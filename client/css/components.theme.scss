@@ -1,0 +1,56 @@
+:root {
+  // Table
+  --Table-container-bg: theme('colors.gray.50');
+  --Table-alternate-row-bg: theme('colors.white');
+  --Table-row-hover-cell-bg: theme('colors.blue.500 / 10%');
+  --Table-header-bg: theme('colors.white');
+  --Table-pagination-button-active-bg: theme('colors.blue.500');
+
+  &.dark {
+    --Table-container-bg: theme('colors.truegray.900');
+    --Table-alternate-row-bg: theme('colors.black');
+    --Table-header-bg: theme('colors.black');
+  }
+
+  // Link
+  --Link-hover-color: theme('colors.blue.500');
+
+  &.dark {
+    --Link-hover-color: theme('colors.blue.700');
+  }
+
+  // MainBar
+  --MainBar-bg: theme('colors.blue.50');
+
+  &.dark {
+    --MainBar-bg: theme('colors.truegray.900');
+  }
+
+  // Form
+  --Form-content-padding: 8px;
+
+  // Menu
+  --Menu-title-bg: theme('colors.slate.100');
+  --Menu-title-color: theme('colors.black');
+
+  &.dark {
+    --Menu-title-bg: theme('colors.dark.700');
+    --Menu-title-color: theme('colors.white');
+  }
+
+  // Dialog
+  --Dialog-title-bg: theme('colors.slate.100');
+  --Dialog-title-color: theme('colors.black');
+
+  &.dark {
+    --Dialog-title-bg: theme('colors.dark.700');
+    --Dialog-title-color: theme('colors.white');
+  }
+
+  // Input wrapper
+  --Input-wrapper-bg: theme('colors.white');
+
+  &.dark {
+    --Input-wrapper-bg: theme('colors.black');
+  }
+}

@@ -1,0 +1,23 @@
+.ripple-container {
+  @apply absolute inset-0 rounded-inherit overflow-hidden pointer-events-none;
+}
+
+.ripple {
+  @apply absolute bg-current block rounded-full w-1px h-1px max-w-full
+    max-h-full;
+
+  animation: ripple 0.8s ease-out;
+}
+
+@keyframes ripple {
+  from {
+    opacity: 30%;
+  }
+  70% {
+    opacity: 0;
+  }
+  to {
+    opacity: 0;
+    transform: scale(300);
+  }
+}

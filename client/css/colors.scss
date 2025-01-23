@@ -1,0 +1,17 @@
+:root {
+  --color-primary: theme('colors.primary');
+  --color-secondary: theme('colors.secondary');
+  --color-tertiary: theme('colors.tertiary');
+  --color-darker: theme('colors.darker');
+  --color-white: theme('colors.white');
+  --color-black: theme('colors.black');
+  --color-positive: theme('colors.positive');
+  --color-negative: theme('colors.negative');
+  --color-warning: theme('colors.warning');
+  --color-info: theme('colors.info');
+  --contrast-color: theme('colors.black');
+
+  &.dark {
+    --contrast-color: theme('colors.white');
+  }
+}
