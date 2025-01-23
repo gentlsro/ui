@@ -469,6 +469,7 @@ export function useTableStore(
         queryBuilder: queryBuilder.value,
         search: search.value,
         queryParams: queryParams.value,
+        orderBy: internalColumns.value.flatMap(col => col.sortDbQuery),
         getStore,
         pagination: {
           skip: isFetchMore.value ? rows.value.length : skip.value,
