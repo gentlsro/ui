@@ -1,7 +1,6 @@
 // Types
 import type { DragEndFnc } from './drag-end-fnc.type'
 import type { IDraggedItem } from './dragged-item.type'
-import type { ObjectKey } from '$utils/shared/types/object-key.type'
 
 export type IDragAndDropProps<T = IItem> = {
   direction?: 'horizontal' | 'vertical'

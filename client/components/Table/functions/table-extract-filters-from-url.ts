@@ -1,4 +1,5 @@
 import { ComparatorEnum } from '$comparatorEnum'
+import { parseValue, SELECTOR_COMPARATORS } from '$utils'
 
 // Types
 import type { IQueryBuilderGroup } from '../../QueryBuilder/types/query-builder-group-props.type'
@@ -9,10 +10,8 @@ import type { IQueryBuilderRow } from '../../QueryBuilder/types/query-builder-ro
 import type { TableColumn } from '../models/table-column.model'
 
 // Functions
-import { parseValue } from '$utils/shared/functions/parse-value'
 
 // Constants
-import { SELECTOR_COMPARATORS } from '$utils/shared/constants/comparators-by-category.const'
 import type { ITableProps } from '../types/table-props.type'
 
 const AND_CONDITION = 'AND'

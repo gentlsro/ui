@@ -1,8 +1,9 @@
+import { formatValue } from '$utils'
+
 // Models
 import type { TableColumn } from '../models/table-column.model'
 
 // Functions
-import { formatValue } from '$utils/shared/functions/format-value'
 import { getComponentProps } from '../../../functions/get-component-props'
 
 // Components

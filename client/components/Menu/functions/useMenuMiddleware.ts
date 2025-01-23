@@ -7,7 +7,6 @@ import type { IMenuProps } from '../types/menu-props.type'
 
 // Middleware
 import { cover, fitWidth, matchWidth } from '../../FloatingUI/functions/useFloatingUIUtils'
-import { stringToFloat } from '$utils/shared/regex/string-to-float.regex'
 
 export function useMenuMiddleware(
   props: IMenuProps,

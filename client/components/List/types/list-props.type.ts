@@ -1,17 +1,14 @@
 import type { z } from 'zod'
 import type { ConcreteComponent, CSSProperties } from 'vue'
 import type { FuseOptions } from '@vueuse/integrations/useFuse'
+import type { GroupItem, SortItem } from '$utils'
+import type { IGroupRow } from '$utilsLayer/shared/composables/useGrouping'
 
 // Types
 import type { IListItem } from './list-item.type'
 import type { IListFetchFnc } from './list-fetch.type'
 import type { ISelection } from '../../../types/selection.type'
 import type { IListItemToAdd } from './list-item-to-add.type'
-
-// Models
-import type { SortItem } from '$utils/shared/models/sort-item.model'
-import type { GroupItem } from '$utils/shared/models/group-item.model'
-import type { IGroupRow } from '$utils/shared/composables/useGrouping'
 
 export type IListProps = {
   /**

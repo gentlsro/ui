@@ -1,7 +1,8 @@
+import type { IGroupRow } from '$utilsLayer/shared/composables/useGrouping'
+
 // Types
 import type { IListItem } from './list-item.type'
 import type { IListItemToAdd } from './list-item-to-add.type'
-import type { IGroupRow } from '$utils/shared/composables/useGrouping'
 
 export type IListEmits = {
   (e: 'submit'): void

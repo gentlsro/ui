@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import type { Placement } from '@floating-ui/dom'
+import { getElementSize } from '$utils'
 
 // Types
+import type { IListProps } from '../List/types/list-props.type'
 import type { ISelectorProps } from './types/selector-props.type'
 
 // Store
 import { useSelectorStore } from './stores/selector.store'
-import type { IListProps } from '../List/types/list-props.type'
-import { getElementSize } from '$utils/client/functions/get-element-size'
 
 type IProps = Pick<
   ISelectorProps,
@@ -73,8 +73,8 @@ function handleHeightChange(height: number) {
   }, 0)
 
   contentHeight.value = height
-  + nonContentHeight
-  + 2 // Top and bottom border
+    + nonContentHeight
+    + 2 // Top and bottom border
 }
 
 function handleHide() {

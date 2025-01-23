@@ -2,7 +2,7 @@
 import type { IFormProps } from '../types/form-props.type'
 
 // Functions
-import { blurAnyFocusedInput } from '$utils/client/functions/blur-any-focused-input'
+import { blurAnyFocusedInput } from '$utilsLayer/client/functions/blur-any-focused-input'
 import { formHasConfirmation } from '../functions/form-has-confirmation'
 
 // Components

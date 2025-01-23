@@ -1,5 +1,4 @@
 // Types
-import type { ClassType } from '$utils/client/types/class.type'
 import type { INavigation } from '../../Button/types/btn-props.type'
 
 export type IChipProps = INavigation & {

@@ -1,11 +1,11 @@
 // @unocss-include
+import type { GroupItem } from '$utils'
 
 // Types
 import type { ITableProps } from '../types/table-props.type'
 
 // Models
 import { TableColumn } from '../models/table-column.model'
-import type { GroupItem } from '$utils/shared/models/group-item.model'
 
 type IPayload = {
   groups?: MaybeRefOrGetter<GroupItem[]>

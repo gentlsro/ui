@@ -1,9 +1,8 @@
 // Types
-import type { IFile } from '$utils/shared/types/file.type'
 import type { IFileInputProps } from '../types/file-input-props.type'
 
 // Models
-import { FileModel } from '$utils/shared/models/file.model'
+import { FileModel } from '$utils'
 
 // Components
 import type Field from '../../../Field/Field.vue'
@@ -37,7 +36,6 @@ export function useFileInput(payload: {
     }
 
     const filesArray = Array.from(files).map(file => new FileModel({ file }))
-    console.log('Log ~ handleAddFile ~ filesArray:', filesArray)
 
     if (props.multi) {
       model.value = [...(model.value || []), ...filesArray]

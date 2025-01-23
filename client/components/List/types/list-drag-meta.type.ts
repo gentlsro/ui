@@ -2,7 +2,7 @@ import type { CSSProperties } from 'vue'
 
 // Types
 import type { IListItem } from './list-item.type'
-import type { IGroupRow } from '$utils/shared/composables/useGrouping'
+import type { IGroupRow } from '$utilsLayer/shared/composables/useGrouping'
 
 export type IListDragMeta = {
   /**

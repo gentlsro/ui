@@ -3,7 +3,7 @@
 import type { IValueFormatterProps } from './types/value-formatter-props.type'
 
 // Functions
-import { formatValue } from '$utils/shared/functions/format-value'
+import { formatValue } from '$utils'
 import { getComponentProps } from '../../functions/get-component-props'
 
 defineOptions({

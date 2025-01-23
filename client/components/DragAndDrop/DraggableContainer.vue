@@ -1,10 +1,10 @@
 <script setup lang="ts" generic="T extends IItem">
+import { moveItem } from '$utils'
+
 // Types
-import type { ObjectKey } from '$utils/shared/types/object-key.type'
 import type { IDragAndDropProps } from './types/drag-and-drop-props.type'
 
 // Functions
-import { moveItem } from '$utils/client/functions/move-item'
 import { useDragAndDrop } from './functions/useDragAndDrop'
 
 const props = withDefaults(defineProps<IDragAndDropProps<T>>(), {

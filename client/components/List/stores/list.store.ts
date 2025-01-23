@@ -1,6 +1,8 @@
 import { ZodSchema } from 'zod'
 import { skipHydrate } from 'pinia'
 import type { Required } from 'utility-types'
+import type { GroupItem, SortItem } from '$utils'
+import type { IGroupRow } from '$utilsLayer/shared/composables/useGrouping'
 
 // Types
 import type { IListItem } from '../types/list-item.type'
@@ -8,11 +10,8 @@ import type { IListProps } from '../types/list-props.type'
 import type { FuseOptions } from '@vueuse/integrations/useFuse'
 import type { IListDragMeta } from '../types/list-drag-meta.type'
 import type { IListItemToAdd } from '../types/list-item-to-add.type'
-import type { IGroupRow } from '$utils/shared/composables/useGrouping'
 
 // Models
-import type { SortItem } from '$utils/shared/models/sort-item.model'
-import type { GroupItem } from '$utils/shared/models/group-item.model'
 
 // Functions
 import { listFetchData } from '../functions/list-fetch-data'

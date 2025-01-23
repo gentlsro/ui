@@ -1,14 +1,11 @@
 <script setup lang="ts">
 import type { Required } from 'utility-types'
 
-// Types
-import type { IFile } from '$utils/shared/types/file.type'
-
 // Models
-import { FileModel } from '$utils/shared/models/file.model'
+import { FileModel } from '$utils'
 
 // Functions
-import { handleDownloadFile } from '$utils/client/functions/download-file'
+import { handleDownloadFile } from '$utilsLayer/client/functions/download-file'
 
 // Constants
 import { IMAGE_TYPES } from './constants/image-types'

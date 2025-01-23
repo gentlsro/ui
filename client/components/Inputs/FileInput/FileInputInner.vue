@@ -1,6 +1,5 @@
 <script setup lang="ts">
 // Types
-import type { IFile } from '$utils/shared/types/file.type'
 import type { IFileInputProps } from './types/file-input-props.type'
 
 const props = defineProps<IFileInputProps & {

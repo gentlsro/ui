@@ -1,8 +1,5 @@
-// Types
-import type { IFile } from '$utils/shared/types/file.type'
-
 // Models
-import { FileModel } from '$utils/shared/models/file.model'
+import { FileModel } from '$utils'
 
 export function getFileLabel(file: FileModel | IFile) {
   const { formatBytes } = useNumber()

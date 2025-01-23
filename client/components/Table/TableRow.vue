@@ -3,13 +3,14 @@
 // unnecessary creation of vue components for each cell and to keep consistency
 // between card and regular views
 
+import { formatValue } from '$utils'
+
 // Types
 import type { ITableProps } from './types/table-props.type'
 import type { IRowColumn } from './types/table-row-column.type'
 
 // Functions
 import { tableSelectRow } from './functions/table-select-row'
-import { formatValue } from '$utils/shared/functions/format-value'
 
 // Store
 import { useTableStore } from './stores/table.store'

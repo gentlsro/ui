@@ -2,8 +2,6 @@ import type { ComparatorEnum } from '$comparatorEnum'
 import type { ExtendedDataType } from '$dataType'
 
 // Types
-import type { ObjectKey } from '$utils/shared/types/object-key.type'
-import type { TableColumn } from '../../Table/models/table-column.model'
 import type { IQueryBuilderGroup } from './query-builder-group-props.type'
 import type { IQueryBuilderRowProps } from './query-builder-row-props.type'
 

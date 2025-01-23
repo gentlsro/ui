@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { klona } from 'klona/full'
+import { FilterItem, NON_VALUE_COMPARATORS } from '$utils'
 
 // Types
 import type { ITableFilterItem } from '../types/table-filter-item.type'
 
 // Models
-import { FilterItem } from '$utils/shared/models/filter-item'
 import type { TableColumn } from '../models/table-column.model'
 
 // Functions
@@ -13,9 +13,6 @@ import { tableFilterValueChangeDebounce } from '../functions/table-filter-value-
 
 // Store
 import { useTableStore } from '../stores/table.store'
-
-// Constants
-import { NON_VALUE_COMPARATORS } from '$utils/shared/constants/comparators-by-category.const'
 
 type IProps = {
   column: TableColumn

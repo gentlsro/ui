@@ -2,26 +2,21 @@ import type { Required } from 'utility-types'
 import type { CSSProperties } from 'vue'
 import type { ExtendedDataType } from '$dataType'
 import { ComparatorEnum } from '$comparatorEnum'
+import { FilterItem, NON_VALUE_COMPARATORS, stringToFloat } from '$utils'
 
 // Types
 import type { ITableProps } from '../types/table-props.type'
 import type { ITableSortItem } from '../types/table-sort-item.type'
-import type { ObjectKey } from '$utils/shared/types/object-key.type'
 import type { ITableFilterItem } from '../types/table-filter-item.type'
 import type { ITableDistinctData } from '../types/table-distinct-data.type'
 
-// Models
-import { FilterItem } from '$utils/shared/models/filter-item'
-
 // Constants
-import { DATE_TYPES } from '$utils/shared/types/datetime.type'
-import { NON_VALUE_COMPARATORS } from '$utils/shared/constants/comparators-by-category.const'
-import { getDefaultComparatorByDataType } from '$utils/shared/constants/default-comparator-by-data-type.const'
+import { DATE_TYPES } from '$utilsLayer/shared/types/datetime.type'
+import { getDefaultComparatorByDataType } from '$utilsLayer/shared/constants/default-comparator-by-data-type.const'
 
 // Functions
-import { stringToFloat } from '$utils/shared/regex/string-to-float.regex'
 import { getComponentProps } from '../../../functions/get-component-props'
-import { getDateSimpleValue } from '$utils/shared/composables/useDateUtils'
+import { getDateSimpleValue } from '$utilsLayer/shared/composables/useDateUtils'
 import { useRenderTemporaryTableCell } from '../composables/useRenderTemporaryTableCell'
 
 // Components

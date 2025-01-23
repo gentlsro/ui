@@ -1,6 +1,3 @@
-// Types
-import type { ITreeNode } from '$utils/shared/types/tree-node.type'
-
 export function getChildren(nodes: ITreeNode[]): ITreeNode[] {
   const children: ITreeNode[] = []
 

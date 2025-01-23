@@ -1,7 +1,6 @@
 <script setup lang="ts">
 // Types
 import type { ITreeProps } from './types/tree-props.type'
-import type { ITreeNode } from '$utils/shared/types/tree-node.type'
 
 // Functions
 import { useTreeStore } from './stores/tree.store'

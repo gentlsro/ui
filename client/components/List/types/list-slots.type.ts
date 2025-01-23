@@ -1,7 +1,8 @@
+import type { IGroupRow } from '$utilsLayer/shared/composables/useGrouping'
+
 // Types
 import type { IListItem } from './list-item.type'
 import type { IListProps } from './list-props.type'
-import type { IGroupRow } from '$utils/shared/composables/useGrouping'
 
 export type IListSlots = {
   search: (props: { ui?: IListProps['ui'] }) => any

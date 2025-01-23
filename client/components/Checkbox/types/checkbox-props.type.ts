@@ -1,7 +1,6 @@
 import type { CSSProperties } from 'vue'
 
 // Types
-import type { ClassType } from '$utils/client/types/class.type'
 import type { ToggleState } from '../../Toggle/types/toggle-props.type'
 
 export type CheckboxClass = Record<

@@ -1,6 +1,7 @@
 <script setup lang="ts" generic="T">
 import type { CSSProperties } from 'vue'
 import { get } from 'lodash-es'
+import { getElementSize } from '$utils'
 
 // Types
 import type { IVirtualScrollEvent } from './types/virtual-scroll-event.type'
@@ -8,7 +9,6 @@ import type { IVirtualScrollerProps } from './types/virtual-scroller-props.type'
 
 // Functions
 import { getComponentProps } from '../../functions/get-component-props'
-import { getElementSize } from '$utils/client/functions/get-element-size'
 
 type IRow = {
   ref: T

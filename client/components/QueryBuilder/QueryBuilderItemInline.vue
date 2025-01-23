@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { klona } from 'klona/full'
+import { NON_VALUE_COMPARATORS } from '$utils'
 
 // Types
 import type { IQueryBuilderItem, IQueryBuilderItemProps } from './types/query-builder-item-props.type'
@@ -10,7 +10,6 @@ import { useQueryBuilderStore } from './query-builder.store'
 
 // Constants
 import { QUERY_BUILDER_LEVEL_COLORS } from './constants/query-builder-level-colors.constant'
-import { NON_VALUE_COMPARATORS } from '$utils/shared/constants/comparators-by-category.const'
 
 defineOptions({
   inheritAttrs: false,

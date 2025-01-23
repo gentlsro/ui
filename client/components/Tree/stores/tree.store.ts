@@ -1,13 +1,13 @@
+import { useSearching } from '$utils'
+
 // Types
 import type { ITreeProps } from '../types/tree-props.type'
 import type { TreeNodeModel } from '../models/tree-node.model'
 import type { ITreeNodeMeta } from '../types/tree-node-meta.type'
-import type { ITreeNode } from '$utils/shared/types/tree-node.type'
 
 // Functions
 import { getChildren } from '../functions/get-children'
 import { flattenTreeNodes } from '../functions/flatten-tree-nodes'
-import { useSearching } from '$utils/shared/composables/useSearching'
 import { getComponentProps } from '../../../functions/get-component-props'
 
 export const treeIdKey = Symbol('__treeId')

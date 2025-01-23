@@ -7,7 +7,7 @@ import type { IActiveTableSplitter, ITableSplitter } from '../types/table-splitt
 import { tableSlotsKey } from '../provide/table.provide'
 
 // Functions
-import { stringToFloat } from '$utils/shared/regex/string-to-float.regex'
+import { stringToFloat } from '$utils'
 
 // Store
 import { useTableStore } from '../stores/table.store'
@@ -144,8 +144,8 @@ export function useTableColumnResizing() {
 
       activeSplitter.value.adjustedWidth
         = activeSplitter.value.originalWidth
-        + activeSplitter.value.left
-        - pageX
+          + activeSplitter.value.left
+          - pageX
     }
   }
 
@@ -155,7 +155,7 @@ export function useTableColumnResizing() {
 
     const diff
       = activeSplitter.value!.adjustedWidth
-      - activeSplitter.value!.originalWidth
+        - activeSplitter.value!.originalWidth
 
     // If the currently resized column is `semiFrozen` but not `frozen`,
     // we need to adjust the widths of all the `semiFrozen` columns that come

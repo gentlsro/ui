@@ -1,8 +1,7 @@
+import { SortItem } from '$utils'
+
 // Types
 import type { IListProps } from '../../types/list-props.type'
-
-// Models
-import { SortItem } from '$utils/shared/models/sort-item.model'
 
 export function getListDefaultSortBy(itemLabel?: IListProps['itemLabel']) {
   return [

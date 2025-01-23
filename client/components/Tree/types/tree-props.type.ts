@@ -2,7 +2,6 @@ import type { CSSProperties, DefineComponent } from 'vue'
 
 // Types
 import type { ITreeNodeMeta } from './tree-node-meta.type'
-import type { ITreeNode } from '$utils/shared/types/tree-node.type'
 
 export type ITreeProps = {
   /**

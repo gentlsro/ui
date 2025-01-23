@@ -1,11 +1,10 @@
 import type { CSSProperties } from 'vue'
 
 // Types
-import type { IFile } from '$utils/shared/types/file.type'
+import type { IInputProps } from '../../types/input-props.type'
 
 // Models
-import type { FileModel } from '$utils/shared/models/file.model'
-import type { IInputProps } from '../../types/input-props.type'
+import type { FileModel } from '$utils'
 
 export type IFileInputProps = {
   /**

@@ -3,7 +3,7 @@
 import type { ITableProps } from './types/table-props.type'
 
 // Models
-import { FilterItem } from '$utils/shared/models/filter-item'
+import { FilterItem } from '$utils'
 
 // Store
 import { useTableStore } from './stores/table.store'

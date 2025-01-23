@@ -1,7 +1,8 @@
+import type { IGroupRow } from '$utilsLayer/shared/composables/useGrouping'
+
 // Types
 import type { IListItem } from '../types/list-item.type'
 import type { IListProps } from '../types/list-props.type'
-import type { IGroupRow } from '$utils/shared/composables/useGrouping'
 
 export async function listFetchData(payload: {
   search?: string

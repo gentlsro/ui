@@ -5,7 +5,7 @@ import type { ITableFilterItem } from '../types/table-filter-item.type'
 import type { IQueryBuilderRow } from '../../QueryBuilder/types/query-builder-row-props.type'
 
 // Constants
-import { SELECTOR_COMPARATORS } from '$utils/shared/constants/comparators-by-category.const'
+import { SELECTOR_COMPARATORS } from '$utils'
 
 export function tableSerializeFilters(
   filtersOrQueryBuilder: Array<ITableFilterItem | IQueryBuilderRow>,

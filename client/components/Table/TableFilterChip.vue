@@ -1,15 +1,9 @@
 <script setup lang="ts">
-import { klona } from 'klona/full'
-
 // Models
-import { FilterItem } from '$utils/shared/models/filter-item'
+import { FilterItem, formatValue, NON_VALUE_COMPARATORS } from '$utils'
 
 // Functions
-import { formatValue } from '$utils/shared/functions/format-value'
 import { useTableStore } from './stores/table.store'
-
-// Constants
-import { NON_VALUE_COMPARATORS } from '$utils/shared/constants/comparators-by-category.const'
 
 type IProps = {
   filter: FilterItem

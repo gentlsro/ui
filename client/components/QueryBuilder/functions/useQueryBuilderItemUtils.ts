@@ -1,14 +1,11 @@
 import { ComparatorEnum } from '$comparatorEnum'
+import { BOOLEANISH_COMPARATORS, NON_VALUE_COMPARATORS, SELECTOR_COMPARATORS } from '$utils'
 
 // Types
 import type { ITableFilterItem } from '../../Table/types/table-filter-item.type'
 
 // Models
 import type { TableColumn } from '../../Table/models/table-column.model'
-
-// Constants
-import { BOOLEANISH_COMPARATORS, NON_VALUE_COMPARATORS, SELECTOR_COMPARATORS } from '$utils/shared/constants/comparators-by-category.const'
-import { getComparatorsByDataType } from '$utils/shared/constants/comparators-by-datatype.const'
 
 export function useQueryBuilderItemUtils(item: Ref<ITableFilterItem>) {
   function checkIsBooleanishComparator(comparator: ComparatorEnum) {

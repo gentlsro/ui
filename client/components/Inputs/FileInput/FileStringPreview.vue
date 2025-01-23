@@ -1,9 +1,6 @@
 <script setup lang="ts">
-// Types
-import type { IFile } from '$utils/shared/types/file.type'
-
 // Functions
-import { handleDownloadFile } from '$utils/client/functions/download-file'
+import { handleDownloadFile } from '$utilsLayer/client/functions/download-file'
 
 // Constants
 import { ICON_BY_FILE_EXTENSION } from './constants/icon-by-file-extension'
@@ -50,7 +47,7 @@ const icon = computed(() => {
 
   const icon
     = ICON_BY_FILE_EXTENSION[ext as keyof typeof ICON_BY_FILE_EXTENSION]
-    || 'i-bi:file-image'
+      || 'i-bi:file-image'
 
   return icon
 })

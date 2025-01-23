@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import { stringToFloat } from '$utils'
 import PerfectScrollbar from 'perfect-scrollbar'
 
 // Types
 import type { IScrollAreaProps } from './types/scroll-area-props.type'
 
 // Regex
-import { stringToFloat } from '$utils/shared/regex/string-to-float.regex'
 
 const props = defineProps<IScrollAreaProps>()
 

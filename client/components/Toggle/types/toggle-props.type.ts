@@ -1,7 +1,6 @@
 import type { CSSProperties } from 'vue'
 
 // Types
-import type { ClassType } from '$utils/client/types/class.type'
 import type { IItemProps } from '../../Item/types/item-props.type'
 
 export type ToggleState = 'checked' | 'unchecked' | 'indeterminate'

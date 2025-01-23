@@ -1,5 +1,4 @@
 // Types
-import type { ITreeNode } from '$utils/shared/types/tree-node.type'
 import type { ITreeNodeMeta } from '../types/tree-node-meta.type'
 
 function getDefaultNodeMeta(): ITreeNodeMeta {

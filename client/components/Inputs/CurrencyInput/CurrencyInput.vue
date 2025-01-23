@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import { MaskedNumber } from 'imask'
+import { isNumeric } from '$utils'
 
 // Types
 import type { ICurrencyInputProps } from './types/currency-input-props.type'
 
 // Functions
 import { useInputUtils } from '../functions/useInputUtils'
-import { isNumeric } from '$utils/shared/functions/is-numeric'
 import { useInputValidationUtils } from '../functions/useInputValidationUtils'
 import { getComponentMergedProps, getComponentProps } from '../../../functions/get-component-props'
 
 // Constants
-import { CURRENCY_DEFAULT } from '$utils/shared/i18n'
+import { CURRENCY_DEFAULT } from '$utilsLayer/shared/i18n'
 
 const props = withDefaults(defineProps<ICurrencyInputProps>(), {
   ...getComponentProps('currencyInput'),

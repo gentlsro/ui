@@ -1,5 +1,5 @@
 // Types
-import type { Day } from '$utils/shared/models/day.model'
+import type { Day } from '$utilsLayer/shared/models/day.model'
 
 // Models
 import type { DayEvent } from './DayEvent.type'

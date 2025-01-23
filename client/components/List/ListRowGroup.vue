@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import type { IGroupRow } from '$utilsLayer/shared/composables/useGrouping'
+
 // Types
 import type { IListProps } from './types/list-props.type'
-import type { IGroupRow } from '$utils/shared/composables/useGrouping'
 
 // Store
 import { useListStore } from './stores/list.store'

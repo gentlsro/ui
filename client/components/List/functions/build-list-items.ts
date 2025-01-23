@@ -1,21 +1,16 @@
 import type { Required } from 'utility-types'
 import type { FuseOptions } from '@vueuse/integrations/useFuse.mjs'
+import { type GroupItem, type SortItem, useSearching, useSorting } from '$utils'
+import { type IGroupRow, useGrouping } from '$utilsLayer/shared/composables/useGrouping'
 
 // Types
 import type { FuseResult } from 'fuse.js'
 import type { IListItem } from '../types/list-item.type'
 import type { IListProps } from '../types/list-props.type'
 
-// Models
-import type { SortItem } from '$utils/shared/models/sort-item.model'
-import type { GroupItem } from '$utils/shared/models/group-item.model'
-
 // Functions
 import { getListItemKey, getListItemLabel } from './helpers'
-import { type IGroupRow, useGrouping } from '$utils/shared/composables/useGrouping'
-import { useSearching } from '$utils/shared/composables/useSearching'
-import { useSorting } from '$utils/shared/composables/useSorting'
-import { highlight } from '$utils/shared/functions/highlightText'
+import { highlight } from '$utilsLayer/shared/functions/highlightText'
 
 const { groupData } = useGrouping()
 const { searchData } = useSearching()

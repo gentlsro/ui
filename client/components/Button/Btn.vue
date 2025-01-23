@@ -13,7 +13,7 @@ import { BUTTON_PRESET } from './constants/button-preset.constant'
 import BtnOrNuxtLinkResolver from './BtnOrNuxtLinkResolver.vue'
 
 // Directives
-import { vRipple } from '$utils/client/directives/ripple.directive'
+import { vRipple } from '$utilsLayer/client/directives/ripple.directive'
 
 const props = withDefaults(defineProps<IBtnProps>(), {
   ...getComponentProps('button'),

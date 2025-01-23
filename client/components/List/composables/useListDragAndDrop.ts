@@ -1,13 +1,13 @@
 // @unocss-include
 
 import { autoScrollPlugin, Draggable, PointerSensor, type PointerSensorMoveEvent } from 'dragdoll'
+import { moveItem } from '$utils'
 
 // Types
 import type { IListItem } from '../types/list-item.type'
 
 // Store
 import { useListStore } from '../stores/list.store'
-import { moveItem } from '$utils/client/functions/move-item'
 import { getListItemKey } from '../functions/helpers'
 
 const LIST_ITEM_CLASSES = ['list-row-item', 'list-row-group']

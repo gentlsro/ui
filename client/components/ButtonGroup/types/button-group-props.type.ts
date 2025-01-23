@@ -1,7 +1,6 @@
 import type { CSSProperties } from 'vue'
 
 // Types
-import type { ClassType } from '$utils/client/types/class.type'
 import type { IBtnProps } from '../../Button/types/btn-props.type'
 
 export type IButtonGroupProps = {

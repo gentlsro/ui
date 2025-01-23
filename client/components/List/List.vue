@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ZodSchema } from 'zod'
+import type { IGroupRow } from '$utilsLayer/shared/composables/useGrouping'
 
 // Types
 import type { IListItem } from './types/list-item.type'
@@ -7,7 +7,6 @@ import type { IListEmits } from './types/list-emits.type'
 import type { IListSlots } from './types/list-slots.type'
 import type { IListProps } from './types/list-props.type'
 import type { IListItemToAdd } from './types/list-item-to-add.type'
-import type { IGroupRow } from '$utils/shared/composables/useGrouping'
 
 // Functions
 import { useListItemAdding } from './composables/useListItemAdding'

@@ -1,3 +1,5 @@
+import { FilterItem, parseValue } from '$utils'
+
 // Types
 import type { ITableProps } from '../types/table-props.type'
 import type { IQueryBuilderItem } from '../../QueryBuilder/types/query-builder-item-props.type'
@@ -6,8 +8,6 @@ import type { IQueryBuilderItem } from '../../QueryBuilder/types/query-builder-i
 import { TableColumn } from '../models/table-column.model'
 
 // Functions
-import { FilterItem } from '$utils/shared/models/filter-item'
-import { parseValue } from '$utils/shared/functions/parse-value'
 import { tableExtractDataFromUrl } from './table-extract-data-from-url'
 
 function getUsedProperties(payload: {

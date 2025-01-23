@@ -1,8 +1,5 @@
 import type { CSSProperties } from 'vue'
 
-// Types
-import type { ClassType } from '$utils/client/types/class.type'
-
 export type ICircleProgressProps = {
   /**
    * Progress value

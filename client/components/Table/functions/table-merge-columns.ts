@@ -1,9 +1,10 @@
+import { FilterItem } from '$utils'
+
 // Types
 import type { ITableStateColumn } from '../types/table-state-column.type'
 
 // Models
 import { TableColumn } from '../models/table-column.model'
-import { FilterItem } from '$utils/shared/models/filter-item'
 
 export function tableMergeColumns(payload: {
   propsColumns?: TableColumn<any>[]

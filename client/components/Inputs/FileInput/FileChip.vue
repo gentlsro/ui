@@ -1,14 +1,13 @@
 <script setup lang="ts">
 // Types
-import type { IFile } from '$utils/shared/types/file.type'
 import type { IFileInputProps } from './types/file-input-props.type'
 
 // Models
-import type { FileModel } from '$utils/shared/models/file.model'
+import type { FileModel } from '$utils'
 
 // Functions
 import { getFileLabel } from './functions/get-file-label'
-import { handleDownloadFile } from '$utils/client/functions/download-file'
+import { handleDownloadFile } from '$utilsLayer/client/functions/download-file'
 
 type IProps = Pick<IFileInputProps, 'disabled' | 'readonly' | 'downloadUrl'> &
   { chip: File | IFile | FileModel }

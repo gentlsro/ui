@@ -1,6 +1,3 @@
-// Types
-import type { ClassType } from '$utils/client/types/class.type'
-
 export type IBannerProps = {
   /**
    * The number in top right corner on the `Banner`

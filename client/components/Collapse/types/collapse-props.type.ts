@@ -1,8 +1,5 @@
 import type { CSSProperties } from 'vue'
 
-// Types
-import type { ClassType } from '$utils/client/types/class.type'
-
 export type ICollapseProps = {
   /**
    * The icon for `Collapse` expansion

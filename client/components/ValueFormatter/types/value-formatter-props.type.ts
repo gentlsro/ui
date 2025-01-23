@@ -1,5 +1,6 @@
+import type { PredictDataTypeOptions } from '$utilsLayer/shared/functions/predict-data-type'
+
 // Types
-import type { PredictDataTypeOptions } from '$utils/shared/functions/predict-data-type'
 import type { ExtendedDataType } from '$dataType'
 
 // Models

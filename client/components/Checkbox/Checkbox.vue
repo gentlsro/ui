@@ -2,7 +2,6 @@
 import type { CSSProperties } from 'vue'
 
 // Types
-import type { ClassType } from '$utils/client/types/class.type'
 import type { ICheckboxProps } from './types/checkbox-props.type'
 
 // Functions
