@@ -96,7 +96,8 @@ export default defineNuxtConfig({
 
   // Alias
   alias: {
-    $ui: resolve('.'),
+    $ui: resolve('./index.ts'),
+    $uiLayer: resolve('.'),
     $uiConfig: './generated/ui.ts',
   },
 
