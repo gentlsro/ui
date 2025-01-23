@@ -21,7 +21,7 @@ export function getInputByDataType(
 ) {
   const { props } = options ?? {}
 
-  const customComponent = utilsConfig.dataTypeExtend.inputByDataType[dataType]
+  const customComponent = utilsConfig.dataTypeExtend.inputByDataType?.[dataType]
 
   if (customComponent) {
     return createComponent(customComponent)

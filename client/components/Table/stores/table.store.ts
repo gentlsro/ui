@@ -3,6 +3,7 @@ import { skipHydrate } from 'pinia'
 // Types
 import type { ITableProps } from '../types/table-props.type'
 import type { ITableLayout } from '../types/table-layout.type'
+import type { ITableSortItem } from '../types/table-sort-item.type'
 import type { ITableStateColumn } from '../types/table-state-column.type'
 import type { IQueryBuilderRow } from '../../QueryBuilder/types/query-builder-row-props.type'
 
@@ -469,7 +470,7 @@ export function useTableStore(
         queryBuilder: queryBuilder.value,
         search: search.value,
         queryParams: queryParams.value,
-        orderBy: internalColumns.value.flatMap(col => col.sortDbQuery),
+        orderBy: internalColumns.value.flatMap(col => col.sortDbQuery) as ITableSortItem[],
         getStore,
         pagination: {
           skip: isFetchMore.value ? rows.value.length : skip.value,
