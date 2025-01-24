@@ -55,6 +55,7 @@ export default defineNuxtConfig({
       { name: 'useUIStore', from: resolve('./client/stores/ui.store.ts') },
       { name: 'useLayoutStore', from: resolve('./client/stores/layout.store.ts') },
       { name: 'notify', from: resolve('./client/components/Notification/functions/useNotifications') },
+      { name: 'useBreadcrumbs', from: resolve('./client/components/Breadcrumbs/functions/useBreadcrumbs') },
 
       // Shared
       { name: 'extendUIConfig', from: resolve('./config.ts') },
