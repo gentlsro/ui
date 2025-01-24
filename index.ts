@@ -1,5 +1,8 @@
 /* eslint-disable perfectionist/sort-exports */
 
+// General
+export { getComponentMergedProps, getComponentProps } from './client/functions/get-component-props'
+
 // Btn
 export { BUTTON_PRESET } from './client/components/Button/constants/button-preset.constant'
 
