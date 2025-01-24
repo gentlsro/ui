@@ -9,6 +9,9 @@ import {
   transformerVariantGroup,
 } from 'unocss'
 
+// Icon loader
+import { FileSystemIconLoader } from '@iconify/utils/lib/loader/node-loaders'
+
 // Breakpoints
 import { BREAKPOINTS_PX } from './shared/constants/breakpoints'
 
@@ -154,7 +157,14 @@ export default defineConfig({
 
   presets: [
     presetUno(),
-    presetIcons(),
+    presetIcons({
+      scale: 1.2,
+      collections: {
+        custom: FileSystemIconLoader('./assets/icons', svg => {
+          return svg.replace(/[\r\n]/g, '')
+        }),
+      },
+    }),
     presetAttributify({ ignoreAttributes: ['size'] }),
     presetTypography(),
   ],
