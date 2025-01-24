@@ -1,4 +1,4 @@
-import { isDayjs } from 'dayjs'
+import * as dayjs from 'dayjs'
 
 // Types
 import type { ITableFilterItem } from '../types/table-filter-item.type'
@@ -29,7 +29,7 @@ export function tableSerializeFilters(
         let val: string | number = item.value
 
         // Date
-        if (isDayjs(item.value)) {
+        if (dayjs.isDayjs(item.value)) {
           val = item.value.format('YYYY-MM-DD')
         }
 
