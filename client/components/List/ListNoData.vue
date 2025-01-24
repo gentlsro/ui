@@ -11,7 +11,6 @@ const { isLoading, listItems } = storeToRefs(useListStore())
 
 // Layout
 const bannerEl = useTemplateRef('bannerEl')
-// @ts-expect-error Too complex to represent
 const { height, width } = useElementSize(bannerEl)
 
 watch(height, h => {
