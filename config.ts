@@ -409,7 +409,7 @@ const defaultComponentsConfig = {
   // Form
   form: {
     props: {
-      editControls: true,
+      editControls: false,
       labelForcedVisibility: true,
       hasControls: undefined,
       submitConfirmation: undefined,
