@@ -40,7 +40,7 @@ export type IFormProps = {
   /**
    * Icon of the submit button (technically the same as `submitBtnProps.icon`)
    */
-  icon?: string
+  icon?: string | false
 
   /**
    * If true, the form's submit button will have loading state.
