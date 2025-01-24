@@ -1,8 +1,16 @@
 <script setup lang="ts">
+const d = ref('2025-01-01')
+const dur = ref(2)
 </script>
 
 <template>
   <div>
-    UI
+    <div
+      flex="~ col"
+      w="100"
+    >
+      <DateInput v-model="d" />
+      <DurationInput v-model="dur" />
+    </div>
   </div>
 </template>

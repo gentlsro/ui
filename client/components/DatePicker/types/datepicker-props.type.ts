@@ -1,4 +1,4 @@
-import type dayjs from 'dayjs'
+import type { Dayjs } from 'dayjs'
 
 // Types
 import type { DayEvent } from './DayEvent.type'
@@ -7,8 +7,8 @@ import type { DayEvent } from './DayEvent.type'
 import type { DayEnum } from '$utilsLayer/shared/enums/day.enum'
 
 export type IDatePickerProps = {
-  allowedDays?: Array<dayjs.Dayjs> | ((date: dayjs.Dayjs) => boolean)
-  disabledDays?: Array<dayjs.Dayjs> | ((date: dayjs.Dayjs) => boolean)
+  allowedDays?: Array<Dayjs> | ((date: Dayjs) => boolean)
+  disabledDays?: Array<Dayjs> | ((date: Dayjs) => boolean)
   events?: DayEvent[]
   excludedDays?: DayEnum[]
   modelValue?: Datetime

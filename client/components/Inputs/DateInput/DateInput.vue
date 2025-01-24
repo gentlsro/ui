@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type dayjs from 'dayjs'
+import type { Dayjs } from 'dayjs'
 
 import { type FactoryOpts, MaskedRange } from 'imask'
 
@@ -107,7 +107,7 @@ function isMaskString(val?: string) {
 const preventSync = autoResetRef(false, 50)
 const wrapperEl = useTemplateRef('wrapperEl')
 
-function handleDateSelect(val: dayjs.Dayjs) {
+function handleDateSelect(val: Dayjs) {
   preventSync.value = true
   model.value = props.format ? val.format(props.format) : val
 

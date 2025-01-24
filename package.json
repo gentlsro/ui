@@ -59,6 +59,7 @@
     "@vueuse/integrations": "12.4.0",
     "@vueuse/math": "12.4.0",
     "@vueuse/nuxt": "12.4.0",
+    "dayjs-nuxt": "2.1.11",
     "eslint": "9.18.0",
     "eslint-plugin-format": "1.0.1",
     "nuxt-lodash": "2.5.3",
