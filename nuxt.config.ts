@@ -38,7 +38,7 @@ export default defineNuxtConfig({
   ],
 
   // SSR https://nuxt.com/docs/api/configuration/nuxt-config#ssr
-  ssr: true,
+  ssr: false,
 
   // Components https://nuxt.com/docs/api/configuration/nuxt-config#components
   components: {

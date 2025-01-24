@@ -1,3 +1,5 @@
+import { skipHydrate } from 'pinia'
+
 // Types
 import type { IFormProps } from '../types/form-props.type'
 
@@ -70,9 +72,10 @@ export function useFormStore(payload?: {
       isLoading,
       confirmationEl,
       hasConfirmation,
-      emitSubmit,
-      emitCancel,
-      handleSubmit: throttledSubmit,
+      emitSubmit: skipHydrate(emitSubmit),
+      emitCancel: skipHydrate(emitCancel),
+
+      handleSubmit: skipHydrate(throttledSubmit),
     }
   })()
 }

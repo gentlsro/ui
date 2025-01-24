@@ -59,7 +59,7 @@ import type { IValueFormatterProps } from './client/components/ValueFormatter/ty
 import type { IColorProps } from './client/components/Inputs/ColorInput/types/color-props.type'
 import type { ITimeInputProps } from './client/components/Inputs/TimeInput/types/time-input-props.type'
 import type { ICurrencyInputProps } from './client/components/Inputs/CurrencyInput/types/currency-input-props.type'
-import type { IDurationInputProps } from './client/components/Inputs/DurationInput/types/input-duration-props.type'
+import type { IDurationInputProps } from './client/components/Inputs/DurationInput/types/duration-input-props.type'
 import type { IMiniCardProps } from './client/components/Card/types/mini-card-props.type'
 import type { IFormProps } from './client/components/Form/types/form-props.type'
 import type { ISelectorProps } from './client/components/Selector/types/selector-props.type'

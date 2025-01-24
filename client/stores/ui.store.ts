@@ -1,5 +1,6 @@
 import { createVNode, render } from 'vue'
-import type { CSSProperties, DefineComponent } from 'vue'
+import { skipHydrate } from 'pinia'
+import type { CSSProperties } from 'vue'
 import { merge } from 'lodash-es'
 import { uiConfig } from '$uiConfig'
 
@@ -96,13 +97,13 @@ export const useUIStore = defineStore('__ui', () => {
     lastPointerDownEl,
     lastPointerDownType,
 
-    setState,
+    setState: skipHydrate(setState),
 
     // Active element
     activeElement,
-    isActiveElementInput,
+    isActiveElementInput: skipHydrate(isActiveElementInput),
 
     // Temporary component
-    setTempComponent,
+    setTempComponent: skipHydrate(setTempComponent),
   }
 })

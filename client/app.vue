@@ -9,10 +9,12 @@ const dur = ref(2)
       flex="~ col"
       w="100"
     >
-      <DateInput v-model="d" />
-      <DurationInput v-model="dur" />
+      <Form>
+        <DateInput v-model="d" />
+        <DurationInput v-model="dur" />
 
-      <div class="i-custom:erb h-10 w-10" />
+        <div class="i-custom:erb h-10 w-10" />
+      </Form>
     </div>
   </div>
 </template>

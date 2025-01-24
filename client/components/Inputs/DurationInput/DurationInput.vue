@@ -2,7 +2,7 @@
 import { type DurationUnit, MODIFIER_BY_UNIT } from '$utilsLayer/shared/composables/useDuration'
 
 // Types
-import type { IDurationInputProps } from './types/input-duration-props.type'
+import type { IDurationInputProps } from './types/duration-input-props.type'
 
 // Functions
 import { getComponentMergedProps, getComponentProps } from '../../../functions/get-component-props'
