@@ -6,6 +6,10 @@ export { BUTTON_PRESET } from './client/components/Button/constants/button-prese
 // Colors
 export { useColors } from './shared/composables/useColors'
 
+// Files
+export { ICON_BY_FILE_EXTENSION } from './client/components/Inputs/FileInput/constants/icon-by-file-extension'
+export { ICON_BY_FILE_TYPE } from './client/components/Inputs/FileInput/constants/icon-by-file-type'
+
 // List
 export type { IListFetchPayload } from './client/components/List/types/list-fetch.type'
 
