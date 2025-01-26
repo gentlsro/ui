@@ -156,6 +156,7 @@ defineExpose(tableGetExposed())
       v-if="rows?.length && !isMetaLoading"
       :ui="mergedProps.ui"
       :editable
+      :to
     >
       <!-- Cell slots -->
       <template

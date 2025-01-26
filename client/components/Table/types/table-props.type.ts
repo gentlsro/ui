@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'vue'
+import type { RouteLocationRaw } from '#vue-router'
 
 // Types
 import type { TableFeature } from './table-feature.type'
@@ -423,6 +424,11 @@ export type ITableProps<
    * use `null` to disable this functionality
    */
   storageKey?: string | null
+
+  /**
+   * Link to the detail from page
+   */
+  to?: (row: any) => RouteLocationRaw
 
   /**
    * Visual configuration

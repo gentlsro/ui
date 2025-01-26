@@ -3,6 +3,8 @@
 // unnecessary creation of vue components for each cell and to keep consistency
 // between card and regular views
 
+import { NuxtLink } from '#components'
+
 import { formatValue } from '$utils'
 
 // Types
@@ -15,7 +17,7 @@ import { tableSelectRow } from './functions/table-select-row'
 // Store
 import { useTableStore } from './stores/table.store'
 
-type IProps = Pick<ITableProps, 'ui' | 'editable'> & {
+type IProps = Pick<ITableProps, 'ui' | 'editable' | 'to'> & {
   row: IItem | IItem[]
   index: number
 }
@@ -58,6 +60,10 @@ const [DefineValueTemplate, ReuseValueTemplate] = createReusableTemplate<{
   row: IItem
   isSelectable: boolean
 }>()
+
+const RowComponent = computed(() => {
+  return props.to ? NuxtLink : 'div'
+})
 
 const isEditableRow = computed(() => {
   return typeof props.editable === 'object'
@@ -255,13 +261,15 @@ function handleEditCellMounted() {
     class="tr-split"
     :style="{ '--cols': rowsColumnCount }"
   >
-    <div
+    <Component
+      :is="RowComponent"
       v-for="(rowData, idx) in rowDataArray"
       :key="idx"
       v-bind="$attrs"
       class="tr tr--card"
       :class="[rowClassArray[idx], { 'is-selected': isSelected(rowData.row) }]"
       :style="rowStyleArray[idx]"
+      :to="to?.(row)"
       @click="handleSelectToggle(rowData.row, $event)"
     >
       <div
@@ -337,16 +345,18 @@ function handleEditCellMounted() {
         name="inner"
         mode="card"
       />
-    </div>
+    </Component>
   </div>
 
   <!-- Regular view -->
-  <div
+  <Component
+    :is="RowComponent"
     v-else-if="rowDataArray[0]"
     v-bind="$attrs"
     class="tr tr--row"
     :class="[rowClassArray[0], { 'is-selected': isSelected(rowDataArray[0].row) }]"
     :style="rowStyleArray[0]"
+    :to="to?.(row)"
   >
     <div
       v-for="column in rowDataArray[0].columns"
@@ -371,7 +381,7 @@ function handleEditCellMounted() {
       name="inner"
       mode="row"
     />
-  </div>
+  </Component>
 </template>
 
 <style scoped lang="scss">

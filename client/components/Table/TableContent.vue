@@ -7,7 +7,7 @@ import { useTableStore } from './stores/table.store'
 import { tableEditMoveCell } from './functions/table-edit-move-cell'
 import type { IVirtualScrollEvent } from '../VirtualScroller/types/virtual-scroll-event.type'
 
-type IProps = Pick<ITableProps, 'editable' | 'ui'>
+type IProps = Pick<ITableProps, 'editable' | 'ui' | 'to'>
 
 defineProps<IProps>()
 
