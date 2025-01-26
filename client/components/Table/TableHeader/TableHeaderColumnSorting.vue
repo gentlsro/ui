@@ -113,7 +113,7 @@ function handleSort(sort?: 'asc' | 'desc', ev?: PointerEvent) {
   }
 
   &__content {
-    @apply grid grid-cols-2 border-1 border-ca rounded-custom;
+    @apply grid grid-cols-2 border-1 border-ca rounded-custom dark:bg-black;
   }
 
   .is-active {

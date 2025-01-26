@@ -10,7 +10,7 @@ type IProps = Pick<ITableProps, 'search'>
 defineProps<IProps>()
 
 // Store
-const { internalColumns } = storeToRefs(useTableStore())
+const { isDataLoading, internalColumns } = storeToRefs(useTableStore())
 
 // Layout
 const search = defineModel<string>('search')
@@ -24,6 +24,8 @@ const searchableColumnLabels = computed(() => {
   <SearchInput
     v-model="search"
     grow
+    :debounce="500"
+    :loading="isDataLoading"
   >
     <template #append>
       <Btn

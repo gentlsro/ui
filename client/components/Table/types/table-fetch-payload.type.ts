@@ -6,4 +6,4 @@ import type { tableBuildFetchPayload } from '../functions/table-build-fetch-payl
 
 export type ITableFetchPayload<
   K extends typeof tableBuildFetchPayload = typeof tableBuildFetchPayload,
-> = ReturnType<NonNullable<NonNullable<ITableProps<K>['modifiers']>['buildFetchPayload']>>
+> = ReturnType<NonNullable<NonNullable<ITableProps<K>['modifiers']>['buildFetchPayload']>> & IItem

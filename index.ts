@@ -24,3 +24,6 @@ export type { INotification } from './client/components/Notification/types/notif
 // Table
 export { TableColumn } from './client/components/Table/models/table-column.model'
 export type { ITableFetchPayload } from './client/components/Table/types/table-fetch-payload.type'
+export type { ITableFilterGroup } from './client/components/Table/types/table-filter-group'
+export type { ITableFilterItem } from './client/components/Table/types/table-filter-item.type'
+export type { ITableFilterRow } from './client/components/Table/types/table-filter-row.type'

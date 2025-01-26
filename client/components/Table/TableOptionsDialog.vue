@@ -86,6 +86,6 @@ function setFitColumns(mode: NonNullable<IUIState['table']>['fit'], unset?: bool
 
 <style scoped lang="scss">
 .hint {
-  @apply text-caption rounded-custom p-2 bg-gray-50 dark:bg-gray-800;
+  @apply text-caption font-rem-12 rounded-custom p-2 bg-gray-50 dark:bg-dark;
 }
 </style>

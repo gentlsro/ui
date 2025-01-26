@@ -129,6 +129,7 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
           :index
           :editable
         >
+          <!-- Field slots -->
           <template
             v-for="col in visibleColumns"
             :key="col.name"
@@ -138,6 +139,14 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
               :name="col.name"
               :row
               :index
+            />
+          </template>
+
+          <!-- Row inside slot -->
+          <template #inner="rowInsideProps">
+            <slot
+              name="row-inside"
+              v-bind="rowInsideProps"
             />
           </template>
         </TableRow>

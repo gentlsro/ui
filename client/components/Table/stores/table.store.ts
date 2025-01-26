@@ -470,7 +470,7 @@ export function useTableStore(
         queryBuilder: queryBuilder.value,
         search: search.value,
         queryParams: queryParams.value,
-        orderBy: internalColumns.value.flatMap(col => col.sortDbQuery) as ITableSortItem[],
+        orderBy: internalColumns.value.flatMap(col => col.sortDbQuery).filter(Boolean) as ITableSortItem[],
         getStore,
         pagination: {
           skip: isFetchMore.value ? rows.value.length : skip.value,

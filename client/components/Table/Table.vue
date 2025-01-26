@@ -178,6 +178,14 @@ defineExpose(tableGetExposed())
           :index
         />
       </template>
+
+      <!-- Row inside slot -->
+      <template #row-inside="rowInsideProps">
+        <slot
+          name="row-inside"
+          v-bind="rowInsideProps"
+        />
+      </template>
     </TableContent>
 
     <TableEmpty v-else />

@@ -331,6 +331,12 @@ function handleEditCellMounted() {
           </slot>
         </div>
       </div>
+
+      <!-- Used for absolutely position info/element -->
+      <slot
+        name="inner"
+        mode="card"
+      />
     </div>
   </div>
 
@@ -359,12 +365,18 @@ function handleEditCellMounted() {
         />
       </slot>
     </div>
+
+    <!-- Used for absolutely position info/element -->
+    <slot
+      name="inner"
+      mode="row"
+    />
   </div>
 </template>
 
 <style scoped lang="scss">
 .tr {
-  @apply flex;
+  @apply flex relative;
 
   &-split {
     @apply grid w-full;
