@@ -43,8 +43,6 @@ export function useFileInput(payload: {
       model.value = filesArray
     }
 
-    console.log(props.multi, model.value)
-
     self?.emit('filesAdded', filesArray)
 
     reset()

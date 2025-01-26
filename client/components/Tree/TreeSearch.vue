@@ -14,8 +14,6 @@ const { search: storeSearch, nodes } = storeToRefs(useTreeStore())
 // Layout
 const search = defineModel<string>('search')
 
-console.log(nodes.value)
-
 syncRef(search, storeSearch, { direction: 'both' })
 </script>
 
