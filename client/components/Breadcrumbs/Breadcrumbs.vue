@@ -48,7 +48,7 @@ const breadcrumbsItems = computed(() => {
       :class="mergedProps.ui?.breadcrumbsClass"
       :style="mergedProps.ui?.breadcrumbsStyle"
     >
-      <HorizontalScroller content-class="flex items-center">
+      <HorizontalScroller>
         <template
           v-for="(breadcrumb, idx) in breadcrumbsItems"
           :key="idx"
