@@ -166,14 +166,12 @@ function parseItemSegment(
     value,
   ] = extractBracketContents(segment) as [ string, ComparatorEnum, string | undefined ]
 
-  console.log(segment, field, comparator, value)
-
   const col = columnsByFilterField[field] ?? columnsByField[field]
   const isComparator = Object.values(ComparatorEnum).includes(comparator)
   const isSelectorComparator = SELECTOR_COMPARATORS.includes(comparator)
 
   if (!isComparator) {
-    // throw new Error(`Invalid comparator: ${comparator}`)
+    throw new Error(`Invalid comparator: ${comparator}`)
   }
 
   const path = generatePath(parentPath, results.length)
