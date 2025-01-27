@@ -13,7 +13,7 @@ export function tableSerializeSorting(payload: {
   columns?: TableColumn[]
   sortItems?: ITableSortItem[]
   lastRow?: IItem
-  rowKey?: string
+  rowKey: string
 }): string {
   const { columns = [], sortItems } = payload
 
