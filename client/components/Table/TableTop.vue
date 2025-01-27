@@ -102,7 +102,7 @@ const isTableTopVisible = computed(() => {
   }
 
   &__center {
-    @apply flex flex-col gap-1;
+    @apply flex flex-col gap-1 self-center;
   }
 
   &__right {
