@@ -173,10 +173,9 @@ provide(formSubmitKey, formStore.handleSubmit)
       >
         <slot name="controls-start" />
 
-        {{ formControlsProps }}
-
         <FormControls
           v-bind="formControlsProps"
+          :edit-control="formControlsProps.editControls"
           :ui="mergedProps.ui"
           :has-confirmation
           :has-keyboard-shortcuts
