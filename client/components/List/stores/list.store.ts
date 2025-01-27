@@ -11,8 +11,6 @@ import type { FuseOptions } from '@vueuse/integrations/useFuse'
 import type { IListDragMeta } from '../types/list-drag-meta.type'
 import type { IListItemToAdd } from '../types/list-item-to-add.type'
 
-// Models
-
 // Functions
 import { listFetchData } from '../functions/list-fetch-data'
 import { buildListItems } from '../functions/build-list-items'

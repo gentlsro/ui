@@ -431,6 +431,7 @@ export function useTableStore(
       const res = await handleRequest(
         () => loadMetaData.value?.fnc?.(getStore),
         {
+          noResolve: true,
           onComplete: () => isMetaLoading.value = false,
           onError: error => {
             isMetaLoading.value = false
@@ -490,6 +491,7 @@ export function useTableStore(
       const res = await handleRequest(
         () => loadData.value?.fnc?.(fetchPayload),
         {
+          noResolve: true,
           onComplete: () => isDataLoading.value = false,
           onError: error => {
             isDataLoading.value = false
