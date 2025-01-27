@@ -21,6 +21,11 @@ export type { IListFetchPayload } from './client/components/List/types/list-fetc
 // Notification
 export type { INotification } from './client/components/Notification/types/notification.type'
 
+// Query builder
+export type { IQueryBuilderRow } from './client/components/QueryBuilder/types/query-builder-row-props.type'
+export type { IQueryBuilderItem } from './client/components/QueryBuilder/types/query-builder-item-props.type'
+export type { IQueryBuilderGroup } from './client/components/QueryBuilder/types/query-builder-group-props.type'
+
 // Table
 export { TableColumn } from './client/components/Table/models/table-column.model'
 export type { ITableFetchPayload } from './client/components/Table/types/table-fetch-payload.type'
