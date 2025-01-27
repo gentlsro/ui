@@ -173,6 +173,8 @@ provide(formSubmitKey, formStore.handleSubmit)
       >
         <slot name="controls-start" />
 
+        {{ formControlsProps }}
+
         <FormControls
           v-bind="formControlsProps"
           :ui="mergedProps.ui"
