@@ -160,11 +160,13 @@ function parseItemSegment(
 
   const segment = endIdx === -1 ? filterStr.slice(idx) : filterStr.slice(idx, endIdx)
 
-  const [field, comparator, value] = extractBracketContents(segment) as [
-    string,
-    ComparatorEnum,
-    string | undefined,
-  ]
+  const [
+    field,
+    comparator,
+    value,
+  ] = extractBracketContents(segment) as [ string, ComparatorEnum, string | undefined ]
+
+  console.log(segment, field, comparator, value)
 
   const col = columnsByFilterField[field] ?? columnsByField[field]
   const isComparator = Object.values(ComparatorEnum).includes(comparator)
@@ -298,8 +300,6 @@ export function tableExtractFiltersFromUrl(payload: {
    */
   modifyFnc?: (queryString: string, key: string) => string
 }) {
-  console.log(payload.modifiers)
-
   // Column filters
   const filters = extractFilterPartFromUrl({
     ...payload,
