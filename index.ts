@@ -28,6 +28,7 @@ export type { IQueryBuilderGroup } from './client/components/QueryBuilder/types/
 
 // Table
 export { TableColumn } from './client/components/Table/models/table-column.model'
+export type { ITableSortItem } from './client/components/Table/types/table-sort-item.type'
 export type { ITableFetchPayload } from './client/components/Table/types/table-fetch-payload.type'
 export type { ITableFilterGroup } from './client/components/Table/types/table-filter-group'
 export type { ITableFilterItem } from './client/components/Table/types/table-filter-item.type'
