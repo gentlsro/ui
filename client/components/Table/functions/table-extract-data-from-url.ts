@@ -25,7 +25,7 @@ export function tableExtractDataFromUrl(payload: {
   } = payload
 
   const {
-    extractFiltersFromUrl = tableExtractFiltersFromUrl,
+    extractFiltersFromUrl,
     extractSortingFromUrl = tableExtractSortingFromUrl,
     extractSelectedColumnsFromUrl = tableExtractSelectedColumnsFromUrl,
     extractPaginationFromUrl = tableExtractPaginationFromUrl,
@@ -33,6 +33,8 @@ export function tableExtractDataFromUrl(payload: {
 
   const params = new URLSearchParams(searchParams ?? '')
   const _columns = toValue(columns)
+
+  console.log(extractFiltersFromUrl)
 
   // Sorting
   const sort = extractSortingFromUrl(params)
