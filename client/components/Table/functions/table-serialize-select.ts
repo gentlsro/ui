@@ -13,8 +13,8 @@ export function tableSerializeSelect(payload: {
   const { columns = [], select } = payload
 
   const _select = select ?? columns
-    .filter(col => !col.isHelperCol && !col.hidden)
+    .filter(col => col.alwaysSelected || (!col.isHelperCol && !col.hidden))
     .flatMap(col => [...(col.local ? [] : [col.field]), ...(col.needsFields ?? [])])
 
-  return _select.join(',')
+  return uniq(_select).join(',')
 }
