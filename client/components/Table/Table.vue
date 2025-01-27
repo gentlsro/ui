@@ -40,7 +40,7 @@ const queryBuilder = defineModel<IQueryBuilderRow[]>('queryBuilder', { default: 
 const selection = defineModel<ITableProps['selection']>('selection')
 
 // Stores
-const store = useTableStore()
+const store = useTableStore({ tableProps: { ...props, ...mergedProps.value } })
 const {
   headerEl,
   totalsEl,

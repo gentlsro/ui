@@ -32,9 +32,9 @@ import type HorizontalScroller from '../../Scroller/HorizontalScroller.vue'
 import { tableBuildFetchPayload } from '../functions/table-build-fetch-payload'
 
 export function useTableStore(
-  config?: { tableId?: string },
+  config?: { tableId?: string, tableProps?: ITableProps },
 ) {
-  const { tableId } = config ?? {}
+  const { tableId, tableProps } = config ?? {}
   const _tableId = tableId ?? injectLocal(tableIdKey, tableId ?? useId())
 
   const { uiState } = storeToRefs(useUIStore())
@@ -76,7 +76,7 @@ export function useTableStore(
     // !SECTION
 
     // SECTION Configs
-    const modifiers = ref<ITableProps['modifiers']>()
+    const modifiers = ref<ITableProps['modifiers']>(tableProps?.modifiers)
     const splitRowsConfig = ref<ITableProps['splitRows']>([])
     const loadMetaData = ref<ITableProps['loadMetaData']>()
     const loadData = ref<ITableProps['loadData']>()
