@@ -27,7 +27,7 @@ export function tableExtractDataFromUrl(payload: {
   const {
     extractFiltersFromUrl,
     extractSortingFromUrl,
-    extractSelectedColumnsFromUrl,
+    extractSelectedColumnsFromUrl = tableExtractSelectedColumnsFromUrl,
     extractPaginationFromUrl,
   } = modifiers ?? {}
 
