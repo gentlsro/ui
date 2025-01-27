@@ -117,7 +117,7 @@ defineExpose({
 }
 
 .content {
-  @apply flex items-center grow overflow-auto;
+  @apply flex grow overflow-auto;
 }
 
 .arrow {
