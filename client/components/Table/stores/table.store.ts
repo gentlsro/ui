@@ -14,6 +14,7 @@ import type { TableColumn } from '../models/table-column.model'
 import { tableIdKey } from '../provide/table.provide'
 
 // Functions
+import { tableNavigate } from '../functions/table-navigate'
 import { tableMergeColumns } from '../functions/table-merge-columns'
 import { getListItemKey } from '../../List/functions/helpers'
 import { extendColumns } from '../functions/table-extend-columns'
@@ -29,7 +30,6 @@ import { queryBuilderInitializeItems } from '../../QueryBuilder/functions/query-
 // Components
 import type HorizontalScroller from '../../Scroller/HorizontalScroller.vue'
 import { tableBuildFetchPayload } from '../functions/table-build-fetch-payload'
-import { tableNavigate } from '../functions/table-navigate'
 
 export function useTableStore(
   config?: { tableId?: string },

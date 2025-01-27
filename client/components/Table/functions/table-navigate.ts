@@ -5,7 +5,8 @@ export function tableNavigate(payload: {
   queryParams: URLSearchParams
   isInfiniteScroll?: boolean
 }) {
-  const { column, queryParams, isInfiniteScroll } = payload
+  const { queryParams, isInfiniteScroll } = payload
+  console.log('Log ~ isInfiniteScroll:', isInfiniteScroll)
   const currentParams = useRequestURL().searchParams
 
   // Get only non-table related params
