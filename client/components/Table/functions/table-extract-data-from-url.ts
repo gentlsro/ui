@@ -24,6 +24,8 @@ export function tableExtractDataFromUrl(payload: {
     modifiers,
   } = payload
 
+  console.log(modifiers)
+
   const {
     extractFiltersFromUrl,
     extractSortingFromUrl,
