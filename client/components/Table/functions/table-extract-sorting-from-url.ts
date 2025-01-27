@@ -7,10 +7,10 @@ import type { TableColumn } from '../models/table-column.model'
  */
 export function tableExtractSortingFromUrl(
   params: URLSearchParams,
-  options?: { key?: string },
+  options?: { paramKey?: string },
 ): Array<Pick<TableColumn, 'field' | 'sort' | 'sortOrder'>> {
-  const { key = 'order' } = options ?? {}
-  const sort = params.get(key)
+  const { paramKey = 'order' } = options ?? {}
+  const sort = params.get(paramKey)
 
   if (!sort) {
     return []
