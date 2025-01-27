@@ -99,6 +99,12 @@ export function useTableStore(
     const minimumColumnWidth = ref(80)
     const breakpoint = ref(0)
 
+    /**
+     * We sometimes need to save some custom data in table context to access it in
+     * a component or similar.
+     */
+    const customData = ref<IItem>({})
+
     // General helper that triggers the sync of the state columns
     const columnWidths = computed(() => {
       return internalColumns.value.map(col => col.width).join(',')
@@ -493,10 +499,7 @@ export function useTableStore(
       )
 
       const resModified = loadData.value?.onFetch?.(res) ?? res
-      const {
-        payloadKey = 'data',
-        countKey = 'count',
-      } = loadData.value ?? {}
+      const { payloadKey = 'data', countKey = 'count' } = loadData.value ?? {}
 
       const rowsFetched = get(resModified, payloadKey) ?? []
       const countFetched = get(resModified, countKey) ?? 0
@@ -543,6 +546,7 @@ export function useTableStore(
       allowComparatorsOfSameType,
       minimumColumnWidth,
       breakpoint,
+      customData,
 
       // Rows
       rows,
