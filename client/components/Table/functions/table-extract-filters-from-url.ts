@@ -298,6 +298,8 @@ export function tableExtractFiltersFromUrl(payload: {
    */
   modifyFnc?: (queryString: string, key: string) => string
 }) {
+  console.log(payload.modifiers)
+
   // Column filters
   const filters = extractFilterPartFromUrl({
     ...payload,
