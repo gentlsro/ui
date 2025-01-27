@@ -173,7 +173,7 @@ function parseItemSegment(
   const isSelectorComparator = SELECTOR_COMPARATORS.includes(comparator)
 
   if (!isComparator) {
-    throw new Error(`Invalid comparator: ${comparator}`)
+    // throw new Error(`Invalid comparator: ${comparator}`)
   }
 
   const path = generatePath(parentPath, results.length)
