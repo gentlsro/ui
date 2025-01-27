@@ -28,7 +28,7 @@ export function tableExtractDataFromUrl(payload: {
     extractFiltersFromUrl,
     extractSortingFromUrl,
     extractSelectedColumnsFromUrl = tableExtractSelectedColumnsFromUrl,
-    extractPaginationFromUrl,
+    extractPaginationFromUrl = tableExtractPaginationFromUrl,
   } = modifiers ?? {}
 
   const params = new URLSearchParams(searchParams ?? '')
