@@ -99,7 +99,7 @@ export function useTableColumnResizing() {
     }
 
     const splitterCopy = klona(omit(splitter, ['column']))
-    const headerDom = unrefElement(headerEl)!
+    const headerDom = unrefElement(headerEl as any) as HTMLElement
     const { y: headerY, height: headerHeight } = headerDom.getBoundingClientRect()
 
     const { height: tableHeight }

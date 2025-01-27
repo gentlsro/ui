@@ -10,7 +10,7 @@ const emits = defineEmits<{
 const { isLoading, listItems } = storeToRefs(useListStore())
 
 // Layout
-const bannerEl = useTemplateRef('bannerEl')
+const bannerEl = useTemplateRef('bannerEl') as any
 const { height, width } = useElementSize(bannerEl)
 
 watch(height, h => {
