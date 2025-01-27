@@ -322,9 +322,8 @@ export function useTableStore(
     // SECTION Query
     const sortingSerialized = computed(() => {
       const { serializeSorting = tableSerializeSorting } = modifiers.value ?? {}
-      const lastRow = rows.value[rows.value.length - 1] as IItem
 
-      return serializeSorting({ columns: internalColumns.value, lastRow, rowKey: rowKey.value })
+      return serializeSorting({ columns: internalColumns.value })
     })
 
     const selectSerialized = computed(() => {
