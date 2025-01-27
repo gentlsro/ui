@@ -77,27 +77,26 @@ export function useTableStore(
 
     // SECTION Configs
     const modifiers = ref<ITableProps['modifiers']>(tableProps?.modifiers)
-    const splitRowsConfig = ref<ITableProps['splitRows']>([])
-    const loadMetaData = ref<ITableProps['loadMetaData']>()
-    const loadData = ref<ITableProps['loadData']>()
-    const queryBuilderProps = ref<ITableProps['queryBuilderProps']>()
-    const autofitConfig = ref<ITableProps['autoFit']>()
-    const features = ref<ITableProps['features']>([])
-    const paginationConfig = ref<NonNullable<ITableProps['paginationConfig']>>({
-      pageSize: 10,
-      options: [10, 25, 50, 100],
-    })
+    const splitRowsConfig = ref<ITableProps['splitRows']>(tableProps?.splitRows ?? [])
+    const loadMetaData = ref<ITableProps['loadMetaData']>(tableProps?.loadMetaData)
+    const loadData = ref<ITableProps['loadData']>(tableProps?.loadData)
+    const queryBuilderProps = ref<ITableProps['queryBuilderProps']>(tableProps?.queryBuilderProps)
+    const autofitConfig = ref<ITableProps['autoFit']>(tableProps?.autoFit)
+    const features = ref<ITableProps['features']>(tableProps?.features ?? [])
+    const paginationConfig = ref<NonNullable<ITableProps['paginationConfig']>>(
+      tableProps?.paginationConfig ?? { pageSize: 10, options: [10, 25, 50, 100] },
+    )
     const selectionConfig = ref<ITableProps['selectionConfig']>()
     // !SECTION
 
     // SECTION General
-    const rowKey = ref<string>('id')
-    const search = ref('')
-    const queryBuilder = ref<IQueryBuilderRow[]>([])
-    const emptyValue = ref<any>()
-    const allowComparatorsOfSameType = ref(false)
-    const minimumColumnWidth = ref(80)
-    const breakpoint = ref(0)
+    const rowKey = ref<string>(tableProps?.rowKey ?? 'id')
+    const search = ref(tableProps?.search ?? '')
+    const queryBuilder = ref<IQueryBuilderRow[]>(tableProps?.queryBuilder ?? [])
+    const emptyValue = ref<any>(tableProps?.emptyValue)
+    const allowComparatorsOfSameType = ref(tableProps?.allowComparatorsOfSameType ?? false)
+    const minimumColumnWidth = ref(tableProps?.minimumColumnWidth ?? 80)
+    const breakpoint = ref(tableProps?.breakpoint ?? 0)
 
     /**
      * We sometimes need to save some custom data in table context to access it in
@@ -112,9 +111,9 @@ export function useTableStore(
     // !SECTION
 
     // SECTION Rows
-    const rows = ref<IItem[]>([])
+    const rows = ref<IItem[]>(tableProps?.rows ?? [])
     const totalRows = ref(0)
-    const rowsLimit = ref(0)
+    const rowsLimit = ref(tableProps?.rowsLimit ?? 0)
     const hasMore = ref(false)
     const isFetchMore = ref(false)
 
@@ -176,7 +175,7 @@ export function useTableStore(
 
     // We have 3 sources of columns - state, api and props
     const apiColumns = shallowRef<Partial<TableColumn<any>>[]>()
-    const propsColumns = shallowRef<TableColumn<any>[]>()
+    const propsColumns = shallowRef<TableColumn<any>[]>(tableProps?.columns as TableColumn<any>[])
 
     // Column initialization
     const columnsMerged = computedWithControl(
@@ -270,7 +269,7 @@ export function useTableStore(
     // !SECTION
 
     // SECTION Selection
-    const selection = ref<ITableProps['selection']>()
+    const selection = ref<ITableProps['selection']>(tableProps?.selection)
 
     const selectionByKey = computed(() => {
       const _selection = Array.isArray(selection.value)
