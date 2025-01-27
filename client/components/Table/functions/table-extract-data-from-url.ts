@@ -44,6 +44,8 @@ export function tableExtractDataFromUrl(payload: {
     modifiers,
   })
 
+  console.log('What teh fuck')
+
   // Column selection
   const visibleColumns = extractSelectedColumnsFromUrl(params, _columns)
 
