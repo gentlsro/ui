@@ -18,7 +18,9 @@ export function useTableAutoFit() {
 
   const tableSlots = inject(tableSlotsKey)
 
-  async function fitColumns(ev?: Partial<Pick<PointerEvent, 'shiftKey' | 'ctrlKey' | 'metaKey'>>) {
+  async function fitColumns(
+    ev?: Partial<Pick<PointerEvent, 'shiftKey' | 'ctrlKey' | 'metaKey'>>,
+  ) {
     if (!ev && !uiState.value.table?.fit) {
       return
     }

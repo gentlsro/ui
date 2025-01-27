@@ -13,7 +13,9 @@ export function tableInitialize() {
       if (loadData.value?.fnc && isImmediate) {
         tableStore.fetchAndSetData({ force: true })
           .then(() => {
-            fitColumns()
+            if (rows.value.length) {
+              fitColumns()
+            }
             isInitialLoad.value = false
           })
       } else {
