@@ -963,7 +963,7 @@ const defaultComponentsConfig = {
         useUrl: true,
       }),
       paginationConfig: () => ({
-        enabled: true,
+        enabled: false,
         pageSize: 25,
         options: [10, 25, 50, 100],
       }),
