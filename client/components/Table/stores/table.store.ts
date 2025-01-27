@@ -23,13 +23,13 @@ import { tableBuildQueryParams } from '../functions/table-build-query-params'
 import { tableSerializeFilters } from '../functions/table-serialize-filters'
 import { tableSerializeSorting } from '../functions/table-serialize-sorting'
 import { tableSerializeSelect } from '../functions/table-serialize-select'
+import { tableSerializePagination } from '../functions/table-serialize-pagination'
 import { queryBuilderInitializeItems } from '../../QueryBuilder/functions/query-builder-initialize-items'
 
 // Components
 import type HorizontalScroller from '../../Scroller/HorizontalScroller.vue'
 import { tableBuildFetchPayload } from '../functions/table-build-fetch-payload'
 import { tableNavigate } from '../functions/table-navigate'
-import { tableSerializePagination } from '../functions/table-serialize-pagination'
 
 export function useTableStore(
   config?: { tableId?: string },
@@ -322,8 +322,9 @@ export function useTableStore(
     // SECTION Query
     const sortingSerialized = computed(() => {
       const { serializeSorting = tableSerializeSorting } = modifiers.value ?? {}
+      const lastRow = rows.value[rows.value.length - 1] as IItem
 
-      return serializeSorting({ columns: internalColumns.value })
+      return serializeSorting({ columns: internalColumns.value, lastRow })
     })
 
     const selectSerialized = computed(() => {
