@@ -206,7 +206,14 @@ watch(
         :option-label
         :empty-value
         :multi
-      />
+      >
+        <template #default="{ item }">
+          <slot
+            name="selection-item"
+            :item
+          />
+        </template>
+      </SelectorInner>
     </slot>
 
     <!-- Append -->

@@ -51,15 +51,20 @@ function handleRemove(idx: number) {
     :class="ui?.innerClass"
     :style="ui?.innerStyle"
   >
-    <SelectorChip
-      v-for="(file, idx) in modelArray"
+    <template
+      v-for="(item, idx) in modelArray"
       :key="idx"
-      :chip="file"
-      :class="ui?.chipClass"
-      :style="ui?.chipStyle"
-      :option-label
-      @remove="handleRemove(idx)"
-    />
+    >
+      <slot :item>
+        <SelectorChip
+          :chip="item"
+          :class="ui?.chipClass"
+          :style="ui?.chipStyle"
+          :option-label
+          @remove="handleRemove(idx)"
+        />
+      </slot>
+    </template>
   </HorizontalScroller>
 
   <ScrollArea
@@ -68,15 +73,20 @@ function handleRemove(idx: number) {
     :class="[ui?.innerClass, { 'is-editable': isEditable }]"
     :style="{ ...ui?.innerStyle, maxHeight }"
   >
-    <SelectorChip
-      v-for="(file, idx) in modelArray"
+    <template
+      v-for="(item, idx) in modelArray"
       :key="idx"
-      :chip="file"
-      :class="ui?.chipClass"
-      :style="ui?.chipStyle"
-      :option-label
-      @remove="handleRemove(idx)"
-    />
+    >
+      <slot :item>
+        <SelectorChip
+          :chip="item"
+          :class="ui?.chipClass"
+          :style="ui?.chipStyle"
+          :option-label
+          @remove="handleRemove(idx)"
+        />
+      </slot>
+    </template>
   </ScrollArea>
 </template>
 
