@@ -734,7 +734,7 @@ const defaultComponentsConfig = {
       fractionDigits: 2,
       required: undefined,
       size: 'md',
-      stackLabel: true,
+      stackLabel: undefined,
       min: Number.NEGATIVE_INFINITY,
       max: Number.POSITIVE_INFINITY,
       step: 'auto',
