@@ -91,9 +91,7 @@ const isTableTopVisible = computed(() => {
 
 <style scoped lang="scss">
 .table-top {
-  @apply grid p-x-2 p-y-1 gap-1;
-
-  grid-template-columns: auto 1fr auto;
+  @apply flex p-x-2 p-y-1 gap-1;
 
   &__left {
     @apply flex flex-col shrink-0 order-10;
