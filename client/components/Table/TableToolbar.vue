@@ -130,20 +130,24 @@ function handleClearSorting() {
         v-if="!isCardView"
         name="autofit"
       >
-        <TableAutofitBtn v-if="featuresEnabledByName.autofit" />
+        <TableAutofitBtn
+          v-if="featuresEnabledByName.autofit"
+          order="10"
+        />
       </slot>
 
       <!-- Columns -->
       <slot name="columns">
-        <TableColumnSelectionBtn />
+        <TableColumnSelectionBtn order="20" />
       </slot>
 
+      <!-- Layout -->
       <slot name="layout">
-        <TableLayoutSelector />
+        <TableLayoutSelector order="30" />
       </slot>
-    </div>
 
-    <slot name="append" />
+      <slot name="append" />
+    </div>
   </div>
 </template>
 
