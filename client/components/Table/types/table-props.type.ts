@@ -157,7 +157,10 @@ export type ITableProps<
     /**
      * The function to get the metadata
      */
-    fnc?: (getStore: () => ReturnType<typeof useTableStore>) => any | Promise<any>
+    fnc?: (payload: {
+      tablePayload: ITableFetchPayload<K>
+      getStore: () => ReturnType<typeof useTableStore>
+    }) => any | Promise<any>
 
     /**
      * The key in the response that contains the columns
@@ -198,7 +201,6 @@ export type ITableProps<
      */
     onFetch?: (payload: {
       res: any
-      tablePayload: ITableFetchPayload<K>
       getStore: () => ReturnType<typeof useTableStore>
     }
     ) => IItem & { _preventFetchData?: boolean }

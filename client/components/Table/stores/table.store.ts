@@ -446,7 +446,7 @@ export function useTableStore(
 
       isMetaLoading.value = true
       const res = await handleRequest(
-        () => loadMetaData.value?.fnc?.(getStore),
+        () => loadMetaData.value?.fnc?.({ tablePayload: fetchPayload, getStore }),
         {
           noResolve: true,
           onComplete: () => isMetaLoading.value = false,
@@ -458,11 +458,7 @@ export function useTableStore(
       )
 
       state.value.metaRaw = res
-      const resModified = loadMetaData.value?.onFetch?.({
-        res,
-        tablePayload: fetchPayload,
-        getStore,
-      }) ?? res
+      const resModified = loadMetaData.value?.onFetch?.({ res, getStore }) ?? res
 
       const {
         columnsKey = 'columns',
