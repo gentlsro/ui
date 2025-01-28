@@ -48,7 +48,6 @@ export async function listFetchData(payload: {
     })
   }, { noResolve: true })
 
-  console.log(payloadKey, countKey, res)
   let _items = payloadKey ? get(res, payloadKey) : res
   const _count = countKey ? get(res, countKey) : _items.length
 
