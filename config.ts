@@ -426,7 +426,7 @@ const defaultComponentsConfig = {
       }),
       ui: () => ({
         submitWrapperClass: 'm-l-auto',
-        contentClass: 'flex grow p-x-2 p-t-2 gap-2 overflow-auto',
+        contentClass: 'flex flex-col grow p-x-2 p-t-2 gap-2 overflow-auto',
         controlsClass: 'border-t-1 border-ca sticky bottom-0 bg-white dark:bg-darker p-2',
         containerClass: 'flex flex-col grow overflow-auto',
         submitClass: 'bg-primary color-white w-40',
