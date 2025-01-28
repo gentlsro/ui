@@ -15,21 +15,21 @@ import { tableIdKey } from '../provide/table.provide'
 
 // Functions
 import { tableNavigate } from '../functions/table-navigate'
-import { tableMergeColumns } from '../functions/table-merge-columns'
 import { getListItemKey } from '../../List/functions/helpers'
 import { extendColumns } from '../functions/table-extend-columns'
+import { tableMergeColumns } from '../functions/table-merge-columns'
 import { getStateColumnData } from '../functions/get-state-column-data'
+import { tableSerializeSelect } from '../functions/table-serialize-select'
 import { tableTransformColumns } from '../functions/table-transform-columns'
 import { tableBuildQueryParams } from '../functions/table-build-query-params'
 import { tableSerializeFilters } from '../functions/table-serialize-filters'
 import { tableSerializeSorting } from '../functions/table-serialize-sorting'
-import { tableSerializeSelect } from '../functions/table-serialize-select'
+import { tableBuildFetchPayload } from '../functions/table-build-fetch-payload'
 import { tableSerializePagination } from '../functions/table-serialize-pagination'
 import { queryBuilderInitializeItems } from '../../QueryBuilder/functions/query-builder-initialize-items'
 
 // Components
 import type HorizontalScroller from '../../Scroller/HorizontalScroller.vue'
-import { tableBuildFetchPayload } from '../functions/table-build-fetch-payload'
 
 export function useTableStore(
   config?: { tableId?: string, tableProps?: ITableProps },
