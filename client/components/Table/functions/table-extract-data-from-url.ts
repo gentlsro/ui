@@ -24,11 +24,9 @@ export function tableExtractDataFromUrl(payload: {
     modifiers,
   } = payload
 
-  console.log(modifiers)
-
   const {
-    extractFiltersFromUrl,
-    extractSortingFromUrl,
+    extractFiltersFromUrl = tableExtractFiltersFromUrl,
+    extractSortingFromUrl = tableExtractSortingFromUrl,
     extractSelectedColumnsFromUrl = tableExtractSelectedColumnsFromUrl,
     extractPaginationFromUrl = tableExtractPaginationFromUrl,
   } = modifiers ?? {}
