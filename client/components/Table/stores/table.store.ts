@@ -617,6 +617,7 @@ export function useTableStore(
       // Data fetching
       fetchAndSetMetaData,
       fetchAndSetData,
+      runOnDataFetchQueue,
     }
   })()
 }
