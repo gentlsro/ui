@@ -426,6 +426,24 @@ export function useTableStore(
         return
       }
 
+      const { buildFetchPayload = tableBuildFetchPayload } = modifiers.value ?? {}
+
+      const lastRow = rows.value[rows.value.length - 1] as IItem
+      const fetchPayload = buildFetchPayload({
+        columns: internalColumns.value,
+        queryBuilder: queryBuilder.value,
+        search: search.value,
+        queryParams: queryParams.value,
+        orderBy: internalColumns.value.flatMap(col => col.sortDbQuery).filter(Boolean) as ITableSortItem[],
+        getStore,
+        pagination: {
+          skip: isFetchMore.value ? rows.value.length : skip.value,
+          take: paginationConfig.value?.pageSize ?? 10,
+        },
+
+        ...(isFetchMore.value && { fetchMore: { lastRow, hasMore: hasMore.value } }),
+      })
+
       isMetaLoading.value = true
       const res = await handleRequest(
         () => loadMetaData.value?.fnc?.(getStore),
@@ -440,7 +458,11 @@ export function useTableStore(
       )
 
       state.value.metaRaw = res
-      const resModified = loadMetaData.value?.onFetch?.(res, getStore) ?? res
+      const resModified = loadMetaData.value?.onFetch?.({
+        res,
+        tablePayload: fetchPayload,
+        getStore,
+      }) ?? res
 
       const {
         columnsKey = 'columns',
@@ -468,9 +490,7 @@ export function useTableStore(
 
       isFetchMore.value = hasMore.value && !!payload?.isFetchMore
 
-      const {
-        buildFetchPayload = tableBuildFetchPayload,
-      } = modifiers.value ?? {}
+      const { buildFetchPayload = tableBuildFetchPayload } = modifiers.value ?? {}
 
       const lastRow = rows.value[rows.value.length - 1] as IItem
       const fetchPayload = buildFetchPayload({

@@ -196,9 +196,11 @@ export type ITableProps<
      * Use-case: if your `loadMetaData.fnc` also returns the actual data, you can manually
      * set the `rows` and whatever data in the store you want, and prevent the data from being fetched again
      */
-    onFetch?: (
-      res: any,
+    onFetch?: (payload: {
+      res: any
+      tablePayload: ITableFetchPayload<K>
       getStore: () => ReturnType<typeof useTableStore>
+    }
     ) => IItem & { _preventFetchData?: boolean }
   }
 
