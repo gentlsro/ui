@@ -91,7 +91,7 @@ const isTableTopVisible = computed(() => {
 
 <style scoped lang="scss">
 .table-top {
-  @apply flex p-x-2 p-y-1 gap-1;
+  @apply flex items-start p-x-2 p-y-1 gap-1;
 
   &__left {
     @apply flex flex-col shrink-0 order-10;
@@ -106,7 +106,7 @@ const isTableTopVisible = computed(() => {
   }
 
   &__export {
-    @apply order-40;
+    @apply order-40 m-t-1;
   }
 }
 </style>
