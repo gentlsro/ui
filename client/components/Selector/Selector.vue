@@ -207,10 +207,11 @@ watch(
         :empty-value
         :multi
       >
-        <template #default="{ item }">
+        <template #default="{ item, index }">
           <slot
             name="selection-item"
             :item
+            :index
           />
         </template>
       </SelectorInner>
