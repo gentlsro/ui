@@ -930,7 +930,7 @@ const defaultComponentsConfig = {
   tab: {
     props: {
       name: undefined,
-      btnProps: () => ({ noUppercase: true }),
+      btnProps: () => ({ noDim: true, noUppercase: true }),
     },
     merge: ['btnProps'],
   },
