@@ -1,9 +1,10 @@
 /* eslint-disable perfectionist/sort-exports */
 
 // General
+export type { ISelection } from './client/types/selection.type'
+export * from './client/types/component-props.type'
 export { BREAKPOINTS } from './shared/constants/breakpoints'
 export { getComponentMergedProps, getComponentProps } from './client/functions/get-component-props'
-export * from './client/types/component-props.type'
 
 // Btn
 export { BUTTON_PRESET } from './client/components/Button/constants/button-preset.constant'
