@@ -334,8 +334,6 @@ export function useTableStore(
     const queryBuilderSerialized = computed(() => {
       const { serializeFilters = tableSerializeFilters } = modifiers.value ?? {}
 
-      console.log(serializeFilters(queryBuilder.value))
-
       return serializeFilters(queryBuilder.value)
     })
 
