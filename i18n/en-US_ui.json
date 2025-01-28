@@ -63,7 +63,8 @@
     "autoStretchColumnsExplain": "When accessing the table, the columns' widths will be adjusted based on the content AND the container width, while stretching the columns at least to the container's width",
     "autoJustifyColumnsExplain2": "Note: There are special cases when the column width will be auto-adjusted based on internally predefined values",
     "nonInteractiveColumn": "Non-interactive column",
-    "useLayout": "Use layout"
+    "useLayout": "Use layout",
+    "filteredManually": "Filtered manually"
   },
   "queryBuilder": {
     "and": "and",

@@ -182,6 +182,15 @@ function debouncedSync(ms: number) {
         :modify-fnc
         :remove-fnc
       />
+
+      <Banner
+        v-if="column.filterDbQuery?.length"
+        :label="$t('table.filteredManually')"
+        outlined
+        variant="info"
+        icon-center
+        m="x-2"
+      />
     </MenuProxy>
   </Btn>
 </template>
