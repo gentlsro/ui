@@ -79,7 +79,7 @@ watch(counter, bounce)
       <!-- Icon -->
       <div
         class="banner-icon"
-        :class="{ 'self-start': !iconCenter }"
+        :class="{ 'self-start m-t-2': !iconCenter }"
       >
         <div :class="[iconClass, icon]" />
       </div>
@@ -105,11 +105,10 @@ watch(counter, bounce)
 
 <style lang="scss" scoped>
 .banner {
-  @apply flex flex-gap-x-2 items-center rounded-custom p-x-2 relative
-    min-h-12 color-true-gray;
+  @apply flex flex-gap-x-2 items-center rounded-custom p-x-2 relative color-true-gray;
 
   &-icon {
-    @apply flex min-h-12 shrink-0 p-y-3;
+    @apply flex shrink-0;
   }
 
   &-text {
