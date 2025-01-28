@@ -56,5 +56,10 @@ export function tableSerializeFilters(
       }
     })
     .filter(Boolean)
+    .filter(row => {
+      const isEmptyCondition = row === 'and()' || row === 'or()'
+
+      return !isEmptyCondition
+    })
     .join(',')
 }
