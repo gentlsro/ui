@@ -97,7 +97,7 @@ function handleClearSorting() {
       <!-- Sorting -->
       <slot name="sorting">
         <HorizontalScroller
-          v-if="featuresEnabledByName.sorting"
+          v-if="featuresEnabledByName.sorting && tableSorting.length"
           :ui="{ contentClass: 'items-center gap-1' }"
           grow
         >
@@ -113,7 +113,6 @@ function handleClearSorting() {
           />
 
           <Btn
-            v-if="tableSorting.length"
             preset="TRASH"
             size="xs"
             :label="$t('general.sorting.clear')"
