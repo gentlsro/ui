@@ -71,42 +71,44 @@ const isTableTopVisible = computed(() => {
     </div>
 
     <!-- Right -->
-    <div class="table-top__right">
-      <!-- Remove filters -->
-      <Separator v-bind="{ vertical: true, class: 'm-t-2' }" />
-      <TableTopRemoveFiltersBtn :features-enabled-by-name />
+    <!-- Remove filters -->
+    <TableTopRemoveFiltersBtn
+      class="table-top__remove-filters"
+      :features-enabled-by-name
+    />
 
-      <!-- Export data -->
-      <slot name="export">
-        <template v-if="featuresEnabledByName.export">
-          <Separator v-bind="{ vertical: true, class: 'm-t-2' }" />
+    <!-- Export data -->
+    <slot name="export">
+      <TableExportBtn
+        v-if="featuresEnabledByName.export"
+        class="table-top__export"
+      />
+    </slot>
 
-          <TableExportBtn
-            v-if="featuresEnabledByName.export"
-            m="t-1"
-          />
-        </template>
-      </slot>
-    </div>
+    <slot />
   </div>
 </template>
 
 <style scoped lang="scss">
 .table-top {
-  @apply grid p-x-2 p-y-1;
+  @apply grid p-x-2 p-y-1 gap-1;
 
   grid-template-columns: auto 1fr auto;
 
   &__left {
-    @apply flex flex-col;
+    @apply flex flex-col shrink-0 order-10;
   }
 
   &__center {
-    @apply flex flex-col gap-1 self-center;
+    @apply grow flex flex-col gap-1 self-center order-20;
   }
 
-  &__right {
-    @apply flex items-start gap-1 p-l-1;
+  &__remove-filters {
+    @apply order-30;
+  }
+
+  &__export {
+    @apply order-40;
   }
 }
 </style>
