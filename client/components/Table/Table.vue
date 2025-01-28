@@ -133,6 +133,7 @@ defineExpose(tableGetExposed())
     <slot
       name="toolbar"
       :ui="mergedProps.ui"
+      :features
     >
       <TableToolbar
         :features

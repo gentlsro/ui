@@ -6,7 +6,7 @@ import type { TableFeature } from './types/table-feature.type'
 // Store
 import { useTableStore } from './stores/table.store'
 
-type IProps = Pick<ITableProps, 'queryBuilder' | 'queryBuilderProps' | 'search' | 'features' | 'ui'>
+type IProps = Pick<ITableProps, 'features' | 'ui'>
 
 const props = defineProps<IProps>()
 
