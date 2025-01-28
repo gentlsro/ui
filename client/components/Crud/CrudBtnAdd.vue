@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { RouteLocationRaw } from '#vue-router'
+
 // Types
 import type { ICrudBtnProps } from './types/crud-btn-props.type'
 
@@ -6,7 +8,7 @@ import type { ICrudBtnProps } from './types/crud-btn-props.type'
 import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
 
 type IProps = ICrudBtnProps & {
-  to?: any // should be RouteLocationRaw but that breaks some projects for whatever reason
+  to?: RouteLocationRaw
 }
 
 const props = withDefaults(defineProps<IProps>(), {
@@ -37,6 +39,7 @@ const label = computed(() => {
     :loading
     :disabled
     v-bind="mergedProps.btnProps"
+    :to
     data-cy="add-button"
   />
 </template>
