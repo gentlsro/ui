@@ -20,6 +20,7 @@ export function tableInitialize() {
       }
 
       if (loadData.value?.fnc && isImmediate) {
+        console.log('Table initialize')
         tableStore.fetchAndSetData({ force: true })
           .then(() => {
             if (rows.value.length) {

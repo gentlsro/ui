@@ -399,6 +399,7 @@ export function useTableStore(
         syncStateColumns()
 
         // Load data with new query params
+        console.log('Query params change')
         fetchAndSetData()
       }
 
