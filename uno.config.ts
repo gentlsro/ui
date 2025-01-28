@@ -160,7 +160,7 @@ export default defineConfig({
     presetIcons({
       scale: 1.2,
       collections: {
-        custom: FileSystemIconLoader('./assets/icons', svg => {
+        custom: FileSystemIconLoader('./client/assets/icons', svg => {
           return svg.replace(/[\r\n]/g, '')
         }),
       },
