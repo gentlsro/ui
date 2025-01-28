@@ -113,6 +113,7 @@ function handleClearSorting() {
           />
 
           <Btn
+            v-if="tableSorting.length"
             preset="TRASH"
             size="xs"
             :label="$t('general.sorting.clear')"

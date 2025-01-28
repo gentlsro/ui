@@ -102,9 +102,9 @@ export function useTableColumnResizing() {
     const headerDom = unrefElement(headerEl as any) as HTMLElement
     const { y: headerY, height: headerHeight } = headerDom.getBoundingClientRect()
 
-    const { height: tableHeight }
-      = (headerDom.parentElement!.querySelector('.virtual-scroll__content') as HTMLElement)
-        .getBoundingClientRect()
+    const { height: tableHeight } = (headerDom.parentElement
+      ?.querySelector('.virtual-scroll__content') as HTMLElement)
+      .getBoundingClientRect() ?? { height: headerHeight }
 
     pageX = ev.pageX
 
