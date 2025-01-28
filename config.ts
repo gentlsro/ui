@@ -208,6 +208,7 @@ const defaultComponentsConfig = {
   colorInput: {
     props: {
       stackLabel: true,
+      disallowedColors: () => [],
       ui: () => ({
         borderRadius: '0.5rem',
       }),
