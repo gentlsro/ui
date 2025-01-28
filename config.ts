@@ -987,7 +987,7 @@ const defaultComponentsConfig = {
       ui: () => ({
         headerCellClass: 'p-x-1 p-y-2px bg-white dark:bg-black',
         headerCellInnerClass: 'font-rem-13 font-semibold tracking-wide leading-tight line-clamp-2',
-        cellClass: 'p-x-2',
+        cellClass: 'overflow-hidden p-x-2',
         cellInnerClass: 'font-rem-13 p-y-1',
         alternateRowClass: 'bg-primary/15 dark:bg-black',
         rowClass: 'hover:bg-primary/25',
