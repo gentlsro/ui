@@ -59,7 +59,18 @@ const tabs = computed(() => {
 })
 
 const tabsNavigationProps = computed<ITabPropsPassthrough[]>(() => {
-  return tabs.value.map(tab => pick(tab, ['id', 'name', 'props']))
+  return tabs.value.map(tab => {
+    const props = tab.props as ITabProps
+
+    // When recreating the tab, the props get param-cased, we need to fix that manually
+    if ('btn-props' in props) {
+      props.btnProps = props['btn-props']
+
+      delete props['btn-props']
+    }
+
+    return { ...pick(tab, ['id', 'name']), props }
+  })
 })
 
 const activeTab = computed(() => {
