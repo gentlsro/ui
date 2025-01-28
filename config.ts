@@ -884,6 +884,7 @@ const defaultComponentsConfig = {
       noMenuMatchWidth: undefined,
       clearSearchOnHide: true,
       clearOptionsOnMenuHide: true,
+      stackLabel: undefined,
       ui: () => ({
         borderRadius: '0.5rem',
         inputClass: 'flex items-center',
