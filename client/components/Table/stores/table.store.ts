@@ -363,6 +363,26 @@ export function useTableStore(
         ...paginationSerialized.value,
       })
     })
+
+    function getFetchPayload() {
+      const { buildFetchPayload = tableBuildFetchPayload } = modifiers.value ?? {}
+
+      const lastRow = rows.value[rows.value.length - 1] as IItem
+      return buildFetchPayload({
+        columns: internalColumns.value,
+        queryBuilder: queryBuilder.value,
+        search: search.value,
+        queryParams: queryParams.value,
+        orderBy: internalColumns.value.flatMap(col => col.sortDbQuery).filter(Boolean) as ITableSortItem[],
+        getStore,
+        pagination: {
+          skip: isFetchMore.value ? rows.value.length : skip.value,
+          take: paginationConfig.value?.pageSize ?? 10,
+        },
+
+        ...(isFetchMore.value && { fetchMore: { lastRow, hasMore: hasMore.value } }),
+      })
+    }
     // !SECTION
 
     // SECTION Lifecycle
@@ -427,24 +447,7 @@ export function useTableStore(
         return
       }
 
-      const { buildFetchPayload = tableBuildFetchPayload } = modifiers.value ?? {}
-
-      const lastRow = rows.value[rows.value.length - 1] as IItem
-      const fetchPayload = buildFetchPayload({
-        columns: internalColumns.value,
-        queryBuilder: queryBuilder.value,
-        search: search.value,
-        queryParams: queryParams.value,
-        orderBy: internalColumns.value.flatMap(col => col.sortDbQuery).filter(Boolean) as ITableSortItem[],
-        getStore,
-        pagination: {
-          skip: isFetchMore.value ? rows.value.length : skip.value,
-          take: paginationConfig.value?.pageSize ?? 10,
-        },
-
-        ...(isFetchMore.value && { fetchMore: { lastRow, hasMore: hasMore.value } }),
-      })
-
+      const fetchPayload = getFetchPayload()
       isMetaLoading.value = true
       const res = await handleRequest(
         () => loadMetaData.value?.fnc?.({ tablePayload: fetchPayload, getStore }),
@@ -611,6 +614,7 @@ export function useTableStore(
 
       // Query
       queryParams,
+      getFetchPayload,
 
       // Miscellaneous
       onDataFetchQueue,
