@@ -118,6 +118,8 @@ defineExpose(tableGetExposed())
     <slot
       name="top"
       :ui="mergedProps.ui"
+      :query-builder-props="mergedProps.queryBuilderProps"
+      :features
     >
       <TableTop
         v-model:search="search"
