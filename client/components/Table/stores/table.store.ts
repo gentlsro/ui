@@ -58,6 +58,21 @@ export function useTableStore(
       metaRaw: null as any,
       queryBuilder: [] as IQueryBuilderRow[],
       search: '',
+
+      /**
+       * We sometimes need to save some custom data in table context to access it in
+       * a component or similar.
+       */
+      customData: {} as IItem,
+    })
+
+    const customData = computed({
+      get() {
+        return state.value.customData
+      },
+      set(val) {
+        state.value.customData = val
+      },
     })
 
     const syncStateColumns = useDebounceFn(() => {
@@ -97,12 +112,6 @@ export function useTableStore(
     const allowComparatorsOfSameType = ref(tableProps?.allowComparatorsOfSameType ?? false)
     const minimumColumnWidth = ref(tableProps?.minimumColumnWidth ?? 80)
     const breakpoint = ref(tableProps?.breakpoint ?? 0)
-
-    /**
-     * We sometimes need to save some custom data in table context to access it in
-     * a component or similar.
-     */
-    const customData = ref<IItem>({})
 
     // General helper that triggers the sync of the state columns
     const columnWidths = computed(() => {
@@ -543,6 +552,7 @@ export function useTableStore(
 
       // State,
       state,
+      customData,
 
       // Layout
       tableEl,
@@ -569,7 +579,6 @@ export function useTableStore(
       allowComparatorsOfSameType,
       minimumColumnWidth,
       breakpoint,
-      customData,
 
       // Rows
       rows,
