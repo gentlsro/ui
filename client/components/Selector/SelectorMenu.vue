@@ -116,8 +116,8 @@ watch(contentHeight, () => {
       :load-data
       :item-key="optionKey"
       :item-label="optionLabel"
-      :search-config="{ enabled: !noSearch }"
-      :selection-config="{ enabled: true, emitKey, multi }"
+      :search-config="{ ...listProps.searchConfig, enabled: !noSearch }"
+      :selection-config="{ ...listProps.selectionConfig, enabled: true, emitKey, multi }"
       :no-filter
       :no-sort
       :clearable
