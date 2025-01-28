@@ -184,7 +184,7 @@ function debouncedSync(ms: number) {
       />
 
       <Banner
-        v-if="column.filterDbQuery?.length"
+        v-else-if="column.filterDbQuery?.length"
         :label="$t('table.filteredManually')"
         outlined
         variant="info"

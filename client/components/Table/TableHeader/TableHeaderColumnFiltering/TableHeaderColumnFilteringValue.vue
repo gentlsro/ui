@@ -17,7 +17,7 @@ type IProps = {
 
 const props = defineProps<IProps>()
 defineExpose({
-  focus: () => valueInputEl.value?.focus(),
+  focus: () => valueInputEl.value?.focus?.(),
 })
 
 // Layout
