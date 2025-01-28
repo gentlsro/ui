@@ -189,7 +189,7 @@ function debouncedSync(ms: number) {
         outlined
         variant="info"
         icon-center
-        m="x-2"
+        m="x-2 b-2"
       />
     </MenuProxy>
   </Btn>
