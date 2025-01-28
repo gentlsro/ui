@@ -9,7 +9,16 @@ export function tableInitialize() {
   const isImmediate = loadData.value?.immediate || !rows.value.length
 
   tableStore.fetchAndSetMetaData()
-    .then(() => {
+    .then(res => {
+      if (typeof res === 'object' && res?._preventFetchData) {
+        if (rows.value.length) {
+          fitColumns()
+        }
+        isInitialLoad.value = false
+
+        return
+      }
+
       if (loadData.value?.fnc && isImmediate) {
         tableStore.fetchAndSetData({ force: true })
           .then(() => {

@@ -440,7 +440,7 @@ export function useTableStore(
       )
 
       state.value.metaRaw = res
-      const resModified = loadMetaData.value?.onFetch?.(res) ?? res
+      const resModified = loadMetaData.value?.onFetch?.(res, getStore) ?? res
 
       const {
         columnsKey = 'columns',
@@ -451,6 +451,8 @@ export function useTableStore(
       apiColumns.value = get(resModified, columnsKey) ?? []
       state.value.layouts = get(resModified, layoutsKey) ?? state.value.layouts
       state.value.layoutDefault = get(resModified, defaultLayoutKey) ?? state.value.layoutDefault
+
+      return resModified
     }
 
     async function fetchAndSetData(payload?: {

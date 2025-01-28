@@ -190,8 +190,16 @@ export type ITableProps<
      * You can use this to modify to response to map the data or whatever
      *
      * NOTE: This gets called before the extraction of data (like `columnsKey`, `layoutsKey`, etc.)
+     * NOTE 2: You can return a special property `_preventFetchData`. If you set this to `true`,
+     * the data `loadData.fnc` will not be called after the metadata is fetched.
+     *
+     * Use-case: if your `loadMetaData.fnc` also returns the actual data, you can manually
+     * set the `rows` and whatever data in the store you want, and prevent the data from being fetched again
      */
-    onFetch?: (res: any) => IItem
+    onFetch?: (
+      res: any,
+      getStore: () => ReturnType<typeof useTableStore>
+    ) => IItem & { _preventFetchData?: boolean }
   }
 
   /**
