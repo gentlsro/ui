@@ -86,6 +86,7 @@ const activeTab = computed(() => {
       :tabs="tabsNavigationProps"
     >
       <TabsNavigation
+        v-if="!noNav"
         v-model="model"
         :tabs="tabsNavigationProps"
         :ui="mergedProps.ui"
