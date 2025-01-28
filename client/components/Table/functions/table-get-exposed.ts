@@ -6,6 +6,6 @@ export function tableGetExposed() {
 
   return {
     refetch: tableStore.fetchAndSetData,
-    store: tableStore,
+    store: () => tableStore,
   }
 }
