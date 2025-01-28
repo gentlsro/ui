@@ -55,7 +55,10 @@ function handleRemove(idx: number) {
       v-for="(item, idx) in modelArray"
       :key="idx"
     >
-      <slot :item>
+      <slot
+        :item
+        :index="idx"
+      >
         <SelectorChip
           :chip="item"
           :class="ui?.chipClass"
@@ -77,7 +80,10 @@ function handleRemove(idx: number) {
       v-for="(item, idx) in modelArray"
       :key="idx"
     >
-      <slot :item>
+      <slot
+        :item
+        :index="idx"
+      >
         <SelectorChip
           :chip="item"
           :class="ui?.chipClass"
