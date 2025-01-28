@@ -67,6 +67,7 @@ const {
   breakpoint,
   loadData,
   rowsLimit,
+  customData,
 } = storeToRefs(store)
 
 // Sync refs with store
@@ -120,6 +121,7 @@ defineExpose(tableGetExposed())
       :ui="mergedProps.ui"
       :query-builder-props="mergedProps.queryBuilderProps"
       :features
+      :custom-data
     >
       <TableTop
         v-model:search="search"
@@ -134,6 +136,7 @@ defineExpose(tableGetExposed())
       name="toolbar"
       :ui="mergedProps.ui"
       :features
+      :custom-data
     >
       <TableToolbar
         :features
@@ -148,6 +151,7 @@ defineExpose(tableGetExposed())
     <slot
       name="header"
       :ui="mergedProps.ui"
+      :custom-data
     >
       <TableHeader
         v-if="!noHeader"
@@ -171,6 +175,7 @@ defineExpose(tableGetExposed())
           :name="col.name"
           :row
           :index
+          :custom-data
         />
       </template>
 
@@ -180,6 +185,7 @@ defineExpose(tableGetExposed())
           name="row"
           :row
           :index
+          :custom-data
         />
       </template>
 
@@ -188,6 +194,7 @@ defineExpose(tableGetExposed())
         <slot
           name="row-inside"
           v-bind="rowInsideProps"
+          :custom-data
         />
       </template>
     </TableContent>
