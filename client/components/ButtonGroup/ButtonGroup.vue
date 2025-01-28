@@ -32,6 +32,6 @@ const mergedProps = computed(() => {
 
 <style lang="scss" scoped>
 .btn-group {
-  @apply flex rounded-full;
+  @apply flex rounded-full border-1 border-ca;
 }
 </style>
