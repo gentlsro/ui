@@ -895,6 +895,7 @@ const defaultComponentsConfig = {
           searchClass: 'gap-1 p-2',
         },
       }),
+      loadData: () => ({}),
       menuProps: () => ({
         position: 'top',
         fit: false,
@@ -906,7 +907,7 @@ const defaultComponentsConfig = {
         ui: { contentClass: 'p-0' },
       }),
     },
-    merge: ['ui', 'listProps', 'menuProps'],
+    merge: ['ui', 'loadData', 'listProps', 'menuProps'],
   },
 
   // Separator

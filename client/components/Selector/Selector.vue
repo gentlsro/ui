@@ -254,7 +254,7 @@ watch(
         :clearable
         :multi
         :no-search
-        :load-data
+        :load-data="mergedProps.loadData"
         :clear-options-on-menu-hide
         @before-hide="handleBeforeHide"
         @hide="handleHide"
