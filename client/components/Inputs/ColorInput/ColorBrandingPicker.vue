@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { colors } from '@unocss/preset-mini'
+import colors from '../../../../shared/constants/colors.json'
 
 // Functions
 import { useColors } from '../../../../shared/composables/useColors'

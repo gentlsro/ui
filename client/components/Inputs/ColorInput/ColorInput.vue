@@ -82,7 +82,7 @@ onMounted(() => {
       {{ modelLabel }}
     </span>
 
-    <!-- <MenuProxy
+    <MenuProxy
       v-model="isPickerActive"
       manual
       tabindex="-1"
@@ -97,7 +97,7 @@ onMounted(() => {
         :disallowed-colors
         @update:model-value="handlePickColor"
       />
-    </MenuProxy> -->
+    </MenuProxy>
 
     <template
       v-if="!noIcon"
