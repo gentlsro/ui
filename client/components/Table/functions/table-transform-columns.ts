@@ -128,10 +128,6 @@ export function tableTransformColumns(payload: {
         // First, we add the predefined filters
         col.filters = col.filtersPredefined ?? []
 
-        if (col.filtersPredefined?.length) {
-          console.log(col)
-        }
-
         // Then, we add the filters from the URL / schema and possibly merge the
         // filters from the URL / schema with the predefined filters (based on comparator)
         const toMerge: FilterItem[] = []
