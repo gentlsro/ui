@@ -209,6 +209,8 @@ export function useTableStore(
     })
 
     watch(columnsMerged, columnsMerged => {
+      console.log('Columns merged:', columnsMerged)
+
       // Merge columns from all the sources, remove duplicates
       let cols = columnsMerged
 
