@@ -76,7 +76,6 @@ export function useTableStore(
     })
 
     const syncStateColumns = useDebounceFn(() => {
-      console.log('Log ~ syncStateColumns ~ nonHelperColumns.value.map(getStateColumnData):', nonHelperColumns.value.map(getStateColumnData))
       state.value.columns = nonHelperColumns.value.map(getStateColumnData)
     }, 50)
 
