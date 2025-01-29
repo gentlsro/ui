@@ -197,6 +197,9 @@ export function useTableStore(
       }),
     )
 
+    // Manually trigger at the initialization
+    columnsMerged.trigger()
+
     const visibleColumns = computed(() => {
       return internalColumns.value.filter(col => !col.hidden)
     })
@@ -225,6 +228,7 @@ export function useTableStore(
 
       // Set the extended columns
       internalColumns.value = cols
+      console.log('Internal columns:', cols)
 
       // Set the query builder
       queryBuilder.value = qb.length ? qb : queryBuilderInitializeItems()
