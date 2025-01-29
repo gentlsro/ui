@@ -19,7 +19,7 @@ export function tableMergeColumns(payload: {
     useState = true,
   } = payload
 
-  const colFields = uniq([...propsColumns, ...apiColumns]
+  const colFields = uniq([...propsColumns, ...apiColumns, ...stateColumns]
     .map(col => col.field))
 
   return colFields.map(colField => {
