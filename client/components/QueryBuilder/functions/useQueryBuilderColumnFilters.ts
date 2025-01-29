@@ -16,6 +16,7 @@ export function useQueryBuilderColumnFilters(props: Pick<IQueryBuilderProps, 'co
   const columnFiltersArray = computed(() => {
     return props.columns
       .flatMap(column => column.filterDbQuery)
+      .filter(filter => !filter.nonInteractive)
       .map(filter => {
         return {
           id: filter.id,
