@@ -163,7 +163,7 @@ export function tableTransformColumns(payload: {
 
               if (isPartOfPredefined) {
                 filterModel.misc = { isPredefined: true }
-                toMerge.push(filterModel)
+                // toMerge.push(filterModel)
               }
 
               return filterModel
@@ -172,13 +172,13 @@ export function tableTransformColumns(payload: {
         ]
 
         // We overwrite the values of the filters with the same comparator
-        toMerge.forEach(f => {
-          const filterWithSameComparator = col.filters.find(f2 => f2.comparator === f.comparator)
+        // toMerge.forEach(f => {
+        //   const filterWithSameComparator = col.filters.find(f2 => f2.comparator === f.comparator)
 
-          if (filterWithSameComparator) {
-            filterWithSameComparator.value = f.value
-          }
-        })
+        //   if (filterWithSameComparator) {
+        //     filterWithSameComparator.value = f.value
+        //   }
+        // })
       }
 
       return col
