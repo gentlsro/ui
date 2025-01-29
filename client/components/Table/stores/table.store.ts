@@ -336,10 +336,8 @@ export function useTableStore(
 
     const selectSerialized = computed(() => {
       const { serializeSelectedColumns = tableSerializeSelect } = modifiers.value ?? {}
-      const serialized = serializeSelectedColumns({ columns: internalColumns.value })
 
-      // This is kinda hacky but we need to make sure there are no unnecessary triggers
-      return `${serialized.select}__||__${serialized.fetchSelect}`
+      return serializeSelectedColumns({ columns: internalColumns.value })
     })
 
     const queryBuilderSerialized = computed(() => {
@@ -365,10 +363,8 @@ export function useTableStore(
     })
 
     const queryParams = computed(() => {
-      const [_, fetchSelect = ''] = selectSerialized.value.split('__||__')
-
       return tableBuildQueryParams({
-        select: fetchSelect,
+        select: selectSerialized.value,
         sorting: sortingSerialized.value,
         filters: filtersSerialized.value,
         queryBuilder: queryBuilderSerialized.value,
@@ -461,6 +457,7 @@ export function useTableStore(
       }
 
       const fetchPayload = getFetchPayload()
+      console.log('Log ~ fetchAndSetMetaData ~ fetchPayload:', fetchPayload)
       isMetaLoading.value = true
       const res = await handleRequest(
         () => loadMetaData.value?.fnc?.({ tablePayload: fetchPayload, getStore }),
