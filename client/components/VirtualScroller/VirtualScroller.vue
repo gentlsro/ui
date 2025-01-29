@@ -433,8 +433,7 @@ watch(rows, (rows, rowsOld) => {
     renderedRows.value = getRenderedRows(0, INITIAL_ROWS_RENDER_COUNT)
 
     nextTick(() => {
-      console.log('here, right?', rows, rowsOld)
-      rerenderVisibleRows({ triggerScrollEvent: true, emitScrollEvent: false })
+      rerenderVisibleRows({ triggerScrollEvent: true, emitScrollEvent: false, resetHeights: true })
     })
   }
 

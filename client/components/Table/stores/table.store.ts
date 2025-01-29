@@ -209,7 +209,12 @@ export function useTableStore(
     })
 
     watch(columnsMerged, columnsMerged => {
-      console.log('Columns merged:', columnsMerged)
+      console.log('Columns merged:', columnsMerged, tableMergeColumns({
+        propsColumns: propsColumns.value,
+        apiColumns: apiColumns.value,
+        stateColumns: state.value.columns,
+        useState: uiState.value.table?.autoSaveSchema,
+      }))
 
       // Merge columns from all the sources, remove duplicates
       let cols = columnsMerged
