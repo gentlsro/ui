@@ -336,8 +336,10 @@ export function useTableStore(
 
     const selectSerialized = computed(() => {
       const { serializeSelectedColumns = tableSerializeSelect } = modifiers.value ?? {}
+      const serialized = serializeSelectedColumns({ columns: internalColumns.value })
 
-      return serializeSelectedColumns({ columns: internalColumns.value })
+      // This is kinda hacky but we need to make sure there are no unnecessary triggers
+      return `${serialized.select}__||__${serialized.fetchSelect}`
     })
 
     const queryBuilderSerialized = computed(() => {
@@ -363,9 +365,11 @@ export function useTableStore(
     })
 
     const queryParams = computed(() => {
+      const [_, fetchSelect = ''] = selectSerialized.value.split('__||__')
+
       return tableBuildQueryParams({
+        select: fetchSelect,
         sorting: sortingSerialized.value,
-        select: selectSerialized.value,
         filters: filtersSerialized.value,
         queryBuilder: queryBuilderSerialized.value,
         search: search.value,
@@ -493,6 +497,7 @@ export function useTableStore(
       const isInvalidFetchMore = payload?.isFetchMore && !hasMore.value
       const isOverLimit = rows.value.length >= rowsLimit.value
       const isInitial = isInitialLoad.value && !payload?.force
+
       if (isOverLimit || isDataLoading.value || isInvalidFetchMore || isInitial) {
         return
       }
