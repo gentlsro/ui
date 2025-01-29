@@ -229,11 +229,6 @@ export function useTableStore(
       // Set the extended columns
       internalColumns.value = cols
 
-      console.log('API columns:', apiColumns.value)
-      console.log('State columns:', state.value.columns)
-      console.log('Props columns:', propsColumns.value)
-      console.log('Internal columns:', cols)
-
       // Set the query builder
       queryBuilder.value = qb.length ? qb : queryBuilderInitializeItems()
 
@@ -465,8 +460,6 @@ export function useTableStore(
       }
 
       const fetchPayload = getFetchPayload()
-      console.log('Log ~ fetchAndSetMetaData ~ fetchPayload:', fetchPayload)
-
       isMetaLoading.value = true
       const res = await handleRequest(
         () => loadMetaData.value?.fnc?.({ tablePayload: fetchPayload, getStore }),
