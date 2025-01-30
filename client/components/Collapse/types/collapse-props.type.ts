@@ -29,6 +29,11 @@ export type ICollapseProps = {
   modelValue?: boolean
 
   /**
+   * When true, the expand icon will not be shown
+   */
+  noExpandIcon?: boolean
+
+  /**
    * By default, when `Collapse` is open, we show a separator between the header
    * and the content. This prop can be used to disable that.
    */

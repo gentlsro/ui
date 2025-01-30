@@ -2,7 +2,7 @@
 // Types
 import type { ICollapseProps } from './types/collapse-props.type'
 
-type IProps = Pick<ICollapseProps, 'title' | 'subtitle' | 'icon' | 'loading' | 'ui' | 'expandIcon' | 'noSeparator'>
+type IProps = Pick<ICollapseProps, 'title' | 'subtitle' | 'icon' | 'loading' | 'ui' | 'expandIcon' | 'noSeparator' | 'noExpandIcon'>
   & { isOpen: boolean }
 
 const props = defineProps<IProps>()
@@ -87,6 +87,7 @@ const subtitleStyle = computed(() => props.ui?.subtitleStyle?.(props.isOpen))
         <!-- Expand icon -->
         <slot name="expandIcon">
           <div
+            v-if="!noExpandIcon"
             class="expand-icon i-majesticons:chevron-right"
             :class="[expandIconClass, { 'rotate-90deg': isOpen }]"
           />
