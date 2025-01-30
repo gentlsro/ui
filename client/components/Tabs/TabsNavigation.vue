@@ -17,6 +17,7 @@ const model = defineModel<string | number>()
 
 <template>
   <HorizontalScroller
+    class="shrink-0"
     :class="ui?.navigationClass"
     :style="ui?.navigationStyle"
     :ui="{
