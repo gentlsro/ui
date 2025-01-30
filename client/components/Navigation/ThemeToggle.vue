@@ -20,6 +20,7 @@ const toggleUIProp = computed(() => {
 
 <template>
   <Toggle
+    v-bind="$props"
     id="theme-toggle"
     :model-value="color"
     check-value="light"
