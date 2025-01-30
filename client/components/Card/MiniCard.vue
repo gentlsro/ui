@@ -200,7 +200,7 @@ const isModified = computed(() => {
   }
 
   .link {
-    @apply decoration-none text-sm;
+    @apply decoration-none;
     overflow-wrap: break-word;
     white-space: pre-line;
 
