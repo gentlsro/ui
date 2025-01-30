@@ -356,7 +356,7 @@ function handleEditCellMounted() {
     class="tr tr--row"
     :class="[rowClassArray[0], { 'is-selected': isSelected(rowDataArray[0].row) }]"
     :style="rowStyleArray[0]"
-    :to="to?.(row)"
+    :to="to?.(row, { rowKey })"
   >
     <div
       v-for="column in rowDataArray[0].columns"

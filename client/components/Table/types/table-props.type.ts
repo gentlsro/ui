@@ -440,7 +440,7 @@ export type ITableProps<
   /**
    * Link to the detail from page
    */
-  to?: (row: any) => RouteLocationRaw
+  to?: (row: any, options?: { rowKey?: string }) => RouteLocationRaw
 
   /**
    * Visual configuration
