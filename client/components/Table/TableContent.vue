@@ -129,6 +129,7 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
           :ui
           :index
           :editable
+          :to
         >
           <!-- Field slots -->
           <template
