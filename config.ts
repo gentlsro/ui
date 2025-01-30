@@ -1011,6 +1011,7 @@ const defaultComponentsConfig = {
       noNav: undefined,
       ui: () => ({
         tabClass: 'fit',
+        navigationContentClass: 'flex gap-1',
         tabNavBtnClass: isActive => isActive ? 'bg-primary color-white' : 'color-ca',
       }),
     },
