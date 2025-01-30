@@ -1,4 +1,5 @@
-import { FilterItem, parseValue } from '$utils'
+import type { FilterItem } from '$utils'
+import { parseValue } from '$utils'
 
 // Types
 import type { ITableProps } from '../types/table-props.type'
@@ -134,41 +135,41 @@ export function tableTransformColumns(payload: {
 
         col.filters = [
           ...col.filters,
-          ...filterItems
-            .map(filter => {
-              const parseValueOptions = { dateFormat: 'YYYY-MM-DD', comparator: filter.comparator }
-              const colProps = pick(col, [
-                'field',
-                'filterField',
-                'dataType',
-                'format',
-                'filterFormat',
-                'customDbQueryFnc',
-              ])
+          //   ...filterItems
+          //     .map(filter => {
+          //       const parseValueOptions = { dateFormat: 'YYYY-MM-DD', comparator: filter.comparator }
+          //       const colProps = pick(col, [
+          //         'field',
+          //         'filterField',
+          //         'dataType',
+          //         'format',
+          //         'filterFormat',
+          //         'customDbQueryFnc',
+          //       ])
 
-              let value: any
+          //       let value: any
 
-              if (Array.isArray(filter.value)) {
-                value = filter.value.map(v => parseValue(v, col.dataType, parseValueOptions))
-              } else {
-                value = parseValue(filter.value, col.dataType, parseValueOptions)
-              }
+          //       if (Array.isArray(filter.value)) {
+          //         value = filter.value.map(v => parseValue(v, col.dataType, parseValueOptions))
+          //       } else {
+          //         value = parseValue(filter.value, col.dataType, parseValueOptions)
+          //       }
 
-              const filterModel = new FilterItem({ ...filter, ...colProps, value })
+          //       const filterModel = new FilterItem({ ...filter, ...colProps, value })
 
-              // We mark the filter as predefined if it's part of the predefined filters
-              // to later merge them (the values) together and eventually remove the non-predefined filters
-              const isPartOfPredefined = col.filtersPredefined
-                ?.some(f => f.comparator === filter.comparator)
+          //       // We mark the filter as predefined if it's part of the predefined filters
+          //       // to later merge them (the values) together and eventually remove the non-predefined filters
+          //       const isPartOfPredefined = col.filtersPredefined
+          //         ?.some(f => f.comparator === filter.comparator)
 
-              if (isPartOfPredefined) {
-                filterModel.misc = { isPredefined: true }
-                // toMerge.push(filterModel)
-              }
+          //       if (isPartOfPredefined) {
+          //         filterModel.misc = { isPredefined: true }
+          //         // toMerge.push(filterModel)
+          //       }
 
-              return filterModel
-            })
-            .filter(f => !f.misc?.isPredefined),
+        //       return filterModel
+        //     })
+        //     .filter(f => !f.misc?.isPredefined),
         ]
 
         // We overwrite the values of the filters with the same comparator
