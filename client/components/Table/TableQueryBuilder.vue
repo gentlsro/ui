@@ -25,6 +25,10 @@ const {
 const queryBuilderEl = useTemplateRef('queryBuilderEl')
 const queryBuilder = defineModel<IQueryBuilderRow[]>('queryBuilder', { default: () => [] })
 
+const nonHelperFilterableColumns = computed(() => {
+  return nonHelperColumns.value.filter(col => col.filterable)
+})
+
 function handleUpdateColumnFilter(columnFilter: IQueryBuilderItem) {
   const modifiedColumnFilters = queryBuilderEl.value?.getModifiedColumnFilter(columnFilter) ?? []
 
@@ -76,7 +80,7 @@ const queryBuilderHeight = computed(() => {
       ref="queryBuilderEl"
       v-bind="queryBuilderProps"
       v-model:items="queryBuilder"
-      :columns="nonHelperColumns"
+      :columns="nonHelperFilterableColumns"
       :style="queryBuilderHeight"
       show-column-filters
       @update:column-filter="handleUpdateColumnFilter"
