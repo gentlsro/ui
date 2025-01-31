@@ -5,7 +5,7 @@ import type { CSSProperties } from 'vue'
 import type { ICheckboxProps } from './types/checkbox-props.type'
 
 // Functions
-import { getComponentProps } from '../../functions/get-component-props'
+import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
 
 const props = withDefaults(defineProps<ICheckboxProps>(), {
   ...getComponentProps('checkbox'),
@@ -17,6 +17,11 @@ const emits = defineEmits<{
 
 defineExpose({
   focus: () => labelEl.value?.focus(),
+})
+
+// Utils
+const mergedProps = computed(() => {
+  return getComponentMergedProps('checkbox', props)
 })
 
 // Layout
@@ -56,30 +61,17 @@ const isIndeterminate = computed(() => {
   return props.modelValue === props.indeterminateValue
 })
 
+const state = computed(() => {
+  return isChecked.value
+    ? 'checked'
+    : isIndeterminate.value ? 'indeterminate' : 'unchecked'
+})
+
 const toggleState = computed(() => {
-  // Checkbox visuals
-  let checkboxClass: ClassType | undefined = props.visuals?.unchecked?.checkbox
-  let checkboxStyle: CSSProperties | undefined = props.visuals?.unchecked?.checkboxStyle
-
-  if (isChecked.value) {
-    checkboxClass = props.visuals?.checked?.checkbox
-    checkboxStyle = props.visuals?.checked?.checkboxStyle
-  } else if (isIndeterminate.value) {
-    checkboxClass = props.visuals?.indeterminate?.checkbox
-    checkboxStyle = props.visuals?.indeterminate?.checkboxStyle
-  }
-
-  // Label class
-  let labelClass: ClassType | undefined = props.visuals?.unchecked?.label
-  let labelStyle: CSSProperties | undefined = props.visuals?.unchecked?.labelStyle
-
-  if (isChecked.value) {
-    labelClass = props.visuals?.checked?.label
-    labelStyle = props.visuals?.checked?.labelStyle
-  } else if (isIndeterminate.value) {
-    labelClass = props.visuals?.indeterminate?.label
-    labelStyle = props.visuals?.indeterminate?.labelStyle
-  }
+  const checkboxClass = mergedProps.value.ui?.checkboxClass?.(state.value)
+  const checkboxStyle = mergedProps.value.ui?.checkboxStyle?.(state.value)
+  const labelClass = mergedProps.value.ui?.labelClass?.(state.value)
+  const labelStyle = mergedProps.value.ui?.labelStyle?.(state.value)
 
   return {
     checked: !isIndeterminate.value ? isChecked.value : undefined,

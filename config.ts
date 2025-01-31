@@ -168,9 +168,9 @@ const defaultComponentsConfig = {
       name: undefined,
       size: 'sm',
       uncheckValue: false,
-      visuals: () => ({}),
+      ui: () => ({}),
     },
-    merge: ['visuals'],
+    merge: ['ui'],
   },
 
   // Chip

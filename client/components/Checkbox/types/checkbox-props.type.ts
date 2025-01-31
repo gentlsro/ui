@@ -91,9 +91,29 @@ export type ICheckboxProps = {
   uncheckValue?: any
 
   /**
-   * Visual adjustments for the checkbox
+   * Visual configuration
    */
-  visuals?: Partial<CheckboxClass>
+  ui?: {
+    /**
+     * Class of the checkbox
+     */
+    checkboxClass?: (state: 'checked' | 'unchecked' | 'indeterminate') => ClassType
+
+    /**
+     * Style of the checkbox
+     */
+    checkboxStyle?: (state: 'checked' | 'unchecked' | 'indeterminate') => CSSProperties
+
+    /**
+     * Class applied to the label
+     */
+    labelClass?: (state: 'checked' | 'unchecked' | 'indeterminate') => ClassType
+
+    /**
+     * Style applied to the label
+     */
+    labelStyle?: (state: 'checked' | 'unchecked' | 'indeterminate') => CSSProperties
+  }
 
   /**
    * The props that should be passed to the input tag (<input>)
