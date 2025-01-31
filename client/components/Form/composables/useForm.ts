@@ -36,11 +36,9 @@ export function useForm(props: IFormProps) {
   }
 
   const hasKeyboardShortcuts = computed(() => {
-    console.log(props, noShortcuts.value)
-
     return formHasKeyboardShortcuts(
-      !noShortcuts.value,
-      uiState.value.general?.keyboardShortcuts,
+      noShortcuts.value,
+      !uiState.value.general?.keyboardShortcuts,
     )
   })
 
