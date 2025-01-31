@@ -12,17 +12,19 @@ export default defineNuxtModule({
         const isBase = layer.cwd === currentDir
         const configPath = isBase ? 'config' : 'ui-config'
 
-        return { path: resolve(layer.cwd, configPath) }
+        return { path: resolve(layer.cwd, configPath), isBase }
       })
       .filter(({ path }) => existsSync(`${path}.ts`))
 
+    const base = configPaths.find(({ isBase }) => isBase)
+
     const code = `import { customDefu } from '$utilsLayer/shared/functions/custom-defu'
 ${configPaths.map(({ path }, idx) => `import config${idx} from '${path}'`).join('\n')}
+export * from '${base?.path}'
 
 export const uiConfig = customDefu(${configPaths.map((_, idx) => `config${idx}`).join(', ')})
 
 export type IUIConfig = typeof uiConfig
-export default uiConfig
 `
 
     addTemplate({
@@ -42,7 +44,7 @@ export default uiConfig
 
       config.resolve.alias = {
         ...config.resolve.alias,
-        $uiConfig: `${nuxt.options.buildDir}/generated/ui.ts`,
+        $ui: `${nuxt.options.buildDir}/generated/ui.ts`,
       }
     })
   },
