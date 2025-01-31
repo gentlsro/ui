@@ -3,7 +3,7 @@
   "type": "module",
   "private": true,
   "packageManager": "pnpm@9.15.0",
-  "main": "./index.ts",
+  "main": "./nuxt.config.ts",
   "scripts": {
     "dev": "nuxt dev --host",
     "postinstall": "nuxt prepare",
