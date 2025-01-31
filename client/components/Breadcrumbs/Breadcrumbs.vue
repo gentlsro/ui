@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { uiConfig } from '$ui'
+import { uiConfig } from '$uiConfig'
 
 // Types
 import type { IBreadcrumbsProps } from './types/breadcrumbs-props.type'

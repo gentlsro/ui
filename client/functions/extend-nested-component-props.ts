@@ -1,4 +1,4 @@
-import { uiConfig } from '$ui'
+import { uiConfig } from '$uiConfig'
 
 type ConfigWithPropsKeys<T> = {
   [K in keyof T]: T[K] extends { props: infer P } ? K : never

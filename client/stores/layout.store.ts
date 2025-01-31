@@ -1,4 +1,4 @@
-import { uiConfig } from '$ui'
+import { uiConfig } from '$uiConfig'
 
 export const useLayoutStore = defineStore('__layout', () => {
   // Layout

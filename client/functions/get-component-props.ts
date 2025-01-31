@@ -1,5 +1,5 @@
-import { uiConfig } from '$ui'
-import type { IUIConfig } from '$ui'
+import { uiConfig } from '$uiConfig'
+import type { IUIConfig } from '$uiConfig'
 import type { IUIConfig as IUIGenericConfig } from '$uiLayer/config'
 
 // Functions

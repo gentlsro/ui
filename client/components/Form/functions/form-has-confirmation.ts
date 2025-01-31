@@ -1,4 +1,4 @@
-import { uiConfig } from '$ui'
+import { uiConfig } from '$uiConfig'
 
 // Types
 import type { IFormProps } from '../types/form-props.type'
