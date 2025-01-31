@@ -103,7 +103,7 @@ function handleFieldChange(field: string) {
   // NOTE: When datatype changes OR we're using non-primitive comparators, we reset value
   const isNonPrimitiveComparator
     = customFilterComponent.value?.comparators.includes(item.value.comparator)
-    || canUseSelectorComparator(item.value.comparator, colSelected.value || col)
+      || canUseSelectorComparator(item.value.comparator, colSelected.value || col)
 
   if (
     col.dataType !== colSelected.value?.dataType
@@ -174,6 +174,7 @@ const $z = useZod(
         emit-key
         size="sm"
         option-key="field"
+        option-label="_label"
         :readonly="!editable"
         class="qb-item__content-field"
         :validation="$z.item.field"
@@ -190,7 +191,7 @@ const $z = useZod(
           />
 
           <span p="y-1.5">
-            {{ col.label }}
+            {{ col._label }}
           </span>
         </template>
 

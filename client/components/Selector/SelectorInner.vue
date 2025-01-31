@@ -11,7 +11,7 @@ type IProps = Pick<ISelectorProps, 'useScroller' | 'ui' | 'maxChipsRows' | 'read
 const props = defineProps<IProps>()
 
 // Store
-const { model } = storeToRefs(useSelectorStore())
+const { model, optionByKey } = storeToRefs(useSelectorStore())
 
 // Layout
 const isMulti = toRef(props, 'multi')
@@ -43,7 +43,7 @@ function handleRemove(idx: number) {
 
 <template>
   <span v-if="!isMulti">
-    {{ getListItemLabel(model, optionLabel) }}
+    {{ getListItemLabel(model, optionLabel, optionByKey) }}
   </span>
 
   <HorizontalScroller
@@ -64,6 +64,7 @@ function handleRemove(idx: number) {
           :class="ui?.chipClass"
           :style="ui?.chipStyle"
           :option-label
+          :option-by-key
           @remove="handleRemove(idx)"
         />
       </slot>
@@ -89,6 +90,7 @@ function handleRemove(idx: number) {
           :class="ui?.chipClass"
           :style="ui?.chipStyle"
           :option-label
+          :option-by-key
           @remove="handleRemove(idx)"
         />
       </slot>

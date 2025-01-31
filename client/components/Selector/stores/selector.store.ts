@@ -14,12 +14,26 @@ export function useSelectorStore(payload?: {
     // Layout
     const menuEl = ref<InstanceType<typeof MenuProxy>>()
 
+    // Utils
+    const initialMap: Record<string, any> = props?.initialMap ?? {}
+    const optionKey = props?.optionKey ?? 'id'
+
     // State
     const model = ref(props?.modelValue)
     const search = ref(props?.search)
     const addedItems = ref(props?.addedItems)
     const options = ref(props?.options ?? [])
     const isLoading = ref(false)
+
+    const optionByKey = computed(() => {
+      return options.value.reduce((agg, option) => {
+        const key = get(option, optionKey)
+
+        set(agg, key, option)
+
+        return agg
+      }, initialMap)
+    })
 
     // Picker
     const isPickerActive = ref(false)
@@ -33,6 +47,7 @@ export function useSelectorStore(payload?: {
       search,
       addedItems,
       options,
+      optionByKey,
       isLoading,
 
       // Picker

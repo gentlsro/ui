@@ -143,7 +143,7 @@ const $z = useZod({ scope: 'qb' })
       truncate
       max-w="40"
     >
-      {{ colSelected?.label }}
+      {{ colSelected?._label }}
     </span>
 
     <!-- Comparator -->
