@@ -1,6 +1,6 @@
 // @unocss-include
 
-import { utilsConfig } from '$utilsConfig'
+import { utilsConfig } from '$utils'
 import type { ExtendedDataType } from '$dataType'
 
 // Functions

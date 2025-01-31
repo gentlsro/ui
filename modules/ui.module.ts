@@ -12,7 +12,7 @@ export default defineNuxtModule({
         const isBase = layer.cwd === currentDir
         const configPath = isBase ? 'config' : 'ui-config'
 
-        return { path: resolve(layer.cwd, configPath), isBase }
+        return { path: resolve(layer.cwd, configPath), isBase, cwd: layer.cwd }
       })
       .filter(({ path }) => existsSync(`${path}.ts`))
 
@@ -20,7 +20,7 @@ export default defineNuxtModule({
 
     const code = `import { customDefu } from '$utilsLayer/shared/functions/custom-defu'
 ${configPaths.map(({ path }, idx) => `import config${idx} from '${path}'`).join('\n')}
-export * from '${base?.path}'
+export * from '${base?.cwd}/index'
 
 export const uiConfig = customDefu(${configPaths.map((_, idx) => `config${idx}`).join(', ')})
 
