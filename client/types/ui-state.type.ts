@@ -1,8 +1,7 @@
 export type IUIState = {
-  general?: {
-    keyboardShortcuts?: boolean
+  general: {
+    keyboardShortcuts: boolean
   }
-
   form: {
     confirmation: {
       enabled?: boolean
@@ -11,8 +10,8 @@ export type IUIState = {
     }
   }
 
-  table?: {
-    autoSaveSchema?: boolean
-    fit?: 'fit' | 'stretch' | 'justify' | null
+  table: {
+    autoSaveSchema: boolean
+    fit: 'fit' | 'stretch' | 'justify' | null
   }
 }
