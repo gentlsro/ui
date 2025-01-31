@@ -243,15 +243,6 @@ export function useTableStore(
         syncStateColumns()
       }
     }, { immediate: true })
-
-    // We need to refresh column labels on locale change
-    // watch(locale, () => {
-    //   internalColumns.value.forEach(col => {
-    //     if (col.misc?.isApiCol && !col.misc?.isPropsCol) {
-    //       col.label = 'penis'
-    //     }
-    //   })
-    // })
     // !SECTION
 
     // SECTION Pagination
