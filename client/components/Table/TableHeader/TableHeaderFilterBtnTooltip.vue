@@ -28,7 +28,7 @@ const { emptyValue } = storeToRefs(useTableStore())
           text="caption"
           font="semibold"
         >
-          {{ column.label }}
+          {{ column._label }}
         </span>
 
         <Separator />

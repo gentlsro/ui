@@ -24,7 +24,7 @@ export async function tableExportData(payload: {
     columns.forEach(col => {
       const colValueRaw = col.valueGetter(row)
       const colValue = col.format?.(row, colValueRaw) ?? colValueRaw
-      const colLabel = col.label || col.field
+      const colLabel = col._label || col.field
 
       rowData[colLabel] = colValue
     })

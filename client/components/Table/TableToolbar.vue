@@ -38,7 +38,7 @@ const tableSorting = computed(() => {
   return internalColumns.value
     .filter(col => col.sort)
     .map(col => ({
-      label: col.label,
+      label: col._label,
       field: col.field,
       direction: col.sort,
       sortOrder: col.sortOrder,

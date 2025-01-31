@@ -16,7 +16,7 @@ const { isDataLoading, internalColumns } = storeToRefs(useTableStore())
 const search = defineModel<string>('search')
 
 const searchableColumnLabels = computed(() => {
-  return internalColumns.value.filter(col => col.searchable).map(col => col.label)
+  return internalColumns.value.filter(col => col.searchable).map(col => col._label)
 })
 </script>
 

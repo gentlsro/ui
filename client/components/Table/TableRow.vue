@@ -283,7 +283,7 @@ function handleEditCellMounted() {
       >
         <!-- Label -->
         <span class="td__label">
-          {{ column.column.label }}
+          {{ column.column._label }}
         </span>
 
         <!-- Value -->

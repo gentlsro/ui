@@ -64,6 +64,7 @@ const tabsNavigationProps = computed<ITabPropsPassthrough[]>(() => {
 
     // When recreating the tab, the props get param-cased, we need to fix that manually
     if ('btn-props' in props) {
+      // @ts-expect-error
       props.btnProps = props['btn-props']
 
       delete props['btn-props']

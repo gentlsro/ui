@@ -41,7 +41,7 @@ export class TableColumn<T = IItem> {
   /**
    * Label of the column
    */
-  label?: string
+  label?: string | (() => string)
 
   /**
    * Initial width of the column
@@ -420,7 +420,9 @@ export class TableColumn<T = IItem> {
    * ~ If `hideLabel` is `true`, it will return an empty string
    */
   get _label() {
-    return this.hideLabel ? '' : this.label ?? ''
+    return this.hideLabel
+      ? ''
+      : typeof this.label === 'function' ? this.label() : (this.label ?? '')
   }
 
   /**

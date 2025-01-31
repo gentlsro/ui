@@ -100,7 +100,7 @@ const $z = useZod(
   <div class="table-filter-chip">
     <!-- Label -->
     <span class="table-filter-chip__label">
-      {{ column?.label }}
+      {{ column?._label }}
     </span>
 
     <!-- Comparator -->
