@@ -118,7 +118,11 @@ export default defineNuxtConfig({
   },
 
   // Typescript https://nuxt.com/docs/api/configuration/nuxt-config#typescript
-  typescript: {},
+  typescript: {
+    tsConfig: {
+      include: [resolve(('./index.ts'))],
+    },
+  },
 
   hooks: {
     ready: async nuxt => {
