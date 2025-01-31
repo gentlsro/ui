@@ -18,6 +18,10 @@ const { internalColumnsByField, nonHelperColumns } = storeToRefs(useTableStore()
 // Layout
 const queryBuilderEl = useTemplateRef('queryBuilderEl')
 
+const nonHelperFilterableColumns = computed(() => {
+  return nonHelperColumns.value.filter(col => col.filterable)
+})
+
 const {
   model: queryBuilder,
   syncFromParent,
@@ -99,7 +103,7 @@ const $z = useZod({ scope: 'qb' })
           ref="queryBuilderEl"
           v-bind="queryBuilderProps"
           v-model:items="queryBuilder"
-          :columns="nonHelperColumns"
+          :columns="nonHelperFilterableColumns"
           editable
         />
       </Form>
