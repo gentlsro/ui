@@ -30,6 +30,7 @@ export type { INotification } from './client/components/Notification/types/notif
 export type { IQueryBuilderRow } from './client/components/QueryBuilder/types/query-builder-row-props.type'
 export type { IQueryBuilderItem } from './client/components/QueryBuilder/types/query-builder-item-props.type'
 export type { IQueryBuilderGroup } from './client/components/QueryBuilder/types/query-builder-group-props.type'
+export { queryBuilderDefault } from './client/components/QueryBuilder/constants/query-builder-default.constant'
 
 // Table
 export { useTableStore } from './client/components/Table/stores/table.store'
