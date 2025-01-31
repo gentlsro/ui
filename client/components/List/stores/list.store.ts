@@ -260,7 +260,9 @@ export function useListStore(listId?: string, listProps?: IListProps) {
         $z: $zAddItem,
       })
     }
+
     // Data fetching
+    const isFirstFetch = ref(true)
     const hasMore = ref(false)
     const isFetchMore = ref(false)
     const loadData = ref<IListProps['loadData']>(
@@ -385,6 +387,7 @@ export function useListStore(listId?: string, listProps?: IListProps) {
       groupBy,
 
       // Data fetching
+      isFirstFetch,
       hasMore,
       isFetchMore,
       loadData,

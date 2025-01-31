@@ -1,9 +1,15 @@
 <script setup lang="ts">
+// Store
+import { useListStore } from './stores/list.store'
 
+const { isFirstFetch, items, isLoading } = storeToRefs(useListStore())
 </script>
 
 <template>
-  <div class="list-loading">
+  <div
+    v-if="isFirstFetch && !items.length && isLoading"
+    class="list-loading"
+  >
     <LoaderBlock
       size="md"
     />

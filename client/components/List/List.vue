@@ -36,6 +36,7 @@ provideLocal(listIdKey, uuid)
 // Store
 const listStore = useListStore(uuid, props)
 const {
+  isFirstFetch,
   containerEl,
   items: storeItems,
   listItems,
@@ -107,11 +108,13 @@ const isImmediate = mergedProps.value.loadData?.immediate || !props.items || !pr
 // We load data immediately if required
 if (mergedProps.value.loadData?.fnc && isImmediate) {
   listStore.fetchAndSetData()
+    .then(() => isFirstFetch.value = false)
 }
 
 // Otherwise, we just trigger the watcher
 else if (storeItems.value) {
   storeItems.value = [...storeItems.value]
+  isFirstFetch.value = false
 }
 
 defineExpose({ handleKey })
