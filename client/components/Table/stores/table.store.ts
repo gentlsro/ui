@@ -34,6 +34,7 @@ import type HorizontalScroller from '../../Scroller/HorizontalScroller.vue'
 export function useTableStore(
   config?: { tableId?: string, tableProps?: ITableProps },
 ) {
+  const { locale } = useI18n()
   const { tableId, tableProps } = config ?? {}
   const _tableId = tableId ?? injectLocal(tableIdKey, tableId ?? useId())
 
@@ -211,6 +212,7 @@ export function useTableStore(
     watch(columnsMerged, columnsMerged => {
       // Merge columns from all the sources, remove duplicates
       let cols = columnsMerged
+      console.log(1)
 
       // Transform columns
       const { columns: _columns, queryBuilder: qb, pagination } = tableTransformColumns({
@@ -243,6 +245,15 @@ export function useTableStore(
         syncStateColumns()
       }
     }, { immediate: true })
+
+    // We need to refresh column labels on locale change
+    // watch(locale, () => {
+    //   internalColumns.value.forEach(col => {
+    //     if (col.misc?.isApiCol && !col.misc?.isPropsCol) {
+    //       col.label = 'penis'
+    //     }
+    //   })
+    // })
     // !SECTION
 
     // SECTION Pagination

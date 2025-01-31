@@ -31,6 +31,14 @@ export function tableMergeColumns(payload: {
 
     // Merge the column objects, with given priority: state > props > api
     const col = merge({}, apiCol, propsCol, stateCol) as TableColumn<any>
+
+    col.misc = {
+      ...col.misc,
+      isApiCol: !!apiCol,
+      isStateCol: !!stateCol,
+      isPropsCol: !!propsCol,
+    }
+
     const filters = col.filters?.map(f => new FilterItem(f)) ?? []
 
     return new TableColumn({ ...col, filters })
