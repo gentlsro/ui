@@ -98,6 +98,7 @@ export default defineNuxtConfig({
   // Alias
   alias: {
     $ui: './generated/ui.ts',
+    $uiConfig: './generated/uiConfig.ts',
     $uiLayer: resolve('.'),
   },
 
@@ -111,8 +112,8 @@ export default defineNuxtConfig({
 
   nitro: {
     alias: {
-      $ui: resolve('.'),
-      $uiConfig: join(process.cwd(), '.nuxt', 'generated', 'ui.ts'),
+      $ui: join(process.cwd(), '.nuxt', 'generated', 'ui.ts'),
+      $uiConfig: join(process.cwd(), '.nuxt', 'generated', 'uiConfig.ts'),
     },
   },
 

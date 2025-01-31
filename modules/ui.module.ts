@@ -16,21 +16,28 @@ export default defineNuxtModule({
       })
       .filter(({ path }) => existsSync(`${path}.ts`))
 
-    const base = configPaths.find(({ isBase }) => isBase)
-
     const code = `import { customDefu } from '$utilsLayer/shared/functions/custom-defu'
 ${configPaths.map(({ path }, idx) => `import config${idx} from '${path}'`).join('\n')}
-export * from '${base?.cwd}/index'
 
 export const uiConfig = customDefu(${configPaths.map((_, idx) => `config${idx}`).join(', ')})
 
 export type IUIConfig = typeof uiConfig
+export default uiConfig
 `
+
+    addTemplate({
+      filename: 'generated/uiConfig.ts',
+      write: true,
+      getContents: () => code,
+    })
+
+    const base = configPaths.find(({ isBase }) => isBase)
 
     addTemplate({
       filename: 'generated/ui.ts',
       write: true,
-      getContents: () => code,
+      getContents: () => `export * from '${base?.cwd}/index'
+`,
     })
 
     nuxt.hook('vite:extendConfig', config => {
@@ -45,6 +52,7 @@ export type IUIConfig = typeof uiConfig
       config.resolve.alias = {
         ...config.resolve.alias,
         $ui: `${nuxt.options.buildDir}/generated/ui.ts`,
+        $uiConfig: `${nuxt.options.buildDir}/generated/uiConfig.ts`,
       }
     })
   },
