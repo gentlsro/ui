@@ -168,6 +168,7 @@ function handleRemove(idx: number) {
             v-model:selection="visibleColumnsLocal"
             :items="nonHelperColumns"
             item-key="field"
+            item-label="_label"
             :selection-config="{ enabled: true, multi: true, useCheckbox: true }"
             :ui="{ rowClass: () => 'p-r-2 m-y-1px rounded-custom' }"
           >
@@ -264,6 +265,7 @@ function handleRemove(idx: number) {
           <List
             v-model:items="visibleColumnsLocal"
             item-key="field"
+            item-label="_label"
             :search-config="{ enabled: false }"
             :sorting-config="{ enabled: false }"
             :ui="{
