@@ -7,6 +7,7 @@ import { getListItemLabel } from '../List/functions/helpers'
 
 type IProps = Pick<ISelectorProps, 'disabled' | 'readonly' | 'optionLabel'> & {
   chip: any
+  optionByKey: Record<string, any>
 }
 
 const props = defineProps<IProps>()
@@ -16,7 +17,7 @@ defineEmits<{
 }>()
 
 const label = computed(() => {
-  return getListItemLabel(props.chip, props.optionLabel)
+  return getListItemLabel(props.chip, props.optionLabel, props.optionByKey)
 })
 </script>
 
