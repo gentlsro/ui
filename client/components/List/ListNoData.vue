@@ -23,7 +23,6 @@ watch(height, h => {
     v-if="!isLoading && !listItems?.length"
     ref="bannerEl"
     m="x-2"
-    min-w="60"
     no-transition
   >
     <span text-caption>
