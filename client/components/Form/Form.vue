@@ -164,6 +164,8 @@ provide(formSubmitKey, formStore.handleSubmit)
       :ui="mergedProps.ui"
       :has-keyboard-shortcuts
       :has-confirmation
+      :cancel-btn-props="mergedProps.cancelBtnProps"
+      :submit-btn-props="mergedProps.submitBtnProps"
     >
       <div
         id="form-controls"
@@ -175,7 +177,6 @@ provide(formSubmitKey, formStore.handleSubmit)
 
         <FormControls
           v-bind="formControlsProps"
-          :edit-control="formControlsProps.editControls"
           :ui="mergedProps.ui"
           :has-confirmation
           :has-keyboard-shortcuts
