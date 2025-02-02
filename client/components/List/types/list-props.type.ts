@@ -120,6 +120,13 @@ export type IListProps = {
      * even if there are items provided through the `items` prop
      */
     immediate?: boolean
+
+    /**
+     * Whether to trigger the `loadData.fnc` on change of the search value
+     *
+     * You can also provide a number to specify the debounce time for the search
+     */
+    onSearch?: boolean | number
   }
 
   /**

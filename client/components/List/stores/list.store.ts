@@ -170,8 +170,12 @@ export function useListStore(listId?: string, listProps?: IListProps) {
       }, {} as Record<string, boolean>) ?? {}
     })
 
-    watch(search, async () => {
-      await fetchAndSetData({ isFetchMore: false, force: true })
+    watch(search, () => {
+      if (typeof loadData.value?.onSearch === 'number') {
+        debouncedFetchAndSetData()
+      } else if (loadData.value?.onSearch) {
+        fetchAndSetData({ isFetchMore: false, force: true })
+      }
     })
 
     watchDebounced(
@@ -315,6 +319,11 @@ export function useListStore(listId?: string, listProps?: IListProps) {
       hasMore.value = res?.hasMore
       items.value = res.items ? [...res.items] : []
     }
+
+    const debouncedFetchAndSetData = useDebounceFn(
+      fetchAndSetData,
+      typeof loadData.value?.onSearch === 'number' ? loadData.value?.onSearch : 0,
+    )
 
     // D'n'D
     const draggedItem = ref<IListItem>()

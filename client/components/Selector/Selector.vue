@@ -13,6 +13,7 @@ import { getComponentMergedProps, getComponentProps } from '../../functions/get-
 import { selectorIdKey, useSelectorStore } from './stores/selector.store'
 import { selectorTransformOptions } from './functions/selector-transform-options'
 import { getListItemEmitValue, getListItemKey } from '../List/functions/helpers'
+import { listFetchData } from '../List/functions/list-fetch-data'
 
 const props = withDefaults(defineProps<ISelectorProps>(), {
   ...getComponentProps('selector'),
@@ -41,6 +42,7 @@ defineExpose({
 })
 
 // Utils
+const { handleRequest } = useRequest()
 const self = getCurrentInstance()
 const uuid = injectLocal(selectorIdKey, useId()) as string
 
@@ -158,8 +160,7 @@ if (props.preselectFirst) {
 
 // Lifcecycle
 onMounted(() => {
-  referenceEl.value = unrefElement(fieldEl as any)
-    ?.querySelector('.wrapper__body') as HTMLDivElement
+  referenceEl.value = unrefElement(fieldEl as any)?.querySelector('.wrapper__body') as HTMLDivElement
 })
 
 // When layout changes, we need to set new reference target for menu
@@ -171,6 +172,16 @@ watch(
     })
   },
 )
+
+// Initialize the options if `immediate` is set
+if (props.immediateFetch && props.loadData?.fnc) {
+  listFetchData({
+    search: search.value,
+    handleRequest,
+    loadData: props.loadData,
+    items: [],
+  }).then(({ items }) => options.value = items)
+}
 </script>
 
 <template>

@@ -36,6 +36,12 @@ export type ISelectorProps = IFieldProps & {
   clearOptionsOnMenuHide?: boolean
 
   /**
+   * When true, the options will be fetched immediately on initialization, without
+   * waiting for the user to open the menu
+   */
+  immediateFetch?: boolean
+
+  /**
    * When true, the dropdown icon will not be shown
    */
   noDropdownIcon?: boolean
