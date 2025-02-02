@@ -13,6 +13,14 @@ defineProps<IProps>()
 
 // Layout
 const model = defineModel<string | number>()
+
+function getLabel(tab: ITabProps) {
+  if (typeof tab.label === 'function') {
+    return tab.label()
+  }
+
+  return tab.label
+}
 </script>
 
 <template>
@@ -29,7 +37,7 @@ const model = defineModel<string | number>()
       v-for="tab in tabs"
       :key="tab.id"
       :icon="tab.props.icon"
-      :label="tab.props.label ?? tab.name"
+      :label="getLabel(tab) ?? tab.name"
       :class="ui?.tabNavBtnClass(model === tab.name)"
       v-bind="tab.props.btnProps?.(model === tab.name)"
       @click="model = tab.name"

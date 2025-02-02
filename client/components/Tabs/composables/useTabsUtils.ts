@@ -26,7 +26,7 @@ export function useTabsUtils() {
       name,
       props: {
         name: { type: String, required: true },
-        label: { type: String, required: false },
+        label: { type: [String, Function], required: false },
         icon: { type: String, required: false },
         btnProps: { type: Function, required: false },
       },

@@ -9,7 +9,7 @@ export type ITabProps = {
    *
    * NOTE: This is basically the same as `btnProps.label` but just exposed for convenience
    */
-  label?: string
+  label?: string | (() => string)
 
   /**
    * Icon for the tab
