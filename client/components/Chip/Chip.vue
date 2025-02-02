@@ -16,9 +16,6 @@ defineEmits<{
   (e: 'remove'): void
 }>()
 
-// Utils
-const localePath = useLocalePath()
-
 // Layout
 const label = computed(() => {
   if (typeof props.label === 'function') {
@@ -37,13 +34,11 @@ const classes = computed(() => {
     },
   ]
 })
-
-console.log(props.navigateToOptions)
 </script>
 
 <template>
   <div
-    v-ripple="ripple"
+    v-ripple="!to && ripple"
     class="chip"
     border="ca"
     h="5"
