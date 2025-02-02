@@ -38,12 +38,7 @@ const classes = computed(() => {
   ]
 })
 
-// Utils
-function handleClick() {
-  if (props.to) {
-    navigateTo(localePath(props.to, undefined), props.navigateToOptions)
-  }
-}
+console.log(props.navigateToOptions)
 </script>
 
 <template>
@@ -79,18 +74,11 @@ function handleClick() {
           v-if="to"
           v-bind="navigateToOptions"
           :to
+          class="link"
+          truncate
+          data-onboarding="chip-label"
         >
-          <template #default="{ route }">
-            <a
-              :href="route.path"
-              class="link"
-              truncate
-              data-onboarding="chip-label"
-              @click.stop.prevent="handleClick"
-            >
-              {{ label }}
-            </a>
-          </template>
+          {{ label }}
         </NuxtLink>
 
         <span
