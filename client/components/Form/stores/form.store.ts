@@ -53,7 +53,7 @@ export function useFormStore(payload?: {
         return
       }
 
-      if (!isConfirmed && hasConfirmation.value) {
+      if (!isConfirmed) {
         blurAnyFocusedInput()
 
         // We try to show the default confirmation menu
