@@ -70,10 +70,7 @@ const editControls = computed(() => {
       data-cy="save-button"
       data-onboarding="form-save-btn"
     >
-      <slot
-        name="confirmation"
-        :confirmation-el
-      >
+      <slot name="confirmation">
         <MenuConfirmation
           v-if="hasConfirmation"
           ref="confirmationEl"
