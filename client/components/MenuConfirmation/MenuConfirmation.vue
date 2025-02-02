@@ -23,7 +23,7 @@ const mergedProps = computed(() => {
 
 // Layout
 const confirmBtnEl = useTemplateRef('confirmBtnEl')
-const isConfirmation = ref(false)
+const isConfirmation = defineModel<boolean>({ default: false })
 
 function handleConfirm() {
   emits('ok')
