@@ -56,14 +56,16 @@ export function useFormStore(payload?: {
         if (confirmationEl.value && hasConfirmation.value) {
           confirmationEl.value?.show?.()
           nextTick(() => confirmationEl.value?.focusConfirmButton?.())
+
+          return
         }
 
         // Otherwise, we emit an event
         else {
           emitConfirmation.value()
-        }
 
-        return
+          return
+        }
       }
 
       if (!isLoading.value && !isSubmitDisabled.value) {
