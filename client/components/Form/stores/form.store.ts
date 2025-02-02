@@ -40,22 +40,20 @@ export function useFormStore(payload?: {
       return formHasConfirmation(isSubmitConfirmation.value, uiState.value.form?.confirmation.enabled)
     })
 
+    watchEffect(() => {
+      console.log('isSubmitConfirmation', isSubmitConfirmation.value, 'uiState.value.form.confirmation.enabled', uiState.value.form?.confirmation.enabled)
+    })
+
     // Errors
     const errors = ref<IFormProps['errors']>(props?.errors ?? [])
 
     // Methods
     async function handleSubmit(isConfirmed?: boolean, payload?: any) {
-      console.log('is editing', isEditing.value)
-      console.log('is confirmed', isConfirmed)
-      console.log('has confirmation', hasConfirmation.value)
       if (!isEditing.value) {
         return
       }
 
-      console.log(1)
-
       if (!isConfirmed && hasConfirmation.value) {
-        console.log(2)
         blurAnyFocusedInput()
 
         // We try to show the default confirmation menu
