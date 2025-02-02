@@ -26,6 +26,7 @@ export function useFormStore(payload?: {
     // Helpers
     const emitSubmit = ref<(payload: any) => void>(() => {})
     const emitCancel = ref<() => void>(() => {})
+    const emitConfirmation = ref<() => void>(() => {})
 
     // Layout
     const formEl = ref<HTMLFormElement>()
@@ -48,10 +49,19 @@ export function useFormStore(payload?: {
         return
       }
 
-      if (!isConfirmed && hasConfirmation.value && confirmationEl.value) {
+      if (!isConfirmed && hasConfirmation.value) {
         blurAnyFocusedInput()
-        confirmationEl.value?.show?.()
-        nextTick(() => confirmationEl.value?.focusConfirmButton?.())
+
+        // We try to show the default confirmation menu
+        if (confirmationEl.value) {
+          confirmationEl.value?.show?.()
+          nextTick(() => confirmationEl.value?.focusConfirmButton?.())
+        }
+
+        // Otherwise, we emit an event
+        else {
+          emitConfirmation.value()
+        }
 
         return
       }
@@ -74,6 +84,7 @@ export function useFormStore(payload?: {
       hasConfirmation,
       emitSubmit: skipHydrate(emitSubmit),
       emitCancel: skipHydrate(emitCancel),
+      emitConfirmation: skipHydrate(emitConfirmation),
 
       handleSubmit: skipHydrate(throttledSubmit),
     }

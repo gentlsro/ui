@@ -21,6 +21,7 @@ const props = withDefaults(defineProps<IFormProps>(), {
 const emits = defineEmits<{
   (e: 'submit', payload?: any): void
   (e: 'cancel'): void
+  (e: 'confirmation'): void
   (e: 'update:errors', errors: string[]): void
 }>()
 
@@ -49,11 +50,13 @@ const {
   hasConfirmation,
   emitSubmit,
   emitCancel,
+  emitConfirmation,
 } = storeToRefs(formStore)
 
 // Set emits
 emitSubmit.value = payload => emits('submit', payload)
 emitCancel.value = () => emits('cancel')
+emitConfirmation.value = () => emits('confirmation')
 
 // State
 const isEditing = defineModel<boolean>('isEditing', { default: false })
