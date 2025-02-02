@@ -63,7 +63,7 @@ const isEditing = defineModel<boolean>('isEditing', { default: false })
 const errors = defineModel<IFormProps['errors']>('errors', { default: () => [] })
 const isLoading = toRef(props, 'loading')
 const isSubmitDisabled = toRef(props, 'submitDisabled')
-const isSubmitConfirmation = toRef(props, 'submitConfirmation')
+const isSubmitConfirmation = toRef(props, 'submitConfirmation', undefined)
 const formControlsProps = getFormControlsProps(props)
 
 // When no controls are available, we put the editing mode active

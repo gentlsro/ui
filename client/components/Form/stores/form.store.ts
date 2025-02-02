@@ -32,9 +32,9 @@ export function useFormStore(payload?: {
     const formEl = ref<HTMLFormElement>()
     const confirmationEl = ref<InstanceType<typeof MenuConfirmation>>()
     const isEditing = ref(!!props?.isEditing)
-    const isLoading = ref()
-    const isSubmitDisabled = ref()
-    const isSubmitConfirmation = ref()
+    const isLoading = ref(props?.loading)
+    const isSubmitDisabled = ref(props?.submitDisabled)
+    const isSubmitConfirmation = ref(props?.submitConfirmation)
 
     const hasConfirmation = computed(() => {
       return formHasConfirmation(isSubmitConfirmation.value, uiState.value.form?.confirmation.enabled)
