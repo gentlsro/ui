@@ -61,7 +61,7 @@ export function useFormStore(payload?: {
         }
 
         // Otherwise, we emit an event
-        else {
+        else if (hasConfirmation.value) {
           emitConfirmation.value()
 
           return
