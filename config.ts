@@ -896,7 +896,9 @@ const defaultComponentsConfig = {
           searchClass: 'gap-1 p-2',
         },
       }),
-      loadData: () => ({}),
+      loadData: () => ({
+        onSearch: 300,
+      }),
       menuProps: () => ({
         position: 'top',
         fit: false,

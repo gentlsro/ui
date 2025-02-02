@@ -228,6 +228,11 @@ export type IListProps = {
       _extra?: { hasExactMatch?: boolean }
     ) => IItem[] | Promise<IItem[]>
 
+    /**
+     * When true, the search (~ local filtering) will be triggerd only once the `loadData.fnc`
+     * is resolved. If no `loadData.fnc` is provided, the search will be triggered immediately
+     */
+    syncWithLoad?: boolean
   }
 
   /**
