@@ -24,15 +24,11 @@ const mergedProps = computed(() => {
 // Layout
 const model = defineModel<boolean>({ default: false })
 
-watchEffect(() => {
-  console.log(model.value)
-})
-
 const drawerClass = computed(() => {
   return [
     `drawer--${props.side}`,
     {
-      'is-open': model,
+      'is-open': model.value,
       'is-full-height': props.fullHeight,
       'is-absolute': props.absolute,
     },
