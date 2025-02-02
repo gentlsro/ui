@@ -45,7 +45,9 @@ export function useFormStore(payload?: {
 
     // Methods
     async function handleSubmit(isConfirmed?: boolean, payload?: any) {
-      console.log('FUCK', confirmationEl.value)
+      console.log('is editing', isEditing.value)
+      console.log('is confirmed', isConfirmed)
+      console.log('payload', payload)
       if (!isEditing.value) {
         return
       }
