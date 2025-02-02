@@ -54,6 +54,7 @@ function handleRemove(idx: number) {
     :is="to ? 'NuxtLink' : 'span'"
     v-if="!isMulti"
     :to
+    target="_blank"
   >
     {{ getListItemLabel(model, optionLabel, optionByKey) }}
   </Component>
@@ -77,6 +78,7 @@ function handleRemove(idx: number) {
           :style="ui?.chipStyle"
           :option-label
           :option-by-key
+          :navigate-to-options="{ target: '_blank' }"
           :to="optionTo?.(item)"
           @remove="handleRemove(idx)"
         />
@@ -104,6 +106,7 @@ function handleRemove(idx: number) {
           :style="ui?.chipStyle"
           :option-label
           :option-by-key
+          :navigate-to-options="{ target: '_blank' }"
           :to="optionTo?.(item)"
           @remove="handleRemove(idx)"
         />
