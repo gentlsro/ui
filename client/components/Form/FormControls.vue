@@ -85,7 +85,7 @@ const editControls = computed(() => {
         </MenuConfirmation>
       </slot>
 
-      <slot name="submit-btn" />
+      <slot name="submit-btn-inner" />
 
       <KeyboardShortcut
         v-if="hasKeyboardShortcuts"
