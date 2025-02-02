@@ -87,8 +87,6 @@ function handleHide() {
 watch(contentHeight, () => {
   menuEl.value?.recomputePosition()
 })
-
-console.log(options.value)
 </script>
 
 <template>
