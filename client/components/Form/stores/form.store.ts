@@ -48,7 +48,7 @@ export function useFormStore(payload?: {
         return
       }
 
-      if (!isConfirmed && hasConfirmation.value) {
+      if (!isConfirmed && hasConfirmation.value && confirmationEl.value) {
         blurAnyFocusedInput()
         confirmationEl.value?.show?.()
         nextTick(() => confirmationEl.value?.focusConfirmButton?.())
