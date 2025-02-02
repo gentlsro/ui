@@ -87,6 +87,12 @@ function handleHide() {
 watch(contentHeight, () => {
   menuEl.value?.recomputePosition()
 })
+
+onMounted(() => {
+  setTimeout(() => {
+    console.log(listEl.value)
+  }, 300)
+})
 </script>
 
 <template>

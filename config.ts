@@ -883,7 +883,7 @@ const defaultComponentsConfig = {
       optionLabel: 'label',
       noMenuMatchWidth: undefined,
       clearSearchOnHide: true,
-      clearOptionsOnMenuHide: true,
+      clearOptionsOnMenuHide: false,
       stackLabel: undefined,
       ui: () => ({
         borderRadius: '0.5rem',
