@@ -30,10 +30,7 @@ const mergedProps = computed(() => {
   return getComponentMergedProps('tabs', props)
 })
 
-// Layout
-const model = defineModel<string | number>()
-
-const tabs = computed(() => {
+function buildTabs() {
   const defaultSlot = self?.slots.default?.() || []
   const vueInstances = defaultSlot.flatMap(t => {
     const children = t.children || []
@@ -56,7 +53,11 @@ const tabs = computed(() => {
       props: component.props as ITabProps,
       vueApp,
     }))
-})
+}
+
+// Layout
+const model = defineModel<string | number>()
+const tabs = ref(buildTabs())
 
 const tabsNavigationProps = computed<ITabPropsPassthrough[]>(() => {
   return tabs.value.map(tab => {
@@ -77,6 +78,8 @@ const tabsNavigationProps = computed<ITabPropsPassthrough[]>(() => {
 const activeTab = computed(() => {
   return tabs.value.find(tab => tab.name === model.value)
 })
+
+defineExpose({ buildTabs })
 </script>
 
 <template>
