@@ -4,12 +4,12 @@ import type { IFormProps } from './types/form-props.type'
 
 // Functions
 import { useForm } from './composables/useForm'
+import { useFormUtils } from './composables/useFormUtils'
+import { focusFirstInput } from '../../functions/focus-first-input'
 import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
 
 // Store
 import { formIdKey, useFormStore } from './stores/form.store'
-import { useFormUtils } from './composables/useFormUtils'
-import { focusFirstInput } from '../../functions/focus-first-input'
 
 // Provide / Inject
 import { formSubmitKey } from './provide/form.provide'
@@ -26,7 +26,7 @@ const emits = defineEmits<{
 }>()
 
 // Init
-const uuid = injectLocal(formIdKey, useId()) as string
+const uuid = useId()
 
 provideLocal(formIdKey, uuid)
 
@@ -63,7 +63,7 @@ const isEditing = defineModel<boolean>('isEditing', { default: false })
 const errors = defineModel<IFormProps['errors']>('errors', { default: () => [] })
 const isLoading = toRef(props, 'loading')
 const isSubmitDisabled = toRef(props, 'submitDisabled')
-const isSubmitConfirmation = toRef(props, 'submitConfirmation', undefined)
+const isSubmitConfirmation = toRef(props, 'submitConfirmation')
 const formControlsProps = getFormControlsProps(props)
 
 // When no controls are available, we put the editing mode active
