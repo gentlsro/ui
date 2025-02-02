@@ -37,7 +37,7 @@ function getLabel(tab: ITabProps) {
       v-for="tab in tabs"
       :key="tab.id"
       :icon="tab.props.icon"
-      :label="getLabel(tab) ?? tab.name"
+      :label="getLabel(tab.props) ?? tab.name"
       :class="ui?.tabNavBtnClass(model === tab.name)"
       v-bind="tab.props.btnProps?.(model === tab.name)"
       @click="model = tab.name"
