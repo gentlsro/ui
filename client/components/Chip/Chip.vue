@@ -77,7 +77,8 @@ function handleClick() {
       <slot>
         <NuxtLink
           v-if="to"
-          :to="to"
+          v-bind="navigateToOptions"
+          :to
         >
           <template #default="{ route }">
             <a
