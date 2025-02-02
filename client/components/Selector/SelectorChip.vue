@@ -27,7 +27,6 @@ const label = computed(() => {
     min-w="20"
     p="!y-1px"
     :has-remove="!(readonly || disabled)"
-    @click.stop.prevent
     @remove="$emit('remove')"
   />
 </template>
