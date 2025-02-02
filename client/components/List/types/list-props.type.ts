@@ -175,11 +175,6 @@ export type IListProps = {
    */
   searchConfig?: {
     /**
-     * The debounce time for search in ms
-     */
-    debounce?: number
-
-    /**
      * When false, the search will be disabled
      *
      * @default true

@@ -217,6 +217,8 @@ if (props.immediateFetch && mergedProps.value.loadData?.fnc) {
         :option-label
         :empty-value
         :multi
+        :to
+        :option-to
       >
         <template #default="{ item, index }">
           <slot

@@ -6,7 +6,7 @@ import type { ISelectorProps } from './types/selector-props.type'
 import { useSelectorStore } from './stores/selector.store'
 import { getListItemLabel } from '../List/functions/helpers'
 
-type IProps = Pick<ISelectorProps, 'useScroller' | 'ui' | 'maxChipsRows' | 'readonly' | 'disabled' | 'emptyValue' | 'multi' | 'optionLabel'>
+type IProps = Pick<ISelectorProps, 'useScroller' | 'ui' | 'maxChipsRows' | 'readonly' | 'disabled' | 'emptyValue' | 'multi' | 'optionLabel' | 'optionTo' | 'to'>
 
 const props = defineProps<IProps>()
 
@@ -15,6 +15,14 @@ const { model, optionByKey } = storeToRefs(useSelectorStore())
 
 // Layout
 const isMulti = toRef(props, 'multi')
+
+const to = computed(() => {
+  if (typeof props.to === 'function') {
+    return props.to(model.value)
+  }
+
+  return props.to
+})
 
 const modelArray = computed(() => {
   if (!model.value || model.value === props.emptyValue) {
@@ -42,9 +50,13 @@ function handleRemove(idx: number) {
 </script>
 
 <template>
-  <span v-if="!isMulti">
+  <Component
+    :is="to ? 'NuxtLink' : 'span'"
+    v-if="!isMulti"
+    :to
+  >
     {{ getListItemLabel(model, optionLabel, optionByKey) }}
-  </span>
+  </Component>
 
   <HorizontalScroller
     v-else-if="useScroller"
@@ -65,6 +77,7 @@ function handleRemove(idx: number) {
           :style="ui?.chipStyle"
           :option-label
           :option-by-key
+          :to="optionTo?.(item)"
           @remove="handleRemove(idx)"
         />
       </slot>
@@ -91,6 +104,7 @@ function handleRemove(idx: number) {
           :style="ui?.chipStyle"
           :option-label
           :option-by-key
+          :to="optionTo?.(item)"
           @remove="handleRemove(idx)"
         />
       </slot>

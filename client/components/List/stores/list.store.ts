@@ -171,10 +171,19 @@ export function useListStore(listId?: string, listProps?: IListProps) {
     })
 
     watch(search, () => {
+      // Debounce the search to fetch data
       if (typeof loadData.value?.onSearch === 'number') {
         debouncedFetchAndSetData()
-      } else if (loadData.value?.onSearch) {
+      }
+
+      // Immediately fetch data
+      else if (loadData.value?.onSearch) {
         fetchAndSetData({ isFetchMore: false, force: true })
+      }
+
+      // Trigger reactivity for `items` to filter locally
+      else {
+        items.value = [...items.value]
       }
     })
 
