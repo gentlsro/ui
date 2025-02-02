@@ -10,7 +10,6 @@ const props = withDefaults(defineProps<IDrawerProps>(), {
 })
 
 const emits = defineEmits<{
-  (e: 'update:modelValue', value: boolean): void
   (e: 'hide'): void
   (e: 'show'): void
   (e: 'before-hide'): void
@@ -23,7 +22,11 @@ const mergedProps = computed(() => {
 })
 
 // Layout
-const model = useVModel(props, 'modelValue', emits)
+const model = defineModel<boolean>({ default: false })
+
+watchEffect(() => {
+  console.log(model.value)
+})
 
 const drawerClass = computed(() => {
   return [
