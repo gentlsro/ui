@@ -52,6 +52,8 @@ export function useFormStore(payload?: {
       if (!isConfirmed && hasConfirmation.value) {
         blurAnyFocusedInput()
 
+        console.log('FUCK', confirmationEl.value)
+
         // We try to show the default confirmation menu
         if (confirmationEl.value) {
           confirmationEl.value?.show?.()
