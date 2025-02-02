@@ -180,7 +180,10 @@ if (props.immediateFetch && props.loadData?.fnc) {
     handleRequest,
     loadData: props.loadData,
     items: [],
-  }).then(({ items }) => options.value = items)
+  }).then(({ items }) => {
+    options.value = items
+    console.log(items)
+  })
 }
 </script>
 
