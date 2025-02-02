@@ -174,16 +174,13 @@ watch(
 )
 
 // Initialize the options if `immediate` is set
-if (props.immediateFetch && props.loadData?.fnc) {
+if (props.immediateFetch && mergedProps.value.loadData?.fnc) {
   listFetchData({
     search: search.value,
     handleRequest,
-    loadData: props.loadData,
+    loadData: mergedProps.value.loadData,
     items: [],
-  }).then(({ items }) => {
-    options.value = items
-    console.log(items)
-  })
+  }).then(({ items }) => options.value = items)
 }
 </script>
 
