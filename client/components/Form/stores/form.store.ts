@@ -47,12 +47,15 @@ export function useFormStore(payload?: {
     async function handleSubmit(isConfirmed?: boolean, payload?: any) {
       console.log('is editing', isEditing.value)
       console.log('is confirmed', isConfirmed)
-      console.log('payload', payload)
+      console.log('has confirmation', hasConfirmation.value)
       if (!isEditing.value) {
         return
       }
 
+      console.log(1)
+
       if (!isConfirmed && hasConfirmation.value) {
+        console.log(2)
         blurAnyFocusedInput()
 
         // We try to show the default confirmation menu
