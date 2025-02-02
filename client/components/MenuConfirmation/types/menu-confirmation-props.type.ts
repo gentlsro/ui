@@ -18,6 +18,11 @@ export type IMenuConfirmationProps = IMenuProps & {
   hasConfirmation?: boolean
 
   /**
+   * When true, the confirmation menu will be shown
+   */
+  modelValue?: boolean
+
+  /**
    * Whether to show the confirmation button
    * Use case: when we provide own slot with `Form` for example
    */
