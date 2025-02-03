@@ -143,6 +143,8 @@ async function handleDelete() {
   await deleteLayout({
     layout: layout.value,
     layouts: state.value.layouts,
+    customData: customData.value,
+    handleRequest,
   })
 
   $hide()
