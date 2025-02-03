@@ -30,6 +30,7 @@ const menuEl = useTemplateRef('menuEl')
 const isOptionsDialogOpen = ref(false)
 const isLayoutSaveDialogOpen = ref(false)
 const layoutSelected = ref<ITableLayout>()
+const actionsVisibleForId = ref<string | number>()
 
 function handleLayoutEdit(layout: any) {
   $hide()
@@ -165,7 +166,7 @@ function getLayoutIcons() {
 
           <div
             class="layout-actions"
-            :class="{ 'is-active': layoutSelected?.id === row.id }"
+            :class="{ 'is-active': actionsVisibleForId === row.id }"
           >
             <Btn
               size="xs"
@@ -175,6 +176,8 @@ function getLayoutIcons() {
             <CrudBtnDelete
               size="xs"
               @click.stop.prevent
+              @show="actionsVisibleForId = row.id"
+              @hide="actionsVisibleForId = undefined"
               @delete="handleDelete(row.ref)"
             />
           </div>
