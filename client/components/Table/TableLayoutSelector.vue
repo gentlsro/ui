@@ -4,12 +4,13 @@ import type { ITableLayout } from './types/table-layout.type'
 
 // Functions
 import { useTableAutoFit } from './composables/useTableAutoFit'
+import { tableDeleteLayout } from './functions/table-delete-layout'
+import { tableGetLayoutMeta } from './functions/table-get-layout-meta'
 import { tableTransformColumns } from './functions/table-transform-columns'
 import { queryBuilderInitializeItems } from '../QueryBuilder/functions/query-builder-initialize-items'
 
 // Store
 import { useTableStore } from './stores/table.store'
-import { tableDeleteLayout } from './functions/table-delete-layout'
 
 // Utils
 const { isLoading, handleRequest } = useRequest()
@@ -25,7 +26,10 @@ const {
   customData,
 } = storeToRefs(useTableStore())
 
-const { deleteLayout = tableDeleteLayout } = modifiers.value ?? {}
+const {
+  deleteLayout = tableDeleteLayout,
+  getLayoutMeta = tableGetLayoutMeta,
+} = modifiers.value ?? {}
 
 // Layout
 const isOptionsDialogOpen = ref(false)
@@ -84,12 +88,6 @@ function handleLayoutApply(layout?: ITableLayout) {
 
   $hide()
 }
-
-function getLayoutIcons() {
-  return [
-    [],
-  ]
-}
 </script>
 
 <template>
@@ -120,7 +118,7 @@ function getLayoutIcons() {
         :items="state.layouts"
         item-label="name"
         data-cy="scheme-search"
-        :ui="{ rowClass: () => 'p-r-2 m-y-1px rounded-custom !cursor-pointer' }"
+        :ui="{ rowClass: () => 'flex-col p-r-2 m-y-1px rounded-custom !cursor-pointer p-y-1' }"
         p="y-1"
         @click:item="handleLayoutApply($event.ref as any)"
       >
@@ -162,29 +160,36 @@ function getLayoutIcons() {
         </template>
 
         <template #item="{ row }">
-          <span grow>
-            {{ row.label }}
-          </span>
-
           <div
-            class="layout-actions"
-            :class="{ 'is-active': isActionsVisibleLayoutId === row.id }"
+            flex="~ gap-2"
+            w="full"
           >
-            <Btn
-              size="xs"
-              preset="EDIT"
-              :loading="isLoading"
-              @click.stop.prevent="handleLayoutEdit(row.ref)"
-            />
-            <CrudBtnDelete
-              size="xs"
-              :loading="isLoading"
-              @click.stop.prevent
-              @before-show="isActionsVisibleLayoutId = row.id"
-              @hide="isActionsVisibleLayoutId = undefined"
-              @delete="handleDelete(row.ref)"
-            />
+            <span grow>
+              {{ row.label }}
+            </span>
+
+            <div
+              class="layout-actions"
+              :class="{ 'is-active': isActionsVisibleLayoutId === row.id }"
+            >
+              <Btn
+                size="xs"
+                preset="EDIT"
+                :loading="isLoading"
+                @click.stop.prevent="handleLayoutEdit(row.ref)"
+              />
+              <CrudBtnDelete
+                size="xs"
+                :loading="isLoading"
+                @click.stop.prevent
+                @before-show="isActionsVisibleLayoutId = row.id"
+                @hide="isActionsVisibleLayoutId = undefined"
+                @delete="handleDelete(row.ref)"
+              />
+            </div>
           </div>
+
+          <TableLayoutMeta v-bind="getLayoutMeta(row.ref)" />
         </template>
       </List>
     </Menu>

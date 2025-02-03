@@ -103,6 +103,8 @@ export async function tableSaveLayout(payload: {
     Object.assign(existingLayout, layout)
 
     return
+  } else {
+    layout.id = generateUUID()
   }
 
   layouts.push(layout)

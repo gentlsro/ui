@@ -30,6 +30,7 @@ import type { tableFilterValueChangeDebounce } from '../functions/table-filter-v
 import type { useTableStore } from '../stores/table.store'
 import type { tableExtractPaginationFromUrl } from '../functions/table-extract-pagination-from-url'
 import type { tableSerializePagination } from '../functions/table-serialize-pagination'
+import type { tableGetLayoutMeta } from '../functions/table-get-layout-meta'
 
 export type ITableProps<
   K extends typeof tableBuildFetchPayload = typeof tableBuildFetchPayload,
@@ -307,6 +308,12 @@ export type ITableProps<
      * Function that navigates to URL based on the table state
      */
     navigate?: typeof tableNavigate
+
+    /**
+     * Function that determines what parts have been saved within the layout, like
+     * columns, filters, sorting, etc.
+     */
+    getLayoutMeta?: typeof tableGetLayoutMeta
   }
 
   /**
