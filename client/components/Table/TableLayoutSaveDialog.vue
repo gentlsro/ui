@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // Types
 import type { ITableLayout } from './types/table-layout.type'
+import type { ITableSortItem } from './types/table-sort-item.type'
 
 // Store
 import { useTableStore } from './stores/table.store'
@@ -10,7 +11,6 @@ import { tableSerializeFilters } from './functions/table-serialize-filters'
 import { tableSerializeSorting } from './functions/table-serialize-sorting'
 import { tableSerializeSelect } from './functions/table-serialize-select'
 import { tableExtractDataFromUrl } from './functions/table-extract-data-from-url'
-import type { ITableSortItem } from './types/table-sort-item.type'
 
 type IProps = {
   layout?: ITableLayout
@@ -74,7 +74,7 @@ const urlSchema = computed(() => {
 })
 
 const canBeSaved = computed(() => {
-  return (toSave.value.columns && !!urlSchema.value.select)
+  return (toSave.value.columns)
     || (toSave.value.filters && !!(urlSchema.value.filters || urlSchema.value.queryBuilder))
     || (toSave.value.sorting && !!urlSchema.value.sorting)
 })
