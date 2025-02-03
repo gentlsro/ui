@@ -128,6 +128,8 @@ async function handleSave() {
     modifiers: modifiers.value,
     queryBuilder: queryBuilder.value,
     customData: customData.value,
+    isPublic: toSave.value.isPublic,
+    isDefault: toSave.value.isDefault,
   })
 
   $hide()

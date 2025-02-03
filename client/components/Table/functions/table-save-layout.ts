@@ -13,10 +13,12 @@ import { tableBuildQueryParams } from './table-build-query-params'
 export async function tableSaveLayout(payload: {
   layout: ITableLayout
   internalColumns: TableColumn[]
-  toSave?: Array<'columns' | 'filters' | 'sorting'>
+  toSave?: Array<'columns' | 'filters' | 'sorting' | ''>
   modifiers?: ITableProps['modifiers']
   queryBuilder?: IQueryBuilderRow[]
   customData: IItem
+  isPublic?: boolean
+  isDefault?: boolean
 
   /**
    * Currently available layouts
@@ -30,6 +32,8 @@ export async function tableSaveLayout(payload: {
     internalColumns,
     queryBuilder = [],
     toSave,
+    isDefault,
+    isPublic,
   } = payload
 
   const {
@@ -56,6 +60,8 @@ export async function tableSaveLayout(payload: {
   })
 
   layout.schema = decodeURIComponent(schema.toString())
+  layout.isDefault = isDefault
+  layout.isPublic = isPublic
 
   if (existingLayout) {
     Object.assign(existingLayout, layout)
