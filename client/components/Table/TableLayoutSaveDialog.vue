@@ -20,6 +20,9 @@ type IProps = {
 const props = defineProps<IProps>()
 const emits = defineEmits<{ (e: 'hide'): void }>()
 
+// Utils
+const { handleRequest } = useRequest()
+
 // Store
 const {
   queryBuilder,
@@ -130,6 +133,7 @@ async function handleSave() {
     customData: customData.value,
     isPublic: toSave.value.isPublic,
     isDefault: toSave.value.isDefault,
+    handleRequest,
   })
 
   $hide()

@@ -11,14 +11,50 @@ import { tableSerializeData } from './table-serialize-data'
 import { tableBuildQueryParams } from './table-build-query-params'
 
 export async function tableSaveLayout(payload: {
+  /**
+   * Currently selected layout
+   */
   layout: ITableLayout
+
+  /**
+   * Current internal columns
+   */
   internalColumns: TableColumn[]
+
+  /**
+   * Which parts of the layout to save
+   */
   toSave?: Array<'columns' | 'filters' | 'sorting' | ''>
+
+  /**
+   * Modifiers for the table functions
+   */
   modifiers?: ITableProps['modifiers']
+
+  /**
+   * Query builder items
+   */
   queryBuilder?: IQueryBuilderRow[]
+
+  /**
+   * Custom data provided from the table store
+   */
   customData: IItem
+
+  /**
+   * Whether the layout is public
+   */
   isPublic?: boolean
+
+  /**
+   * Whether the layout is default
+   */
   isDefault?: boolean
+
+  /**
+   * Handle request function
+   */
+  handleRequest: ReturnType<typeof useRequest>['handleRequest']
 
   /**
    * Currently available layouts

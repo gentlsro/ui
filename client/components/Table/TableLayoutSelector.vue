@@ -26,11 +26,10 @@ const {
 const { deleteLayout = tableDeleteLayout } = modifiers.value ?? {}
 
 // Layout
-const menuEl = useTemplateRef('menuEl')
 const isOptionsDialogOpen = ref(false)
 const isLayoutSaveDialogOpen = ref(false)
 const layoutSelected = ref<ITableLayout>()
-const actionsVisibleForId = ref<string | number>()
+const isActionsVisibleLayoutId = ref<string | number>()
 
 function handleLayoutEdit(layout: any) {
   $hide()
@@ -108,7 +107,6 @@ function getLayoutIcons() {
 
     <!-- Layout selector menu -->
     <Menu
-      ref="menuEl"
       placement="bottom-end"
       w="100"
       :no-arrow="false"
@@ -166,7 +164,7 @@ function getLayoutIcons() {
 
           <div
             class="layout-actions"
-            :class="{ 'is-active': actionsVisibleForId === row.id }"
+            :class="{ 'is-active': isActionsVisibleLayoutId === row.id }"
           >
             <Btn
               size="xs"
@@ -176,8 +174,8 @@ function getLayoutIcons() {
             <CrudBtnDelete
               size="xs"
               @click.stop.prevent
-              @show="actionsVisibleForId = row.id"
-              @hide="actionsVisibleForId = undefined"
+              @show="isActionsVisibleLayoutId = row.id"
+              @hide="isActionsVisibleLayoutId = undefined"
               @delete="handleDelete(row.ref)"
             />
           </div>
