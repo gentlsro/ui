@@ -16,6 +16,7 @@ const props = withDefaults(defineProps<IProps>(), {
 
 defineEmits<{
   (e: 'delete'): void
+  (e: 'show'): void
   (e: 'hide'): void
 }>()
 
@@ -53,6 +54,7 @@ const label = computed(() => {
       :confirmation-text
       h="auto"
       v-bind="menuProps"
+      @show="$emit('show')"
       @hide="$emit('hide')"
       @ok="$emit('delete')"
     >
