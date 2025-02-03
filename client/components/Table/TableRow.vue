@@ -395,7 +395,7 @@ function handleEditCellMounted() {
   }
 
   .td {
-    @apply flex items-center border-ca;
+    @apply flex items-center border-ca overflow-auto;
     @apply w-$colWidth;
 
     .link {
