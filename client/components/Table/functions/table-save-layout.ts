@@ -16,6 +16,7 @@ export async function tableSaveLayout(payload: {
   toSave?: Array<'columns' | 'filters' | 'sorting'>
   modifiers?: ITableProps['modifiers']
   queryBuilder?: IQueryBuilderRow[]
+  customData: IItem
 
   /**
    * Currently available layouts

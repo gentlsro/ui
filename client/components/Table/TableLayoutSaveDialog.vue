@@ -21,7 +21,13 @@ const props = defineProps<IProps>()
 const emits = defineEmits<{ (e: 'hide'): void }>()
 
 // Store
-const { queryBuilder, internalColumns, modifiers, state } = storeToRefs(useTableStore())
+const {
+  queryBuilder,
+  internalColumns,
+  modifiers,
+  state,
+  customData,
+} = storeToRefs(useTableStore())
 
 // Helpers
 function getUnifiedSchema(schema: string | URLSearchParams) {
@@ -121,6 +127,7 @@ async function handleSave() {
     layouts: state.value.layouts,
     modifiers: modifiers.value,
     queryBuilder: queryBuilder.value,
+    customData: customData.value,
   })
 
   $hide()

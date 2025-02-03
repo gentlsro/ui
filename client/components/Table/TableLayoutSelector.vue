@@ -163,7 +163,10 @@ function getLayoutIcons() {
             {{ row.label }}
           </span>
 
-          <div class="layout-actions">
+          <div
+            class="layout-actions"
+            :class="{ 'is-active': layoutSelected?.id === row.id }"
+          >
             <Btn
               size="xs"
               preset="EDIT"
@@ -200,7 +203,8 @@ function getLayoutIcons() {
   @apply items-center bg-white dark:bg-black rounded-custom hidden;
 }
 
-.list-row-item:hover .layout-actions {
+.list-row-item:hover .layout-actions,
+.layout-actions.is-active {
   @apply flex;
 }
 
