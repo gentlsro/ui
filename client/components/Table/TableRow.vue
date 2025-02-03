@@ -194,6 +194,11 @@ function handleSelectToggle(row: IItem, ev?: MouseEvent) {
     selectionByKey: selectionByKey.value,
     isSet: isCtrl,
   })
+
+  if (isCtrl) {
+    ev.preventDefault()
+    ev.stopPropagation()
+  }
 }
 
 function handleEditCell(rowData: typeof rowDataArray.value[number], column: IRowColumn) {
@@ -269,7 +274,7 @@ function handleEditCellMounted() {
       class="tr tr--card"
       :class="[rowClassArray[idx], { 'is-selected': isSelected(rowData.row) }]"
       :style="rowStyleArray[idx]"
-      :to="to?.(row)"
+      :to="to?.(row, { rowKey })"
       @click="handleSelectToggle(rowData.row, $event)"
     >
       <div
