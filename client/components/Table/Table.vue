@@ -169,13 +169,14 @@ defineExpose(tableGetExposed())
       <template
         v-for="col in visibleColumns"
         :key="col.name"
-        #[col.name]="{ row, index }"
+        #[col.name]="{ row, column, index }"
       >
         <slot
           :name="col.name"
           :row
           :index
           :custom-data
+          :column
         />
       </template>
 

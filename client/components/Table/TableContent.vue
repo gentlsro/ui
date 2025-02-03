@@ -134,12 +134,13 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
           <template
             v-for="col in visibleColumns"
             :key="col.name"
-            #[col.name]
+            #[col.name]="{ row, column }"
           >
             <slot
               :name="col.name"
               :row
               :index
+              :column
             />
           </template>
 

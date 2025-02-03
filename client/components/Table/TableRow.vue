@@ -335,6 +335,8 @@ function handleEditCellMounted() {
           <slot
             v-else
             :name="column.column.field"
+            :row="rowData.row"
+            :column="column.column"
           >
             <ReuseValueTemplate
               :column
@@ -372,7 +374,11 @@ function handleEditCellMounted() {
       :data-field="column.column.field"
       :data-key="rowDataArray[0].rowKey"
     >
-      <slot :name="column.column.field">
+      <slot
+        :name="column.column.field"
+        :row="rowDataArray[0].row"
+        :column="column.column"
+      >
         <ReuseValueTemplate
           :column
           :row="rowDataArray[0].row"
