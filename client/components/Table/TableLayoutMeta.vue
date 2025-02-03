@@ -31,7 +31,7 @@ defineProps<IProps>()
     />
 
     <Separator
-      v-if="hasSelect || hasFilters || hasSorting"
+      v-if="(hasSelect || hasFilters || hasSorting) && (isPublic || isDefault)"
       vertical
       m="x-1"
     />
@@ -52,6 +52,6 @@ defineProps<IProps>()
 
 <style scoped lang="scss">
 .layout-meta {
-  @apply flex items-center w-full font-rem-12 color-blue-500 gap-2px;
+  @apply flex items-center w-full font-rem-10 color-blue-500 gap-2px;
 }
 </style>
