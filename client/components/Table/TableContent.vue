@@ -37,7 +37,6 @@ function handleVirtualScroll(ev: IVirtualScrollEvent) {
   const isFetchMore = rowsSplit.value.length - visibleEndItem.index - 1 < FETCH_MORE_THRESHOLD
 
   if (isFetchMore && hasMore.value && !paginationConfig.value?.enabled && !isDataLoading.value) {
-    console.log('Virtual scroll')
     tableStore.fetchAndSetData({ isFetchMore: true })
   }
 }
