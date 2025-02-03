@@ -274,7 +274,7 @@ function handleEditCellMounted() {
       class="tr tr--card"
       :class="[rowClassArray[idx], { 'is-selected': isSelected(rowData.row) }]"
       :style="rowStyleArray[idx]"
-      :to="to?.(row, { rowKey })"
+      :to="to?.(rowData.row, { rowKey })"
       @click="handleSelectToggle(rowData.row, $event)"
     >
       <div
@@ -361,7 +361,7 @@ function handleEditCellMounted() {
     class="tr tr--row"
     :class="[rowClassArray[0], { 'is-selected': isSelected(rowDataArray[0].row) }]"
     :style="rowStyleArray[0]"
-    :to="to?.(row, { rowKey })"
+    :to="to?.(rowDataArray[0].row, { rowKey })"
   >
     <div
       v-for="column in rowDataArray[0].columns"
