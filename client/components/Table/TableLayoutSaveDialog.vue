@@ -21,7 +21,7 @@ const props = defineProps<IProps>()
 const emits = defineEmits<{ (e: 'hide'): void }>()
 
 // Utils
-const { handleRequest } = useRequest()
+const { isLoading, handleRequest } = useRequest()
 
 // Store
 const {
@@ -176,6 +176,7 @@ const $z = useZod(
       :submit-btn-props="{ size: 'sm' }"
       no-shortcuts
       no-edit-controls
+      :loading="isLoading"
       :submit-disabled="!canBeSaved"
       :submit-confirmation="false"
       @submit="handleSave"
@@ -184,6 +185,7 @@ const $z = useZod(
         v-model="layout.name"
         :label="$t('table.layoutName')"
         stack-label
+        :readonly="!!layout.id"
         col=" md:span-2"
         zod="layout.name"
       />

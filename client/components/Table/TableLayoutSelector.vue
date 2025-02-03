@@ -12,7 +12,7 @@ import { useTableStore } from './stores/table.store'
 import { tableDeleteLayout } from './functions/table-delete-layout'
 
 // Utils
-const { handleRequest } = useRequest()
+const { isLoading, handleRequest } = useRequest()
 const { fitColumns } = useTableAutoFit()
 
 // Store
@@ -173,10 +173,12 @@ function getLayoutIcons() {
             <Btn
               size="xs"
               preset="EDIT"
+              :loading="isLoading"
               @click.stop.prevent="handleLayoutEdit(row.ref)"
             />
             <CrudBtnDelete
               size="xs"
+              :loading="isLoading"
               @click.stop.prevent
               @before-show="isActionsVisibleLayoutId = row.id"
               @hide="isActionsVisibleLayoutId = undefined"
