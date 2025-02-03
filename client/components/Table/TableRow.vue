@@ -395,7 +395,7 @@ function handleEditCellMounted() {
   }
 
   .td {
-    @apply flex items-center border-ca overflow-auto;
+    @apply flex items-center border-ca;
     @apply w-$colWidth;
 
     .link {
@@ -405,7 +405,7 @@ function handleEditCellMounted() {
 }
 
 .tr--card {
-  @apply flex-col gap-y-2px rounded-custom p-2 m-1 dark:bg-black;
+  @apply flex-col gap-y-2px rounded-custom p-2 m-1 dark:bg-black overflow-auto;
   @apply light:(outline-1 outline-ca outline-solid bg-white);
 
   &.is-selectable {
@@ -444,7 +444,7 @@ function handleEditCellMounted() {
     }
 
     &__value {
-      @apply relative flex items-center gap-1 leading-tight self-center;
+      @apply relative flex items-center gap-1 leading-tight self-center overflow-auto;
     }
   }
 }
