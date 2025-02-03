@@ -18,6 +18,8 @@ defineEmits<{
   (e: 'delete'): void
   (e: 'show'): void
   (e: 'hide'): void
+  (e: 'before-show'): void
+  (e: 'before-hide'): void
 }>()
 
 // Utils
@@ -55,7 +57,9 @@ const label = computed(() => {
       h="auto"
       v-bind="menuProps"
       @show="$emit('show')"
+      @before-show="$emit('before-show')"
       @hide="$emit('hide')"
+      @before-hide="$emit('before-hide')"
       @ok="$emit('delete')"
     >
       <slot name="confirmation" />

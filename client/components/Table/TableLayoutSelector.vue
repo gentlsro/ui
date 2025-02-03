@@ -12,6 +12,7 @@ import { useTableStore } from './stores/table.store'
 import { tableDeleteLayout } from './functions/table-delete-layout'
 
 // Utils
+const { handleRequest } = useRequest()
 const { fitColumns } = useTableAutoFit()
 
 // Store
@@ -21,6 +22,7 @@ const {
   modifiers,
   queryBuilder: queryBuilderStore,
   onDataFetchQueue,
+  customData,
 } = storeToRefs(useTableStore())
 
 const { deleteLayout = tableDeleteLayout } = modifiers.value ?? {}
@@ -41,6 +43,8 @@ async function handleDelete(layout: any) {
   await deleteLayout({
     layout,
     layouts: state.value.layouts,
+    handleRequest,
+    customData: customData.value,
   })
 
   $hide({ all: true })
@@ -174,7 +178,7 @@ function getLayoutIcons() {
             <CrudBtnDelete
               size="xs"
               @click.stop.prevent
-              @show="isActionsVisibleLayoutId = row.id"
+              @before-show="isActionsVisibleLayoutId = row.id"
               @hide="isActionsVisibleLayoutId = undefined"
               @delete="handleDelete(row.ref)"
             />
