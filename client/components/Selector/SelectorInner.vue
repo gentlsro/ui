@@ -54,7 +54,8 @@ function handleRemove(idx: number) {
     :is="to ? 'NuxtLink' : 'span'"
     v-if="!isMulti"
     :to
-    target="_blank"
+    :target="to ? '_blank' : undefined"
+    truncate
   >
     {{ getListItemLabel(model, optionLabel, optionByKey) }}
   </Component>
