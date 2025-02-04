@@ -23,10 +23,10 @@ export function tableMergeColumns(payload: {
     .map(col => col.field))
 
   return colFields.map(colField => {
-    const propsCol = (propsColumns.find(col => col.field === colField) ?? {})
-    const apiCol = (apiColumns.find(col => col.field === colField) ?? {})
+    const propsCol = (propsColumns.find(col => col.field === colField))
+    const apiCol = (apiColumns.find(col => col.field === colField))
     const stateCol = useState
-      ? (stateColumns.find(col => col.field === colField) ?? {})
+      ? (stateColumns.find(col => col.field === colField))
       : undefined
 
     // Merge the column objects, with given priority: state > props > api
@@ -41,7 +41,7 @@ export function tableMergeColumns(payload: {
 
     const filters = col.filters?.map(f => new FilterItem(f)) ?? []
 
-    console.log(new TableColumn({ ...col, filters }))
+    console.log(col, new TableColumn({ ...col, filters }))
 
     return new TableColumn({ ...col, filters })
   })
