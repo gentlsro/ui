@@ -71,6 +71,7 @@ export function tableTransformColumns(payload: {
     modifiers,
     searchParams: schemaParams,
   })
+  console.log('Log ~ schemaResult:', schemaResult)
 
   // URL result
   const urlResult = tableExtractDataFromUrl({
