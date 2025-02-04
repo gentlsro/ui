@@ -41,9 +41,7 @@ export function tableMergeColumns(payload: {
 
     const filters = col.filters?.map(f => new FilterItem(f)) ?? []
 
-    if (col.field === 'modifiedDate') {
-      console.log(new TableColumn({ ...col, filters }))
-    }
+    console.log(new TableColumn({ ...col, filters }))
 
     return new TableColumn({ ...col, filters })
   })
