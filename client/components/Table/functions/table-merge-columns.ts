@@ -34,6 +34,7 @@ export function tableMergeColumns(payload: {
     console.log('Log ~ stateCol:', stateCol)
     console.log('Log ~ propsCol:', propsCol)
     console.log('Log ~ apiCol:', apiCol)
+    console.log('Log ~ col:', col)
 
     col.misc = {
       ...col.misc,
