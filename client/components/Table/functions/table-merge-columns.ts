@@ -41,8 +41,6 @@ export function tableMergeColumns(payload: {
 
     const filters = col.filters?.map(f => new FilterItem(f)) ?? []
 
-    console.log(col, new TableColumn({ ...col, filters }))
-
     return new TableColumn({ ...col, filters })
   })
 }
