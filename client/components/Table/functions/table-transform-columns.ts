@@ -92,7 +92,6 @@ export function tableTransformColumns(payload: {
   }
 
   const { filters, queryBuilder, sort, visibleColumns } = result
-  console.log('Log ~ result:', result)
 
   const _visibleColumns = visibleColumns.map(col => modifiers?.caseInsensitive ? col.toLowerCase() : col)
 
@@ -113,9 +112,14 @@ export function tableTransformColumns(payload: {
 
       // Sorting
       if (sort.length) {
-        console.log(sort, colField)
         // Get the sort item
-        const sortItem = sort.find(s => s.field === colField)
+        const sortItem = sort.find(s => {
+          const sortField = modifiers?.caseInsensitive
+            ? s.field.toLowerCase()
+            : s.field
+
+          return sortField === colField
+        })
 
         col.sort = sortItem?.sort
         col.sortOrder = sortItem?.sortOrder
