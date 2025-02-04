@@ -72,6 +72,8 @@ function handleLayoutApply(layout?: ITableLayout) {
     onDataFetchQueue.value.push(fitColumns)
   }
 
+  console.log(layout?.schema)
+
   const {
     columns,
     queryBuilder,
