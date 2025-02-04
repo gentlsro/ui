@@ -71,7 +71,6 @@ export function tableTransformColumns(payload: {
     modifiers,
     searchParams: schemaParams,
   })
-  console.log('Log ~ schemaResult:', schemaResult)
 
   // URL result
   const urlResult = tableExtractDataFromUrl({
@@ -93,6 +92,7 @@ export function tableTransformColumns(payload: {
   }
 
   const { filters, queryBuilder, sort, visibleColumns } = result
+  console.log('Log ~ result:', result)
 
   const _visibleColumns = visibleColumns.map(col => modifiers?.caseInsensitive ? col.toLowerCase() : col)
 
@@ -113,6 +113,7 @@ export function tableTransformColumns(payload: {
 
       // Sorting
       if (sort.length) {
+        console.log(s.field, colField)
         // Get the sort item
         const sortItem = sort.find(s => s.field === colField)
 
