@@ -113,7 +113,7 @@ export function tableTransformColumns(payload: {
 
       // Sorting
       if (sort.length) {
-        console.log(s.field, colField)
+        console.log(sort, colField)
         // Get the sort item
         const sortItem = sort.find(s => s.field === colField)
 
