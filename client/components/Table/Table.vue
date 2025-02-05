@@ -25,7 +25,7 @@ provideLocal(tableSlotsKey, slots)
 
 // Init
 const self = getCurrentInstance()
-const uuid = injectLocal(tableIdKey, useId())
+const uuid = injectLocal(tableIdKey, tableGetStorageKey(props.storageKey, self) ?? useId())
 
 provideLocal(tableIdKey, uuid)
 
@@ -109,6 +109,11 @@ watch(visibleColumns, cols => {
 tableInitialize()
 
 defineExpose(tableGetExposed())
+
+// We need to reset the initial load flag on unmounting
+onUnmounted(() => {
+  isInitialLoad.value = true
+})
 </script>
 
 <template>
