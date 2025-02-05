@@ -33,14 +33,18 @@ function getLabel(tab: ITabProps) {
       contentStyle: ui?.navigationContentStyle,
     }"
   >
-    <Btn
+    <slot
       v-for="tab in tabs"
       :key="tab.id"
-      :icon="tab.props.icon"
-      :label="getLabel(tab.props) ?? tab.name"
-      :class="ui?.tabNavBtnClass(model === tab.name)"
-      v-bind="tab.props.btnProps?.(model === tab.name)"
-      @click="model = tab.name"
-    />
+      :name="`${tab.name}-label`"
+    >
+      <Btn
+        :icon="tab.props.icon"
+        :label="getLabel(tab.props) ?? tab.name"
+        :class="ui?.tabNavBtnClass(model === tab.name)"
+        v-bind="tab.props.btnProps?.(model === tab.name)"
+        @click="model = tab.name"
+      />
+    </slot>
   </HorizontalScroller>
 </template>
