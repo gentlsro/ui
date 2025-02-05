@@ -16,7 +16,7 @@ export function useTableAutoFit() {
     visibleColumns,
   } = storeToRefs(useTableStore())
 
-  const tableSlots = inject(tableSlotsKey)
+  const tableSlots = injectLocal(tableSlotsKey)
 
   async function fitColumns(
     ev?: Partial<Pick<PointerEvent, 'shiftKey' | 'ctrlKey' | 'metaKey'>>,
