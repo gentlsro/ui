@@ -246,6 +246,8 @@ function handleEditCellMounted() {
       v-else-if="column.link?.to"
       v-bind="column.link"
       class="link"
+      :style="column.cellInnerStyle"
+      :class="column.cellInnerClass"
       @click.stop.prevent
     >
       {{ column.valueFormatted }}
