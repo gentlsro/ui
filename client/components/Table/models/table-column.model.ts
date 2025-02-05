@@ -503,6 +503,9 @@ export class TableColumn<T = IItem> {
         this,
         slotRenderFnc,
       )
+
+      // We add a litle bit of tolerance
+      maxContentWidth += 4
     }
 
     // When necessary, we can put `autofitLongestText = false` to calculate the
