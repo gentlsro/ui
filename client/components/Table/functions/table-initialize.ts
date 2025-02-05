@@ -14,7 +14,7 @@ export function tableInitialize() {
       // we do not fetch the data
       if (typeof res === 'object' && res?._preventFetchData) {
         if (rows.value.length) {
-          fitColumns()
+          nextTick(fitColumns)
         }
         isInitialLoad.value = false
 
