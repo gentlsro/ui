@@ -70,7 +70,7 @@ export function useRenderTemporaryTableCell() {
       maxContentWidth = tempComponentDom?.getBoundingClientRect().width || 0
     }
 
-    cleanup()
+    // cleanup()
 
     return maxContentWidth
   }

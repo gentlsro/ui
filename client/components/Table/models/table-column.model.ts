@@ -498,6 +498,8 @@ export class TableColumn<T = IItem> {
           { labelChars: 0, row: undefined } as Record<string, any>,
         )
 
+      console.log(maxContentRow)
+
       maxContentWidth = await getCellWidth(
         maxContentRow.row,
         this,
