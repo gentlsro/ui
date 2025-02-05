@@ -40,8 +40,9 @@ const editControls = computed(() => {
     <!-- Cancel button -->
     <CrudBtnCancel
       v-if="editControls?.cancel"
-      :class="[ui?.cancelClass, { invisible: !isEditing }]"
       v-bind="cancelBtnProps"
+      v-model:is-editing="isEditing"
+      :class="[ui?.cancelClass, { invisible: !isEditing }]"
       data-onboarding="form-cancel-btn"
     >
       <KeyboardShortcut
@@ -98,7 +99,10 @@ const editControls = computed(() => {
     <slot name="append" />
 
     <!-- Edit button (absolutely positioned) -->
-    <CrudEditBtn v-if="editControls?.edit">
+    <CrudEditBtn
+      v-if="editControls?.edit"
+      v-model:is-editing="isEditing"
+    >
       <KeyboardShortcut
         v-if="hasKeyboardShortcuts"
         char="E"
