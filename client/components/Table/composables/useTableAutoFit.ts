@@ -21,7 +21,6 @@ export function useTableAutoFit() {
   async function fitColumns(
     ev?: Partial<Pick<PointerEvent, 'shiftKey' | 'ctrlKey' | 'metaKey'>>,
   ) {
-    console.log('fitColumns', tableSlots)
     if (!ev && !uiState.value.table?.fit) {
       return
     }

@@ -33,7 +33,6 @@ export function useRenderTemporaryTableCell() {
     // NOTE - When using a slot, we need to render the component that is being
     //        used in the slot, so we can get the actual width of the cell
     if (slotRenderFnc) {
-      console.log('with slot', col)
       const vnode = slotRenderFnc({
         row,
         index: 0,
@@ -56,7 +55,6 @@ export function useRenderTemporaryTableCell() {
     // NOTE - When not using a slot, we just use the TableCell to render the
     //        cell, and get the width of the cell
     else {
-      console.log('without slot', col, formattedValue)
       cleanup = setTempComponent(() => {
         return col.dataType === 'boolean'
           ? h(
