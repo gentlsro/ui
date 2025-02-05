@@ -4,6 +4,12 @@
 
 <template>
   <div class="table-loading">
-    Table loading
+    <LoaderBlock size="xl" />
   </div>
 </template>
+
+<style scoped lang="scss">
+.table-loading {
+  @apply grow flex flex-center;
+}
+</style>

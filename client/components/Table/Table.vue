@@ -68,6 +68,7 @@ const {
   loadData,
   rowsLimit,
   customData,
+  isInitialLoad,
 } = storeToRefs(store)
 
 // Sync refs with store
@@ -199,6 +200,8 @@ defineExpose(tableGetExposed())
         />
       </template>
     </TableContent>
+
+    <TableLoading v-else-if="isInitialLoad" />
 
     <TableEmpty v-else />
 
