@@ -14,7 +14,7 @@ export function tableInitialize() {
       // we do not fetch the data
       if (typeof res === 'object' && res?._preventFetchData) {
         if (rows.value.length) {
-          nextTick(fitColumns)
+          requestAnimationFrame(() => fitColumns())
         }
         isInitialLoad.value = false
 
@@ -25,12 +25,12 @@ export function tableInitialize() {
         tableStore.fetchAndSetData({ force: true })
           .then(() => {
             if (rows.value.length) {
-              nextTick(fitColumns)
+              requestAnimationFrame(() => fitColumns())
             }
             isInitialLoad.value = false
           })
       } else {
-        nextTick(fitColumns)
+        requestAnimationFrame(() => fitColumns())
         isInitialLoad.value = false
       }
     })
