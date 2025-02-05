@@ -65,7 +65,7 @@ export function useRenderTemporaryTableCell() {
           : h(
               'div',
               { style: cellStyle, class: _cellClass },
-              [h('span', { class: cellInnerClass, style: cellInnerStyle }, formattedValue)],
+              [h('span', { class: cellInnerClass, style: cellInnerStyle }, [formattedValue])],
             )
       },
       )
