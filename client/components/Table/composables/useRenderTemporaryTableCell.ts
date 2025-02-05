@@ -24,6 +24,7 @@ export function useRenderTemporaryTableCell() {
 
     const value = col.valueGetter(row)
     const formattedValue = formatValue(value, row, { format: col.format, dataType: col.dataType })
+    console.log('slot render fnc', col.field, slotRenderFnc?.())
 
     // @ts-expect-error
     const { cellInnerClass, cellInnerStyle, cellClass, cellStyle } = getComponentProps('table').ui?.() ?? {}
