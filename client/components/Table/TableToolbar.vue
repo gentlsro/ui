@@ -138,12 +138,18 @@ function handleClearSorting() {
 
       <!-- Columns -->
       <slot name="columns">
-        <TableColumnSelectionBtn order="20" />
+        <TableColumnSelectionBtn
+          v-if="featuresEnabledByName.columnSelection"
+          order="20"
+        />
       </slot>
 
       <!-- Layout -->
       <slot name="layout">
-        <TableLayoutSelector order="30" />
+        <TableLayoutSelector
+          v-if="featuresEnabledByName.layouts"
+          order="30"
+        />
       </slot>
 
       <slot name="append" />

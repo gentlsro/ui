@@ -985,7 +985,7 @@ const defaultComponentsConfig = {
       selectionConfig: () => ({
         multi: true,
       }),
-      features: () => ['export', 'queryBuilder', 'queryBuilderDialog', 'filterChips', 'search', 'sorting', 'autofit'],
+      features: () => ['export', 'queryBuilder', 'queryBuilderDialog', 'filterChips', 'search', 'sorting', 'autofit', 'columnSelection', 'layouts'],
       ui: () => ({
         headerCellClass: 'p-x-1 p-y-2px bg-white dark:bg-black',
         headerCellInnerClass: 'font-rem-13 font-semibold tracking-wide leading-tight line-clamp-2',
