@@ -37,6 +37,7 @@ function getLabel(tab: ITabProps) {
       v-for="tab in tabs"
       :key="tab.id"
       :name="`${tab.name}-label`"
+      :change-fn="() => model = tab.name"
     >
       <Btn
         :icon="tab.props.icon"
