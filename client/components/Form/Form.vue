@@ -67,6 +67,9 @@ const isSubmitConfirmation = toRef(props, 'submitConfirmation')
 const formControlsProps = getFormControlsProps(props)
 
 // When no controls are available, we put the editing mode active
+console.log('Log ~ props.noControls:', props.noControls)
+console.log('Log ~ props.noEditControls:', props.noEditControls)
+console.log('Log ~ props.editControls:', props.editControls)
 if (props.noControls || props.noEditControls || !props.editControls) {
   isEditing.value = true
 }
