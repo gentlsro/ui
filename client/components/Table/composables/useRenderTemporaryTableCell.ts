@@ -1,3 +1,5 @@
+// @unocss-include
+
 import { formatValue } from '$utils'
 
 // Models
@@ -21,10 +23,14 @@ export function useRenderTemporaryTableCell() {
     let cleanup: () => void = () => {}
 
     const value = col.valueGetter(row)
+    console.log('Log ~ useRenderTemporaryTableCell ~ value:', value)
     const formattedValue = formatValue(value, row, { format: col.format, dataType: col.dataType })
+    console.log('Log ~ useRenderTemporaryTableCell ~ formattedValue:', formattedValue)
 
     // @ts-expect-error
     const { cellInnerClass, cellInnerStyle, cellClass, cellStyle } = getComponentProps('table').ui?.() ?? {}
+
+    const _cellClass = [cellClass, 'flex', 'items-center']
 
     // NOTE - When using a slot, we need to render the component that is being
     //        used in the slot, so we can get the actual width of the cell
@@ -38,7 +44,7 @@ export function useRenderTemporaryTableCell() {
       cleanup = setTempComponent(
         () => h(
           'div',
-          { style: cellStyle, class: cellClass },
+          { style: cellStyle, class: _cellClass },
           [vnode],
         ),
       )
@@ -59,7 +65,7 @@ export function useRenderTemporaryTableCell() {
             )
           : h(
               'div',
-              { style: cellStyle, class: cellClass },
+              { style: cellStyle, class: _cellClass },
               h('span', { class: cellInnerClass, style: cellInnerStyle }, formattedValue),
             )
       },
@@ -70,7 +76,7 @@ export function useRenderTemporaryTableCell() {
       maxContentWidth = tempComponentDom?.getBoundingClientRect().width || 0
     }
 
-    // cleanup()
+    cleanup()
 
     return maxContentWidth
   }
