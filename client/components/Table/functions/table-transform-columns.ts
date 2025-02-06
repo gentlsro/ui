@@ -100,6 +100,9 @@ export function tableTransformColumns(payload: {
     modifiers,
   })
 
+  console.log('Log ~ isSchemaUsed:', isSchemaUsed)
+  console.log('Log ~ isUrlUsed:', isUrlUsed)
+
   if (!isSchemaUsed && !isUrlUsed) {
     return { columns: _columns, queryBuilder: [] }
   }
