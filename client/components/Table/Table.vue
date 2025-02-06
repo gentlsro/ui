@@ -222,7 +222,7 @@ onUnmounted(() => {
     <TableEmpty v-else />
 
     <TableTotals
-      v-if="totals"
+      v-if="totals?.length"
       :totals
       :ui="mergedProps.ui"
     />
