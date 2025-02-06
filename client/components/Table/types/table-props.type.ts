@@ -152,6 +152,11 @@ export type ITableProps<
   }
 
   /**
+   * Whether the table is loading
+   */
+  loading?: boolean
+
+  /**
    * Configuration for loading the metadata
    */
   loadMetaData?: {

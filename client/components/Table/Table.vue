@@ -38,6 +38,7 @@ const search = defineModel<string>('search', { default: '' })
 const rows = defineModel<IItem[]>('rows', { default: () => [] })
 const queryBuilder = defineModel<IQueryBuilderRow[]>('queryBuilder', { default: () => [] })
 const selection = defineModel<ITableProps['selection']>('selection')
+const isLoading = defineModel<boolean>('isLoading', { default: false })
 
 const tableClass = computed(() => {
   return [
@@ -77,6 +78,7 @@ const {
   rowsLimit,
   customData,
   isInitialLoad,
+  isDataLoading,
 } = storeToRefs(store)
 
 // Sync refs with store
@@ -100,6 +102,7 @@ syncRef(toRef(mergedProps.value, 'selectionConfig'), selectionConfig, { directio
 syncRef(toRef(props, 'splitRows', []), splitRowsConfig, { direction: 'ltr' })
 syncRef(toRef(props, 'breakpoint', 0), breakpoint, { direction: 'ltr' })
 syncRef(toRef(props, 'rowsLimit'), rowsLimit, { direction: 'ltr' })
+syncRef(isLoading, isDataLoading, { direction: 'both' })
 
 // When columns change, make sure to get their real widths
 watch(visibleColumns, cols => {
