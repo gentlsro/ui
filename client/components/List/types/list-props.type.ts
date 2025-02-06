@@ -152,9 +152,14 @@ export type IListProps = {
       totalRows: number
 
       /**
-       * The "resolved" items, based on the `loadData.payloadKey`
+       * Current value of the `items`, from the `List` store
        */
       items: IItem[]
+
+      /**
+       * The "resolved" items, based on the `loadData.payloadKey`
+       */
+      itemsFetched: IItem[]
 
       /**
        * The "resolved" count, based on the `loadData.countKey`

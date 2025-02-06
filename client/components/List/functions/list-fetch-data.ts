@@ -62,10 +62,11 @@ export async function listFetchData(payload: {
   if (onFetchData) {
     return onFetchData({
       isFetchMore,
-      items: _items,
+      items,
+      itemsFetched: _items,
       count: _count,
-      res,
       totalRows,
+      res,
     })
   }
 
