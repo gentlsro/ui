@@ -107,7 +107,8 @@ export function tableTransformColumns(payload: {
         const isVisible = col.isHelperCol || orderIdx > -1
 
         col.hidden = col.nonInteractive ? col.hidden : !isVisible
-        col._internalSort = col.nonInteractive ? (col._internalSort ?? -1) : orderIdx
+        col._internalSort = col._internalSort
+          ?? (col.nonInteractive ? (col._internalSort ?? -1) : orderIdx)
       }
 
       // Sorting
