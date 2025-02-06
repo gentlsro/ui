@@ -218,11 +218,10 @@ export function useTableStore(
         modifiers: modifiers.value,
         schemaParams: state.value.layoutDefault?.schema ?? '',
         urlParams: useRequestURL().searchParams,
-        shouldSchemaBeUsed: !state.value?.columns?.length,
+        // shouldSchemaBeUsed: !state.value?.columns?.length,
       })
 
       cols = _columns
-      console.log('Log ~ returndefineStore ~ _columns:', _columns)
 
       // Extend columns with grouping and selection
       cols = extendColumns(cols, { selectionConfig: selectionConfig.value })
