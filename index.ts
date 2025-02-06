@@ -41,6 +41,7 @@ export type { ITableFetchPayload } from './client/components/Table/types/table-f
 export type { ITableFilterGroup } from './client/components/Table/types/table-filter-group'
 export type { ITableFilterItem } from './client/components/Table/types/table-filter-item.type'
 export type { ITableFilterRow } from './client/components/Table/types/table-filter-row.type'
+export type { TableFeature } from './client/components/Table/types/table-feature.type'
 export { tableExtractDataFromUrl } from './client/components/Table/functions/table-extract-data-from-url'
 
 // Tree
