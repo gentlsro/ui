@@ -540,8 +540,9 @@ const defaultComponentsConfig = {
       searchInputProps: () => ({
         autofocus: true,
       }),
+      modifiers: () => ({}),
     },
-    merge: ['searchConfig', 'ui', 'sortingConfig', 'selectionConfig', 'loadData', 'addConfig', 'searchInputProps'],
+    merge: ['searchConfig', 'ui', 'sortingConfig', 'selectionConfig', 'loadData', 'addConfig', 'searchInputProps', 'modifiers'],
   },
 
   // Loader
