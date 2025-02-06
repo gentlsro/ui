@@ -87,26 +87,19 @@ export function tableTransformColumns(payload: {
     modifiers,
   })
 
-  console.log('Log ~ isUrlUsed:', isUrlUsed)
-  console.log('Log ~ isSchemaUsed:', isSchemaUsed)
   if (!isSchemaUsed && !isUrlUsed) {
+    _columns = _columns.toSorted((a, b) => {
+      const aSort = a._internalSort ?? -1
+      const bSort = b._internalSort ?? -1
+
+      return aSort - bSort
+    })
+
     return { columns: _columns, queryBuilder: [] }
   }
 
   const { filters, queryBuilder, sort, visibleColumns } = result
-
   const _visibleColumns = visibleColumns.map(col => modifiers?.caseInsensitive ? col.toLowerCase() : col)
-
-  // Columns may already be ordered in state, or if a specific `_internalSort` is set
-  // for that reason, we first pre-sort the columns based on the `_internalSort` value
-  _columns = _columns.toSorted((a, b) => {
-    const aSort = a._internalSort ?? -1
-    const bSort = b._internalSort ?? -1
-
-    return aSort - bSort
-  })
-
-  console.log(_columns)
 
   // Handle order of the columns, their visibility, filters and sorting
   _columns = _columns
