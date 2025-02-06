@@ -120,6 +120,10 @@ const contentStyle = computed(() => {
 </template>
 
 <style lang="scss" scoped>
+.list-content {
+  @apply grow;
+}
+
 .list.is-dense {
   .list-content {
     @apply p-1 p-t-0;

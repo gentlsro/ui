@@ -82,6 +82,7 @@ const { treeEl } = useTreeKeyboard()
     <VirtualScroller
       :rows="nodesVisible"
       :row-height="32"
+      class="nodes"
       :class="mergedProps.ui?.contentClass"
       :style="mergedProps.ui?.contentStyle"
     >
@@ -112,5 +113,9 @@ const { treeEl } = useTreeKeyboard()
 <style lang="scss" scoped>
 .tree {
   @apply flex flex-col gap-1;
+
+  .nodes {
+    @apply grow;
+  }
 }
 </style>

@@ -569,7 +569,7 @@ function renderOnlyVisible(
 
 <style lang="scss" scoped>
 .virtual-scroll {
-  @apply relative overflow-auto grow outline-none;
+  @apply relative overflow-auto outline-none;
 
   &__content {
     @apply relative;
