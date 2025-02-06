@@ -222,6 +222,7 @@ export function useTableStore(
       })
 
       cols = _columns
+      console.log('Log ~ returndefineStore ~ _columns:', _columns)
 
       // Extend columns with grouping and selection
       cols = extendColumns(cols, { selectionConfig: selectionConfig.value })
