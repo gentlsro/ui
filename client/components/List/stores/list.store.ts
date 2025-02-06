@@ -284,6 +284,7 @@ export function useListStore(listId?: string, listProps?: IListProps) {
     const isFirstFetch = ref(true)
     const hasMore = ref(false)
     const isFetchMore = ref(false)
+    const totalRows = ref(0)
 
     async function fetchData(payload?: {
       isFetchMore?: boolean
@@ -324,6 +325,7 @@ export function useListStore(listId?: string, listProps?: IListProps) {
     }) {
       isFetchMore.value = hasMore.value && !!payload?.isFetchMore
       const res = await fetchData(payload)
+      totalRows.value = res?.totalRows ?? 0
 
       if (!res) {
         return

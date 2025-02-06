@@ -17,6 +17,7 @@ export async function listFetchData(payload: {
   listItems?: Array<IListItem | IGroupRow>
   items: IItem[]
   modifiers?: IListProps['modifiers']
+  totalRows?: number
 }) {
   const {
     search,
@@ -27,6 +28,7 @@ export async function listFetchData(payload: {
     isFetchMore,
     hasMore,
     modifiers,
+    totalRows = 0,
   } = payload
 
   const { fnc, countKey, payloadKey } = loadData ?? {}
@@ -63,7 +65,7 @@ export async function listFetchData(payload: {
       items: _items,
       count: _count,
       res,
-      hasMore,
+      totalRows,
     })
   }
 
@@ -72,7 +74,8 @@ export async function listFetchData(payload: {
   }
 
   return {
-    hasMore: _count > _items.length,
+    hasMore: totalRows > _items.length,
     items: _items,
+    totalRows: _count,
   }
 }

@@ -147,9 +147,9 @@ export type IListProps = {
       isFetchMore?: boolean
 
       /**
-       * Current value of the `hasMore`, from the `List` store
+       * Current value of the `totalRows`, from the `List` store
        */
-      hasMore?: boolean
+      totalRows: number
 
       /**
        * The "resolved" items, based on the `loadData.payloadKey`
@@ -165,7 +165,7 @@ export type IListProps = {
        * The original result of the `loadData.fnc`
        */
       res: any
-    }) => { hasMore: boolean, items: IItem[] }
+    }) => { hasMore: boolean, items: IItem[], totalRows?: number }
   }
 
   /**
