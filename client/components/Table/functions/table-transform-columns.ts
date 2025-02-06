@@ -37,6 +37,10 @@ function getUsedProperties(payload: {
     ? urlResult.visibleColumns.length ? urlResult.visibleColumns : schemaResult.visibleColumns
     : shouldSchemaBeUsed ? schemaResult.visibleColumns : []
 
+  console.log('Log ~ urlResult.visibleColumns:', urlResult.visibleColumns)
+  console.log('Log ~ schemaResult.visibleColumns:', schemaResult.visibleColumns)
+  console.log('Log ~ visibleColumnsWithFallback:', visibleColumnsWithFallback)
+
   return {
     isUrlUsed: !!isUrlUsed,
     isSchemaUsed: !!isSchemaUsed,
