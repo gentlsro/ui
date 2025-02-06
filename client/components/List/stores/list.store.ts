@@ -314,6 +314,7 @@ export function useListStore(listId?: string, listProps?: IListProps) {
         listItems: listItems.value,
         items: items.value,
         modifiers: modifiers.value,
+        totalRows: totalRows.value,
         ...payload,
       })
     }
