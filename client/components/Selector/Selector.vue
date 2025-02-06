@@ -5,15 +5,15 @@ import type { ISelectorProps } from './types/selector-props.type'
 import type { ISelectorEmits } from './types/selector-emits.type'
 
 // Functions
-import { useFieldUtils } from '../Field/functions/useFieldUtils'
 import { useSelector } from './composables/useSelector'
+import { useFieldUtils } from '../Field/functions/useFieldUtils'
+import { listFetchData } from '../List/functions/list-fetch-data'
 import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
 
 // Store
 import { selectorIdKey, useSelectorStore } from './stores/selector.store'
 import { selectorTransformOptions } from './functions/selector-transform-options'
 import { getListItemEmitValue, getListItemKey } from '../List/functions/helpers'
-import { listFetchData } from '../List/functions/list-fetch-data'
 
 const props = withDefaults(defineProps<ISelectorProps>(), {
   ...getComponentProps('selector'),
@@ -180,6 +180,7 @@ if (props.immediateFetch && mergedProps.value.loadData?.fnc) {
     handleRequest,
     loadData: mergedProps.value.loadData,
     items: [],
+    modifiers: mergedProps.value.listProps?.modifiers,
   }).then(({ items }) => options.value = items)
 }
 </script>

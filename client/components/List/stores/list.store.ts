@@ -34,6 +34,12 @@ export function useListStore(listId?: string, listProps?: IListProps) {
     // Store
     const { lastPointerDownType } = storeToRefs(useUIStore())
 
+    // Configs
+    const modifiers = ref<IListProps['modifiers']>(listProps?.modifiers)
+    const loadData = ref<IListProps['loadData']>(
+      listProps?.loadData ?? getComponentProps('list').loadData(),
+    )
+
     // Utils
     const isLoadingSource = ref(listProps?.loading ?? false)
     const { isLoading: isRequestLoading, handleRequest, abortController } = useRequest()
@@ -278,9 +284,6 @@ export function useListStore(listId?: string, listProps?: IListProps) {
     const isFirstFetch = ref(true)
     const hasMore = ref(false)
     const isFetchMore = ref(false)
-    const loadData = ref<IListProps['loadData']>(
-      listProps?.loadData ?? getComponentProps('list').loadData(),
-    )
 
     async function fetchData(payload?: {
       isFetchMore?: boolean
@@ -309,6 +312,7 @@ export function useListStore(listId?: string, listProps?: IListProps) {
         hasMore: hasMore.value,
         listItems: listItems.value,
         items: items.value,
+        modifiers: modifiers.value,
         ...payload,
       })
     }
@@ -357,6 +361,10 @@ export function useListStore(listId?: string, listProps?: IListProps) {
     })
 
     return {
+      // Configs
+      loadData,
+      modifiers,
+
       // Layout
       itemKey,
       itemLabel,
@@ -408,7 +416,6 @@ export function useListStore(listId?: string, listProps?: IListProps) {
       isFirstFetch,
       hasMore,
       isFetchMore,
-      loadData,
       fetchData,
       fetchAndSetData,
 

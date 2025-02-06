@@ -130,6 +130,40 @@ export type IListProps = {
   }
 
   /**
+   * Modifiers are a set of functions and other configurable options that can be
+   * used to modify the behavior of the list's internals
+   */
+  modifiers?: {
+    /**
+     * A function that will be called when the list fetches data (after resolving them)
+     * Must return an object with the following properties:
+     * - `hasMore`: Whether there are more items to fetch
+     * - `items`: The resolved items
+     */
+    onFetchData?: (payload: {
+      /**
+       * Whether the request is called upon getting more data
+       */
+      isFetchMore?: boolean
+
+      /**
+       * The "resolved" items, based on the `loadData.payloadKey`
+       */
+      items: IItem[]
+
+      /**
+       * The "resolved" count, based on the `loadData.countKey`
+       */
+      count?: any
+
+      /**
+       * The original result of the `loadData.fnc`
+       */
+      res: any
+    }) => { hasMore: boolean, items: IItem[] }
+  }
+
+  /**
    * When true, the list will not be filtered locally
    * If `loadData.fnc` is not provided and `noFilter` is true, the SearchInput will not be shown
    */

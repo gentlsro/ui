@@ -55,6 +55,7 @@ const {
   isMounted: isMountedStore,
   isClearable: storeIsClearable,
   hiddenItems: storeHiddenItems,
+  modifiers,
 } = storeToRefs(listStore)
 
 // Set emits
@@ -98,6 +99,7 @@ syncRef(toRef(props, 'clearable'), storeIsClearable, { direction: 'ltr' })
 syncRef(search, storeSearch, { direction: 'both' })
 syncRef(isMounted, isMountedStore, { direction: 'ltr' })
 syncRef(toRef(props, 'hiddenItems'), storeHiddenItems, { direction: 'ltr' })
+syncRef(toRef(props, 'modifiers'), modifiers, { direction: 'ltr' })
 
 // Adding
 useListItemAdding()
