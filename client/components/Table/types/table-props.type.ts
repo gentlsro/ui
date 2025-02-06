@@ -322,6 +322,11 @@ export type ITableProps<
   noHeader?: boolean
 
   /**
+   * When true, the table will not use the saved state to restore the table
+   */
+  noState?: boolean
+
+  /**
    * Pagination configuration
    */
   paginationConfig?: {

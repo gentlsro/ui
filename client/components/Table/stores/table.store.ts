@@ -105,6 +105,7 @@ export function useTableStore(
     // !SECTION
 
     // SECTION General
+    const noState = ref(tableProps?.noState ?? false)
     const rowKey = ref<string>(tableProps?.rowKey ?? 'id')
     const search = ref(tableProps?.search ?? '')
     const queryBuilder = ref<IQueryBuilderRow[]>(tableProps?.queryBuilder ?? [])
@@ -220,7 +221,7 @@ export function useTableStore(
         urlParams: useRequestURL().searchParams,
 
         // Schema should be used only in case we don't have anything in the state
-        shouldSchemaBeUsed: !state.value?.columns?.length,
+        shouldSchemaBeUsed: noState.value || !state.value?.columns?.length,
       })
 
       cols = _columns
