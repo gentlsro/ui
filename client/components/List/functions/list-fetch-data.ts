@@ -4,6 +4,9 @@ import type { IGroupRow } from '$utilsLayer/shared/composables/useGrouping'
 import type { IListItem } from '../types/list-item.type'
 import type { IListProps } from '../types/list-props.type'
 
+// Store
+import type { useListStore } from '../stores/list.store'
+
 export async function listFetchData(payload: {
   search?: string
   handleRequest: ReturnType<typeof useRequest>['handleRequest']
@@ -60,6 +63,7 @@ export async function listFetchData(payload: {
       items: _items,
       count: _count,
       res,
+      hasMore,
     })
   }
 

@@ -147,6 +147,11 @@ export type IListProps = {
       isFetchMore?: boolean
 
       /**
+       * Current value of the `hasMore`, from the `List` store
+       */
+      hasMore?: boolean
+
+      /**
        * The "resolved" items, based on the `loadData.payloadKey`
        */
       items: IItem[]
