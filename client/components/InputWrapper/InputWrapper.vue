@@ -177,7 +177,7 @@ const wrapperProps = computed(() => {
 
       <!-- Error -->
       <template
-        v-if="errorVisible"
+        v-if="errorVisible && issues?.length"
         #error
       >
         <InputErrorContainer
