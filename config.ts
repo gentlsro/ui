@@ -735,7 +735,7 @@ const defaultComponentsConfig = {
       fractionDigits: 2,
       required: undefined,
       size: 'md',
-      stackLabel: undefined,
+      stackLabel: true,
       min: Number.NEGATIVE_INFINITY,
       max: Number.POSITIVE_INFINITY,
       step: 'auto',
@@ -885,7 +885,8 @@ const defaultComponentsConfig = {
       noMenuMatchWidth: undefined,
       clearSearchOnHide: true,
       clearOptionsOnMenuHide: false,
-      stackLabel: undefined,
+      stackLabel: true,
+      errorTakesSpace: true,
       ui: () => ({
         borderRadius: '0.5rem',
         inputClass: 'flex items-center',
