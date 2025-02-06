@@ -83,6 +83,8 @@ function handleLayoutApply(layout?: ITableLayout) {
     shouldUrlBeUsed: false,
   })
 
+  console.log(layout?.schema, columns)
+
   internalColumns.value = columns
   queryBuilderStore.value = queryBuilder.length ? queryBuilder : queryBuilderInitializeItems()
 
