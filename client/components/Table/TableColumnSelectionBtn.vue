@@ -66,6 +66,12 @@ function handleApply() {
     { isMovable: col => !col.isHelperCol, isSameField: (a, b) => a.field === b.field },
   )
 
+  internalColumns.value.forEach((col, idx) => {
+    if (!col.hidden) {
+      col._internalSort = idx
+    }
+  })
+
   $hide()
 }
 
