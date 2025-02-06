@@ -39,6 +39,14 @@ const rows = defineModel<IItem[]>('rows', { default: () => [] })
 const queryBuilder = defineModel<IQueryBuilderRow[]>('queryBuilder', { default: () => [] })
 const selection = defineModel<ITableProps['selection']>('selection')
 
+const tableClass = computed(() => {
+  return [
+    mergedProps.value?.ui?.containerClass,
+    `separator--${props.separator}`,
+    { 'is-bordered': props.bordered },
+  ]
+})
+
 // Stores
 const store = useTableStore({ tableProps: { ...props, ...mergedProps.value } })
 const {
@@ -120,7 +128,7 @@ onUnmounted(() => {
   <div
     ref="tableEl"
     class="table"
-    :class="[`separator--${separator}`, { 'is-bordered': bordered }]"
+    :class="tableClass"
   >
     <slot
       name="top"

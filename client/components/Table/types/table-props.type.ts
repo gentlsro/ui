@@ -552,5 +552,15 @@ export type ITableProps<
      * Style applied to the TableTop
      */
     topStyle?: CSSProperties
+
+    /**
+     * Class applied to the table itself
+     */
+    containerClass?: ClassType
+
+    /**
+     * Style applied to the table itself
+     */
+    containerStyle?: CSSProperties
   }
 }
