@@ -31,10 +31,19 @@ function getUsedProperties(payload: {
       || schemaResult.queryBuilder.length
       || schemaResult.visibleColumns.length)
 
+  // When using URL while not having a `select` property, fallback to schema
+  // for the `select`
+  const visibleColumnsWithFallback = shouldUrlBeUsed
+    ? urlResult.visibleColumns.length ? urlResult.visibleColumns : schemaResult.visibleColumns
+    : shouldSchemaBeUsed ? schemaResult.visibleColumns : []
+
   return {
     isUrlUsed: !!isUrlUsed,
     isSchemaUsed: !!isSchemaUsed,
-    result: (isUrlUsed && modifiers?.useUrl) ? urlResult : schemaResult,
+    result: {
+      ...(isUrlUsed && modifiers?.useUrl) ? urlResult : schemaResult,
+      visibleColumns: visibleColumnsWithFallback,
+    },
   }
 }
 
@@ -71,7 +80,6 @@ export function tableTransformColumns(payload: {
     modifiers,
     searchParams: schemaParams,
   })
-  console.log('Log ~ schemaResult:', schemaResult)
 
   // URL result
   const urlResult = tableExtractDataFromUrl({
@@ -79,7 +87,6 @@ export function tableTransformColumns(payload: {
     modifiers,
     searchParams: urlParams,
   })
-  console.log('Log ~ urlResult:', urlResult)
 
   const { result, isUrlUsed, isSchemaUsed } = getUsedProperties({
     shouldUrlBeUsed,
