@@ -71,6 +71,7 @@ export function tableTransformColumns(payload: {
     modifiers,
     searchParams: schemaParams,
   })
+  console.log('Log ~ schemaResult:', schemaResult)
 
   // URL result
   const urlResult = tableExtractDataFromUrl({
@@ -78,6 +79,7 @@ export function tableTransformColumns(payload: {
     modifiers,
     searchParams: urlParams,
   })
+  console.log('Log ~ urlResult:', urlResult)
 
   const { result, isUrlUsed, isSchemaUsed } = getUsedProperties({
     shouldUrlBeUsed,
