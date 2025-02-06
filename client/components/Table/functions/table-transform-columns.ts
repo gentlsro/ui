@@ -62,13 +62,6 @@ export function tableTransformColumns(payload: {
   let _columns = internalColumns.map(col => new TableColumn(col))
 
   if (!shouldUrlBeUsed && !shouldSchemaBeUsed) {
-    _columns = _columns.toSorted((a, b) => {
-      const aSort = a._internalSort ?? Number.MAX_SAFE_INTEGER
-      const bSort = b._internalSort ?? Number.MAX_SAFE_INTEGER
-
-      return aSort - bSort
-    })
-
     return { columns: _columns, queryBuilder: [] }
   }
 
@@ -113,7 +106,8 @@ export function tableTransformColumns(payload: {
         const isVisible = col.isHelperCol || orderIdx > -1
 
         col.hidden = col.nonInteractive ? col.hidden : !isVisible
-        col._internalSort = (col.nonInteractive ? (col._internalSort ?? Number.MAX_SAFE_INTEGER) : orderIdx)
+        col._internalSort = col._internalSort
+          ?? (col.nonInteractive ? (col._internalSort ?? -1) : orderIdx)
       }
 
       // Sorting
@@ -196,8 +190,8 @@ export function tableTransformColumns(payload: {
       return col
     })
     .toSorted((a, b) => {
-      const aSort = a._internalSort ?? Number.MAX_SAFE_INTEGER
-      const bSort = b._internalSort ?? Number.MAX_SAFE_INTEGER
+      const aSort = a._internalSort ?? -1
+      const bSort = b._internalSort ?? -1
 
       return aSort - bSort
     })
