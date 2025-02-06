@@ -218,7 +218,9 @@ export function useTableStore(
         modifiers: modifiers.value,
         schemaParams: state.value.layoutDefault?.schema ?? '',
         urlParams: useRequestURL().searchParams,
-        // shouldSchemaBeUsed: !state.value?.columns?.length,
+
+        // Schema should be used only in case we don't have anything in the state
+        shouldSchemaBeUsed: !state.value?.columns?.length,
       })
 
       cols = _columns
