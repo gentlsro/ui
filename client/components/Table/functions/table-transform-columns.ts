@@ -87,6 +87,7 @@ export function tableTransformColumns(payload: {
     modifiers,
   })
 
+  console.log('Log ~ _columns:', _columns)
   if (!isSchemaUsed && !isUrlUsed) {
     return { columns: _columns, queryBuilder: [] }
   }
