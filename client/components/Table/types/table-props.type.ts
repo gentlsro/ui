@@ -460,6 +460,11 @@ export type ITableProps<
   to?: (row: any, options?: { rowKey?: string }) => RouteLocationRaw
 
   /**
+   * Totals
+   */
+  totals?: Array<Pick<TableColumn, 'field' | 'label'> & { value: any }>
+
+  /**
    * Visual configuration
    */
   ui?: {

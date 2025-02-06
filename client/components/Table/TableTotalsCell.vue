@@ -7,6 +7,7 @@ import type { TableColumn } from './models/table-column.model'
 
 type IProps = Pick<ITableProps, 'ui'> & {
   column: TableColumn
+  total?: NonNullable<ITableProps['totals']>[number]
 }
 
 const props = defineProps<IProps>()
@@ -21,6 +22,14 @@ const totalsCellStyle = computed(() => {
     '--colWidth': props.column.width,
   }
 })
+
+const totalText = computed(() => {
+  const label = typeof props.total?.label === 'function'
+    ? props.total?.label()
+    : props.total?.label
+
+  return `${label ? `${label}:` : ''}${props.total?.value}`
+})
 </script>
 
 <template>
@@ -30,10 +39,8 @@ const totalsCellStyle = computed(() => {
     :style="totalsCellStyle"
   >
     <slot>
-      <span
-        class="th__totals-inner"
-      >
-        Total...
+      <span class="th__totals-inner">
+        {{ totalText }}
       </span>
     </slot>
   </div>

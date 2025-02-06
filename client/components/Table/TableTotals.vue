@@ -1,9 +1,24 @@
 <script setup lang="ts">
+import type { ITableProps } from './types/table-props.type'
+
 // Store
 import { useTableStore } from './stores/table.store'
 
+type IProps = Pick<ITableProps, 'totals' | 'ui'>
+
+const props = defineProps<IProps>()
+
 // Store
 const { totalsEl, totalsX, visibleColumns } = storeToRefs(useTableStore())
+
+// Layout
+const totalsByField = computed(() => {
+  return props.totals?.reduce((agg, total) => {
+    agg[total.field] = total
+
+    return agg
+  }, {} as Record<string, any>)
+})
 </script>
 
 <template>
@@ -17,6 +32,8 @@ const { totalsEl, totalsX, visibleColumns } = storeToRefs(useTableStore())
       v-for="col in visibleColumns"
       :key="col.field"
       :column="col"
+      :ui
+      :total="totalsByField?.[col.field]"
     />
   </HorizontalScroller>
 </template>
