@@ -433,6 +433,8 @@ export function useTableStore(
 
     // React to the query params changes
     watch(queryParams, queryParams => {
+      console.log('Query params change', decodeURIComponent(queryParams.toString()))
+
       // We should only sync the state once we're use every relevant part is loaded
       // We can assume that the meta is loaded if `apiColumns` is not `undefined`
       // and `propsColumns` is not `undefined`
@@ -440,7 +442,6 @@ export function useTableStore(
         syncStateColumns()
 
         // Load data with new query params
-        console.log('Query params change', decodeURIComponent(queryParams.toString()))
         fetchAndSetData()
       }
 
