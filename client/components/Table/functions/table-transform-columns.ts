@@ -109,8 +109,10 @@ export function tableTransformColumns(payload: {
   const _visibleColumns = visibleColumns.map(col => modifiers?.caseInsensitive ? col.toLowerCase() : col)
 
   // Handle order of the columns, their visibility, filters and sorting
+  console.log(_columns)
   _columns = _columns
     .map(col => {
+      console.log(col)
       const colField = modifiers?.caseInsensitive ? col.field.toLowerCase() : col.field
 
       // Order and visibility
