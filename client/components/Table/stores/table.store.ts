@@ -464,6 +464,7 @@ export function useTableStore(
       }
 
       const fetchPayload = getFetchPayload()
+      console.log('columns', internalColumns.value)
       console.log('Log ~ fetchAndSetMetaData ~ fetchPayload:', decodeURIComponent(fetchPayload.queryParams!.toString()))
       isMetaLoading.value = true
       const res = await handleRequest(
