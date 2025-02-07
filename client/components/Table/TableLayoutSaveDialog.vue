@@ -154,6 +154,7 @@ async function handleDelete() {
 const $z = useZod(
   { layout: z.object({ name: z.string() }) },
   { layout },
+  { scope: '_layoutSaveDialog' },
 )
 </script>
 
