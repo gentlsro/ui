@@ -107,8 +107,6 @@ export function tableTransformColumns(payload: {
     forceUrlUsage,
   })
 
-  console.log(result, isSchemaUsed, isUrlUsed)
-
   if (!isSchemaUsed && !isUrlUsed) {
     _columns = _columns.toSorted((a, b) => {
       const aSort = a._internalSort ?? Number.MAX_SAFE_INTEGER
@@ -122,6 +120,7 @@ export function tableTransformColumns(payload: {
 
   const { filters, queryBuilder, sort, visibleColumns } = result
   const _visibleColumns = visibleColumns.map(col => modifiers?.caseInsensitive ? col.toLowerCase() : col)
+  console.log('Log ~ filters:', filters)
 
   // Handle order of the columns, their visibility, filters and sorting
   _columns = _columns
@@ -157,7 +156,17 @@ export function tableTransformColumns(payload: {
       if (filters.length) {
         // Get filters for the column
         const filterItems = (filters as IQueryBuilderItem[])
-          .filter(f => f.field === colField || f.filterField === colField)
+          .filter(f => {
+            const fField = modifiers?.caseInsensitive
+              ? f.field.toLowerCase()
+              : f.field
+
+            const fFilterField = modifiers?.caseInsensitive && f.filterField
+              ? f.filterField.toLowerCase()
+              : f.filterField
+
+            return fField === colField || fFilterField === colField
+          })
 
         // First, we add the predefined filters
         col.filters = col.filtersPredefined ?? []
