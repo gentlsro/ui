@@ -29,7 +29,10 @@ provideLocal(tableSlotsKey, slots)
 // Init
 const self = getCurrentInstance()
 const uuid = injectLocal(tableIdKey, useId())
-const storageKey = injectLocal(tableStorageKey, tableGetStorageKey(props.storageKey, self) ?? useId())
+const storageKey = injectLocal(
+  tableStorageKey,
+  tableGetStorageKey(props.storageKey, self) ?? useId(),
+)
 
 provideLocal(tableIdKey, uuid)
 provideLocal(tableStorageKey, storageKey)
@@ -86,6 +89,7 @@ const {
   isDataLoading,
   emits: storeEmits,
   rowClickable,
+  totals,
 } = storeToRefs(store)
 
 // Set emits
@@ -116,6 +120,7 @@ syncRef(toRef(props, 'breakpoint', 0), breakpoint, { direction: 'ltr' })
 syncRef(toRef(props, 'rowsLimit'), rowsLimit, { direction: 'ltr' })
 syncRef(isLoading, isDataLoading, { direction: 'both' })
 syncRef(toRef(props, 'rowClickable'), rowClickable, { direction: 'ltr' })
+syncRef(toRef(props, 'totals'), totals, { direction: 'ltr' })
 
 // When columns change, make sure to get their real widths
 watch(visibleColumns, cols => {

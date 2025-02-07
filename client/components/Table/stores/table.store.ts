@@ -123,6 +123,7 @@ export function useTableStore(
     const allowComparatorsOfSameType = ref(tableProps?.allowComparatorsOfSameType ?? false)
     const minimumColumnWidth = ref(tableProps?.minimumColumnWidth ?? 80)
     const breakpoint = ref(tableProps?.breakpoint ?? 0)
+    const totals = ref(tableProps?.totals)
 
     // General helper that triggers the sync of the state columns
     const columnWidths = computed(() => {
@@ -604,6 +605,7 @@ export function useTableStore(
       allowComparatorsOfSameType,
       minimumColumnWidth,
       breakpoint,
+      totals,
 
       // Rows
       rows,
