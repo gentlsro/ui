@@ -68,8 +68,6 @@ export function tableTransformColumns(payload: {
     forceUrlUsage,
   } = payload
 
-  console.log('table transform', decodeURIComponent(urlParams.toString()))
-
   // Create a copy of the columns
   let _columns = internalColumns.map(col => new TableColumn(col))
 
@@ -120,7 +118,6 @@ export function tableTransformColumns(payload: {
 
   const { filters, queryBuilder, sort, visibleColumns } = result
   const _visibleColumns = visibleColumns.map(col => modifiers?.caseInsensitive ? col.toLowerCase() : col)
-  console.log('Log ~ filters:', filters)
 
   // Handle order of the columns, their visibility, filters and sorting
   _columns = _columns
@@ -198,7 +195,6 @@ export function tableTransformColumns(payload: {
               }
 
               const filterModel = new FilterItem({ ...filter, ...colProps, value })
-              console.log('Log ~ filterModel:', filterModel)
 
               // We mark the filter as predefined if it's part of the predefined filters
               // to later merge them (the values) together and eventually remove the non-predefined filters
