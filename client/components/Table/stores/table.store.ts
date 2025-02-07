@@ -226,7 +226,6 @@ export function useTableStore(
       })
 
       cols = _columns
-      console.log('Log ~ returndefineStore ~ cols:', cols)
 
       // Extend columns with grouping and selection
       cols = extendColumns(cols, { selectionConfig: selectionConfig.value })
@@ -344,7 +343,6 @@ export function useTableStore(
 
     const selectSerialized = computed(() => {
       const { serializeSelectedColumns = tableSerializeSelect } = modifiers.value ?? {}
-      console.log('Log ~ selectSerialized ~ internalColumns.value:', internalColumns.value)
 
       return serializeSelectedColumns({ columns: internalColumns.value })
     })
@@ -372,8 +370,6 @@ export function useTableStore(
     })
 
     const queryParams = computed(() => {
-      console.log('selectSerialized.value:', selectSerialized.value)
-
       return tableBuildQueryParams({
         select: selectSerialized.value,
         sorting: sortingSerialized.value,
@@ -439,7 +435,7 @@ export function useTableStore(
         syncStateColumns()
 
         // Load data with new query params
-        console.log('Query params change')
+        console.log('Query params change', decodeURIComponent(queryParams.toString()))
         fetchAndSetData()
       }
 
@@ -468,6 +464,7 @@ export function useTableStore(
       }
 
       const fetchPayload = getFetchPayload()
+      console.log('Log ~ fetchAndSetMetaData ~ fetchPayload:', decodeURIComponent(fetchPayload.queryParams!.toString()))
       isMetaLoading.value = true
       const res = await handleRequest(
         () => loadMetaData.value?.fnc?.({ tablePayload: fetchPayload, getStore }),
