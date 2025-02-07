@@ -107,7 +107,7 @@ export function tableTransformColumns(payload: {
     forceUrlUsage,
   })
 
-  console.log(result)
+  console.log(result, isSchemaUsed, isUrlUsed)
 
   if (!isSchemaUsed && !isUrlUsed) {
     _columns = _columns.toSorted((a, b) => {
@@ -189,6 +189,7 @@ export function tableTransformColumns(payload: {
               }
 
               const filterModel = new FilterItem({ ...filter, ...colProps, value })
+              console.log('Log ~ filterModel:', filterModel)
 
               // We mark the filter as predefined if it's part of the predefined filters
               // to later merge them (the values) together and eventually remove the non-predefined filters
