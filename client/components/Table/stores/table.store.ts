@@ -10,9 +10,6 @@ import type { IQueryBuilderRow } from '../../QueryBuilder/types/query-builder-ro
 // Models
 import type { TableColumn } from '../models/table-column.model'
 
-// Provide / Inject
-import { tableIdKey } from '../provide/table.provide'
-
 // Functions
 import { tableNavigate } from '../functions/table-navigate'
 import { getListItemKey } from '../../List/functions/helpers'
@@ -31,11 +28,16 @@ import { queryBuilderInitializeItems } from '../../QueryBuilder/functions/query-
 // Components
 import type HorizontalScroller from '../../Scroller/HorizontalScroller.vue'
 
+// Provide / Inject
+export const tableIdKey = Symbol('__tableId')
+export const tableStorageKey = Symbol('__tableStorageKey')
+
 export function useTableStore(
-  config?: { tableId?: string, tableProps?: ITableProps },
+  config?: { tableId?: string, storageKey?: string, tableProps?: ITableProps },
 ) {
   const { tableId, tableProps } = config ?? {}
   const _tableId = tableId ?? injectLocal(tableIdKey, tableId ?? useId())
+  const _storageKey = tableId ?? injectLocal(tableStorageKey, tableId ?? useId())
 
   const { uiState } = storeToRefs(useUIStore())
 
@@ -51,7 +53,7 @@ export function useTableStore(
     const { handleRequest } = useRequest()
 
     // SECTION State
-    const state = useLocalStorage(_tableId, {
+    const state = useLocalStorage(_storageKey, {
       columns: [] as ITableStateColumn[],
       layouts: [] as ITableLayout[],
       layoutDefault: undefined as ITableLayout | undefined,
@@ -464,8 +466,6 @@ export function useTableStore(
       }
 
       const fetchPayload = getFetchPayload()
-      console.log('columns', internalColumns.value)
-      console.log('Log ~ fetchAndSetMetaData ~ fetchPayload:', decodeURIComponent(fetchPayload.queryParams!.toString()))
       isMetaLoading.value = true
       const res = await handleRequest(
         () => loadMetaData.value?.fnc?.({ tablePayload: fetchPayload, getStore }),

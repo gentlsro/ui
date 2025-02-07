@@ -4,7 +4,7 @@ import type { ITableProps } from './types/table-props.type'
 import type { IQueryBuilderRow } from '../QueryBuilder/types/query-builder-row-props.type'
 
 // Provide / Inject
-import { tableIdKey, tableSlotsKey } from './provide/table.provide'
+import { tableSlotsKey } from './provide/table.provide'
 
 // Functions
 import { tableInitialize } from './functions/table-initialize'
@@ -13,7 +13,7 @@ import { tableGetStorageKey } from './functions/table-get-storage-key'
 import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
 
 // Stores
-import { useTableStore } from './stores/table.store'
+import { tableIdKey, tableStorageKey, useTableStore } from './stores/table.store'
 
 const props = withDefaults(defineProps<ITableProps>(), {
   ...getComponentProps('table'),
@@ -25,9 +25,11 @@ provideLocal(tableSlotsKey, slots)
 
 // Init
 const self = getCurrentInstance()
-const uuid = injectLocal(tableIdKey, tableGetStorageKey(props.storageKey, self) ?? useId())
+const uuid = injectLocal(tableIdKey, useId())
+const storageKey = injectLocal(tableStorageKey, tableGetStorageKey(props.storageKey, self) ?? useId())
 
 provideLocal(tableIdKey, uuid)
+provideLocal(tableStorageKey, storageKey)
 
 const mergedProps = computed(() => {
   return getComponentMergedProps('table', props)
