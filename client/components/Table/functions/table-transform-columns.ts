@@ -68,6 +68,8 @@ export function tableTransformColumns(payload: {
     forceUrlUsage,
   } = payload
 
+  console.log('table transform', decodeURIComponent(urlParams.toString()))
+
   // Create a copy of the columns
   let _columns = internalColumns.map(col => new TableColumn(col))
 
