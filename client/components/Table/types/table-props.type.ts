@@ -74,6 +74,11 @@ export type ITableProps<
   features?: TableFeature[]
 
   /**
+   * Whether the row should be clickable
+   */
+  rowClickable?: boolean
+
+  /**
    * The default key for the table rows
    * @default 'id'
    */
