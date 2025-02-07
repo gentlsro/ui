@@ -112,7 +112,6 @@ export function tableTransformColumns(payload: {
   _columns = _columns
     .map(col => {
       const colField = modifiers?.caseInsensitive ? col.field.toLowerCase() : col.field
-      console.log(2, col.field)
 
       // Order and visibility
       if (_visibleColumns.length) {
@@ -128,7 +127,6 @@ export function tableTransformColumns(payload: {
       if (sort.length) {
         // Get the sort item
         const sortItem = sort.find(s => {
-          console.log(3, s.field)
           const sortField = modifiers?.caseInsensitive
             ? s.field.toLowerCase()
             : s.field

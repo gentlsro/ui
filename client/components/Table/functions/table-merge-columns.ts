@@ -29,6 +29,8 @@ export function tableMergeColumns(payload: {
       ? (stateColumns.find(col => col.field === colField))
       : undefined
 
+    console.log('state col', stateCol)
+
     // Merge the column objects, with given priority: state > props > api
     const col = merge({}, apiCol, propsCol, stateCol) as TableColumn<any>
 

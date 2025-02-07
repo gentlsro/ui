@@ -106,6 +106,8 @@ export function useTableStore(
 
     // SECTION General
     const noState = ref(tableProps?.noState ?? false)
+    console.log('Log ~ returndefineStore ~ noState:', noState.value)
+    const initialSchema = ref(tableProps?.initialSchema ?? '')
     const rowKey = ref<string>(tableProps?.rowKey ?? 'id')
     const search = ref(tableProps?.search ?? '')
     const queryBuilder = ref<IQueryBuilderRow[]>(tableProps?.queryBuilder ?? [])
@@ -213,12 +215,14 @@ export function useTableStore(
       // Merge columns from all the sources, remove duplicates
       let cols = columnsMerged
 
+      console.log('Initial schema', initialSchema.value)
+
       // Transform columns
       const { columns: _columns, queryBuilder: qb, pagination } = tableTransformColumns({
         internalColumns: cols,
         modifiers: modifiers.value,
         schemaParams: state.value.layoutDefault?.schema ?? '',
-        urlParams: tableProps?.initialSchema ?? useRequestURL().searchParams,
+        urlParams: initialSchema.value ?? useRequestURL().searchParams,
 
         // Schema should be used only in case we don't have anything in the state
         shouldSchemaBeUsed: noState.value || !state.value?.columns?.length,

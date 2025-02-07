@@ -7,13 +7,13 @@ import type { IQueryBuilderRow } from '../QueryBuilder/types/query-builder-row-p
 import { tableIdKey, tableSlotsKey } from './provide/table.provide'
 
 // Functions
+import { tableInitialize } from './functions/table-initialize'
 import { tableGetExposed } from './functions/table-get-exposed'
 import { tableGetStorageKey } from './functions/table-get-storage-key'
 import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
 
 // Stores
 import { useTableStore } from './stores/table.store'
-import { tableInitialize } from './functions/table-initialize'
 
 const props = withDefaults(defineProps<ITableProps>(), {
   ...getComponentProps('table'),
