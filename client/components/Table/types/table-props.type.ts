@@ -583,5 +583,15 @@ export type ITableProps<
      * Style applied to the table itself
      */
     containerStyle?: CSSProperties
+
+    /**
+     * Class applied to the cell
+     */
+    totalsCellClass?: ClassType
+
+    /**
+     * Style applied to the cell
+     */
+    totalsCellStyle?: CSSProperties
   }
 }

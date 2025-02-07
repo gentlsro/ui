@@ -13,17 +13,22 @@ type IProps = Pick<ITableProps, 'ui'> & {
 const props = defineProps<IProps>()
 
 const totalsCellClass = computed(() => {
-  return [props.column.totalsCellClass]
+  return [props.ui?.totalsCellClass, props.column.totalsCellClass]
 })
 
 const totalsCellStyle = computed(() => {
   return {
+    ...props.ui?.totalsCellStyle,
     ...props.column.totalsCellStyle,
     '--colWidth': props.column.width,
   }
 })
 
 const totalText = computed(() => {
+  if (isNil(props.total?.value)) {
+    return ''
+  }
+
   const label = typeof props.total?.label === 'function'
     ? props.total?.label()
     : props.total?.label
