@@ -58,6 +58,8 @@ export function tableTransformColumns(payload: {
     shouldSchemaBeUsed = true,
   } = payload
 
+  console.log('url params', urlParams)
+
   // Create a copy of the columns
   let _columns = internalColumns.map(col => new TableColumn(col))
 
@@ -86,6 +88,8 @@ export function tableTransformColumns(payload: {
     searchParams: urlParams,
   })
 
+  console.log('url result', urlResult.visibleColumns)
+
   const { result, isUrlUsed, isSchemaUsed } = getUsedProperties({
     shouldUrlBeUsed,
     shouldSchemaBeUsed,
@@ -93,6 +97,8 @@ export function tableTransformColumns(payload: {
     urlResult,
     modifiers,
   })
+
+  console.log('result', result.visibleColumns)
 
   if (!isSchemaUsed && !isUrlUsed) {
     _columns = _columns.toSorted((a, b) => {
