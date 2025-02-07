@@ -194,7 +194,7 @@ export function useTableStore(
         propsColumns: propsColumns.value,
         apiColumns: apiColumns.value,
         stateColumns: state.value.columns,
-        useState: uiState.value.table?.autoSaveSchema,
+        useState: uiState.value.table?.autoSaveSchema && !noState.value,
       }),
     )
 
