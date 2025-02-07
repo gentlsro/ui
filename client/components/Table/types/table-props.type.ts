@@ -115,6 +115,12 @@ export type ITableProps<
   }
 
   /**
+   * Initial schema for the table, if this is used, it takes priority over everything,
+   * even the URL
+   */
+  initialSchema?: string | URLSearchParams
+
+  /**
    * Load data configuration
    */
   loadData?: {
