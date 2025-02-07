@@ -2,6 +2,7 @@
 // Types
 import type { ITableProps } from './types/table-props.type'
 import type { IQueryBuilderRow } from '../QueryBuilder/types/query-builder-row-props.type'
+import type { ITableEmits } from './types/table-emits.type'
 
 // Provide / Inject
 import { tableSlotsKey } from './provide/table.provide'
@@ -18,6 +19,8 @@ import { tableIdKey, tableStorageKey, useTableStore } from './stores/table.store
 const props = withDefaults(defineProps<ITableProps>(), {
   ...getComponentProps('table'),
 })
+
+const emits = defineEmits<ITableEmits>()
 
 const slots = useSlots()
 
@@ -81,7 +84,13 @@ const {
   customData,
   isInitialLoad,
   isDataLoading,
+  emits: storeEmits,
 } = storeToRefs(store)
+
+// Set emits
+storeEmits.value = {
+  rowClick: (row: any) => emits('click:row', row),
+}
 
 // Sync refs with store
 syncRef(toRef(props, 'rowKey'), rowKey, { direction: 'ltr' })

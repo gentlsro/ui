@@ -6,6 +6,7 @@ import type { ITableLayout } from '../types/table-layout.type'
 import type { ITableSortItem } from '../types/table-sort-item.type'
 import type { ITableStateColumn } from '../types/table-state-column.type'
 import type { IQueryBuilderRow } from '../../QueryBuilder/types/query-builder-row-props.type'
+import type { ITableEmitFncs } from '../types/table-emit-fncs.type'
 
 // Models
 import type { TableColumn } from '../models/table-column.model'
@@ -92,6 +93,12 @@ export function useTableStore(
     const { width: tableWidth } = useElementSize(tableEl)
     // !SECTION
 
+    // SECTION Emits
+    const emits = ref<ITableEmitFncs>({
+      rowClick: _item => {},
+    })
+    // !SECTION
+
     // SECTION Configs
     const modifiers = ref<ITableProps['modifiers']>(tableProps?.modifiers)
     const splitRowsConfig = ref<ITableProps['splitRows']>(tableProps?.splitRows ?? [])
@@ -129,6 +136,7 @@ export function useTableStore(
     const rowsLimit = ref(tableProps?.rowsLimit ?? 0)
     const hasMore = ref(false)
     const isFetchMore = ref(false)
+    const rowClickable = ref(tableProps?.rowClickable ?? false)
 
     // When table is mounted, the query params watcher will trigger multiple times
     // because of column merging and possibly other things. For that reason,
@@ -574,6 +582,9 @@ export function useTableStore(
       headerEl,
       totalsEl,
 
+      // Emits
+      emits,
+
       // Configs
       modifiers,
       loadMetaData,
@@ -603,6 +614,7 @@ export function useTableStore(
       isInitialLoad,
       hasMore,
       isFetchMore,
+      rowClickable,
 
       // Columns
       internalColumns: skipHydrate(internalColumns),

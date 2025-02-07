@@ -52,6 +52,8 @@ const {
   cellEdit,
   isEditingCell: isEditingCellStore,
   cellEditValue,
+  emits,
+  rowClickable,
 } = storeToRefs(tableStore)
 
 // Layout
@@ -218,6 +220,12 @@ function handleEditCellMounted() {
     controlEl.select?.() ?? controlEl.focus?.()
   }
 }
+
+function handleRowClick(row: IItem) {
+  if (rowClickable.value) {
+    emits.value.rowClick(row)
+  }
+}
 </script>
 
 <template>
@@ -274,10 +282,10 @@ function handleEditCellMounted() {
       :key="idx"
       v-bind="$attrs"
       class="tr tr--card"
-      :class="[rowClassArray[idx], { 'is-selected': isSelected(rowData.row) }]"
+      :class="[rowClassArray[idx], { 'is-selected': isSelected(rowData.row), 'is-clickable': rowClickable }]"
       :style="rowStyleArray[idx]"
       :to="to?.(rowData.row, { rowKey })"
-      @click="handleSelectToggle(rowData.row, $event)"
+      @click="handleSelectToggle(rowData.row, $event), handleRowClick(rowData.row)"
     >
       <div
         v-for="column in rowData.columns"
@@ -363,9 +371,10 @@ function handleEditCellMounted() {
     v-else-if="rowDataArray[0]"
     v-bind="$attrs"
     class="tr tr--row"
-    :class="[rowClassArray[0], { 'is-selected': isSelected(rowDataArray[0].row) }]"
+    :class="[rowClassArray[0], { 'is-selected': isSelected(rowDataArray[0].row), 'is-clickable': rowClickable }]"
     :style="rowStyleArray[0]"
     :to="to?.(rowDataArray[0].row, { rowKey })"
+    @click="handleRowClick(rowDataArray[0].row)"
   >
     <div
       v-for="column in rowDataArray[0].columns"
@@ -458,6 +467,14 @@ function handleEditCellMounted() {
 
     &__value {
       @apply relative flex items-center gap-1 leading-tight self-center overflow-auto;
+    }
+  }
+}
+
+.tr--row {
+  &.is-clickable {
+    &:hover {
+      @apply cursor-pointer;
     }
   }
 }
