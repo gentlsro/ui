@@ -458,7 +458,7 @@ export function useTableStore(
         const { navigate = tableNavigate } = modifiers.value ?? {}
 
         navigate({
-          column: internalColumns.value,
+          columns: internalColumns.value,
           queryParams,
           isInfiniteScroll: !paginationConfig.value?.enabled,
         })
