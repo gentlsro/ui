@@ -107,6 +107,8 @@ export function tableTransformColumns(payload: {
     forceUrlUsage,
   })
 
+  console.log(result)
+
   if (!isSchemaUsed && !isUrlUsed) {
     _columns = _columns.toSorted((a, b) => {
       const aSort = a._internalSort ?? Number.MAX_SAFE_INTEGER
