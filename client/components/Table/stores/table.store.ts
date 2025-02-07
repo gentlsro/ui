@@ -225,6 +225,9 @@ export function useTableStore(
 
         // Schema should be used only in case we don't have anything in the state
         shouldSchemaBeUsed: noState.value || !state.value?.columns?.length,
+
+        // When providing an `initialSchema`, we want to force its usage
+        forceUrlUsage: !!initialSchema.value,
       })
 
       cols = _columns

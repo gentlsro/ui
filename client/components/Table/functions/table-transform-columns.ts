@@ -16,8 +16,16 @@ function getUsedProperties(payload: {
   modifiers: ITableProps['modifiers']
   schemaResult: ReturnType<typeof tableExtractDataFromUrl>
   urlResult: ReturnType<typeof tableExtractDataFromUrl>
+  forceUrlUsage?: boolean
 }) {
-  const { shouldUrlBeUsed, shouldSchemaBeUsed, schemaResult, urlResult, modifiers } = payload
+  const {
+    shouldUrlBeUsed,
+    shouldSchemaBeUsed,
+    schemaResult,
+    urlResult,
+    modifiers,
+    forceUrlUsage,
+  } = payload
 
   const isUrlUsed = shouldUrlBeUsed
     && (urlResult.filters.length
@@ -34,7 +42,7 @@ function getUsedProperties(payload: {
   return {
     isUrlUsed: !!isUrlUsed,
     isSchemaUsed: !!isSchemaUsed,
-    result: isUrlUsed && modifiers?.useUrl ? urlResult : schemaResult,
+    result: isUrlUsed && (modifiers?.useUrl || forceUrlUsage) ? urlResult : schemaResult,
   }
 }
 
@@ -48,6 +56,7 @@ export function tableTransformColumns(payload: {
   schemaParams: URLSearchParams | string
   shouldUrlBeUsed?: boolean
   shouldSchemaBeUsed?: boolean
+  forceUrlUsage?: boolean
 }) {
   const {
     internalColumns,
@@ -56,6 +65,7 @@ export function tableTransformColumns(payload: {
     schemaParams,
     shouldUrlBeUsed = true,
     shouldSchemaBeUsed = true,
+    forceUrlUsage,
   } = payload
 
   // Create a copy of the columns
@@ -92,6 +102,7 @@ export function tableTransformColumns(payload: {
     schemaResult,
     urlResult,
     modifiers,
+    forceUrlUsage,
   })
 
   if (!isSchemaUsed && !isUrlUsed) {
