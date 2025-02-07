@@ -168,6 +168,10 @@ export default defineNuxtConfig({
   // Lodash
   lodash: { prefix: '' },
 
+  pinia: {
+    storesDirs: [],
+  },
+
   // UnoCSS
   unocss: {
     preflight: false,
