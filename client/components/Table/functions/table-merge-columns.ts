@@ -19,19 +19,19 @@ export function tableMergeColumns(payload: {
     useState = true,
   } = payload
 
-  const colFields = uniq([
-    ...propsColumns,
-    ...apiColumns,
-    ...useState ? stateColumns : [],
-  ]
+  const colFields = uniq([...propsColumns, ...apiColumns, ...stateColumns]
     .map(col => col.field))
 
   return colFields.map(colField => {
     const propsCol = (propsColumns.find(col => col.field === colField))
     const apiCol = (apiColumns.find(col => col.field === colField))
-    const stateCol = useState
-      ? (stateColumns.find(col => col.field === colField))
-      : undefined
+    let stateCol = stateColumns.find(col => col.field === colField)
+
+    // In case we don't want to use state, we just extract the `field` and `width`
+    // from the state col to keep consistency. We do not include filters, sorting,...
+    if (!useState && stateCol) {
+      stateCol = pick(stateCol, ['field', 'width']) as ITableStateColumn
+    }
 
     // Merge the column objects, with given priority: state > props > api
     const col = merge({}, apiCol, propsCol, stateCol) as TableColumn<any>
