@@ -455,7 +455,7 @@ export function useTableStore(
           isInfiniteScroll: !paginationConfig.value?.enabled,
         })
       }
-    })
+    }, { immediate: true })
 
     watch(columnWidths, syncStateColumns)
     // !SECTION
