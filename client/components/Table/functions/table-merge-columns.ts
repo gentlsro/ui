@@ -19,7 +19,11 @@ export function tableMergeColumns(payload: {
     useState = true,
   } = payload
 
-  const colFields = uniq([...propsColumns, ...apiColumns, ...stateColumns]
+  const colFields = uniq([
+    ...propsColumns,
+    ...apiColumns,
+    ...useState ? stateColumns : [],
+  ]
     .map(col => col.field))
 
   return colFields.map(colField => {
@@ -28,8 +32,6 @@ export function tableMergeColumns(payload: {
     const stateCol = useState
       ? (stateColumns.find(col => col.field === colField))
       : undefined
-
-    console.log('state col', stateCol)
 
     // Merge the column objects, with given priority: state > props > api
     const col = merge({}, apiCol, propsCol, stateCol) as TableColumn<any>
