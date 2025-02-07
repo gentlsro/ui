@@ -85,6 +85,7 @@ const {
   isInitialLoad,
   isDataLoading,
   emits: storeEmits,
+  rowClickable,
 } = storeToRefs(store)
 
 // Set emits
@@ -114,6 +115,7 @@ syncRef(toRef(props, 'splitRows', []), splitRowsConfig, { direction: 'ltr' })
 syncRef(toRef(props, 'breakpoint', 0), breakpoint, { direction: 'ltr' })
 syncRef(toRef(props, 'rowsLimit'), rowsLimit, { direction: 'ltr' })
 syncRef(isLoading, isDataLoading, { direction: 'both' })
+syncRef(toRef(props, 'rowClickable'), rowClickable, { direction: 'ltr' })
 
 // When columns change, make sure to get their real widths
 watch(visibleColumns, cols => {

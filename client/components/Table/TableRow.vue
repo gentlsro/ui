@@ -285,7 +285,7 @@ function handleRowClick(row: IItem) {
       :class="[rowClassArray[idx], { 'is-selected': isSelected(rowData.row), 'is-clickable': rowClickable }]"
       :style="rowStyleArray[idx]"
       :to="to?.(rowData.row, { rowKey })"
-      @click="handleSelectToggle(rowData.row, $event), handleRowClick(rowData.row)"
+      @click="[handleSelectToggle(rowData.row, $event), handleRowClick(rowData.row)]"
     >
       <div
         v-for="column in rowData.columns"
@@ -410,6 +410,12 @@ function handleRowClick(row: IItem) {
 .tr {
   @apply flex relative;
 
+  &.is-clickable {
+    &:hover {
+      @apply cursor-pointer;
+    }
+  }
+
   &-split {
     @apply grid w-full;
 
@@ -467,14 +473,6 @@ function handleRowClick(row: IItem) {
 
     &__value {
       @apply relative flex items-center gap-1 leading-tight self-center overflow-auto;
-    }
-  }
-}
-
-.tr--row {
-  &.is-clickable {
-    &:hover {
-      @apply cursor-pointer;
     }
   }
 }
