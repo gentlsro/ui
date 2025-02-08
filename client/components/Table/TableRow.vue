@@ -474,7 +474,7 @@ function handleRowClick(row: IItem) {
     }
 
     &__value {
-      @apply relative flex items-center gap-1 leading-tight self-center overflow-auto;
+      @apply relative flex items-center gap-1 leading-tight self-center overflow-auto p-x-2;
     }
   }
 }
