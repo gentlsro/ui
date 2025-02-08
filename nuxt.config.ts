@@ -83,7 +83,6 @@ export default defineNuxtConfig({
     resolve('./client/css/zindex.scss'),
     resolve('./client/css/ripple.scss'),
     resolve('./client/css/colors.scss'),
-    resolve('./client/css/components.theme.scss'),
   ],
 
   // Runtime config https://nuxt.com/docs/api/configuration/nuxt-config#runtimeconfig
