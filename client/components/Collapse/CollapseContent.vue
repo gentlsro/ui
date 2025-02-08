@@ -53,7 +53,7 @@ $transitionDuration: 150ms;
   transition-duration: $transitionDuration;
 
   .collapse__content-inner {
-    @apply flex flex-col rounded-b-custom;
+    @apply flex flex-col overflow-auto rounded-b-custom;
     @apply min-h-0 transition-visibility invisible;
   }
 
