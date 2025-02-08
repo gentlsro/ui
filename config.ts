@@ -296,7 +296,9 @@ const defaultComponentsConfig = {
       persistent: undefined,
       title: undefined,
       transitionDuration: 250,
-      ui: () => ({}),
+      ui: () => ({
+        headerClass: 'font-semibold',
+      }),
     },
     merge: ['ui'],
   },
@@ -481,6 +483,7 @@ const defaultComponentsConfig = {
       tooltip: undefined,
       ui: () => ({
         borderRadius: '0.5rem',
+        inputContainerClass: 'bg-white dark:bg-black',
       }),
     },
     merge: ['ui'],
@@ -581,7 +584,9 @@ const defaultComponentsConfig = {
       title: undefined,
       transitionDuration: 250,
       virtual: undefined,
-      ui: () => ({}),
+      ui: () => ({
+        headerClass: 'font-semibold',
+      }),
     },
     merge: ['ui'],
   },

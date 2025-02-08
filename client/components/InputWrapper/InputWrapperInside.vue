@@ -81,7 +81,7 @@ const classes = computed(() => {
 
 <style lang="scss" scoped>
 .input-wrapper__inside {
-  @apply grid items-center rounded-$borderRadius bg-$Input-wrapper-bg;
+  @apply grid items-center rounded-$borderRadius;
 
   grid-template-areas:
     'prepend input loading append'

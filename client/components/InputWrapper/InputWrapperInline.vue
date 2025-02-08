@@ -159,8 +159,7 @@ const classes = computed(() => {
   grid-row: 1 / 2;
   transition: border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
-  @apply border-custom rounded-$borderRadius pointer-events-none border-ca fit
-    bg-$Input-wrapper-bg;
+  @apply border-custom rounded-$borderRadius pointer-events-none border-ca fit;
 }
 
 .input-wrapper__inline:focus-within {

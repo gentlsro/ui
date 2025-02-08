@@ -120,7 +120,6 @@ defineExpose({
 
   &-content {
     @apply flex flex-gap-x-4 grow items-center rounded-custom;
-    @apply bg-$MainBar-bg;
   }
 
   &-title {
