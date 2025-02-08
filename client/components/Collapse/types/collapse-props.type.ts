@@ -2,6 +2,12 @@ import type { CSSProperties } from 'vue'
 
 export type ICollapseProps = {
   /**
+   * When true, the content's height will be watched and every change will trigger
+   * a transition
+   */
+  autoAdjustHeight?: boolean
+
+  /**
    * The icon for `Collapse` expansion
    *
    * Note: Will get rotated 90 degrees when `isOpen` is `true`

@@ -44,7 +44,7 @@ function handleClick() {
       <Collapse
         title="Collapse ijasdij asidjias jioda iojadio jasiod jioasoijd "
         :ui="{ contentClass: () => 'bg-red' }"
-        :max-content-height="600"
+        auto-adjust-height
         floating
       >
         {{ content }}

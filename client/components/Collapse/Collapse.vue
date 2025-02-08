@@ -53,7 +53,7 @@ async function handleToggle() {
     :aria-expanded="isOpen"
     :style="{
       '--transitionTimingFunction': 'cubic-bezier(0.4, 0, 0.2, 1)',
-      '--transitionDuration': '150ms',
+      '--transitionDuration': '1150ms',
     }"
   >
     <!-- Header -->
@@ -88,6 +88,7 @@ async function handleToggle() {
         :no-transition
         :content-height
         :max-content-height
+        :auto-adjust-height
         :ui="mergedProps.ui"
         @before-hide="$emit('before-hide')"
         @hide="$emit('hide')"

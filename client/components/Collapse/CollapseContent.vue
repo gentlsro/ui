@@ -2,7 +2,7 @@
 // Types
 import type { ICollapseProps } from './types/collapse-props.type'
 
-type IProps = Pick<ICollapseProps, 'ui' | 'floating' | 'noTransition' | 'contentHeight' | 'maxContentHeight'>
+type IProps = Pick<ICollapseProps, 'ui' | 'floating' | 'noTransition' | 'contentHeight' | 'maxContentHeight' | 'autoAdjustHeight'>
   & { isOpen: boolean }
 
 const props = defineProps<IProps>()
@@ -15,6 +15,7 @@ const emits = defineEmits<{
 
 // Layout
 const contentEl = ref<HTMLDivElement>()
+const inTransition = ref(false)
 
 function handleTransition(when: 'before' | 'after') {
   const toEmit = [
@@ -24,6 +25,10 @@ function handleTransition(when: 'before' | 'after') {
 
   // @ts-expect-error
   emits(toEmit.join(''))
+
+  if (when === 'before' && props.isOpen) {
+    inTransition.value = true
+  }
 }
 
 watch(
@@ -65,13 +70,15 @@ function getContentHeight(actualContentHeight: number) {
   return Math.min(maxContentHeight, contentHeight)
 }
 
-useResizeObserver(contentEl, () => {
+function onTransitionEnd() {
   const el = contentEl.value as HTMLDivElement
+  inTransition.value = false
 
-  requestAnimationFrame(() => {
-    el.style.height = `${getContentHeight(el.scrollHeight)}px`
-  })
-})
+  if (el) {
+    el.style.height = ''
+    el.style.maxHeight = props.maxContentHeight ? `${props.maxContentHeight}px` : ''
+  }
+}
 </script>
 
 <template>
@@ -86,9 +93,10 @@ useResizeObserver(contentEl, () => {
       v-if="isOpen"
       ref="contentEl"
       class="collapse__content"
-      :class="[contentClass, { 'is-floating': floating }]"
+      :class="[contentClass, { 'is-floating': floating, 'in-transition': inTransition }]"
       :data-state="isOpen ? 'open' : 'closed'"
       :style="contentStyle"
+      @transitionend="onTransitionEnd"
     >
       <slot />
     </div>
@@ -99,22 +107,22 @@ useResizeObserver(contentEl, () => {
 .collapse__content {
   @apply flex flex-col overflow-auto rounded-b-custom;
 
+  transition-duration: var(--transitionDuration);
+  transition-timing-function: var(--transitionTimingFunction);
+  transition-property: height, opacity;
+
   &.is-floating {
     @apply absolute left-0 right-0 bottom-0 translate-y-full;
+  }
+
+  &.in-transition {
+    @apply overflow-hidden;
   }
 }
 
 // Transition
-.v-enter-active,
-.v-leave-active {
-  transition-duration: var(--transitionDuration);
-  transition-timing-function: var(--transitionTimingFunction);
-  transition-property: height, opacity;
-  overflow: hidden !important;
-}
-
 .v-enter-from,
 .v-leave-to {
-  @apply opacity-0;
+  @apply opacity-0 overflow-hidden;
 }
 </style>
