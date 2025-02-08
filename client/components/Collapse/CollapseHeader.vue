@@ -101,6 +101,10 @@ const subtitleStyle = computed(() => props.ui?.subtitleStyle?.(props.isOpen))
 .collapse__header {
   @apply flex items-center gap-2 p-x-2 min-h-10;
 
+  transition-duration: var(--transitionDuration);
+  transition-timing-function: var(--transitionTimingFunction);
+  transition-property: border-radius;
+
   &-icon {
     @apply shrink-0;
   }

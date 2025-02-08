@@ -9,7 +9,7 @@ const props = withDefaults(defineProps<ICollapseProps>(), {
   ...getComponentProps('collapse'),
 })
 
-const emits = defineEmits<{
+defineEmits<{
   (e: 'before-show'): void
   (e: 'before-hide'): void
   (e: 'show'): void
@@ -44,26 +44,6 @@ async function handleToggle() {
     isOpen.value = true
   }
 }
-
-// Transitions
-const inTransition = ref(false)
-
-function handleTransition(
-  ev: TransitionEvent,
-  state: 'start' | 'end',
-) {
-  if (ev.propertyName === 'grid-template-rows') {
-    inTransition.value = state === 'start'
-
-    const toEmit = [
-      state === 'start' ? 'before-' : '',
-      isOpen.value ? 'show' : 'hide',
-    ]
-
-    // @ts-expect-error
-    emits(toEmit.join(''))
-  }
-}
 </script>
 
 <template>
@@ -71,6 +51,10 @@ function handleTransition(
     class="collapse"
     :data-state="isOpen ? 'open' : 'closed'"
     :aria-expanded="isOpen"
+    :style="{
+      '--transitionTimingFunction': 'cubic-bezier(0.4, 0, 0.2, 1)',
+      '--transitionDuration': '150ms',
+    }"
   >
     <!-- Header -->
     <slot
@@ -101,10 +85,14 @@ function handleTransition(
       <CollapseContent
         :is-open
         :floating
-        :in-transition
+        :no-transition
+        :content-height
+        :max-content-height
         :ui="mergedProps.ui"
-        @transitionstart="handleTransition($event, 'start')"
-        @transitionend="handleTransition($event, 'end')"
+        @before-hide="$emit('before-hide')"
+        @hide="$emit('hide')"
+        @before-show="$emit('before-show')"
+        @show="$emit('show')"
       >
         <slot />
       </CollapseContent>

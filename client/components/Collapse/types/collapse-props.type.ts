@@ -9,6 +9,13 @@ export type ICollapseProps = {
   expandIcon?: (isOpen: boolean) => ClassType
 
   /**
+   * The height of the content
+   *
+   * NOTE: By default, the height is based on the actual content
+   */
+  contentHeight?: number
+
+  /**
    * When true, the content will have a `position: absolute`
    */
   floating?: boolean
@@ -22,6 +29,11 @@ export type ICollapseProps = {
    * Whether the `Collapse` is loading
    */
   loading?: boolean
+
+  /**
+   * The maximum height for the content
+   */
+  maxContentHeight?: number
 
   /**
    * State of the `Collapse` open/closed
@@ -38,6 +50,11 @@ export type ICollapseProps = {
    * and the content. This prop can be used to disable that.
    */
   noSeparator?: boolean
+
+  /**
+   * When true, the `Collapse` will not use the expand/collapse transition
+   */
+  noTransition?: boolean
 
   /**
    * The subtitle of the `Collapse`
