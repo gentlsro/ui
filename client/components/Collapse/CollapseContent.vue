@@ -23,13 +23,15 @@ const contentStyle = computed(() => {
     :class="{ 'is-floating': floating, 'in-transition': inTransition }"
     :data-state="isOpen ? 'open' : 'closed'"
   >
-    <div
-      class="collapse__content-inner"
-      :class="contentClass"
-      :style="contentStyle"
-    >
-      <slot />
-    </div>
+    <span>
+      <div
+        class="collapse__content-inner"
+        :class="contentClass"
+        :style="contentStyle"
+      >
+        <slot />
+      </div>
+    </span>
   </div>
 </template>
 

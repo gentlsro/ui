@@ -16,6 +16,12 @@ const emits = defineEmits<{
   (e: 'hide'): void
 }>()
 
+defineSlots<{
+  header?: (props: { isOpen: boolean, onClick: () => void, ui: ICollapseProps['ui'] }) => any
+  content?: (props: { isOpen: boolean, ui: ICollapseProps['ui'] }) => any
+  default?: () => any
+}>()
+
 const mergedProps = computed(() => {
   return getComponentMergedProps('collapse', props)
 })
@@ -91,7 +97,6 @@ function handleTransition(
       name="content"
       :ui="mergedProps.ui"
       :is-open
-      :in-transition
     >
       <CollapseContent
         :is-open
