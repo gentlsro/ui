@@ -45,7 +45,7 @@ async function getTotals() {
         rows: rows.value,
         getStore: () => useTableStore(),
       })
-    })
+    }, { noResolve: true })
 
     totals.value = res
   }
