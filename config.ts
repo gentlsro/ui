@@ -952,7 +952,7 @@ const defaultComponentsConfig = {
       bordered: false,
       allowComparatorsOfSameType: false,
       minimumColumnWidth: 80,
-      breakpoint: 1202,
+      breakpoint: 600,
       editable: true,
       autoFit: () => ({
         enabled: true,
@@ -967,8 +967,7 @@ const defaultComponentsConfig = {
       separator: 'horizontal',
       splitRows: () => [
         { breakpoint: 600, count: 2 },
-        { breakpoint: 1200, count: 3 },
-        { breakpoint: 1201, count: 1 },
+        { breakpoint: 800, count: 3 },
       ],
       modifiers: () => ({
         caseInsensitive: true,
