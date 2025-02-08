@@ -107,10 +107,6 @@ function onTransitionEnd() {
 .collapse__content {
   @apply flex flex-col overflow-auto rounded-b-custom;
 
-  transition-duration: var(--transitionDuration);
-  transition-timing-function: var(--transitionTimingFunction);
-  transition-property: height, opacity;
-
   &.is-floating {
     @apply absolute left-0 right-0 bottom-0 translate-y-full;
   }
@@ -121,6 +117,15 @@ function onTransitionEnd() {
 }
 
 // Transition
+.v-enter-active,
+.v-leave-active {
+  transition-duration: var(--transitionDuration);
+  transition-timing-function: var(--transitionTimingFunction);
+  transition-property: height, opacity;
+
+  @apply overflow-hidden;
+}
+
 .v-enter-from,
 .v-leave-to {
   @apply opacity-0 overflow-hidden;

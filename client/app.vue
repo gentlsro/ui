@@ -28,7 +28,6 @@ function handleClick() {
       <Collapse
         title="Collapse"
         :ui="{ contentClass: () => 'bg-red' }"
-        :max-content-height="600"
         no-transition
         @before-show="$log('before-show')"
         @hide="$log('hide')"
