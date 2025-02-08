@@ -2,6 +2,7 @@ import { skipHydrate } from 'pinia'
 
 // Types
 import type { ITableProps } from '../types/table-props.type'
+import type { ITableTotal } from '../types/table-total.type'
 import type { ITableLayout } from '../types/table-layout.type'
 import type { ITableSortItem } from '../types/table-sort-item.type'
 import type { ITableStateColumn } from '../types/table-state-column.type'
@@ -123,6 +124,7 @@ export function useTableStore(
     const allowComparatorsOfSameType = ref(tableProps?.allowComparatorsOfSameType ?? false)
     const minimumColumnWidth = ref(tableProps?.minimumColumnWidth ?? 80)
     const breakpoint = ref(tableProps?.breakpoint ?? 0)
+    const totals = ref<ITableTotal[]>()
 
     // General helper that triggers the sync of the state columns
     const columnWidths = computed(() => {
@@ -587,6 +589,7 @@ export function useTableStore(
       allowComparatorsOfSameType,
       minimumColumnWidth,
       breakpoint,
+      totals,
 
       // Rows
       rows,

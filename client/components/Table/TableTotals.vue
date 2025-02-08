@@ -14,11 +14,15 @@ const { handleRequest } = useRequest()
 
 // Store
 const tableStore = useTableStore()
-const { rows, totalsEl, totalsX, visibleColumns } = storeToRefs(tableStore)
+const {
+  totals,
+  rows,
+  totalsEl,
+  totalsX,
+  visibleColumns,
+} = storeToRefs(tableStore)
 
 // Layout
-const totals = ref<ITableTotal[]>()
-
 const totalsByField = computed(() => {
   return totals.value?.reduce((agg, total) => {
     agg[total.field] = total
