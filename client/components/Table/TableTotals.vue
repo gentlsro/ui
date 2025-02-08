@@ -32,7 +32,7 @@ const totalsByField = computed(() => {
 })
 
 // Data fetching
-getTotals()
+watch(rows, getTotals)
 
 async function getTotals() {
   if (typeof props.totals === 'function') {
