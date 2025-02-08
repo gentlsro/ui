@@ -68,7 +68,7 @@ export function useTableStore(
        * a component or similar.
        */
       customData: {} as IItem,
-    })
+    }, { writeDefaults: true })
 
     const customData = computed({
       get() {
@@ -465,7 +465,7 @@ export function useTableStore(
           isInfiniteScroll: !paginationConfig.value?.enabled,
         })
       }
-    }, { immediate: true })
+    })
 
     watch(columnWidths, syncStateColumns)
     // !SECTION
