@@ -149,6 +149,7 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
             <slot
               name="row-inside"
               v-bind="rowInsideProps"
+              :index
             />
           </template>
         </TableRow>
