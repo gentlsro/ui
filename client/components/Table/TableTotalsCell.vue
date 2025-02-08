@@ -35,7 +35,7 @@ const totalText = computed(() => {
     : props.total?.label
 
   const labelEl = label
-    ? `<span text="caption">${label}</span>`
+    ? `<span text="caption">${label}:</span>`
     : ''
 
   const valueEl = props.total?.value
@@ -67,7 +67,7 @@ const totalText = computed(() => {
   @apply w-$colWidth;
 
   &__totals-inner {
-    @apply flex gap-1 items-center;
+    @apply flex gap-2 items-center;
   }
 }
 </style>
