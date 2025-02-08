@@ -361,6 +361,7 @@ function handleRowClick(row: IItem) {
       <slot
         name="inner"
         mode="card"
+        :row="rowData.row"
       />
     </Component>
   </div>
@@ -402,6 +403,7 @@ function handleRowClick(row: IItem) {
     <slot
       name="inner"
       mode="row"
+      :row="rowDataArray[0].row"
     />
   </Component>
 </template>
