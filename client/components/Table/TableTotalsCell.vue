@@ -1,13 +1,14 @@
 <script setup lang="ts">
 // Types
 import type { ITableProps } from './types/table-props.type'
+import type { ITableTotal } from './types/table-total.type'
 
 // Models
 import type { TableColumn } from './models/table-column.model'
 
 type IProps = Pick<ITableProps, 'ui'> & {
   column: TableColumn
-  total?: NonNullable<ITableProps['totals']>[number]
+  total?: ITableTotal
 }
 
 const props = defineProps<IProps>()

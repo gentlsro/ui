@@ -123,7 +123,6 @@ export function useTableStore(
     const allowComparatorsOfSameType = ref(tableProps?.allowComparatorsOfSameType ?? false)
     const minimumColumnWidth = ref(tableProps?.minimumColumnWidth ?? 80)
     const breakpoint = ref(tableProps?.breakpoint ?? 0)
-    const totals = ref(tableProps?.totals)
 
     // General helper that triggers the sync of the state columns
     const columnWidths = computed(() => {
@@ -521,24 +520,7 @@ export function useTableStore(
       }
 
       isFetchMore.value = hasMore.value && !!payload?.isFetchMore
-
-      const { buildFetchPayload = tableBuildFetchPayload } = modifiers.value ?? {}
-
-      const lastRow = rows.value[rows.value.length - 1] as IItem
-      const fetchPayload = buildFetchPayload({
-        columns: internalColumns.value,
-        queryBuilder: queryBuilder.value,
-        search: search.value,
-        queryParams: queryParams.value,
-        orderBy: internalColumns.value.flatMap(col => col.sortDbQuery).filter(Boolean) as ITableSortItem[],
-        getStore,
-        pagination: {
-          skip: isFetchMore.value ? rows.value.length : skip.value,
-          take: paginationConfig.value?.pageSize ?? 10,
-        },
-
-        ...(isFetchMore.value && { fetchMore: { lastRow, hasMore: hasMore.value } }),
-      })
+      const fetchPayload = getFetchPayload()
 
       isDataLoading.value = true
       const res = await handleRequest(
@@ -554,9 +536,9 @@ export function useTableStore(
       )
 
       const resModified = loadData.value?.onFetch?.(res) ?? res
-      const { payloadKey = 'data', countKey = 'count' } = loadData.value ?? {}
+      const { payloadKey, countKey = 'count' } = loadData.value ?? {}
 
-      const rowsFetched = get(resModified, payloadKey) ?? []
+      const rowsFetched = payloadKey ? (get(resModified, payloadKey) ?? []) : resModified
       const countFetched = get(resModified, countKey) ?? 0
 
       rows.value = isFetchMore.value ? [...rows.value, ...rowsFetched] : rowsFetched
@@ -605,7 +587,6 @@ export function useTableStore(
       allowComparatorsOfSameType,
       minimumColumnWidth,
       breakpoint,
-      totals,
 
       // Rows
       rows,

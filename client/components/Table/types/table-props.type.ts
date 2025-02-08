@@ -2,6 +2,7 @@ import type { CSSProperties } from 'vue'
 import type { RouteLocationRaw } from '#vue-router'
 
 // Types
+import type { ITableTotal } from './table-total.type'
 import type { TableFeature } from './table-feature.type'
 import type { ISelection } from '../../../types/selection.type'
 import type { ITableFetchPayload } from './table-fetch-payload.type'
@@ -476,7 +477,11 @@ export type ITableProps<
   /**
    * Totals
    */
-  totals?: Array<Pick<TableColumn, 'field' | 'label'> & { value: any }>
+  totals?: ITableTotal[] | ((payload: {
+    tablePayload: ITableFetchPayload<K>
+    rows: IItem[]
+    getStore: () => ReturnType<typeof useTableStore>
+  }) => Promise<ITableTotal[]>)
 
   /**
    * Visual configuration
