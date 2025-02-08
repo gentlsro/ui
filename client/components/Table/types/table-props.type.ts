@@ -95,8 +95,11 @@ export type ITableProps<
   autoFit?: {
     /**
      * Whether to autofit the columns on initialization
+     *
+     * NOTE: By default, the table will get auto-fit based on the `uiState.table.autoFit` value,
+     * but if you set this to `forced`, the table will force the `mode` set in this prop.
      */
-    onInit?: boolean
+    onInit?: boolean | 'forced'
 
     /**
      * The mode to use for the autofit

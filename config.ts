@@ -955,6 +955,7 @@ const defaultComponentsConfig = {
       breakpoint: 600,
       editable: true,
       autoFit: () => ({
+        onInit: true,
         enabled: true,
         mode: 'fit',
         considerHeader: false,

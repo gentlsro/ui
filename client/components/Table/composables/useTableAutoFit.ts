@@ -20,13 +20,15 @@ export function useTableAutoFit() {
 
   async function fitColumns(
     ev?: Partial<Pick<PointerEvent, 'shiftKey' | 'ctrlKey' | 'metaKey'>>,
+    options?: { mode?: 'fit' | 'stretch' | 'justify' },
   ) {
-    if (!ev && !uiState.value.table?.fit) {
+    const { mode = uiState.value.table?.fit } = options ?? {}
+    if (!ev && !mode) {
       return
     }
 
-    let isStretch = uiState.value.table?.fit === 'stretch'
-    let isJustify = uiState.value.table?.fit === 'justify'
+    let isStretch = mode === 'stretch'
+    let isJustify = mode === 'justify'
 
     if (ev) {
       isStretch = !!ev?.shiftKey
