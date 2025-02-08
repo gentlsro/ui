@@ -15,6 +15,7 @@ import { getComponentMergedProps, getComponentProps } from '../../functions/get-
 
 // Stores
 import { tableIdKey, tableStorageKey, useTableStore } from './stores/table.store'
+import type { TableFeature } from './types/table-feature.type'
 
 const props = withDefaults(defineProps<ITableProps>(), {
   ...getComponentProps('table'),
@@ -135,6 +136,30 @@ watch(visibleColumns, cols => {
   })
 })
 
+const hasTop = computed(() => {
+  const TOP_FEATURES = [
+    'queryBuilderDialog',
+    'queryBuilder',
+    'filterChips',
+    'search',
+    'export',
+  ] as TableFeature[]
+
+  return TOP_FEATURES.some(feature => props.features?.includes(feature))
+})
+
+const hasToolbar = computed(() => {
+  const TOOLBAR_FEATURES = [
+    'selection',
+    'sorting',
+    'autofit',
+    'columnSelection',
+    'layouts',
+  ] as TableFeature[]
+
+  return TOOLBAR_FEATURES.some(feature => props.features?.includes(feature))
+})
+
 tableInitialize()
 
 defineExpose(tableGetExposed())
@@ -159,6 +184,7 @@ onUnmounted(() => {
       :custom-data
     >
       <TableTop
+        v-if="hasTop"
         v-model:search="search"
         v-model:query-builder="queryBuilder"
         :query-builder-props="mergedProps.queryBuilderProps"
@@ -174,6 +200,7 @@ onUnmounted(() => {
       :custom-data
     >
       <TableToolbar
+        v-if="hasToolbar"
         :features
         :ui="mergedProps.ui"
       >
