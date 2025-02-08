@@ -470,7 +470,7 @@ function handleRowClick(row: IItem) {
     grid-template-columns: 1fr 3fr;
 
     &__label {
-      @apply text-caption text-xs min-h-6 p-t-1;
+      @apply text-caption text-xs min-h-6 p-t-1 line-clamp-2;
     }
 
     &__value {
