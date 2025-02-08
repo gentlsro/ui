@@ -1000,7 +1000,7 @@ const defaultComponentsConfig = {
         cellInnerClass: 'font-rem-13 p-y-1 truncate',
         alternateRowClass: 'bg-primary/15 dark:bg-black',
         rowClass: 'hover:bg-primary/25',
-        totalsCellClass: 'font-rem-13 font-semibold tracking-wide p-y-1',
+        totalsCellClass: 'font-rem-13 font-semibold tracking-wide p-y-2 border-t-1 border-black dark:border-white',
       }),
     },
     merge: [
