@@ -34,7 +34,15 @@ const totalText = computed(() => {
     ? props.total?.label()
     : props.total?.label
 
-  return `${label ? `${label}:` : ''}${props.total?.value}`
+  const labelEl = label
+    ? `<span text="caption">${label}</span>`
+    : ''
+
+  const valueEl = props.total?.value
+    ? `<span font="semibold">${props.total?.value}</span>`
+    : ''
+
+  return `${labelEl}${valueEl}`
 })
 </script>
 
@@ -45,9 +53,10 @@ const totalText = computed(() => {
     :style="totalsCellStyle"
   >
     <slot>
-      <span class="th__totals-inner">
-        {{ totalText }}
-      </span>
+      <span
+        class="th__totals-inner"
+        v-html="totalText"
+      />
     </slot>
   </div>
 </template>
@@ -56,5 +65,9 @@ const totalText = computed(() => {
 .th {
   @apply flex flex-center shrink-0;
   @apply w-$colWidth;
+
+  &__totals-inner {
+    @apply flex gap-1 items-center;
+  }
 }
 </style>
