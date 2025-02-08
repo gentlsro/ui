@@ -968,6 +968,7 @@ const defaultComponentsConfig = {
       splitRows: () => [
         { breakpoint: 600, count: 2 },
         { breakpoint: 800, count: 3 },
+        { breakpoint: 1000, count: 1 },
       ],
       modifiers: () => ({
         caseInsensitive: true,
