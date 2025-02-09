@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { getActivePinia } from 'pinia'
+
 // Types
 import type { IQueryBuilderProps } from './types/query-builder-props.type'
 import type { IQueryBuilderEmits } from './types/query-builder-emits.type'
@@ -23,6 +25,7 @@ const uuid = injectLocal(queryBuilderIdKey, useId())
 provideLocal(queryBuilderIdKey, uuid)
 
 // Store
+const store = useQueryBuilderStore()
 const {
   columns: storeColumns,
   items: storeItems,
@@ -31,7 +34,7 @@ const {
   draggedItem,
   isSmallerScreen,
   getFilterComponentFnc: storeGetFilterComponentFnc,
-} = storeToRefs(useQueryBuilderStore())
+} = storeToRefs(store)
 
 // Utils
 useQueryBuilderDragAndDrop()
@@ -75,6 +78,13 @@ syncRef(toRef(props, 'getFilterComponent'), storeGetFilterComponentFnc, { direct
 if (!props.items.length && !props.noInitialization) {
   items.value = queryBuilderInitializeItems()
 }
+
+// Dispose of store on unmount
+onUnmounted(() => {
+  store.$dispose()
+  const pinia = getActivePinia()
+  delete pinia?.state.value[store.$id]
+})
 
 defineExpose({
   clearFilter,

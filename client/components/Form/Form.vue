@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { getActivePinia } from 'pinia'
+
 // Types
 import type { IFormProps } from './types/form-props.type'
 
@@ -129,6 +131,14 @@ onMounted(() => {
 
 // We provide the form submit key
 provide(formSubmitKey, formStore.handleSubmit)
+
+// Lifecycle
+// Dispose of store on unmount
+onUnmounted(() => {
+  formStore.$dispose()
+  const pinia = getActivePinia()
+  delete pinia?.state.value[formStore.$id]
+})
 </script>
 
 <template>

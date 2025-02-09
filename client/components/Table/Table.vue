@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { getActivePinia } from 'pinia'
+
 // Types
 import type { ITableProps } from './types/table-props.type'
 import type { IQueryBuilderRow } from '../QueryBuilder/types/query-builder-row-props.type'
@@ -16,7 +18,6 @@ import { getComponentMergedProps, getComponentProps } from '../../functions/get-
 // Stores
 import { tableIdKey, tableStorageKey, useTableStore } from './stores/table.store'
 import type { TableFeature } from './types/table-feature.type'
-import { getActivePinia } from 'pinia'
 
 const props = withDefaults(defineProps<ITableProps>(), {
   ...getComponentProps('table'),

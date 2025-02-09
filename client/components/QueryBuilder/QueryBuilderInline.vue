@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { getActivePinia } from 'pinia'
 import type { ComparatorEnum } from '$comparatorEnum'
 
 // Types
@@ -31,13 +32,14 @@ const uuid = injectLocal(queryBuilderIdKey, useId())
 provideLocal(queryBuilderIdKey, uuid)
 
 // Store
+const store = useQueryBuilderStore()
 const {
   queryBuilderEl,
   columns: storeColumns,
   items: storeItems,
   maxNestingLevel: storeMaxNestingLevel,
   getFilterComponentFnc: storeGetFilterComponentFnc,
-} = storeToRefs(useQueryBuilderStore())
+} = storeToRefs(store)
 
 // Layout
 const items = defineModel<IQueryBuilderProps['items']>('items', { required: true })
@@ -114,6 +116,13 @@ syncRef(toRef(props, 'getFilterComponent'), storeGetFilterComponentFnc, { direct
 if (!props.items.length && !props.noInitialization) {
   items.value = queryBuilderInitializeItems()
 }
+
+// Dispose of store on unmount
+onUnmounted(() => {
+  store.$dispose()
+  const pinia = getActivePinia()
+  delete pinia?.state.value[store.$id]
+})
 
 defineExpose({
   clearFilter,

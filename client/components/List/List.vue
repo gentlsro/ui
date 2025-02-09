@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { getActivePinia } from 'pinia'
 import type { IGroupRow } from '$utilsLayer/shared/composables/useGrouping'
 
 // Types
@@ -118,6 +119,13 @@ else if (storeItems.value) {
   storeItems.value = [...storeItems.value]
   isFirstFetch.value = false
 }
+
+// Dispose of store on unmount
+onUnmounted(() => {
+  listStore.$dispose()
+  const pinia = getActivePinia()
+  delete pinia?.state.value[listStore.$id]
+})
 
 defineExpose({ handleKey })
 </script>

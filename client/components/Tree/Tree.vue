@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { getActivePinia } from 'pinia'
+
 // Types
 import type { ITreeProps } from './types/tree-props.type'
 
@@ -12,11 +14,6 @@ import { treeIdKey, useTreeStore } from './stores/tree.store'
 const props = withDefaults(defineProps<ITreeProps>(), {
   ...getComponentProps('tree'),
 })
-
-defineSlots<{
-  search?: (props: { search?: string }) => any
-  node: (props: { node: ITreeNode, collapse: () => void, level?: number }) => any
-}>()
 
 // Utils
 const uuid = injectLocal(treeIdKey, useId()) as string
@@ -37,6 +34,7 @@ const mergedProps = computed(() => {
 })
 
 // Store
+const store = useTreeStore({ treeProps: props })
 const {
   nodesSource,
   loadChildren,
@@ -47,7 +45,7 @@ const {
   collapsingConfig: storeCollapsingConfig,
   selection: storeSelection,
   selectionConfig: storeSelectionConfig,
-} = storeToRefs(useTreeStore({ treeProps: props }))
+} = storeToRefs(store)
 
 // Sync with store
 syncRef(nodes, nodesSource, { direction: 'both' })
@@ -62,6 +60,14 @@ loadChildren.value = props.loadChildren
 
 // Init keyboard navigation
 const { treeEl } = useTreeKeyboard()
+
+// Lifecycle
+// Dispose of store on unmount
+onUnmounted(() => {
+  store.$dispose()
+  const pinia = getActivePinia()
+  delete pinia?.state.value[store.$id]
+})
 </script>
 
 <template>
