@@ -32,7 +32,6 @@ export function tableInitialize() {
       }
 
       if (loadData.value?.fnc && isImmediate) {
-        console.log('Log ~ fetch data after meta, forced.')
         tableStore.fetchAndSetData({ force: true })
           .then(() => {
             if (rows.value.length) {
