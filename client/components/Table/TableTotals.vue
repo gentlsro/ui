@@ -50,7 +50,7 @@ async function getTotals() {
     totals.value = res
   }
 
-  else {
+  else if (props.totals) {
     totals.value = props.totals
   }
 }
