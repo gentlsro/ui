@@ -58,7 +58,7 @@ function handleRemove(idx: number) {
     truncate
   >
     <slot
-      :item="model"
+      :item="modelArray[0]"
       :index="0"
     >
       {{ getListItemLabel(model, optionLabel, optionByKey) }}
