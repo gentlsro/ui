@@ -465,7 +465,7 @@ export function useTableStore(
           isInfiniteScroll: !paginationConfig.value?.enabled,
         })
       }
-    }, { immediate: true })
+    })
 
     watch(columnWidths, () => {
       if (apiColumns.value && apiColumns.value) {
