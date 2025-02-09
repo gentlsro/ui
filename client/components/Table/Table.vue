@@ -16,6 +16,7 @@ import { getComponentMergedProps, getComponentProps } from '../../functions/get-
 // Stores
 import { tableIdKey, tableStorageKey, useTableStore } from './stores/table.store'
 import type { TableFeature } from './types/table-feature.type'
+import { getActivePinia } from 'pinia'
 
 const props = withDefaults(defineProps<ITableProps>(), {
   ...getComponentProps('table'),
@@ -162,9 +163,10 @@ tableInitialize()
 
 defineExpose(tableGetExposed())
 
-// We need to reset the initial load flag on unmounting
+// We need to reset the store when the component is unmounted
 onUnmounted(() => {
-  isInitialLoad.value = true
+  const pinia = getActivePinia()
+  delete pinia?.state.value[store.$id]
 })
 </script>
 

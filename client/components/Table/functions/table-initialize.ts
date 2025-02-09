@@ -32,12 +32,13 @@ export function tableInitialize() {
       }
 
       if (loadData.value?.fnc && isImmediate) {
+        isInitialLoad.value = false
+
         tableStore.fetchAndSetData({ force: true })
           .then(() => {
             if (rows.value.length) {
               autoFit()
             }
-            isInitialLoad.value = false
           })
       } else {
         autoFit()
