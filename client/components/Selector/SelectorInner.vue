@@ -57,7 +57,12 @@ function handleRemove(idx: number) {
     :target="to ? '_blank' : undefined"
     truncate
   >
-    {{ getListItemLabel(model, optionLabel, optionByKey) }}
+    <slot
+      :item="model"
+      :index="0"
+    >
+      {{ getListItemLabel(model, optionLabel, optionByKey) }}
+    </slot>
   </Component>
 
   <HorizontalScroller
