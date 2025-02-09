@@ -459,13 +459,15 @@ export function useTableStore(
       if (modifiers.value?.useUrl) {
         const { navigate = tableNavigate } = modifiers.value ?? {}
 
-        navigate({
-          columns: internalColumns.value,
-          queryParams,
-          isInfiniteScroll: !paginationConfig.value?.enabled,
+        nextTick(() => {
+          navigate({
+            columns: internalColumns.value,
+            queryParams,
+            isInfiniteScroll: !paginationConfig.value?.enabled,
+          })
         })
       }
-    })
+    }, { immediate: true })
 
     watch(columnWidths, () => {
       if (apiColumns.value && apiColumns.value) {
