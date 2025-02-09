@@ -241,6 +241,7 @@ export function useTableStore(
       })
 
       cols = _columns
+      console.log('Log ~ table transform columns', _columns)
 
       // Extend columns with grouping and selection
       cols = extendColumns(cols, { selectionConfig: selectionConfig.value })
@@ -480,7 +481,6 @@ export function useTableStore(
       }
 
       const fetchPayload = getFetchPayload()
-      console.log('Log ~ fetchAndSetMetaData ~ fetchPayload:', fetchPayload)
       isMetaLoading.value = true
       const res = await handleRequest(
         () => loadMetaData.value?.fnc?.({ tablePayload: fetchPayload, getStore }),
