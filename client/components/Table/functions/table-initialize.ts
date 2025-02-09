@@ -32,14 +32,15 @@ export function tableInitialize() {
       }
 
       if (loadData.value?.fnc && isImmediate) {
-        isInitialLoad.value = false
-
+        console.log('Log ~ fetch data after meta, forced.')
         tableStore.fetchAndSetData({ force: true })
           .then(() => {
             if (rows.value.length) {
               autoFit()
             }
           })
+
+        isInitialLoad.value = false
       } else {
         autoFit()
         isInitialLoad.value = false
