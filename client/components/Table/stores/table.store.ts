@@ -54,6 +54,19 @@ export function useTableStore(
     const isExporting = ref(false)
     const { handleRequest } = useRequest()
 
+    function navigate() {
+      // When using URL, we navigate to the new URL
+      if (modifiers.value?.useUrl) {
+        const { navigate = tableNavigate } = modifiers.value ?? {}
+
+        navigate({
+          columns: internalColumns.value,
+          queryParams: queryParams.value,
+          isInfiniteScroll: !paginationConfig.value?.enabled,
+        })
+      }
+    }
+
     // SECTION State
     const state = useLocalStorage(_storageKey, {
       columns: [] as ITableStateColumn[],
@@ -454,18 +467,7 @@ export function useTableStore(
         // Load data with new query params
         fetchAndSetData()
       }
-
-      // When using URL, we navigate to the new URL
-      if (modifiers.value?.useUrl && !isInitialLoad.value) {
-        const { navigate = tableNavigate } = modifiers.value ?? {}
-
-        navigate({
-          columns: internalColumns.value,
-          queryParams,
-          isInfiniteScroll: !paginationConfig.value?.enabled,
-        })
-      }
-    }, { immediate: true })
+    })
 
     watch(columnWidths, () => {
       if (apiColumns.value && apiColumns.value) {
@@ -551,6 +553,10 @@ export function useTableStore(
       totalRows.value = countFetched || totalRows.value
       hasMore.value = rows.value.length < totalRows.value
 
+      if (!isFetchMore.value) {
+        onDataFetchQueue.value.push(navigate)
+      }
+
       runOnDataFetchQueue()
     }
     // !SECTION
@@ -560,6 +566,7 @@ export function useTableStore(
       isMetaLoading,
       isDataLoading,
       isExporting,
+      navigate,
 
       // State,
       state,

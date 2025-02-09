@@ -4,7 +4,7 @@ import { useTableStore } from '../stores/table.store'
 export function tableInitialize() {
   const { fitColumns } = useTableAutoFit()
   const tableStore = useTableStore()
-  const { isInitialLoad, rows, loadData, autofitConfig } = storeToRefs(tableStore)
+  const { onDataFetchQueue, isInitialLoad, rows, loadData, autofitConfig } = storeToRefs(tableStore)
 
   const isImmediate = loadData.value?.immediate || !rows.value.length
 
@@ -27,6 +27,9 @@ export function tableInitialize() {
           autoFit()
         }
         isInitialLoad.value = false
+
+        onDataFetchQueue.value.push(tableStore.navigate)
+        tableStore.runOnDataFetchQueue()
 
         return
       }
