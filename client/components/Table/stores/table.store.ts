@@ -259,7 +259,7 @@ export function useTableStore(
 
       // Set the state columns once everything is set
       if (propsColumns.value && apiColumns.value) {
-        syncStateColumns()
+        // syncStateColumns()
       }
     }, { immediate: true })
     // !SECTION
@@ -449,7 +449,7 @@ export function useTableStore(
       // We can assume that the meta is loaded if `apiColumns` is not `undefined`
       // and `propsColumns` is not `undefined`
       if (apiColumns.value && propsColumns.value) {
-        syncStateColumns()
+        // syncStateColumns()
 
         // Load data with new query params
         fetchAndSetData()
@@ -467,7 +467,7 @@ export function useTableStore(
       }
     })
 
-    watch(columnWidths, syncStateColumns)
+    // watch(columnWidths, syncStateColumns)
     // !SECTION
 
     // SECTION Data fetching
@@ -513,8 +513,6 @@ export function useTableStore(
       isFetchMore?: boolean
       force?: boolean
     }) {
-      console.log('Log ~ fetchAndSetData')
-
       const isInvalidFetchMore = payload?.isFetchMore && !hasMore.value
       const isOverLimit = rows.value.length >= rowsLimit.value
       const isInitial = isInitialLoad.value && !payload?.force
