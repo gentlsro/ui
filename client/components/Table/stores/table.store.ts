@@ -465,7 +465,7 @@ export function useTableStore(
           })
         }
       }
-    })
+    }, { immediate: true })
 
     watch(columnWidths, () => {
       if (apiColumns.value && apiColumns.value) {
