@@ -472,7 +472,6 @@ export function useTableStore(
 
     // SECTION Data fetching
     async function fetchAndSetMetaData() {
-      await nextTick()
       // When there is no `loadMetaData.fnc`, we just set empty columns
       if (!loadMetaData.value?.fnc) {
         apiColumns.value = []
@@ -481,6 +480,7 @@ export function useTableStore(
       }
 
       const fetchPayload = getFetchPayload()
+      console.log('Log ~ fetchAndSetMetaData ~ fetchPayload:', fetchPayload)
       isMetaLoading.value = true
       const res = await handleRequest(
         () => loadMetaData.value?.fnc?.({ tablePayload: fetchPayload, getStore }),
