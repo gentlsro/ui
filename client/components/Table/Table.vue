@@ -165,6 +165,7 @@ defineExpose(tableGetExposed())
 
 // We need to reset the store when the component is unmounted
 onUnmounted(() => {
+  store.$dispose()
   const pinia = getActivePinia()
   delete pinia?.state.value[store.$id]
 })
