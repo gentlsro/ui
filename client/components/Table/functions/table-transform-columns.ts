@@ -88,7 +88,6 @@ export function tableTransformColumns(payload: {
     modifiers,
     searchParams: schemaParams,
   })
-  console.log('Log ~ schemaResult:', schemaResult)
 
   // URL result
   const urlResult = tableExtractDataFromUrl({
@@ -96,7 +95,6 @@ export function tableTransformColumns(payload: {
     modifiers,
     searchParams: urlParams,
   })
-  console.log('Log ~ urlResult:', urlResult)
 
   const { result, isUrlUsed, isSchemaUsed } = getUsedProperties({
     shouldUrlBeUsed,
@@ -106,7 +104,6 @@ export function tableTransformColumns(payload: {
     modifiers,
     forceUrlUsage,
   })
-  console.log('Log ~ result:', result)
 
   if (!isSchemaUsed && !isUrlUsed) {
     _columns = _columns.toSorted((a, b) => {
@@ -138,91 +135,85 @@ export function tableTransformColumns(payload: {
       }
 
       // Sorting
-      if (sort.length) {
-        // Get the sort item
-        const sortItem = sort.find(s => {
-          const sortField = modifiers?.caseInsensitive
-            ? s.field.toLowerCase()
-            : s.field
+      const sortItem = sort.find(s => {
+        const sortField = modifiers?.caseInsensitive
+          ? s.field.toLowerCase()
+          : s.field
 
-          return sortField === colField
-        })
+        return sortField === colField
+      })
 
-        col.sort = sortItem?.sort
-        col.sortOrder = sortItem?.sortOrder
-      }
+      col.sort = sortItem?.sort
+      col.sortOrder = sortItem?.sortOrder
 
       // Filtering
-      if (filters.length) {
-        // Get filters for the column
-        const filterItems = (filters as IQueryBuilderItem[])
-          .filter(f => {
-            const fField = modifiers?.caseInsensitive
-              ? f.field.toLowerCase()
-              : f.field
+      const filterItems = (filters as IQueryBuilderItem[])
+        .filter(f => {
+          const fField = modifiers?.caseInsensitive
+            ? f.field.toLowerCase()
+            : f.field
 
-            const fFilterField = modifiers?.caseInsensitive && f.filterField
-              ? f.filterField.toLowerCase()
-              : f.filterField
+          const fFilterField = modifiers?.caseInsensitive && f.filterField
+            ? f.filterField.toLowerCase()
+            : f.filterField
 
-            return fField === colField || fFilterField === colField
-          })
-
-        // First, we add the predefined filters
-        col.filters = col.filtersPredefined ?? []
-
-        // Then, we add the filters from the URL / schema and possibly merge the
-        // filters from the URL / schema with the predefined filters (based on comparator)
-        const toMerge: FilterItem[] = []
-
-        col.filters = [
-          ...col.filters,
-          ...filterItems
-            .map(filter => {
-              const parseValueOptions = { dateFormat: 'YYYY-MM-DD', comparator: filter.comparator }
-              const colProps = pick(col, [
-                'field',
-                'filterField',
-                'dataType',
-                'format',
-                'filterFormat',
-                'customDbQueryFnc',
-              ])
-
-              let value: any
-
-              if (Array.isArray(filter.value)) {
-                value = filter.value.map(v => parseValue(v, col.dataType, parseValueOptions))
-              } else {
-                value = parseValue(filter.value, col.dataType, parseValueOptions)
-              }
-
-              const filterModel = new FilterItem({ ...filter, ...colProps, value })
-
-              // We mark the filter as predefined if it's part of the predefined filters
-              // to later merge them (the values) together and eventually remove the non-predefined filters
-              const isPartOfPredefined = col.filtersPredefined
-                ?.some(f => f.comparator === filter.comparator)
-
-              if (isPartOfPredefined) {
-                filterModel.misc = { isPredefined: true }
-                // toMerge.push(filterModel)
-              }
-
-              return filterModel
-            })
-            .filter(f => !f.misc?.isPredefined),
-        ]
-
-        // We overwrite the values of the filters with the same comparator
-        toMerge.forEach(f => {
-          const filterWithSameComparator = col.filters.find(f2 => f2.comparator === f.comparator)
-
-          if (filterWithSameComparator) {
-            filterWithSameComparator.value = f.value
-          }
+          return fField === colField || fFilterField === colField
         })
-      }
+
+      // First, we add the predefined filters
+      col.filters = col.filtersPredefined ?? []
+
+      // Then, we add the filters from the URL / schema and possibly merge the
+      // filters from the URL / schema with the predefined filters (based on comparator)
+      const toMerge: FilterItem[] = []
+
+      col.filters = [
+        ...col.filters,
+        ...filterItems
+          .map(filter => {
+            const parseValueOptions = { dateFormat: 'YYYY-MM-DD', comparator: filter.comparator }
+            const colProps = pick(col, [
+              'field',
+              'filterField',
+              'dataType',
+              'format',
+              'filterFormat',
+              'customDbQueryFnc',
+            ])
+
+            let value: any
+
+            if (Array.isArray(filter.value)) {
+              value = filter.value.map(v => parseValue(v, col.dataType, parseValueOptions))
+            } else {
+              value = parseValue(filter.value, col.dataType, parseValueOptions)
+            }
+
+            const filterModel = new FilterItem({ ...filter, ...colProps, value })
+
+            // We mark the filter as predefined if it's part of the predefined filters
+            // to later merge them (the values) together and eventually remove the non-predefined filters
+            const isPartOfPredefined = col.filtersPredefined
+              ?.some(f => f.comparator === filter.comparator)
+
+            if (isPartOfPredefined) {
+              filterModel.misc = { isPredefined: true }
+              // toMerge.push(filterModel)
+            }
+
+            return filterModel
+          })
+          .filter(f => !f.misc?.isPredefined),
+      ]
+
+      // We overwrite the values of the filters with the same comparator
+      toMerge.forEach(f => {
+        const filterWithSameComparator = col.filters.find(f2 => f2.comparator === f.comparator)
+
+        if (filterWithSameComparator) {
+          filterWithSameComparator.value = f.value
+        }
+      })
 
       return col
     })
