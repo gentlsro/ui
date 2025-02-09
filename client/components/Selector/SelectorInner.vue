@@ -11,10 +11,14 @@ type IProps = Pick<ISelectorProps, 'useScroller' | 'ui' | 'maxChipsRows' | 'read
 const props = defineProps<IProps>()
 
 // Store
-const { model, optionByKey } = storeToRefs(useSelectorStore())
+const { model, optionByKey, initialMap } = storeToRefs(useSelectorStore())
 
 // Layout
 const isMulti = toRef(props, 'multi')
+
+watchEffect(() => {
+  console.log(optionByKey.value, initialMap.value)
+})
 
 const to = computed(() => {
   if (typeof props.to === 'function') {

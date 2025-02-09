@@ -68,7 +68,7 @@ export type ISelectorProps = IFieldProps & {
    * so we can provide the initial map to show the label instead like so:
    * `{ 1: { id: 1, label: 'John Doe' } }` (assuming they `optionLabel` is `label`)
    */
-  initialMap?: Record<string, any> | null
+  initialMap?: Record<string, any>
 
   /**
    * Usage: Let's say we already selected some of the options in different

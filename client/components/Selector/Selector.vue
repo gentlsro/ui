@@ -62,6 +62,7 @@ const {
   isPickerActive,
   addedItems: addedItemsStore,
   options: optionsStore,
+  initialMap,
 } = storeToRefs(useSelectorStore({ props }))
 
 // Field
@@ -144,6 +145,7 @@ syncRef(model, modelStore, { direction: 'both' })
 syncRef(search, searchStore, { direction: 'both' })
 syncRef(addedItems, addedItemsStore, { direction: 'both' })
 syncRef(options, optionsStore, { direction: 'both' })
+syncRef(toRef(props, 'initialMap', {}), initialMap, { direction: 'ltr' })
 
 // Preselect first
 if (props.preselectFirst) {

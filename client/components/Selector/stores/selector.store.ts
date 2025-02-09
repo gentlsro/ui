@@ -15,7 +15,7 @@ export function useSelectorStore(payload?: {
     const menuEl = ref<InstanceType<typeof MenuProxy>>()
 
     // Utils
-    const initialMap: Record<string, any> = props?.initialMap ?? {}
+    const initialMap: Record<string, any> = ref(props?.initialMap ?? {})
     const optionKey = props?.optionKey ?? 'id'
 
     // State
@@ -32,7 +32,7 @@ export function useSelectorStore(payload?: {
         set(agg, key, option)
 
         return agg
-      }, initialMap)
+      }, initialMap.value)
     })
 
     // Picker
@@ -41,6 +41,7 @@ export function useSelectorStore(payload?: {
     return {
       // Layout
       menuEl,
+      initialMap,
 
       // State
       model,
