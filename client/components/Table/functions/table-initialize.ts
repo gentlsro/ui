@@ -37,9 +37,9 @@ export function tableInitialize() {
             if (rows.value.length) {
               autoFit()
             }
-          })
 
-        isInitialLoad.value = false
+            isInitialLoad.value = false
+          })
       } else {
         autoFit()
         isInitialLoad.value = false
