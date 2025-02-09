@@ -68,7 +68,7 @@ export function useTableStore(
        * a component or similar.
        */
       customData: {} as IItem,
-    }, { writeDefaults: true })
+    })
 
     const customData = computed({
       get() {
@@ -241,7 +241,6 @@ export function useTableStore(
       })
 
       cols = _columns
-      console.log('Log ~ table transform columns', _columns)
 
       // Extend columns with grouping and selection
       cols = extendColumns(cols, { selectionConfig: selectionConfig.value })
