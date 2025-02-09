@@ -453,21 +453,19 @@ export function useTableStore(
 
         // Load data with new query params
         fetchAndSetData()
-      }
 
-      // When using URL, we navigate to the new URL
-      if (modifiers.value?.useUrl) {
-        const { navigate = tableNavigate } = modifiers.value ?? {}
+        // When using URL, we navigate to the new URL
+        if (modifiers.value?.useUrl) {
+          const { navigate = tableNavigate } = modifiers.value ?? {}
 
-        nextTick(() => {
           navigate({
             columns: internalColumns.value,
             queryParams,
             isInfiniteScroll: !paginationConfig.value?.enabled,
           })
-        })
+        }
       }
-    }, { immediate: true })
+    })
 
     watch(columnWidths, () => {
       if (apiColumns.value && apiColumns.value) {
