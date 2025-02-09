@@ -122,6 +122,7 @@ function handleSelect() {
     :class="headerClass"
     :style="headerStyle"
     :data-column="column.field"
+    :title="column._label"
   >
     <slot>
       <Checkbox
