@@ -4,7 +4,7 @@ import type { ISelectorProps } from './types/selector-props.type'
 
 // Store
 import { useSelectorStore } from './stores/selector.store'
-import { getListItemLabel } from '../List/functions/helpers'
+import { getListItem, getListItemLabel } from '../List/functions/helpers'
 
 type IProps = Pick<ISelectorProps, 'useScroller' | 'ui' | 'maxChipsRows' | 'readonly' | 'disabled' | 'emptyValue' | 'multi' | 'optionLabel' | 'optionTo' | 'to'>
 
@@ -58,7 +58,7 @@ function handleRemove(idx: number) {
     truncate
   >
     <slot
-      :item="modelArray[0]"
+      :item="getListItem(model, optionByKey)"
       :index="0"
     >
       {{ getListItemLabel(model, optionLabel, optionByKey) }}
@@ -75,7 +75,7 @@ function handleRemove(idx: number) {
       :key="idx"
     >
       <slot
-        :item
+        :item="getListItem(item, optionByKey)"
         :index="idx"
       >
         <SelectorChip
