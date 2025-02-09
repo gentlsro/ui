@@ -21,7 +21,7 @@ export function tableInitialize() {
   tableStore.fetchAndSetMetaData()
     .then(res => {
       // We may have returned a special property `_preventFetchData`, in which case
-      // we do not fetch the data
+      // we do not fetch the data (for example in case we already got the data in the meta fetch)
       if (typeof res === 'object' && res?._preventFetchData) {
         if (rows.value.length) {
           autoFit()

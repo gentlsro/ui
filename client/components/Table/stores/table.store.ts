@@ -472,6 +472,7 @@ export function useTableStore(
 
     // SECTION Data fetching
     async function fetchAndSetMetaData() {
+      await nextTick()
       // When there is no `loadMetaData.fnc`, we just set empty columns
       if (!loadMetaData.value?.fnc) {
         apiColumns.value = []
