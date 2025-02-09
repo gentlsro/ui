@@ -467,7 +467,11 @@ export function useTableStore(
       }
     })
 
-    // watch(columnWidths, syncStateColumns)
+    watch(columnWidths, () => {
+      if (apiColumns.value && apiColumns.value) {
+        syncStateColumns()
+      }
+    })
     // !SECTION
 
     // SECTION Data fetching
