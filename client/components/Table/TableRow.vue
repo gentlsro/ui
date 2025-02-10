@@ -221,9 +221,9 @@ function handleEditCellMounted() {
   }
 }
 
-function handleRowClick(row: IItem) {
+function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
   if (rowClickable.value) {
-    emits.value.rowClick(row)
+    emits.value.rowClick(payload)
   }
 }
 </script>
@@ -285,7 +285,10 @@ function handleRowClick(row: IItem) {
       :class="[rowClassArray[idx], { 'is-selected': isSelected(rowData.row), 'is-clickable': rowClickable }]"
       :style="rowStyleArray[idx]"
       :to="to?.(rowData.row, { rowKey })"
-      @click="[handleSelectToggle(rowData.row, $event), handleRowClick(rowData.row)]"
+      @click="[
+        handleSelectToggle(rowData.row, $event),
+        handleRowClick({ row: rowData.row, ev: $event }),
+      ]"
     >
       <div
         v-for="column in rowData.columns"
@@ -375,7 +378,7 @@ function handleRowClick(row: IItem) {
     :class="[rowClassArray[0], { 'is-selected': isSelected(rowDataArray[0].row), 'is-clickable': rowClickable }]"
     :style="rowStyleArray[0]"
     :to="to?.(rowDataArray[0].row, { rowKey })"
-    @click="handleRowClick(rowDataArray[0].row)"
+    @click="handleRowClick({ row: rowDataArray[0].row, ev: $event })"
   >
     <div
       v-for="column in rowDataArray[0].columns"
