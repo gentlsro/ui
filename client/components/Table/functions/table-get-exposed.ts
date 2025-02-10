@@ -12,5 +12,6 @@ export function tableGetExposed() {
     refetch: tableStore.fetchAndSetData,
     store: () => tableStore,
     fitColumns,
+    getFetchPayload: () => tableStore.getFetchPayload(),
   }
 }
