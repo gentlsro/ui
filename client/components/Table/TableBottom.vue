@@ -12,7 +12,8 @@ const { paginationConfig } = storeToRefs(useTableStore())
     <TableTotalRows />
 
     <!-- Center -->
-    <TablePagination />
+    <TablePagination v-if="paginationConfig?.enabled" />
+    <span v-else />
 
     <!-- Right -->
     <div
