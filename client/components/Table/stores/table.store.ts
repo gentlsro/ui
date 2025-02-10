@@ -322,6 +322,7 @@ export function useTableStore(
 
       return _selection.reduce((agg, selection) => {
         const key = selectionConfig.value?.selectionKey ?? rowKey.value
+        console.log('Log ~ return_selection.reduce ~ selection:', key, selection)
         const itemKey = getListItemKey(selection, key)
         agg[itemKey] = true
 

@@ -28,7 +28,6 @@ const props = defineProps<IProps>()
 // Helpers
 function isSelected(row: IItem) {
   const key = selectionConfig.value?.selectionKey ?? rowKey.value
-  console.log('Log ~ isSelected ~ key:', key, selectionByKey.value, row)
 
   return selectionByKey.value[get(row, key)]
 }
