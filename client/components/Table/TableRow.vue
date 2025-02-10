@@ -28,6 +28,7 @@ const props = defineProps<IProps>()
 // Helpers
 function isSelected(row: IItem) {
   const key = selectionConfig.value?.selectionKey ?? rowKey.value
+  console.log('Log ~ isSelected ~ key:', key, selectionByKey.value, row)
 
   return selectionByKey.value[get(row, key)]
 }
@@ -375,7 +376,10 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
     v-else-if="rowDataArray[0]"
     v-bind="$attrs"
     class="tr tr--row"
-    :class="[rowClassArray[0], { 'is-selected': isSelected(rowDataArray[0].row), 'is-clickable': rowClickable }]"
+    :class="[
+      rowClassArray[0],
+      { 'is-selected': isSelected(rowDataArray[0].row), 'is-clickable': rowClickable },
+    ]"
     :style="rowStyleArray[0]"
     :to="to?.(rowDataArray[0].row, { rowKey })"
     @click="handleRowClick({ row: rowDataArray[0].row, ev: $event })"
