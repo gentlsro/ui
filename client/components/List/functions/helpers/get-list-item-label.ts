@@ -1,5 +1,6 @@
 // Types
 import type { IListProps } from '../../types/list-props.type'
+import { getListItem } from './get-list-item'
 
 export function getListItemLabel(
   item: any,
@@ -7,7 +8,9 @@ export function getListItemLabel(
   itemByKey: IItem = {},
 ) {
   if (typeof itemLabel === 'function') {
-    return itemLabel(item)
+    const _item = getListItem(item, itemByKey)
+
+    return itemLabel(_item)
   }
 
   return typeof item === 'object'
