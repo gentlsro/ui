@@ -1,3 +1,3 @@
 export type ITableEmitFncs = {
-  rowClick: (item: IItem) => void
+  rowClick: (payload: { row: any, ev?: MouseEvent }) => void
 }

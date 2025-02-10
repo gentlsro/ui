@@ -96,7 +96,7 @@ const {
 
 // Set emits
 storeEmits.value = {
-  rowClick: (row: any) => emits('click:row', row),
+  rowClick: (payload: { ev?: MouseEvent, row: any }) => emits('click:row', payload),
 }
 
 // Sync refs with store

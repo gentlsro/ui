@@ -109,7 +109,7 @@ export function useTableStore(
 
     // SECTION Emits
     const emits = ref<ITableEmitFncs>({
-      rowClick: _item => {},
+      rowClick: (_payload: { row: any, ev?: MouseEvent }) => {},
     })
     // !SECTION
 
