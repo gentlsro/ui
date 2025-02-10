@@ -13,5 +13,6 @@ export function tableGetExposed() {
     store: () => tableStore,
     fitColumns,
     getFetchPayload: () => tableStore.getFetchPayload(),
+    getVirtualScroller: () => tableStore.virtualScrollEl,
   }
 }
