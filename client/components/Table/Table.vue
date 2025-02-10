@@ -3,8 +3,9 @@ import { getActivePinia } from 'pinia'
 
 // Types
 import type { ITableProps } from './types/table-props.type'
-import type { IQueryBuilderRow } from '../QueryBuilder/types/query-builder-row-props.type'
 import type { ITableEmits } from './types/table-emits.type'
+import type { TableFeature } from './types/table-feature.type'
+import type { IQueryBuilderRow } from '../QueryBuilder/types/query-builder-row-props.type'
 
 // Provide / Inject
 import { tableSlotsKey } from './provide/table.provide'
@@ -17,7 +18,6 @@ import { getComponentMergedProps, getComponentProps } from '../../functions/get-
 
 // Stores
 import { tableIdKey, tableStorageKey, useTableStore } from './stores/table.store'
-import type { TableFeature } from './types/table-feature.type'
 
 const props = withDefaults(defineProps<ITableProps>(), {
   ...getComponentProps('table'),
