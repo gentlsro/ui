@@ -118,11 +118,11 @@ const subtitleStyle = computed(() => props.ui?.subtitleStyle?.(props.isOpen))
   }
 
   &-text {
-    @apply flex flex-col grow p-y-2;
+    @apply flex flex-col grow;
   }
 
   &-title {
-    @apply overflow-auto font-rem-14 font-semibold;
+    @apply overflow-auto font-rem-14 font-semibold p-y-2;
   }
 
   &-subtitle {
