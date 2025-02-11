@@ -127,7 +127,28 @@ export type ITableProps<
    * Initial schema for the table, if this is used, it takes priority over everything,
    * even the URL
    */
-  initialSchema?: string | URLSearchParams
+  initialSchemaConfig?: {
+    /**
+     * The schema to use
+     */
+    schema: string | URLSearchParams
+
+    /**
+     * We can choose to merge the initial schema with either the default schema (if available)
+     * or with the state schema (if available)
+     */
+    mergeWith?: 'default' | 'state'
+
+    /**
+     * A function used to merge the initial schema with the state or default schema
+     *
+     * By default, the `initialParams` overrides keys on the `stateOrDefaultParams`
+     */
+    mergeFnc?: (
+      initialParams: URLSearchParams,
+      stateOrDefaultParams: URLSearchParams
+    ) => URLSearchParams
+  }
 
   /**
    * Load data configuration

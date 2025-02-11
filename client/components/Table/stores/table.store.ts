@@ -75,6 +75,7 @@ export function useTableStore(
       metaRaw: null as any,
       queryBuilder: [] as IQueryBuilderRow[],
       search: '',
+      queryParams: '',
 
       /**
        * We sometimes need to save some custom data in table context to access it in
@@ -93,6 +94,7 @@ export function useTableStore(
     })
 
     const syncStateColumns = useDebounceFn(() => {
+      state.value.queryParams = decodeURIComponent(queryParams.value.toString())
       state.value.columns = nonHelperColumns.value.map(getStateColumnData)
     }, 50)
 
@@ -125,11 +127,12 @@ export function useTableStore(
       tableProps?.paginationConfig ?? { pageSize: 10, options: [10, 25, 50, 100] },
     )
     const selectionConfig = ref<ITableProps['selectionConfig']>()
+    const initialSchemaConfig = ref<ITableProps['initialSchemaConfig']>(tableProps?.initialSchemaConfig)
+
     // !SECTION
 
     // SECTION General
     const noState = ref(tableProps?.noState ?? false)
-    const initialSchema = ref(tableProps?.initialSchema)
     const rowKey = ref<string>(tableProps?.rowKey ?? 'id')
     const search = ref(tableProps?.search ?? '')
     const queryBuilder = ref<IQueryBuilderRow[]>(tableProps?.queryBuilder ?? [])
@@ -243,14 +246,12 @@ export function useTableStore(
       const { columns: _columns, queryBuilder: qb, pagination } = tableTransformColumns({
         internalColumns: cols,
         modifiers: modifiers.value,
-        schemaParams: state.value.layoutDefault?.schema ?? '',
-        urlParams: initialSchema.value ?? useRequestURL().searchParams,
+        defaultSchema: state.value.layoutDefault?.schema ?? '',
+        urlSchema: useRequestURL().searchParams,
+        initialSchemaConfig: initialSchemaConfig.value,
 
         // Schema should be used only in case we don't have anything in the state
         shouldSchemaBeUsed: noState.value || !state.value?.columns?.length,
-
-        // When providing an `initialSchema`, we want to force its usage
-        forceUrlUsage: !!initialSchema.value,
       })
 
       cols = _columns
@@ -591,6 +592,7 @@ export function useTableStore(
       paginationConfig,
       selectionConfig,
       splitRowsConfig,
+      initialSchemaConfig,
 
       // General
       rowKey,

@@ -14,14 +14,14 @@ function getUsedProperties(payload: {
   shouldUrlBeUsed?: boolean
   shouldSchemaBeUsed?: boolean
   modifiers: ITableProps['modifiers']
-  schemaResult: ReturnType<typeof tableExtractDataFromUrl>
-  urlResult: ReturnType<typeof tableExtractDataFromUrl>
   forceUrlUsage?: boolean
+  defaultSchemaResult: ReturnType<typeof tableExtractDataFromUrl>
+  urlResult: ReturnType<typeof tableExtractDataFromUrl>
 }) {
   const {
     shouldUrlBeUsed,
     shouldSchemaBeUsed,
-    schemaResult,
+    defaultSchemaResult,
     urlResult,
     modifiers,
     forceUrlUsage,
@@ -34,15 +34,15 @@ function getUsedProperties(payload: {
       || urlResult.visibleColumns.length)
 
   const isSchemaUsed = shouldSchemaBeUsed
-    && (schemaResult.filters.length
-      || schemaResult.sort.length
-      || schemaResult.queryBuilder.length
-      || schemaResult.visibleColumns.length)
+    && (defaultSchemaResult.filters.length
+      || defaultSchemaResult.sort.length
+      || defaultSchemaResult.queryBuilder.length
+      || defaultSchemaResult.visibleColumns.length)
 
   return {
     isUrlUsed: !!isUrlUsed,
     isSchemaUsed: !!isSchemaUsed,
-    result: isUrlUsed && (modifiers?.useUrl || forceUrlUsage) ? urlResult : schemaResult,
+    result: isUrlUsed && (modifiers?.useUrl || forceUrlUsage) ? urlResult : defaultSchemaResult,
   }
 }
 
@@ -52,26 +52,29 @@ function getUsedProperties(payload: {
 export function tableTransformColumns(payload: {
   internalColumns: TableColumn<any>[]
   modifiers: ITableProps['modifiers']
-  urlParams: URLSearchParams | string
-  schemaParams: URLSearchParams | string
   shouldUrlBeUsed?: boolean
   shouldSchemaBeUsed?: boolean
   forceUrlUsage?: boolean
+  urlSchema: URLSearchParams | string
+  defaultSchema: URLSearchParams | string
+  stateSchema?: URLSearchParams | string
+  initialSchemaConfig?: ITableProps['initialSchemaConfig']
 }) {
   const {
     internalColumns,
     modifiers,
-    urlParams,
-    schemaParams,
+    urlSchema,
     shouldUrlBeUsed = true,
     shouldSchemaBeUsed = true,
-    forceUrlUsage,
+    initialSchemaConfig,
+    defaultSchema,
+    stateSchema,
   } = payload
 
   // Create a copy of the columns
   let _columns = internalColumns.map(col => new TableColumn(col))
 
-  if (!shouldUrlBeUsed && !shouldSchemaBeUsed) {
+  if (!shouldUrlBeUsed && !shouldSchemaBeUsed && !initialSchemaConfig?.schema) {
     _columns = _columns.toSorted((a, b) => {
       const aSort = a._internalSort ?? Number.MAX_SAFE_INTEGER
       const bSort = b._internalSort ?? Number.MAX_SAFE_INTEGER
@@ -82,27 +85,64 @@ export function tableTransformColumns(payload: {
     return { columns: _columns, queryBuilder: [] }
   }
 
-  // Schema result
-  const schemaResult = tableExtractDataFromUrl({
+  // Initial schema
+  let initialParams: URLSearchParams | undefined
+
+  if (initialSchemaConfig?.schema) {
+    initialParams = new URLSearchParams(initialSchemaConfig.schema)
+
+    // Merge with state schema
+    if (initialSchemaConfig.mergeWith === 'state' && stateSchema) {
+      const stateParams = new URLSearchParams(stateSchema)
+
+      if (initialSchemaConfig.mergeFnc) {
+        initialParams = initialSchemaConfig.mergeFnc(initialParams, stateParams)
+      } else {
+        initialParams.forEach((value, key) => {
+          stateParams.set(key, value)
+        })
+
+        initialParams = stateParams
+      }
+    }
+
+    // Merge with default schema
+    else if (initialSchemaConfig.mergeWith === 'default' && defaultSchema) {
+      const defaultParams = new URLSearchParams(defaultSchema)
+
+      if (initialSchemaConfig.mergeFnc) {
+        initialParams = initialSchemaConfig.mergeFnc(initialParams, defaultParams)
+      } else {
+        initialParams.forEach((value, key) => {
+          defaultParams.set(key, value)
+        })
+
+        initialParams = defaultParams
+      }
+    }
+  }
+
+  // Default schema result
+  const defaultSchemaResult = tableExtractDataFromUrl({
     columns: _columns,
     modifiers,
-    searchParams: schemaParams,
+    searchParams: defaultSchema,
   })
 
-  // URL result
+  // URL schema result
   const urlResult = tableExtractDataFromUrl({
     columns: _columns,
     modifiers,
-    searchParams: urlParams,
+    searchParams: initialParams ?? urlSchema,
   })
 
   const { result, isUrlUsed, isSchemaUsed } = getUsedProperties({
     shouldUrlBeUsed,
     shouldSchemaBeUsed,
-    schemaResult,
+    defaultSchemaResult,
     urlResult,
     modifiers,
-    forceUrlUsage,
+    forceUrlUsage: !!initialParams,
   })
 
   if (!isSchemaUsed && !isUrlUsed) {
