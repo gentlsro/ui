@@ -9,6 +9,17 @@ const content = ref([
 function handleClick() {
   content.value.push($t('lorem'))
 }
+
+const x = ref()
+
+// Generatde 100 items
+const options = ref<any[]>([])
+for (let i = 0; i < 75; i++) {
+  options.value.push({
+    id: generateUUID(),
+    label: `Item ${i}`,
+  })
+}
 </script>
 
 <template>
@@ -21,6 +32,14 @@ function handleClick() {
       flex="~ col"
       w="100"
     >
+      Value: {{ x }}
+      <Selector
+        v-model="x"
+        :options
+        :list-props="{ addConfig: { enabled: true }, searchConfig: { syncWithLoad: true } }"
+        no-sort
+      />
+
       <Btn
         label="add content"
         @click="handleClick"

@@ -4,7 +4,9 @@ import { useListStore } from '../stores/list.store'
 // Provide / Inject
 import { formSubmitKey } from '../../Form/provide/form.provide'
 
-export function useListKeyboard() {
+export function useListKeyboard(config?: { registerKeyStroke?: boolean }) {
+  const { registerKeyStroke = true } = config ?? {}
+
   // Injections
   const formSubmit = inject(formSubmitKey, () => {})
 
@@ -177,15 +179,18 @@ export function useListKeyboard() {
     preventNextHoverEvent.value = true
   }
 
-  onKeyStroke(
-    ['ArrowUp', 'ArrowDown', 'Enter', 'PageUp', 'PageDown', 'Tab'],
-    handleKey,
-  )
+  // We register the key handling
+  if (registerKeyStroke) {
+    onKeyStroke(
+      ['ArrowUp', 'ArrowDown', 'Enter', 'PageUp', 'PageDown', 'Tab'],
+      handleKey,
+    )
 
-  whenever(
-    () => !focused.value,
-    () => itemFocusedIdx.value = -1,
-  )
+    whenever(
+      () => !focused.value,
+      () => itemFocusedIdx.value = -1,
+    )
+  }
 
   return {
     listEl,

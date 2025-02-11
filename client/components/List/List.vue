@@ -10,12 +10,12 @@ import type { IListProps } from './types/list-props.type'
 import type { IListItemToAdd } from './types/list-item-to-add.type'
 
 // Functions
+import { useListKeyboard } from './composables/useListKeyboard'
 import { useListItemAdding } from './composables/useListItemAdding'
 import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
 
 // Store
 import { listIdKey, useListStore } from './stores/list.store'
-import { useListKeyboard } from './composables/useListKeyboard'
 
 const props = withDefaults(defineProps<IListProps>(), {
   ...getComponentProps('list'),
@@ -102,7 +102,7 @@ syncRef(toRef(props, 'hiddenItems'), storeHiddenItems, { direction: 'ltr' })
 syncRef(toRef(props, 'modifiers'), modifiers, { direction: 'ltr' })
 
 // Adding & Keyboard
-const { handleKey } = useListKeyboard()
+const { handleKey } = useListKeyboard({ registerKeyStroke: false })
 useListItemAdding()
 
 // Initial load data
