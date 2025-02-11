@@ -16,13 +16,15 @@ const bannerEl = useTemplateRef('bannerEl') as any
 const { height, width } = useElementSize(bannerEl)
 
 watch(height, () => {
-  requestAnimationFrame(() => {
-    const { total } = getElementSize(unrefElement(bannerEl))
+  if (!bannerEl.value) {
+    return
+  }
 
-    emits('change:contentSize', {
-      height: total.height,
-      width: total.width,
-    })
+  const { total } = getElementSize(unrefElement(bannerEl))
+
+  emits('change:contentSize', {
+    height: total.height,
+    width: total.width,
   })
 })
 </script>
