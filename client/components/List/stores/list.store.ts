@@ -199,6 +199,7 @@ export function useListStore(listId?: string, listProps?: IListProps) {
         const _items = [...items, ...addedItems.map(item => item.ref)]
           .filter(item => !isHiddenByItemKey.value[getListItemKey(item, itemKey.value)])
 
+        console.time('buildListItems')
         const res = await buildListItems({
           items: _items,
           itemKey: itemKey.value,
@@ -224,9 +225,8 @@ export function useListStore(listId?: string, listProps?: IListProps) {
           $z: $zAddItem,
         })
 
-        console.log('smth changed')
-
         itemsGrouped.value = res.items
+        console.timeEnd('buildListItems')
 
         // Prefocus first item non-group item if out of bounds or
         const isNothingFocused = itemFocusedIdx.value === -1
