@@ -82,7 +82,6 @@ function handleHeightChange(height: number) {
 function handleHide() {
   if (props.clearOptionsOnMenuHide && props.loadData?.fnc) {
     options.value = []
-    contentHeight.value = 0
   }
 }
 

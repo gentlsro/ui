@@ -13,7 +13,7 @@ const { isLoading, listItems } = storeToRefs(useListStore())
 
 // Layout
 const bannerEl = useTemplateRef('bannerEl') as any
-const { height, width } = useElementSize(bannerEl)
+const { height } = useElementSize(bannerEl)
 
 watch(height, () => {
   const el = unrefElement(bannerEl) as HTMLElement
