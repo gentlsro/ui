@@ -147,16 +147,14 @@ export function useInputUtils(options: IInputUtilsOptions) {
     const lastTarget = uiStore.lastPointerDownEl
     const isProgrammatic = uiStore.activeElement === document.body
 
-    const isFocusable
-      = lastTarget?.classList.contains('input-wrapper__focusable')
+    const isFocusable = lastTarget?.classList.contains('input-wrapper__focusable')
       || !!lastTarget?.closest('.input-wrapper__focusable')
 
     const isSameWrapper = inputElement.value?.closest('.wrapper__body') === lastTarget?.closest('.wrapper__body')
 
     // `Tab` handling
     const relatedTargetWrapper = relatedTarget?.closest('.wrapper__body')
-    const isRelatedTargetFocusable
-      = !relatedTargetWrapper
+    const isRelatedTargetFocusable = !relatedTargetWrapper
       || relatedTargetWrapper === inputElement.value?.closest('.wrapper__body')
 
     // We prevent the blur event when clicking on focusable elements
@@ -182,7 +180,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
       // We need to reset the iMask placeholder
       const isModelEmpty
         = isNil(originalModel.value)
-        || toValue(originalModel) === toValue(emptyValue)
+          || toValue(originalModel) === toValue(emptyValue)
 
       if (isModelEmpty) {
         unmasked.value = ''
@@ -296,6 +294,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
   watch(model, val => {
     const isEmptyValue = isEqual(val, props.emptyValue)
     const isSame = isEqual(val, typed.value) || (typed.value === '' && isEmptyValue)
+    console.log('Log ~ useInputUtils ~ isSame:', isSame)
 
     if (!isSame) {
       if (isEmptyValue) {
