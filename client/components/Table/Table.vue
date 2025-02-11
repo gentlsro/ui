@@ -123,7 +123,7 @@ syncRef(toRef(props, 'breakpoint', 0), breakpoint, { direction: 'ltr' })
 syncRef(toRef(props, 'rowsLimit'), rowsLimit, { direction: 'ltr' })
 syncRef(isLoading, isDataLoading, { direction: 'both' })
 syncRef(toRef(props, 'rowClickable'), rowClickable, { direction: 'ltr' })
-syncRef(toRef(props, 'initialSchemaConfig'), initialSchemaConfig, { direction: 'ltr' })
+syncRef(toRef(mergedProps.value, 'initialSchemaConfig'), initialSchemaConfig, { direction: 'ltr' })
 
 // When columns change, make sure to get their real widths
 watch(visibleColumns, cols => {
