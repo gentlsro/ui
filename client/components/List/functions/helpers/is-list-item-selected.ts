@@ -10,7 +10,7 @@ export function isListItemSelected(payload: {
 }) {
   const { item, selection, itemKey = 'id' } = payload
 
-  if (!selection) {
+  if (isNil(selection)) {
     return false
   }
 
@@ -20,7 +20,7 @@ export function isListItemSelected(payload: {
 
   const idsSelected = arraySelected
     .map(s => typeof s === 'object' ? getListItemKey(s, itemKey) : s)
-    .filter(Boolean) as (string | number)[]
+    .filter(key => !isNil(key)) as (string | number)[]
 
   return idsSelected.includes(item.id)
 }
