@@ -106,6 +106,7 @@ let timeout: any
 
 function modifyFnc(filter: ITableFilterItem) {
   const debounceMs = filterValueChangeDebounce({ column: column.value, filter })
+  console.log('Log ~ modifyFnc ~ debounceMs:', debounceMs)
   debouncedSync(debounceMs)
 }
 

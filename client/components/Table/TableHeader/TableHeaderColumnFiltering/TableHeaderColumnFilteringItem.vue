@@ -28,6 +28,7 @@ defineExpose({ focus: () => valueInputEl.value?.focus() })
         :item
         editable
         grow
+        @update:model-value="modifyFnc?.(item)"
       />
 
       <!-- Remove -->
