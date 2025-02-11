@@ -1,6 +1,8 @@
 import type { CSSProperties } from 'vue'
 
 export type IBreadcrumbsProps = {
+  homePath?: string | (() => string)
+
   ui?: {
     /**
      * Class to apply to the breadcrumbs wrapper
