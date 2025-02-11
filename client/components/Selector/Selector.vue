@@ -14,6 +14,7 @@ import { getComponentMergedProps, getComponentProps } from '../../functions/get-
 import { selectorIdKey, useSelectorStore } from './stores/selector.store'
 import { selectorTransformOptions } from './functions/selector-transform-options'
 import { getListItemEmitValue, getListItemKey } from '../List/functions/helpers'
+import { getActivePinia } from 'pinia'
 
 const props = withDefaults(defineProps<ISelectorProps>(), {
   ...getComponentProps('selector'),
@@ -56,6 +57,7 @@ const mergedProps = computed(() => {
 provideLocal(selectorIdKey, uuid)
 
 // Store
+const selectorStore = useSelectorStore({ props })
 const {
   model: modelStore,
   search: searchStore,
@@ -63,7 +65,7 @@ const {
   addedItems: addedItemsStore,
   options: optionsStore,
   initialMap,
-} = storeToRefs(useSelectorStore({ props }))
+} = storeToRefs(selectorStore)
 
 // Field
 const { el, inputId, isEditable, getFieldProps, handleFocusOrClick } = useFieldUtils({
@@ -185,6 +187,13 @@ if (props.immediateFetch && mergedProps.value.loadData?.fnc) {
     modifiers: mergedProps.value.listProps?.modifiers,
   }).then(({ items }) => options.value = items)
 }
+
+// Dispose of store on unmount
+onUnmounted(() => {
+  selectorStore.$dispose()
+  const pinia = getActivePinia()
+  delete pinia?.state.value[selectorStore.$id]
+})
 </script>
 
 <template>
