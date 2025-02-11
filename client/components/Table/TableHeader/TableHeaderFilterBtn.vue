@@ -168,6 +168,7 @@ function debouncedSync(ms: number) {
       max-h="!2/3"
       :ui="{ contentClass: '!gap-2' }"
       :no-arrow="false"
+      no-transition
       @before-show="handleMenuBeforeShow"
       @before-hide="handleMenuBeforeHide"
     >
