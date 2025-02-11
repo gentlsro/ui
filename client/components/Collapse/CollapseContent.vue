@@ -90,7 +90,7 @@ function onTransitionEnd() {
     @after-leave="handleTransition('after')"
   >
     <div
-      v-if="isOpen"
+      v-show="isOpen"
       ref="contentEl"
       class="collapse__content"
       :class="[contentClass, { 'is-floating': floating, 'in-transition': inTransition }]"
