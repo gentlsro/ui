@@ -23,7 +23,8 @@ defineEmits<{
   <Chip
     :label="getFileLabel(chip)"
     min-w="20"
-    p="!y-1px"
+    h="7"
+    p="!y-0"
     :has-remove="!(readonly || disabled)"
     @click.stop.prevent
     @remove="$emit('remove')"
@@ -32,8 +33,8 @@ defineEmits<{
     <Btn
       v-if="'path' in chip"
       size="auto"
-      w="4"
-      h="4"
+      w="5"
+      h="5"
       bg="primary"
       color="white"
       self-center
