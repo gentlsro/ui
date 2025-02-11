@@ -72,9 +72,11 @@ function handleHeightChange(height: number) {
     return agg + total.height
   }, 0)
 
-  contentHeight.value = height
-    + nonContentHeight
-    + 2 // Top and bottom border
+  requestAnimationFrame(() => {
+    contentHeight.value = height
+      + nonContentHeight
+      + 2 // Top and bottom border
+  })
 }
 
 function handleHide() {

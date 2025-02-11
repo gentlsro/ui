@@ -2,20 +2,11 @@
 // Store
 import { useListStore } from './stores/list.store'
 
-const emits = defineEmits<{
-  (e: 'change:contentSize', payload: { height: number, width: number }): void
-}>()
-
 // Store
 const { isLoading, listItems } = storeToRefs(useListStore())
 
 // Layout
 const bannerEl = useTemplateRef('bannerEl') as any
-const { height, width } = useElementSize(bannerEl)
-
-watch(height, h => {
-  emits('change:contentSize', { height: h, width: width.value })
-})
 </script>
 
 <template>
@@ -24,6 +15,7 @@ watch(height, h => {
     ref="bannerEl"
     m="x-2"
     no-transition
+    p="b-2"
   >
     <span text-caption>
       {{ $t('general.noData') }}

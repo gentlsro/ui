@@ -76,10 +76,13 @@ const rows = toRef(props, 'rows')
 const containerEl = useTemplateRef('containerEl')
 const virtualScrollEl = useTemplateRef('virtualScrollEl')
 const isMounted = ref(false)
-const isVirtual = ref((props.rows ?? []).length > VIRTUAL_SCROLL_THRESHOLD || false)
 const rowHeight = toRef(props, 'rowHeight')
 const rowKey = toRef(props, 'rowKey') as Ref<keyof T>
 const visibleItemsIdx = ref({ first: 0, last: 0 })
+
+const isVirtual = computed(() => {
+  return (props.rows ?? []).length > VIRTUAL_SCROLL_THRESHOLD || false
+})
 
 const containerRect = useElementSize(containerEl)
 const virtualScrollerRect = useElementSize(virtualScrollEl)
@@ -372,6 +375,10 @@ function rerenderVisibleRows(payload?: {
   emitScrollEvent?: boolean
   resetHeights?: boolean
 }) {
+  if (!isVirtual.value) {
+    return
+  }
+
   const { triggerScrollEvent = true, emitScrollEvent, resetHeights } = payload ?? {}
   const children = Array.from(containerEl.value?.children || [])
 
@@ -387,6 +394,10 @@ function rerenderVisibleRows(payload?: {
 watchThrottled(
   width,
   () => {
+    if (!isVirtual.value) {
+      return
+    }
+
     pauseRowHeightWatcher()
     rerenderVisibleRows({
       triggerScrollEvent: true,
@@ -404,7 +415,6 @@ watchThrottled(
 )
 
 watch(rows, (rows, rowsOld) => {
-  isVirtual.value = rows?.length > VIRTUAL_SCROLL_THRESHOLD
   pauseRowHeightWatcher()
 
   // When fetching more data, we just want to extend the heights array with
@@ -450,6 +460,10 @@ watch(rows, (rows, rowsOld) => {
 // - We loaded all the data
 // - The data is not enough to overflow the container, so we need to force the scroll event to possibly load more data
 watch([containerRect.height, virtualScrollerRect.height], async heights => {
+  if (!isVirtual.value) {
+    return
+  }
+
   const isZero = heights.includes(0)
   const hasNoOverflow = heights[0] <= heights[1]
 
@@ -460,15 +474,16 @@ watch([containerRect.height, virtualScrollerRect.height], async heights => {
   }
 })
 
-// Height watcher
+// Height watcher for currently rendered rows
 const hasJustRerendered = ref(false)
 
-const {
-  pause: pauseRowHeightWatcher,
-  resume: resumeRowHeightWatcher,
-} = watchPausable(
+const { pause: pauseRowHeightWatcher, resume: resumeRowHeightWatcher } = watchPausable(
   () => renderedRows.value.rows,
   () => {
+    if (!isVirtual.value) {
+      return
+    }
+
     if (hasJustRerendered.value) {
       hasJustRerendered.value = false
 

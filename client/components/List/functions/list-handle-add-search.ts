@@ -36,13 +36,20 @@ export async function listHandleAddSearch(payload: {
   const labelKey = typeof itemLabel === 'function' ? 'label' : itemLabel
 
   const id = generateUUID()
-  preAddedItem.value = {
-    _isNew: true,
-    id,
-    label: search,
-    path: '-1',
-    index: -1,
-    _highlighted: search,
-    ref: { id, [labelKey]: search },
+
+  if (preAddedItem.value) {
+    preAddedItem.value.label = search
+    preAddedItem.value._highlighted = search
+    preAddedItem.value.ref[labelKey] = search
+  } else {
+    preAddedItem.value = {
+      _isNew: true,
+      id,
+      label: search,
+      path: '-1',
+      index: -1,
+      _highlighted: search,
+      ref: { id, [labelKey]: search },
+    }
   }
 }

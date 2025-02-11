@@ -25,7 +25,6 @@ const emits = defineEmits<IListEmits>()
 defineSlots<IListSlots>()
 
 // Utils
-const { handleKey } = useListKeyboard()
 const uuid = injectLocal(listIdKey, useId()) as string
 
 const mergedProps = computed(() => {
@@ -102,7 +101,8 @@ syncRef(isMounted, isMountedStore, { direction: 'ltr' })
 syncRef(toRef(props, 'hiddenItems'), storeHiddenItems, { direction: 'ltr' })
 syncRef(toRef(props, 'modifiers'), modifiers, { direction: 'ltr' })
 
-// Adding
+// Adding & Keyboard
+const { handleKey } = useListKeyboard()
 useListItemAdding()
 
 // Initial load data
@@ -181,7 +181,7 @@ defineExpose({ handleKey })
 
     <!-- No data -->
     <slot name="noData">
-      <ListNoData @change:content-size="$emit('change:contentSize', $event)" />
+      <ListNoData />
     </slot>
 
     <!-- Loading -->
