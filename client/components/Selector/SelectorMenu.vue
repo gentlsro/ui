@@ -86,12 +86,6 @@ function handleHide() {
   }
 }
 
-// When no options are available, we recalculate the height
-whenever(
-  () => !options.value.length,
-  () => handleHeightChange(0),
-)
-
 watch(contentHeight, () => {
   menuEl.value?.recomputePosition()
 })

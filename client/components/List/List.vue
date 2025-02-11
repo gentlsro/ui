@@ -181,7 +181,9 @@ defineExpose({ handleKey })
 
     <!-- No data -->
     <slot name="noData">
-      <ListNoData />
+      <ListNoData
+        @change:content-size="$emit('change:contentSize', $event)"
+      />
     </slot>
 
     <!-- Loading -->
