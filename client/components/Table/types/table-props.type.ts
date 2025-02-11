@@ -137,7 +137,7 @@ export type ITableProps<
      * We can choose to merge the initial schema with either the default schema (if available)
      * or with the state schema (if available)
      */
-    mergeWith?: 'default' | 'state'
+    mergeWith?: 'defaultSchema' | 'state'
 
     /**
      * A function used to merge the initial schema with the state or default schema

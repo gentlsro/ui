@@ -107,7 +107,7 @@ export function tableTransformColumns(payload: {
     }
 
     // Merge with default schema
-    else if (initialSchemaConfig.mergeWith === 'default' && defaultSchema) {
+    else if (initialSchemaConfig.mergeWith === 'defaultSchema' && defaultSchema) {
       const defaultParams = new URLSearchParams(defaultSchema)
 
       if (initialSchemaConfig.mergeFnc) {
