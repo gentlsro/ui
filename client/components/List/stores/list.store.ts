@@ -8,10 +8,12 @@ import type { IGroupRow } from '$utilsLayer/shared/composables/useGrouping'
 import type { IListItem } from '../types/list-item.type'
 import type { IListProps } from '../types/list-props.type'
 import type { FuseOptions } from '@vueuse/integrations/useFuse'
+import type { IListEmitFncs } from '../types/list-emit-fncs.type'
 import type { IListDragMeta } from '../types/list-drag-meta.type'
 import type { IListItemToAdd } from '../types/list-item-to-add.type'
 
 // Functions
+import { getListItemKey } from '../functions/helpers'
 import { listFetchData } from '../functions/list-fetch-data'
 import { buildListItems } from '../functions/build-list-items'
 import { listItemSelect } from '../functions/list-item-select'
@@ -22,8 +24,6 @@ import { getListDefaultSortBy } from '../functions/helpers/get-list-default-sort
 
 // Components
 import type SearchInput from '../../Inputs/TextInput/SearchInput.vue'
-import { getListItemKey } from '../functions/helpers'
-import type { IListEmitFncs } from '../types/list-emit-fncs.type'
 
 export const listIdKey = Symbol('__listId')
 
@@ -223,6 +223,8 @@ export function useListStore(listId?: string, listProps?: IListProps) {
           itemLabel: itemLabel.value,
           $z: $zAddItem,
         })
+
+        console.log('smth changed')
 
         itemsGrouped.value = res.items
 
