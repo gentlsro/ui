@@ -294,6 +294,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
   watch(model, val => {
     const isEmptyValue = isEqual(val, props.emptyValue)
     const isSame = isEqual(val, typed.value) || (typed.value === '' && isEmptyValue)
+    console.log('Log ~ useInputUtils ~ val:', val, typed.value)
     console.log('Log ~ useInputUtils ~ isSame:', isSame)
 
     if (!isSame) {
@@ -309,6 +310,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
 
   // We also need to sync the `model` when the `originalModel` changes
   watch(originalModel, val => {
+    console.log('Log ~ useInputUtils ~ originalModel:', val)
     model.value = val
   })
 
