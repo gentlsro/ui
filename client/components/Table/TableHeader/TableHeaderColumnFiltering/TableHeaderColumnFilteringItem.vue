@@ -13,10 +13,11 @@ type IProps = {
 
 defineProps<IProps>()
 defineEmits<{ (e: 'remove:item'): void }>()
-defineExpose({ focus: () => valueInputEl.value?.focus() })
 
 // Layout
 const valueInputEl = useTemplateRef('valueInputEl')
+
+defineExpose({ focus: () => valueInputEl.value?.focus() })
 </script>
 
 <template>
@@ -27,7 +28,6 @@ const valueInputEl = useTemplateRef('valueInputEl')
         :item
         editable
         grow
-        @update:model-value="modifyFnc?.(item)"
       />
 
       <!-- Remove -->
@@ -47,7 +47,6 @@ const valueInputEl = useTemplateRef('valueInputEl')
         key: 'item.value',
         options: { scope: 'qb' },
       }"
-      @update:model-value="modifyFnc?.(item)"
     />
   </div>
 </template>
