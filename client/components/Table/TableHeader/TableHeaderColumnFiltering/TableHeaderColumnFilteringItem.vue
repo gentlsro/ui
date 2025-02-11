@@ -37,10 +37,8 @@ defineExpose({ focus: () => valueInputEl.value?.focus() })
         :item
         editable
         grow
-        @update:model-value="modifyFnc?.(item, debounceFilterTriggerMs)"
+        @update:model-value="modifyFnc?.(item)"
       />
-
-      {{ debounceFilterTriggerMs }}
 
       <!-- Remove -->
       <Btn
@@ -59,7 +57,7 @@ defineExpose({ focus: () => valueInputEl.value?.focus() })
         key: 'item.value',
         options: { scope: 'qb' },
       }"
-      @update:model-value="modifyFnc?.(item)"
+      @update:model-value="modifyFnc?.(item, debounceFilterTriggerMs)"
     />
   </div>
 </template>
