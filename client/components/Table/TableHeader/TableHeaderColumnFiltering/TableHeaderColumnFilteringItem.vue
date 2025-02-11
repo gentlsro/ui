@@ -47,6 +47,7 @@ defineExpose({ focus: () => valueInputEl.value?.focus() })
         key: 'item.value',
         options: { scope: 'qb' },
       }"
+      @update:model-value="modifyFnc?.(item)"
     />
   </div>
 </template>
