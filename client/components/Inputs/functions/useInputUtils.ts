@@ -307,14 +307,9 @@ export function useInputUtils(options: IInputUtilsOptions) {
   })
 
   // We also need to sync the `model` when the `originalModel` changes
-  watchEffect(() => {
-    console.log('here')
-    model.value = originalModel.value
+  watch(originalModel, val => {
+    model.value = val
   })
-  // watch(originalModel, val => {
-  //   console.log('Log ~ useInputUtils ~ originalModel:', val)
-  //   model.value = val
-  // })
 
   // Initialize
   onMounted(() => {
@@ -327,20 +322,27 @@ export function useInputUtils(options: IInputUtilsOptions) {
   provide('inputId', inputId)
 
   return {
+    // Mask
+    elMask: mask,
+
+    // Layout
     el,
+    label,
     inputId,
+    isBlurred,
+    hasContent,
+    wrapperProps,
+    hasBeenTouched,
+    hasClearableBtn,
+
+    // State
     model,
     masked,
     typed,
     unmasked,
-    hasBeenTouched,
-    isBlurred,
-    wrapperProps,
     hasNoValue: isEmpty,
-    hasClearableBtn,
-    hasContent,
-    label,
     lastValidValue,
+
     handleBlur,
     clear,
     focus,
@@ -349,6 +351,5 @@ export function useInputUtils(options: IInputUtilsOptions) {
     getInputElement,
     handleFocusOrClick,
     handleClickWrapper,
-    elMask: mask,
   }
 }
