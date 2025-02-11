@@ -68,7 +68,7 @@ const pages = computed(() => {
 <template>
   <div
     class="table-pagination"
-    :class="{ 'has-pagination': paginationConfig?.enabled && totalPages > 1 }"
+    :class="{ 'has-pagination': paginationConfig?.enabled }"
   >
     <!-- First page -->
     <Btn
@@ -131,10 +131,15 @@ const pages = computed(() => {
     />
 
     <!-- Loading -->
-    <Skeleton
+    <div
       v-if="isDataLoading || isMetaLoading"
       class="is-loading"
-    />
+    >
+      <LoaderInline
+        size="sm"
+        roudned-full
+      />
+    </div>
 
     <!-- Limit reached -->
     <div
@@ -169,7 +174,7 @@ const pages = computed(() => {
   }
 
   .is-loading {
-    @apply absolute inset-0 rounded-full;
+    @apply flex flex-center absolute inset-0 rounded-full backdrop-blur-2;
   }
 
   .limit-reached {

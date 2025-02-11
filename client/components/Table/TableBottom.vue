@@ -3,7 +3,11 @@
 import { useTableStore } from './stores/table.store'
 
 // Store
-const { paginationConfig } = storeToRefs(useTableStore())
+const {
+  isDataLoading,
+  isMetaLoading,
+  paginationConfig,
+} = storeToRefs(useTableStore())
 </script>
 
 <template>
@@ -13,7 +17,17 @@ const { paginationConfig } = storeToRefs(useTableStore())
 
     <!-- Center -->
     <TablePagination v-if="paginationConfig?.enabled" />
-    <span v-else />
+    <!-- Loading -->
+    <div
+      v-else
+      class="is-loading"
+    >
+      <LoaderInline
+        v-if="isDataLoading || isMetaLoading"
+        size="sm"
+        roudned-full
+      />
+    </div>
 
     <!-- Right -->
     <div
@@ -45,8 +59,12 @@ const { paginationConfig } = storeToRefs(useTableStore())
 
 <style scoped lang="scss">
 .table-bottom {
-  @apply grid p-x-2 items-center;
+  @apply relative grid p-x-2 items-center min-h-10;
 
   grid-template-columns: 1fr auto 1fr;
+
+  .is-loading {
+    @apply absolute left-1/2 -translate-x-1/2 top-0;
+  }
 }
 </style>

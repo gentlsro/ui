@@ -460,10 +460,6 @@ watch(rows, (rows, rowsOld) => {
 // - We loaded all the data
 // - The data is not enough to overflow the container, so we need to force the scroll event to possibly load more data
 watch([containerRect.height, virtualScrollerRect.height], async heights => {
-  if (!isVirtual.value) {
-    return
-  }
-
   const isZero = heights.includes(0)
   const hasNoOverflow = heights[0] <= heights[1]
 
