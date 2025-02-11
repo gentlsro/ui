@@ -224,6 +224,11 @@ export class TableColumn<T = IItem> {
      * The icon to use for the input
      */
     icon?: string
+
+    /**
+     * A debounce time for the filter trigger
+     */
+    debounceFilterTriggerMs?: number
   }
 
   /**

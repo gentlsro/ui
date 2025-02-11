@@ -14,7 +14,7 @@ import { getAvailableComparators } from '../../functions/get-available-comparato
 
 type IProps = {
   column: TableColumn
-  modifyFnc?: (filter: ITableFilterItem) => void
+  modifyFnc?: (filter: ITableFilterItem, debounceMs?: number) => void
   removeFnc?: (filter: ITableFilterItem) => void
 }
 

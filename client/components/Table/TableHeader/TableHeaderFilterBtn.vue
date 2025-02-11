@@ -104,9 +104,9 @@ function handleMenuBeforeHide() {
 // // Debouncing
 let timeout: any
 
-function modifyFnc(filter: ITableFilterItem) {
-  const debounceMs = filterValueChangeDebounce({ column: column.value, filter })
-  debouncedSync(debounceMs)
+function modifyFnc(filter: ITableFilterItem, debounceMs?: number) {
+  const _debounceMs = debounceMs ?? filterValueChangeDebounce({ column: column.value, filter })
+  debouncedSync(_debounceMs)
 }
 
 function removeFnc() {

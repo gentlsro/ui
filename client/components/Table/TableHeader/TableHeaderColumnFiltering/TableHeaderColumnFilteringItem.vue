@@ -8,14 +8,23 @@ import type { TableColumn } from '../../models/table-column.model'
 type IProps = {
   column: TableColumn
   item: ITableFilterItem
-  modifyFnc?: (filter: ITableFilterItem) => void
+  modifyFnc?: (filter: ITableFilterItem, debounceMs?: number) => void
 }
 
-defineProps<IProps>()
+const props = defineProps<IProps>()
 defineEmits<{ (e: 'remove:item'): void }>()
 
 // Layout
 const valueInputEl = useTemplateRef('valueInputEl')
+
+const debounceFilterTriggerMs = computed(() => {
+  const isRelevantComparator = props.column.filterComponent?.comparators
+    .includes(props.item.comparator)
+
+  return isRelevantComparator
+    ? props.column.filterComponent?.debounceFilterTriggerMs
+    : undefined
+})
 
 defineExpose({ focus: () => valueInputEl.value?.focus() })
 </script>
@@ -28,7 +37,7 @@ defineExpose({ focus: () => valueInputEl.value?.focus() })
         :item
         editable
         grow
-        @update:model-value="modifyFnc?.(item)"
+        @update:model-value="modifyFnc?.(item, debounceFilterTriggerMs)"
       />
 
       <!-- Remove -->
