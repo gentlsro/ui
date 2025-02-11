@@ -26,7 +26,11 @@ const mergedProps = computed(() => {
 const breadcrumbsItems = computed(() => {
   const homeBreacrumb = uiConfig.breadcrumbs.home.component
     ? { component: uiConfig.breadcrumbs.home.component }
-    : { icon: uiConfig.breadcrumbs.home.icon, label: uiConfig.breadcrumbs.home.label }
+    : {
+        to: uiConfig.breadcrumbs.home.path,
+        icon: uiConfig.breadcrumbs.home.icon,
+        label: uiConfig.breadcrumbs.home.label,
+      }
 
   return [
     homeBreacrumb,
