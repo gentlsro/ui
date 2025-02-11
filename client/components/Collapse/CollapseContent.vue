@@ -34,11 +34,6 @@ function handleTransition(when: 'before' | 'after') {
 watch(
   () => props.isOpen,
   async isOpen => {
-    // When collapse content gets opened, we first wait for the content to be rendered
-    if (isOpen) {
-      await nextTick()
-    }
-
     const el = contentEl.value as HTMLDivElement
 
     if (isOpen) {
