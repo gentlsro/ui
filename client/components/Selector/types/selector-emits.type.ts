@@ -10,4 +10,5 @@ export type ISelectorEmits = {
   (e: 'picker-before-show'): void
   (e: 'blur'): void
   (e: 'focus'): void
+  (e: 'clear'): void
 }

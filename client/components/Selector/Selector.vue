@@ -113,6 +113,12 @@ const wrapperClass = computed(() => {
     },
   ]
 })
+
+function handleClear() {
+  model.value = props.emptyValue
+  emits('clear')
+}
+
 // Options
 const options = defineModel<NonNullable<ISelectorProps['options']>>('options', { default: () => [] })
 options.value = selectorTransformOptions(options.value, props)
@@ -252,7 +258,7 @@ onUnmounted(() => {
           v-if="hasClearButton"
           :clear-confirmation
           :size
-          @clear="model = emptyValue"
+          @clear="handleClear"
         />
 
         <slot name="append" />
