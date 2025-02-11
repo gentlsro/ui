@@ -40,6 +40,8 @@ defineExpose({ focus: () => valueInputEl.value?.focus() })
         @update:model-value="modifyFnc?.(item, debounceFilterTriggerMs)"
       />
 
+      {{ debounceFilterTriggerMs }}
+
       <!-- Remove -->
       <Btn
         preset="TRASH"

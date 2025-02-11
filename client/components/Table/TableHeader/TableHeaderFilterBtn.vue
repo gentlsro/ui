@@ -105,6 +105,7 @@ function handleMenuBeforeHide() {
 let timeout: any
 
 function modifyFnc(filter: ITableFilterItem, debounceMs?: number) {
+  console.log('Log ~ modifyFnc ~ debounceMs:', debounceMs)
   const _debounceMs = debounceMs ?? filterValueChangeDebounce({ column: column.value, filter })
   debouncedSync(_debounceMs)
 }
