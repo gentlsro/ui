@@ -10,7 +10,6 @@ import { getComponentMergedProps, getComponentProps } from '../../functions/get-
 
 // Constants
 import { BUTTON_PRESET } from '../Button/constants/button-preset.constant'
-import type { IBtnProps } from '../Button/types/btn-props.type'
 
 const props = withDefaults(defineProps<IBreadcrumbsProps>(), {
   ...getComponentProps('breadcrumbs'),
@@ -25,17 +24,9 @@ const mergedProps = computed(() => {
 
 // Layout
 const breadcrumbsItems = computed(() => {
-  const homePath = typeof props.homePath === 'function'
-    ? props.homePath()
-    : props.homePath
-
   const homeBreacrumb = uiConfig.breadcrumbs.home.component
     ? { component: uiConfig.breadcrumbs.home.component }
-    : {
-        icon: uiConfig.breadcrumbs.home.icon,
-        label: uiConfig.breadcrumbs.home.label,
-        to: homePath ? $p(homePath) : undefined,
-      } as IBtnProps
+    : { icon: uiConfig.breadcrumbs.home.icon, label: uiConfig.breadcrumbs.home.label }
 
   return [
     homeBreacrumb,
