@@ -11,7 +11,6 @@ export function useFormUtils() {
       'label',
       'loading',
       'noSubmit',
-      'noGrow',
       'noControls',
       'preventSubmitOnEnter',
       'reset',
