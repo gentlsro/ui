@@ -1003,6 +1003,7 @@ const defaultComponentsConfig = {
         rowClass: 'hover:bg-primary/25',
         totalsCellClass: 'font-rem-13 font-semibold tracking-wide p-y-2 border-t-1 border-black dark:border-white',
       }),
+      initialSchemaConfig: () => ({}),
     },
     merge: [
       'autoFit',
@@ -1013,6 +1014,7 @@ const defaultComponentsConfig = {
       'ui',
       'paginationConfig',
       'loadData',
+      'initialSchemaConfig',
     ],
   },
 

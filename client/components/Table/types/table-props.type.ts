@@ -131,7 +131,7 @@ export type ITableProps<
     /**
      * The schema to use
      */
-    schema: string | URLSearchParams
+    schema?: string | URLSearchParams
 
     /**
      * We can choose to merge the initial schema with either the default schema (if available)
