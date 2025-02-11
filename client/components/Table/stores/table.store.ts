@@ -524,7 +524,7 @@ export function useTableStore(
       const isOverLimit = rows.value.length >= rowsLimit.value
       const isInitial = isInitialLoad.value && !payload?.force
 
-      if (isOverLimit || isDataLoading.value || isInvalidFetchMore || isInitial) {
+      if (isOverLimit || isDataLoading.value || isInvalidFetchMore || isInitial || !loadData.value?.fnc) {
         return
       }
 

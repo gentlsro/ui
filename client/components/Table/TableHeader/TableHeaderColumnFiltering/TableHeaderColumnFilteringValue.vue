@@ -104,7 +104,7 @@ const filterComponentProps = computed(() => {
   // When using custom filter component, we use its additional props
   if (customFilterComponent.value) {
     const props = typeof customFilterComponent.value.props === 'function'
-      ? customFilterComponent.value.props(filterValue.value, column.value)
+      ? customFilterComponent.value.props(item.value, column.value)
       : customFilterComponent.value.props
 
     return props

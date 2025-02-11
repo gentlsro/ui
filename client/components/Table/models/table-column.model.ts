@@ -205,7 +205,7 @@ export class TableColumn<T = IItem> {
     /**
      * The props to pass to the component
      */
-    props?: IItem | ((value: any, column: Omit<ITableFilterItem, 'value'>) => IItem)
+    props?: IItem | ((filterItem: ITableFilterItem, column: TableColumn) => IItem)
 
     /**
      * A set of comparators for which the filter should be used
@@ -229,7 +229,7 @@ export class TableColumn<T = IItem> {
   /**
    * Usage: when we need to pass props to the "default" filter component
    */
-  filterComponentProps?: IItem | ((value: any, column: Omit<ITableFilterItem, 'value'>) => IItem)
+  filterComponentProps?: IItem | ((filterItem: ITableFilterItem, column: TableColumn) => IItem)
 
   /**
    * The component to use for editing the actual value in the table
