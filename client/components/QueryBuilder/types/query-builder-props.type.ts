@@ -51,5 +51,5 @@ export type IQueryBuilderProps = {
   getFilterComponent?: (
     column: TableColumn<any>,
     filterItem: ITableFilterItem
-  ) => Omit<TableColumn['filterComponent'], 'comparators'> | undefined
+  ) => Omit<NonNullable<TableColumn['filterComponent']>, 'comparators'> | undefined
 }

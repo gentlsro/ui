@@ -87,7 +87,7 @@ export type ITableProps<
   getFilterComponent?: (
     column: TableColumn<any>,
     filterItem: ITableFilterItem
-  ) => Omit<TableColumn['filterComponent'], 'comparators'> | undefined
+  ) => Omit<NonNullable<TableColumn['filterComponent']>, 'comparators'> | undefined
 
   /**
    * Whether the row should be clickable
