@@ -223,8 +223,7 @@ export function useDragAndDrop<T = IItem>(
       return
     }
 
-    // @ts-expect-error DOM functions
-    const item: T = dndState.draggedEl?.['get-item']?.()
+    const item: T = (dndState.draggedEl as any)?.['get-item']?.()
 
     const shouldPrevent = onDragStart({ el: dndState.draggedEl!, item, dndState })
 
@@ -354,23 +353,18 @@ export function useDragAndDrop<T = IItem>(
       dndState.toIdx = targetChildren.indexOf(dndState.draggedEl!)
 
       const previousItemEl = targetChildren[dndState.toIdx - 1] as HTMLElement | undefined
-      // @ts-expect-error ...
-      const previousItem = previousItemEl?.['get-item']?.()
+      const previousItem = (previousItemEl as any)?.['get-item']?.()
 
       const nextItemEl = targetChildren[dndState.toIdx + 1] as HTMLElement | undefined
-      // @ts-expect-error ...
-      const nextItem = nextItemEl?.['get-item']?.()
+      const nextItem = (nextItemEl as any)?.['get-item']?.()
 
       const continueDrag = await onDragEnd({
         siblingItem: previousItem ?? nextItem,
         item: draggedItem.value,
         toIdx: dndState.toIdx,
 
-        // @ts-expect-error ...
-        from: dndState.draggedContainerEl?.getParent?.() ?? undefined,
-
-        // @ts-expect-error ...
-        to: dndState.targetContainerEl?.getParent?.() ?? undefined,
+        from: (dndState.draggedContainerEl as any)?.getParent?.() ?? undefined,
+        to: (dndState.targetContainerEl as any)?.getParent?.() ?? undefined,
 
         moveDirection: previousItem ? 'down' : 'up',
 
@@ -416,8 +410,7 @@ export function useDragAndDrop<T = IItem>(
     }
 
     // IMMEDIATE
-    // // @ts-expect-error - TS doesn't know about our custom functions
-    // const items = dndState.targetContainerEl?.['getItems']?.() ?? []
+    // const items = (dndState.targetContainerEl as any)?.['getItems']?.() ?? []
     // const isItemAlreadyInContainer = items.includes(draggedItem.ref)
 
     // if (isItemAlreadyInContainer) {
@@ -519,8 +512,7 @@ export function useDragAndDrop<T = IItem>(
 
       // When moving within the same container, we need to `move` the item
       if (isSameContainer) {
-        // @ts-expect-error
-        dndState.targetContainerEl?.moveItem(
+        (dndState.targetContainerEl as any)?.moveItem(
           dndState.draggedElInitialIdx,
           dndState.toIdx,
         )
@@ -529,11 +521,8 @@ export function useDragAndDrop<T = IItem>(
       // When moving to a different container, we need to `remove` the item from the old container
       // and `insert` it into the new container
       else {
-        // @ts-expect-error ...
-        dndState.targetContainerEl?.insertItem(dndState.toIdx, draggedItem.value.ref)
-
-        // @ts-expect-error ...
-        dndState.draggedContainerEl?.removeItem(draggedItem.value.ref)
+        ;(dndState.targetContainerEl as any)?.insertItem(dndState.toIdx, draggedItem.value.ref)
+        ;(dndState.draggedContainerEl as any)?.removeItem(draggedItem.value.ref)
       }
     }
 
@@ -623,8 +612,7 @@ export function useDragAndDrop<T = IItem>(
   function cloneElement(event: MouseEvent | TouchEvent) {
     clonedElement = dndState.draggedEl?.cloneNode(true) as HTMLElement
 
-    // @ts-expect-error - TS doesn't know about our custom functions
-    const item: T = dndState.draggedEl?.['get-item']?.()
+    const item: T = (dndState.draggedEl as any)?.['get-item']?.()
 
     if (clonedElement) {
       let clientX: number, clientY: number
