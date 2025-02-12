@@ -78,8 +78,8 @@ function handleLayoutApply(layout?: ITableLayout) {
   } = tableTransformColumns({
     internalColumns: internalColumns.value,
     modifiers: modifiers.value,
-    schemaParams: layout?.schema ?? '',
-    urlParams: '',
+    defaultSchema: layout?.schema ?? '',
+    urlSchema: '',
     shouldUrlBeUsed: false,
   })
 
@@ -189,7 +189,7 @@ function handleLayoutApply(layout?: ITableLayout) {
             </div>
           </div>
 
-          <TableLayoutMeta v-bind="getLayoutMeta(row.ref)" />
+          <TableLayoutMeta v-bind="getLayoutMeta(row.ref as ITableLayout)" />
         </template>
       </List>
     </Menu>

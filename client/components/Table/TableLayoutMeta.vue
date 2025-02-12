@@ -1,10 +1,10 @@
 <script setup lang="ts">
 type IProps = {
-  hasSelect: boolean
-  hasFilters: boolean
-  hasSorting: boolean
-  isPublic: boolean
-  isDefault: boolean
+  hasSelect?: boolean
+  hasFilters?: boolean
+  hasSorting?: boolean
+  isPublic?: boolean
+  isDefault?: boolean
 }
 
 defineProps<IProps>()
