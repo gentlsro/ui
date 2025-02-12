@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { uiConfig } from '$uiConfig'
 import type { IUIConfig } from '$uiConfig'
 import type { IUIConfig as IUIGenericConfig } from '$uiLayer/config'

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // Types
-import type { ExtendedDataType } from '../../../../.nuxt/generated/data-type.type'
+import type { ExtendedDataType } from '$dataType'
 
 // Functions
 import { getInputByDataType } from './constants/input-by-datatype'

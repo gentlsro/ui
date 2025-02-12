@@ -33,7 +33,6 @@ import type { tableExtractPaginationFromUrl } from '../functions/table-extract-p
 import type { tableSerializePagination } from '../functions/table-serialize-pagination'
 import type { tableGetLayoutMeta } from '../functions/table-get-layout-meta'
 import type { ITableFilterItem } from './table-filter-item.type'
-import type { createComponent } from '../../../functions/create-component'
 
 export type ITableProps<
   K extends typeof tableBuildFetchPayload = typeof tableBuildFetchPayload,
@@ -88,7 +87,7 @@ export type ITableProps<
   getFilterComponent?: (
     column: TableColumn<any>,
     filterItem: ITableFilterItem
-  ) => TableColumn['filterComponent'] | undefined
+  ) => Omit<TableColumn['filterComponent'], 'comparators'> | undefined
 
   /**
    * Whether the row should be clickable

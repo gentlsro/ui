@@ -148,8 +148,7 @@ export function useDragAndDrop<T = IItem>(
     // Remove horizontal scroll from the html
     document.documentElement.style.overflowX = 'hidden'
 
-    // @ts-expect-error DOM functions
-    const item: T = dndState.draggedEl?.['get-item']?.()
+    const item: T = (dndState.draggedEl as any)?.['get-item']?.()
 
     const shouldPrevent = onDragStart({ el: dndState.draggedEl!, item, dndState })
 
