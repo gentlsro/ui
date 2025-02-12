@@ -54,6 +54,9 @@ export function useTableStore(
     const isExporting = ref(false)
     const { handleRequest } = useRequest()
 
+    /**
+     * Navigates to a URL corresponding to the current state of the table
+     */
     function navigate() {
       // When using URL, we navigate to the new URL
       if (modifiers.value?.useUrl) {
@@ -128,6 +131,7 @@ export function useTableStore(
     )
     const selectionConfig = ref<ITableProps['selectionConfig']>()
     const initialSchemaConfig = ref<ITableProps['initialSchemaConfig']>(tableProps?.initialSchemaConfig)
+    const getFilterComponent = ref<ITableProps['getFilterComponent']>(tableProps?.getFilterComponent)
 
     // !SECTION
 
@@ -652,6 +656,7 @@ export function useTableStore(
 
       // Miscellaneous
       onDataFetchQueue,
+      getFilterComponent,
 
       // Data fetching
       fetchAndSetMetaData,

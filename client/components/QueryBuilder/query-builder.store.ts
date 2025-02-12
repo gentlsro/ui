@@ -5,11 +5,14 @@ import type { IQueryBuilderDraggedItem } from './types/query-builder-dragged-ite
 // Models
 import type { TableColumn } from '../Table/models/table-column.model'
 import type { IQueryBuilderProps } from './types/query-builder-props.type'
-import type { IQueryBuilderItem } from './types/query-builder-item-props.type'
 
 export const queryBuilderIdKey = Symbol('__queryBuilderId')
 
-export function useQueryBuilderStore(queryBuilderId?: string) {
+export function useQueryBuilderStore(payload?: {
+  queryBuilderId?: string
+  queryBuilderProps?: IQueryBuilderProps
+}) {
+  const { queryBuilderId, queryBuilderProps } = payload ?? {}
   const _queryBuilderId = injectLocal(queryBuilderIdKey, queryBuilderId ?? useId())
 
   return defineStore(`queryBuilder.${_queryBuilderId}`, () => {
@@ -20,14 +23,14 @@ export function useQueryBuilderStore(queryBuilderId?: string) {
     const collapsedById = ref<Record<string | number, boolean>>({})
 
     // Layout
-    const maxNestingLevel = ref(0)
+    const maxNestingLevel = ref(queryBuilderProps?.maxLevel ?? 0)
     const isSmallerScreen = ref(false)
     const queryBuilderEl = ref<HTMLElement>()
     const hoveredItem = ref<IQueryBuilderRow | undefined>()
 
     const queryBuilderElRect = ref<DOMRect>()
 
-    const getFilterComponentFnc = ref<IQueryBuilderProps['getFilterComponent']>()
+    const getFilterComponentFnc = ref<IQueryBuilderProps['getFilterComponent']>(queryBuilderProps?.getFilterComponent)
 
     useResizeObserver(queryBuilderEl, entries => {
       requestAnimationFrame(() => {

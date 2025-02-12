@@ -13,7 +13,11 @@ type IProps = Pick<ITableProps, 'queryBuilder' | 'queryBuilderProps'>
 const props = defineProps<IProps>()
 
 // Store
-const { internalColumnsByField, nonHelperColumns } = storeToRefs(useTableStore())
+const {
+  internalColumnsByField,
+  nonHelperColumns,
+  getFilterComponent,
+} = storeToRefs(useTableStore())
 
 // Layout
 const queryBuilderEl = useTemplateRef('queryBuilderEl')
@@ -105,6 +109,7 @@ const $z = useZod({ scope: 'qb' })
           v-model:items="queryBuilder"
           :columns="nonHelperFilterableColumns"
           editable
+          :get-filter-component
         />
       </Form>
     </Dialog>

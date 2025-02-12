@@ -25,7 +25,7 @@ const uuid = injectLocal(queryBuilderIdKey, useId())
 provideLocal(queryBuilderIdKey, uuid)
 
 // Store
-const store = useQueryBuilderStore()
+const store = useQueryBuilderStore({ queryBuilderProps: props })
 const {
   columns: storeColumns,
   items: storeItems,

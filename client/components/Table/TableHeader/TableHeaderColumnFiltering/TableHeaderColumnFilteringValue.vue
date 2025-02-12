@@ -9,6 +9,9 @@ import type { TableColumn } from '../../models/table-column.model'
 import { getInputByDataType } from '../../../Inputs/DynamicInput/constants/input-by-datatype'
 import { useQueryBuilderItemUtils } from '../../../QueryBuilder/functions/useQueryBuilderItemUtils'
 
+// Store
+import { useTableStore } from '../../stores/table.store'
+
 type IProps = {
   column: TableColumn
   editable?: boolean
@@ -19,6 +22,9 @@ const props = defineProps<IProps>()
 defineExpose({
   focus: () => valueInputEl.value?.focus?.(),
 })
+
+// Store
+const { getFilterComponent } = storeToRefs(useTableStore())
 
 // Layout
 const valueInputEl = ref<any>()
@@ -42,6 +48,11 @@ const customFilterComponent = computed(() => {
   // When using a comparator that is defined to have a custom filter component, we use it
   if (customFilterComponent && isValidComparator) {
     return customFilterComponent
+  }
+
+  // When using a getFilterComponent props, we try to apply it
+  if (getFilterComponent.value) {
+    return getFilterComponent.value(column.value, item.value)
   }
 
   // Otherwise, we don't return anything

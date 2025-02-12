@@ -1,4 +1,10 @@
 <script setup lang="ts">
+import { ComparatorEnum } from '../.nuxt/generated/comparator-enum'
+import NumberInput from './components/Inputs/NumberInput/NumberInput.vue'
+import TextInput from './components/Inputs/TextInput/TextInput.vue'
+import Selector from './components/Selector/Selector.vue'
+import { TableColumn } from './components/Table/models/table-column.model'
+
 const d = ref('2025-01-01')
 const dur = ref(2)
 
@@ -20,6 +26,39 @@ for (let i = 0; i < 75; i++) {
     label: `Item ${i}`,
   })
 }
+
+const columns = [
+  new TableColumn({ field: 'id', label: 'id' }),
+  new TableColumn({
+    field: 'label',
+    label: 'label',
+    extraComparators: [ComparatorEnum.IN],
+    filterComponent: {
+      component: Selector,
+      comparators: [ComparatorEnum.EQUAL, ComparatorEnum.IN],
+      debounceFilterTriggerMs: 0,
+      props: filterItem => {
+        const isMulti = filterItem.comparator === ComparatorEnum.IN
+
+        return {
+          multi: isMulti,
+          options: ['test', 'best', 'rest'],
+        }
+      },
+    },
+  }),
+]
+
+function getFilterComponent(column: any) {
+  if (column.field === 'id') {
+    return {
+      component: Selector,
+      props: {
+        options: ['oy', 'vey', 'goy'],
+      },
+    }
+  }
+}
 </script>
 
 <template>
@@ -30,13 +69,21 @@ for (let i = 0; i < 75; i++) {
   >
     <div
       flex="~ col"
-      w="100"
+      w="300"
     >
+      <Table
+        :rows="options"
+        :columns
+        h="300"
+        :get-filter-component
+      />
+
+      <!-- <div h="100" />
+
       Value: {{ x }}
       <Selector
         v-model="x"
         :options
-        :list-props="{ addConfig: { enabled: true }, searchConfig: { syncWithLoad: true } }"
         no-sort
       />
 
@@ -67,7 +114,7 @@ for (let i = 0; i < 75; i++) {
       >
         {{ content }}
       </Collapse>
-      a
+      a -->
     </div>
   </div>
 </template>

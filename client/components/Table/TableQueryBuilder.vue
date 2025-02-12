@@ -19,6 +19,7 @@ const {
   internalColumnsByField,
   nonHelperColumns,
   queryBuilderProps,
+  getFilterComponent,
 } = storeToRefs(useTableStore())
 
 // Layout
@@ -83,6 +84,7 @@ const queryBuilderHeight = computed(() => {
       :columns="nonHelperFilterableColumns"
       :style="queryBuilderHeight"
       show-column-filters
+      :get-filter-component
       @update:column-filter="handleUpdateColumnFilter"
       @remove:column-filter="handleRemoveColumnFilter"
     />

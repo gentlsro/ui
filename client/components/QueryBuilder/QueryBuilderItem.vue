@@ -68,7 +68,7 @@ const customFilterComponent = computed(() => {
     return customFilterComponent
   }
 
-  // When using the QueryBuilder prop `getFilterComponent`, we use it
+  // When using a `getFilterComponent` prop, we use it
   if (getFilterComponentFnc.value) {
     return getFilterComponentFnc.value(colSelected.value, item.value)
   }

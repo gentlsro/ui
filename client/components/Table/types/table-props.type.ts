@@ -32,6 +32,8 @@ import type { useTableStore } from '../stores/table.store'
 import type { tableExtractPaginationFromUrl } from '../functions/table-extract-pagination-from-url'
 import type { tableSerializePagination } from '../functions/table-serialize-pagination'
 import type { tableGetLayoutMeta } from '../functions/table-get-layout-meta'
+import type { ITableFilterItem } from './table-filter-item.type'
+import type { createComponent } from '../../../functions/create-component'
 
 export type ITableProps<
   K extends typeof tableBuildFetchPayload = typeof tableBuildFetchPayload,
@@ -73,6 +75,20 @@ export type ITableProps<
    * A list of features that should be enabled within the table
    */
   features?: TableFeature[]
+
+  /**
+   * A function that may return a component that is used in specific cases for the
+   * column filter value.
+   *
+   * Priority of the shown filter component is:
+   * `TableColumn.filterComponent` > `getFilterComponent` > default input based on `dataType`
+   *
+   * NOTE: This will also be passed down to the query builder
+   */
+  getFilterComponent?: (
+    column: TableColumn<any>,
+    filterItem: ITableFilterItem
+  ) => TableColumn['filterComponent'] | undefined
 
   /**
    * Whether the row should be clickable

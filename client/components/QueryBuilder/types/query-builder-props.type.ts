@@ -42,13 +42,14 @@ export type IQueryBuilderProps = {
   showColumnFilters?: boolean
 
   /**
-   * Function to get a filter component for a column
+   * A function that may return a component that is used in specific cases for the
+   * item filter value.
    *
-   * NOTE: TableColumn.filterComponent still takes precendence over this
-   * So priority is: `TableColumn.filterComponent` > `getFilterComponent` > default input based on `dataType`
+   * Priority of the shown filter component is:
+   * `TableColumn.filterComponent` > `getFilterComponent` > default input based on `dataType`
    */
   getFilterComponent?: (
     column: TableColumn<any>,
-    item: ITableFilterItem
+    filterItem: ITableFilterItem
   ) => TableColumn['filterComponent'] | undefined
 }
