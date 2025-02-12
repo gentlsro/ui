@@ -101,9 +101,10 @@ function handleFieldChange(field: string) {
   }
 
   // NOTE: When datatype changes OR we're using non-primitive comparators, we reset value
-  const isNonPrimitiveComparator
-    = customFilterComponent.value?.comparators.includes(item.value.comparator)
-      || canUseSelectorComparator(item.value.comparator, colSelected.value || col)
+  const cfc = customFilterComponent.value // cfc ~ customFilterComponent abbreviation
+  const isNonPrimitiveComparator = (cfc && !cfc.comparators)
+    || cfc?.comparators?.includes(item.value.comparator)
+    || canUseSelectorComparator(item.value.comparator, colSelected.value || col)
 
   if (
     col.dataType !== colSelected.value?.dataType

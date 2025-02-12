@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'vue'
+import type { Required } from 'utility-types'
 import type { RouteLocationRaw } from '#vue-router'
 
 // Types
@@ -87,7 +88,7 @@ export type ITableProps<
   getFilterComponent?: (
     column: TableColumn<any>,
     filterItem: ITableFilterItem
-  ) => Omit<NonNullable<TableColumn['filterComponent']>, 'comparators'> | undefined
+  ) => Required<Partial<NonNullable<TableColumn['filterComponent']>>, 'component'> | undefined
 
   /**
    * Whether the row should be clickable

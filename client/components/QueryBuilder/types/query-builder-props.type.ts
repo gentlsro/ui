@@ -1,3 +1,5 @@
+import type { Required } from 'utility-types'
+
 // Types
 import type { IQueryBuilderRow } from './query-builder-row-props.type'
 
@@ -51,5 +53,5 @@ export type IQueryBuilderProps = {
   getFilterComponent?: (
     column: TableColumn<any>,
     filterItem: ITableFilterItem
-  ) => Omit<NonNullable<TableColumn['filterComponent']>, 'comparators'> | undefined
+  ) => Required<Partial<NonNullable<TableColumn['filterComponent']>>, 'component'> | undefined
 }
