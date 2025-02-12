@@ -7,13 +7,13 @@ import type { ExtendedDataType } from '$dataType'
 import { createComponent } from '../../../../functions/create-component'
 
 // Components
-import TextInput from '../../TextInput/TextInput.vue'
-import NumberInput from '../../NumberInput/NumberInput.vue'
 import Toggle from '../../../Toggle/Toggle.vue'
-import CurrencyInput from '../../CurrencyInput/CurrencyInput.vue'
-import DurationInput from '../../DurationInput/DurationInput.vue'
+import TextInput from '../../TextInput/TextInput.vue'
 import DateInput from '../../DateInput/DateInput.vue'
 import TimeInput from '../../TimeInput/TimeInput.vue'
+import NumberInput from '../../NumberInput/NumberInput.vue'
+import CurrencyInput from '../../CurrencyInput/CurrencyInput.vue'
+import DurationInput from '../../DurationInput/DurationInput.vue'
 
 export function getInputByDataType(
   dataType: ExtendedDataType,
