@@ -1004,6 +1004,7 @@ const defaultComponentsConfig = {
         totalsCellClass: 'font-rem-13 font-semibold tracking-wide p-y-2 border-t-1 border-black dark:border-white',
       }),
       initialSchemaConfig: () => ({}),
+      getFilterComponent: () => undefined,
     },
     merge: [
       'autoFit',
@@ -1221,7 +1222,7 @@ export type IUIConfig = {
       icon?: string
       path?: string
       label?: string | (() => string | undefined)
-      component?: any
+      component?: string
     }
   }
   button: IConfigItem<IBtnProps>

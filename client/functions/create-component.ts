@@ -17,7 +17,19 @@ export function createComponent<T extends Component>(payload?: {
   const { component: componentSrc, props, icon } = payload
   let component = componentSrc as T
 
-  if (typeof componentSrc === 'function') {
+  // In case we provided a string, we resolve the component
+  if (typeof componentSrc === 'string') {
+    component = resolveComponentByName(componentSrc) as T
+
+    return {
+      component,
+      props,
+      icon: icon ?? 'i-carbon:unknown',
+    }
+  }
+
+  // In case we provided a function, we call it
+  else if (typeof componentSrc === 'function') {
     component = componentSrc()
   }
 

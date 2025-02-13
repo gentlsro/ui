@@ -33,19 +33,24 @@ const columns = [
     field: 'label',
     label: 'label',
     extraComparators: [ComparatorEnum.IN],
-    filterComponent: {
-      component: Selector,
-      comparators: [ComparatorEnum.EQUAL, ComparatorEnum.IN],
-      debounceFilterTriggerMs: 0,
-      props: filterItem => {
-        const isMulti = filterItem.comparator === ComparatorEnum.IN
+    // filterComponent: {
+    //   component: Selector,
+    //   comparators: [ComparatorEnum.EQUAL, ComparatorEnum.IN],
+    //   debounceFilterTriggerMs: 0,
+    //   props: filterItem => {
+    //     const isMulti = filterItem.comparator === ComparatorEnum.IN
 
-        return {
-          multi: isMulti,
-          options: ['test', 'best', 'rest'],
-        }
-      },
-    },
+    //     return {
+    //       multi: isMulti,
+    //       options: ['test', 'best', 'rest'],
+    //     }
+    //   },
+    // },
+  }),
+  new TableColumn({
+    field: 'test',
+    label: 'test',
+    dataType: 'some-type',
   }),
 ]
 
@@ -75,7 +80,6 @@ function getFilterComponent(column: any) {
         :rows="options"
         :columns
         h="300"
-        :get-filter-component
       />
 
       <!-- <div h="100" />

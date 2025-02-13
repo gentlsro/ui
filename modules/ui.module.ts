@@ -7,6 +7,8 @@ const currentDir = resolve('..')
 export default defineNuxtModule({
   setup: async (_, nuxt) => {
     console.log('✔ Creating ui virtual file...')
+    const componentPaths: string[] = []
+
     const configPaths = nuxt.options._layers
       .map(layer => {
         const isBase = layer.cwd === currentDir

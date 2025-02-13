@@ -52,7 +52,16 @@ const customFilterComponent = computed(() => {
 
   // When using a getFilterComponent props, we try to apply it
   if (getFilterComponent.value) {
-    return getFilterComponent.value(column.value, item.value)
+    const filterComponent = (getFilterComponent.value(column.value, item.value)) as TableColumn['filterComponent']
+
+    if (!filterComponent) {
+      return undefined
+    }
+
+    return {
+      ...filterComponent,
+      component: resolveComponentByName(filterComponent.component),
+    }
   }
 
   // Otherwise, we don't return anything
