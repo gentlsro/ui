@@ -303,10 +303,7 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
         <!-- Label -->
         <span class="td__label">
           {{ column.column._label }}
-        </span>
 
-        <!-- Value -->
-        <div class="td__value">
           <!-- Edit button -->
           <Btn
             v-if="column.isEditable"
@@ -316,7 +313,10 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
             icon="i-material-symbols:edit-rounded"
             @click.stop.prevent="handleEditCell(rowData, column)"
           />
+        </span>
 
+        <!-- Value -->
+        <div class="td__value">
           <!-- Editing -->
           <template v-if="isEditingCell(rowData, column)">
             <Btn
@@ -463,7 +463,7 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
     }
 
     .edit-btn {
-      @apply -translate-x-full top-1/2 left-0 -translate-y-1/2
+      @apply top-1/2 right-1 -translate-y-1/2
         bg-white dark:bg-black;
       @apply hidden;
 
@@ -477,11 +477,11 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
     grid-template-columns: 1fr 3fr;
 
     &__label {
-      @apply text-caption text-xs min-h-6 p-t-1 line-clamp-2;
+      @apply relative text-caption text-xs min-h-6 p-t-1 line-clamp-2;
     }
 
     &__value {
-      @apply relative flex items-center gap-1 leading-tight self-center p-x-2 line-clamp-3;
+      @apply flex items-center gap-1 leading-tight self-center overflow-auto p-x-2;
     }
   }
 }
