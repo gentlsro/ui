@@ -81,7 +81,7 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
     } else if (ev.key === 'Enter') {
       tableStore.saveCellEditValue()
 
-      if (isCtrlKey) {
+      if (!isCtrlKey) {
         tableEditMoveCell({
           tableEl: tableEl.value,
           isCardView: isCardView.value,

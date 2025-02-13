@@ -275,6 +275,7 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
   <div
     v-if="isCardView"
     class="tr-split"
+    :class="{ 'is-card-editing': !!cellEdit }"
     :style="{ '--cols': rowsColumnCount }"
   >
     <Component
@@ -494,7 +495,7 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
     }
   }
 
-  .is-editing.is-editable .td__label {
+  .is-card-editing.is-editable .td__label {
     @apply color-black dark:color-white;
   }
 }
