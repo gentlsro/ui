@@ -90,7 +90,9 @@ const rowDataArray = computed(() => {
           }
 
           const colEditable = !(typeof col.noEdit === 'function' ? col.noEdit(row) : col.noEdit)
+          console.log('Log ~ returnrowArray.map ~ colEditable:', colEditable)
           const isEditable = isEditableRow.value && colEditable
+          console.log('Log ~ returnrowArray.map ~ isEditableRow.value:', isEditableRow.value)
           const cellValue = col.valueGetter(row)
           const cellFormattedValue = formatValue(cellValue, row, {
             format: col.format,
