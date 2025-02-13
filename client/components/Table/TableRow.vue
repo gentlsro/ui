@@ -454,12 +454,6 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
     @apply outline-1 outline-primary outline-solid bg-primary/15;
   }
 
-  .is-editing {
-    .cancel-edit-btn {
-      @apply flex;
-    }
-  }
-
   &.is-editable {
     .td.is-editable:hover {
       @apply shadow-ca shadow-consistent-xs;
@@ -479,13 +473,19 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
     }
   }
 
+  .is-editing {
+    .cancel-edit-btn {
+      @apply flex;
+    }
+  }
+
   .td {
     @apply grid w-full items-start rounded-custom min-h-6;
 
     grid-template-columns: 1fr 3fr;
 
     &__label {
-      @apply relative text-caption text-xs min-h-6 p-t-1 line-clamp-2;
+      @apply relative text-caption text-xs min-h-6 p-t-1 line-clamp-2 h-full;
     }
 
     &__value {
