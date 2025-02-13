@@ -180,6 +180,7 @@ onUnmounted(() => {
     class="table"
     :class="tableClass"
   >
+    <!-- Top -->
     <slot
       name="top"
       :ui="mergedProps.ui"
@@ -197,6 +198,7 @@ onUnmounted(() => {
       />
     </slot>
 
+    <!-- Toolbar -->
     <slot
       name="toolbar"
       :ui="mergedProps.ui"
@@ -214,6 +216,7 @@ onUnmounted(() => {
       </TableToolbar>
     </slot>
 
+    <!-- Header -->
     <slot
       name="header"
       :ui="mergedProps.ui"
@@ -225,6 +228,7 @@ onUnmounted(() => {
       />
     </slot>
 
+    <!-- Content -->
     <TableContent
       v-if="rows?.length && !isMetaLoading"
       :ui="mergedProps.ui"
@@ -266,16 +270,23 @@ onUnmounted(() => {
       </template>
     </TableContent>
 
+    <!-- Loading -->
     <TableLoading v-else-if="isInitialLoad" />
 
+    <!-- Empty -->
     <TableEmpty v-else />
 
+    <!-- Totals -->
     <TableTotals
       :totals
       :ui="mergedProps.ui"
     />
 
+    <!-- Bottom -->
     <TableBottom />
+
+    <!-- Default slot to be used for custom content (most likely absolutely positioned) -->
+    <slot />
   </div>
 </template>
 
