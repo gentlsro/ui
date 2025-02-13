@@ -343,6 +343,7 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
             <Btn
               size="xs"
               preset="SAVE"
+              bg="white dark:black"
             />
           </template>
 

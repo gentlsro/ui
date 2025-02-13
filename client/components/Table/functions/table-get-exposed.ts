@@ -29,5 +29,6 @@ export function tableGetExposed() {
 
       tableSelectRow(_payload)
     },
+    cancelEdit: () => tableStore.cancelCellEdit(),
   }
 }
