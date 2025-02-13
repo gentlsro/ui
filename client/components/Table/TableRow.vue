@@ -317,6 +317,7 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
 
           <!-- Cancel edit -->
           <Btn
+            v-if="column.isEditable"
             size="xs"
             class="cancel-edit-btn"
             tabindex="-1"
