@@ -493,6 +493,10 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
       @apply flex items-center gap-1 leading-tight self-center overflow-auto p-x-2;
     }
   }
+
+  .is-editing.is-editable {
+    @apply color-black dark:color-white;
+  }
 }
 
 .separator--vertical,
