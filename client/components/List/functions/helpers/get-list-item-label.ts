@@ -10,10 +10,10 @@ export function getListItemLabel(
   if (typeof itemLabel === 'function') {
     const _item = getListItem(item, itemByKey)
 
-    return itemLabel(_item)
+    return itemLabel(_item) || item
   }
 
   return typeof item === 'object'
-    ? get(item, itemLabel ?? 'label')
+    ? get(item, itemLabel ?? 'label') || item
     : get(itemByKey, item)?.[itemLabel ?? ''] ?? item
 }
