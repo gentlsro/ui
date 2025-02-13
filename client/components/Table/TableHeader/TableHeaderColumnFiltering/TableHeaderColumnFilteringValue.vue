@@ -43,7 +43,8 @@ const component = getInputByDataType(column.value.dataType || 'string')
 
 const customFilterComponent = computed(() => {
   const customFilterComponent = column.value?.filterComponent
-  const isValidComparator = customFilterComponent?.comparators.includes(item.value.comparator)
+  const isValidComparator = !customFilterComponent?.comparators.length
+    || customFilterComponent?.comparators.includes(item.value.comparator)
 
   // When using a comparator that is defined to have a custom filter component, we use it
   if (customFilterComponent && isValidComparator) {
@@ -53,8 +54,10 @@ const customFilterComponent = computed(() => {
   // When using a getFilterComponent props, we try to apply it
   if (getFilterComponent.value) {
     const filterComponent = (getFilterComponent.value(column.value, item.value)) as TableColumn['filterComponent']
+    const isValidComparator = !filterComponent?.comparators.length
+      || filterComponent?.comparators.includes(item.value.comparator)
 
-    if (!filterComponent) {
+    if (!filterComponent || !isValidComparator) {
       return undefined
     }
 

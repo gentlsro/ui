@@ -209,6 +209,8 @@ export class TableColumn<T = IItem> {
 
     /**
      * A set of comparators for which the filter should be used
+     *
+     * NOTE: If an empty array is provided, the filter will be used for all the comparators!
      */
     comparators: ComparatorEnum[]
 
