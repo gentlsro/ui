@@ -74,6 +74,9 @@ const isEditableRow = computed(() => {
 })
 
 const rowDataArray = computed(() => {
+  // This needs to be here to trigger reactivity
+  const _isEditableRow = isEditableRow.value
+
   const rowArray = Array.isArray(props.row)
     ? props.row
     : [props.row]
@@ -90,9 +93,7 @@ const rowDataArray = computed(() => {
           }
 
           const colEditable = !(typeof col.noEdit === 'function' ? col.noEdit(row) : col.noEdit)
-          console.log('Log ~ returnrowArray.map ~ colEditable:', colEditable)
-          const isEditable = isEditableRow.value && colEditable
-          console.log('Log ~ returnrowArray.map ~ isEditableRow.value:', isEditableRow.value)
+          const isEditable = _isEditableRow && colEditable
           const cellValue = col.valueGetter(row)
           const cellFormattedValue = formatValue(cellValue, row, {
             format: col.format,
