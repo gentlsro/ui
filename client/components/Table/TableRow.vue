@@ -91,7 +91,6 @@ const rowDataArray = computed(() => {
 
           const colEditable = !(typeof col.noEdit === 'function' ? col.noEdit(row) : col.noEdit)
           const isEditable = isEditableRow.value && colEditable
-          console.log('Log ~ returnrowArray.map ~ isEditable:', isEditable)
 
           const cellValue = col.valueGetter(row)
           const cellFormattedValue = formatValue(cellValue, row, {
@@ -308,7 +307,6 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
 
         <!-- Value -->
         <div class="td__value">
-          {{ column.isEditable }}
           <!-- Edit button -->
           <Btn
             v-if="column.isEditable"
@@ -483,7 +481,7 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
     }
 
     &__value {
-      @apply relative flex items-center gap-1 leading-tight self-center overflow-auto p-x-2;
+      @apply relative flex items-center gap-1 leading-tight self-center p-x-2 line-clamp-3;
     }
   }
 }
