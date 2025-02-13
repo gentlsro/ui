@@ -296,7 +296,7 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
         :key="column.id"
         class="td"
         :style="column.cellStyle"
-        :class="column.cellClass"
+        :class="[column.cellClass, { 'is-editing': isEditingCell(rowData, column) }]"
         :data-field="column.column.field"
         :data-key="rowData.rowKey"
       >
@@ -313,21 +313,22 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
             icon="i-material-symbols:edit-rounded"
             @click.stop.prevent="handleEditCell(rowData, column)"
           />
+
+          <!-- Cancel edit -->
+          <Btn
+            size="xs"
+            class="cancel-edit-btn"
+            tabindex="-1"
+            preset="CLOSE"
+            no-dim
+            @click.stop.prevent="handleCancelEditCell"
+          />
         </span>
 
         <!-- Value -->
         <div class="td__value">
           <!-- Editing -->
           <template v-if="isEditingCell(rowData, column)">
-            <Btn
-              size="xs"
-              class="edit-btn !flex"
-              tabindex="-1"
-              preset="CLOSE"
-              no-dim
-              @click.stop.prevent="handleCancelEditCell"
-            />
-
             <Component
               :is="column.column._editComponent.component"
               v-model="cellEditValue"
@@ -453,6 +454,12 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
     @apply outline-1 outline-primary outline-solid bg-primary/15;
   }
 
+  .is-editing {
+    .cancel-edit-btn {
+      @apply flex;
+    }
+  }
+
   &.is-editable {
     .td.is-editable:hover {
       @apply shadow-ca shadow-consistent-xs;
@@ -462,7 +469,8 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
       }
     }
 
-    .edit-btn {
+    .edit-btn,
+    .cancel-edit-btn {
       @apply top-1/2 right-1 -translate-y-1/2
         bg-white dark:bg-black;
       @apply hidden;

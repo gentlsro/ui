@@ -370,6 +370,10 @@ export function useTableStore(
       set(row, column.field, cellEditValue.value)
     }
 
+    function cancelCellEdit() {
+      cellEdit.value = undefined
+    }
+
     // !SECTION
 
     // SECTION Query
@@ -654,6 +658,7 @@ export function useTableStore(
       cellEditValue,
       loadCellEditValue,
       saveCellEditValue,
+      cancelCellEdit,
 
       // Query
       queryParams,
