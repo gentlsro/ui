@@ -4,7 +4,7 @@ import type { ITableProps } from '../types/table-props.type'
 // Functions
 import { getListItemKey } from '../../List/functions/helpers'
 
-export function tableSelectRow(payload: {
+export async function tableSelectRow(payload: {
   selection: Ref<ITableProps['selection']>
   selectionConfig: ITableProps['selectionConfig']
   row: IItem
@@ -27,6 +27,14 @@ export function tableSelectRow(payload: {
 
   if (!selectionConfig?.enabled) {
     return
+  }
+
+  if (selectionConfig.onSelect) {
+    const shouldContinue = await selectionConfig.onSelect({ row, selection, isSet })
+
+    if (shouldContinue === false) {
+      return
+    }
   }
 
   const key = selectionConfig.selectionKey ?? rowKey

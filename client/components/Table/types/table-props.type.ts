@@ -449,10 +449,15 @@ export type ITableProps<
      * Function that gets called on row select, returrn `false` to prevent the
      * selection from happening
      */
-    onSelect?: (
-      row: any,
-      selection: MaybeRefOrGetter<ISelection>,
-    ) => void | false | Promise<void | false>
+    onSelect?: (payload: {
+      row: any
+      selection: MaybeRefOrGetter<ISelection>
+
+      /**
+       * When true, only given row will should selected, others should be deselected
+       */
+      isSet?: boolean
+    }) => void | false | Promise<void | false>
 
     /**
      * Selection key
