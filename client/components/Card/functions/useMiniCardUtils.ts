@@ -14,6 +14,7 @@ export function useMiniCardUtils() {
       'icon',
       'row',
       'toPreviousValue',
+      'previousValue',
       'originalValue',
     ])
   }
