@@ -43,7 +43,7 @@ export function useTabsUtils() {
     return {
       id: name,
       name: props.name,
-      component: tabComponent,
+      component: markRaw(tabComponent),
       props: mergedProps,
     }
   }
