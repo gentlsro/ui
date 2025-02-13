@@ -494,7 +494,7 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
     }
   }
 
-  .is-editing.is-editable {
+  .is-editing.is-editable .td__label {
     @apply color-black dark:color-white;
   }
 }
