@@ -465,7 +465,7 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
 
     .edit-btn,
     .cancel-edit-btn {
-      @apply top-1/2 right-1 -translate-y-1/2
+      @apply top-1/2 right-0 -translate-y-1/2
         bg-white dark:bg-black;
       @apply hidden;
 
