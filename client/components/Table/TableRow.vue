@@ -74,9 +74,6 @@ const isEditableRow = computed(() => {
 })
 
 const rowDataArray = computed(() => {
-  // This needs to be here to trigger reactivity
-  const _isEditableRow = isEditableRow.value
-
   const rowArray = Array.isArray(props.row)
     ? props.row
     : [props.row]
@@ -93,7 +90,9 @@ const rowDataArray = computed(() => {
           }
 
           const colEditable = !(typeof col.noEdit === 'function' ? col.noEdit(row) : col.noEdit)
-          const isEditable = _isEditableRow && colEditable
+          const isEditable = isEditableRow.value && colEditable
+          console.log('Log ~ returnrowArray.map ~ isEditable:', isEditable)
+
           const cellValue = col.valueGetter(row)
           const cellFormattedValue = formatValue(cellValue, row, {
             format: col.format,
@@ -309,6 +308,7 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
 
         <!-- Value -->
         <div class="td__value">
+          {{ column.isEditable }}
           <!-- Edit button -->
           <Btn
             v-if="column.isEditable"
