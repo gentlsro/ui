@@ -36,7 +36,6 @@ export function useInputUtils(options: IInputUtilsOptions) {
   const lastValidValue = ref<any>()
   const { emptyValue } = toRefs(props)
 
-  console.log(maskRef.value)
   const { el, mask, masked, unmasked, typed } = useIMask(maskRef, {
     onAccept: ev => {
       nextTick(() => {
