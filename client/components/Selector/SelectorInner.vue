@@ -58,7 +58,7 @@ function handleRemove(idx: number) {
     truncate
   >
     <slot
-      :item="getListItem(model, optionByKey)"
+      :item="getListItem(model, optionByKey) ?? model"
       :index="0"
     >
       {{ getListItemLabel(model, optionLabel, optionByKey) }}
@@ -75,7 +75,7 @@ function handleRemove(idx: number) {
       :key="idx"
     >
       <slot
-        :item="getListItem(item, optionByKey)"
+        :item="getListItem(item, optionByKey) ?? item"
         :index="idx"
       >
         <SelectorChip
@@ -103,7 +103,7 @@ function handleRemove(idx: number) {
       :key="idx"
     >
       <slot
-        :item="getListItem(item, optionByKey)"
+        :item="getListItem(item, optionByKey) ?? item"
         :index="idx"
       >
         <SelectorChip
