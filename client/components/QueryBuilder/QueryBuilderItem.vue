@@ -69,7 +69,8 @@ const customFilterComponent = computed(() => {
   }
 
   // When using a `getFilterComponent` prop, we use it
-  if (getFilterComponentFnc.value) {
+  console.log(colSelected.value)
+  if (getFilterComponentFnc.value && colSelected.value) {
     return getFilterComponentFnc.value(colSelected.value, item.value)
   }
 
