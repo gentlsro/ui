@@ -48,7 +48,7 @@ const customFilterComponent = computed(() => {
 
   // When using a comparator that is defined to have a custom filter component, we use it
   if (customFilterComponent && isValidComparator) {
-    return customFilterComponent
+    return markRaw(customFilterComponent)
   }
 
   // When using a getFilterComponent props, we try to apply it
