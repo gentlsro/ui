@@ -63,7 +63,7 @@ const customFilterComponent = computed(() => {
 
     return {
       ...filterComponent,
-      component: markRaw(resolveComponentByName(filterComponent.component)),
+      component: resolveComponentByName(filterComponent.component),
     }
   }
 
