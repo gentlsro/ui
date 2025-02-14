@@ -30,9 +30,9 @@ const mergedProps = computed(() => {
 
 // Mask
 const mask = computed<MaskedNumber>(() => {
-  if (props.mask) {
-    return props.mask as MaskedNumber
-  }
+  // if (props.mask) {
+  //   return props.mask as MaskedNumber
+  // }
 
   return new MaskedNumber({
     thousandsSeparator: props.noGrouping
