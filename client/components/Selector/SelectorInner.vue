@@ -103,7 +103,7 @@ function handleRemove(idx: number) {
       :key="idx"
     >
       <slot
-        :item
+        :item="getListItem(item, optionByKey)"
         :index="idx"
       >
         <SelectorChip
