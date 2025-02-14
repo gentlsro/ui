@@ -20,7 +20,7 @@ type IProps = {
 
 const props = defineProps<IProps>()
 defineExpose({
-  focus: () => valueInputEl.value?.focus?.(),
+  focus: () => requestAnimationFrame(() => valueInputEl.value?.focus?.()),
 })
 
 // Store
