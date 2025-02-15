@@ -127,7 +127,7 @@ syncRef(toRef(mergedProps.value, 'initialSchemaConfig'), initialSchemaConfig, { 
 
 // When columns change, make sure to get their real widths
 watch(visibleColumns, cols => {
-  nextTick(() => {
+  requestAnimationFrame(() => {
     console.log(cols)
     cols.forEach(col => col._width = col.getWidth())
 
