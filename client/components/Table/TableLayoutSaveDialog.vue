@@ -24,13 +24,13 @@ const emits = defineEmits<{ (e: 'hide'): void }>()
 const { isLoading, handleRequest } = useRequest()
 
 // Store
+const tableStore = useTableStore()
 const {
-  queryBuilder,
   internalColumns,
   modifiers,
   state,
   customData,
-} = storeToRefs(useTableStore())
+} = storeToRefs(tableStore)
 
 // Helpers
 function getUnifiedSchema(schema: string | URLSearchParams) {
@@ -124,12 +124,11 @@ async function handleSave() {
     .map(([key]) => key as 'columns' | 'filters' | 'sorting')
 
   await saveLayout({
+    tablePayload: tableStore.getFetchPayload(),
     layout: layout.value,
-    internalColumns: internalColumns.value,
     toSave: _toSave,
     layouts: state.value.layouts,
     modifiers: modifiers.value,
-    queryBuilder: queryBuilder.value,
     customData: customData.value,
     isPublic: toSave.value.isPublic,
     isDefault: toSave.value.isDefault,

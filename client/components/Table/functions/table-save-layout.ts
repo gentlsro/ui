@@ -1,10 +1,7 @@
 // Types
 import type { ITableProps } from '../types/table-props.type'
 import type { ITableLayout } from '../types/table-layout.type'
-import type { IQueryBuilderRow } from '../../QueryBuilder/types/query-builder-row-props.type'
-
-// Models
-import type { TableColumn } from '../models/table-column.model'
+import type { ITableFetchPayload } from '../types/table-fetch-payload.type'
 
 // Functions
 import { tableSerializeData } from './table-serialize-data'
@@ -12,14 +9,14 @@ import { tableBuildQueryParams } from './table-build-query-params'
 
 export async function tableSaveLayout(payload: {
   /**
+   * The table payload
+   */
+  tablePayload: ITableFetchPayload
+
+  /**
    * Currently selected layout
    */
   layout: ITableLayout
-
-  /**
-   * Current internal columns
-   */
-  internalColumns: TableColumn[]
 
   /**
    * Which parts of the layout to save
@@ -30,11 +27,6 @@ export async function tableSaveLayout(payload: {
    * Modifiers for the table functions
    */
   modifiers?: ITableProps['modifiers']
-
-  /**
-   * Query builder items
-   */
-  queryBuilder?: IQueryBuilderRow[]
 
   /**
    * Custom data provided from the table store
@@ -65,16 +57,14 @@ export async function tableSaveLayout(payload: {
     layout,
     layouts,
     modifiers,
-    internalColumns,
-    queryBuilder = [],
+    tablePayload,
     toSave,
     isDefault,
     isPublic,
   } = payload
 
-  const {
-    buildParams = tableBuildQueryParams,
-  } = modifiers ?? {}
+  const { buildParams = tableBuildQueryParams } = modifiers ?? {}
+  const { tableData } = tablePayload
   const existingLayout = layouts.find(l => l.name === layout.name)
 
   const {
@@ -83,9 +73,9 @@ export async function tableSaveLayout(payload: {
     sorting: sortingSerialized,
     queryBuilder: queryBuilderSerialized,
   } = tableSerializeData({
-    columns: internalColumns,
+    columns: tableData.columns,
     modifiers,
-    queryBuilder,
+    queryBuilder: tableData.queryBuilder,
   })
 
   const schema = buildParams({
