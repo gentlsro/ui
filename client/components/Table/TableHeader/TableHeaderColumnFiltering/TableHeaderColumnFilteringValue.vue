@@ -152,6 +152,9 @@ const filterComponentProps = computed(() => {
 </script>
 
 <template>
+  <!-- Non-value comparators have no value -->
+  <span v-if="isNonValueComparator" />
+
   <!-- Custom filter component -->
   <Component
     :is="customFilterComponent.component"
@@ -203,7 +206,7 @@ const filterComponentProps = computed(() => {
   <!-- Primitive value -->
   <Component
     :is="component.component"
-    v-else-if="component?.component && !isNonValueComparator"
+    v-else-if="component?.component"
     ref="valueInputEl"
     v-model="filterValue"
     size="sm"
