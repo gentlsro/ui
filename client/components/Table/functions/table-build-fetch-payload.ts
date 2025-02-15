@@ -14,6 +14,12 @@ export function tableBuildFetchPayload(payload: {
   fetchMore?: { lastRow: IItem, hasMore: boolean }
   queryParams?: URLSearchParams
   getStore: () => any
+
+  /**
+   * Whether to include fields that are marked as `alwaysSelected` or
+   * as part of the `needsFields` of a column
+   */
+  includeInvisible?: boolean
 }) {
   const {
     columns,

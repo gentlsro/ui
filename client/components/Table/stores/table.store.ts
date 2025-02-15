@@ -422,7 +422,9 @@ export function useTableStore(
       })
     })
 
-    function getFetchPayload() {
+    function getFetchPayload(
+      payload?: Partial<Parameters<typeof tableBuildFetchPayload>[0]>,
+    ) {
       const { buildFetchPayload = tableBuildFetchPayload } = modifiers.value ?? {}
 
       const lastRow = rows.value[rows.value.length - 1] as IItem
@@ -439,6 +441,7 @@ export function useTableStore(
         },
 
         ...(isFetchMore.value && { fetchMore: { lastRow, hasMore: hasMore.value } }),
+        ...payload,
       })
     }
     // !SECTION
