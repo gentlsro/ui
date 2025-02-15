@@ -127,8 +127,8 @@ syncRef(toRef(mergedProps.value, 'initialSchemaConfig'), initialSchemaConfig, { 
 
 // When columns change, make sure to get their real widths
 watch(visibleColumns, cols => {
-  requestAnimationFrame(() => {
-    console.log(cols)
+  nextTick(() => {
+    console.log('watch')
     cols.forEach(col => col._width = col.getWidth())
 
     // Idk, it just requires a second tick re-measure the scrollbars
@@ -164,8 +164,14 @@ const hasToolbar = computed(() => {
 })
 
 tableInitialize()
-
 defineExpose(tableGetExposed())
+
+onMounted(() => {
+  nextTick(() => {
+    console.log('mounted')
+    visibleColumns.value.forEach(col => col._width = col.getWidth())
+  })
+})
 
 // We need to reset the store when the component is unmounted
 onUnmounted(() => {
