@@ -128,6 +128,7 @@ syncRef(toRef(mergedProps.value, 'initialSchemaConfig'), initialSchemaConfig, { 
 // When columns change, make sure to get their real widths
 watch(visibleColumns, cols => {
   nextTick(() => {
+    console.log(cols)
     cols.forEach(col => col._width = col.getWidth())
 
     // Idk, it just requires a second tick re-measure the scrollbars
@@ -136,7 +137,7 @@ watch(visibleColumns, cols => {
       totalsEl.value?.measure()
     })
   })
-}, { immediate: true })
+})
 
 const hasTop = computed(() => {
   const TOP_FEATURES = [
