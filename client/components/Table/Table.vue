@@ -136,7 +136,7 @@ watch(visibleColumns, cols => {
       totalsEl.value?.measure()
     })
   })
-})
+}, { immediate: true })
 
 const hasTop = computed(() => {
   const TOP_FEATURES = [

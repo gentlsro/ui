@@ -30,7 +30,6 @@ const contentClass = computed(() => {
 
 function getSplitterLeft(splitter: ITableSplitter) {
   const { column } = splitter
-  console.log('Log ~ getSplitterLeft ~ column:', column)
 
   // We move the splitter by the scrollX value when the column is frozen
   const offsetX = column.semiFrozen ? headerX.value : 0

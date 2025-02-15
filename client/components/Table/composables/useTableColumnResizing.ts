@@ -35,7 +35,6 @@ export function useTableColumnResizing() {
 
   const columnSplitters = computed(() => {
     const splitters: ITableSplitter[] = []
-    console.log('Log ~ columnSplitters ~ visibleColumns.value:', visibleColumns.value)
 
     if (!visibleColumns.value.length) {
       return splitters
