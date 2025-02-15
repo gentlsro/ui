@@ -158,7 +158,7 @@ const filterComponentProps = computed(() => {
   <!-- Custom filter component -->
   <Component
     :is="customFilterComponent.component"
-    v-if="customFilterComponent"
+    v-else-if="customFilterComponent"
     ref="valueInputEl"
     v-model="filterValue"
     :readonly="!editable"
