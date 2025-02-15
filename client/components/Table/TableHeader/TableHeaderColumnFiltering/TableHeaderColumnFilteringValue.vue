@@ -40,22 +40,28 @@ const {
 
 // Custom filter component
 const component = getInputByDataType(column.value.dataType || 'string')
+const columnFilterComponentC = toRaw(column.value?.filterComponent?.component)
 
 const customFilterComponent = computed(() => {
-  const customFilterComponent = column.value?.filterComponent
-  const isValidComparator = !customFilterComponent?.comparators.length
-    || customFilterComponent?.comparators.includes(item.value.comparator)
+  // If column definition has its own filter component, we use it
+  const columnFilterComponent = column.value?.filterComponent
+  const isValidComparator = !columnFilterComponent?.comparators.length
+    || columnFilterComponent?.comparators.includes(item.value.comparator)
 
-  // When using a comparator that is defined to have a custom filter component, we use it
-  if (customFilterComponent && isValidComparator) {
-    return markRaw(customFilterComponent)
+  if (columnFilterComponent && isValidComparator) {
+    return {
+      ...columnFilterComponent,
+
+      // If this is not done, vue complains about component being reactive
+      component: columnFilterComponentC,
+    }
   }
 
-  // When using a getFilterComponent props, we try to apply it
+  // If `getFilterComponent` is defined, we try to apply it
   if (getFilterComponent.value) {
     const filterComponent = (getFilterComponent.value(column.value, item.value)) as TableColumn['filterComponent']
-    const isValidComparator = !filterComponent?.comparators.length
-      || filterComponent?.comparators.includes(item.value.comparator)
+    const isValidComparator = !filterComponent?.comparators?.length
+      || filterComponent?.comparators?.includes(item.value.comparator)
 
     if (!filterComponent || !isValidComparator) {
       return undefined
