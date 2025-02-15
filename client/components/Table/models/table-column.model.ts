@@ -437,6 +437,8 @@ export class TableColumn<T = IItem> {
    */
   getWidth() {
     const el = document.querySelector(`[data-column="${this.field}"]`)
+    console.log(`[data-column="${this.field}"]`)
+    console.log(el)
 
     if (!el) {
       return 0
