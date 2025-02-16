@@ -2,7 +2,7 @@ export type IListItem = {
   /**
    * The item reference (original object)
    */
-  ref: IItem
+  ref: any
 
   /**
    * The unique ID of the item

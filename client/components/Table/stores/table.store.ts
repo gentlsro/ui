@@ -153,7 +153,7 @@ export function useTableStore(
     // !SECTION
 
     // SECTION Rows
-    const rows = ref<IItem[]>(tableProps?.rows ?? [])
+    const rows = ref<any[]>(tableProps?.rows ?? [])
     const totalRows = ref(0)
     const rowsLimit = ref(tableProps?.rowsLimit ?? 0)
     const hasMore = ref(false)

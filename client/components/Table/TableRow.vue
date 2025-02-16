@@ -18,7 +18,7 @@ import { tableSelectRow } from './functions/table-select-row'
 import { useTableStore } from './stores/table.store'
 
 type IProps = Pick<ITableProps, 'ui' | 'editable' | 'to'> & {
-  row: IItem | IItem[]
+  row: any | any[]
   index: number
 }
 
@@ -59,7 +59,7 @@ const {
 // Layout
 const [DefineValueTemplate, ReuseValueTemplate] = createReusableTemplate<{
   column: IRowColumn
-  row: IItem
+  row: any
   isSelectable: boolean
 }>()
 
@@ -78,7 +78,7 @@ const rowDataArray = computed(() => {
     ? props.row
     : [props.row]
 
-  return rowArray.map((row: IItem) => {
+  return rowArray.map((row: any) => {
     return {
       row,
       isSelectable: !selectionConfig.value?.disabled?.(row),
