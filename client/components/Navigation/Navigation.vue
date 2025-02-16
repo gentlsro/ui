@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { uiConfig } from '$uiConfig'
+
 // Types
 import type { INavigationProps } from './types/navigation-props.type'
 
@@ -26,6 +28,7 @@ const mergedProps = computed(() => {
 
 // Layout
 const isInitialized = ref(false)
+const minHeight = uiConfig.navigation.defaultNavigationHeight
 const headerEl = useTemplateRef('headerEl')
 const navigationEl = useTemplateRef('navigationEl')
 const { height } = useElementSize(headerEl)
@@ -68,6 +71,7 @@ const isNavigationHidden = computed(() => {
 
   const hasScrollerMoreThanNavigationHeight = y.value >= navigationEl.value.offsetHeight
   const hasScrolledDown = lastScrollDirection.value === 'down'
+
   const hasScrolledUpEnough = !(
     diff.value > SCROLL_TRIGGER_PX && lastScrollDirection.value === 'up'
   )
@@ -89,51 +93,28 @@ onMounted(() => {
     z="$zNavigation"
     class="navigation-wrapper"
     :class="[
-      mergedProps.ui?.navigationClass,
+      mergedProps.ui?.headerClass,
       {
         'has-shadow': isScrolled && !noShadow,
         'is-hidden': isNavigationHidden && !isDrawerOpen.left && !isDrawerOpen.right,
         'is-initialized': isInitialized,
       },
     ]"
+    :style="{ ...mergedProps.ui?.headerStyle, minHeight: `${minHeight}px` }"
   >
     <div
       ref="navigationEl"
-      class="navigation"
+      :class="mergedProps?.ui?.navigationClass"
+      :style="mergedProps?.ui?.navigationStyle"
     >
-      <nav flex="~ 1 gap-x-2 gap-y-1 wrap">
-        <slot name="left" />
-      </nav>
-
-      <slot name="before-actions" />
-
-      <!-- Theme & Locale & Account -->
-      <div
-        v-if="!noToolbar"
-        class="toolbar"
-        :class="mergedProps.ui?.toolbarClass"
-        :style="mergedProps.ui?.toolbarStyle"
-      >
-        <slot name="prepend-actions" />
-
-        <slot name="actions">
-          <ThemeToggle />
-          <LocaleSwitch />
-        </slot>
-
-        <slot name="append-actions" />
-      </div>
-
-      <slot name="after-actions" />
+      <slot />
     </div>
-
-    <div id="nav-placeholder" />
   </header>
 </template>
 
 <style lang="scss" scoped>
 header {
-  @apply relative top-0 inset-inline-0 transition-transform ease-linear;
+  @apply relative flex top-0 inset-inline-0 transition-transform ease-linear;
 
   &.is-hidden {
     @apply -translate-y-100%;
@@ -141,27 +122,6 @@ header {
 
   &.is-initialized {
     @apply fixed;
-  }
-
-  &.has-shadow:not(:has(~ main .has-breadcrumbs)) {
-    @apply shadow-consistent shadow-ca;
-  }
-
-  .toolbar {
-    @apply flex gap-1 self-start items-center;
-
-    .environment {
-      @apply absolute left-50% -translate-x-1/2 p-y-1 p-x-2 color-white rounded-custom
-        border-2 border-white;
-    }
-  }
-}
-
-.navigation {
-  @apply w-full flex flex-gap-2 p-x-1;
-
-  &-wrapper {
-    @apply flex flex-col justify-center min-h-$navHeight;
   }
 }
 </style>

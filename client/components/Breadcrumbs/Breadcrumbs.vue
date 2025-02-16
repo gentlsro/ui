@@ -95,7 +95,7 @@ const breadcrumbsItems = computed(() => {
 
 <style lang="scss">
 .breadcrumbs {
-  @apply flex flex-gap-x-1 items-center text-sm m-t-2 m-b-1 overflow-auto;
+  @apply flex flex-gap-x-1 items-center text-sm overflow-auto;
 
   &-wrapper {
     @apply flex gap-1 items-center;

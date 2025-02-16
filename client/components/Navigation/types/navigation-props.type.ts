@@ -21,6 +21,16 @@ export type INavigationProps = {
    */
   ui?: {
     /**
+     * Class to apply to the header (wrapper)
+     */
+    headerClass?: ClassType
+
+    /**
+     * Style to apply to the header (wrapper)
+     */
+    headerStyle?: CSSProperties
+
+    /**
      * Class to apply to the navigation
      */
     navigationClass?: ClassType
@@ -29,15 +39,5 @@ export type INavigationProps = {
      * Style to apply to the navigation
      */
     navigationStyle?: CSSProperties
-
-    /**
-     * Class to apply to the toolbar
-     */
-    toolbarClass?: ClassType
-
-    /**
-     * Style to apply to the toolbar
-     */
-    toolbarStyle?: CSSProperties
   }
 }

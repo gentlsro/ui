@@ -128,7 +128,7 @@ const defaultComponentsConfig = {
     props: {
       ui: () => ({
         wrapperClass: 'p-x-1 lg:p-x-3',
-        breadcrumbsClass: 'rounded-custom',
+        breadcrumbsClass: 'rounded-custom m-t-2 m-b-1',
       }),
     },
     home: {
@@ -704,11 +704,7 @@ const defaultComponentsConfig = {
       noShadow: undefined,
       noHide: undefined,
       ui: () => ({
-        navigationClass: 'bg-primary',
-        toolbarClass: [
-          'p-y-2px p-x-2px !gap-0 bg-white dark:bg-darker rounded-full m-y-1',
-          'hover:(outline-1 outline-white outline-solid outline-offset-1)',
-        ],
+        headerClass: 'bg-primary',
       }),
     },
     defaultNavigationHeight: 48,
