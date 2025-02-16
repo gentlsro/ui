@@ -1,6 +1,4 @@
 // @unocss-include
-// Types
-import type { PropsDefaults } from './client/functions/get-component-props'
 
 // Component types
 import type { IBadgeProps } from './client/components/Badge/types/badge-props.type'
@@ -66,7 +64,7 @@ import type { ISelectorProps } from './client/components/Selector/types/selector
 import type { ITableProps } from './client/components/Table/types/table-props.type'
 import type { IQueryBuilderProps } from './client/components/QueryBuilder/types/query-builder-props.type'
 
-const defaultComponentsConfig = {
+export const defaultComponentsConfig = {
   // Badge
   badge: {
     props: {
@@ -118,7 +116,7 @@ const defaultComponentsConfig = {
       to: undefined,
       tooltip: undefined,
       type: 'button',
-      ui: () => ({}),
+      ui: {},
     },
     merge: ['ui'],
   },
@@ -126,10 +124,10 @@ const defaultComponentsConfig = {
   // Breadcrumbs
   breadcrumbs: {
     props: {
-      ui: () => ({
+      ui: {
         wrapperClass: 'p-x-1 lg:p-x-3',
-        breadcrumbsClass: 'rounded-custom m-t-2 m-b-1',
-      }),
+        breadcrumbsClass: 'rounded-custom',
+      },
     },
     home: {
       icon: 'i-lucide:home',
@@ -145,9 +143,9 @@ const defaultComponentsConfig = {
     props: {
       buttons: undefined,
       modelValue: undefined,
-      ui: () => ({
+      ui: {
         activeClass: 'bg-primary color-white',
-      }),
+      },
     },
     merge: ['ui'],
   },
@@ -168,7 +166,7 @@ const defaultComponentsConfig = {
       name: undefined,
       size: 'sm',
       uncheckValue: false,
-      ui: () => ({}),
+      ui: {},
     },
     merge: ['ui'],
   },
@@ -195,11 +193,11 @@ const defaultComponentsConfig = {
       modelValue: undefined,
       noSeparator: true,
       title: undefined,
-      ui: () => ({
+      ui: {
         headerClass: isOpen => isOpen
           ? 'bg-white dark:bg-dark-700'
           : 'bg-white dark:bg-dark-700',
-      }),
+      },
     },
     merge: ['ui'],
   },
@@ -208,10 +206,10 @@ const defaultComponentsConfig = {
   colorInput: {
     props: {
       stackLabel: true,
-      disallowedColors: () => [],
-      ui: () => ({
+      disallowedColors: [],
+      ui: {
         borderRadius: '0.5rem',
-      }),
+      },
     },
     merge: ['ui'],
   },
@@ -230,10 +228,10 @@ const defaultComponentsConfig = {
   // Crud buttons
   crudBtns: {
     props: {
-      btnProps: () => ({
+      btnProps: {
         noDim: true,
         noUppercase: true,
-      }),
+      },
       label: undefined,
       loading: undefined,
       disabled: undefined,
@@ -250,9 +248,9 @@ const defaultComponentsConfig = {
       size: 'md',
       fractionDigits: 2,
       currencyPosition: 'prepend',
-      ui: () => ({
+      ui: {
         borderRadius: '0.5rem',
-      }),
+      },
     },
     merge: ['ui'],
   },
@@ -270,9 +268,9 @@ const defaultComponentsConfig = {
       required: undefined,
       size: 'md',
       stackLabel: true,
-      ui: () => ({
+      ui: {
         borderRadius: '0.5rem',
-      }),
+      },
     },
     merge: ['ui'],
   },
@@ -280,7 +278,7 @@ const defaultComponentsConfig = {
   // DatePicker
   datePicker: {
     props: {
-      excludedDays: () => [],
+      excludedDays: [],
       modelValue: undefined,
     },
   },
@@ -296,9 +294,9 @@ const defaultComponentsConfig = {
       persistent: undefined,
       title: undefined,
       transitionDuration: 250,
-      ui: () => ({
+      ui: {
         headerClass: 'font-semibold',
-      }),
+      },
     },
     merge: ['ui'],
   },
@@ -314,9 +312,9 @@ const defaultComponentsConfig = {
       side: 'right',
       title: undefined,
       width: 480,
-      ui: () => ({
+      ui: {
         titleClass: 'p-x-2',
-      }),
+      },
     },
     merge: ['ui'],
   },
@@ -324,14 +322,14 @@ const defaultComponentsConfig = {
   // DurationInput
   durationInput: {
     props: {
-      allowedUnits: () => ['minute', 'hour', 'day'],
+      allowedUnits: ['minute', 'hour', 'day'],
       initialDurationUnit: 'hour',
       errorTakesSpace: true,
       errorVisible: true,
       size: 'md',
-      ui: () => ({
+      ui: {
         borderRadius: '0.5rem',
-      }),
+      },
     },
     merge: ['ui'],
   },
@@ -345,10 +343,10 @@ const defaultComponentsConfig = {
       noContent: undefined,
       hasContent: undefined,
       stackLabel: true,
-      ui: () => ({
+      ui: {
         borderRadius: '0.5rem',
-      }),
-      inputProps: () => ({}),
+      },
+      inputProps: {},
     },
     merge: ['ui', 'inputProps'],
   },
@@ -356,9 +354,9 @@ const defaultComponentsConfig = {
   // FieldWithFormatter
   fieldWithFormatter: {
     props: {
-      ui: () => ({
+      ui: {
         borderRadius: '0.5rem',
-      }),
+      },
     },
   },
 
@@ -375,11 +373,11 @@ const defaultComponentsConfig = {
       noPreview: undefined,
       noBorder: true,
       activeLabelColor: 'unset',
-      ui: () => ({
+      ui: {
         borderRadius: '0.5rem',
         inputContainerClass: '!bg-transparent',
         inputClass: '!p-0',
-      }),
+      },
     },
     merge: ['ui'],
   },
@@ -398,13 +396,13 @@ const defaultComponentsConfig = {
       noPreview: undefined,
       noBorder: undefined,
       size: 'md',
-      ui: () => ({
+      ui: {
         borderRadius: '0.5rem',
         inputClass: 'flex items-center',
         inputInnerContainerClass: 'cursor-pointer',
         inputContainerClass: 'cursor-pointer',
         contentClass: 'cursor-pointer',
-      }),
+      },
     },
     merge: ['ui'],
   },
@@ -418,22 +416,22 @@ const defaultComponentsConfig = {
       submitConfirmation: undefined,
       focusFirstInput: true,
       noShortcuts: undefined,
-      submitBtnProps: () => ({
+      submitBtnProps: {
         icon: 'i-iconamoon:send-bold',
-      }),
-      cancelBtnProps: () => ({}),
+      },
+      cancelBtnProps: {},
       preventSubmitOnEnter: true,
-      errorsSectionProps: () => ({
+      errorsSectionProps: {
         ui: { sectionClass: 'flex flex-col gap-y-2 order-first' },
-      }),
-      ui: () => ({
+      },
+      ui: {
         submitWrapperClass: 'm-l-auto',
         contentClass: 'flex flex-col grow p-2 gap-2 overflow-auto',
         controlsClass: 'border-t-1 border-ca sticky bottom-0 bg-white dark:bg-darker p-y-1 p-x-2',
         containerClass: 'flex flex-col grow overflow-auto',
         submitClass: 'bg-primary color-white w-40',
         cancelClass: 'w-40',
-      }),
+      },
     },
     confirmationInit: { enabled: true, required: false, editable: true },
     merge: ['ui', 'errorsSectionProps', 'cancelBtnProps', 'submitBtnProps'],
@@ -444,7 +442,7 @@ const defaultComponentsConfig = {
     props: {
       filled: undefined,
       highlighted: true,
-      ui: () => ({}),
+      ui: {},
     },
     merge: ['ui'],
   },
@@ -454,12 +452,12 @@ const defaultComponentsConfig = {
     props: {
       required: undefined,
       activeLabelColor: 'var(--color-primary)',
-      ui: () => ({
+      ui: {
         labelClass: [
           'color-truegray-600 active:color-blue-500',
           'dark:color-truegray-300 dark:active:color-blue-500',
         ],
-      }),
+      },
     },
     merge: ['ui'],
   },
@@ -481,10 +479,10 @@ const defaultComponentsConfig = {
       preferMargin: undefined,
       readonly: undefined,
       tooltip: undefined,
-      ui: () => ({
+      ui: {
         borderRadius: '0.5rem',
         inputContainerClass: 'bg-white dark:bg-black',
-      }),
+      },
     },
     merge: ['ui'],
   },
@@ -506,44 +504,43 @@ const defaultComponentsConfig = {
       itemKey: 'id',
       itemLabel: 'label',
       clearable: true,
-      ui: () => ({
+      ui: {
         moveHandleClass: 'p-t-2 color-ca',
         contentClass: hasSearch => hasSearch ? 'p-x-2 p-t-0' : 'p-2',
         searchClass: 'gap-1 p-2',
         rowClass: () => 'p-r-2 m-y-1px rounded-custom',
         rowStyle: ({ groupsCount }) => ({ paddingLeft: `${(groupsCount || 1) * 8}px` }),
         rowGroupStyle: ({ level }) => ({ paddingLeft: `${level * 8}px` }),
-      }),
+      },
       search: '',
-      searchConfig: () => ({
+      searchConfig: {
         enabled: true,
-        debounce: 0,
         fuseSearchToken: "'",
-      }),
-      sortingConfig: () => ({
+      },
+      sortingConfig: {
         enabled: true,
         sortBy: undefined,
-      }),
+      },
       selection: undefined,
-      selectionConfig: () => ({
+      selectionConfig: {
         enabled: false,
         multi: false,
-      }),
-      loadData: () => ({
+      },
+      loadData: {
         fnc: undefined,
         immediate: false,
         payloadKey: 'data',
         countKey: 'count',
-      }),
-      addConfig: () => ({
+      },
+      addConfig: {
         enabled: false,
         noLocalAdd: false,
         transformAddedItem: undefined,
-      }),
-      searchInputProps: () => ({
+      },
+      searchInputProps: {
         autofocus: true,
-      }),
-      modifiers: () => ({}),
+      },
+      modifiers: {},
     },
     merge: ['searchConfig', 'ui', 'sortingConfig', 'selectionConfig', 'loadData', 'addConfig', 'searchInputProps', 'modifiers'],
   },
@@ -584,9 +581,9 @@ const defaultComponentsConfig = {
       title: undefined,
       transitionDuration: 250,
       virtual: undefined,
-      ui: () => ({
+      ui: {
         headerClass: 'font-semibold',
-      }),
+      },
     },
     merge: ['ui'],
   },
@@ -625,9 +622,9 @@ const defaultComponentsConfig = {
       title: undefined,
       transitionDuration: 250,
       trigger: 'click',
-      ui: () => ({
+      ui: {
         contentClass: 'p-1 gap-y-3',
-      }),
+      },
       virtual: undefined,
 
     },
@@ -645,7 +642,7 @@ const defaultComponentsConfig = {
       persistent: undefined,
       title: undefined,
       transitionDuration: 250,
-      ui: () => ({}),
+      ui: {},
 
       // Menu props
       beforeHideFnc: undefined,
@@ -679,12 +676,12 @@ const defaultComponentsConfig = {
     props: {
       previousValue: undefined,
       emptyValueString: '-',
-      ui: () => ({
+      ui: {
         iconClass: 'color-blue-500 dark:color-blue-700 h-6 w-6',
         labelClass: 'color-slate-600 dark:color-slate-300 font-rem-14 p-b-1',
         valueClass: 'font-rem-16',
         previousValueClass: 'color-purple-500 dark:color-purple-600',
-      }),
+      },
     },
     merge: ['ui'],
   },
@@ -703,9 +700,9 @@ const defaultComponentsConfig = {
       noToolbar: undefined,
       noShadow: undefined,
       noHide: undefined,
-      ui: () => ({
-        headerClass: 'bg-primary',
-      }),
+      ui: {
+        navigationClass: 'bg-primary',
+      },
     },
     defaultNavigationHeight: 48,
     merge: ['ui'],
@@ -740,9 +737,9 @@ const defaultComponentsConfig = {
       min: Number.NEGATIVE_INFINITY,
       max: Number.POSITIVE_INFINITY,
       step: 'auto',
-      ui: () => ({
+      ui: {
         borderRadius: '0.5rem',
-      }),
+      },
     },
     merge: ['ui'],
   },
@@ -759,11 +756,11 @@ const defaultComponentsConfig = {
       noBottom: undefined,
       side: 'left',
       width: 280,
-      ui: () => ({
+      ui: {
         contentClass: () => 'bg-primary color-white',
         bottomClass: () => 'bg-primary color-white p-1',
         fillerClass: () => 'border-b-1',
-      }),
+      },
     },
     merge: ['ui'],
   },
@@ -772,10 +769,10 @@ const defaultComponentsConfig = {
   pageTitle: {
     props: {
       title: undefined,
-      ui: () => ({
+      ui: {
         titleClass: 'font-700',
         containerClass: 'max-w-screen-lg p-y-4 m-b-2 m-l-2',
-      }),
+      },
     },
     merge: ['ui'],
   },
@@ -786,10 +783,10 @@ const defaultComponentsConfig = {
       breadcrumbs: true,
       moveContent: false,
       pad: true,
-      ui: () => ({
+      ui: {
         containerClass: undefined,
         contentClass: undefined,
-      }),
+      },
     },
     merge: ['ui'],
   },
@@ -822,7 +819,7 @@ const defaultComponentsConfig = {
       name: undefined,
       size: 'sm',
       val: undefined,
-      ui: () => ({}),
+      ui: {},
     },
     merge: ['ui'],
   },
@@ -831,9 +828,9 @@ const defaultComponentsConfig = {
   scroller: {
     props: {
       arrows: 'inside',
-      ui: () => ({
+      ui: {
         contentClass: 'gap-1',
-      }),
+      },
     },
     merge: ['ui'],
   },
@@ -855,7 +852,7 @@ const defaultComponentsConfig = {
       required: undefined,
       errorVisible: true,
       errorTakesSpace: true,
-      ui: () => ({}),
+      ui: {},
     },
     merge: ['ui'],
   },
@@ -868,10 +865,10 @@ const defaultComponentsConfig = {
       title: undefined,
       subtitle: undefined,
       titleElement: undefined,
-      ui: () => ({
+      ui: {
         sectionClass: 'max-w-screen-xl p-2',
         contentClass: 'gap-y-5 gap-x-3 md:p-3 p-t-3',
-      }),
+      },
     },
     merge: ['ui'],
   },
@@ -888,21 +885,21 @@ const defaultComponentsConfig = {
       clearOptionsOnMenuHide: false,
       stackLabel: true,
       errorTakesSpace: true,
-      ui: () => ({
+      ui: {
         borderRadius: '0.5rem',
         inputClass: 'flex items-center',
-      }),
-      listProps: () => ({
+      },
+      listProps: {
         clearable: false,
         ui: {
           contentClass: hasSearch => hasSearch ? 'p-x-2 p-b-2' : 'p-2',
           searchClass: 'gap-1 p-2',
         },
-      }),
-      loadData: () => ({
+      },
+      loadData: {
         onSearch: 300,
-      }),
-      menuProps: () => ({
+      },
+      menuProps: {
         position: 'top',
         fit: false,
         manual: true,
@@ -911,7 +908,7 @@ const defaultComponentsConfig = {
         noArrow: true,
         offset: 0,
         ui: { contentClass: 'p-0' },
-      }),
+      },
     },
     merge: ['ui', 'loadData', 'listProps', 'menuProps'],
   },
@@ -950,47 +947,46 @@ const defaultComponentsConfig = {
       minimumColumnWidth: 80,
       breakpoint: 600,
       editable: true,
-      autoFit: () => ({
+      autoFit: {
         onInit: true,
-        enabled: true,
         mode: 'fit',
         considerHeader: false,
         maxColumnWidthChars: 100,
         rowsLimit: 100,
-      }),
+      },
       rowsLimit: 1000,
       emptyValue: null,
       rowKey: 'id',
       separator: 'horizontal',
-      splitRows: () => [
+      splitRows: [
         { breakpoint: 600, count: 2 },
         { breakpoint: 800, count: 3 },
         { breakpoint: 1000, count: 1 },
       ],
-      modifiers: () => ({
+      modifiers: {
         caseInsensitive: true,
         useUrl: true,
-      }),
-      paginationConfig: () => ({
+      },
+      paginationConfig: {
         enabled: false,
         pageSize: 25,
         options: [10, 25, 50, 100],
-      }),
-      loadMetaData: () => ({
+      },
+      loadMetaData: {
         columnsKey: 'columns',
         layoutsKey: 'layouts',
         defaultLayoutKey: 'defaultLayout',
-      }),
-      queryBuilderProps: () => ({
+      },
+      queryBuilderProps: {
         allowComparatorsOfSameType: false,
         showColumnFilters: true,
         editable: true,
-      }),
-      selectionConfig: () => ({
+      },
+      selectionConfig: {
         multi: true,
-      }),
-      features: () => ['export', 'queryBuilder', 'queryBuilderDialog', 'filterChips', 'search', 'sorting', 'autofit', 'columnSelection', 'layouts'],
-      ui: () => ({
+      },
+      features: ['export', 'queryBuilder', 'queryBuilderDialog', 'filterChips', 'search', 'sorting', 'autofit', 'columnSelection', 'layouts'],
+      ui: {
         headerCellClass: 'p-x-1 p-y-2px bg-white dark:bg-black',
         headerCellInnerClass: 'font-rem-13 font-semibold tracking-wide leading-tight line-clamp-2',
         cellClass: 'overflow-hidden p-x-2',
@@ -998,8 +994,8 @@ const defaultComponentsConfig = {
         alternateRowClass: 'bg-primary/15 dark:bg-black',
         rowClass: 'hover:bg-primary/25',
         totalsCellClass: 'font-rem-13 font-semibold tracking-wide p-y-2 border-t-1 border-black dark:border-white',
-      }),
-      initialSchemaConfig: () => ({}),
+      },
+      initialSchemaConfig: {},
       getFilterComponent: () => undefined,
     },
     merge: [
@@ -1019,11 +1015,11 @@ const defaultComponentsConfig = {
   tabs: {
     props: {
       noNav: undefined,
-      ui: () => ({
+      ui: {
         tabClass: 'fit',
         navigationContentClass: 'flex gap-1',
         tabNavBtnClass: isActive => isActive ? 'bg-primary color-white' : 'color-ca',
-      }),
+      },
     },
     merge: ['ui'],
   },
@@ -1036,13 +1032,13 @@ const defaultComponentsConfig = {
       disabled: undefined,
       errorTakesSpace: true,
       errorVisible: true,
-      mask: () => ({ mask: /.*/ }),
+      mask: { mask: /.*/ },
       required: undefined,
       size: 'md',
       stackLabel: true,
-      ui: () => ({
+      ui: {
         borderRadius: '0.5rem',
-      }),
+      },
     },
     merge: ['ui'],
   },
@@ -1056,13 +1052,13 @@ const defaultComponentsConfig = {
       emptyValue: undefined,
       errorTakesSpace: true,
       errorVisible: true,
-      mask: () => ({ mask: /.*/ }),
+      mask: { mask: /.*/ },
       required: undefined,
       size: 'md',
       stackLabel: true,
-      ui: () => ({
+      ui: {
         borderRadius: '0.5rem',
-      }),
+      },
     },
     merge: ['ui'],
   },
@@ -1082,9 +1078,9 @@ const defaultComponentsConfig = {
       errorTakesSpace: true,
       errorVisible: true,
       size: 'md',
-      ui: () => ({
+      ui: {
         borderRadius: '0.5rem',
-      }),
+      },
     },
     merge: ['ui'],
   },
@@ -1104,7 +1100,7 @@ const defaultComponentsConfig = {
       readonly: undefined,
       size: 'sm',
       uncheckValue: false,
-      ui: () => ({
+      ui: {
         toggleClass: state => {
           const defaultClass = 'rounded-full border-1 border-ca hover:border-true-gray-400'
 
@@ -1129,7 +1125,7 @@ const defaultComponentsConfig = {
               return [defaultClass, 'bg-neutral']
           }
         },
-      }),
+      },
     },
     merge: ['ui'],
   },
@@ -1149,17 +1145,17 @@ const defaultComponentsConfig = {
   // Tree
   tree: {
     props: {
-      collapsingConfig: () => ({ showCollapsedWhenSearched: true }),
+      collapsingConfig: { showCollapsedWhenSearched: true },
       connectors: true,
       loadChildren: undefined,
       maxLevel: Number.MAX_SAFE_INTEGER,
       meta: undefined,
-      modelValue: () => [],
+      modelValue: [],
       search: '',
-      searchConfig: () => ({ enabled: true, fnc: undefined }),
+      searchConfig: { enabled: true, fnc: undefined },
       selection: undefined,
-      selectionConfig: () => ({ multi: false, emitKey: false }),
-      ui: () => ({ nodePadding: '1rem' }),
+      selectionConfig: { multi: false, emitKey: false },
+      ui: { nodePadding: '1rem' },
     },
     merge: ['collapsingConfig', 'searchConfig', 'selectionConfig', 'ui'],
   },
@@ -1189,9 +1185,9 @@ const defaultComponentsConfig = {
   // YearMonthSelector
   yearMonthSelector: {
     props: {
-      ui: () => ({
+      ui: {
         borderRadius: '0.5rem',
-      }),
+      },
     },
     merge: ['ui'],
   },
@@ -1206,7 +1202,7 @@ const defaultComponentsConfig = {
 } satisfies IUIConfig
 
 type IConfigItem<T> = {
-  props: PropsDefaults<Partial<T>>
+  props: Partial<T>
   merge?: Array<keyof T>
 }
 

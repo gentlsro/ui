@@ -15,14 +15,6 @@ type ConfigWithMergeKeys<T> = {
   [K in keyof T]: T[K] extends { merge: any } ? K : never
 }[keyof T]
 
-export type PropsDefaults<T> = {
-  [K in keyof T]: NonNullable<T[K]> extends Function
-    ? T[K]
-    : NonNullable<T[K]> extends Array<any> | Record<string, any>
-      ? () => NonNullable<T[K]>
-      : T[K]
-}
-
 type PickProps<T, Keys extends readonly (keyof T)[]> = {
   [K in Keys[number]]: GetValue<T[K]>;
 }
