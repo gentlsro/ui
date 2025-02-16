@@ -10,11 +10,6 @@ export type IPageWrapperProps = {
   breadcrumbs?: boolean
 
   /**
-   * If true, the TopBar component will be included in the page
-   */
-  includeTopBar?: boolean
-
-  /**
    * If true, Loading component will be shown instead of the page content
    */
   loading?: boolean
