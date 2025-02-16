@@ -101,6 +101,11 @@ export default defineNuxtConfig({
     $uiLayer: resolve('.'),
   },
 
+  build: {
+    // No touchy or I cut fingers
+    transpile: ['imask', 'vue-imask'],
+  },
+
   // Future
   future: {
     compatibilityVersion: 4,
