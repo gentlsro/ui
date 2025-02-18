@@ -567,7 +567,7 @@ export function useTableStore(
       const countFetched = get(resModified, countKey) ?? 0
 
       rows.value = isFetchMore.value ? [...rows.value, ...rowsFetched] : rowsFetched
-      totalRows.value = countFetched ?? totalRows.value
+      totalRows.value = isFetchMore.value ? totalRows.value : countFetched
       hasMore.value = rows.value.length < totalRows.value
 
       if (!isFetchMore.value) {
