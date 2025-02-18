@@ -25,7 +25,7 @@
     "invert-color": "2.0.0",
     "lodash-es": "4.17.21",
     "mezr": "1.1.0",
-    "nuxt": "3.15.3",
+    "nuxt": "3.15.4",
     "perfect-scrollbar": "1.5.6",
     "pinia": "2.3.1",
     "pinia-plugin-persistedstate": "4.2.0",
