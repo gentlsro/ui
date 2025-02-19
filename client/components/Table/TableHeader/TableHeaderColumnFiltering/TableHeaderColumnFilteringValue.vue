@@ -39,8 +39,7 @@ const {
 } = useQueryBuilderItemUtils(item)
 
 // Custom filter component
-const component = getInputByDataType(column.value.dataType || 'string')
-console.log('Log ~ component:', component)
+const component = computed(() => getInputByDataType(column.value.dataType || 'string'))
 const columnFilterComponentC = toRaw(column.value?.filterComponent?.component)
 
 const customFilterComponent = computed(() => {

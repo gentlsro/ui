@@ -11,14 +11,14 @@ type IProps = {
 
 const props = defineProps<IProps>()
 
-const component = getInputByDataType(props.dataType)
+const component = computed(() => getInputByDataType(props.dataType))
 
 const shortcutIcon = computed(() => {
   if (props.custom) {
     return 'i-carbon:area-custom'
   }
 
-  return component?.icon
+  return component.value?.icon
 })
 </script>
 

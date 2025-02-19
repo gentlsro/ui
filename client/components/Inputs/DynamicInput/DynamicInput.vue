@@ -12,7 +12,7 @@ type IProps = {
 
 const props = defineProps<IProps>()
 
-const component = getInputByDataType(props.dataType)
+const component = computed(() => getInputByDataType(props.dataType))
 const model = defineModel<any>()
 </script>
 
