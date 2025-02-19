@@ -13,6 +13,9 @@ export { BUTTON_PRESET } from './client/components/Button/constants/button-prese
 // Colors
 export { useColors } from './shared/composables/useColors'
 
+// Dynamic input
+export { getInputByDataType } from './client/components/Inputs/DynamicInput/constants/input-by-datatype'
+
 // Files
 export { ICON_BY_FILE_EXTENSION } from './client/components/Inputs/FileInput/constants/icon-by-file-extension'
 export { ICON_BY_FILE_TYPE } from './client/components/Inputs/FileInput/constants/icon-by-file-type'
