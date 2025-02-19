@@ -216,4 +216,6 @@ const filterComponentProps = computed(() => {
     :placeholder="$t('queryBuilder.value')"
     data-cy="qb-item__content-value"
   />
+
+  {{ component?.props }}
 </template>
