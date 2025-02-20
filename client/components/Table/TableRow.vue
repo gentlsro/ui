@@ -53,8 +53,7 @@ const {
   isEditingCell: isEditingCellStore,
   cellEditValue,
   emits,
-  rowClickable,
-  saveCellEditValue,
+  rowClickable,,
 } = storeToRefs(tableStore)
 
 // Layout
@@ -348,7 +347,7 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
               size="xs"
               preset="SAVE"
               bg="white dark:black"
-              @click="saveCellEditValue"
+              @click.stop.prevent="tableStore.saveCellEditValue"
             />
           </template>
 
