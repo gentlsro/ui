@@ -53,7 +53,7 @@ const {
   isEditingCell: isEditingCellStore,
   cellEditValue,
   emits,
-  rowClickable,,
+  rowClickable,
 } = storeToRefs(tableStore)
 
 // Layout
