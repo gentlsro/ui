@@ -12,7 +12,6 @@ const props = withDefaults(defineProps<IFileInputProps>(), {
 })
 
 defineEmits<{
-  (e: 'update:modelValue', val?: Datetime): void
   (e: 'focus'): void
   (e: 'blur'): void
 }>()
