@@ -24,6 +24,8 @@ export { ICON_BY_FILE_TYPE } from './client/components/Inputs/FileInput/constant
 export { useFormStore } from './client/components/Form/stores/form.store'
 
 // List
+
+export type { IListItem } from './client/components/List/types/list-item.type'
 export { useListStore } from './client/components/List/stores/list.store'
 export type { IListFetchPayload } from './client/components/List/types/list-fetch.type'
 

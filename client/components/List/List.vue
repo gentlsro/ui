@@ -10,7 +10,7 @@ import type { IListProps } from './types/list-props.type'
 import type { IListItemToAdd } from './types/list-item-to-add.type'
 
 // Functions
-import { useListKeyboard } from './composables/useListKeyboard'
+import { listGetExposed } from './functions/list-get-exposed'
 import { useListItemAdding } from './composables/useListItemAdding'
 import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
 
@@ -101,8 +101,7 @@ syncRef(isMounted, isMountedStore, { direction: 'ltr' })
 syncRef(toRef(props, 'hiddenItems'), storeHiddenItems, { direction: 'ltr' })
 syncRef(toRef(props, 'modifiers'), modifiers, { direction: 'ltr' })
 
-// Adding & Keyboard
-const { handleKey } = useListKeyboard({ registerKeyStroke: false })
+// Adding
 useListItemAdding()
 
 // Initial load data
@@ -127,7 +126,7 @@ onUnmounted(() => {
   delete pinia?.state.value[listStore.$id]
 })
 
-defineExpose({ handleKey })
+defineExpose(listGetExposed())
 </script>
 
 <template>
