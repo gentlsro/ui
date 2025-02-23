@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // Types
+import type { ITableEmits } from './types/file-input-emits.type'
 import type { IFileInputProps } from './types/file-input-props.type'
 
 // Functions
@@ -11,10 +12,7 @@ const props = withDefaults(defineProps<IFileInputProps>(), {
   ...getComponentProps('fileInputSimple'),
 })
 
-defineEmits<{
-  (e: 'focus'): void
-  (e: 'blur'): void
-}>()
+defineEmits<ITableEmits>()
 
 // Utils
 const { el, getFieldProps, handleFocusOrClick } = useFieldUtils({
