@@ -23,6 +23,14 @@ export function useSelector(payload: {
   const optionKey = toRef(props, 'optionKey', 'id')
 
   const hasContent = computed(() => {
+    if (props.hasContent) {
+      if (typeof props.hasContent === 'function') {
+        return props.hasContent(model.value)
+      }
+
+      return props.hasContent
+    }
+
     return Array.isArray(model.value)
       ? model.value.length > 0
       : !isNil(getListItemKey(model.value, optionKey.value)) && model.value !== ''

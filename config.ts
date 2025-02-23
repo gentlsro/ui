@@ -885,6 +885,7 @@ export const defaultComponentsConfig = {
       clearOptionsOnMenuHide: false,
       stackLabel: true,
       errorTakesSpace: true,
+      hasContent: undefined,
       ui: {
         borderRadius: '0.5rem',
         inputClass: 'flex items-center',
