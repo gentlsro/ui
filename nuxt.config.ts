@@ -11,7 +11,7 @@ import {
   transformerVariantGroup,
 } from 'unocss'
 
-import { createResolver } from '@nuxt/kit'
+import { createResolver } from 'nuxt/kit'
 
 // Preset
 import { gentlUIPreset } from './client/functions/unocss-preset'
