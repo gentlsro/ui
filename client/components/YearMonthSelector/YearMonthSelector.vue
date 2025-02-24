@@ -48,6 +48,10 @@ const isPickerActive = ref(false)
 const pickerState = ref('hide')
 
 function handlePickerIconClick(ev: MouseEvent) {
+  if (!isEditable.value) {
+    return
+  }
+
   if (isPickerActive.value) {
     ev.preventDefault()
     ev.stopPropagation()
@@ -64,7 +68,7 @@ function handleMonthSelect() {
 }
 
 // Field
-const { el, getFieldProps, handleFocusOrClick } = useFieldUtils({
+const { el, getFieldProps, handleFocusOrClick, isEditable } = useFieldUtils({
   props,
   onBeforeFocus: ev => onBeforeFocus?.(ev, isPickerActive) ?? {},
   onFocus: ev => onFocus ? onFocus(ev, isPickerActive) : isPickerActive.value = true,
@@ -144,6 +148,12 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .picker-icon {
-  @apply cursor-pointer color-ca m-x-2 h-5.5 w-5.5;
+  @apply cursor-default color-ca m-x-2 h-5.5 w-5.5;
+}
+
+.wrapper__body:not(.is-readonly):not(.is-disabled) {
+  .picker-icon {
+    @apply cursor-pointer;
+  }
 }
 </style>

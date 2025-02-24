@@ -1,3 +1,3 @@
 <template>
-  UI
+  <YearMonthSelector readonly />
 </template>
