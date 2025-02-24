@@ -64,7 +64,7 @@ export type IInputWrapperProps = {
   noBorder?: boolean
 
   /**
-   * By default, when focusing the input, menus/dialogs that are not in the same context
+   * By default, when focusing the input, menus/dialogs that are not in the same context will get hidden
    * When this prop is true, the floating will not be hidden
    */
   noHideFloating?: boolean

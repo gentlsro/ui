@@ -41,8 +41,10 @@ const searchableColumnLabels = computed(() => {
           <MiniCard
             :label="$t('table.searchPossibleInColumns')"
             :value="searchableColumnLabels?.join(', ')"
-            value-class="!font-rem-12 color-ca"
-            label-class="!font-rem-14"
+            :ui="{
+              valueClass: 'font-rem-12 color-ca',
+              labelClass: 'font-rem-14',
+            }"
           />
 
           <p class="non-searchable-info">
