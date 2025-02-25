@@ -7,6 +7,7 @@ import { FilterItem } from '$utils'
 
 // Store
 import { useTableStore } from './stores/table.store'
+import type { IQueryBuilderItem } from '../QueryBuilder/types/query-builder-item-props.type'
 
 type IProps = Pick<ITableProps, 'queryBuilder' | 'queryBuilderProps'>
 
@@ -46,7 +47,8 @@ async function handleSubmit() {
   }
 
   // Sync the column filters
-  const modifiedColumnFilters = queryBuilderEl.value?.getModifiedColumnFilters()
+  const modifiedColumnFilters = queryBuilderEl.value
+    ?.getModifiedColumnFilters() as Array<{ field: string, filters: IQueryBuilderItem[] }>
 
   modifiedColumnFilters?.forEach(col => {
     const column = internalColumnsByField.value[col.field]
