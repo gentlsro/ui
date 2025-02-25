@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { merge } from 'lodash-es'
-
 // Types
 import type { IToggleProps, ToggleClass, ToggleState } from './types/toggle-props.type'
 
@@ -146,8 +144,8 @@ function handleKeyDown(e: KeyboardEvent) {
       >
         <slot name="bullet">
           <div
-            v-if="mergedProps?.ui.icon?.(model)"
-            :class="mergedProps?.ui.icon?.(model)"
+            v-if="mergedProps?.ui?.icon?.(model)"
+            :class="mergedProps?.ui?.icon?.(model)"
           />
         </slot>
       </div>

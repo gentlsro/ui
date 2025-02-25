@@ -1,7 +1,6 @@
 import { createVNode, render } from 'vue'
 import { skipHydrate } from 'pinia'
 import type { CSSProperties } from 'vue'
-import { merge } from 'lodash-es'
 import { uiConfig } from '$uiConfig'
 
 // Types

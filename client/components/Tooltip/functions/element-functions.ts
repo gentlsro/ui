@@ -1,5 +1,3 @@
-import { throttle } from 'lodash-es'
-
 const instance = getCurrentInstance()
 
 export function getTargetElement(target: any): any {

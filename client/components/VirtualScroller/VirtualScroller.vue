@@ -1,6 +1,5 @@
 <script setup lang="ts" generic="T">
 import type { CSSProperties } from 'vue'
-import { get } from 'lodash-es'
 import { getElementSize } from '$utils'
 
 // Types
