@@ -71,7 +71,7 @@ defineExpose({
     v-bind="wrapperProps"
     :id="inputId"
     :ui="mergedProps.ui"
-    :has-content="hasContent"
+    :has-content
     .focus="focus"
     @click="handleClickWrapper"
   >

@@ -36,11 +36,6 @@ export type ISelectorProps = IFieldProps & {
   clearOptionsOnMenuHide?: boolean
 
   /**
-   * A function to determine whether the selector has content
-   */
-  hasContent?: boolean | ((item: any) => boolean)
-
-  /**
    * When true, the options will be fetched immediately on initialization, without
    * waiting for the user to open the menu
    */
