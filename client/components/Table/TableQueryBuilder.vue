@@ -31,7 +31,8 @@ const nonHelperFilterableColumns = computed(() => {
 })
 
 function handleUpdateColumnFilter(columnFilter: IQueryBuilderItem) {
-  const modifiedColumnFilters = queryBuilderEl.value?.getModifiedColumnFilter(columnFilter) ?? []
+  const modifiedColumnFilters = queryBuilderEl.value
+    ?.getModifiedColumnFilter(columnFilter) as Array<{ field: string, filters: IQueryBuilderItem[] }>
 
   modifiedColumnFilters.forEach(col => {
     const column = internalColumnsByField.value[col.field]
