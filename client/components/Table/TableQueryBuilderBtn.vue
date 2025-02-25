@@ -1,7 +1,6 @@
 <script setup lang="ts">
 // Types
 import type { ITableProps } from './types/table-props.type'
-import type { IQueryBuilderItem } from '../QueryBuilder/types/query-builder-item-props.type'
 
 // Models
 import { FilterItem } from '$utils'
@@ -47,15 +46,15 @@ async function handleSubmit() {
   }
 
   // Sync the column filters
-  const modifiedColumnFilters = queryBuilderEl.value?.getModifiedColumnFilters() ?? []
+  const modifiedColumnFilters = queryBuilderEl.value?.getModifiedColumnFilters()
 
-  modifiedColumnFilters.forEach(col => {
+  modifiedColumnFilters?.forEach(col => {
     const column = internalColumnsByField.value[col.field]
 
     if (column) {
       column.filters = [
         ...column.filters.filter(f => f.nonInteractive),
-        ...col.filters.map((f: IQueryBuilderItem) => new FilterItem({ ...column, ...f })),
+        ...col.filters.map(f => new FilterItem({ ...column, ...f })),
       ]
     }
   })
