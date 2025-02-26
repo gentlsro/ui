@@ -13,6 +13,9 @@ export { BUTTON_PRESET } from './client/components/Button/constants/button-prese
 // Colors
 export { useColors } from './shared/composables/useColors'
 
+// Draggable
+export { useDragAndDrop } from './client/components/DragAndDrop/functions/useDragAndDrop'
+
 // Dynamic input
 export { getInputByDataType } from './client/components/Inputs/DynamicInput/constants/input-by-datatype'
 
@@ -24,7 +27,6 @@ export { ICON_BY_FILE_TYPE } from './client/components/Inputs/FileInput/constant
 export { useFormStore } from './client/components/Form/stores/form.store'
 
 // List
-
 export type { IListItem } from './client/components/List/types/list-item.type'
 export { useListStore } from './client/components/List/stores/list.store'
 export type { IListFetchPayload } from './client/components/List/types/list-fetch.type'
