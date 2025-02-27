@@ -220,9 +220,9 @@ onUnmounted(() => {
       v-if="$slots.prepend"
       #prepend
     >
-      {{ hasContent }}
       <slot name="prepend" />
     </template>
+    hasContent: {{ !!hasContent }}
 
     <!-- Content -->
     <slot>
