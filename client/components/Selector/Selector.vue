@@ -33,6 +33,9 @@ const props = withDefaults(defineProps<ISelectorProps>(), {
 })
 
 const emits = defineEmits<ISelectorEmits>()
+
+console.log(props)
+
 defineExpose({
   focus: () => handleFocusOrClick(),
   blur: () => isPickerActive.value = false,
@@ -222,7 +225,6 @@ onUnmounted(() => {
     >
       <slot name="prepend" />
     </template>
-    hasContent: {{ !!hasContent }}
 
     <!-- Content -->
     <slot>
