@@ -21,6 +21,7 @@ export function useListDragAndDrop() {
     draggedItem,
     dragMeta,
     itemKey,
+    emits,
   } = storeToRefs(useListStore())
 
   // Utils
@@ -199,6 +200,7 @@ export function useListDragAndDrop() {
 
     if (drag && !!dragMeta.value.target?.id) {
       items.value = moveItem(items.value, fromIdx, toIdx)
+      emits.value.itemMoved(draggedItem.value!.ref, items.value)
     }
 
     // Reset dragging

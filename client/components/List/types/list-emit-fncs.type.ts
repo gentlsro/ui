@@ -11,4 +11,5 @@ export type IListEmitFncs = {
   remove: (item: IListItemToAdd) => void
   itemClick: (row: IListItem) => void
   groupClick: (row: IGroupRow) => void
+  itemMoved: (item: any, items: any[]) => void
 }

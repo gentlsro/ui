@@ -13,4 +13,5 @@ export type IListEmits = {
   (e: 'click:item', row: IListItem): void
   (e: 'click:group', row: IGroupRow): void
   (e: 'change:contentSize', payload: { height: number, width: number }): void
+  (e: 'move:item', payload: { item: any, items: any[] }): void
 }

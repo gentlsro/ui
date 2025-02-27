@@ -267,7 +267,7 @@ defineExpose({
     >
       <HorizontalScroller
         class="shortcuts"
-        content-class="gap-x-1 p-x-2"
+        :ui="{ contentClass: 'gap-x-1 p-x-2' }"
         arrows="outside"
       >
         <Chip

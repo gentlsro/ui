@@ -66,6 +66,7 @@ storeEmits.value = {
   remove: (item: IListItemToAdd) => emits('remove:item', item),
   itemClick: (row: IListItem) => emits('click:item', row),
   groupClick: (row: IGroupRow) => emits('click:group', row),
+  itemMoved: (item, items) => emits('move:item', { item, items }),
 }
 
 // Layout

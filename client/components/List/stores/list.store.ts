@@ -361,6 +361,7 @@ export function useListStore(listId?: string, listProps?: IListProps) {
       remove: _item => {},
       itemClick: _row => {},
       groupClick: _row => {},
+      itemMoved: (_item, _items) => {},
     })
 
     return {
