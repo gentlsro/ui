@@ -206,7 +206,7 @@ const filterComponentProps = computed(() => {
   <!-- Primitive value -->
   <Component
     :is="component.component"
-    v-else-if="component?.component"
+    v-if="component?.component"
     ref="valueInputEl"
     v-model="filterValue"
     size="sm"
