@@ -1,3 +1,5 @@
+import { uiConfig } from '$uiConfig'
+
 // Types
 import type { IBreadcrumb } from '../types/breadcrumb.type'
 
@@ -8,7 +10,10 @@ export function useBreadcrumbs(
   breadcrumbsRef?: MaybeRefOrGetter<IBreadcrumb[]>,
   options?: { useLastBreadcrumbAsTitle?: boolean, title?: MaybeRefOrGetter<string> },
 ) {
-  const { useLastBreadcrumbAsTitle = true, title } = options ?? {}
+  const {
+    useLastBreadcrumbAsTitle = uiConfig.breadcrumbs.misc.useLastBreadcrumbAsTitle,
+    title,
+  } = options ?? {}
   const injectedBreadcrumbs = inject(breadcrumbsKey, ref([])) as Ref<IBreadcrumb[]>
 
   const breadcrumbs = computed(() => {

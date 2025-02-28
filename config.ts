@@ -135,6 +135,7 @@ export const defaultComponentsConfig = {
       label: undefined as undefined | (() => string | undefined),
       component: undefined as any,
     },
+    misc: { useLastBreadcrumbAsTitle: true },
     merge: ['ui'],
   },
 
@@ -1211,6 +1212,7 @@ export type IUIConfig = {
   badge: IConfigItem<IBadgeProps>
   banner: IConfigItem<IBannerProps>
   breadcrumbs: IConfigItem<IBreadcrumbsProps> & {
+    misc: { useLastBreadcrumbAsTitle: boolean }
     home: {
       icon?: string
       path?: string
