@@ -40,6 +40,11 @@ const {
 
 // Custom filter component
 const component = computed(() => getInputByDataType(column.value.dataType || 'string'))
+
+watchEffect(() => {
+  console.log(component.value)
+})
+
 const columnFilterComponentC = toRaw(column.value?.filterComponent?.component)
 
 const customFilterComponent = computed(() => {
@@ -206,7 +211,7 @@ const filterComponentProps = computed(() => {
   <!-- Primitive value -->
   <Component
     :is="component.component"
-    v-if="component?.component"
+    v-else-if="component?.component"
     ref="valueInputEl"
     v-model="filterValue"
     size="sm"
