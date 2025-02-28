@@ -41,10 +41,6 @@ const {
 // Custom filter component
 const component = computed(() => getInputByDataType(column.value.dataType || 'string'))
 
-watchEffect(() => {
-  console.log(component.value)
-})
-
 const columnFilterComponentC = toRaw(column.value?.filterComponent?.component)
 
 const customFilterComponent = computed(() => {
