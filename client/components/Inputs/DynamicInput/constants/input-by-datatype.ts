@@ -24,7 +24,10 @@ export function getInputByDataType(
   const customComponent = utilsConfig.dataTypeExtend.inputByDataType?.[dataType]
 
   if (customComponent) {
-    return createComponent(customComponent)
+    return {
+      ...customComponent,
+      component: resolveComponentByName(customComponent.component),
+    }
   }
 
   switch (dataType) {
