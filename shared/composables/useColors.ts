@@ -82,13 +82,26 @@ export function useColors() {
   /**
    * Creates CSS out of the [IStyle] object
    */
-  function resolveStyle(style?: IItem | null): IItem {
+  function resolveStyle(
+    style?: IItem | null,
+
+    // When true, in case we get a `complex` style and no `icon` property, we
+    // add fallback for the `backgroundColor` -> `style.color`
+    fillMissingIcon?: boolean,
+  ): IItem {
     if (!style) {
       return {}
     }
 
     if (style.isComplex) {
-      return pick(style, ['color', 'backgroundColor', 'borderColor', 'icon'])
+      return {
+        backgroundColor: (style.icon || !fillMissingIcon)
+          ? style.backgroundColor
+          : (style.backgroundColor ?? style.color),
+        color: style.color,
+        icon: style.icon,
+        isComplex: true,
+      }
     } else {
       return {
         backgroundColor: style.color,
