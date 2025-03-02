@@ -1082,6 +1082,7 @@ export const defaultComponentsConfig = {
       errorTakesSpace: true,
       errorVisible: true,
       size: 'md',
+      stackLabel: true,
       ui: {
         borderRadius: '0.5rem',
       },

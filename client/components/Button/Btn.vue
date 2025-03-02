@@ -226,7 +226,7 @@ defineExpose({
   }
 
   &--xs {
-    @apply min-h-6 min-w-6 flex-gap-x-0.5 flex-gap-x-1 p-x-2;
+    @apply min-h-6 min-w-6 gap-x-2 p-x-2;
 
     .icon {
       @apply h-3.5 w-3.5;
@@ -237,7 +237,7 @@ defineExpose({
     }
 
     .btn-label {
-      @apply font-rem-10 p-y-1 m-t-2px; // That m-t-2px is arbitrary, it just looks better...
+      @apply font-rem-10 p-y-1 leading-none;
     }
 
     .loading__loader {
