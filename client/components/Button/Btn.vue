@@ -150,7 +150,7 @@ defineExpose({
   }
 
   &-label {
-    @apply leading-tight tracking-wider max-w-full;
+    @apply tracking-wider max-w-full;
   }
 
   &.is-left {
