@@ -122,7 +122,7 @@ const subtitleStyle = computed(() => props.ui?.subtitleStyle?.(props.isOpen))
   }
 
   &-title {
-    @apply overflow-auto font-rem-14 font-semibold p-y-2;
+    @apply overflow-auto font-rem-14 font-semibold;
   }
 
   &-subtitle {

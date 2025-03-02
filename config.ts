@@ -198,6 +198,8 @@ export const defaultComponentsConfig = {
         headerClass: isOpen => isOpen
           ? 'bg-white dark:bg-dark-700'
           : 'bg-white dark:bg-dark-700',
+        titleClass: () => 'p-y-2',
+        subtitleClass: () => 'p-b-2 m-t--1',
       },
     },
     merge: ['ui'],
