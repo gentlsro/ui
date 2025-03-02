@@ -70,6 +70,9 @@ export async function listItemSelect(payload: {
       if (!isValid) {
         return
       }
+
+      // Add the _isCreate flag
+      item.ref._isCreate = true
     }
 
     emits.select(item)
