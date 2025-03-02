@@ -17,6 +17,9 @@ const props = withDefaults(defineProps<IBreadcrumbsProps>(), {
 
 // Utils
 const { breadcrumbs } = useBreadcrumbs()
+watchEffect(() => {
+  console.log('Log ~ breadcrumbs:', breadcrumbs.value)
+})
 
 const mergedProps = computed(() => {
   return getComponentMergedProps('breadcrumbs', props)

@@ -14,18 +14,17 @@ export function useBreadcrumbs(
     useLastBreadcrumbAsTitle = uiConfig.breadcrumbs.misc.useLastBreadcrumbAsTitle,
     title,
   } = options ?? {}
-  const injectedBreadcrumbs = inject(breadcrumbsKey, ref([])) as Ref<IBreadcrumb[]>
 
-  const breadcrumbs = computed(() => {
-    const localBreadcrumbs = toValue(breadcrumbsRef) ?? []
+  const injectedBreadcrumbs = injectLocal(breadcrumbsKey, ref([])) as Ref<IBreadcrumb[]>
 
-    return [...injectedBreadcrumbs.value, ...localBreadcrumbs]
-  })
+  if (breadcrumbsRef) {
+    injectedBreadcrumbs.value = toValue(breadcrumbsRef)
+  }
 
-  if (breadcrumbs.value && title) {
+  if (injectedBreadcrumbs.value && title) {
     useHead({ title })
-  } else if (breadcrumbs.value && useLastBreadcrumbAsTitle) {
-    const lastBreadcrumb = toValue(breadcrumbs.value).at(-1)
+  } else if (injectedBreadcrumbs.value && useLastBreadcrumbAsTitle) {
+    const lastBreadcrumb = toValue(injectedBreadcrumbs.value).at(-1)
     const title = typeof lastBreadcrumb?.label === 'function'
       ? lastBreadcrumb.label()
       : lastBreadcrumb?.label
@@ -35,7 +34,7 @@ export function useBreadcrumbs(
     }
   }
 
-  provide(breadcrumbsKey, breadcrumbs)
+  provideLocal(breadcrumbsKey, injectedBreadcrumbs)
 
-  return { breadcrumbs }
+  return { breadcrumbs: injectedBreadcrumbs }
 }
