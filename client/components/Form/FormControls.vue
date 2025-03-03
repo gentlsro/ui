@@ -58,10 +58,7 @@ const editControls = computed(() => {
     <!-- Submit button -->
     <Btn
       v-if="!noSubmit"
-      :class="[
-        ui?.submitClass,
-        { invisible: !isEditing && !!editControls },
-      ]"
+      :class="[ui?.submitClass, { invisible: !isEditing && !!editControls }]"
       :disabled="isSubmitDisabled"
       :loading="isLoading"
       :icon

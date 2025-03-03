@@ -195,7 +195,15 @@ onUnmounted(() => {
           :has-keyboard-shortcuts
           :cancel-btn-props="mergedProps.cancelBtnProps"
           :submit-btn-props="mergedProps.submitBtnProps"
-        />
+        >
+          <template #prepend>
+            <slot name="submit-prepend" />
+          </template>
+
+          <template #append>
+            <slot name="submit-append" />
+          </template>
+        </FormControls>
       </div>
     </slot>
   </form>
