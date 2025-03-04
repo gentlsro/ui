@@ -12,6 +12,16 @@ export type ITooltipProps = {
    */
   delay?: [number, number]
 
+  /*
+   * Whether the tooltip is open by manually providing the `modelValue`
+   */
+  manual?: boolean
+
+  /**
+   * The tooltip model value
+   */
+  modelValue?: boolean
+
   /**
    * When true, the `Menu` will not have an arrow
    */

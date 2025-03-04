@@ -44,7 +44,7 @@ function handlePickColor(color?: string) {
 }
 
 // Field
-const { el, getFieldProps, handleFocusOrClick } = useFieldUtils({
+const { el, getFieldProps, handleFocusOrClick, hasClearableBtn } = useFieldUtils({
   props,
   onBeforeFocus: ev => onBeforeFocus?.(ev, isPickerActive) ?? {},
   onFocus: ev => onFocus ? onFocus(ev, isPickerActive) : isPickerActive.value = true,
@@ -54,9 +54,8 @@ const fieldProps = getFieldProps(props)
 
 // Lifcecycle
 onMounted(() => {
-  referenceEl.value = unrefElement(fieldEl as any)?.querySelector(
-    '.wrapper__body',
-  ) as HTMLDivElement
+  referenceEl.value = unrefElement(fieldEl as any)
+    ?.querySelector('.wrapper__body') as HTMLDivElement
 })
 </script>
 
@@ -99,11 +98,16 @@ onMounted(() => {
       />
     </MenuProxy>
 
-    <template
-      v-if="!noIcon"
-      #append
-    >
+    <template #append>
+      <InputClearBtn
+        v-if="hasClearableBtn && model && model !== emptyValue"
+        :clear-confirmation
+        :size
+        @click.stop.prevent="model = emptyValue"
+      />
+
       <div
+        v-if="!noIcon"
         :class="icon"
         m="x-2"
         tabindex="-1"

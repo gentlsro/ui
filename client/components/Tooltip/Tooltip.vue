@@ -88,6 +88,10 @@ onMounted(() => {
     referenceEl.value = getTargetElement(props.referenceTarget)
     referenceEl.value?.classList.add('has-tooltip')
 
+    if (props.manual) {
+      return
+    }
+
     referenceEl.value?.addEventListener('mouseenter', () => {
       referenceEl.value?.classList.add('tooltip-hovered')
 

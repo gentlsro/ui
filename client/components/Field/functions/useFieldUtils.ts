@@ -27,6 +27,12 @@ export function useFieldUtils(options?: {
     return !props?.readonly && !props?.disabled
   })
 
+  const hasClearableBtn = computed(() => {
+    return (
+      !props?.readonly && !props?.disabled && props?.clearable
+    )
+  })
+
   // In some cases, we click into the wrapper but not directly in the `.control`
   // element, so the `focus` does not get triggered. We need to handle this case manually
   function handleClickWrapper(ev: MouseEvent) {
@@ -104,6 +110,7 @@ export function useFieldUtils(options?: {
     el,
     inputId,
     isEditable,
+    hasClearableBtn,
     getFieldProps,
     handleClickWrapper,
     handleFocusOrClick,

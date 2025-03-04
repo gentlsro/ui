@@ -196,7 +196,7 @@ label.label.is-inline {
   }
 }
 
-.wrapper.has-content {
+.wrapper {
   label.label.is-regular {
     left: var(--prependWidth);
   }

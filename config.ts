@@ -1190,6 +1190,7 @@ export const defaultComponentsConfig = {
   // YearMonthSelector
   yearMonthSelector: {
     props: {
+      stackLabel: true,
       ui: {
         borderRadius: '0.5rem',
       },
