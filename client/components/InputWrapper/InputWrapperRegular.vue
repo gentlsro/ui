@@ -93,7 +93,7 @@ const classes = computed(() => {
 
   &.has-label {
     grid-template-areas:
-      'nothing  label nothing2 nothing3'
+      'label  label nothing2 nothing3'
       'prepend  input loading append'
       'nothing4 error nothing5 nothing6';
 
@@ -108,7 +108,7 @@ const classes = computed(() => {
 
   .input-wrapper__regular-label {
     @apply self-start relative fit;
-    grid-column: 2 / 5;
+    grid-column: 1 / 5;
     grid-row: 1 / 3;
   }
 
