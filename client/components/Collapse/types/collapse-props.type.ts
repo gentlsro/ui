@@ -52,6 +52,12 @@ export type ICollapseProps = {
   noExpandIcon?: boolean
 
   /**
+   * When true, the `Collapse` will not try to calculate the height of the content,
+   * it will "just render it". This will also turn off transitions.
+   */
+  noHeightCalculation?: boolean
+
+  /**
    * By default, when `Collapse` is open, we show a separator between the header
    * and the content. This prop can be used to disable that.
    */

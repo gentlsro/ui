@@ -2,7 +2,7 @@
 // Types
 import type { ICollapseProps } from './types/collapse-props.type'
 
-type IProps = Pick<ICollapseProps, 'ui' | 'floating' | 'noTransition' | 'contentHeight' | 'maxContentHeight' | 'autoAdjustHeight'>
+type IProps = Pick<ICollapseProps, 'ui' | 'floating' | 'noTransition' | 'noHeightCalculation' | 'contentHeight' | 'maxContentHeight' | 'autoAdjustHeight'>
   & { isOpen: boolean }
 
 const props = defineProps<IProps>()
@@ -18,6 +18,10 @@ const contentEl = ref<HTMLDivElement>()
 const inTransition = ref(false)
 
 function handleTransition(when: 'before' | 'after') {
+  if (!props.noHeightCalculation) {
+    return
+  }
+
   const toEmit = [
     when === 'before' ? 'before-' : '',
     props.isOpen ? 'show' : 'hide',
@@ -34,6 +38,10 @@ function handleTransition(when: 'before' | 'after') {
 watch(
   () => props.isOpen,
   async isOpen => {
+    if (!props.noHeightCalculation) {
+      return
+    }
+
     const el = contentEl.value as HTMLDivElement
 
     if (isOpen) {
@@ -66,6 +74,10 @@ function getContentHeight(actualContentHeight: number) {
 }
 
 function onTransitionEnd() {
+  if (!props.noHeightCalculation) {
+    return
+  }
+
   const el = contentEl.value as HTMLDivElement
   inTransition.value = false
 
@@ -74,11 +86,15 @@ function onTransitionEnd() {
     el.style.maxHeight = props.maxContentHeight ? `${props.maxContentHeight}px` : ''
   }
 }
+
+if (props.autoAdjustHeight) {
+  // TODO: Implement this
+}
 </script>
 
 <template>
   <Transition
-    :css="!noTransition"
+    :css="!noTransition && !noHeightCalculation"
     @before-enter="handleTransition('before')"
     @before-leave="handleTransition('before')"
     @after-enter="handleTransition('after')"
