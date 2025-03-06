@@ -182,7 +182,7 @@ const $z = useZod(
         data-cy="qb-item__content-field"
         @update:model-value="handleFieldChange"
       >
-        <template #item="{ item: col }">
+        <template #option="{ item: col }">
           <QueryBuilderItemDataTypeShortcut
             :data-type="col.dataType"
             class="relative top-1"
