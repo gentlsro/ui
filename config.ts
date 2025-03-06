@@ -975,6 +975,10 @@ export const defaultComponentsConfig = {
         layoutsKey: 'layouts',
         defaultLayoutKey: 'defaultLayout',
       },
+      loadData: {
+        payloadKey: 'data',
+        countKey: 'count',
+      },
       queryBuilderProps: {
         allowComparatorsOfSameType: false,
         showColumnFilters: true,

@@ -42,7 +42,7 @@ export function useMenuMiddleware(
           Object.assign(elements.floating.style, {
             height: manualHeight || undefined,
             maxWidth: `${availableWidth}px`,
-            maxHeight: `${maxHeight}px`,
+            maxHeight: `${Math.max(maxHeight, 200)}px`,
           })
         },
         boundary: props.boundary,
