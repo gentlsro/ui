@@ -18,7 +18,7 @@ const contentEl = ref<HTMLDivElement>()
 const inTransition = ref(false)
 
 function handleTransition(when: 'before' | 'after') {
-  if (!props.noHeightCalculation) {
+  if (props.noHeightCalculation) {
     return
   }
 
@@ -38,7 +38,7 @@ function handleTransition(when: 'before' | 'after') {
 watch(
   () => props.isOpen,
   async isOpen => {
-    if (!props.noHeightCalculation) {
+    if (props.noHeightCalculation) {
       return
     }
 
@@ -74,7 +74,7 @@ function getContentHeight(actualContentHeight: number) {
 }
 
 function onTransitionEnd() {
-  if (!props.noHeightCalculation) {
+  if (props.noHeightCalculation) {
     return
   }
 
