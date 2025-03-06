@@ -182,9 +182,9 @@ const $z = useZod(
         data-cy="qb-item__content-field"
         @update:model-value="handleFieldChange"
       >
-        <template #option="{ item: col }">
+        <template #option="{ item }">
           <QueryBuilderItemDataTypeShortcut
-            :data-type="col.dataType"
+            :data-type="item.ref.dataType"
             class="relative top-1"
             self-start
             shrink-0
@@ -192,7 +192,7 @@ const $z = useZod(
           />
 
           <span p="y-1.5">
-            {{ col._label }}
+            {{ item.ref._label }}
           </span>
         </template>
 
