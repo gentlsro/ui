@@ -21,18 +21,28 @@ export function useMenuMiddleware(
       ...(props.cover ? [cover] : []),
       shift({ padding: 0 }),
       size({
-        apply: ({ availableWidth, elements }) => {
+        apply: ({ availableWidth, availableHeight, elements }) => {
           const manualHeight = elements.floating.style.getPropertyValue('--floatingHeight')
 
           // If we have any maxHeight prop, we just use it, otherwise we don't
-          const maxHeight = !isNil(props.maxHeight)
-            ? typeof props.maxHeight === 'number' ? `${props.maxHeight}px` : props.maxHeight
-            : undefined
+          let maxHeight = availableHeight
+
+          if (typeof props.maxHeight === 'number') {
+            maxHeight = Math.min(maxHeight, props.maxHeight)
+          }
+
+          else if (typeof props.maxHeight === 'string' && props.maxHeight.endsWith('%')) {
+            maxHeight = Math.min(maxHeight, window.innerHeight * Number.parseFloat(props.maxHeight) / 100)
+          }
+
+          else if (typeof props.maxHeight === 'string' && props.maxHeight.endsWith('vh')) {
+            maxHeight = Math.min(maxHeight, Number.parseFloat(props.maxHeight.replace('vh', '')) * window.innerHeight)
+          }
 
           Object.assign(elements.floating.style, {
             height: manualHeight || undefined,
             maxWidth: `${availableWidth}px`,
-            maxHeight,
+            maxHeight: `${maxHeight}px`,
           })
         },
         boundary: props.boundary,
