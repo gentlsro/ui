@@ -247,7 +247,7 @@ export function useListStore(listId?: string, listProps?: IListProps) {
     })
 
     // Selection
-    const selection = ref()
+    const selection = ref(listProps?.selection)
 
     const selectionConfig = ref<IListProps['selectionConfig']>(
       listProps?.selectionConfig ?? getComponentProps('list').selectionConfig(),

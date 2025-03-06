@@ -93,7 +93,7 @@ syncRef(toRef(mergedProps.value, 'addConfig'), storeAddConfig, { direction: 'ltr
 syncRef(toRef(mergedProps.value, 'loadData'), storeLoadData, { direction: 'ltr' })
 syncRef(toRef(mergedProps.value, 'searchConfig'), storeSearchConfig, { direction: 'ltr' })
 syncRef(toRef(mergedProps.value, 'sortingConfig'), storeSortingConfig, { direction: 'ltr' })
-syncRef(selection, storeSelection, { direction: 'both' })
+syncRef(selection, storeSelection, { direction: 'both', immediate: false })
 syncRef(items, storeItems, { direction: 'both', immediate: false })
 syncRef(toRef(props, 'loading'), isLoadingSource, { direction: 'ltr' })
 syncRef(toRef(props, 'clearable'), storeIsClearable, { direction: 'ltr' })
