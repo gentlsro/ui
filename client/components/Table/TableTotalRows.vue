@@ -56,6 +56,6 @@ const pageSize = computed(() => paginationConfig.value?.pageSize ?? 1)
 
 <style scoped lang="scss">
 .total-rows {
-  @apply text-caption font-rem-13;
+  @apply text-caption font-rem-13 lowercase;
 }
 </style>

@@ -944,7 +944,7 @@ export const defaultComponentsConfig = {
       allowComparatorsOfSameType: false,
       minimumColumnWidth: 80,
       breakpoint: 600,
-      editable: true,
+      editable: false,
       autoFit: {
         onInit: true,
         mode: 'fit',
