@@ -55,7 +55,7 @@ const menuStyle = computed(() => {
   return { '--floatingHeight': `${contentHeight.value}px` }
 })
 
-function handleModelUpdate() {
+function handleItemSelection() {
   if (!props.multi) {
     $hide()
   }
@@ -123,7 +123,7 @@ watch(contentHeight, () => {
       :no-sort
       :clearable
       @change:content-size="handleHeightChange($event.height)"
-      @update:selection="handleModelUpdate"
+      @select:item="handleItemSelection"
     >
       <!-- Above -->
       <template #above>

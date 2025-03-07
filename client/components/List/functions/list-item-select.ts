@@ -57,8 +57,17 @@ export async function listItemSelect(payload: {
 
     if (isMulti) {
       selection.value = model.filter(s => getListItemKey(s, itemKey) !== item.id)
-    } else if (isClearable) {
+    }
+
+    // When the single selection is clearable, we just remove it
+    else if (isClearable) {
       selection.value = undefined
+    }
+
+    // When the single selection is not clearable, we want to trigger the `selection`
+    // event to potentially hide `Menu` or similar
+    else {
+      emits.select(item)
     }
   }
 
