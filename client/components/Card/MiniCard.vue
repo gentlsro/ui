@@ -21,6 +21,12 @@ const mergedProps = computed(() => {
 const valueFormatterProps = getValueFormatterProps(props)
 const [DefineTemplate, OriginalValueBtn] = createReusableTemplate()
 
+const label = computed(() => {
+  return typeof props.label === 'function'
+    ? props.label()
+    : props.label
+})
+
 function getShownValue(val: any) {
   if (isNil(val) || val === '' || (Array.isArray(val) && val.length === 0)) {
     return props.emptyValueString

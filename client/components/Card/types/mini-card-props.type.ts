@@ -7,7 +7,7 @@ export type IMiniCardProps = IValueFormatterProps & {
   /**
    * The label of the card
    */
-  label: string | number
+  label: string | number | (() => string | number)
 
   /**
    * The icon of the card

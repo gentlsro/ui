@@ -8,6 +8,11 @@ export type ITimeInputShortcut = {
 
 export type ITimeInputProps = IInputProps & {
   /**
+   * When true, the time input will not display an icon
+   */
+  noIcon?: boolean
+
+  /**
    * The shortcuts
    */
   shortcuts?: ITimeInputShortcut[]

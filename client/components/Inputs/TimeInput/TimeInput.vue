@@ -321,11 +321,13 @@ defineExpose({
             self-end
             color="ca"
             tabindex="-1"
+            :class="{ 'm-r-2': noIcon }"
             @click.stop.prevent="isAm = !isAm"
             @mousedown.stop.prevent=""
           />
 
           <div
+            v-if="!noIcon"
             class="time-input-icon"
             i-bx:time-five
           />
@@ -350,7 +352,7 @@ defineExpose({
 
 <style lang="scss" scoped>
 .time-input-icon {
-  @apply cursor-pointer color-ca m-x-2 h-6 w-6;
+  @apply cursor-pointer color-ca m-r-2 h-6 w-6;
 }
 
 .input-wrapper {
