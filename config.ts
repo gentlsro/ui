@@ -1214,7 +1214,7 @@ export type IUIConfig = {
   badge: IConfigItem<IBadgeProps>
   banner: IConfigItem<IBannerProps>
   breadcrumbs: IConfigItem<IBreadcrumbsProps> & {
-    misc: { useLastBreadcrumbAsTitle: boolean }
+    misc?: { useLastBreadcrumbAsTitle?: boolean }
     home: {
       icon?: string
       path?: string
