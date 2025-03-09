@@ -163,8 +163,9 @@ const {
   model,
   label,
   wrapperProps,
-  hasNoValue,
+  hasContent,
   hasClearableBtn,
+  hasNoValue,
   focus,
   select,
   blur,
@@ -244,7 +245,7 @@ defineExpose({
     :id="inputId"
     ref="wrapperEl"
     v-bind="wrapperProps"
-    :has-content="!hasNoValue"
+    :has-content
     :ui="mergedProps.ui"
     .focus="focus"
     @click="handleClickWrapper"
@@ -274,7 +275,10 @@ defineExpose({
       :name="name || path || label || placeholder"
       class="control"
       :class="mergedProps.ui?.inputClass"
-      :style="mergedProps.ui?.inputStyle"
+      :style="{
+        ...mergedProps.ui?.inputStyle,
+        ...(hasNoValue && { color: 'var(--placeholder-color)' }),
+      }"
       v-bind="inputProps"
       @focus="handleFocusOrClick"
       @input="handleInput"
@@ -328,8 +332,7 @@ defineExpose({
 
           <div
             v-if="!noIcon"
-            class="time-input-icon"
-            i-bx:time-five
+            class="time-input-icon i-bx:time-five"
           />
         </template>
       </div>

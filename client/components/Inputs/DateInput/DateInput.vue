@@ -139,6 +139,7 @@ const {
   masked,
   wrapperProps,
   hasNoValue,
+  hasContent,
   hasClearableBtn,
   handleFocusOrClick,
   handleClickWrapper,
@@ -179,7 +180,7 @@ defineExpose({
     v-bind="wrapperProps"
     :id="inputId"
     ref="wrapperEl"
-    :has-content="!hasNoValue"
+    :has-content
     :ui="mergedProps.ui"
     .focus="focus"
     @click="handleClickWrapper"
@@ -208,8 +209,11 @@ defineExpose({
       :label="label || placeholder"
       :name="name || path || label || placeholder"
       class="control"
-      :class="ui?.inputClass"
-      :style="ui?.inputStyle"
+      :class="mergedProps.ui?.inputClass"
+      :style="{
+        ...mergedProps.ui?.inputStyle,
+        ...(hasNoValue && { color: 'var(--placeholder-color)' }),
+      }"
       v-bind="inputProps"
       @focus="handleFocusOrClick"
       @blur="handleBlur"

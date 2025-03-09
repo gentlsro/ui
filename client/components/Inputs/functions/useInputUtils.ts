@@ -104,7 +104,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
   })
 
   const hasContent = computed(() => {
-    return props.hasContent || !isEmpty.value
+    return props.hasContent || !isEmpty.value || !!props.placeholder
   })
 
   const hasClearableBtn = computed(() => {

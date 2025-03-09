@@ -10,6 +10,7 @@
   --color-warning: theme('colors.warning');
   --color-info: theme('colors.info');
   --contrast-color: theme('colors.black');
+  --placeholder-color: #9ca3af;
 
   &.dark {
     --contrast-color: theme('colors.white');
