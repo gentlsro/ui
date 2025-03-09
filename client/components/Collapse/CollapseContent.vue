@@ -116,7 +116,7 @@ if (props.autoAdjustHeight) {
 
 <style lang="scss" scoped>
 .collapse__content {
-  @apply flex flex-col overflow-auto rounded-b-custom;
+  @apply flex flex-col overflow-auto rounded-b-custom z-10;
 
   &.is-floating {
     @apply absolute left-0 right-0 bottom-0 translate-y-full;
