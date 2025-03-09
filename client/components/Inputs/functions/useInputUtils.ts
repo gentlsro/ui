@@ -30,7 +30,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
     if (!props.emitOnBlur) {
       originalModel.value = val
     }
-  }, props.debounce)
+  }, props.debounce ?? 0)
 
   // Mask
   const lastValidValue = ref<any>()

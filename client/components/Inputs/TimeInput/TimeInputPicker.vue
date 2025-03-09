@@ -156,7 +156,7 @@ defineExpose({
     h="!auto"
     position="top"
     placement="bottom-start"
-    :reference-target="referenceTarget"
+    :reference-target
     no-uplift
     @hide="handlePickerHide"
   >
