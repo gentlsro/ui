@@ -89,6 +89,7 @@ async function handleToggle() {
         :content-height
         :max-content-height
         :auto-adjust-height
+        :no-height-calculation
         :ui="mergedProps.ui"
         @before-hide="$emit('before-hide')"
         @hide="$emit('hide')"
