@@ -116,7 +116,10 @@ watch(isEditing, isEditing => {
     // We need a timeout to
   // 1. Wait for the form to be rendered
   // 2. Potentially prevent the `e` key being inputted into the input
-    setTimeout(() => handleFocusFirstInput())
+
+    if (props.focusFirstInput) {
+      setTimeout(() => handleFocusFirstInput())
+    }
   } else {
     emits('cancel')
   }
