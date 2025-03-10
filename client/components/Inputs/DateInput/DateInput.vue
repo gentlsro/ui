@@ -197,7 +197,6 @@ defineExpose({
     .focus="focus"
     @click="handleClickWrapper"
   >
-    {{ utc }}
     <template
       v-if="$slots.prepend"
       #prepend
