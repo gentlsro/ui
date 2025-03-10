@@ -82,7 +82,21 @@ const mask = computed<FactoryOpts>(() => {
         return val
       }
 
-      return formatDate(val)
+      if (props.utc) {
+        return formatDate(val)
+      } else {
+        return formatDate(
+          val,
+          {
+            outputIntlOptions: {
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit',
+              timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            },
+          },
+        )
+      }
     },
     parse: (val: any) => {
       if (!isDate(val)) {
@@ -105,7 +119,6 @@ function isMaskString(val?: string) {
 
 // Layout
 const preventSync = autoResetRef(false, 50)
-const wrapperEl = useTemplateRef('wrapperEl')
 
 function handleDateSelect(val: Dayjs) {
   preventSync.value = true
@@ -179,12 +192,12 @@ defineExpose({
   <InputWrapper
     v-bind="wrapperProps"
     :id="inputId"
-    ref="wrapperEl"
     :has-content
     :ui="mergedProps.ui"
     .focus="focus"
     @click="handleClickWrapper"
   >
+    {{ utc }}
     <template
       v-if="$slots.prepend"
       #prepend
@@ -278,8 +291,9 @@ defineExpose({
         <DatePicker
           ref="datePickerEl"
           :model-value="model"
-          :allowed-days="allowedDays"
-          :disabled-days="disabledDays"
+          :allowed-days
+          :disabled-days
+          :utc
           @mousedown.stop.prevent
           @update:model-value="handleDateSelect"
         />

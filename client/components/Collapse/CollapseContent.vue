@@ -18,10 +18,6 @@ const contentEl = ref<HTMLDivElement>()
 const inTransition = ref(false)
 
 function handleTransition(when: 'before' | 'after') {
-  if (props.noHeightCalculation) {
-    return
-  }
-
   const toEmit = [
     when === 'before' ? 'before-' : '',
     props.isOpen ? 'show' : 'hide',
@@ -29,6 +25,10 @@ function handleTransition(when: 'before' | 'after') {
 
   // @ts-expect-error
   emits(toEmit.join(''))
+
+  if (props.noHeightCalculation) {
+    return
+  }
 
   if (when === 'before' && props.isOpen) {
     inTransition.value = true

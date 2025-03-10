@@ -17,8 +17,12 @@ const props = withDefaults(defineProps<IDatePickerProps>(), {
 const MIN_COUNT_OF_WEEKS = 6
 
 // Utils
-const { formatDate, getPeriod, getExtendedPeriod, getDaysInPeriod }
-  = useDateUtils()
+const {
+  formatDate,
+  getPeriod,
+  getExtendedPeriod,
+  getDaysInPeriod,
+} = useDateUtils()
 
 // Layout
 const originalModel = defineModel<any>()
@@ -27,6 +31,7 @@ const daysInPeriod = computed(() =>
   getDaysInPeriod(extendedPeriod, {
     excludedDays: excludedDays.value,
     currentPeriod: period.value,
+    utc: props.utc,
   }),
 )
 

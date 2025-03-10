@@ -147,7 +147,6 @@ const maskFullTime = computed<FactoryOpts>(() => {
 })
 
 // Layout
-const wrapperEl = useTemplateRef('wrapperEl')
 const isAm = ref(+delocalizedTimeParts.value.hh < 12)
 
 const modelValueLocalized = computed(() => localizeTime(props.modelValue))
@@ -244,7 +243,6 @@ defineExpose({
 <template>
   <InputWrapper
     :id="inputId"
-    ref="wrapperEl"
     v-bind="wrapperProps"
     :has-content
     :ui="mergedProps.ui"

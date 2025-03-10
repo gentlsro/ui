@@ -25,4 +25,11 @@ export type IDateInputProps = IInputProps & {
    * Date format that we expect the input to return
    */
   format?: string
+
+  /**
+   * Whether the date should be in UTC
+   *
+   * NOTE: This will not modify the actual value => only affects the display value
+   */
+  utc?: boolean
 }

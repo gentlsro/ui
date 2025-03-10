@@ -14,4 +14,5 @@ export type IDatePickerProps = {
   modelValue?: Datetime
   noControls?: boolean
   shortcuts?: boolean
+  utc?: boolean
 }
