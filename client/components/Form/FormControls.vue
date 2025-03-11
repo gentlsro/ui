@@ -61,9 +61,9 @@ const editControls = computed(() => {
       :class="[ui?.submitClass, { invisible: !isEditing && !!editControls }]"
       :disabled="isSubmitDisabled"
       :loading="isLoading"
-      :icon
       :label="label ?? $t('general.submit')"
       v-bind="submitBtnProps"
+      :icon
       type="submit"
       data-cy="save-button"
       data-onboarding="form-save-btn"
