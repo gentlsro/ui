@@ -415,9 +415,8 @@ export const defaultComponentsConfig = {
       submitConfirmation: undefined,
       focusFirstInput: true,
       noShortcuts: undefined,
-      submitBtnProps: {
-        icon: 'i-iconamoon:send-bold',
-      },
+      icon: 'i-iconamoon:send-bold',
+      submitBtnProps: {},
       cancelBtnProps: {},
       preventSubmitOnEnter: true,
       errorsSectionProps: {
