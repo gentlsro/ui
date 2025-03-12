@@ -255,10 +255,9 @@ export function useTableStore(
         initialSchemaConfig: initialSchemaConfig.value,
 
         // Schema should be used only in case we don't have anything in the state
-        shouldSchemaBeUsed: noState.value || !state.value?.columns?.length,
+        // or we don't use the `autoSaveSchema` feature
+        shouldSchemaBeUsed: noState.value || !state.value?.columns?.length || !uiState.value.table?.autoSaveSchema,
       })
-      console.log('Log ~ returndefineStore ~ state.value?.columns?.length:', state.value?.columns?.length)
-      console.log('Log ~ returndefineStore ~ noState.value:', noState.value)
 
       cols = _columns
 
