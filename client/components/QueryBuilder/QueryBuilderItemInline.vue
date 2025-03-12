@@ -155,6 +155,8 @@ const $z = useZod({ scope: 'qb' })
       {{ $t(`comparator.${item.comparator?.replaceAll('.', '|')}`).toLocaleLowerCase() }}
     </span>
 
+    {{ item.value }}
+
     <!-- Value -->
     <ValueFormatter
       v-if="!isNonValueComparator"
