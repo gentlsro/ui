@@ -257,7 +257,8 @@ export function useTableStore(
         // Schema should be used only in case we don't have anything in the state
         shouldSchemaBeUsed: noState.value || !state.value?.columns?.length,
       })
-      console.log('Log ~ returndefineStore ~ shouldSchemaBeUsed:', noState.value || !state.value?.columns?.length)
+      console.log('Log ~ returndefineStore ~ state.value?.columns?.length:', state.value?.columns?.length)
+      console.log('Log ~ returndefineStore ~ noState.value:', noState.value)
 
       cols = _columns
 
