@@ -40,11 +40,7 @@ const formattedOriginalValue = computed(() => {
 })
 
 const isEmptyValue = computed(() => {
-  return isNil(formattedValue) || formattedValue.value === props.emptyValue || formattedValue.value === ''
-})
-
-watchEffect(() => {
-  console.log(props.value, formattedValue.value)
+  return isNil(formattedValue) || formattedValue.value === props.emptyValue
 })
 </script>
 
