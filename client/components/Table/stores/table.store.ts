@@ -245,7 +245,6 @@ export function useTableStore(
     watch(columnsMerged, columnsMerged => {
       // Merge columns from all the sources, remove duplicates
       let cols = columnsMerged
-      console.log('Log ~ returndefineStore ~ Before transform:', cols)
 
       // Transform columns
       const { columns: _columns, queryBuilder: qb, pagination } = tableTransformColumns({
@@ -258,9 +257,9 @@ export function useTableStore(
         // Schema should be used only in case we don't have anything in the state
         shouldSchemaBeUsed: noState.value || !state.value?.columns?.length,
       })
+      console.log('Log ~ returndefineStore ~ shouldSchemaBeUsed:', noState.value || !state.value?.columns?.length)
 
       cols = _columns
-      console.log('Log ~ returndefineStore ~ After transform:', cols)
 
       // Extend columns with grouping and selection
       cols = extendColumns(cols, { selectionConfig: selectionConfig.value })
