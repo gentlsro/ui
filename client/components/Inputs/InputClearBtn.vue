@@ -20,6 +20,7 @@ defineEmits<{ (e: 'clear'): void }>()
     @click.stop.prevent="!clearConfirmation && $emit('clear')"
   >
     <MenuConfirmation
+      v-if="clearConfirmation"
       @ok="$emit('clear')"
     >
       {{ clearConfirmation }}
