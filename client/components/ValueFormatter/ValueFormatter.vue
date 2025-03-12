@@ -40,7 +40,7 @@ const formattedOriginalValue = computed(() => {
 })
 
 const isEmptyValue = computed(() => {
-  return isNil(formattedValue) || formattedValue.value === props.emptyValue
+  return isNil(formattedValue) || formattedValue.value === props.emptyValue || formattedValue.value === ''
 })
 </script>
 
