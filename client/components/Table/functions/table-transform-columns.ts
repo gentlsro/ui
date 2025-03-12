@@ -128,7 +128,6 @@ export function tableTransformColumns(payload: {
     modifiers,
     searchParams: defaultSchema,
   })
-  console.log('Log ~ defaultSchemaResult:', defaultSchemaResult)
 
   // URL schema result
   const urlResult = tableExtractDataFromUrl({
@@ -136,7 +135,6 @@ export function tableTransformColumns(payload: {
     modifiers,
     searchParams: initialParams ?? urlSchema,
   })
-  console.log('Log ~ urlResult:', urlResult)
 
   const { result, isUrlUsed, isSchemaUsed } = getUsedProperties({
     shouldUrlBeUsed,
