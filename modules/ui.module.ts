@@ -89,7 +89,7 @@ export default uiConfig
 `
 
     addTemplate({
-      filename: 'generated/uiConfig.ts',
+      filename: `${nuxt.options.rootDir}/generated/uiConfig.ts`,
       write: true,
       getContents: () => code,
     })
@@ -97,7 +97,7 @@ export default uiConfig
     const base = configPaths.find(({ isBase }) => isBase)
 
     addTemplate({
-      filename: 'generated/ui.ts',
+      filename: `${nuxt.options.rootDir}/generated/ui.ts`,
       write: true,
       getContents: () => `export * from '${base?.cwd}/index'
 `,
@@ -114,8 +114,8 @@ export default uiConfig
 
       config.resolve.alias = {
         ...config.resolve.alias,
-        $ui: `${nuxt.options.buildDir}/generated/ui.ts`,
-        $uiConfig: `${nuxt.options.buildDir}/generated/uiConfig.ts`,
+        $ui: `${nuxt.options.rootDir}/generated/ui.ts`,
+        $uiConfig: `${nuxt.options.rootDir}/generated/uiConfig.ts`,
       }
     })
   },

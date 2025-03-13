@@ -96,8 +96,8 @@ export default defineNuxtConfig({
 
   // Alias
   alias: {
-    $ui: './generated/ui.ts',
-    $uiConfig: './generated/uiConfig.ts',
+    $ui: join(process.cwd(), 'generated', 'ui.ts'),
+    $uiConfig: join(process.cwd(), 'generated', 'uiConfig.ts'),
     $uiLayer: resolve('.'),
   },
 
@@ -116,13 +116,22 @@ export default defineNuxtConfig({
 
   nitro: {
     alias: {
-      $ui: join(process.cwd(), '.nuxt', 'generated', 'ui.ts'),
-      $uiConfig: join(process.cwd(), '.nuxt', 'generated', 'uiConfig.ts'),
+      $ui: join(process.cwd(), 'generated', 'ui.ts'),
+      $uiConfig: join(process.cwd(), 'generated', 'uiConfig.ts'),
     },
   },
 
   // Typescript https://nuxt.com/docs/api/configuration/nuxt-config#typescript
-  typescript: {},
+  typescript: {
+    tsConfig: {
+      compilerOptions: {
+        paths: {
+          "$ui": [join(process.cwd(), '.nuxt', 'generated', 'ui.ts')],
+          $uiConfig: join(process.cwd(), '.nuxt', 'generated', 'uiConfig.ts')
+        }
+      }
+    }
+  },
 
   hooks: {
     ready: async nuxt => {
