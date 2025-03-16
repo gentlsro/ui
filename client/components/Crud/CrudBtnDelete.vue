@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
 import type { ICrudBtnProps } from './types/crud-btn-props.type'
-import type { IMenuProps } from '../Menu/types/menu-props.type'
+import type { IMenuConfirmationProps } from '$ui'
 import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
 
 type IProps = ICrudBtnProps & {
   noConfirm?: boolean
   confirmationText?: string
-  menuProps?: IMenuProps & { class?: ClassType, style?: CSSProperties }
+  menuProps?: IMenuConfirmationProps & { class?: ClassType, style?: CSSProperties }
 }
 
 const props = withDefaults(defineProps<IProps>(), {

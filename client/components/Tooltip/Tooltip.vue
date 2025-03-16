@@ -159,10 +159,10 @@ onMounted(() => {
 }
 
 .arrow {
-  @apply absolute w-2 h-2 rotate-45 dark:bg-darker bg-white;
+  @apply absolute w-2 h-2 rotate-45 bg-inherit;
 
   &.has-header {
-    @apply bg-white dark:bg-darker;
+    @apply bg-inherit;
   }
 }
 
