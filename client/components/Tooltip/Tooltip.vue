@@ -5,7 +5,7 @@ import { arrow, flip, offset, shift, useFloating } from '@floating-ui/vue'
 import type { ITooltipProps } from './types/tooltip-props.type'
 
 // Functions
-import { getComponentProps } from '../../functions/get-component-props'
+import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
 
 defineOptions({
   inheritAttrs: false,
@@ -44,6 +44,11 @@ function getTargetElement(target: any): any {
 
 const instance = getCurrentInstance()
 
+// Utils
+const mergedProps = computed(() => {
+  return getComponentMergedProps('tooltip', props)
+})
+
 // Layout
 const model = defineModel({ default: false })
 const tooltipEl = ref<HTMLElement>()
@@ -67,9 +72,10 @@ const { floatingStyles, placement, middlewareData } = useFloating(
 )
 
 const tooltipClass = computed(() => {
-  return {
-    'font-normal normal-case text-base': props.noInheritFontStyle,
-  }
+  return [
+    mergedProps.value?.ui?.tooltipClass,
+    { 'font-normal normal-case text-base': props.noInheritFontStyle },
+  ]
 })
 
 watch(middlewareData, middlewareData => {
@@ -124,10 +130,10 @@ onMounted(() => {
     <div
       v-if="model"
       ref="tooltipEl"
-      :style="floatingStyles"
       class="tooltip"
       p="x-2 y-1"
       :class="tooltipClass"
+      :style="{ ...floatingStyles, ...mergedProps.ui?.tooltipStyle }"
       :placement="placement"
       v-bind="$attrs"
     >

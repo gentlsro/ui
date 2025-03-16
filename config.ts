@@ -1143,7 +1143,9 @@ export const defaultComponentsConfig = {
       offset: 8,
       placement: undefined,
       referenceTarget: undefined,
+      ui: {},
     },
+    merge: ['ui'],
   },
 
   // Tree

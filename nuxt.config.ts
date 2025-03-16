@@ -126,11 +126,11 @@ export default defineNuxtConfig({
     tsConfig: {
       compilerOptions: {
         paths: {
-          "$ui": [join(process.cwd(), '.nuxt', 'generated', 'ui.ts')],
-          $uiConfig: join(process.cwd(), '.nuxt', 'generated', 'uiConfig.ts')
-        }
-      }
-    }
+          $ui: [join(process.cwd(), '.nuxt', 'generated', 'ui.ts')],
+          $uiConfig: join(process.cwd(), '.nuxt', 'generated', 'uiConfig.ts'),
+        },
+      },
+    },
   },
 
   hooks: {

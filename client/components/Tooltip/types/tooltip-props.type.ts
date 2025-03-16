@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'vue'
 import type { MaybeElement } from '@floating-ui/vue'
 
 import type {
@@ -51,4 +52,19 @@ export type ITooltipProps = {
    * to stringify it and throw an error.
    */
   referenceTarget?: MaybeElement<ReferenceElement> | HTMLElement | string | null
+
+  /**
+   * Visual configuration
+   */
+  ui?: {
+    /**
+     * The tooltip class
+     */
+    tooltipClass?: ClassType
+
+    /**
+     * The tooltip style
+     */
+    tooltipStyle?: CSSProperties
+  }
 }
