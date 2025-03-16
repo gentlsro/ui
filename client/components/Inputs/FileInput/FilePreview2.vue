@@ -254,11 +254,11 @@ function handleImageClick(url: string) {
   grid-template-rows: auto 1fr;
 
   &__filename {
-    @apply text-caption font-rem-12 line-clamp-2 break-words leading-tight;
+    @apply text-caption color-black dark:color-white font-rem-12 line-clamp-2 break-words leading-tight;
   }
 
   &__meta {
-    @apply flex gap-1 items-center text-caption font-rem-11 line-clamp-2 break-words leading-tight;
+    @apply flex gap-1 items-center text-caption font-rem-10 line-clamp-2 break-words leading-tight;
   }
 
   &__header {
