@@ -24,10 +24,14 @@ const mergedProps = computed(() => {
 
 // Layout
 const breadcrumbsItems = computed(() => {
+  const homePath = typeof uiConfig.breadcrumbs.home.path === 'function'
+    ? uiConfig.breadcrumbs.home.path()
+    : uiConfig.breadcrumbs.home.path
+
   const homeBreacrumb = uiConfig.breadcrumbs.home.component
     ? { component: uiConfig.breadcrumbs.home.component }
     : {
-        to: uiConfig.breadcrumbs.home.path,
+        to: homePath,
         icon: uiConfig.breadcrumbs.home.icon,
         label: uiConfig.breadcrumbs.home.label,
       }

@@ -1220,7 +1220,7 @@ export type IUIConfig = {
     misc?: { useLastBreadcrumbAsTitle?: boolean }
     home: {
       icon?: string
-      path?: string
+      path?: string | (() => string)
       label?: string | (() => string | undefined)
       component?: string
     }
