@@ -88,8 +88,9 @@ const isModified = computed(() => {
 
             <NuxtLink
               v-else
-              :to="to"
+              :to
               class="link"
+              v-bind="navigateToOptions"
               :class="[
                 mergedProps.ui?.valueClass,
                 { 'font-bold': !noBold, 'is-modified': isModified },

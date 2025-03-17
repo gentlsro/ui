@@ -16,6 +16,7 @@ export function useMiniCardUtils() {
       'toPreviousValue',
       'previousValue',
       'originalValue',
+      'navigateToOptions',
     ])
   }
 

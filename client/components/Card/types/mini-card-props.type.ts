@@ -2,6 +2,7 @@ import type { CSSProperties } from 'vue'
 
 // Types
 import type { IValueFormatterProps } from '../../ValueFormatter/types/value-formatter-props.type'
+import type { NavigateToOptions } from '../../../../../Utilities/client/types/navigate-to.type'
 
 export type IMiniCardProps = IValueFormatterProps & {
   /**
@@ -23,6 +24,11 @@ export type IMiniCardProps = IValueFormatterProps & {
    * The link we want to redirect to
    */
   to?: any // should be RouteLocationRaw but that breaks some projects for whatever reason
+
+  /**
+   * The options to pass to the NuxtLink component
+   */
+  navigateToOptions?: NavigateToOptions
 
   /**
    * The link we want to redirect to previous value
