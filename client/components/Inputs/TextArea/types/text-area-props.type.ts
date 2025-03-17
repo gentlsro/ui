@@ -1,5 +1,5 @@
 // Types
-import type { ITooltipProps } from '../../../Tooltip/types/tooltip-props.type'
+import type { IMenuProps } from '$ui'
 import type { IInputProps } from '../../types/input-props.type'
 
 export type ITextAreaInputProps = IInputProps & {
@@ -23,5 +23,5 @@ export type ITextAreaInputProps = IInputProps & {
   /**
    * The props that should be passed to the tooltip
    */
-  tooltipProps?: ITooltipProps
+  tooltipProps?: IMenuProps
 }
