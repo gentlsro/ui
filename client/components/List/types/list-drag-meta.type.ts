@@ -28,7 +28,7 @@ export type IListDragMeta = {
   /**
    * Placement of the indicator - above or below the target item
    */
-  placement?: 'above' | 'below'
+  placement?: 'above' | 'below' | 'left' | 'right'
 
   /**
    * The CSS properties to apply to the drop indicator
