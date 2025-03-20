@@ -70,7 +70,9 @@ const customFilterComponent = computed(() => {
 
     return {
       ...filterComponent,
-      component: resolveComponentByName(filterComponent.component),
+      component: typeof filterComponent.component === 'string'
+        ? resolveComponentByName(filterComponent.component)
+        : markRaw(filterComponent.component),
     }
   }
 
