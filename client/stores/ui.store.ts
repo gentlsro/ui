@@ -78,7 +78,6 @@ export const useUIStore = defineStore('__ui', () => {
     })
 
     document.documentElement.addEventListener('keydown', ev => {
-      console.log(ev)
       lastKeydownEvent.value = ev
     })
   })
