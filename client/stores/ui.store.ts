@@ -8,7 +8,7 @@ import type { IUIState } from '../types/ui-state.type'
 
 export const useUIStore = defineStore('__ui', () => {
   // State
-  const latestKeyPress = ref<KeyboardEvent>()
+  const lastKeyPress = ref<KeyboardEvent>()
   const hasUserLeftPage = usePageLeave()
 
   const uiState = useCookie<IUIState>('__ui', {
@@ -78,7 +78,7 @@ export const useUIStore = defineStore('__ui', () => {
     })
 
     document.documentElement.addEventListener('keypress', ev => {
-      latestKeyPress.value = ev
+      lastKeyPress.value = ev
     })
   })
 
@@ -97,7 +97,7 @@ export const useUIStore = defineStore('__ui', () => {
     // State
     uiState,
     hasUserLeftPage,
-    latestKeyPress,
+    lastKeyPress,
     lastPointerDownEvent,
     lastPointerDownEl,
     lastPointerDownType,
