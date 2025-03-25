@@ -1,6 +1,6 @@
 import type { MaybeElementRef } from '@vueuse/core'
 
-function getScrollbarWidth() {
+export function getScrollbarWidth() {
   if (!import.meta.client) {
     return 0
   }
