@@ -106,9 +106,11 @@ const mask = computed<FactoryOpts>(() => {
         return val
       }
 
+      const parsedDate = parseDate(val, { isLocalString: true }).format('YYYY-MM-DD')
+
       return props.format
-        ? parseDate(val, { isLocalString: true }).format(props.format)
-        : parseDate(val, { isLocalString: true })
+        ? $date(parsedDate, { utc: props.utc }).format(props.format)
+        : $date(parsedDate, { utc: props.utc })
     },
   }
 })
@@ -262,8 +264,7 @@ defineExpose({
         </Btn>
 
         <div
-          i-system-uicons:calendar-date
-          class="picker-icon"
+          class="picker-icon i-system-uicons:calendar-date"
           @mousedown="handlePickerIconClick"
           @click.stop.prevent
         />

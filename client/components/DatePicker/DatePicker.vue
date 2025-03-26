@@ -17,6 +17,7 @@ const props = withDefaults(defineProps<IDatePickerProps>(), {
 const MIN_COUNT_OF_WEEKS = 6
 
 // Utils
+const { isDayjs } = useDayjs()
 const {
   formatDate,
   getPeriod,
@@ -53,6 +54,16 @@ function handleSelectToday() {
   model.value = $date().startOf('d')
 }
 
+function isSelected(day: Day) {
+  if (!hasValue.value) {
+    return false
+  }
+
+  const mmdd = `${day.dateObj.month() + 1}-${day.dateObj.date()}`
+
+  return mmdd === modelMMDD.value
+}
+
 function isDayDisabled(day: Day) {
   if (!props.disabledDays && !props.allowedDays) {
     return false
@@ -78,11 +89,25 @@ const model = computed<Datetime>({
       return null
     }
 
-    return $date(originalModel.value)
+    return $date(originalModel.value, { utc: props.utc })
   },
   set(val) {
     originalModel.value = val
   },
+})
+
+const modelMMDD = computed(() => {
+  if (!model.value) {
+    return null
+  }
+
+  if (isDayjs(model.value)) {
+    return `${model.value?.month() + 1}-${model.value?.date()}`
+  }
+
+  const m = $date(model.value)
+
+  return `${m.month() + 1}-${m.date()}`
 })
 
 /**
@@ -91,8 +116,6 @@ const model = computed<Datetime>({
  */
 const internalValue = ref<Datetime>(model.value) as Ref<Datetime>
 const excludedDays = toRef(props, 'excludedDays')
-
-const internalValueObj = computed(() => $date(internalValue.value))
 
 const period = computed(() => {
   return getPeriod({ dateRef: internalValue, unit: 'month' })
@@ -115,7 +138,7 @@ function handleDaySelect(day: Day) {
     return
   }
 
-  model.value = day.dateObj
+  model.value = $date(day.dateString, { utc: props.utc })
 }
 
 defineExpose({
@@ -164,7 +187,7 @@ defineExpose({
           v-for="(day, idx) in daysInPeriod"
           :key="idx"
           :day="day"
-          :is-selected="hasValue && day.dateObj.isSame(model, 'd')"
+          :is-selected="isSelected(day)"
           :disabled="isDayDisabled(day)"
           :events="eventsByDay?.[day.dateString]"
           @click="handleDaySelect(day)"
