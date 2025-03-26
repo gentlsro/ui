@@ -374,10 +374,6 @@ function rerenderVisibleRows(payload?: {
   emitScrollEvent?: boolean
   resetHeights?: boolean
 }) {
-  if (!isVirtual.value) {
-    return
-  }
-
   const { triggerScrollEvent = true, emitScrollEvent, resetHeights } = payload ?? {}
   const children = Array.from(containerEl.value?.children || [])
 
