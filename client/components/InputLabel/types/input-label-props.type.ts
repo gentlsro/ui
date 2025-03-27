@@ -65,5 +65,10 @@ export type IInputLabelProps = {
      * Style applied to the label
      */
     labelStyle?: CSSProperties
+
+    /**
+     * The width of the label when it's in inline mode
+     */
+    labelInlineWidth?: string
   }
 }

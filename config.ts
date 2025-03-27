@@ -455,6 +455,7 @@ export const defaultComponentsConfig = {
           'color-truegray-600 active:color-blue-500',
           'dark:color-truegray-300 dark:active:color-blue-500',
         ],
+        labelInlineWidth: '200px',
       },
     },
     merge: ['ui'],
