@@ -108,7 +108,7 @@ const classes = computed(() => {
 
   .input-wrapper__regular-label {
     @apply self-start relative fit;
-    grid-column: 1 / 5;
+    grid-column: 2 / 5;
     grid-row: 1 / 3;
   }
 
