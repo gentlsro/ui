@@ -58,10 +58,9 @@ const labelStyle = computed(() => {
 })
 
 onMounted(() => {
-  const prepend = self?.vnode.el?.parentNode.parentNode.querySelector('.input-wrapper__regular-prepend')
-  prependWidth.value = prepend?.clientWidth ?? 0
-
   nextTick(() => {
+    const prepend = self?.vnode.el?.parentNode.parentNode.querySelector('.input-wrapper__regular-prepend')
+    prependWidth.value = prepend?.clientWidth ?? 0
     isMounted.value = true
   })
 })
