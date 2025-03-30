@@ -9,6 +9,21 @@ import type {
 
 export type ITooltipProps = {
   /**
+   * The tooltip content
+   */
+  content?: {
+    /**
+     * The tooltip title
+     */
+    title?: string
+
+    /**
+     * The tooltip description
+     */
+    description?: string
+  }
+
+  /**
    * The tooltip delay in milliseconds => [showDelay, hideDelay]
    */
   delay?: [number, number]

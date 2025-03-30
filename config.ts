@@ -182,7 +182,9 @@ export const defaultComponentsConfig = {
       label: undefined,
       labelClass: undefined,
       ripple: undefined,
+      tooltip: undefined,
     },
+    merge: ['tooltip'],
   },
 
   // Collapse

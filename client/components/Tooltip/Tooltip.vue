@@ -144,7 +144,20 @@ onMounted(() => {
         class="arrow"
       />
 
-      <slot />
+      <slot>
+        <div
+          v-if="content"
+          class="tooltip__content"
+        >
+          <span class="tooltip__content-title">
+            {{ content.title }}
+          </span>
+
+          <span class="tooltip__content-description">
+            {{ content.description }}
+          </span>
+        </div>
+      </slot>
     </div>
   </Teleport>
 </template>
@@ -156,6 +169,18 @@ onMounted(() => {
   z-index: calc(var(--zMenu) + 1);
 
   @apply font-size-$Tooltip-font-size color-$Tooltip-font-color;
+
+  .tooltip__content {
+    @apply flex flex-col w-80;
+  }
+
+  .tooltip__content-title {
+    @apply font-semibold font-rem-14;
+  }
+
+  .tooltip__content-description {
+    @apply font-thin text-caption font-rem-12;
+  }
 }
 
 .arrow {

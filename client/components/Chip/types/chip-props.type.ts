@@ -1,5 +1,8 @@
+import type { AllowedComponentProps } from 'vue'
+
 // Types
 import type { INavigation } from '../../Button/types/btn-props.type'
+import type { ITooltipProps } from '../../Tooltip/types/tooltip-props.type'
 
 export type IChipProps = INavigation & {
   /**
@@ -36,4 +39,12 @@ export type IChipProps = INavigation & {
    * Whether the chip centered
    */
   center?: boolean
+
+  /**
+   * Tooltip configuration
+   */
+  tooltip?: {
+    label?: string
+    props?: Partial<ITooltipProps> & AllowedComponentProps
+  }
 }

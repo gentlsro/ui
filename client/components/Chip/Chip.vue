@@ -6,7 +6,7 @@ import type { IChipProps } from './types/chip-props.type'
 import { vRipple } from '$utilsLayer/client/directives/ripple.directive'
 
 // Functions
-import { getComponentProps } from '../../functions/get-component-props'
+import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
 
 const props = withDefaults(defineProps<IChipProps>(), {
   ...getComponentProps('chip'),
@@ -15,6 +15,11 @@ const props = withDefaults(defineProps<IChipProps>(), {
 defineEmits<{
   (e: 'remove'): void
 }>()
+
+// Utils
+const mergedProps = computed(() => {
+  return getComponentMergedProps('chip', props)
+})
 
 // Layout
 const label = computed(() => {
@@ -61,6 +66,7 @@ const classes = computed(() => {
     />
 
     <div
+      v-if="label || $slots.default"
       class="chip-label"
       :class="[labelClass, { 'justify-center': center }]"
     >
@@ -86,18 +92,21 @@ const classes = computed(() => {
       </slot>
     </div>
 
+    <!-- Tooltip -->
+    <Tooltip
+      v-if="tooltip || $slots.tooltip"
+      :offset="8"
+      :class="mergedProps.ui?.tooltipClass"
+      :style="mergedProps.ui?.tooltipStyle"
+      v-bind="tooltip?.props"
+    />
+
+    <!-- Remove btn -->
     <Btn
       v-if="hasRemove"
       icon="i-eva:close-fill !w-4 !h-4"
       size="auto"
-      color="ca"
-      h="4"
-      w="4"
-      self-center
-      shrink-0
       tabindex="-1"
-      :rounded="false"
-      class="rounded"
       @click.stop.prevent="$emit('remove')"
       @mousedown.stop.prevent
     />
@@ -111,6 +120,10 @@ const classes = computed(() => {
 
   &-label {
     @apply flex flex-gap-x-2 flex-1 truncate;
+  }
+
+  .remove-btn {
+    @apply color-ca h-4 w-4 self-center shrink-0;
   }
 }
 </style>
