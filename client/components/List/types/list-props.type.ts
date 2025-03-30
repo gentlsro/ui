@@ -92,6 +92,11 @@ export type IListProps = {
   items?: IItem[]
 
   /**
+   * Unique identifier to initialize the list store with
+   */
+  listId?: string
+
+  /**
    * The props that should be passed to the SearchInput
    */
   searchInputProps?: IItem

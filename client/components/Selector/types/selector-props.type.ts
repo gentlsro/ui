@@ -71,13 +71,6 @@ export type ISelectorProps = IFieldProps & {
   initialMap?: Record<string, any>
 
   /**
-   * Usage: Let's say we already selected some of the options in different
-   * selectors and we don't want to let user select it again
-   * @example { [OPTION_KEY: string]: boolean } -> { 'id123': true }
-   */
-  hiddenOptions?: Record<string, boolean>
-
-  /**
    * Whether the list should also show currently selected value, works
    * with `hiddenOptions` prop
    */

@@ -19,13 +19,14 @@ import { listIdKey, useListStore } from './stores/list.store'
 
 const props = withDefaults(defineProps<IListProps>(), {
   ...getComponentProps('list'),
+  listId: () => useId(),
 })
 
 const emits = defineEmits<IListEmits>()
 defineSlots<IListSlots>()
 
 // Utils
-const uuid = injectLocal(listIdKey, useId()) as string
+const uuid = props.listId ?? injectLocal(listIdKey, useId()) as string
 
 const mergedProps = computed(() => {
   return getComponentMergedProps('list', props)

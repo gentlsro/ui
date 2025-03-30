@@ -106,11 +106,12 @@ defineExpose({
     <Tooltip
       v-if="tooltip || $slots.tooltip"
       :offset="8"
-      :class="mergedProps.ui?.tooltipClass"
-      :style="mergedProps.ui?.tooltipStyle"
       v-bind="tooltip?.props"
     >
-      <slot name="tooltip">
+      <slot
+        v-if="tooltip?.label || $slots.tooltip"
+        name="tooltip"
+      >
         {{ tooltip.label }}
       </slot>
     </Tooltip>

@@ -509,7 +509,7 @@ export const defaultComponentsConfig = {
         moveHandleClass: 'p-t-2 color-ca',
         contentClass: hasSearch => hasSearch ? 'p-x-2 p-t-0' : 'p-2',
         searchClass: 'gap-1 p-2',
-        rowClass: () => 'p-r-2 m-y-1px rounded-custom',
+        rowClass: () => 'p-r-2 m-y-1px p-y-1 rounded-custom',
         rowStyle: ({ groupsCount }) => ({ paddingLeft: `${(groupsCount || 1) * 8}px` }),
         rowGroupStyle: ({ level }) => ({ paddingLeft: `${level * 8}px` }),
       },
