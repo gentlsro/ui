@@ -46,7 +46,9 @@ export function useBreadcrumbs(
 
   setTitle()
 
-  watch(trigger, setTitle)
+  if (trigger) {
+    watch(trigger, setTitle)
+  }
 
   return { breadcrumbs: injectedBreadcrumbs, refresh: setTitle }
 }
