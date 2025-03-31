@@ -96,8 +96,6 @@ const classes = computed(() => {
     <Tooltip
       v-if="tooltip || $slots.tooltip"
       :offset="8"
-      :class="mergedProps.ui?.tooltipClass"
-      :style="mergedProps.ui?.tooltipStyle"
       v-bind="tooltip?.props"
     />
 

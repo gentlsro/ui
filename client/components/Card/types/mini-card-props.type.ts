@@ -2,7 +2,7 @@ import type { CSSProperties } from 'vue'
 
 // Types
 import type { IValueFormatterProps } from '../../ValueFormatter/types/value-formatter-props.type'
-import type { NavigateToOptions } from '../../../../../Utilities/client/types/navigate-to.type'
+import type { NavigateToOptions } from '$utilsLayer/client/types/navigate-to.type'
 
 export type IMiniCardProps = IValueFormatterProps & {
   /**
