@@ -131,7 +131,7 @@ export const defaultComponentsConfig = {
     },
     home: {
       icon: 'i-lucide:home',
-      path: '/',
+      path: '/' as string | (() => string),
       label: undefined as undefined | (() => string | undefined),
       component: undefined as any,
     },
