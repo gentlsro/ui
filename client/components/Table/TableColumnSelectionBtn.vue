@@ -24,6 +24,10 @@ const {
 // Layout
 const visibleColumnsLocal = ref<TableColumn[]>([])
 
+const interactiveNonHelperColumns = computed(() => {
+  return nonHelperColumns.value.filter(col => !col.nonInteractive)
+})
+
 const visibleNonHelperColumns = computed(() => {
   return visibleColumnsStore.value.filter(col => !col.isHelperCol)
 })
@@ -120,7 +124,7 @@ function handleRemove(idx: number) {
       </span>
 
       <span font="rem-10">
-        ({{ visibleNonHelperColumns.length }}/{{ nonHelperColumns.length }})
+        ({{ visibleNonHelperColumns.length }}/{{ interactiveNonHelperColumns.length }})
       </span>
     </div>
 
@@ -173,7 +177,7 @@ function handleRemove(idx: number) {
 
           <List
             v-model:selection="visibleColumnsLocal"
-            :items="nonHelperColumns"
+            :items="interactiveNonHelperColumns"
             item-key="field"
             item-label="_label"
             :selection-config="{ enabled: true, multi: true, useCheckbox: true }"
