@@ -246,9 +246,6 @@ export function useTableStore(
       // Merge columns from all the sources, remove duplicates
       let cols = columnsMerged
 
-      console.log('columnsMerged', cols)
-      console.log('shouldSchemaBeUsed', noState.value || !state.value?.columns?.length || !uiState.value.table?.autoSaveSchema)
-
       // Transform columns
       const { columns: _columns, queryBuilder: qb, pagination } = tableTransformColumns({
         internalColumns: cols,
@@ -263,8 +260,6 @@ export function useTableStore(
       })
 
       cols = _columns
-
-      console.log('columns transformed', cols)
 
       // Extend columns with grouping and selection
       cols = extendColumns(cols, { selectionConfig: selectionConfig.value })
