@@ -46,7 +46,6 @@ function getUsedProperties(payload: {
   // Special case, if the URL doesn't define any visible columns, we try to use
   // the columns from default schema
   if (!result.visibleColumns.length && defaultSchemaResult.visibleColumns.length) {
-    console.log('Using default schema visible columns')
     result.visibleColumns = defaultSchemaResult.visibleColumns
   }
 
