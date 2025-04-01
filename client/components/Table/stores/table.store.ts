@@ -261,6 +261,8 @@ export function useTableStore(
 
       cols = _columns
 
+      console.log('defaultSchema', state.value.layoutDefault?.schema)
+
       // Extend columns with grouping and selection
       cols = extendColumns(cols, { selectionConfig: selectionConfig.value })
 

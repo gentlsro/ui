@@ -39,10 +39,21 @@ function getUsedProperties(payload: {
       || defaultSchemaResult.queryBuilder.length
       || defaultSchemaResult.visibleColumns.length)
 
+  const result = isUrlUsed && (modifiers?.useUrl || forceUrlUsage)
+    ? urlResult
+    : defaultSchemaResult
+
+  // Special case, if the URL doesn't define any visible columns, we try to use
+  // the columns from default schema
+  if (!result.visibleColumns.length && defaultSchemaResult.visibleColumns.length) {
+    console.log('Using default schema visible columns')
+    result.visibleColumns = defaultSchemaResult.visibleColumns
+  }
+
   return {
     isUrlUsed: !!isUrlUsed,
     isSchemaUsed: !!isSchemaUsed,
-    result: isUrlUsed && (modifiers?.useUrl || forceUrlUsage) ? urlResult : defaultSchemaResult,
+    result,
   }
 }
 
@@ -128,7 +139,6 @@ export function tableTransformColumns(payload: {
     modifiers,
     searchParams: defaultSchema,
   })
-  console.log('Log ~ defaultSchemaResult:', defaultSchemaResult)
 
   // URL schema result
   const urlResult = tableExtractDataFromUrl({
@@ -136,7 +146,6 @@ export function tableTransformColumns(payload: {
     modifiers,
     searchParams: initialParams ?? urlSchema,
   })
-  console.log('Log ~ urlResult:', urlResult)
 
   const { result, isUrlUsed, isSchemaUsed } = getUsedProperties({
     shouldUrlBeUsed,
@@ -146,10 +155,6 @@ export function tableTransformColumns(payload: {
     modifiers,
     forceUrlUsage: !!initialParams,
   })
-
-  console.log('isSchemaUsed', isSchemaUsed)
-  console.log('isUrlUsed', isUrlUsed)
-  console.log('result', result)
 
   if (!isSchemaUsed && !isUrlUsed) {
     _columns = _columns.toSorted((a, b) => {
