@@ -188,10 +188,9 @@ const $z = useZod(
             class="relative top-1"
             self-start
             shrink-0
-            m="t-1.5"
           />
 
-          <span p="y-1.5">
+          <span>
             {{ item.ref._label }}
           </span>
         </template>
