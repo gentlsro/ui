@@ -269,7 +269,7 @@ export function useTableStore(
 
       // Set the query builder
       queryBuilder.value = qb.length ? qb : queryBuilderInitializeItems()
-      // state.value.queryBuilder = queryBuilder.value
+      state.value.queryBuilder = queryBuilder.value
 
       // Set the pagination
       if (pagination?.take || pagination?.skip) {
