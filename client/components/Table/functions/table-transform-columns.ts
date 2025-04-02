@@ -138,7 +138,6 @@ export function tableTransformColumns(payload: {
     modifiers,
     searchParams: defaultSchema,
   })
-  console.log("🚀 ~ defaultSchemaResult:", defaultSchemaResult)
 
   // URL schema result
   const urlResult = tableExtractDataFromUrl({
@@ -146,7 +145,6 @@ export function tableTransformColumns(payload: {
     modifiers,
     searchParams: initialParams ?? urlSchema,
   })
-  console.log("🚀 ~ urlResult:", urlResult)
 
   const { result, isUrlUsed, isSchemaUsed } = getUsedProperties({
     shouldUrlBeUsed,
@@ -156,7 +154,6 @@ export function tableTransformColumns(payload: {
     modifiers,
     forceUrlUsage: !!initialParams,
   })
-  console.log("🚀 ~ result:", result)
 
   if (!isSchemaUsed && !isUrlUsed) {
     _columns = _columns.toSorted((a, b) => {
@@ -166,11 +163,12 @@ export function tableTransformColumns(payload: {
       return aSort - bSort
     })
 
-    return { columns: _columns, queryBuilder: [] }
+    return { columns: _columns, queryBuilder: result.queryBuilder }
   }
 
   const { filters, queryBuilder, sort, visibleColumns } = result
   const _visibleColumns = visibleColumns.map(col => modifiers?.caseInsensitive ? col.toLowerCase() : col)
+  console.log("🚀 ~ queryBuilder:", queryBuilder)
 
   // Handle order of the columns, their visibility, filters and sorting
   _columns = _columns

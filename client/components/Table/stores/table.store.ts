@@ -427,6 +427,7 @@ export function useTableStore(
     function getFetchPayload(
       payload?: Partial<Parameters<typeof tableBuildFetchPayload>[0]>,
     ) {
+      console.log("🚀 ~ getFetchPayload ~ queryBuilder.value:", queryBuilder.value)
       const { buildFetchPayload = tableBuildFetchPayload } = modifiers.value ?? {}
 
       const lastRow = rows.value[rows.value.length - 1] as IItem
