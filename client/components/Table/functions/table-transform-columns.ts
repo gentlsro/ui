@@ -163,7 +163,7 @@ export function tableTransformColumns(payload: {
       return aSort - bSort
     })
 
-    return { columns: _columns, queryBuilder: [] }
+    return { columns: _columns, queryBuilder: result.queryBuilder }
   }
 
   const { filters, queryBuilder, sort, visibleColumns } = result
