@@ -68,8 +68,6 @@ const customFilterComponent = computed(() => {
       return undefined
     }
 
-    console.log(filterComponent)
-
     return {
       ...filterComponent,
       component: typeof filterComponent.component === 'string'
