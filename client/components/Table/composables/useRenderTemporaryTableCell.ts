@@ -12,6 +12,7 @@ import { getComponentProps } from '../../../functions/get-component-props'
 import Checkbox from '../../Checkbox/Checkbox.vue'
 
 export function useRenderTemporaryTableCell() {
+  const { currentLocaleCode } = useLocale()
   const { setTempComponent } = useUIStore()
 
   async function getCellWidth(
@@ -23,7 +24,11 @@ export function useRenderTemporaryTableCell() {
     let cleanup: () => void = () => {}
 
     const value = col.valueGetter(row)
-    const formattedValue = formatValue(value, row, { format: col.format, dataType: col.dataType })
+    const formattedValue = formatValue(
+      value,
+      row,
+      { format: col.format, dataType: col.dataType, localeIso: currentLocaleCode.value },
+    )
 
     // @ts-expect-error
     const { cellInnerClass, cellInnerStyle, cellClass, cellStyle } = getComponentProps('table').ui?.() ?? {}
