@@ -282,5 +282,7 @@ export function tableTransformColumns(payload: {
     selectUsed: !!visibleColumns.length,
     queryBuilderUsed: !!queryBuilder.length,
     pagination: result.pagination,
+    isSchemaUsed,
+    isUrlUsed,
   }
 }

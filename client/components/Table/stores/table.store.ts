@@ -29,6 +29,7 @@ import { queryBuilderInitializeItems } from '../../QueryBuilder/functions/query-
 
 // Components
 import type HorizontalScroller from '../../Scroller/HorizontalScroller.vue'
+import { useRequestURL } from 'nuxt/app'
 
 // Provide / Inject
 export const tableIdKey = Symbol('__tableId')
@@ -247,7 +248,7 @@ export function useTableStore(
       let cols = columnsMerged
 
       // Transform columns
-      const { columns: _columns, queryBuilder: qb, pagination } = tableTransformColumns({
+      const { columns: _columns, queryBuilder: qb, pagination, isSchemaUsed, isUrlUsed } = tableTransformColumns({
         internalColumns: cols,
         modifiers: modifiers.value,
         defaultSchema: state.value.layoutDefault?.schema ?? '',
@@ -268,8 +269,12 @@ export function useTableStore(
       internalColumns.value = cols
 
       // Set the query builder
-      queryBuilder.value = qb.length ? qb : queryBuilderInitializeItems()
-      state.value.queryBuilder = queryBuilder.value
+      console.log("🚀 ~ returndefineStore ~ isUrlUsed:", isUrlUsed)
+      console.log("🚀 ~ returndefineStore ~ isSchemaUsed:", isSchemaUsed)
+      if (isSchemaUsed || isUrlUsed) {
+        queryBuilder.value = qb.length ? qb : queryBuilderInitializeItems()
+        state.value.queryBuilder = queryBuilder.value
+      }
 
       // Set the pagination
       if (pagination?.take || pagination?.skip) {
