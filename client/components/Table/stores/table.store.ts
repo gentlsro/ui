@@ -269,6 +269,7 @@ export function useTableStore(
 
       // Set the query builder
       queryBuilder.value = qb.length ? qb : queryBuilderInitializeItems()
+      console.log("🚀 ~ Setting query builder:", queryBuilder.value)
       // state.value.queryBuilder = queryBuilder.value
 
       // Set the pagination
@@ -427,7 +428,7 @@ export function useTableStore(
     function getFetchPayload(
       payload?: Partial<Parameters<typeof tableBuildFetchPayload>[0]>,
     ) {
-      console.log("🚀 ~ getFetchPayload ~ queryBuilder.value:", queryBuilder.value)
+      console.log("🚀 ~ Getting query builder in getFetchPayload ~ queryBuilder.value:", queryBuilder.value)
       const { buildFetchPayload = tableBuildFetchPayload } = modifiers.value ?? {}
 
       const lastRow = rows.value[rows.value.length - 1] as IItem

@@ -168,7 +168,6 @@ export function tableTransformColumns(payload: {
 
   const { filters, queryBuilder, sort, visibleColumns } = result
   const _visibleColumns = visibleColumns.map(col => modifiers?.caseInsensitive ? col.toLowerCase() : col)
-  console.log("🚀 ~ queryBuilder:", queryBuilder)
 
   // Handle order of the columns, their visibility, filters and sorting
   _columns = _columns
