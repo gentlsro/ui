@@ -506,6 +506,7 @@ export function useTableStore(
         return
       }
 
+      console.log("🚀 ~ Fetching meta data ~ queryBuilder.value:", queryBuilder.value)
       const fetchPayload = getFetchPayload()
       isMetaLoading.value = true
       const res = await handleRequest(
