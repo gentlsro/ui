@@ -139,7 +139,7 @@ export function useTableStore(
     const noState = ref(tableProps?.noState ?? false)
     const rowKey = ref<string>(tableProps?.rowKey ?? 'id')
     const search = ref(tableProps?.search ?? '')
-    const queryBuilder = ref<IQueryBuilderRow[]>([])
+    const queryBuilder = ref<IQueryBuilderRow[]>(tableProps?.queryBuilder ?? [])
     const emptyValue = ref<any>(tableProps?.emptyValue)
     const allowComparatorsOfSameType = ref(tableProps?.allowComparatorsOfSameType ?? false)
     const minimumColumnWidth = ref(tableProps?.minimumColumnWidth ?? 80)
