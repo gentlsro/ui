@@ -11,9 +11,6 @@ type IProps = {
 
 const props = defineProps<IProps>()
 
-// Utils
-const { currentLocaleCode } = useLocale()
-
 // Store
 const { internalColumns } = storeToRefs(useTableStore())
 
@@ -29,7 +26,7 @@ const {
 } = useRefReset(() => props.filter, { modifyFnc: val => new FilterItem(val) })
 
 const formattedValue = computed(() => {
-  return formatValue(props.filter.value, undefined, { dataType: props.filter.dataType, localeIso: currentLocaleCode.value })
+  return formatValue(props.filter.value, undefined, { dataType: props.filter.dataType })
 })
 
 const column = computed(() => {
