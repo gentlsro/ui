@@ -418,7 +418,8 @@ export function useTableStore(
         select: selectSerialized.value,
         sorting: sortingSerialized.value,
         filters: filtersSerialized.value,
-        queryBuilder: queryBuilderSerialized.value,
+        queryBuilder: [],
+        // queryBuilder: queryBuilderSerialized.value,
         search: search.value,
         ...paginationSerialized.value,
       })
