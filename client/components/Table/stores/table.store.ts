@@ -268,9 +268,8 @@ export function useTableStore(
       internalColumns.value = cols
 
       // Set the query builder
-      console.log('Query builder', qb)
-      // queryBuilder.value = qb.length ? qb : queryBuilderInitializeItems()
-      state.value.queryBuilder = queryBuilder.value
+      queryBuilder.value = qb.length ? qb : queryBuilderInitializeItems()
+      // state.value.queryBuilder = queryBuilder.value
 
       // Set the pagination
       if (pagination?.take || pagination?.skip) {
