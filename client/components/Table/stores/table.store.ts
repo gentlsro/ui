@@ -268,7 +268,8 @@ export function useTableStore(
       internalColumns.value = cols
 
       // Set the query builder
-      queryBuilder.value = qb.length ? qb : queryBuilderInitializeItems()
+      console.log('Query builder', qb)
+      // queryBuilder.value = qb.length ? qb : queryBuilderInitializeItems()
       state.value.queryBuilder = queryBuilder.value
 
       // Set the pagination
@@ -418,8 +419,7 @@ export function useTableStore(
         select: selectSerialized.value,
         sorting: sortingSerialized.value,
         filters: filtersSerialized.value,
-        queryBuilder: [],
-        // queryBuilder: queryBuilderSerialized.value,
+        queryBuilder: queryBuilderSerialized.value,
         search: search.value,
         ...paginationSerialized.value,
       })
