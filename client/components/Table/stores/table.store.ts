@@ -272,9 +272,10 @@ export function useTableStore(
       if (isSchemaUsed || isUrlUsed) {
         queryBuilder.value = qb.length ? qb : queryBuilderInitializeItems()
         state.value.queryBuilder = queryBuilder.value
+      } else {
+        console.log(state.value)
+        queryBuilder.value = state.value.queryBuilder ?? queryBuilderInitializeItems()
       }
-      console.log("🚀 ~ returndefineStore ~ isUrlUsed:", isUrlUsed)
-      console.log("🚀 ~ returndefineStore ~ isSchemaUsed:", isSchemaUsed)
 
       // Set the pagination
       if (pagination?.take || pagination?.skip) {
