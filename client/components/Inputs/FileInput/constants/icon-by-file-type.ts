@@ -13,4 +13,6 @@ export const ICON_BY_FILE_TYPE = {
   'application/msword': 'vscode-icons:file-type-word2', // DOC
   'application/vnd.ms-powerpoint': 'vscode-icons:file-type-powerpoint2', // PPT
   'text/plain': 'i-hugeicons:txt-01', // TXT
+  'application/json': 'i-bi:filetype-json', // JSON
+  'application/zip': 'i-hugeicons:zip-01', // ZIP
 } as const

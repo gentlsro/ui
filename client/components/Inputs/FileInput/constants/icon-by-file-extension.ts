@@ -11,4 +11,5 @@ export const ICON_BY_FILE_EXTENSION = {
   ppt: 'vscode-icons:file-type-powerpoint2', // PPT
   txt: 'i-hugeicons:txt-01', // TXT
   json: 'i-bi:filetype-json', // JSON
+  zip: 'i-hugeicons:zip-01', // ZIP
 } as const
