@@ -77,7 +77,7 @@ const isModified = computed(() => {
               class="value-container-card__value"
               :class="[
                 mergedProps.ui?.valueClass,
-                { 'font-bold': !noBold, 'is-modified': isModified },
+                { 'font-semibold': !noBold, 'is-modified': isModified },
               ]"
               :style="mergedProps.ui?.valueStyle"
             >
@@ -93,7 +93,7 @@ const isModified = computed(() => {
               v-bind="navigateToOptions"
               :class="[
                 mergedProps.ui?.valueClass,
-                { 'font-bold': !noBold, 'is-modified': isModified },
+                { 'font-semibold': !noBold, 'is-modified': isModified },
               ]"
               :style="mergedProps.ui?.valueStyle"
             >
@@ -118,7 +118,7 @@ const isModified = computed(() => {
             <span
               v-if="!toPreviousValue || !val"
               class="value-container-card__value"
-              :class="[mergedProps.ui?.previousValueClass, { 'font-bold': !noBold }]"
+              :class="[mergedProps.ui?.previousValueClass, { 'font-semibold': !noBold }]"
               :style="mergedProps.ui?.previousValueStyle"
             >
               {{ getShownValue(val) }}
@@ -128,7 +128,7 @@ const isModified = computed(() => {
               v-else
               :to="toPreviousValue"
               class="link"
-              :class="[mergedProps.ui?.previousValueClass, { 'font-bold': !noBold }]"
+              :class="[mergedProps.ui?.previousValueClass, { 'font-semibold': !noBold }]"
               :style="mergedProps.ui?.previousValueStyle"
             >
               <span class="link__label">

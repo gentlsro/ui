@@ -22,11 +22,11 @@ export function useBreadcrumbs(
 
   const injectedBreadcrumbs = injectLocal(breadcrumbsKey, ref([])) as Ref<IBreadcrumb[]>
 
-  if (breadcrumbsRef) {
-    injectedBreadcrumbs.value = toValue(breadcrumbsRef)
-  }
-
   function setTitle() {
+    if (breadcrumbsRef) {
+      injectedBreadcrumbs.value = toValue(breadcrumbsRef)
+    }
+
     if (injectedBreadcrumbs.value && title) {
       useHead({ title })
     } else if (injectedBreadcrumbs.value && useLastBreadcrumbAsTitle) {

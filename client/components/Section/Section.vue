@@ -32,7 +32,7 @@ const titleElement = computed(() => {
 <template>
   <section
     class="section"
-    :class="mergedProps.ui?.sectionClass"
+    :class="[mergedProps.ui?.sectionClass, { 'is-dense': props.dense }]"
     :style="mergedProps.ui?.sectionStyle"
   >
     <!-- Title -->
@@ -80,6 +80,10 @@ const titleElement = computed(() => {
 <style scoped lang="scss">
 .section {
   @apply flex flex-col;
+
+  &.is-dense {
+    @apply "!p-0";
+  }
 
   &__title {
     @apply relative font-semibold m-b-0 p-b-0.5;

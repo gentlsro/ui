@@ -5,6 +5,7 @@ import type { TableFeature } from './types/table-feature.type'
 import type { IQueryBuilderRow } from '../QueryBuilder/types/query-builder-row-props.type'
 
 type IProps = Pick<ITableProps, 'queryBuilder' | 'queryBuilderProps' | 'search' | 'features' | 'ui'>
+  & { forceVisibility?: boolean }
 
 const props = defineProps<IProps>()
 
@@ -21,7 +22,8 @@ const featuresEnabledByName = computed<Record<TableFeature, boolean>>(() => {
 })
 
 const isTableTopVisible = computed(() => {
-  return featuresEnabledByName.value.queryBuilderDialog
+  return props.forceVisibility
+    || featuresEnabledByName.value.queryBuilderDialog
     || featuresEnabledByName.value.queryBuilder
     || featuresEnabledByName.value.filterChips
     || featuresEnabledByName.value.search
