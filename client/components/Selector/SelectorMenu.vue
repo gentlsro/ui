@@ -46,7 +46,6 @@ const listProps = computed(() => {
 
 const menuClass = computed(() => {
   return {
-    'has-label': !!props.label,
     'is-menu-width-matched': !props.noMenuMatchWidth,
   }
 })
@@ -163,3 +162,17 @@ watch(contentHeight, () => {
     </List>
   </MenuProxy>
 </template>
+
+<style lang="scss">
+.selector-menu[placement='top'] {
+  .list-content {
+    @apply p-t-2;
+  }
+}
+
+.selector-menu[placement='bottom'] {
+  .list-content {
+    @apply p-b-2;
+  }
+}
+</style>

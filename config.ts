@@ -894,7 +894,7 @@ export const defaultComponentsConfig = {
       listProps: {
         clearable: false,
         ui: {
-          contentClass: hasSearch => hasSearch ? 'p-x-2 p-b-2' : 'p-2',
+          contentClass: hasSearch => hasSearch ? 'p-x-2' : 'p-2',
           searchClass: 'gap-1 p-2',
         },
       },
