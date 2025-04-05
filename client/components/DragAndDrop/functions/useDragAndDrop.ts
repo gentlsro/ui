@@ -150,7 +150,7 @@ export function useDragAndDrop<T = IItem>(
 
     const item: T = (dndState.draggedEl as any)?.['get-item']?.()
 
-    const shouldPrevent = onDragStart({ el: dndState.draggedEl!, item, dndState })
+    const shouldPrevent = onDragStart({ el: dndState.draggedEl!, item, dndState, event })
 
     if (shouldPrevent === true) {
       return
@@ -225,7 +225,7 @@ export function useDragAndDrop<T = IItem>(
 
     const item: T = (dndState.draggedEl as any)?.['get-item']?.()
 
-    const shouldPrevent = onDragStart({ el: dndState.draggedEl!, item, dndState })
+    const shouldPrevent = onDragStart({ el: dndState.draggedEl!, item, dndState, event })
 
     if (shouldPrevent === true) {
       return
