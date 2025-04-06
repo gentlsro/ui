@@ -1,8 +1,8 @@
-export type IListItem = {
+export type IListItem<T = any> = {
   /**
    * The item reference (original object)
    */
-  ref: any
+  ref: T
 
   /**
    * The unique ID of the item
