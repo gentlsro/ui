@@ -3,7 +3,7 @@
 // Types
 import type { IFieldProps } from '../../../Field/types/field-props.type'
 
-export type IColorProps = IFieldProps & {
+export type IColorInputProps = IFieldProps & {
   /**
    * A list of colors that are not allowed to be selected
    */

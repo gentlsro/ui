@@ -54,7 +54,7 @@ import type { IBreadcrumbsProps } from './client/components/Breadcrumbs/types/br
 import type { IFileInputProps } from './client/components/Inputs/FileInput/types/file-input-props.type'
 import type { IFieldWithFormatterProps } from './client/components/Field/types/field-with-formatter.type'
 import type { IValueFormatterProps } from './client/components/ValueFormatter/types/value-formatter-props.type'
-import type { IColorProps } from './client/components/Inputs/ColorInput/types/color-props.type'
+import type { IColorInputProps } from './client/components/Inputs/ColorInput/types/color-props.type'
 import type { ITimeInputProps } from './client/components/Inputs/TimeInput/types/time-input-props.type'
 import type { ICurrencyInputProps } from './client/components/Inputs/CurrencyInput/types/currency-input-props.type'
 import type { IDurationInputProps } from './client/components/Inputs/DurationInput/types/duration-input-props.type'
@@ -1233,7 +1233,7 @@ export type IUIConfig = {
   checkbox: IConfigItem<ICheckboxProps>
   chip: IConfigItem<IChipProps>
   collapse: IConfigItem<ICollapseProps>
-  colorInput: IConfigItem<IColorProps>
+  colorInput: IConfigItem<IColorInputProps>
   confirmation: IConfigItem<IConfirmationProps>
   crudBtns: IConfigItem<ICrudBtnProps>
   currencyInput: IConfigItem<ICurrencyInputProps>

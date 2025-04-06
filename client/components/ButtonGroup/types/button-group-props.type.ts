@@ -7,7 +7,7 @@ export type IButtonGroupProps = {
   /**
    * The value of the active button
    */
-  modelValue: string | number
+  modelValue?: string | number
 
   /**
    * A list of buttons in the group

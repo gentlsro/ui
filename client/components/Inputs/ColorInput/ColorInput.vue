@@ -1,12 +1,12 @@
 <script setup lang="ts">
 // Types
-import type { IColorProps } from './types/color-props.type'
+import type { IColorInputProps } from './types/color-props.type'
 
 // Functions
 import { useFieldUtils } from '../../Field/functions/useFieldUtils'
 import { getComponentMergedProps, getComponentProps } from '../../../functions/get-component-props'
 
-const props = withDefaults(defineProps<IColorProps>(), {
+const props = withDefaults(defineProps<IColorInputProps>(), {
   ...getComponentProps('colorInput'),
 })
 
