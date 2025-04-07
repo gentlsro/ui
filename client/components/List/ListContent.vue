@@ -62,7 +62,7 @@ const contentStyle = computed(() => {
     ref="listEl"
     :rows="listItems"
     class="list-content"
-    :row-height="32"
+    :row-height="36"
     :fetch-more="isFetchMore"
     :class="contentClass"
     :style="contentStyle"

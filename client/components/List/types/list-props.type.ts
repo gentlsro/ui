@@ -231,6 +231,11 @@ export type IListProps = {
     enabled?: boolean
 
     /**
+     * When true, the search input will not be visible even when the `enabled` is true
+     */
+    hidden?: boolean
+
+    /**
      * The extended search token for fuse.js library
      * https://www.fusejs.io/examples.html#extended-search
      *

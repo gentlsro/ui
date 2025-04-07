@@ -170,9 +170,7 @@ export function useListKeyboard(config?: { registerKeyStroke?: boolean }) {
       nextTick(() => {
         const listElDom = unrefElement(listEl)
         resume()
-        itemFocusedEl.value = listElDom.querySelector(
-          '.list-row-item.is-focused',
-        ) as HTMLDivElement
+        itemFocusedEl.value = listElDom?.querySelector('.list-row-item.is-focused') as HTMLDivElement
       })
     }
 

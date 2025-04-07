@@ -84,7 +84,7 @@ const isSearchInputVisible = computed(() => {
     return false
   }
 
-  return mergedProps.value.searchConfig?.enabled
+  return mergedProps.value.searchConfig?.enabled && !mergedProps.value.searchConfig?.hidden
 })
 
 // Sync with store
