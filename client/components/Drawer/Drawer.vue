@@ -64,7 +64,7 @@ function handleTransition(
       <DrawerTitle
         v-if="title"
         v-model="model"
-        :title="title"
+        :title
         :ui="mergedProps.ui"
       />
     </slot>

@@ -18,7 +18,10 @@ const isOpen = defineModel<boolean>()
   >
     <slot name="left" />
 
-    <Heading grow>
+    <Heading
+      grow
+      :highlighted="false"
+    >
       {{ title }}
     </Heading>
 
