@@ -320,7 +320,15 @@ function scrollTo(idx: number) {
 /**
  * Scrolls to the bottom of the virtual scroller
  */
-function scrollToBottom() {
+function scrollToBottom(payload?: {
+  /**
+   * When make sure is true, it will check the scroll position in the next
+   * animation frame and repeat the process until the scroll position is at the bottom
+   */
+  makeSure?: boolean
+}) {
+  const { makeSure = false } = payload ?? {}
+
   if (!virtualScrollEl.value) {
     return
   }
@@ -330,13 +338,15 @@ function scrollToBottom() {
   if (virtualScrollEl.value) {
     virtualScrollEl.value.scrollTop = scrollHeight
 
-    requestAnimationFrame(() => {
-      const diff = scrollTop - (scrollHeight - clientHeight)
+    if (makeSure) {
+      requestAnimationFrame(() => {
+        const diff = scrollTop - (scrollHeight - clientHeight)
 
-      if (Math.abs(diff) >= 1) {
-        scrollToBottom()
-      }
-    })
+        if (Math.abs(diff) >= 1) {
+          scrollToBottom()
+        }
+      })
+    }
   }
 }
 

@@ -133,7 +133,7 @@ export function useListKeyboard(config?: { registerKeyStroke?: boolean }) {
     if (!itemSelected) {
       // Got above start
       if (itemFocusedIdx.value < 0) {
-        listEl.value?.scrollToBottom()
+        listEl.value?.scrollToBottom({ makeSure: true })
         itemFocusedIdx.value = items.length
       }
 
