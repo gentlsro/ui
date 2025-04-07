@@ -24,7 +24,7 @@ export type IDrawerProps = {
   /**
    * Whether the drawer is open
    */
-  modelValue: boolean
+  modelValue?: boolean
 
   /**
    * When true, title will be hidden
