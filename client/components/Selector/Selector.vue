@@ -150,7 +150,7 @@ const menuProps = computed(() => {
 })
 
 // Sync with store
-syncRef(model, modelStore, { direction: 'both' })
+syncRef(model, modelStore, { direction: 'both', immediate: false })
 syncRef(search, searchStore, { direction: 'both' })
 syncRef(addedItems, addedItemsStore, { direction: 'both' })
 syncRef(options, optionsStore, { direction: 'both' })
