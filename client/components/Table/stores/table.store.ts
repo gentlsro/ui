@@ -273,7 +273,6 @@ export function useTableStore(
         queryBuilder.value = qb.length ? qb : queryBuilderInitializeItems()
         state.value.queryBuilder = queryBuilder.value
       } else {
-        console.log(state.value)
         queryBuilder.value = state.value.queryBuilder ?? queryBuilderInitializeItems()
       }
 

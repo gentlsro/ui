@@ -71,12 +71,6 @@ export type ISelectorProps = IFieldProps & {
   initialMap?: Record<string, any>
 
   /**
-   * Whether the list should also show currently selected value, works
-   * with `hiddenOptions` prop
-   */
-  hideSelf?: boolean
-
-  /**
    * Maximum number of chips to show in the field
    */
   maxChipsRows?: number

@@ -298,6 +298,6 @@ onUnmounted(() => {
 
 <style scoped lang="scss">
 .table {
-  @apply flex flex-col overflow-auto grow;
+  @apply flex flex-col overflow-auto grow @container;
 }
 </style>

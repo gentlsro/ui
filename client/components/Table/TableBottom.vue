@@ -37,7 +37,7 @@ const {
     >
       <span
         text="caption"
-        class="!lt-md:hidden"
+        class="hidden @lg:block"
       >
         {{ $t('table.rowsPerPage') }}
       </span>
