@@ -14,15 +14,15 @@ import Checkbox from '../../Checkbox/Checkbox.vue'
 import TableHeaderCell from '../TableHeader/TableHeaderCell.vue'
 
 /**
- * Splits a string at a word boundary near the middle and returns the longer part.
+ * Splits a string into two sections at a word boundary near the middle and returns the longer section.
  * If the string is empty, returns an empty string.
  * 
- * NOTE: Made by Claude
+ * NOTE: Modified from Claude's original implementation
  */
 function splitStringInMiddle(input: string): string {
   if (!input) {
-    return ""
-  };
+    return "";
+  }
   
   const words = input.split(" ");
   
@@ -34,29 +34,12 @@ function splitStringInMiddle(input: string): string {
     return words[0]!.length >= words[1]!.length ? words[0]! : words[1]!;
   }
   
-  // Find approximate middle position
-  const middlePos = Math.floor(input.length / 2);
-  
-  // Find word boundary nearest to the middle
-  let splitIndex = 0;
-  let currentPos = 0;
-  
-  for (let i = 0; i < words.length; i++) {
-    const wordLength = words[i]!.length;
-    
-    // If adding this word crosses or gets closer to the middle, track this position
-    if (currentPos + wordLength >= middlePos) {
-      splitIndex = i;
-      break;
-    }
-    
-    // Add word length plus space
-    currentPos += wordLength + 1;
-  }
+  // Find the middle word index
+  const middleWordIndex = Math.floor(words.length / 2);
   
   // Create the two parts
-  const firstPart = words.slice(0, splitIndex).join(" ");
-  const secondPart = words.slice(splitIndex).join(" ");
+  const firstPart = words.slice(0, middleWordIndex).join(" ");
+  const secondPart = words.slice(middleWordIndex).join(" ");
   
   // Return the longer part
   return firstPart.length >= secondPart.length ? firstPart : secondPart;
@@ -162,7 +145,7 @@ export function useRenderTemporaryTableCell() {
         { class: _headerCellClass, style: _headerCellStyle },
         [
           h('span', { class: _headerCellInnerClass, style: _headerCellInnerStyle }, [longerPart]),
-          h('div', { style: { flexShrink: 0, width: '32px', height: '32px' } }),
+          ...(hasFilterBtn ? [h('div', { style: { flexShrink: 0, width: '32px', height: '32px' } })] : []),
         ],
       )
     },
