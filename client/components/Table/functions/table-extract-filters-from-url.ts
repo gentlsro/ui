@@ -202,7 +202,7 @@ function parseItemSegment(
 /**
  * Recursively parse the filter string into structured data.
  */
-export function parseFilterString(
+function parseFilterString(
   filterStr: string,
   results: IQueryBuilderRow[] = [],
   parentPath = '',
@@ -298,6 +298,8 @@ export function tableExtractFiltersFromUrl(payload: {
    */
   modifyFnc?: (queryString: string, key: string) => string
 }) {
+  console.log('here!')
+
   // Column filters
   const filters = extractFilterPartFromUrl({
     ...payload,
