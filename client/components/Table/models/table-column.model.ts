@@ -528,7 +528,7 @@ export class TableColumn<T = IItem> {
       }
     }
 
-    const headerWidth = await getHeaderWidth(this, ui)
+    const headerWidth = await getHeaderWidth(this, ui) + 1 // +1 for the border
 
     const colMinWidth = Math.min(
       Math.max(
