@@ -27,6 +27,11 @@ export function tableMergeColumns(payload: {
     const apiCol = (apiColumns.find(col => col.field === colField))
     let stateCol = stateColumns.find(col => col.field === colField)
 
+    // Make sure to remove columns that are only in the state but not in any other sources
+    if (!apiCol && !propsCol) {
+      return null
+    }
+
     // In case we don't want to use state, we just extract the `field` and `width`
     // from the state col to keep consistency. We do not include filters, sorting,...
     if (!useState && stateCol) {
@@ -35,6 +40,7 @@ export function tableMergeColumns(payload: {
 
     // Merge the column objects, with given priority: state > props > api
     const col = merge({}, apiCol, propsCol, stateCol) as TableColumn<any>
+
 
     col.misc = {
       ...col.misc,
@@ -46,5 +52,5 @@ export function tableMergeColumns(payload: {
     const filters = col.filters?.map(f => new FilterItem(f)) ?? []
 
     return new TableColumn({ ...col, filters })
-  })
+  }).filter(Boolean) as TableColumn<any>[]
 }
