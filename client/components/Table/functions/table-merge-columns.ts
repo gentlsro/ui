@@ -28,9 +28,8 @@ export function tableMergeColumns(payload: {
     let stateCol = stateColumns.find(col => col.field === colField)
 
     // Make sure to remove columns that are only in the state but not in any other sources
-    if (!apiCol && !propsCol) {
-      console.log("🚀 ~ non existent:", stateCol)
-
+    // But only if there actually are some api columns
+    if (apiColumns.length && !apiCol && !propsCol) {
       return null
     }
 
