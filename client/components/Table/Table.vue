@@ -93,6 +93,7 @@ const {
   emits: storeEmits,
   rowClickable,
   initialSchemaConfig,
+  uiConfig,
 } = storeToRefs(store)
 
 // Set emits
@@ -124,6 +125,7 @@ syncRef(toRef(props, 'rowsLimit'), rowsLimit, { direction: 'ltr' })
 syncRef(isLoading, isDataLoading, { direction: 'both' })
 syncRef(toRef(props, 'rowClickable'), rowClickable, { direction: 'ltr' })
 syncRef(toRef(mergedProps.value, 'initialSchemaConfig'), initialSchemaConfig, { direction: 'ltr' })
+syncRef(toRef(mergedProps.value, 'ui'), uiConfig, { direction: 'ltr', immediate: false })
 
 // When columns change, make sure to get their real widths
 watch(visibleColumns, cols => {

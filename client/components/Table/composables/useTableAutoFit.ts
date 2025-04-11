@@ -14,6 +14,7 @@ export function useTableAutoFit() {
     minimumColumnWidth,
     virtualScrollEl,
     visibleColumns,
+    uiConfig,
   } = storeToRefs(useTableStore())
 
   const tableSlots = injectLocal(tableSlotsKey)
@@ -77,6 +78,7 @@ export function useTableAutoFit() {
           slotRenderFnc,
           tableMinColWidth: minimumColumnWidth.value,
           autofitConfig: autofitConfig.value,
+          ui: uiConfig.value,
         })
       }
 
@@ -115,6 +117,7 @@ export function useTableAutoFit() {
             ...autofitConfig.value,
             considerHeader: mode === 'fit-with-header',
           },
+          ui: uiConfig.value,
         })
       }
     }

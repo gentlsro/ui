@@ -465,8 +465,9 @@ export class TableColumn<T = IItem> {
     slotRenderFnc?: Function
     tableMinColWidth: number
     autofitConfig?: ITableProps['autoFit']
+    ui?: ITableProps['ui']
   }) {
-    const { rows, slotRenderFnc, tableMinColWidth = 80, autofitConfig } = payload
+    const { rows, slotRenderFnc, tableMinColWidth = 80, autofitConfig, ui } = payload
 
     if (!this.resizable) {
       return
@@ -477,7 +478,7 @@ export class TableColumn<T = IItem> {
       rowsLimit = 80,
       considerHeader = false,
     } = autofitConfig ?? getComponentProps('table').autoFit()
-    const { getCellWidth } = useRenderTemporaryTableCell()
+    const { getCellWidth, getHeaderWidth } = useRenderTemporaryTableCell()
 
     let maxContentWidth = 0
 
@@ -521,18 +522,21 @@ export class TableColumn<T = IItem> {
       const _rows = (rows || []).slice(0, rowsLimit)
 
       for await (const row of _rows) {
-        const width = await getCellWidth(row, this, slotRenderFnc)
+        // const width = await getCellWidth(row, this, slotRenderFnc)
+        const width = 400
 
         maxContentWidth = Math.max(maxContentWidth, width)
       }
     }
+
+    const headerWidth = await getHeaderWidth(this, ui)
 
     const labelChars = this._label.length
     const colMinWidth = Math.min(
       Math.max(
         tableMinColWidth,
         this.minWidth || 0,
-        considerHeader ? labelChars * 8 + 40 : 0, // These numbers are arbitrary
+        considerHeader ? headerWidth : 0,
         maxContentWidth + 1, // + 1 for the border
       ),
       maxColumnWidthChars * 6 + 20, // When autofitting, we don't want to go over some predefined value

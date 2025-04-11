@@ -2,8 +2,15 @@
 // Functions
 import { useTableAutoFit } from './composables/useTableAutoFit'
 
+// Store
+const { uiState } = storeToRefs(useUIStore())
+
 // Utils
 const { fitColumns } = useTableAutoFit()
+
+const mode = computed(() => {
+  return uiState.value.table.fit === 'fit' ? 'fit' : 'fit-with-header'
+})
 </script>
 
 <template>
@@ -13,7 +20,7 @@ const { fitColumns } = useTableAutoFit()
     icon="i-material-symbols:fit-width"
     p="!x-2"
     color="ca"
-    @click="fitColumns"
+    @click="fitColumns(undefined, { mode })"
   >
     <!-- Label -->
     <div class="items-center hidden lg:flex gap-1">

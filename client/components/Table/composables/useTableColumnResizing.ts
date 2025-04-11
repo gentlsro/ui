@@ -24,6 +24,7 @@ export function useTableColumnResizing() {
     minimumColumnWidth,
     internalColumns,
     visibleColumns,
+    uiConfig,
   } = storeToRefs(useTableStore())
 
   // Splitters (for resizing columns)
@@ -90,6 +91,7 @@ export function useTableColumnResizing() {
         slotRenderFnc,
         tableMinColWidth: minimumColumnWidth.value,
         autofitConfig: autofitConfig.value,
+        ui: uiConfig.value,
       })
 
       // Trigger the reactivity on columns

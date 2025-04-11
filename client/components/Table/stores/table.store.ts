@@ -121,6 +121,7 @@ export function useTableStore(
 
     // SECTION Configs
     const modifiers = ref<ITableProps['modifiers']>(tableProps?.modifiers)
+    const uiConfig = ref<ITableProps['ui']>(tableProps?.ui)
     const splitRowsConfig = ref<ITableProps['splitRows']>(tableProps?.splitRows ?? [])
     const loadMetaData = ref<ITableProps['loadMetaData']>(tableProps?.loadMetaData)
     const loadData = ref<ITableProps['loadData']>(tableProps?.loadData)
@@ -616,6 +617,7 @@ export function useTableStore(
       selectionConfig,
       splitRowsConfig,
       initialSchemaConfig,
+      uiConfig,
 
       // General
       rowKey,
