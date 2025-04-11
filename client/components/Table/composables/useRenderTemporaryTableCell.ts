@@ -66,19 +66,22 @@ function splitStringInMiddle(input: string): string {
 export function useRenderTemporaryTableCell() {
   const { setTempComponent } = useUIStore()
 
-  async function getCellWidth(
+  async function getCellWidth(payload: {
     row: any,
     col: TableColumn<any>,
     slotRenderFnc?: Function,
-  ) {
+    ui?: ITableProps['ui'], 
+  }) {
+    const { row, col, slotRenderFnc, ui } = payload
+
     let maxContentWidth = 0
     let cleanup: () => void = () => {}
 
     const value = col.valueGetter(row)
     const formattedValue = formatValue(value, row, { format: col.format, dataType: col.dataType })
-
+    
     // @ts-expect-error
-    const { cellInnerClass, cellInnerStyle, cellClass, cellStyle } = getComponentProps('table').ui?.() ?? {}
+    const { cellInnerClass, cellInnerStyle, cellClass, cellStyle } = ui ?? getComponentProps('table').ui?.() ?? {}
 
     const _cellClass = [cellClass, 'flex', 'items-center']
 
@@ -140,10 +143,27 @@ export function useRenderTemporaryTableCell() {
 
     const longerPart = splitStringInMiddle(col._label)
 
+    // @ts-expect-error
+    const { headerCellClass, headerCellInnerClass, headerCellStyle, headerCellInnerStyle } = ui ?? getComponentProps('table').ui?.() ?? {}
+
+    // UI
+    const _headerCellClass = ['flex items-center gap-2', headerCellClass, col.headerClass]
+    const _headerCellStyle = { ...headerCellStyle, ...col.headerStyle }
+
+    const _headerCellInnerClass = [headerCellInnerClass]
+    const _headerCellInnerStyle = headerCellInnerStyle
+
+    const isHelperCol = col.isHelperCol || col.nonInteractive
+    const hasFilterBtn = (col.filterable || col.sortable) && !isHelperCol
+
     cleanup = setTempComponent(() => {
       return h(
-        TableHeaderCell,
-        { ui, column: new TableColumn({ ...col, label: longerPart, width: 'auto' }) },
+        'div',
+        { class: _headerCellClass, style: _headerCellStyle },
+        [
+          h('span', { class: _headerCellInnerClass, style: _headerCellInnerStyle }, [longerPart]),
+          h('div', { style: { flexShrink: 0, width: '32px', height: '32px' } }),
+        ],
       )
     },
     )

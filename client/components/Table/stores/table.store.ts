@@ -588,10 +588,6 @@ export function useTableStore(
     }
     // !SECTION
 
-    watchEffect(() => {
-      console.log(modifiers.value, tableProps)
-    })
-
     return {
       // Utils
       isMetaLoading,

@@ -506,11 +506,12 @@ export class TableColumn<T = IItem> {
           { labelChars: 0, row: undefined } as Record<string, any>,
         )
 
-      maxContentWidth = await getCellWidth(
-        maxContentRow.row,
-        this,
+      maxContentWidth = await getCellWidth({
+        row: maxContentRow.row,
+        col: this,
         slotRenderFnc,
-      )
+        ui
+      })
 
       // We add a litle bit of tolerance
       maxContentWidth += 4
@@ -522,7 +523,12 @@ export class TableColumn<T = IItem> {
       const _rows = (rows || []).slice(0, rowsLimit)
 
       for await (const row of _rows) {
-        const width = await getCellWidth(row, this, slotRenderFnc)
+        const width = await getCellWidth({
+          row,
+          col: this,
+          slotRenderFnc,
+          ui
+        })
 
         maxContentWidth = Math.max(maxContentWidth, width)
       }
