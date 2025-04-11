@@ -20,7 +20,7 @@ export function useTableAutoFit() {
 
   async function fitColumns(
     ev?: Partial<Pick<PointerEvent, 'shiftKey' | 'ctrlKey' | 'metaKey'>>,
-    options?: { mode?: 'fit' | 'stretch' | 'justify' },
+    options?: { mode?: 'fit' | 'stretch' | 'justify' | 'fit-with-header' },
   ) {
     const { mode = uiState.value.table?.fit } = options ?? {}
     if (!ev && !mode) {
@@ -103,7 +103,6 @@ export function useTableAutoFit() {
     }
 
     // Fit columns ~ will try to fit the columns based on their content
-    // Fit columns ~ will try to fit the columns based on their content
     else {
       for await (const col of resizableColumns) {
         const slotRenderFnc = tableSlots?.[col.field]
@@ -112,7 +111,10 @@ export function useTableAutoFit() {
           rows: rows.value,
           slotRenderFnc,
           tableMinColWidth: minimumColumnWidth.value,
-          autofitConfig: autofitConfig.value,
+          autofitConfig: {
+            ...autofitConfig.value,
+            considerHeader: mode === 'fit-with-header',
+          },
         })
       }
     }

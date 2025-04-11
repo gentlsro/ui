@@ -12,6 +12,6 @@ export type IUIState = {
 
   table: {
     autoSaveSchema: boolean
-    fit: 'fit' | 'stretch' | 'justify' | null
+    fit: 'fit' | 'stretch' | 'justify' | 'fit-with-header' | null
   }
 }

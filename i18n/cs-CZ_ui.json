@@ -62,9 +62,11 @@
     "autoJustifyColumnsExplain": "Když otevřete tabulku, šířky sloupců budou sjednoceny – všechny budou stejně široké.",
     "autoJustifyColumns": "Stejné šířky sloupců",
     "autoJustifyColumnsExplain2": "Poznámka: V některých případech se šířka sloupců automaticky upraví podle předem definovaných hodnot.",
-    "autoFitColumns": "Dynamická šířka sloupců",
+    "autoFitColumns": "ŠÍřka sloupců podle jejich obsahu",
     "autoFitColumnsExplain": "Když otevřete tabulku, šířky sloupců se přizpůsobí podle obsahu.",
-    "filteredManually": "Vyfiltrováno manuálně"
+    "filteredManually": "Vyfiltrováno manuálně",
+    "autoFitColumnsWithHeader": "ŠÍřka sloupců podle jejich obsahu, s přihlédnutím k velikosti nadpisu",
+    "autoFitColumnsWithHeaderExplain": "Podobné jako \"Šířka sloupců podle jejich obsahu\" s tím rozdílem, že bude do výpočtu zahrnuta velikost také nadpisu sloupce"
   },
   "queryBuilder": {
     "self": "Pokročilé filtrování",

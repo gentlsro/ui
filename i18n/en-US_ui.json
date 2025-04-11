@@ -64,7 +64,9 @@
     "autoJustifyColumnsExplain2": "Note: There are special cases when the column width will be auto-adjusted based on internally predefined values",
     "nonInteractiveColumn": "Non-interactive column",
     "useLayout": "Use layout",
-    "filteredManually": "Filtered manually"
+    "filteredManually": "Filtered manually",
+    "autoFitColumnsWithHeader": "Auto-fit columns with consideration for the header width",
+    "autoFitColumnsWithHeaderExplain": "Similar to the \"Auto-fit\" option, but the header's width is also considered"
   },
   "queryBuilder": {
     "and": "and",

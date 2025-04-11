@@ -54,6 +54,19 @@ function setFitColumns(mode: NonNullable<IUIState['table']>['fit'], unset?: bool
 
     <Separator m="y-2" />
 
+    <!-- Auto-fit columns with header -->
+    <Checkbox
+      :model-value="uiState.table?.fit === 'fit-with-header'"
+      :label="$t('table.autoFitColumnsWithHeader')"
+      @update:model-value="setFitColumns('fit-with-header', uiState.table?.fit === 'fit-with-header')"
+    />
+
+    <span class="hint">
+      {{ $t('table.autoFitColumnsWithHeaderExplain') }}
+    </span>
+
+    <Separator m="y-2" />
+
     <!-- Auto-justify columns -->
     <Checkbox
       :model-value="uiState.table?.fit === 'justify'"
