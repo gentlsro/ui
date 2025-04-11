@@ -522,8 +522,7 @@ export class TableColumn<T = IItem> {
       const _rows = (rows || []).slice(0, rowsLimit)
 
       for await (const row of _rows) {
-        // const width = await getCellWidth(row, this, slotRenderFnc)
-        const width = 400
+        const width = await getCellWidth(row, this, slotRenderFnc)
 
         maxContentWidth = Math.max(maxContentWidth, width)
       }
@@ -531,7 +530,6 @@ export class TableColumn<T = IItem> {
 
     const headerWidth = await getHeaderWidth(this, ui)
 
-    const labelChars = this._label.length
     const colMinWidth = Math.min(
       Math.max(
         tableMinColWidth,

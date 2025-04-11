@@ -16,6 +16,7 @@ export function useTableColumnResizing() {
   const tableSlots = inject(tableSlotsKey)
 
   // Store
+  const { uiState } = storeToRefs(useUIStore())
   const {
     virtualScrollEl,
     autofitConfig,
@@ -90,7 +91,10 @@ export function useTableColumnResizing() {
         rows: rows.value,
         slotRenderFnc,
         tableMinColWidth: minimumColumnWidth.value,
-        autofitConfig: autofitConfig.value,
+        autofitConfig: {
+          ...autofitConfig.value,
+          considerHeader: uiState.value.table.fit === 'fit-with-header',
+        },
         ui: uiConfig.value,
       })
 
