@@ -34,8 +34,6 @@ const {
 
 // Helpers
 function getUnifiedSchema(schema: string | URLSearchParams) {
-  console.log(modifiers.value)
-
   const { filters, queryBuilder, sort, visibleColumns } = tableExtractDataFromUrl({
     columns: internalColumns.value,
     modifiers: modifiers.value,

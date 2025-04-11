@@ -132,6 +132,8 @@ export function tableTransformColumns(payload: {
     }
   }
 
+  console.log('transform columns', modifiers)
+
   // Default schema result
   const defaultSchemaResult = tableExtractDataFromUrl({
     columns: _columns,
