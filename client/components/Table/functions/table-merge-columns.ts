@@ -28,9 +28,9 @@ export function tableMergeColumns(payload: {
     let stateCol = stateColumns.find(col => col.field === colField)
 
     // Make sure to remove columns that are only in the state but not in any other sources
-    if (!apiCol && !propsCol) {
-      return null
-    }
+    // if (!apiCol && !propsCol) {
+    //   return null
+    // }
 
     // In case we don't want to use state, we just extract the `field` and `width`
     // from the state col to keep consistency. We do not include filters, sorting,...
