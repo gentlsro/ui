@@ -248,8 +248,6 @@ export function useTableStore(
       // Merge columns from all the sources, remove duplicates
       let cols = columnsMerged
 
-      console.log('from store', modifiers.value)
-
       // Transform columns
       const { columns: _columns, queryBuilder: qb, pagination, isSchemaUsed, isUrlUsed } = tableTransformColumns({
         internalColumns: cols,

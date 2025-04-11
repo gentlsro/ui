@@ -124,7 +124,11 @@ export function useRenderTemporaryTableCell() {
     let cleanup: () => void = () => {}
     let maxContentWidth = 0
 
-    const longerPart = splitStringInMiddle(col._label)
+    // Split the label into two sections at a word boundary near the middle
+    // in case we have a longer label
+    const longerPart = col._label.length > 16
+      ? splitStringInMiddle(col._label)
+      : col._label
 
     // @ts-expect-error
     const { headerCellClass, headerCellInnerClass, headerCellStyle, headerCellInnerStyle } = ui ?? getComponentProps('table').ui?.() ?? {}
