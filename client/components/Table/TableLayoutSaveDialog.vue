@@ -87,6 +87,10 @@ const urlSchema = computed(() => {
   return getUnifiedSchema(urlSearchParams.value)
 })
 
+watchEffect(() => {
+  console.log(urlSchema.value)
+})
+
 const canBeSaved = computed(() => {
   return (toSave.value.columns)
     || (toSave.value.filters && !!(urlSchema.value.filters || urlSchema.value.queryBuilder))
