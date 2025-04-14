@@ -87,10 +87,6 @@ const urlSchema = computed(() => {
   return getUnifiedSchema(urlSearchParams.value)
 })
 
-watchEffect(() => {
-  console.log(urlSchema.value)
-})
-
 const canBeSaved = computed(() => {
   return (toSave.value.columns)
     || (toSave.value.filters && !!(urlSchema.value.filters || urlSchema.value.queryBuilder))
@@ -229,7 +225,7 @@ const $z = useZod(
           </template>
 
           <template #append>
-            <div v-if="!urlSchema.filters && toSave.filters">
+            <div v-if="!urlSchema.filters && !urlSchema.queryBuilder && toSave.filters">
               <div class="i-clarity:warning-solid w-5 h-5 color-amber-500" />
 
               <Tooltip>
