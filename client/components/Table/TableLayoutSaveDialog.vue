@@ -21,6 +21,7 @@ const props = defineProps<IProps>()
 const emits = defineEmits<{ (e: 'hide'): void }>()
 
 // Utils
+const route = useRoute()
 const { isLoading, handleRequest } = useRequest()
 
 // Store
@@ -78,10 +79,12 @@ const toSave = ref({
   isDefault: false,
 })
 
-const urlSchema = computed(() => {
-  console.log(useRequestURL().searchParams)
+const urlSearchParams = computed(() => {
+  return new URLSearchParams(route.query as Record<string, string>)
+})
 
-  return getUnifiedSchema(useRequestURL().searchParams)
+const urlSchema = computed(() => {
+  return getUnifiedSchema(urlSearchParams.value)
 })
 
 const canBeSaved = computed(() => {
@@ -98,7 +101,7 @@ function loadLayout() {
     queryBuilder,
     sorting,
     select,
-  } = getUnifiedSchema(props.layout?.schema ?? useRequestURL().searchParams)
+  } = getUnifiedSchema(props.layout?.schema ?? urlSearchParams.value)
 
   toSave.value = {
     columns: !!select,
