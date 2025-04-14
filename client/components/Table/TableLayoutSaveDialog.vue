@@ -21,6 +21,8 @@ const props = defineProps<IProps>()
 const emits = defineEmits<{ (e: 'hide'): void }>()
 
 // Utils
+const route = useRoute()
+console.log('🚀 ~ route:', route)
 const { isLoading, handleRequest } = useRequest()
 
 // Store
