@@ -109,6 +109,10 @@ useListItemAdding()
 // Initial load data
 const isImmediate = mergedProps.value.loadData?.immediate || !props.items || !props.items.length
 
+const isImmediate2 = mergedProps.value.loadData?.immediate !== false
+  && (!props.items || !props.items.length)
+console.log('🚀 ~ isImmediate2:', isImmediate2)
+
 // We load data immediately if required
 if (mergedProps.value.loadData?.fnc && isImmediate) {
   listStore.fetchAndSetData()
