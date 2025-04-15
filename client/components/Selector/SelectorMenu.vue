@@ -135,7 +135,7 @@ watch(contentHeight, () => {
           v-if="!noSearch"
           v-model:search="search"
           :ui="listProps.ui"
-          :input-props="listProps.searchInputProps"
+          :search-input-props="listProps.searchInputProps"
         />
       </template>
 
