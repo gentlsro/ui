@@ -57,7 +57,6 @@ export async function listFetchData(payload: {
   }, { noResolve: true })
 
   let _items = payloadKey ? get(res, payloadKey) : res
-  console.log('Log ~ _items:', _items)
   const _count = countKey ? get(res, countKey) : _items.length
 
   if (onFetchData) {

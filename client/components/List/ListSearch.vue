@@ -7,7 +7,7 @@ import { useListStore } from './stores/list.store'
 
 type IProps = Pick<IListProps, 'searchInputProps' | 'ui' | 'search'>
 
-defineProps<IProps>()
+const props = defineProps<IProps>()
 
 defineSlots<{
   default: (props: { search?: string, isLoading: boolean, items: IItem[] }) => any
@@ -21,6 +21,8 @@ const { searchEl, isLoading, items, $zAddItem } = storeToRefs(useListStore())
 
 // Layout
 const search = defineModel<string>('search')
+
+console.log(props.searchInputProps)
 </script>
 
 <template>
