@@ -107,8 +107,6 @@ syncRef(toRef(props, 'modifiers'), modifiers, { direction: 'ltr' })
 useListItemAdding()
 
 // Initial load data
-console.log('props', props)
-console.log('mergedProps', mergedProps.value)
 const isImmediate = mergedProps.value.loadData?.immediate !== false
   && (!props.items || !props.items.length)
 
