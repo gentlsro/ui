@@ -176,7 +176,15 @@ export function useListStore(listId?: string, listProps?: IListProps) {
       }, {} as Record<string, boolean>) ?? {}
     })
 
-    watch(search, () => {
+    watch(search, searchVal => {
+      // Check if the search value is below the minimum number of characters
+      const minChars = searchConfig.value?.minChars ?? 0
+      const _searchVal = (searchVal ?? '')?.trim()
+
+      if (_searchVal?.length < minChars) {
+        return
+      }
+
       // Debounce the search to fetch data
       if (typeof loadData.value?.onSearch === 'number') {
         debouncedFetchAndSetData({ isFetchMore: false, force: true })

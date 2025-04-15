@@ -236,6 +236,11 @@ export type IListProps = {
     hidden?: boolean
 
     /**
+     * The minimum number of characters to trigger the search
+     */
+    minChars?: number
+
+    /**
      * The extended search token for fuse.js library
      * https://www.fusejs.io/examples.html#extended-search
      *
