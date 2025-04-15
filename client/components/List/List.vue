@@ -111,7 +111,7 @@ const isImmediate = mergedProps.value.loadData?.immediate || !props.items || !pr
 
 const isImmediate2 = mergedProps.value.loadData?.immediate !== false
   && (!props.items || !props.items.length)
-console.log('🚀 ~ isImmediate2:', isImmediate2)
+console.log('🚀 ~ isImmediate2:', mergedProps.value.loadData?.immediate, isImmediate2)
 
 // We load data immediately if required
 if (mergedProps.value.loadData?.fnc && isImmediate) {
