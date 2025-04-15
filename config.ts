@@ -529,7 +529,6 @@ export const defaultComponentsConfig = {
       },
       loadData: {
         fnc: undefined,
-        immediate: false,
         payloadKey: 'data',
         countKey: 'count',
       },
