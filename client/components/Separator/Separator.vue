@@ -25,7 +25,9 @@ const classes = computed(() => {
     class="separator"
     :class="classes"
   >
-    &#8203;
+    <slot>
+      &#8203;
+    </slot>
   </span>
 </template>
 
