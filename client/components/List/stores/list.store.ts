@@ -1,4 +1,4 @@
-import { ZodSchema } from 'zod'
+import { ZodType } from 'zod'
 import { skipHydrate } from 'pinia'
 import type { Required } from 'utility-types'
 import type { GroupItem, SortItem } from '$utils'
@@ -134,14 +134,14 @@ export function useListStore(listId?: string, listProps?: IListProps) {
     // Add validation
     const validation = addConfig.value?.validation as NonNullable<IListProps['addConfig']>['validation']
     let validationSchemaKey = 'search'
-    let validationSchema: ZodSchema | undefined
+    let validationSchema: ZodType | undefined
 
-    if (validation instanceof ZodSchema) {
+    if (validation instanceof ZodType) {
       validationSchema = validation
     } else if (validation) {
       validationSchemaKey = validation.key
       // @ts-expect-error
-      validationSchema = validation.schema.shape[validation.key] as ZodSchema
+      validationSchema = validation.schema.shape[validation.key] as ZodType
     }
 
     const $zAddItem = useZod(

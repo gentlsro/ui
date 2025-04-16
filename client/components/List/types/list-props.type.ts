@@ -58,9 +58,9 @@ export type IListProps = {
      * }
      */
     validation?:
-      z.ZodSchema<any, any, any>
+      z.ZodType<any, any>
       | {
-        schema: z.ZodSchema<any, any, any>
+        schema: z.ZodType<any, any>
         key: string
       }
   }
