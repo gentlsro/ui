@@ -23,7 +23,7 @@ const isMonorepo = import.meta.env.VITE_MONOREPO === 'true'
 export default defineNuxtConfig({
   extends: isMonorepo
     ? [['../Utilities']]
-    : [['github:gentlsro/Utilities#master']],
+    : [['github:gentlsro/Utilities#zod_upgrade']],
 
   // Modules https://nuxt.com/docs/api/configuration/nuxt-config#modules
   modules: [
