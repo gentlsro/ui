@@ -12,6 +12,8 @@ const props = defineProps<
   }
 >()
 
+console.log(props)
+
 // Layout
 const isMounted = useMounted()
 

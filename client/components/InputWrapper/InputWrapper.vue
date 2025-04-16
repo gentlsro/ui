@@ -29,8 +29,6 @@ const mergedProps = computed(() => {
   return getComponentMergedProps('inputWrapper', props)
 })
 
-console.log(props, mergedProps.value)
-
 // Layout
 const wrapperEl = ref<HTMLDivElement>()
 
