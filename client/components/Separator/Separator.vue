@@ -33,7 +33,7 @@ const classes = computed(() => {
 
 <style lang="scss" scoped>
 .separator {
-  @apply flex border-true-gray/40 rounded-full;
+  @apply flex flex-center border-true-gray/40 rounded-full;
 
   &-horizontal {
     @apply w-full border-b-1;
