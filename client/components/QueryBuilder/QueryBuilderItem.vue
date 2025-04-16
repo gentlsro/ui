@@ -129,7 +129,7 @@ const $z = useZod(
     item: z.object({
       field: z.string(),
       comparator: z.string(),
-      value: z.unknown().refine(val => {
+      value: z.unknown().optional().refine(val => {
         if (isNonValueComparator.value) {
           return isNil(val)
         }
