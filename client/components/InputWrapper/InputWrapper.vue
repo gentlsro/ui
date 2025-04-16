@@ -78,7 +78,9 @@ const contentClass = computed(() => {
   }
 })
 
-const wrapperStyleVariables = computed(() => getInputWrapperStyleVariables(props))
+const wrapperStyleVariables = computed(() => {
+  return getInputWrapperStyleVariables({ ...props, ...mergedProps.value })
+})
 
 const isInputRequired = computed(() => {
   if (!isNil(props.required)) {
