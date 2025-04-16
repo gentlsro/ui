@@ -160,7 +160,7 @@ label.label {
 
 .wrapper__body:not(.selector-wrapper):focus-within > div {
   > label.label {
-    color: var(--active-color, var(--color-primary));
+    color: var(--activeColor, var(--color-primary));
 
     &:not(.is-inline) {
       @apply font-rem-12;
