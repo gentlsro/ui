@@ -8,7 +8,7 @@ import type { IVirtualScrollEvent } from '../VirtualScroller/types/virtual-scrol
 import { useListStore } from './stores/list.store'
 import { useListKeyboard } from './composables/useListKeyboard'
 
-type IProps = Pick<IListProps, 'ui' | 'noHover' | 'reorderable' | 'disabledFnc'>
+type IProps = Pick<IListProps, 'ui' | 'noHover' | 'reorderable' | 'disabledFnc' | 'scrollerConfig'>
 
 const props = defineProps<IProps>()
 defineEmits<{
@@ -27,6 +27,7 @@ const {
   isFetchMore,
   searchConfig,
   dragMeta,
+  itemKey,
 } = storeToRefs(listStore)
 
 const { handleMouseOver } = useListKeyboard()
@@ -59,10 +60,10 @@ const contentStyle = computed(() => {
 <template>
   <VirtualScroller
     v-if="listItems?.length"
+    v-bind="scrollerConfig"
     ref="listEl"
     :rows="listItems"
     class="list-content"
-    :row-height="36"
     :fetch-more="isFetchMore"
     :class="contentClass"
     :style="contentStyle"

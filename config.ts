@@ -522,6 +522,7 @@ export const defaultComponentsConfig = {
         enabled: true,
         sortBy: undefined,
       },
+      scrollerConfig: { rowHeight: 36 },
       selection: undefined,
       selectionConfig: {
         enabled: false,
@@ -542,7 +543,7 @@ export const defaultComponentsConfig = {
       },
       modifiers: {},
     },
-    merge: ['searchConfig', 'ui', 'sortingConfig', 'selectionConfig', 'loadData', 'addConfig', 'searchInputProps', 'modifiers'],
+    merge: ['searchConfig', 'ui', 'sortingConfig', 'selectionConfig', 'loadData', 'addConfig', 'searchInputProps', 'modifiers', 'scrollerConfig'],
   },
 
   // Loader
