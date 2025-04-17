@@ -56,11 +56,11 @@ export type ITabsProps = {
     /**
      * Class to apply to the tab's navigation button
      */
-    tabNavBtnClass?: (isActive: boolean) => ClassType
+    tabNavBtnClass?: (isActive: boolean, idx: number) => ClassType
 
     /**
      * Style to apply to the tab's navigation button
      */
-    tabNavBtnStyle?: (isActive: boolean) => CSSProperties
+    tabNavBtnStyle?: (isActive: boolean, idx: number) => CSSProperties
   }
 }
