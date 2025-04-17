@@ -42,7 +42,7 @@ function getLabel(tab: ITabProps) {
       <Btn
         :icon="tab.props.icon"
         :label="getLabel(tab.props) ?? tab.name"
-        :class="ui?.tabNavBtnClass(model === tab.name)"
+        :class="ui?.tabNavBtnClass?.(model === tab.name)"
         v-bind="tab.props.btnProps?.(model === tab.name)"
         @click="model = tab.name"
       />
