@@ -34,16 +34,18 @@ function getLabel(tab: ITabProps) {
     }"
   >
     <slot
-      v-for="tab in tabs"
+      v-for="(tab, idx) in tabs"
       :key="tab.id"
+      :idx
       :name="`${tab.name}-label`"
       :change-fn="() => model = tab.name"
     >
       <Btn
         :icon="tab.props.icon"
         :label="getLabel(tab.props) ?? tab.name"
-        :class="ui?.tabNavBtnClass?.(model === tab.name)"
-        v-bind="tab.props.btnProps?.(model === tab.name)"
+        :style="ui?.tabNavBtnStyle?.(model === tab.name, idx)"
+        :class="ui?.tabNavBtnClass?.(model === tab.name, idx)"
+        v-bind="tab.props.btnProps?.(model === tab.name, idx)"
         @click="model = tab.name"
       />
     </slot>

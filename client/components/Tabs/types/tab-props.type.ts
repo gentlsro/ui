@@ -26,5 +26,5 @@ export type ITabProps = {
   /**
    * The props that should be passed to the button
    */
-  btnProps?: (isActive: boolean) => Partial<IBtnProps>
+  btnProps?: (isActive: boolean, idx: number) => Partial<IBtnProps>
 }
