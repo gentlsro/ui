@@ -98,6 +98,7 @@ const contentStyle = computed(() => {
           :no-hover
           :reorderable
           :ui
+          :is-last="index === listItems.length - 1"
           :disabled-fnc
           @mouseover="handleMouseOver(row, index)"
         >
