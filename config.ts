@@ -543,7 +543,17 @@ export const defaultComponentsConfig = {
       },
       modifiers: {},
     },
-    merge: ['searchConfig', 'ui', 'sortingConfig', 'selectionConfig', 'loadData', 'addConfig', 'searchInputProps', 'modifiers', 'scrollerConfig'],
+    merge: [
+      'searchConfig',
+      'ui',
+      'sortingConfig',
+      'selectionConfig',
+      'loadData',
+      'addConfig',
+      'searchInputProps',
+      'modifiers',
+      'scrollerConfig',
+    ],
   },
 
   // Loader
