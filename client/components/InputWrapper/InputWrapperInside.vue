@@ -143,12 +143,18 @@ const classes = computed(() => {
   transition: border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
   @apply absolute fit border-custom rounded-$borderRadius pointer-events-none
-    border-ca;
+    border-$borderColorBase;
+}
+
+.input-wrapper__inside:hover {
+  > .input-wrapper__inside-border {
+    @apply border-$borderColorHover;
+  }
 }
 
 .input-wrapper__inside:focus-within {
   > .input-wrapper__inside-border {
-    @apply border-$borderColor;
+    @apply border-$borderColorFocus;
   }
 }
 

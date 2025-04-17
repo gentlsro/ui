@@ -2,6 +2,8 @@
 import type { IInputWrapperProps } from '../../InputWrapper/types/input-wrapper-props.type'
 
 export function useInputWrapperUtils() {
+  const { isDark } = useTheme()
+
   function getInputWrapperProps(props: IInputWrapperProps) {
     return reactivePick(
       props,
@@ -31,6 +33,18 @@ export function useInputWrapperUtils() {
   }
 
   function getInputWrapperStyleVariables(props: IInputWrapperProps) {
+    const borderColorBase = typeof props.ui?.borderColor?.base === 'function'
+      ? props.ui?.borderColor?.base(isDark.value)
+      : props.ui?.borderColor?.base
+
+    const borderColorFocus = typeof props.ui?.borderColor?.focus === 'function'
+      ? props.ui?.borderColor?.focus(isDark.value)
+      : props.ui?.borderColor?.focus
+
+    const borderColorHover = typeof props.ui?.borderColor?.hover === 'function'
+      ? props.ui?.borderColor?.hover(isDark.value)
+      : props.ui?.borderColor?.hover
+
     const styleVariables = {
       '--fontSize': '',
       '--labelFontSize': '',
@@ -38,7 +52,9 @@ export function useInputWrapperUtils() {
       '--padding': '',
       '--margin': '',
       '--bodyMargin': '',
-      '--borderColor': props.ui?.borderColor || 'var(--color-primary)',
+      '--borderColorBase': borderColorBase || 'var(--color-primary)',
+      '--borderColorFocus': borderColorFocus || 'var(--color-primary)',
+      '--borderColorHover': borderColorHover || 'var(--color-primary)',
 
       // This is a special case
       // We could use the `extendNestedComponentProps` so the `ui` prop gets extended (not overwritten)

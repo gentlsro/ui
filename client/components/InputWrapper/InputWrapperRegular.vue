@@ -54,7 +54,7 @@ const classes = computed(() => {
 
     <!-- Input -->
     <div
-      class="input-wrapper__input  input-wrapper__regular-input input-wrapper__focusable"
+      class="input-wrapper__input input-wrapper__regular-input input-wrapper__focusable"
       :class="ui?.inputInnerContainerClass"
       :style="ui?.inputInnerContainerStyle"
     >
@@ -139,7 +139,7 @@ const classes = computed(() => {
   grid-row: 1 / 2;
   transition: border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
-  @apply fit border-custom rounded-$borderRadius pointer-events-none border-ca;
+  @apply fit border-custom rounded-$borderRadius pointer-events-none border-$borderColorBase;
 }
 
 // With label
@@ -147,9 +147,15 @@ const classes = computed(() => {
   grid-row: 2 / 3;
 }
 
+.input-wrapper__regular:hover {
+  > .input-wrapper__regular-border {
+    @apply border-$borderColorHover;
+  }
+}
+
 .input-wrapper__regular:focus-within {
   > .input-wrapper__regular-border {
-    @apply border-$borderColor;
+    @apply border-$borderColorFocus;
   }
 }
 

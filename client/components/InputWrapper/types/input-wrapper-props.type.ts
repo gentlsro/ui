@@ -102,7 +102,31 @@ export type IInputWrapperProps = {
     /**
      * The border color of the input
      */
-    borderColor?: string
+    borderColor?: {
+      /**
+       * The color of the border when the input is focused
+       *
+       * Note: This must be a valid CSS color string or a function that returns a valid CSS color string
+       * Not a unocss class
+       */
+      base?: string | ((isDark: boolean) => string)
+
+      /**
+       * The color of the border when the input is focused
+       *
+       * Note: This must be a valid CSS color string or a function that returns a valid CSS color string
+       * Not a unocss class
+       */
+      focus?: string | ((isDark: boolean) => string)
+
+      /**
+       * The color of the border when the input is hovered
+       *
+       * Note: This must be a valid CSS color string or a function that returns a valid CSS color string
+       * Not a unocss class
+       */
+      hover?: string | ((isDark: boolean) => string)
+    }
 
     /**
      * The border radius of the input
