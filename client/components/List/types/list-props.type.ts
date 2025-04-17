@@ -400,12 +400,24 @@ export type IListProps = {
     /**
      * Class to apply to the list row
      */
-    rowClass?: (payload: { isSelected: boolean, row: IItem, groupsCount: number }) => ClassType
+    rowClass?: (
+      payload: {
+        isSelected: boolean
+        row: IItem
+        groupsCount: number
+        isLast: boolean
+      }
+    ) => ClassType
 
     /**
      * Style to apply to the list row
      */
-    rowStyle?: (payload: { isSelected: boolean, row: IItem, groupsCount: number }) => CSSProperties
+    rowStyle?: (payload: {
+      isSelected: boolean
+      row: IItem
+      groupsCount: number
+      isLast: boolean
+    }) => CSSProperties
 
     /**
      * Class to apply to the list row group

@@ -12,6 +12,7 @@ import { useListDragAndDrop } from './composables/useListDragAndDrop'
 
 type IProps = Pick<IListProps, 'ui' | 'noHover' | 'reorderable' | 'disabledFnc'> & {
   item: IListItem
+  isLast: boolean
 }
 
 const props = defineProps<IProps>()
@@ -64,6 +65,7 @@ const rowProps = computed(() => {
         isSelected: isSelected.value,
         groupsCount: groupBy.value.length,
         row: item.value.ref,
+        isLast: props.isLast,
       }),
       {
         'is-reorderable': isReorderable,
@@ -82,6 +84,7 @@ const rowProps = computed(() => {
       isSelected: isSelected.value,
       groupsCount: groupBy.value.length,
       row: item.value.ref,
+      isLast: props.isLast,
     }),
   }
 })
