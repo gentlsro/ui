@@ -140,9 +140,10 @@ watch(contentHeight, () => {
       </template>
 
       <!-- Content -->
-      <template #content="{ ui }">
+      <template #content="{ ui, scrollerConfig }">
         <ListContent
           :ui
+          :scroller-config
           @change:content-size="handleHeightChange($event.height)"
         >
           <template #item="{ row, index }">

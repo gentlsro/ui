@@ -130,8 +130,6 @@ onUnmounted(() => {
 })
 
 defineExpose(listGetExposed())
-
-console.log(mergedProps.value)
 </script>
 
 <template>
