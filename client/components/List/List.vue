@@ -164,12 +164,14 @@ defineExpose(listGetExposed())
     <slot
       name="content"
       :ui="mergedProps.ui"
+      :scroller-config="mergedProps.scrollerConfig"
     >
       <ListContent
         :no-hover
         :reorderable
         :disabled-fnc
         :ui="mergedProps.ui"
+        :scroller-config="mergedProps.scrollerConfig"
         @change:content-size="$emit('change:contentSize', $event)"
       >
         <template #item="itemData">

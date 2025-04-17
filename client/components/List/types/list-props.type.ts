@@ -1,4 +1,5 @@
 import type { z } from 'zod'
+import type { IVirtualScrollerProps } from '$ui'
 import type { ConcreteComponent, CSSProperties } from 'vue'
 import type { FuseOptions } from '@vueuse/integrations/useFuse'
 import type { GroupItem, SortItem } from '$utils'
@@ -213,6 +214,11 @@ export type IListProps = {
    * The tag to use for the row
    */
   rowComponent?: ConcreteComponent | string
+
+  /**
+   * Scroller configuration
+   */
+  scrollerConfig?: Pick<IVirtualScrollerProps<any>, 'rowHeight' | 'overscan' | 'threshold' | 'watchWidth'>
 
   /**
    * The search value
