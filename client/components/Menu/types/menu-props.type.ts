@@ -137,6 +137,11 @@ export type IMenuProps = {
   transitionDuration?: number
 
   /**
+   * The transition class
+   */
+  transitionClass?: string
+
+  /**
    * The trigger event
    */
   trigger?: 'click' | 'contextmenu'

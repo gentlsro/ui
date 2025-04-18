@@ -74,6 +74,10 @@ const dialogMaxHeight = computed(() => {
 })
 
 const transitionClass = computed(() => {
+  if (props.transitionClass) {
+    return props.transitionClass
+  }
+
   switch (props.position) {
     case 'top':
       return 'opacity-0 transform-origin-top translate-y--10'
