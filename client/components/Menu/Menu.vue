@@ -298,6 +298,7 @@ const isOverlayVisible = computed(() => {
       :css="!noTransition"
       :enter-from-class="transitionClass"
       :leave-to-class="transitionClass"
+      :duration="transitionDuration"
       @before-enter="$emit('beforeShow')"
       @before-leave="$emit('beforeHide')"
       @after-leave="commitHide"
