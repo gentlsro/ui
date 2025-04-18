@@ -186,7 +186,7 @@ const isOverlayVisible = computed(() => {
     <div
       v-if="isOverlayVisible"
       class="backdrop"
-      :style="mergedProps.ui?.backdropStyle"
+      :style="{ ...mergedProps.ui?.backdropStyle, '--transitionDuration': `${transitionDuration}ms` }"
       :class="[mergedProps.ui?.backdropClass, { 'is-active': model }]"
     />
 
