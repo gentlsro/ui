@@ -206,6 +206,22 @@ export function useTableStore(
     })
     // !SECTION
 
+    // SECTION Pagination
+    const currentPage = ref(1)
+
+    const totalPages = computed(() => {
+      const pageSize = paginationConfig.value?.pageSize ?? 10
+
+      return Math.ceil(totalRows.value / pageSize)
+    })
+
+    const skip = computed(() => {
+      const pageSize = paginationConfig.value?.pageSize ?? 10
+
+      return (currentPage.value - 1) * pageSize
+    })
+    // !SECTION
+
     // SECTION Columns
     // Columns
     const internalColumns = ref<TableColumn<any>[]>([])
@@ -288,21 +304,6 @@ export function useTableStore(
         syncStateColumns()
       }
     }, { immediate: true })
-    // !SECTION
-
-    // SECTION Pagination
-    const currentPage = ref(1)
-    const totalPages = computed(() => {
-      const pageSize = paginationConfig.value?.pageSize ?? 10
-
-      return Math.ceil(totalRows.value / pageSize)
-    })
-
-    const skip = computed(() => {
-      const pageSize = paginationConfig.value?.pageSize ?? 10
-
-      return (currentPage.value - 1) * pageSize
-    })
     // !SECTION
 
     // SECTION Horizontal scroll syncing

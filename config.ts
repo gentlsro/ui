@@ -483,6 +483,10 @@ export const defaultComponentsConfig = {
       ui: {
         borderRadius: '0.5rem',
         inputContainerClass: 'bg-white dark:bg-black',
+        borderColor: {
+          base: '#737373',
+          focus: 'var(--color-primary)',
+        },
       },
     },
     merge: ['ui'],
