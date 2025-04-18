@@ -195,7 +195,6 @@ const isOverlayVisible = computed(() => {
       :css="!noTransition"
       :enter-from-class="transitionClass"
       :leave-to-class="transitionClass"
-      :duration="transitionDuration"
       @before-enter="$emit('beforeShow')"
       @before-leave="$emit('beforeHide')"
       @after-leave="commitHide"
@@ -336,6 +335,8 @@ const isOverlayVisible = computed(() => {
 .v-enter-active,
 .v-leave-active {
   @apply pointer-events-none;
+
+  transition-duration: var(--transitionDuration);
   transition:
     opacity 0.3s ease,
     transform 0.3s cubic-bezier(0.19, 1, 0.22, 1);
