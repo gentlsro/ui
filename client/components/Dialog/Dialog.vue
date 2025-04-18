@@ -195,6 +195,8 @@ const isOverlayVisible = computed(() => {
       :css="!noTransition"
       :enter-from-class="transitionClass"
       :leave-to-class="transitionClass"
+      :duration="transitionDuration"
+      :style="{ '--transitionDuration': `${transitionDuration}ms` }"
       @before-enter="$emit('beforeShow')"
       @before-leave="$emit('beforeHide')"
       @after-leave="commitHide"
@@ -212,7 +214,6 @@ const isOverlayVisible = computed(() => {
         <div
           ref="floatingEl"
           class="dialog"
-          :style="{ '--transitionDuration': `${transitionDuration}ms` }"
           :class="{ 'has-transition': !noTransition }"
           h="120"
           w="100"
@@ -334,18 +335,16 @@ const isOverlayVisible = computed(() => {
 
 .v-enter-active,
 .v-leave-active {
-  @apply pointer-events-none;
+  @apply pointer-events-none transition-all;
 
+  transition-timing-function: ease-out;
   transition-duration: var(--transitionDuration);
-  transition:
-    opacity 0.3s ease,
-    transform 0.3s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 // Backdrop
 .backdrop {
   @apply fixed inset-0 transition-background-color z-$zBackdrop
-    duration-$transitionDuration ease bg-transparent;
+    duration-$transitionDuration ease-out bg-transparent;
 
   &.is-active {
     @apply bg-darker/70;
