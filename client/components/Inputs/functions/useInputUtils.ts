@@ -28,7 +28,11 @@ export function useInputUtils(options: IInputUtilsOptions) {
 
   const debouncedChange = useDebounceFn((val: any) => {
     if (!props.emitOnBlur) {
-      originalModel.value = val
+      const isSame = isEqual(val, originalModel.value)
+
+      if (!isSame) {
+        originalModel.value = val
+      }
     }
   }, props.debounce ?? 0)
 
