@@ -11,11 +11,12 @@ import { tableSerializeSorting } from './table-serialize-sorting'
 import { tableSerializeSelect } from './table-serialize-select'
 
 export function tableSerializeData(payload: {
+  rowKey: string
   columns: TableColumn[]
   queryBuilder: IQueryBuilderRow[]
   modifiers: ITableProps['modifiers']
 }) {
-  const { columns, queryBuilder, modifiers } = payload
+  const { rowKey, columns, queryBuilder, modifiers } = payload
   const {
     serializeFilters = tableSerializeFilters,
     serializeSorting = tableSerializeSorting,
@@ -26,7 +27,7 @@ export function tableSerializeData(payload: {
 
   const filtersSerialized = serializeFilters(filters)
   const queryBuilderSerialized = serializeFilters(queryBuilder)
-  const sortingSerialized = serializeSorting({ columns })
+  const sortingSerialized = serializeSorting({ columns, rowKey })
   const selectSerialized = serializeSelectedColumns({ columns })
 
   return {

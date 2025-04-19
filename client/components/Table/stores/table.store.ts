@@ -389,7 +389,7 @@ export function useTableStore(
     const sortingSerialized = computed(() => {
       const { serializeSorting = tableSerializeSorting } = modifiers.value ?? {}
 
-      return serializeSorting({ columns: internalColumns.value })
+      return serializeSorting({ columns: internalColumns.value, rowKey: rowKey.value })
     })
 
     const selectSerialized = computed(() => {

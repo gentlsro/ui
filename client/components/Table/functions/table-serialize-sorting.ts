@@ -12,6 +12,8 @@ import type { TableColumn } from '../models/table-column.model'
 export function tableSerializeSorting(payload: {
   columns?: TableColumn[]
   sortItems?: ITableSortItem[]
+  rowKey: string
+  lastRow?: IItem
 }): string {
   const { columns = [], sortItems } = payload
 
