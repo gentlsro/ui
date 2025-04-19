@@ -76,6 +76,7 @@ const contentStyle = computed(() => {
         :index
         :ui
         :is-group="'isGroup' in row"
+        :is-last="index === listItems.length - 1"
       >
         <!-- Group -->
         <ListRowGroup

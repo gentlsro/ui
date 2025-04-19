@@ -220,10 +220,11 @@ function handleRemove(idx: number) {
 
             <template #content="contentProps">
               <ListContent v-bind="contentProps">
-                <template #item-row="{ row, ui }">
+                <template #item-row="{ row, ui, isLast }">
                   <ListRowItem
                     v-if="!('isGroup' in row)"
                     :ui
+                    :is-last
                     :disabled-fnc="isDisabledFnc"
                     :item="row"
                   >
