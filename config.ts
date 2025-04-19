@@ -715,6 +715,7 @@ export const defaultComponentsConfig = {
       noToolbar: undefined,
       noShadow: undefined,
       noHide: undefined,
+      sticky: undefined,
       ui: {
         navigationClass: 'bg-primary',
       },
