@@ -149,7 +149,7 @@ export default defineNuxtConfig({
     },
   },
 
-  // i18ns
+  // i18n
   i18n: {
     strategy: 'prefix_and_default',
     skipSettingLocaleOnNavigate: true,
