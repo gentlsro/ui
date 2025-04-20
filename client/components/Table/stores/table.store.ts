@@ -569,7 +569,7 @@ export function useTableStore(
         },
       )
 
-      const resModified = loadData.value?.onFetch?.(res) ?? res
+      const resModified = loadData.value?.onFetch?.({ res, getStore }) ?? res
       const { payloadKey, countKey = 'count' } = loadData.value ?? {}
 
       const rowsFetched = payloadKey ? (get(resModified, payloadKey) ?? []) : resModified
