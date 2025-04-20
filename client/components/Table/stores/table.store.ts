@@ -589,6 +589,7 @@ export function useTableStore(
 
     return {
       // Utils
+      tableName: _storageKey,
       isMetaLoading,
       isDataLoading,
       isExporting,
