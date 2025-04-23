@@ -72,6 +72,8 @@ const subtitleStyle = computed(() => props.ui?.subtitleStyle?.(props.isOpen))
       </slot>
     </div>
 
+    <slot name="append" />
+
     <!-- Header right -->
     <slot
       name="right"

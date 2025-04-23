@@ -8,10 +8,6 @@ import { getComponentMergedProps, getComponentProps } from '../../functions/get-
 // Components
 import Heading from '../Typography/Heading.vue'
 
-defineOptions({
-  inheritAttrs: false,
-})
-
 const props = withDefaults(defineProps<ISectionProps>(), {
   ...getComponentProps('section'),
 })
@@ -39,6 +35,7 @@ const titleElement = computed(() => {
     <slot
       v-if="$slots.title || title"
       name="title"
+      :ui="mergedProps.ui"
     >
       <Component
         :is="Heading"
@@ -68,7 +65,6 @@ const titleElement = computed(() => {
     <!-- Content -->
     <div
       class="section__content"
-      v-bind="$attrs"
       :class="mergedProps.ui?.contentClass"
       :style="mergedProps.ui?.contentStyle"
     >

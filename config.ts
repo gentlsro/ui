@@ -198,10 +198,8 @@ export const defaultComponentsConfig = {
       title: undefined,
       ui: {
         headerClass: isOpen => isOpen
-          ? 'bg-white dark:bg-dark-700'
-          : 'bg-white dark:bg-dark-700',
-        titleClass: () => 'p-y-2',
-        subtitleClass: () => 'p-b-2 m-t--1',
+          ? 'p-y-1 bg-white dark:bg-dark-700'
+          : 'p-y-1 bg-white dark:bg-dark-700',
       },
     },
     merge: ['ui'],
@@ -441,7 +439,7 @@ export const defaultComponentsConfig = {
   heading: {
     props: {
       filled: undefined,
-      highlighted: true,
+      highlighted: false,
       ui: {},
     },
     merge: ['ui'],
