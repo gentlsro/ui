@@ -440,7 +440,9 @@ export const defaultComponentsConfig = {
     props: {
       filled: undefined,
       highlighted: false,
-      ui: {},
+      ui: {
+        contentClass: 'min-h-10',
+      },
     },
     merge: ['ui'],
   },
