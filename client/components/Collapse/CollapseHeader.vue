@@ -13,6 +13,7 @@ defineSlots<{
   title?: () => any
   subtitle?: () => any
   right?: () => any
+  append?: () => any
   expandIcon?: () => any
 }>()
 
