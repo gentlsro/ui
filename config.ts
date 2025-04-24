@@ -883,7 +883,7 @@ export const defaultComponentsConfig = {
       titleElement: undefined,
       ui: {
         sectionClass: 'max-w-screen-xl p-2',
-        contentClass: 'gap-y-5 gap-x-3 md:p-3 p-t-3',
+        contentClass: 'flex flex-col gap-2',
       },
     },
     merge: ['ui'],
