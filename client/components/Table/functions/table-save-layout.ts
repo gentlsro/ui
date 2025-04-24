@@ -9,6 +9,11 @@ import { tableBuildQueryParams } from './table-build-query-params'
 
 export async function tableSaveLayout(payload: {
   /**
+   * The row key
+   */
+  rowKey: string
+
+  /**
    * The table payload
    */
   tablePayload: ITableFetchPayload
@@ -61,6 +66,7 @@ export async function tableSaveLayout(payload: {
     toSave,
     isDefault,
     isPublic,
+    rowKey,
   } = payload
 
   const { buildParams = tableBuildQueryParams } = modifiers ?? {}
@@ -73,6 +79,7 @@ export async function tableSaveLayout(payload: {
     sorting: sortingSerialized,
     queryBuilder: queryBuilderSerialized,
   } = tableSerializeData({
+    rowKey,
     columns: tableData.columns,
     modifiers,
     queryBuilder: tableData.queryBuilder,

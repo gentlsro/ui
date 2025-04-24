@@ -298,6 +298,7 @@ const isOverlayVisible = computed(() => {
       :css="!noTransition"
       :enter-from-class="transitionClass"
       :leave-to-class="transitionClass"
+      :style="{ '--transitionDuration': `${transitionDuration}ms` }"
       @before-enter="$emit('beforeShow')"
       @before-leave="$emit('beforeHide')"
       @after-leave="commitHide"
@@ -307,10 +308,7 @@ const isOverlayVisible = computed(() => {
         v-if="model"
         ref="floatingEl"
         class="floating-element menu"
-        :style="{
-          ...floatingStyles,
-          '--transitionDuration': `${transitionDuration}ms`,
-        }"
+        :style="floatingStyles"
         :class="{
           'is-cover': cover,
           'is-fit': fit,
@@ -476,6 +474,8 @@ s .menu[placement='right-end'] {
 .v-enter-active,
 .v-leave-active {
   @apply pointer-events-none;
+
+  transition-duration: var(--transitionDuration);
   transition:
     opacity 0.3s ease,
     transform 0.3s cubic-bezier(0.19, 1, 0.22, 1);

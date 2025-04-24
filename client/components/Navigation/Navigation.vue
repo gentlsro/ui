@@ -98,6 +98,7 @@ onMounted(() => {
         'has-shadow': isScrolled && !noShadow,
         'is-hidden': isNavigationHidden && !isDrawerOpen.left && !isDrawerOpen.right,
         'is-initialized': isInitialized,
+        'is-sticky': props.sticky,
       },
     ]"
     :style="{ ...mergedProps.ui?.headerStyle, minHeight: `${minHeight}px` }"
@@ -122,6 +123,10 @@ header {
 
   &.is-initialized {
     @apply fixed;
+  }
+
+  &.is-sticky {
+    @apply sticky;
   }
 }
 </style>

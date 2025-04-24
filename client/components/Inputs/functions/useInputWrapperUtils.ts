@@ -52,9 +52,9 @@ export function useInputWrapperUtils() {
       '--padding': '',
       '--margin': '',
       '--bodyMargin': '',
-      '--borderColorBase': borderColorBase || 'var(--color-primary)',
+      '--borderColorBase': borderColorBase,
       '--borderColorFocus': borderColorFocus || 'var(--color-primary)',
-      '--borderColorHover': borderColorHover || 'var(--color-primary)',
+      '--borderColorHover': borderColorHover || borderColorBase,
 
       // This is a special case
       // We could use the `extendNestedComponentProps` so the `ui` prop gets extended (not overwritten)

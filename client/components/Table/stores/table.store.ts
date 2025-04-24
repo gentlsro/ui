@@ -389,7 +389,7 @@ export function useTableStore(
     const sortingSerialized = computed(() => {
       const { serializeSorting = tableSerializeSorting } = modifiers.value ?? {}
 
-      return serializeSorting({ columns: internalColumns.value })
+      return serializeSorting({ columns: internalColumns.value, rowKey: rowKey.value })
     })
 
     const selectSerialized = computed(() => {
@@ -569,7 +569,7 @@ export function useTableStore(
         },
       )
 
-      const resModified = loadData.value?.onFetch?.(res) ?? res
+      const resModified = loadData.value?.onFetch?.({ res, getStore }) ?? res
       const { payloadKey, countKey = 'count' } = loadData.value ?? {}
 
       const rowsFetched = payloadKey ? (get(resModified, payloadKey) ?? []) : resModified
@@ -589,6 +589,7 @@ export function useTableStore(
 
     return {
       // Utils
+      tableName: _storageKey,
       isMetaLoading,
       isDataLoading,
       isExporting,

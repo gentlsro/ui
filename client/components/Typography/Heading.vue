@@ -25,7 +25,6 @@ const classes = computed(() => {
 <template>
   <h6
     class="heading"
-    min-h="12"
     :class="classes"
     :style="mergedProps.ui?.contentStyle"
   >

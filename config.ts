@@ -198,10 +198,8 @@ export const defaultComponentsConfig = {
       title: undefined,
       ui: {
         headerClass: isOpen => isOpen
-          ? 'bg-white dark:bg-dark-700'
-          : 'bg-white dark:bg-dark-700',
-        titleClass: () => 'p-y-2',
-        subtitleClass: () => 'p-b-2 m-t--1',
+          ? 'p-y-1 bg-white dark:bg-dark-700'
+          : 'p-y-1 bg-white dark:bg-dark-700',
       },
     },
     merge: ['ui'],
@@ -441,8 +439,10 @@ export const defaultComponentsConfig = {
   heading: {
     props: {
       filled: undefined,
-      highlighted: true,
-      ui: {},
+      highlighted: false,
+      ui: {
+        contentClass: 'min-h-10',
+      },
     },
     merge: ['ui'],
   },
@@ -547,7 +547,17 @@ export const defaultComponentsConfig = {
       },
       modifiers: {},
     },
-    merge: ['searchConfig', 'ui', 'sortingConfig', 'selectionConfig', 'loadData', 'addConfig', 'searchInputProps', 'modifiers', 'scrollerConfig'],
+    merge: [
+      'searchConfig',
+      'ui',
+      'sortingConfig',
+      'selectionConfig',
+      'loadData',
+      'addConfig',
+      'searchInputProps',
+      'modifiers',
+      'scrollerConfig',
+    ],
   },
 
   // Loader
@@ -705,6 +715,7 @@ export const defaultComponentsConfig = {
       noToolbar: undefined,
       noShadow: undefined,
       noHide: undefined,
+      sticky: undefined,
       ui: {
         navigationClass: 'bg-primary',
       },
@@ -872,7 +883,7 @@ export const defaultComponentsConfig = {
       titleElement: undefined,
       ui: {
         sectionClass: 'max-w-screen-xl p-2',
-        contentClass: 'gap-y-5 gap-x-3 md:p-3 p-t-3',
+        contentClass: 'flex flex-col gap-2',
       },
     },
     merge: ['ui'],

@@ -13,6 +13,7 @@ defineSlots<{
   title?: () => any
   subtitle?: () => any
   right?: () => any
+  append?: () => any
   expandIcon?: () => any
 }>()
 
@@ -71,6 +72,8 @@ const subtitleStyle = computed(() => props.ui?.subtitleStyle?.(props.isOpen))
         </span>
       </slot>
     </div>
+
+    <slot name="append" />
 
     <!-- Header right -->
     <slot

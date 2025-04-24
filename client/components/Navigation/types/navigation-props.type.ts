@@ -17,6 +17,11 @@ export type INavigationProps = {
   noHide?: boolean
 
   /**
+   * When true, the navigation will have the `position: sticky` instead of `position: fixed`
+   */
+  sticky?: boolean
+
+  /**
    * Visual configuration
    */
   ui?: {

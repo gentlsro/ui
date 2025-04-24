@@ -9,11 +9,7 @@ defineProps<IProps>()
 
 <template>
   <div class="file-input__empty">
-    <div
-      i-material-symbols:upload
-      h="16"
-      w="16"
-    />
+    <div class="i-material-symbols:upload w-16 h-16" />
     <div
       flex="~ col"
       text="center"

@@ -197,10 +197,10 @@ export type ITableProps<
     onError?: (error: any) => void
 
     /**
-     * A function that gets called when the metadata is fetched
+     * A function that gets called when the data is fetched
      * You can use this to modify to response to map the data or whatever
      */
-    onFetch?: (res: any) => IItem
+    onFetch?: (payload: { res: any, getStore: () => ReturnType<typeof useTableStore> }) => IItem
   }
 
   /**

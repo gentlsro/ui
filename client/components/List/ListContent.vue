@@ -27,7 +27,6 @@ const {
   isFetchMore,
   searchConfig,
   dragMeta,
-  itemKey,
 } = storeToRefs(listStore)
 
 const { handleMouseOver } = useListKeyboard()

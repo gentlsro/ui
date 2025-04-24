@@ -45,15 +45,27 @@ const fieldProps = getFieldProps(props)
     class="file-input"
     :class="{ 'dragged-over': isOverDropZone }"
   >
-    <FileInputInner
-      v-bind="$props"
-      :ui="mergedProps.ui"
-      :model-value="model"
-      :file-remove-fnc="handleRemoveFile"
+    <slot
       :open-file-dialog
-    />
+      :is-over-drop-zone
+      :remove-file="handleRemoveFile"
+    >
+      <FileInputInner
+        v-bind="$props"
+        :ui="mergedProps.ui"
+        :model-value="model"
+        :file-remove-fnc="handleRemoveFile"
+        :open-file-dialog
+      />
+    </slot>
 
-    <FileInputEmpty v-if="!multi && !model?.length" />
+    <slot
+      name="empty"
+      :open-file-dialog
+      :is-over-drop-zone
+    >
+      <FileInputEmpty v-if="!multi && !model?.length" />
+    </slot>
   </Field>
 </template>
 

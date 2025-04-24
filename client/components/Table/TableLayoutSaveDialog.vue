@@ -31,6 +31,7 @@ const {
   modifiers,
   state,
   customData,
+  rowKey,
 } = storeToRefs(tableStore)
 
 // Helpers
@@ -44,7 +45,7 @@ function getUnifiedSchema(schema: string | URLSearchParams) {
   const sortItems = sort.map(s => ({ ...s, direction: s.sort })) as ITableSortItem[]
   const filtersSerialized = serializeFilters(filters)
   const queryBuilderSerialized = serializeFilters(queryBuilder)
-  const sortingSerialized = serializeSorting({ sortItems })
+  const sortingSerialized = serializeSorting({ sortItems, rowKey: rowKey.value })
   const selectSerialized = serializeSelectedColumns({ select: visibleColumns })
 
   return {
@@ -137,6 +138,7 @@ async function handleSave() {
     customData: customData.value,
     isPublic: toSave.value.isPublic,
     isDefault: toSave.value.isDefault,
+    rowKey: rowKey.value,
     handleRequest,
   })
 

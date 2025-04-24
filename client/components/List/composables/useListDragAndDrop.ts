@@ -268,6 +268,10 @@ export function useListDragAndDrop() {
   }) {
     const { el, containerEl, itemId, moveHandleEl } = payload
 
+    if (!moveHandleEl) {
+      return
+    }
+
     const pointerSensor = new PointerSensor(moveHandleEl)
     const draggable = new Draggable([pointerSensor], {
       elements: () => {

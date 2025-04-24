@@ -22,6 +22,8 @@ export { getInputByDataType } from './client/components/Inputs/DynamicInput/cons
 // Files
 export { ICON_BY_FILE_EXTENSION } from './client/components/Inputs/FileInput/constants/icon-by-file-extension'
 export { ICON_BY_FILE_TYPE } from './client/components/Inputs/FileInput/constants/icon-by-file-type'
+export { IMAGE_TYPES } from './client/components/Inputs/FileInput/constants/image-types'
+export { VIDEO_TYPES } from './client/components/Inputs/FileInput/constants/video-types'
 
 // Form
 export { useFormStore } from './client/components/Form/stores/form.store'

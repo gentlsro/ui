@@ -217,7 +217,7 @@ onMounted(() => {
   }
 
   &.is-selected:not(.uses-checkbox) {
-    @apply dark:bg-primary/60 bg-primary/20 light:color-primary;
+    @apply dark:bg-primary/50 bg-primary/20 light:color-primary;
   }
 
   &.is-focused:not(.no-hover),
