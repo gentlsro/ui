@@ -2,12 +2,13 @@
 // Types
 import type { IBtnProps } from './types/btn-props.type'
 
-const props = defineProps<IBtnProps & {
+const props = withDefaults(defineProps<IBtnProps & {
   modelValue?: any
   position?: 'left' | 'right' | 'top' | 'bottom'
   transform?: (model: any) => string
-}
->()
+}>(), {
+  icon: 'i-bx:copy',
+})
 
 // COPY
 const { copy, copied, isSupported } = useClipboard({ copiedDuring: 2000 })
@@ -61,7 +62,7 @@ function handleCopy() {
     <template #icon>
       <div
         v-if="!copied"
-        i-bx:copy
+        :class="icon"
         class="icon"
       />
       <Checkmark
