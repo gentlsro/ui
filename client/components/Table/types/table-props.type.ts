@@ -121,7 +121,7 @@ export type ITableProps<
     /**
      * The mode to use for the autofit
      */
-    mode?: 'justify' | 'stretch' | 'fit'
+    mode?: 'justify' | 'stretch' | 'fit' | 'fit-with-header'
 
     /**
      * The number of rows to consider when calculating the autofit

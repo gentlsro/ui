@@ -966,7 +966,7 @@ export const defaultComponentsConfig = {
       editable: false,
       autoFit: {
         onInit: true,
-        mode: 'fit',
+        mode: 'fit-with-header',
         considerHeader: false,
         maxColumnWidthChars: 100,
         rowsLimit: 100,
