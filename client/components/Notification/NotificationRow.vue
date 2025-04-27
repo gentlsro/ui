@@ -46,7 +46,7 @@ const subtitleArr = computed(() => {
     : [props.notification.subtitle]
 })
 
-const { pause, resume, counter } = useInterval(STEP, {
+const { reset, pause, resume, counter } = useInterval(STEP, {
   controls: true,
   immediate: !props.noClose,
   callback(count) {
@@ -73,9 +73,6 @@ function handleResume() {
 function handleHide() {
   isPausedByForce.value = true
 
-  // Makes sure the counter is over
-  counter.value = TIMEOUT
-
   pause()
   emits('hide')
 }
@@ -98,8 +95,7 @@ function bounce() {
 const notificationCounter = toRef(props.notification, 'counter')
 
 watch(notificationCounter, async () => {
-  counter.value = 0
-
+  reset()
   bounce()
 })
 </script>
