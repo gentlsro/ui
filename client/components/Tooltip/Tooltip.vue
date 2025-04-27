@@ -148,12 +148,24 @@ onMounted(() => {
         <div
           v-if="content"
           class="tooltip__content"
+          :class="mergedProps.ui?.contentClass"
+          :style="mergedProps.ui?.contentStyle"
         >
-          <span class="tooltip__content-title">
+          <span
+            v-if="content.title"
+            class="tooltip__content-title"
+            :class="mergedProps.ui?.titleClass"
+            :style="mergedProps.ui?.titleStyle"
+          >
             {{ content.title }}
           </span>
 
-          <span class="tooltip__content-description">
+          <span
+            v-if="content.description"
+            class="tooltip__content-description"
+            :class="mergedProps.ui?.descriptionClass"
+            :style="mergedProps.ui?.descriptionStyle"
+          >
             {{ content.description }}
           </span>
         </div>
@@ -170,17 +182,17 @@ onMounted(() => {
 
   @apply font-size-$Tooltip-font-size color-$Tooltip-font-color;
 
-  .tooltip__content {
-    @apply flex flex-col w-80;
-  }
+  // .tooltip__content {
+  //   @apply flex flex-col w-80;
+  // }
 
-  .tooltip__content-title {
-    @apply font-semibold font-rem-14;
-  }
+  // .tooltip__content-title {
+  //   @apply font-semibold font-rem-14;
+  // }
 
-  .tooltip__content-description {
-    @apply font-thin text-caption font-rem-12;
-  }
+  // .tooltip__content-description {
+  //   @apply font-thin text-caption font-rem-12;
+  // }
 }
 
 .arrow {

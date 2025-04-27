@@ -1162,7 +1162,11 @@ export const defaultComponentsConfig = {
       offset: 8,
       placement: undefined,
       referenceTarget: undefined,
-      ui: {},
+      ui: {
+        contentClass: 'flex flex-col w-80',
+        titleClass: 'font-semibold font-rem-14',
+        descriptionClass: 'font-thin text-caption font-rem-12',
+      },
     },
     merge: ['ui'],
   },

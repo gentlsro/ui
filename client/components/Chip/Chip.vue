@@ -96,7 +96,8 @@ const classes = computed(() => {
     <Tooltip
       v-if="tooltip || $slots.tooltip"
       :offset="8"
-      v-bind="tooltip?.props"
+      :content="{ title: tooltip?.label }"
+      v-bind="mergedProps.tooltip?.props"
     />
 
     <!-- Remove btn -->

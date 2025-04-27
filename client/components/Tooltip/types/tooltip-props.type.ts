@@ -81,5 +81,35 @@ export type ITooltipProps = {
      * The tooltip style
      */
     tooltipStyle?: CSSProperties
+
+    /**
+     * The tooltip content class
+     */
+    contentClass?: ClassType
+
+    /**
+     * The tooltip content style
+     */
+    contentStyle?: CSSProperties
+
+    /**
+     * The tooltip title class
+     */
+    titleClass?: ClassType
+
+    /**
+     * The tooltip title style
+     */
+    titleStyle?: CSSProperties
+
+    /**
+     * The tooltip description class
+     */
+    descriptionClass?: ClassType
+
+    /**
+     * The tooltip description style
+     */
+    descriptionStyle?: CSSProperties
   }
 }

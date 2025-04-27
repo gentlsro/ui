@@ -207,18 +207,18 @@ defineExpose({
   }
 
   &.is-disabled {
-    @apply disabled cursor-not-allowed;
+    @apply cursor-not-allowed;
 
     * {
       @apply cursor-not-allowed;
     }
 
     &--filled {
-      @apply border-none;
+      @apply disabled border-none;
     }
 
     &--flat {
-      @apply "!bg-transparent";
+      @apply '!opacity-40';
     }
   }
 
