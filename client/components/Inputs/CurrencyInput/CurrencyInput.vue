@@ -137,8 +137,8 @@ const currency = computed(() => {
   }
 
   return new Intl.NumberFormat(
-    currentLocale.value.iso,
-    { style: 'currency', currency: currentLocale.value.currency },
+    currentLocale.value.code,
+    { style: 'currency', currency: (currentLocale.value as any).currency },
   )
     .formatToParts(1)
     .find(part => part.type === 'currency')

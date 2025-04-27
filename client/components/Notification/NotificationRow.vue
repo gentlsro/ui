@@ -140,9 +140,8 @@ watch(notificationCounter, async () => {
         <p
           max-w="full"
           break="words"
-        >
-          {{ notification.title }}
-        </p>
+          v-html="notification.title"
+        />
       </div>
 
       <!-- Close button -->
