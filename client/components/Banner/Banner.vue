@@ -5,7 +5,7 @@
 import type { IBannerProps } from './types/banner-props.type'
 
 // Functions
-import { getComponentProps } from '../../functions/get-component-props'
+import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
 
 const props = withDefaults(defineProps<IBannerProps>(), {
   ...getComponentProps('banner'),
@@ -18,8 +18,12 @@ defineEmits<{
 
 defineExpose({ dismiss })
 
+// Utils
+const mergedProps = computed(() => {
+  return getComponentMergedProps('banner', props)
+})
+
 // Layout
-const bannerEl = useTemplateRef('bannerEl')
 const counter = toRef(props, 'counter')
 const model = defineModel<boolean>({ default: true })
 
@@ -67,7 +71,6 @@ watch(counter, bounce)
   >
     <div
       v-if="model"
-      ref="bannerEl"
       class="banner"
       :class="[
         `banner--${variant}`,
@@ -85,7 +88,11 @@ watch(counter, bounce)
       </div>
 
       <!-- Text -->
-      <div class="banner-text">
+      <div
+        class="banner-text"
+        :class="mergedProps.ui?.labelClass"
+        :style="mergedProps.ui?.labelStyle"
+      >
         <slot>
           {{ label }}
         </slot>

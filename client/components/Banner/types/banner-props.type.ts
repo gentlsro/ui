@@ -1,3 +1,5 @@
+import type { CSSProperties } from 'vue'
+
 export type IBannerProps = {
   /**
    * The number in top right corner on the `Banner`
@@ -43,4 +45,29 @@ export type IBannerProps = {
    * Type of the `Banner`
    */
   variant?: 'error' | 'info' | 'success' | 'warning'
+
+  /**
+   * Visual configuration
+   */
+  ui?: {
+    /**
+     * Class for the label
+     */
+    labelClass?: ClassType
+
+    /**
+     * Style for the label
+     */
+    labelStyle?: CSSProperties
+
+    /**
+     * Class for the icon
+     */
+    iconClass?: ClassType
+
+    /**
+     * Style for the icon
+     */
+    iconStyle?: CSSProperties
+  }
 }

@@ -85,6 +85,7 @@ export const defaultComponentsConfig = {
       outlined: undefined,
       variant: undefined,
     },
+    merge: ['ui'],
   },
 
   // Button
