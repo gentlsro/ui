@@ -511,7 +511,7 @@ export const defaultComponentsConfig = {
       itemLabel: 'label',
       clearable: true,
       ui: {
-        moveHandleClass: 'p-t-2 color-ca',
+        moveHandleClass: 'p-t-1.5 color-ca',
         contentClass: hasSearch => hasSearch ? 'p-x-2 p-t-0' : 'p-2',
         searchClass: 'gap-1 p-2',
         rowClass: () => 'p-r-2 m-y-1px p-y-1 rounded-custom',
