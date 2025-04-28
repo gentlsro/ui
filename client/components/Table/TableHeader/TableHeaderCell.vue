@@ -124,7 +124,10 @@ function handleSelect() {
     :data-column="column.field"
     :title="column._label"
   >
-    <slot>
+    <slot
+      :column="column"
+      :ui="{ headerInnerCellClass, headerCellInnerStyle: ui?.headerCellInnerStyle }"
+    >
       <Checkbox
         v-if="column.field === '_selectable'"
         :model-value="selectionState"

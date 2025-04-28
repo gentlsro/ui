@@ -89,7 +89,10 @@ defineExpose({
       />
     </slot>
 
-    <slot name="label">
+    <slot
+      name="label"
+      :ui="mergedProps.ui"
+    >
       <div
         v-if="label"
         class="btn-label"

@@ -13,6 +13,21 @@ export function useBtnUtils() {
       'noUnderline',
       'to',
       'type',
+      'size',
+      'icon',
+      'label',
+      'labelBreakpoint',
+      'loaderVariant',
+      'loading',
+      'loadingColor',
+      'name',
+      'noBold',
+      'noDim',
+      'noHoverEffect',
+      'noUppercase',
+      'noTruncate',
+      'outlined',
+      
     ])
   }
 

@@ -48,16 +48,21 @@ function getSplitterLeft(splitter: ITableSplitter) {
     :ui="{ contentClass }"
   >
     <!-- Column cells -->
-    <TableHeaderCell
-      v-for="(col, idx) in visibleColumns"
+    <slot
+      v-for="col in visibleColumns"
       :key="col.field"
       :column="col"
       :ui
-      :class="{
-        'is-last': idx === visibleColumns.length - 1,
-        'rounded-custom border-1': isCardView,
-      }"
-    />
+    >
+      <TableHeaderCell
+        :column="col"
+        :ui
+        :class="{
+          'is-last': idx === visibleColumns.length - 1,
+          'rounded-custom border-1': isCardView,
+        }"
+      />
+    </slot>
 
     <template v-if="!isCardView">
       <!-- Filler -->
