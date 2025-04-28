@@ -968,7 +968,6 @@ export const defaultComponentsConfig = {
       autoFit: {
         onInit: true,
         mode: 'fit-with-header',
-        considerHeader: false,
         maxColumnWidthChars: 100,
         rowsLimit: 100,
       },

@@ -91,10 +91,7 @@ export function useTableColumnResizing() {
         rows: rows.value,
         slotRenderFnc,
         tableMinColWidth: minimumColumnWidth.value,
-        autofitConfig: {
-          ...autofitConfig.value,
-          considerHeader: uiState.value.table.fit === 'fit-with-header',
-        },
+        autofitConfig: autofitConfig.value,
         ui: uiConfig.value,
       })
 

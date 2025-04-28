@@ -77,7 +77,7 @@ export function useTableAutoFit() {
           rows: rows.value,
           slotRenderFnc,
           tableMinColWidth: minimumColumnWidth.value,
-          autofitConfig: autofitConfig.value,
+          autofitConfig: { ...autofitConfig.value, mode },
           ui: uiConfig.value,
         })
       }
@@ -113,10 +113,7 @@ export function useTableAutoFit() {
           rows: rows.value,
           slotRenderFnc,
           tableMinColWidth: minimumColumnWidth.value,
-          autofitConfig: {
-            ...autofitConfig.value,
-            considerHeader: mode === 'fit-with-header',
-          },
+          autofitConfig: { ...autofitConfig.value, mode },
           ui: uiConfig.value,
         })
       }

@@ -7,10 +7,6 @@ const { uiState } = storeToRefs(useUIStore())
 
 // Utils
 const { fitColumns } = useTableAutoFit()
-
-const mode = computed(() => {
-  return uiState.value.table.fit === 'fit' ? 'fit' : 'fit-with-header'
-})
 </script>
 
 <template>
@@ -20,7 +16,7 @@ const mode = computed(() => {
     icon="i-material-symbols:fit-width"
     p="!x-2"
     color="ca"
-    @click="fitColumns(undefined, { mode })"
+    @click="fitColumns"
   >
     <!-- Label -->
     <div class="items-center hidden lg:flex gap-1">

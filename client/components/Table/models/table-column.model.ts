@@ -476,10 +476,11 @@ export class TableColumn<T = IItem> {
     const {
       maxColumnWidthChars = 100,
       rowsLimit = 80,
-      considerHeader = false,
+      mode = 'fit-with-header',
     } = autofitConfig ?? getComponentProps('table').autoFit()
     const { getCellWidth, getHeaderWidth } = useRenderTemporaryTableCell()
 
+    const considerHeader = mode === 'fit-with-header'
     let maxContentWidth = 0
 
     // We primarily use the row with the longest text to calculate the autofit width

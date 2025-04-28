@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { ITableTotal } from './types/table-total.type'
 import type { ITableProps } from './types/table-props.type'
 
 // Store
@@ -43,7 +42,7 @@ async function getTotals() {
       return totalsFnc({
         tablePayload,
         rows: rows.value,
-        getStore: () => useTableStore(),
+        getStore: () => tableStore,
       })
     }, { noResolve: true })
 

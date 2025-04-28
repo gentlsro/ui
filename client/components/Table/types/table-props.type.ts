@@ -121,17 +121,12 @@ export type ITableProps<
     /**
      * The mode to use for the autofit
      */
-    mode?: 'justify' | 'stretch' | 'fit' | 'fit-with-header'
+    mode?: 'justify' | 'stretch' | 'fit' | 'fit-with-header' | null
 
     /**
      * The number of rows to consider when calculating the autofit
      */
     rowsLimit?: number
-
-    /**
-     * Whether to consider the header when calculating the autofit
-     */
-    considerHeader?: boolean
 
     /**
      * The maximum width of the column in characters
