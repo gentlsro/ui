@@ -49,7 +49,7 @@ function getSplitterLeft(splitter: ITableSplitter) {
   >
     <!-- Column cells -->
     <slot
-      v-for="col in visibleColumns"
+      v-for="(col, idx) in visibleColumns"
       :key="col.field"
       :column="col"
       :ui
