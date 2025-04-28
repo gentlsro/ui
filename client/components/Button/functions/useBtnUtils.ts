@@ -27,7 +27,8 @@ export function useBtnUtils() {
       'noUppercase',
       'noTruncate',
       'outlined',
-      
+      'round',
+      'rounded',
     ])
   }
 
