@@ -72,7 +72,6 @@ export const useUIStore = defineStore('__ui', () => {
   const lastPointerDownType = ref<string>()
 
   if (!isInitialized.value) {
-    console.log('Here?')
     document.documentElement.addEventListener('pointerdown', ev => {
       lastPointerDownEvent.value = ev
       lastPointerDownEl.value = ev.target as HTMLElement
