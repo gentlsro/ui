@@ -8,6 +8,7 @@ import type { IUIState } from '../types/ui-state.type'
 
 export const useUIStore = defineStore('__ui', () => {
   // State
+  const isInitialized = ref(false)
   const lastKeydownEvent = ref<KeyboardEvent>()
   const hasUserLeftPage = usePageLeave()
 
@@ -70,7 +71,8 @@ export const useUIStore = defineStore('__ui', () => {
   const lastPointerDownEl = ref<HTMLElement>()
   const lastPointerDownType = ref<string>()
 
-  onMounted(() => {
+  if (!isInitialized.value) {
+    console.log('Here?')
     document.documentElement.addEventListener('pointerdown', ev => {
       lastPointerDownEvent.value = ev
       lastPointerDownEl.value = ev.target as HTMLElement
@@ -80,7 +82,9 @@ export const useUIStore = defineStore('__ui', () => {
     document.documentElement.addEventListener('keydown', ev => {
       lastKeydownEvent.value = ev
     })
-  })
+
+    isInitialized.value = true
+  }
 
   // Active element
   const activeElement = useActiveElement()
