@@ -74,9 +74,9 @@ defineExpose({
   <BtnOrNuxtLinkResolver
     ref="component"
     v-ripple="!disabled && ripple"
+    v-bind="btnProps"
     :name="name ?? (label || icon)"
     :aria-label="label ?? (name || icon)"
-    v-bind="btnProps"
     class="btn"
     :class="[btnClass, mergedProps.ui?.btnClass]"
     :style="mergedProps.ui?.btnStyle"
