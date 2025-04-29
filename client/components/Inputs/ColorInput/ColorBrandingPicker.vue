@@ -87,6 +87,8 @@ const opacity = computed({
 watch(sRGBHex, value => {
   if (value && props.rgba) {
     model.value = hexToRgb(value)
+  } else {
+    model.value = value
   }
 })
 

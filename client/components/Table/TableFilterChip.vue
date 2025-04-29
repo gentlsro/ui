@@ -26,7 +26,16 @@ const {
 } = useRefReset(() => props.filter, { modifyFnc: val => new FilterItem(val) })
 
 const formattedValue = computed(() => {
-  return formatValue(props.filter.value, undefined, { dataType: props.filter.dataType })
+  const format = props.filter.filterFormat
+    ?? props.filter.format
+    ?? column.value?.filterFormat
+    ?? column.value?.format
+
+  return formatValue(
+    props.filter.value,
+    undefined,
+    { dataType: props.filter.dataType, format },
+  )
 })
 
 const column = computed(() => {
