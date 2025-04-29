@@ -189,7 +189,7 @@ const filterComponentProps = computed(() => {
     v-bind="filterComponentProps"
     ref="valueInputEl"
     v-model="item.value"
-    :load-data="{ fnc: column?.getDistinctData }"
+    :load-data="{ fnc: column?.getDistinctData, payloadKey: null }"
     :multi="isSelectorComparator"
     emit-key
     size="sm"
