@@ -20,9 +20,9 @@ const props = withDefaults(defineProps<IBtnProps>(), {
 })
 
 // Utils
-const { getBtnProps } = useBtnUtils()
+const { getBtnProps, getBtnOrNuxtLinkResolverProps } = useBtnUtils()
 
-const btnProps = getBtnProps(props)
+const btnProps = getBtnOrNuxtLinkResolverProps(props)
 
 const mergedProps = computed(() => {
   return getComponentMergedProps('button', props)

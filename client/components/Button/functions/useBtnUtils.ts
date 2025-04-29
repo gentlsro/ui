@@ -32,7 +32,22 @@ export function useBtnUtils() {
     ])
   }
 
+  function getBtnOrNuxtLinkResolverProps(props: IBtnProps) {
+    return reactivePick(props, [
+      'disabled',
+      'download',
+      'exact',
+      'external',
+      'navigateToOptions',
+      'noActiveLink',
+      'noUnderline',
+      'to',
+      'type',
+    ])
+  }
+
   return {
     getBtnProps,
+    getBtnOrNuxtLinkResolverProps,
   }
 }
