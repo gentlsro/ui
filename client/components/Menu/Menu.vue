@@ -119,7 +119,8 @@ const transitionClass = computed(() => {
   }
 })
 
-function hide() {
+function hide(force?: boolean) {
+  isChangeForced.value = !!force
   modelHandler.value = false
 }
 
@@ -361,7 +362,7 @@ const isOverlayVisible = computed(() => {
               preset="CLOSE"
               size="sm"
               self="start"
-              @click="hide"
+              @click="hide(true)"
             />
           </div>
         </slot>

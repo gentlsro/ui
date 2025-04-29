@@ -9,7 +9,7 @@ export const cover: Middleware = {
     const { height: menuHeight } = rects.floating
 
     return {
-      y: Math.max(y + modifier * (menuHeight / 2) - referenceHeight, 0),
+      y: Math.max(y + modifier * (menuHeight / 2) - (referenceHeight / 2), 0),
     }
   },
 }

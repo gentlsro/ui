@@ -36,8 +36,13 @@ export function $hide(options?: {
    * The type of the floating element to hide
    */
   type?: 'menu' | 'dialog'
+
+  /**
+   * When true, the floating element will be hidden even when having `persistent` prop
+   */
+  force?: boolean
 }) {
-  let { instance, all, ignore = [], ignoreUntilEl, type } = options ?? {}
+  let { instance, all, ignore = [], ignoreUntilEl, type, force } = options ?? {}
   let selector = '.floating-element'
 
   if (type === 'menu') {
@@ -60,7 +65,7 @@ export function $hide(options?: {
 
       if (!isIgnored) {
         // @ts-expect-error DOM attribute
-        el?.hide()
+        el?.hide(force)
       }
     })
 
@@ -70,7 +75,7 @@ export function $hide(options?: {
   if (instance) {
     const floatingEl = instance?.vnode.el?.closest(selector)
 
-    floatingEl?.hide()
+    floatingEl?.hide(force)
   }
 
   // Hides the last floating element
@@ -80,7 +85,7 @@ export function $hide(options?: {
 
     if (!isIgnored) {
       // @ts-expect-error DOM attribute
-      floatingEl?.hide()
+      floatingEl?.hide(force)
     }
   }
 }
