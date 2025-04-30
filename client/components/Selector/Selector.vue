@@ -302,6 +302,7 @@ onUnmounted(() => {
         :no-search
         :load-data="mergedProps.loadData"
         :clear-options-on-menu-hide
+        :emits
         @before-hide="handleBeforeHide"
         @hide="handleHide"
         @before-show="handleBeforeShow"

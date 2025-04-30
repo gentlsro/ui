@@ -1,9 +1,10 @@
 export type ISelectorEmits = {
   (e: 'update:modelValue', val: any): void
   (e: 'update:options', val: any[]): void
-  (e: 'added', item: any): void
-  (e: 'removed', item: any): void
-  (e: 'validation-reset', val?: string | undefined | null): void
+  (e: 'add:item', item: any): void
+  (e: 'remove:item', item: any): void
+  (e: 'select:item', item: any): void
+  (e: 'unselect:item', item: any): void
   (e: 'picker-hide'): void
   (e: 'picker-before-hide'): void
   (e: 'picker-show'): void

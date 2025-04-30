@@ -5,6 +5,7 @@ import { getElementSize } from '$utils'
 // Types
 import type { IListProps } from '../List/types/list-props.type'
 import type { ISelectorProps } from './types/selector-props.type'
+import type { ISelectorEmits } from '../../../client/components/Selector/types/selector-emits.type'
 
 // Store
 import { useSelectorStore } from './stores/selector.store'
@@ -15,7 +16,7 @@ type IProps = Pick<
   | 'optionLabel' | 'emitKey' | 'noFilter' | 'noSort' | 'clearable' | 'multi'
   | 'loadData' | 'clearOptionsOnMenuHide' | 'noSearch'
 >
-& { referenceEl?: any, placement: Placement }
+& { referenceEl?: any, placement: Placement, emits: ISelectorEmits }
 
 const props = defineProps<IProps>()
 
@@ -54,10 +55,12 @@ const menuStyle = computed(() => {
   return { '--floatingHeight': `${contentHeight.value}px` }
 })
 
-function handleItemSelection() {
+function handleItemSelection(item: any) {
   if (!props.multi) {
     $hide()
   }
+
+  props.emits('select:item', item)
 }
 
 function handleHeightChange(height: number) {
@@ -123,6 +126,9 @@ watch(contentHeight, () => {
       :clearable
       @change:content-size="handleHeightChange($event.height)"
       @select:item="handleItemSelection"
+      @unselect:item="emits('unselect:item', $event)"
+      @add:item="emits('add:item', $event)"
+      @remove:item="emits('remove:item', $event)"
     >
       <!-- Above -->
       <template #above>

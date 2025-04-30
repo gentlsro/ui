@@ -90,7 +90,10 @@ function handleClearSorting() {
         >
           <div class="i-flowbite:chevron-right-outline rotate-90 h-4 w-4" />
 
-          <slot name="selection-menu" />
+          <slot
+            name="selection-menu"
+            :selection
+          />
         </Btn>
       </slot>
 

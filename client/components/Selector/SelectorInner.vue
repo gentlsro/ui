@@ -84,6 +84,8 @@ function handleRemove(idx: number) {
           :style="ui?.chipStyle"
           :option-label
           :option-by-key
+          :readonly
+          :disabled
           :navigate-to-options="{ target: '_blank' }"
           :to="optionTo?.(item)"
           @remove="handleRemove(idx)"
@@ -112,6 +114,8 @@ function handleRemove(idx: number) {
           :style="ui?.chipStyle"
           :option-label
           :option-by-key
+          :readonly
+          :disabled
           :navigate-to-options="{ target: '_blank' }"
           :to="optionTo?.(item)"
           @remove="handleRemove(idx)"

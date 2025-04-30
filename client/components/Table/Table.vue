@@ -218,8 +218,11 @@ onUnmounted(() => {
         :features
         :ui="mergedProps.ui"
       >
-        <template #selection-menu>
-          <slot name="selection-menu" />
+        <template #selection-menu="{ selection }">
+          <slot
+            name="selection-menu"
+            :selection
+          />
         </template>
       </TableToolbar>
     </slot>
