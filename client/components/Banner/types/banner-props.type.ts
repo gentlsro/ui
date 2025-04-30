@@ -17,11 +17,6 @@ export type IBannerProps = {
   iconCenter?: boolean
 
   /**
-   * The icon class
-   */
-  iconClass?: ClassType
-
-  /**
    * The label of the `Banner`
    */
   label?: string

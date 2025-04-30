@@ -84,7 +84,7 @@ watch(counter, bounce)
         class="banner-icon"
         :class="{ 'self-start m-t-2': !iconCenter }"
       >
-        <div :class="[iconClass, icon]" />
+        <div :class="[mergedProps.ui?.iconClass, icon]" />
       </div>
 
       <!-- Text -->
