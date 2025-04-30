@@ -14,6 +14,9 @@ const props = defineProps<IProps>()
 // Store
 const { internalColumns } = storeToRefs(useTableStore())
 
+// Utils
+const { currentLocaleCode } = useLocale()
+
 // Layout
 const menuEl = useTemplateRef('menuEl')
 const itemEditEl = useTemplateRef('itemEditEl')
@@ -34,7 +37,7 @@ const formattedValue = computed(() => {
   return formatValue(
     props.filter.value,
     undefined,
-    { dataType: props.filter.dataType, format },
+    { dataType: props.filter.dataType, format, localeIso: currentLocaleCode.value },
   )
 })
 

@@ -25,6 +25,9 @@ type IProps = Pick<ITableProps, 'ui' | 'editable' | 'to'> & {
 defineOptions({ inheritAttrs: false })
 const props = defineProps<IProps>()
 
+// Utils
+const { currentLocaleCode } = useLocale()
+
 // Helpers
 function isSelected(row: IItem) {
   const key = selectionConfig.value?.selectionKey ?? rowKey.value
@@ -97,6 +100,7 @@ const rowDataArray = computed(() => {
             format: col.format,
             dataType: col.dataType,
             comparator: col.comparator,
+            localeIso: currentLocaleCode.value,
           })
 
           // Visuals - Styles
