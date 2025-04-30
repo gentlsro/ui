@@ -69,7 +69,13 @@ const {
 } = storeToRefs(selectorStore)
 
 // Field
-const { el, inputId, isEditable, getFieldProps, handleFocusOrClick } = useFieldUtils({
+const {
+  el,
+  inputId,
+  isEditable,
+  getFieldProps,
+  handleFocusOrClick,
+} = useFieldUtils({
   props,
   onBeforeFocus: ev => {
     if (isPreventNextFocus.value) {
