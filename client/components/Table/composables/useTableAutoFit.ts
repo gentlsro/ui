@@ -21,7 +21,7 @@ export function useTableAutoFit() {
 
   async function fitColumns(
     ev?: Partial<Pick<PointerEvent, 'shiftKey' | 'ctrlKey' | 'metaKey'>>,
-    options?: { mode?: 'fit' | 'stretch' | 'justify' | 'fit-with-header' },
+    options?: { mode?: 'fit' | 'stretch' | 'justify' | 'fit-with-header' | null },
   ) {
     const { mode = uiState.value.table?.fit } = options ?? {}
     if (!ev && !mode) {

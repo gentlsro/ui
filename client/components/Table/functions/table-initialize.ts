@@ -9,7 +9,7 @@ export function tableInitialize() {
   const isImmediate = loadData.value?.immediate || !rows.value.length
 
   function autoFit() {
-    let mode: 'fit' | 'stretch' | 'justify' | 'fit-with-header' | undefined
+    let mode: 'fit' | 'stretch' | 'justify' | 'fit-with-header' | null | undefined
 
     if (autofitConfig.value?.onInit === 'forced') {
       mode = autofitConfig.value.mode
