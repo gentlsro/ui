@@ -92,7 +92,6 @@ onKeyStroke(['d', 'D'], (ev: KeyboardEvent) => {
         no-uppercase
         color="negative"
         data-cy="remove-all-filters"
-        p="!y-1.5"
         @click="handleClearFilters('all')"
       >
         <KeyboardShortcut

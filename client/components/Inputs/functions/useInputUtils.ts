@@ -182,9 +182,8 @@ export function useInputUtils(options: IInputUtilsOptions) {
 
     if (!isSame) {
       // We need to reset the iMask placeholder
-      const isModelEmpty
-        = isNil(originalModel.value)
-          || toValue(originalModel) === toValue(emptyValue)
+      const isModelEmpty = isNil(originalModel.value)
+        || toValue(originalModel) === toValue(emptyValue)
 
       if (isModelEmpty) {
         unmasked.value = ''
@@ -301,8 +300,8 @@ export function useInputUtils(options: IInputUtilsOptions) {
 
     if (!isSame) {
       if (isEmptyValue) {
-        typed.value = props.emptyValue
-        masked.value = ''
+        // typed.value = props.emptyValue
+        // masked.value = ''
         unmasked.value = ''
       } else {
         typed.value = val

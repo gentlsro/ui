@@ -41,7 +41,7 @@ const { emptyValue } = storeToRefs(useTableStore())
       >
         <div :class="[column.sort === 'asc' ? 'i-ph:sort-descending-bold' : 'i-ph:sort-ascending-bold']" />
         <span text="xs">
-          {{ $t(`sorting.${column.sort}`) }}
+          {{ $t(`general.sorting.${column.sort}`) }}
         </span>
       </div>
 

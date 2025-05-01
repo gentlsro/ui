@@ -1,4 +1,5 @@
 import * as XLSX from 'xlsx'
+import { parseValue } from '$utils'
 
 // Models
 import type { TableColumn } from '../models/table-column.model'
@@ -23,7 +24,10 @@ export async function tableExportData(payload: {
 
     columns.forEach(col => {
       const colValueRaw = col.valueGetter(row)
-      const colValue = col.format?.(row, colValueRaw) ?? colValueRaw
+      const colValue = col.format?.(row, colValueRaw)
+        ?? parseValue(colValueRaw, col.dataType, { dateFormat: 'YYYY-MM-DD HH:mm:ss' })
+        ?? colValueRaw
+
       const colLabel = col._label || col.field
 
       rowData[colLabel] = colValue
