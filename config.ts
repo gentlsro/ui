@@ -78,7 +78,6 @@ export const defaultComponentsConfig = {
       counter: undefined,
       dismissable: undefined,
       iconCenter: undefined,
-      iconClass: undefined,
       label: undefined,
       modelValue: undefined,
       noTransition: undefined,
