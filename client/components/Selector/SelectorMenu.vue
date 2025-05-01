@@ -5,7 +5,7 @@ import { getElementSize } from '$utils'
 // Types
 import type { IListProps } from '../List/types/list-props.type'
 import type { ISelectorProps } from './types/selector-props.type'
-import type { ISelectorEmits } from '../../../client/components/Selector/types/selector-emits.type'
+import type { ISelectorEmits } from './types/selector-emits.type'
 
 // Store
 import { useSelectorStore } from './stores/selector.store'
