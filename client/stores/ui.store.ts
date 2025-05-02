@@ -70,7 +70,7 @@ export const useUIStore = defineStore('__ui', () => {
   const lastPointerDownEvent = ref<PointerEvent>()
   const lastPointerDownEl = ref<HTMLElement>()
   const lastPointerDownType = ref<string>()
-
+  const lastPasteEvent = ref<ClipboardEvent>()
   if (!isInitialized.value) {
     document.documentElement.addEventListener('pointerdown', ev => {
       lastPointerDownEvent.value = ev
@@ -80,6 +80,10 @@ export const useUIStore = defineStore('__ui', () => {
 
     document.documentElement.addEventListener('keydown', ev => {
       lastKeydownEvent.value = ev
+    })
+
+    document.documentElement.addEventListener('paste', ev => {
+      lastPasteEvent.value = ev
     })
 
     isInitialized.value = true
@@ -104,6 +108,7 @@ export const useUIStore = defineStore('__ui', () => {
     lastPointerDownEvent,
     lastPointerDownEl,
     lastPointerDownType,
+    lastPasteEvent,
 
     setState: skipHydrate(setState),
 
