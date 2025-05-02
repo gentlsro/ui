@@ -5,6 +5,11 @@ import type { IBtnProps } from '../../Button/types/btn-props.type'
 
 export type IButtonGroupProps = {
   /**
+   * Whether the buttons are disabled
+   */
+  disabled?: boolean
+
+  /**
    * The value of the active button
    */
   modelValue?: string | number

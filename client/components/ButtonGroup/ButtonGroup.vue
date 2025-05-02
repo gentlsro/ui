@@ -21,6 +21,8 @@ const mergedProps = computed(() => {
       v-for="(btn, idx) in buttons"
       :key="idx"
       v-bind="btn"
+      :disabled
+      disable-style="flat"
       :class="{ [mergedProps.ui?.activeClass]: btn.value === modelValue }"
     >
       <template #default>
