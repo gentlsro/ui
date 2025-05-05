@@ -1,9 +1,10 @@
 export default defineNuxtPlugin(() => {
   const { isActiveElementInput } = useUIStore()
   const { width, height } = useElementSize(document.documentElement)
+  const { isMobile } = useDevice()
 
   watch([width, height], () => {
-    if (isActiveElementInput()) {
+    if (isActiveElementInput() && isMobile) {
       return
     }
 
