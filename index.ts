@@ -32,6 +32,7 @@ export { useFormStore } from './client/components/Form/stores/form.store'
 export type { IListItem } from './client/components/List/types/list-item.type'
 export { useListStore } from './client/components/List/stores/list.store'
 export type { IListFetchPayload } from './client/components/List/types/list-fetch.type'
+export { getListItemEmitValue } from './client/components/List/functions/helpers/get-list-emit-value'
 
 // Notification
 export type { INotification } from './client/components/Notification/types/notification.type'
