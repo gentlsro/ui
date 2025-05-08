@@ -51,7 +51,13 @@ useResizeObserver(scrollEl, () => {
 })
 
 defineExpose({
-  scroll: (left: number) => x.value = left,
+  scroll: (left: number, diff?: boolean) => {
+    if (diff) {
+      x.value = x.value + left
+    } else {
+      x.value = left
+    }
+  },
   getScrollDimensions: () => ({
     width: scrollEl.value?.scrollWidth || 0,
     height: scrollEl.value?.scrollHeight || 0,
@@ -78,7 +84,7 @@ defineExpose({
         no-dim
         no-hover-effect
         icon="i-majesticons:chevron-left"
-        @pointerdown.stop.prevent="handleScrollViaBtn(false)"
+        @pointerdown.stop.prevent="handleScrollViaBtn(false, 'x')"
       />
     </div>
 
@@ -105,7 +111,7 @@ defineExpose({
         no-dim
         no-hover-effect
         icon="i-majesticons:chevron-right"
-        @pointerdown.stop.prevent="handleScrollViaBtn(true)"
+        @pointerdown.stop.prevent="handleScrollViaBtn(true, 'x')"
       />
     </div>
   </div>

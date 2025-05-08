@@ -17,10 +17,15 @@ export function useScrollerScroll() {
 
   // Scrolling
   const btnScrollSpeed = ref(4)
+  const btnScrollDirection = ref<'x' | 'y'>('x')
   const clampedScrollSpeed = useClamp(btnScrollSpeed, -16, 16)
 
-  function handleScroll(distance: number) {
-    scrollEl.value?.scrollBy({ left: distance, behavior: 'auto' })
+  function handleScroll(distance: number, direction: 'x' | 'y') {
+    if (direction === 'x') {
+      scrollEl.value?.scrollBy({ left: distance, behavior: 'auto' })
+    } else {
+      scrollEl.value?.scrollBy({ top: distance, behavior: 'auto' })
+    }
   }
 
   // Via wheel
@@ -33,14 +38,28 @@ export function useScrollerScroll() {
 
     // Scrolling right
     if (ev.deltaY > 0 && !arrivedState.right) {
-      handleScroll(scrollSpeed)
+      handleScroll(scrollSpeed, 'x')
       ev.stopPropagation()
       ev.preventDefault()
     }
 
     // Scrolling left
     else if (ev.deltaY < 0 && !arrivedState.left) {
-      handleScroll(-1 * scrollSpeed)
+      handleScroll(-1 * scrollSpeed, 'x')
+      ev.stopPropagation()
+      ev.preventDefault()
+    }
+
+    // Scrolling up
+    else if (ev.deltaY < 0 && !arrivedState.top) {
+      handleScroll(-1 * scrollSpeed, 'y')
+      ev.stopPropagation()
+      ev.preventDefault()
+    }
+
+    // Scrolling down
+    else if (ev.deltaY > 0 && !arrivedState.bottom) {
+      handleScroll(scrollSpeed, 'y')
       ev.stopPropagation()
       ev.preventDefault()
     }
@@ -49,7 +68,7 @@ export function useScrollerScroll() {
   // Via buttons
   const { pause, resume } = useIntervalFn(
     () => {
-      handleScroll(clampedScrollSpeed.value)
+      handleScroll(clampedScrollSpeed.value, btnScrollDirection.value)
 
       btnScrollSpeed.value = btnScrollSpeed.value * 1.02
     },
@@ -57,8 +76,9 @@ export function useScrollerScroll() {
     { immediate: false },
   )
 
-  function handleScrollViaBtn(increment: boolean) {
+  function handleScrollViaBtn(increment: boolean, direction: 'x' | 'y') {
     btnScrollSpeed.value = increment ? 4 : -4
+    btnScrollDirection.value = direction
     resume()
 
     window.addEventListener('pointerup', stopScrolling)
