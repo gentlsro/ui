@@ -77,6 +77,8 @@ onMounted(() => {
     :style="labelStyle"
   >
     {{ label }}
+
+    <slot />
   </label>
 </template>
 

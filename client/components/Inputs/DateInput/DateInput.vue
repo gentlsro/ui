@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { Dayjs } from 'dayjs'
 
-import { type FactoryOpts, MaskedRange } from 'imask'
+import { MaskedRange } from 'imask'
+import type { FactoryOpts } from 'imask'
 
 // Types
 import type { IDateInputProps } from './types/date-input-props.type'
@@ -199,6 +200,15 @@ defineExpose({
     .focus="focus"
     @click="handleClickWrapper"
   >
+    <!-- Label -->
+    <template #label="labelProps">
+      <slot
+        name="label"
+        v-bind="labelProps"
+      />
+    </template>
+
+    <!-- Prepend -->
     <template
       v-if="$slots.prepend"
       #prepend
@@ -233,6 +243,7 @@ defineExpose({
       @blur="handleBlur"
     >
 
+    <!-- Append -->
     <template #append>
       <div
         v-if="$slots.append || (!readonly && !disabled)"

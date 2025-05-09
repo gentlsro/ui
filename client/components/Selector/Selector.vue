@@ -222,6 +222,14 @@ onUnmounted(() => {
     @focus="handleFocusOrClick"
     @click="handleFocusOrClick"
   >
+    <!-- Label -->
+    <template #label="labelProps">
+      <slot
+        name="label"
+        v-bind="labelProps"
+      />
+    </template>
+
     <!-- Prepend -->
     <template
       v-if="$slots.prepend"

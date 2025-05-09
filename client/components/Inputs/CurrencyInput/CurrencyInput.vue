@@ -254,6 +254,15 @@ defineExpose({
     .focus="focus"
     @click="handleClickWrapper"
   >
+    <!-- Label -->
+    <template #label="labelProps">
+      <slot
+        name="label"
+        v-bind="labelProps"
+      />
+    </template>
+
+    <!-- Prepend -->
     <template
       v-if="$slots.prepend || currencyVisibility === 'prepend'"
       #prepend
@@ -293,6 +302,7 @@ defineExpose({
       @beforeinput="handleBeforeInput"
     >
 
+    <!-- Append -->
     <template
       v-if="$slots.append || hasClearableBtn || step || currencyVisibility === 'append'"
       #append

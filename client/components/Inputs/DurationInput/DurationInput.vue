@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { type DurationUnit, MODIFIER_BY_UNIT } from '$utilsLayer/shared/composables/useDuration'
+import { MODIFIER_BY_UNIT } from '$utilsLayer/shared/composables/useDuration'
+import type { DurationUnit } from '$utilsLayer/shared/composables/useDuration'
 
 // Types
 import type { IDurationInputProps } from './types/duration-input-props.type'
@@ -100,10 +101,20 @@ defineExpose({
     v-model="model"
     :ui="mergedProps.ui"
   >
+    <!-- Label -->
+    <template #label="labelProps">
+      <slot
+        name="label"
+        v-bind="labelProps"
+      />
+    </template>
+
+    <!-- Prepend -->
     <template #prepend>
       <slot name="prepend" />
     </template>
 
+    <!-- Append -->
     <template #append>
       <slot name="append" />
 

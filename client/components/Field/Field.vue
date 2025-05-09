@@ -54,6 +54,15 @@ defineExpose({
     error-visible
     :has-content
   >
+    <!-- Label -->
+    <template #label="labelProps">
+      <slot
+        name="label"
+        v-bind="labelProps"
+      />
+    </template>
+
+    <!-- Prepend -->
     <template
       v-if="$slots.prepend"
       #prepend
@@ -80,6 +89,7 @@ defineExpose({
       <slot />
     </span>
 
+    <!-- Append -->
     <template
       v-if="$slots.append || (!readonly && !disabled)"
       #append

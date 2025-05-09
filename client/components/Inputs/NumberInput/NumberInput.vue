@@ -107,6 +107,15 @@ defineExpose({
     .focus="focus"
     @click="handleClickWrapper"
   >
+    <!-- Label -->
+    <template #label="labelProps">
+      <slot
+        name="label"
+        v-bind="labelProps"
+      />
+    </template>
+
+    <!-- Prepend -->
     <template
       v-if="$slots.prepend"
       #prepend
@@ -139,6 +148,7 @@ defineExpose({
       @paste.stop.prevent="handlePaste"
     >
 
+    <!-- Append -->
     <template
       v-if="$slots.append || hasClearableBtn || (!readonly && !disabled)"
       #append

@@ -1,7 +1,8 @@
 <script setup lang="ts">
 // TODO: am/pm values are not reactive on language change (broken only for 13h for some reason...)
 
-import { type FactoryOpts, MaskedRange } from 'imask'
+import { MaskedRange } from 'imask'
+import type { FactoryOpts } from 'imask'
 
 // Types
 import type { ITimeInputProps } from './types/time-input-props.type'
@@ -249,6 +250,15 @@ defineExpose({
     .focus="focus"
     @click="handleClickWrapper"
   >
+    <!-- Label -->
+    <template #label="labelProps">
+      <slot
+        name="label"
+        v-bind="labelProps"
+      />
+    </template>
+
+    <!-- Prepend -->
     <template
       v-if="$slots.prepend"
       #prepend
@@ -284,6 +294,7 @@ defineExpose({
       @blur="handleBlur"
     >
 
+    <!-- Append -->
     <template #append>
       <div
         v-if="$slots.append || hasClearableBtn || (!readonly && !disabled)"
@@ -337,6 +348,7 @@ defineExpose({
       </div>
     </template>
 
+    <!-- Menu -->
     <template #menu>
       <TimeInputPicker
         ref="timeInputPickerEl"

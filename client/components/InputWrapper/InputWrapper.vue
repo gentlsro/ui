@@ -138,11 +138,17 @@ const wrapperProps = computed(() => {
         v-if="label"
         #label
       >
-        <InputLabel
-          v-bind="labelProps"
+        <slot
+          name="label"
+          :label-props
           :required="isInputRequired"
-          @click="$emit('label-click', $event)"
-        />
+        >
+          <InputLabel
+            v-bind="labelProps"
+            :required="isInputRequired"
+            @click="$emit('label-click', $event)"
+          />
+        </slot>
       </template>
 
       <!-- Prepend -->

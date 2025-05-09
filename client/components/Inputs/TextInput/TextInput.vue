@@ -75,6 +75,15 @@ defineExpose({
     .focus="focus"
     @click="handleClickWrapper"
   >
+    <!-- Label -->
+    <template #label="labelProps">
+      <slot
+        name="label"
+        v-bind="labelProps"
+      />
+    </template>
+
+    <!-- Prepend -->
     <template
       v-if="$slots.prepend"
       #prepend
@@ -109,6 +118,7 @@ defineExpose({
       @keypress.enter="$emit('enter', $event)"
     >
 
+    <!-- Append -->
     <template
       v-if="$slots.append || hasCopyBtn || clearable"
       #append
