@@ -4,6 +4,7 @@ import type { IDialogProps } from './types/dialog-props.type'
 
 // Functions
 import { useDialogLayout } from './functions/useDialogLayout'
+import { useFloatingUIUtils } from '../FloatingUI/functions/useFloatingUIUtils'
 import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
 
 defineOptions({ inheritAttrs: false })
@@ -31,6 +32,8 @@ defineExpose({
 })
 
 // Utils
+const { getLastFloatingUIZindex } = useFloatingUIUtils()
+
 const mergedProps = computed(() => {
   return getComponentMergedProps('dialog', props)
 })
@@ -39,6 +42,7 @@ const mergedProps = computed(() => {
 const model = defineModel({ default: false })
 const isChangeForced = ref(false)
 const debouncedModel = ref(model.value)
+const zIndex = ref(0)
 
 const title = computed(() => {
   if (typeof props.title === 'function') {
@@ -123,10 +127,11 @@ function commitHide() {
 // We sync the model with the debouncedModel immediately when the value is `true`
 // to show the content immediately to trigger the transition
 whenever(model, isVisible => {
+  zIndex.value = getLastFloatingUIZindex() + 1
   debouncedModel.value = isVisible
 
   triggerEl.value?.classList.add('is-dialog-active')
-})
+}, { immediate: true })
 
 // Click outside
 onClickOutside(floatingEl, handleClickOutside, {
@@ -170,11 +175,6 @@ function bounce() {
   })
   _floatingEl.classList.add('bounce')
 }
-
-// Overlay
-const isOverlayVisible = computed(() => {
-  return !props.noOverlay
-})
 </script>
 
 <template>
@@ -184,9 +184,13 @@ const isOverlayVisible = computed(() => {
   >
     <!-- Overlay -->
     <div
-      v-if="isOverlayVisible"
+      v-if="!noOverlay"
       class="backdrop"
-      :style="{ ...mergedProps.ui?.backdropStyle, '--transitionDuration': `${transitionDuration}ms` }"
+      :style="{
+        ...mergedProps.ui?.backdropStyle,
+        '--transitionDuration': `${transitionDuration}ms`,
+        '--zIndex': zIndex,
+      }"
       :class="[mergedProps.ui?.backdropClass, { 'is-active': model }]"
     />
 
@@ -206,8 +210,12 @@ const isOverlayVisible = computed(() => {
         v-if="model"
         ref="dialogWrapperEl"
         class="dialog__wrapper floating-element"
-        :position="position"
-        :style="{ '--dialogMaxHeight': dialogMaxHeight }"
+        :data-open="model"
+        :position
+        :style="{
+          '--dialogMaxHeight': dialogMaxHeight,
+          '--zIndex': zIndex,
+        }"
         .hide="hide"
       >
         <!-- Dialog -->
@@ -282,7 +290,7 @@ const isOverlayVisible = computed(() => {
     border-ca pointer-events-auto bg-white dark:bg-darker;
 
   &__wrapper {
-    @apply flex fixed inset-0 z-$zDialog pointer-events-none;
+    @apply flex fixed inset-0 pointer-events-none z-$zIndex;
   }
 
   &__header {
@@ -344,7 +352,7 @@ const isOverlayVisible = computed(() => {
 
 // Backdrop
 .backdrop {
-  @apply fixed inset-0 transition-background-color z-$zBackdrop
+  @apply fixed inset-0 transition-background-color z-$zIndex
     duration-$transitionDuration ease-out bg-transparent;
 
   &.is-active {

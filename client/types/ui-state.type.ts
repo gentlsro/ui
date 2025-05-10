@@ -2,6 +2,7 @@ export type IUIState = {
   general: {
     keyboardShortcuts: boolean
   }
+
   form: {
     confirmation: {
       enabled?: boolean

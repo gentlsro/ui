@@ -77,7 +77,21 @@ export function useFloatingUIUtils() {
     return unrefElement(el)
   }
 
+  function getLastFloatingUIZindex() {
+    const lastFloatingElement = document.querySelector('.floating-element:last-child') as HTMLElement
+
+    if (!lastFloatingElement) {
+      return 2999
+    }
+
+    const computedStyle = getComputedStyle(lastFloatingElement)
+    const zIndex = +computedStyle.getPropertyValue('--zIndex')
+
+    return Number(zIndex)
+  }
+
   return {
     getElement,
+    getLastFloatingUIZindex,
   }
 }
