@@ -207,7 +207,7 @@ const collapseProps = computed(() => {
 
 <style scoped lang="scss">
 .qb-group {
-  @apply relative flex flex-col rounded-custom p-r-0 p-l-2 m-l-5 border-1
+  @apply relative flex flex-col gap-1px rounded-custom p-r-0 p-l-2 m-l-5 border-1
     border-transparent;
 
   transition:

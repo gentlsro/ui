@@ -254,14 +254,14 @@ const $z = useZod(
 <style scoped lang="scss">
 .qb-item {
   @apply relative flex gap-2 rounded-custom p-l-2 min-h-10 m-r-2 m-l-5
-    items-center bg-ca border-1 border-transparent;
+    items-center bg-slate-100 dark:bg-dark-950 border-1 border-transparent;
 
   transition:
     background-color 0.3s ease-in-out,
     shadow 0.3s ease-in-out;
 
   &.is-hovered {
-    @apply bg-white dark:bg-darker z-1 shadow-consistent shadow-ca;
+    @apply bg-white dark:bg-darker z-1 shadow-consistent-xs shadow-ca;
   }
 
   &.is-dragged {

@@ -28,10 +28,13 @@ onMounted(() => {
   // We add timeout to prevent scrollbars to show when waiting for animation
   if (scrollArea.value) {
     const parentFloatingUI = (self?.vnode.el as HTMLElement)?.closest('.menu, .dialog') as HTMLElement
+    console.log('🚀 ~ onMounted ~ parentFloatingUI:', parentFloatingUI)
 
     if (parentFloatingUI?.classList.contains('has-transition')) {
       const transitionDurationString = parentFloatingUI.style.getPropertyValue('--transitionDuration')
+      console.log('🚀 ~ onMounted ~ transitionDurationString:', transitionDurationString)
       const transitionDuration = Number(stringToFloat(transitionDurationString))
+      console.log('🚀 ~ onMounted ~ transitionDuration:', transitionDuration)
 
       setTimeout(() => {
         init()

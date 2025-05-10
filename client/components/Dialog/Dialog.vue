@@ -214,6 +214,7 @@ const isOverlayVisible = computed(() => {
         <div
           ref="floatingEl"
           class="dialog"
+          :style="{ '--transitionDuration': `${transitionDuration}ms` }"
           :class="{ 'has-transition': !noTransition }"
           h="120"
           w="100"

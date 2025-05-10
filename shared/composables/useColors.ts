@@ -100,6 +100,7 @@ export function useColors() {
           : (style.backgroundColor ?? style.color),
         color: style.color,
         icon: style.icon,
+        border: style.borderColor ? `1px solid ${style.borderColor}` : undefined,
         isComplex: true,
       }
     } else {
