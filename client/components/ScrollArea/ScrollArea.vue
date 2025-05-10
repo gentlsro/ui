@@ -35,7 +35,7 @@ onMounted(() => {
 
       setTimeout(() => {
         init()
-      }, transitionDuration + 25)
+      }, transitionDuration + 50)
     } else {
       init()
     }
