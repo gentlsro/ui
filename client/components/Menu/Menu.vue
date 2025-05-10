@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { type Placement, useFloating } from '@floating-ui/vue'
+import { useFloating } from '@floating-ui/vue'
+import type { Placement } from '@floating-ui/vue'
 
 // Types
 import type { IMenuProps } from './types/menu-props.type'

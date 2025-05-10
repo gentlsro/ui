@@ -84,19 +84,9 @@ const mask = computed<FactoryOpts>(() => {
       }
 
       if (props.utc) {
-        return formatDate(val)
+        return formatDate(val, 'utc')
       } else {
-        return formatDate(
-          val,
-          {
-            outputIntlOptions: {
-              year: 'numeric',
-              month: '2-digit',
-              day: '2-digit',
-              timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-            },
-          },
-        )
+        return formatDate(val)
       }
     },
     parse: (val: any) => {
@@ -275,6 +265,7 @@ defineExpose({
         </Btn>
 
         <div
+          v-if="!noPickerIcon"
           class="picker-icon i-system-uicons:calendar-date"
           @mousedown="handlePickerIconClick"
           @click.stop.prevent

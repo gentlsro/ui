@@ -48,7 +48,7 @@ function handleMonthSelect(month: number) {
     <Btn
       v-for="m in months"
       :key="m.idx"
-      :label="formatDate(m.date, 'month')"
+      :label="formatDate(m.date, utc ? 'utcMonth' : 'month')"
       tabindex="-1"
       size="sm"
       no-uppercase

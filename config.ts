@@ -1,5 +1,7 @@
 // @unocss-include
 
+import utilsConfig from '$utilsConfig'
+
 // Component types
 import type { IBadgeProps } from './client/components/Badge/types/badge-props.type'
 import type { IBannerProps } from './client/components/Banner/types/banner-props.type'
@@ -274,7 +276,7 @@ export const defaultComponentsConfig = {
       ui: {
         borderRadius: '0.5rem',
       },
-      utc: true,
+      utc: utilsConfig.general.useUtc ?? true,
     },
     merge: ['ui'],
   },
@@ -284,7 +286,7 @@ export const defaultComponentsConfig = {
     props: {
       excludedDays: [],
       modelValue: undefined,
-      utc: true,
+      utc: utilsConfig.general.useUtc ?? true,
     },
   },
 
