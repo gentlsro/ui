@@ -40,7 +40,7 @@ const actions = computed(() => ({
 }))
 
 // Layout
-const fileUrl = `${rC.public.NUXT_PUBLIC_FILES_HOST}/files${props.file.path}`
+const fileUrl = `${rC.public.FILES_HOST}/files${props.file.path}`
 
 const icon = computed(() => {
   const ext = getFileExtension(props.file.name ?? '')
