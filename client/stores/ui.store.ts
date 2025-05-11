@@ -2,6 +2,7 @@ import { createVNode, render } from 'vue'
 import { skipHydrate } from 'pinia'
 import type { CSSProperties } from 'vue'
 import { uiConfig } from '$uiConfig'
+import utilsConfig from '$utilsConfig'
 
 // Types
 import type { IUIState } from '../types/ui-state.type'
@@ -29,6 +30,7 @@ export const useUIStore = defineStore('__ui', () => {
         fit: uiConfig.table.props.autoFit().mode,
       },
     }),
+    domain: utilsConfig.general.domain,
   })
 
   function setState(state: Partial<IUIState>, extend = true) {
