@@ -85,13 +85,6 @@ export default defineNuxtConfig({
     resolve('./client/css/colors.scss'),
   ],
 
-  // Runtime config https://nuxt.com/docs/api/configuration/nuxt-config#runtimeconfig
-  runtimeConfig: {
-    public: {
-      COOKIE_DOMAIN: undefined as string | undefined,
-    },
-  },
-
   srcDir: 'client/',
 
   // Alias
