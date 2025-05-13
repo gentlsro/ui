@@ -54,7 +54,7 @@ export function useImages() {
       return undefined
     }
 
-    const filesHost = useRuntimeConfig().public.NUXT_PUBLIC_FILES_HOST || '/api/files'
+    const filesHost = useRuntimeConfig().public.FILES_HOST || '/api/files'
 
     const { folder = '' } = options
 
