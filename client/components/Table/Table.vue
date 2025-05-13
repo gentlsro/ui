@@ -250,7 +250,7 @@ onUnmounted(() => {
       <template
         v-for="col in visibleColumns"
         :key="col.name"
-        #[col.name]="{ row, column, index }"
+        #[col.name]="{ row, column, index, value }"
       >
         <slot
           :name="col.name"
@@ -258,6 +258,7 @@ onUnmounted(() => {
           :index
           :custom-data
           :column
+          :value
         />
       </template>
 
