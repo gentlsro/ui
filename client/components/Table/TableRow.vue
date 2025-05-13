@@ -361,6 +361,7 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
             :name="column.column.field"
             :row="rowData.row"
             :column="column.column"
+            :value="column.value"
           >
             <ReuseValueTemplate
               :column
@@ -407,6 +408,7 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
         :name="column.column.field"
         :row="rowDataArray[0].row"
         :column="column.column"
+        :value="column.value"
       >
         <ReuseValueTemplate
           :column
