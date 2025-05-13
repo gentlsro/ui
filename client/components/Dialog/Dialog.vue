@@ -92,7 +92,7 @@ const transitionClass = computed(() => {
     case 'right':
       return 'opacity-0 transform-origin-right translate-x-10'
     default:
-      return 'opacity-0 transform-origin-center scale-20'
+      return 'opacity-0 transform-origin-center scale-60'
   }
 })
 
