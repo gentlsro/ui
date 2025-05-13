@@ -30,7 +30,7 @@ export const useUIStore = defineStore('__ui', () => {
         fit: uiConfig.table.props.autoFit().mode,
       },
     }),
-    domain: utilsConfig.general.domain,
+    domain: utilsConfig.general.domain ?? undefined,
   })
 
   function setState(state: Partial<IUIState>, extend = true) {
