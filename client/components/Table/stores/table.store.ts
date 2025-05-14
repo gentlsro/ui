@@ -100,7 +100,10 @@ export function useTableStore(
 
     const syncStateColumns = useDebounceFn(() => {
       state.value.queryParams = decodeURIComponent(queryParams.value.toString())
-      state.value.columns = nonHelperColumns.value.map(getStateColumnData)
+
+      if (!noState.value) {
+        state.value.columns = nonHelperColumns.value.map(getStateColumnData)
+      }
     }, 50)
 
     // !SECTION
@@ -490,7 +493,7 @@ export function useTableStore(
     watch(queryParams, queryParams => {
       console.log('Query params change', decodeURIComponent(queryParams.toString()))
 
-      // We should only sync the state once we're use every relevant part is loaded
+      // We should only sync the state once we're sure every relevant part is loaded
       // We can assume that the meta is loaded if `apiColumns` is not `undefined`
       // and `propsColumns` is not `undefined`
       if (apiColumns.value && propsColumns.value) {
