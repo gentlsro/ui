@@ -359,7 +359,11 @@ defineExpose({
         :is12h="is12h"
         :model-value-localized="modelValueLocalized"
         :shortcuts="shortcuts"
-      />
+      >
+        <template #shortcuts>
+          <slot name="shortcuts" />
+        </template>
+      </TimeInputPicker>
     </template>
   </InputWrapper>
 </template>

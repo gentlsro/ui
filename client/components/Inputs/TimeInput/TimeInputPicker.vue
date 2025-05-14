@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { type FactoryOpts, MaskedRange } from 'imask'
+import { MaskedRange } from 'imask'
+import type { FactoryOpts } from 'imask'
 
 // Types
 import type { ITimeInputPickerProps } from './types/time-input-picker-props.type'
@@ -258,30 +259,32 @@ defineExpose({
     </div>
 
     <!-- Shortcuts -->
-    <Field
-      v-if="shortcuts"
-      :label="$t('general.shortcuts')"
-      has-content
-      dense
-      p="t-4"
-    >
-      <HorizontalScroller
-        class="shortcuts"
-        :ui="{ contentClass: 'gap-x-1 p-x-2' }"
-        arrows="outside"
+    <slot name="shortcuts">
+      <Field
+        v-if="shortcuts"
+        :label="$t('general.shortcuts')"
+        has-content
+        dense
+        p="t-4"
       >
-        <Chip
-          v-for="(shortcut, idx) in shortcuts"
-          :key="idx"
-          :label="shortcut.label"
-          ripple
-          center
-          class="shortcuts-chip"
-          :class="{ 'is-12h': is12h }"
-          @click="setValue(shortcut.value, 'both', true, true)"
-        />
-      </HorizontalScroller>
-    </Field>
+        <HorizontalScroller
+          class="shortcuts"
+          :ui="{ contentClass: 'gap-x-1 p-x-2' }"
+          arrows="outside"
+        >
+          <Chip
+            v-for="(shortcut, idx) in shortcuts"
+            :key="idx"
+            :label="shortcut.label"
+            ripple
+            center
+            class="shortcuts-chip"
+            :class="{ 'is-12h': is12h }"
+            @click="setValue(shortcut.value, 'both', true, true)"
+          />
+        </HorizontalScroller>
+      </Field>
+    </slot>
   </MenuProxy>
 </template>
 
