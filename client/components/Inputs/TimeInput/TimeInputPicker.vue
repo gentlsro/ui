@@ -65,8 +65,6 @@ const maskMinutes = computed<FactoryOpts>(() => {
 
 // Layout
 const menuProxyEl = useTemplateRef('menuProxyEl')
-const hInput = useTemplateRef('hInput')
-const mInput = useTemplateRef('mInput')
 const hourEl = useTemplateRef('hourEl')
 const minuteEl = useTemplateRef('minuteEl')
 const isPickerActive = ref(false)
@@ -172,7 +170,6 @@ defineExpose({
         items-center
       >
         <TextInput
-          ref="hInput"
           layout="regular"
           :model-value="localizedTimeParts.hh"
           class="w-[calc(50%-8px)]"
@@ -183,7 +180,6 @@ defineExpose({
           @update:model-value="setValue($event, 'h', true)"
         />
         <TextInput
-          ref="mInput"
           layout="regular"
           :model-value="localizedTimeParts.mm"
           class="w-[calc(50%-8px)]"
