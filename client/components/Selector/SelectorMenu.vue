@@ -90,6 +90,19 @@ function handleHide() {
 watch(contentHeight, () => {
   menuEl.value?.recomputePosition()
 })
+
+// When the search is not enabled, we need to focus the content list
+// to be able to use keyboard navigation
+whenever(isPickerActive, () => {
+  if (props.noSearch) {
+    setTimeout(() => {
+      const listElDom = unrefElement(listEl as any) as HTMLElement
+      const contentElDom = listElDom?.querySelector('.virtual-scroll') as HTMLElement
+
+    contentElDom?.focus()
+    })
+  }
+})
 </script>
 
 <template>
