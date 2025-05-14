@@ -292,10 +292,14 @@ export function useTableStore(
       // Set the query builder
       if (isSchemaUsed || isUrlUsed) {
         queryBuilder.value = qb.length ? qb : queryBuilderInitializeItems()
-        state.value.queryBuilder = queryBuilder.value
+
+        if (!noState.value) {
+          state.value.queryBuilder = queryBuilder.value
+        }
       } else {
         queryBuilder.value = state.value.queryBuilder ?? queryBuilderInitializeItems()
       }
+      
 
       // Set the pagination
       if (pagination?.take || pagination?.skip) {
