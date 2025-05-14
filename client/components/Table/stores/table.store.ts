@@ -376,9 +376,13 @@ export function useTableStore(
 
       
       const { row, column } = cellEdit.value
-      set(row, column.field, cellEditValue.value)
+      const onSave = cellEdit.value.column.editComponent?.onSave
       
-      cellEdit.value.column.editComponent?.onSave?.(_row, cellEdit.value.column, originalRow)
+      if (onSave) {
+        Object.assign(row, onSave(_row, cellEdit.value.column, originalRow))
+      } else {
+        set(row, column.field, cellEditValue.value)
+      }
     }
 
     function cancelCellEdit() {
