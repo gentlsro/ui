@@ -268,11 +268,14 @@ export function useTableStore(
       // Merge columns from all the sources, remove duplicates
       let cols = columnsMerged
 
+      const defaultSchema = modifiers.value?.defaultSchemaModifyFnc?.(state.value.layoutDefault?.schema ?? '')
+        ?? (state.value.layoutDefault?.schema ?? '')
+
       // Transform columns
       const { columns: _columns, queryBuilder: qb, pagination, isSchemaUsed, isUrlUsed } = tableTransformColumns({
         internalColumns: cols,
         modifiers: modifiers.value,
-        defaultSchema: state.value.layoutDefault?.schema ?? '',
+        defaultSchema,
         urlSchema: useRequestURL().searchParams,
         initialSchemaConfig: initialSchemaConfig.value,
 

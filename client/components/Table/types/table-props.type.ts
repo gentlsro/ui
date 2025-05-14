@@ -280,6 +280,17 @@ export type ITableProps<
     caseInsensitive?: boolean
 
     /**
+     * A function that can be used to modify the default schema
+     * 
+     * We may have a situation when we only need to use some parts of the default schema.
+     * For example, the default schema uses a filter and fields selection. But we really only
+     * need the fields selection. This function can be used to extract whatever is needed.
+     *
+     * If you return `undefined`, it falls back to the default schema.
+     */
+    defaultSchemaModifyFnc?: (schema?: string) => string | undefined,
+
+    /**
      * Function that extracts the sorting from the URL
      */
     extractSortingFromUrl?: typeof tableExtractSortingFromUrl
