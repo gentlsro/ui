@@ -1,4 +1,5 @@
 import { skipHydrate } from 'pinia'
+import { klona } from 'klona/full'
 
 // Types
 import type { ITableProps } from '../types/table-props.type'
@@ -370,7 +371,7 @@ export function useTableStore(
         return
       }
 
-      const originalRow = cellEdit.value.row
+      const originalRow = klona(cellEdit.value.row)
       const _row = { ...cellEdit.value.row, [cellEdit.value.column.field]: cellEditValue.value }
 
       
