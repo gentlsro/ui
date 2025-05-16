@@ -167,6 +167,7 @@ export default defineConfig({
     presetAttributify({ ignoreAttributes: ['size'] }),
     presetTypography(),
   ],
+  safelist: ['color-contrast'],
   transformers: [
     transformerDirectives({ applyVariable: ['--apply', '@apply'] }),
     transformerVariantGroup(),
