@@ -192,7 +192,7 @@ export default defineNuxtConfig({
       transformerDirectives(),
       transformerVariantGroup(),
     ],
-    safelist: ['i-emojione:flag-for-united-kingdom', 'i-emojione:flag-for-czechia'],
+    safelist: ['color-contrast', 'i-emojione:flag-for-united-kingdom', 'i-emojione:flag-for-czechia'],
     nuxtLayers: true,
   },
 })
