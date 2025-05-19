@@ -192,18 +192,6 @@ function handleScrollEvent(
   const _noEmit = props.noScrollEmit || noEmit
   const scrollY = ((ev?.target as any)?.scrollTop || 1) as number
 
-  if (!force && lastScrollTop === scrollY) {
-    const firstVisibleIdx = heightsCumulated.value.findIndex(h => h >= scrollY)
-    let lastVisibleIdx = heightsCumulated.value.findIndex(
-      h => h >= scrollY + (virtualScrollerRect.height.value),
-    )
-
-    visibleItemsIdx.value.first = firstVisibleIdx
-    visibleItemsIdx.value.last = lastVisibleIdx
-
-    return
-  }
-
   lastScrollTop = scrollY
 
   // Rendered rows
@@ -230,6 +218,10 @@ function handleScrollEvent(
 
   visibleItemsIdx.value.first = firstVisibleIdx
   visibleItemsIdx.value.last = lastVisibleIdx
+
+  if (!force && lastScrollTop === scrollY) {
+    return
+  }
 
   if (!_noEmit) {
     emits('virtual-scroll', {
