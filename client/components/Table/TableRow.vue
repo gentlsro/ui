@@ -296,17 +296,9 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
         handleRowClick({ row: rowData.row, ev: $event }),
       ]"
     >
-      <div
-        v-for="column in rowData.columns"
-        :key="column.id"
-        class="td"
-        :style="column.cellStyle"
-        :class="[column.cellClass, { 'is-editing': isEditingCell(rowData, column) }]"
-        :data-field="column.column.field"
-        :data-key="rowData.rowKey"
-      >
-        {{ column.valueFormatted }}
-      </div>
+      <span>
+        {{ rowData.columns.map(col => col.valueFormatted).join(', ') }}
+      </span>
 
       <!-- Used for absolutely position info/element -->
       <slot
