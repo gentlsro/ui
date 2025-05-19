@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'vue'
 import type { Required } from 'utility-types'
+import type { IVirtualScrollerProps } from '$ui'
 import type { RouteLocationRaw } from '#vue-router'
 
 // Types
@@ -425,6 +426,11 @@ export type ITableProps<
    * The maximum number of rows to load
    */
   rowsLimit?: number
+
+  /**
+   * Scroller configuration
+   */
+  scrollerConfig?: Pick<IVirtualScrollerProps<any>, 'rowHeight' | 'overscan' | 'threshold' | 'watchWidth'>
 
   /**
    * The search query
