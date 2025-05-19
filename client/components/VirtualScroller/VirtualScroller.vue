@@ -182,6 +182,7 @@ function handleScrollEvent(
     force?: boolean
   },
 ) {
+  console.log('Log ~handleScrollEvent')
   if (preventNextScroll.value) {
     preventNextScroll.value = false
 
@@ -191,6 +192,10 @@ function handleScrollEvent(
   const { noEmit, force } = options ?? {}
   const _noEmit = props.noScrollEmit || noEmit
   const scrollY = ((ev?.target as any)?.scrollTop || 1) as number
+
+  if (!force && lastScrollTop === scrollY) {
+    return
+  }
 
   lastScrollTop = scrollY
 
@@ -218,10 +223,6 @@ function handleScrollEvent(
 
   visibleItemsIdx.value.first = firstVisibleIdx
   visibleItemsIdx.value.last = lastVisibleIdx
-
-  if (!force && lastScrollTop === scrollY) {
-    return
-  }
 
   if (!_noEmit) {
     emits('virtual-scroll', {
