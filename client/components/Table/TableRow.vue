@@ -301,7 +301,7 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
         :key="column.id"
         class="td"
         :style="column.cellStyle"
-        :class="[column.cellClass]"
+        :class="[column.cellClass, { 'is-editing': isEditingCell(rowData, column) }]"
         :data-field="column.column.field"
         :data-key="rowData.rowKey"
       >
@@ -333,8 +333,31 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
 
         <!-- Value -->
         <div class="td__value">
+          <!-- Editing -->
+          <template v-if="isEditingCell(rowData, column)">
+            <Component
+              :is="column.column._editComponent.component"
+              v-model="cellEditValue"
+              v-bind="column.column._editComponent.props"
+              size="sm"
+              class="active-edit-cell"
+              grow
+              @vue:mounted="handleEditCellMounted"
+              @click.stop.prevent
+            />
+
+            <!-- Save button -->
+            <Btn
+              size="xs"
+              preset="SAVE"
+              bg="white dark:black"
+              @click.stop.prevent="tableStore.saveCellEditValue"
+            />
+          </template>
+
           <!-- Value -->
           <slot
+            v-else
             :name="column.column.field"
             :row="rowData.row"
             :column="column.column"
