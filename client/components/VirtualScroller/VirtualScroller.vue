@@ -576,10 +576,10 @@ function renderOnlyVisible(
         class="virtual-scroll__row"
         @vue:mounted="handleMountedRow($event)"
       >
-        <!-- <slot
+        <slot
           :row="row.ref"
           :index="row.idx"
-        > -->
+        >
           <div
             flex="~ center"
             min-h="$rowHeight"
@@ -587,7 +587,7 @@ function renderOnlyVisible(
           >
             {{ row.ref }}
           </div>
-        <!-- </slot> -->
+        </slot>
       </div>
 
       <slot name="inner" />

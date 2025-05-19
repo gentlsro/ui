@@ -305,71 +305,7 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
         :data-field="column.column.field"
         :data-key="rowData.rowKey"
       >
-        <!-- Label -->
-        <span class="td__label">
-          {{ column.column._label }}
-
-          <!-- Edit button -->
-          <Btn
-            v-if="column.isEditable"
-            size="xs"
-            class="edit-btn"
-            tabindex="-1"
-            icon="i-material-symbols:edit-rounded"
-            @click.stop.prevent="handleEditCell(rowData, column)"
-          />
-
-          <!-- Cancel edit -->
-          <Btn
-            v-if="column.isEditable"
-            size="xs"
-            class="cancel-edit-btn"
-            tabindex="-1"
-            preset="CLOSE"
-            no-dim
-            @click.stop.prevent="handleCancelEditCell"
-          />
-        </span>
-
-        <!-- Value -->
-        <div class="td__value">
-          <!-- Editing -->
-          <template v-if="isEditingCell(rowData, column)">
-            <Component
-              :is="column.column._editComponent.component"
-              v-model="cellEditValue"
-              v-bind="column.column._editComponent.props"
-              size="sm"
-              class="active-edit-cell"
-              grow
-              @vue:mounted="handleEditCellMounted"
-              @click.stop.prevent
-            />
-
-            <!-- Save button -->
-            <Btn
-              size="xs"
-              preset="SAVE"
-              bg="white dark:black"
-              @click.stop.prevent="tableStore.saveCellEditValue"
-            />
-          </template>
-
-          <!-- Value -->
-          <slot
-            v-else
-            :name="column.column.field"
-            :row="rowData.row"
-            :column="column.column"
-            :value="column.value"
-          >
-            <ReuseValueTemplate
-              :column
-              :row="rowData.row"
-              :is-selectable="rowData.isSelectable"
-            />
-          </slot>
-        </div>
+        {{ column.valueFormatted }}
       </div>
 
       <!-- Used for absolutely position info/element -->
