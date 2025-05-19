@@ -533,8 +533,6 @@ function renderOnlyVisible(
   visibleItemsIdx.value.last = lastVisibleIdx
 
   const { first, last } = visibleItemsIdx.value
-  console.log('Log ~ first:', first)
-  console.log('Log ~ last:', last)
 
   const _first = firstIdx ?? first
   let _last = lastIdx ?? last
