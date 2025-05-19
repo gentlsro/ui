@@ -182,7 +182,6 @@ function handleScrollEvent(
     force?: boolean
   },
 ) {
-  console.log('Log ~handleScrollEvent')
   if (preventNextScroll.value) {
     preventNextScroll.value = false
 
@@ -521,6 +520,18 @@ function renderOnlyVisible(
   },
 ) {
   const { firstIdx, lastIdx, rowHeight } = options ?? {}
+
+// Visible rows
+  const firstVisibleIdx = heightsCumulated.value.findIndex(h => h >= scrollY)
+  let lastVisibleIdx = heightsCumulated.value.findIndex(
+    h => h >= scrollY + (virtualScrollerRect.height.value),
+  )
+
+  lastVisibleIdx = lastVisibleIdx === -1 ? rows.value?.length - 1 : lastVisibleIdx
+
+  visibleItemsIdx.value.first = firstVisibleIdx
+  visibleItemsIdx.value.last = lastVisibleIdx
+
   const { first, last } = visibleItemsIdx.value
   console.log('Log ~ first:', first)
   console.log('Log ~ last:', last)
