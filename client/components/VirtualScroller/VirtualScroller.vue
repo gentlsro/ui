@@ -165,6 +165,8 @@ const rowsInViewport = computed(() => {
     0,
   ) as number
 
+  console.log('overscanBot', overscanBot, Math.ceil(overscanBot / rowHeight.value))
+
   return Math.ceil(overscanBot / rowHeight.value)
 })
 
