@@ -166,11 +166,6 @@ const rowsInViewport = computed(() => {
     + Math.min(overscan.value.top, scrollTop),
     0,
   ) as number
-  
-  console.log('Log ~ rowsInViewport ~ height.value:', height.value)
-  console.log('Log ~ rowsInViewport ~ overscan.value.bottom:', overscan.value.bottom)
-  console.log('Log ~ rowsInViewport ~ Math.min(overscan.value.top, scrollTop):', Math.min(overscan.value.top, scrollTop))
-  console.log('overscanBot', overscanBot, Math.ceil(overscanBot / avgRowHeight.value))
 
   return Math.ceil(overscanBot / avgRowHeight.value)
 })
@@ -214,7 +209,7 @@ function handleScrollEvent(
     ? firstIdx + rowsInViewport.value
     : rows.value?.length - 1
 
-  console.log('rowsInViewport', rowsInViewport.value, firstIdx, lastIdx)
+  console.log('rowsInViewport, amount:', rowsInViewport.value, 'firstIdx:', firstIdx, 'lastIdx:', lastIdx)
   renderedRows.value = getRenderedRows(firstIdx, lastIdx)
 
   // Visible rows
