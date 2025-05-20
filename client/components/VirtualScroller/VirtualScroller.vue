@@ -495,7 +495,6 @@ const hasJustRerendered = ref(false)
 const { pause: pauseRowHeightWatcher, resume: resumeRowHeightWatcher } = watchPausable(
   () => renderedRows.value.rows,
   () => {
-    console.log('row watcher triggered')
     if (!isVirtual.value) {
       return
     }
