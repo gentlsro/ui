@@ -335,8 +335,7 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
         <div class="td__value">
           <!-- Editing -->
           <template v-if="isEditingCell(rowData, column)">
-            <span>{{ cellEditValue }}</span>
-            <!-- <Component
+            <Component
               :is="column.column._editComponent.component"
               v-model="cellEditValue"
               v-bind="column.column._editComponent.props"
@@ -345,7 +344,7 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
               grow
               @vue:mounted="handleEditCellMounted"
               @click.stop.prevent
-            /> -->
+            />
 
             <!-- Save button -->
             <Btn
