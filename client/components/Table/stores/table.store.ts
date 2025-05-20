@@ -384,15 +384,16 @@ export function useTableStore(
       const originalRow = klona(cellEdit.value.row)
       const _row = { ...cellEdit.value.row, [cellEdit.value.column.field]: cellEditValue.value }
 
-      
       const { row, column } = cellEdit.value
       const onSave = cellEdit.value.column.editComponent?.onSave
-      
+
       if (onSave) {
         Object.assign(row, onSave(_row, cellEdit.value.column, originalRow))
       } else {
         set(row, column.field, cellEditValue.value)
       }
+
+      cellEdit.value = undefined
     }
 
     function cancelCellEdit() {
