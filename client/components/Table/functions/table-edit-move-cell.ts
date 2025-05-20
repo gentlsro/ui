@@ -83,7 +83,7 @@ export function tableEditMoveCell(payload: {
 
   if (nextCellEditBtn) {
     nextCellEditBtn.click()
-    nextCellEditBtn.scrollIntoView({ block: 'nearest' })
+    ;(nextCellEditBtn.parentNode as HTMLElement)?.scrollIntoView({ block: 'nearest' })
 
     ev.preventDefault?.()
     ev.stopPropagation?.()
