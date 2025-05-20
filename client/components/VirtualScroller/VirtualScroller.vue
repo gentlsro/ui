@@ -221,7 +221,6 @@ function handleScrollEvent(
     ? firstIdx + rowsInViewport.value
     : rows.value?.length - 1
 
-  console.log('rowsInViewport, amount:', rowsInViewport.value, 'firstIdx:', firstIdx, 'lastIdx:', lastIdx)
   renderedRows.value = getRenderedRows(firstIdx, lastIdx)
 
   // Visible rows
@@ -485,7 +484,6 @@ watch([containerRect.height, virtualScrollerRect.height], async heights => {
 
   if (hasNoOverflow && !isZero) {
     nextTick(() => {
-      console.log('Triggered more...')
       handleScrollEvent(lastScrollEvent.value, { noEmit: false, force: true })
     })
   }
