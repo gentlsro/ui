@@ -207,6 +207,7 @@ function handleScrollEvent(
     force?: boolean
   },
 ) {
+  console.log(options)
   if (preventNextScroll.value) {
     preventNextScroll.value = false
 
