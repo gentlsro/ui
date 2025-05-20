@@ -209,6 +209,7 @@ function handleScrollEvent(
     ? firstIdx + rowsInViewport.value
     : rows.value?.length - 1
 
+  console.log('rowsInViewport', rowsInViewport.value, firstIdx, lastIdx)
   renderedRows.value = getRenderedRows(firstIdx, lastIdx)
 
   // Visible rows
