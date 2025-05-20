@@ -56,6 +56,17 @@ defineExpose({
     heights.value = Array.from({ length: props.rows?.length ?? 0 }, () => rowHeight ?? props.rowHeight)
     renderedRows.value = { rows: [], firstRow: null, lastRow: null }
   },
+
+  /**
+   * Triggers the scroll event
+   */
+  triggerScrollEvent: () => {
+    handleScrollEvent(lastScrollEvent.value, { noEmit: false, force: true })
+  },
+
+  /**
+   * Rerenders the visible rows
+   */
   renderOnlyVisible,
   updateRowHeight,
   getDimensions: () => ({

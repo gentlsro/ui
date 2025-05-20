@@ -87,6 +87,7 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
           isCardView: isCardView.value,
           cellEdit: cellEdit.value,
           ev: { key: 'ArrowRight' },
+          virtualScrollEl: virtualScrollEl.value,
         })
       } else {
         cellEdit.value = undefined
@@ -100,6 +101,7 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
         isCardView: isCardView.value,
         cellEdit: cellEdit.value,
         ev,
+        virtualScrollEl: virtualScrollEl.value,
       })
     }
   }

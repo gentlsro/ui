@@ -6,8 +6,9 @@ export function tableEditMoveCell(payload: {
   isCardView: boolean
   cellEdit: { row: IItem, column: TableColumn }
   ev: Partial<Pick<KeyboardEvent, 'key' | 'stopPropagation' | 'preventDefault'>>
+  virtualScrollEl?: any
 }) {
-  const { isCardView, cellEdit, tableEl, ev } = payload
+  const { isCardView, cellEdit, tableEl, ev, virtualScrollEl } = payload
   let currentCell = tableEl.querySelector('.active-edit-cell') as HTMLElement
   currentCell = currentCell?.closest('.td') as HTMLElement
 
@@ -83,7 +84,9 @@ export function tableEditMoveCell(payload: {
 
   if (nextCellEditBtn) {
     nextCellEditBtn.click()
-    ;(nextCellEditBtn.parentNode as HTMLElement)?.scrollIntoView({ block: 'nearest' })
+    ;(nextCellEditBtn.parentNode as HTMLElement)?.scrollIntoView({ block: 'center' })
+
+    virtualScrollEl?.triggerScrollEvent()
 
     ev.preventDefault?.()
     ev.stopPropagation?.()
