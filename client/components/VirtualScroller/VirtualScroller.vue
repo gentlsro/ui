@@ -44,8 +44,14 @@ defineExpose({
   rerender: (noEmit = false, resetHeights = true) => {
     rerenderVisibleRows({ triggerScrollEvent: !noEmit, resetHeights })
   },
-  clear: () => {
-    heights.value = []
+
+  /**
+   * Clears the virtual scroller = removes the rendered rows and resets the heights
+   */
+  clear: (payload?: { rowHeight?: number }) => {
+    const { rowHeight } = payload ?? {}
+
+    heights.value = Array.from({ length: props.rows?.length ?? 0 }, () => rowHeight ?? props.rowHeight)
     renderedRows.value = { rows: [], firstRow: null, lastRow: null }
   },
   renderOnlyVisible,
@@ -203,8 +209,6 @@ function handleScrollEvent(
   }
 
   lastScrollTop = scrollY
-
-  console.log('is virtual', isVirtual.value)
 
   // Rendered rows
   const overscanTop = Math.max(scrollY - overscan.value.top, 1)
@@ -395,7 +399,6 @@ function rerenderVisibleRows(payload?: {
 }) {
   const { triggerScrollEvent = true, emitScrollEvent, resetHeights } = payload ?? {}
   const children = Array.from(containerEl.value?.children || [])
-  console.log('Log ~ children:', children)
 
   children?.forEach(el => {
     handleMountedRow(el, { resetHeights })
@@ -480,6 +483,7 @@ watch([containerRect.height, virtualScrollerRect.height], async heights => {
 
   if (hasNoOverflow && !isZero) {
     nextTick(() => {
+      console.log('Triggered more...')
       handleScrollEvent(lastScrollEvent.value, { noEmit: false, force: true })
     })
   }
