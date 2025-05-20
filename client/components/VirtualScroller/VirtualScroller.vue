@@ -123,6 +123,8 @@ const renderedRows = ref(
   getRenderedRows(0, INITIAL_ROWS_RENDER_COUNT),
 ) as Ref<IVisibleRows>
 
+const avgRowHeight = useAverage(heights)
+
 const renderedRowsByIdx = computed(() => {
   return renderedRows.value.rows.reduce((agg, row) => {
     agg[row.idx] = row
@@ -164,10 +166,13 @@ const rowsInViewport = computed(() => {
     + Math.min(overscan.value.top, scrollTop),
     0,
   ) as number
+  
+  console.log('Log ~ rowsInViewport ~ height.value:', height.value)
+  console.log('Log ~ rowsInViewport ~ overscan.value.bottom:', overscan.value.bottom)
+  console.log('Log ~ rowsInViewport ~ Math.min(overscan.value.top, scrollTop):', Math.min(overscan.value.top, scrollTop))
+  console.log('overscanBot', overscanBot, Math.ceil(overscanBot / avgRowHeight.value))
 
-  console.log('overscanBot', overscanBot, Math.ceil(overscanBot / rowHeight.value))
-
-  return Math.ceil(overscanBot / rowHeight.value)
+  return Math.ceil(overscanBot / avgRowHeight.value)
 })
 
 function handleScrollEvent(
