@@ -47,6 +47,8 @@ defineExpose({
 
   /**
    * Clears the virtual scroller = removes the rendered rows and resets the heights
+   *
+   * You can also pass a `rowHeight` to reset the heights to a specific value
    */
   clear: (payload?: { rowHeight?: number }) => {
     const { rowHeight } = payload ?? {}
