@@ -44,6 +44,18 @@ defineExpose({
   rerender: (noEmit = false, resetHeights = true) => {
     rerenderVisibleRows({ triggerScrollEvent: !noEmit, resetHeights })
   },
+
+  /**
+   * Clears the virtual scroller = removes the rendered rows and resets the heights
+   *
+   * You can also pass a `rowHeight` to reset the heights to a specific value
+   */
+  clear: (payload?: { rowHeight?: number }) => {
+    const { rowHeight } = payload ?? {}
+
+    heights.value = Array.from({ length: props.rows?.length ?? 0 }, () => rowHeight ?? props.rowHeight)
+    renderedRows.value = { rows: [], firstRow: null, lastRow: null }
+  },
   renderOnlyVisible,
   updateRowHeight,
   getDimensions: () => ({
@@ -123,6 +135,8 @@ const renderedRows = ref(
   getRenderedRows(0, INITIAL_ROWS_RENDER_COUNT),
 ) as Ref<IVisibleRows>
 
+const avgRowHeight = useAverage(heights)
+
 const renderedRowsByIdx = computed(() => {
   return renderedRows.value.rows.reduce((agg, row) => {
     agg[row.idx] = row
@@ -165,7 +179,7 @@ const rowsInViewport = computed(() => {
     0,
   ) as number
 
-  return Math.ceil(overscanBot / rowHeight.value)
+  return Math.ceil(overscanBot / avgRowHeight.value)
 })
 
 function handleScrollEvent(
