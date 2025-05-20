@@ -190,6 +190,11 @@ const rowStyleArray = computed(() => {
   ])
 })
 
+function handleSaveCellEditValue() {
+  tableStore.saveCellEditValue()
+  cellEdit.value = undefined
+}
+
 function handleSelectToggle(row: IItem, ev?: MouseEvent) {
   const isCtrl = ev && !(ev.ctrlKey || ev.metaKey)
 
@@ -351,7 +356,7 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
               size="xs"
               preset="SAVE"
               bg="white dark:black"
-              @click.stop.prevent="tableStore.saveCellEditValue"
+              @click.stop.prevent="handleSaveCellEditValue"
             />
           </template>
 

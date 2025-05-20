@@ -392,8 +392,6 @@ export function useTableStore(
       } else {
         set(row, column.field, cellEditValue.value)
       }
-
-      cellEdit.value = undefined
     }
 
     function cancelCellEdit() {
