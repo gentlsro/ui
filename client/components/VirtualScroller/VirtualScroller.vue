@@ -45,6 +45,7 @@ defineExpose({
     rerenderVisibleRows({ triggerScrollEvent: !noEmit, resetHeights })
   },
   clear: () => {
+    heights.value = []
     renderedRows.value = { rows: [], firstRow: null, lastRow: null }
   },
   renderOnlyVisible,
