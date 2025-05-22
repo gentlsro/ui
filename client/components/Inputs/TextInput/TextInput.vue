@@ -118,6 +118,11 @@ defineExpose({
       @keypress.enter="$emit('enter', $event)"
     >
 
+    <!-- Hint -->
+    <template #hint>
+      <slot name="hint" />
+    </template>
+
     <!-- Append -->
     <template
       v-if="$slots.append || hasCopyBtn || clearable"
