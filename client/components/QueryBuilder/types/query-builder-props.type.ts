@@ -14,6 +14,11 @@ export type IQueryBuilderProps = {
   allowComparatorsOfSameType?: boolean
 
   /**
+   * The breakpoint at which the query builder will be displayed in mobile mode
+   */
+  breakpoint?: number
+
+  /**
    * Whether the query builder is editable
    */
   editable?: boolean

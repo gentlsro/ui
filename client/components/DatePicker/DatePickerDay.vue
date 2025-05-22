@@ -46,7 +46,7 @@ const eventsAdjusted = computed<Pick<DayEvent, 'color' | 'icon'>[]>(() => {
       v-if="edge && (day.isEdge.start.month || day.isEdge.end.month)"
       class="edge"
     >
-      {{ formatDate(day.dateValue, 'monthShort') }}
+      {{ formatDate(day.dateValue, utc ? 'utcMonthShort' : 'monthShort') }}
     </div>
 
     <!-- Top -->

@@ -81,7 +81,7 @@ function handleMonthSelect(month: Pick<Month, 'idx'>, callback?: () => void) {
       flex="1"
       h="8"
       tabindex="-1"
-      :label="formatDate(model, 'month')"
+      :label="formatDate(model, utc ? 'utcMonth' : 'month')"
     />
 
     <!-- Next -->
@@ -107,7 +107,7 @@ function handleMonthSelect(month: Pick<Month, 'idx'>, callback?: () => void) {
           <Btn
             v-for="m in months"
             :key="m.idx"
-            :label="formatDate(m.date, 'month')"
+            :label="formatDate(m.date, utc ? 'utcMonth' : 'month')"
             class="month-btn"
             no-uppercase
             tabindex="-1"

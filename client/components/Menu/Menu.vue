@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { type Placement, useFloating } from '@floating-ui/vue'
+import { useFloating } from '@floating-ui/vue'
+import type { Placement } from '@floating-ui/vue'
 
 // Types
 import type { IMenuProps } from './types/menu-props.type'
@@ -7,6 +8,7 @@ import type { IMenuProps } from './types/menu-props.type'
 // Functions
 import { useMenuLayout } from './functions/useMenuLayout'
 import { useMenuMiddleware } from './functions/useMenuMiddleware'
+import { useFloatingUIUtils } from '../FloatingUI/functions/useFloatingUIUtils'
 import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
 
 defineOptions({ inheritAttrs: false })
@@ -44,6 +46,7 @@ defineExpose({
 
 // Utils
 const { color } = useTheme()
+const { getLastFloatingUIZindex } = useFloatingUIUtils()
 
 const mergedProps = computed(() => {
   return getComponentMergedProps('menu', props)
@@ -53,6 +56,7 @@ const mergedProps = computed(() => {
 const model = defineModel({ default: false })
 const isChangeForced = ref(false)
 const debouncedModel = ref(model.value)
+const zIndex = ref(0)
 
 const title = computed(() => {
   if (typeof props.title === 'function') {
@@ -148,6 +152,7 @@ function commitHide() {
 // We sync the model with the debouncedModel immediately when the value is `true`
 // to show the content immediately to trigger the transition
 whenever(model, isVisible => {
+  zIndex.value = getLastFloatingUIZindex() + 1
   debouncedModel.value = isVisible
 
   const referenceEl = floatingReferenceEl.value as HTMLElement
@@ -164,7 +169,7 @@ whenever(model, isVisible => {
   isReferenceElTransparent.value = referenceElStyle.backgroundColor === 'rgba(0, 0, 0, 0)'
 
   if ((!props.noOverlay || !props.noUplift) && !props.cover) {
-    referenceEl.style.zIndex = '3000'
+    referenceEl.style.zIndex = `${zIndex.value + 1}`
   }
 
   if (isReferenceElTransparent.value && !props.noUplift && !props.cover) {
@@ -291,6 +296,10 @@ const isOverlayVisible = computed(() => {
     <div
       v-if="isOverlayVisible"
       class="backdrop"
+      :style="{
+        '--transitionDuration': `${transitionDuration}ms`,
+        '--zIndex': zIndex,
+      }"
       :class="{ 'is-open': model }"
     />
 
@@ -299,7 +308,10 @@ const isOverlayVisible = computed(() => {
       :css="!noTransition"
       :enter-from-class="transitionClass"
       :leave-to-class="transitionClass"
-      :style="{ '--transitionDuration': `${transitionDuration}ms` }"
+      :style="{
+        '--transitionDuration': `${transitionDuration}ms`,
+        '--zIndex': zIndex,
+      }"
       @before-enter="$emit('beforeShow')"
       @before-leave="$emit('beforeHide')"
       @after-leave="commitHide"
@@ -310,6 +322,7 @@ const isOverlayVisible = computed(() => {
         ref="floatingEl"
         class="floating-element menu"
         :style="floatingStyles"
+        :data-open="model"
         :class="{
           'is-cover': cover,
           'is-fit': fit,
@@ -382,7 +395,7 @@ const isOverlayVisible = computed(() => {
 
 <style lang="scss" scoped>
 .menu {
-  @apply flex flex-col max-w-95vw max-h-95% rounded-custom z-$zMenu
+  @apply flex flex-col max-w-95vw max-h-95% rounded-custom z-$zIndex
     rounded-custom border-1 border-ca bg-white dark:bg-darker;
 
   @apply shadow-consistent-xs shadow-darker/20;
@@ -489,7 +502,7 @@ s .menu[placement='right-end'] {
 
 // Backdrop
 .backdrop {
-  @apply fixed inset-0 z-$zBackdrop transition-background-color
+  @apply fixed inset-0 transition-background-color z-$zIndex
     duration-$transitionDuration ease bg-transparent;
 }
 

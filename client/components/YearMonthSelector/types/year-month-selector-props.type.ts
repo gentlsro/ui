@@ -5,4 +5,5 @@ export type IYearMonthSelectorProps = IFieldProps & {
   clearable?: boolean
   emptyValue?: any
   modelValue?: Datetime
+  utc?: boolean
 }

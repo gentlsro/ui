@@ -52,6 +52,7 @@ const titleElement = computed(() => {
     <slot
       v-if="$slots.subtitle || subtitle"
       name="subtitle"
+      :ui="mergedProps.ui"
     >
       <p
         class="section__subtitle"

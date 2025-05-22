@@ -517,7 +517,7 @@ export class TableColumn<T = IItem> {
         row: maxContentRow.row,
         col: this,
         slotRenderFnc,
-        ui
+        ui,
       })
 
       // We add a litle bit of tolerance
@@ -534,7 +534,7 @@ export class TableColumn<T = IItem> {
           row,
           col: this,
           slotRenderFnc,
-          ui
+          ui,
         })
 
         maxContentWidth = Math.max(maxContentWidth, width)

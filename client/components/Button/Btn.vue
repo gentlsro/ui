@@ -20,7 +20,7 @@ const props = withDefaults(defineProps<IBtnProps>(), {
 })
 
 // Utils
-const { getBtnProps, getBtnOrNuxtLinkResolverProps } = useBtnUtils()
+const { getBtnOrNuxtLinkResolverProps } = useBtnUtils()
 
 const btnProps = getBtnOrNuxtLinkResolverProps(props)
 
@@ -246,6 +246,22 @@ defineExpose({
 
     .loading__loader {
       @apply h-3.5;
+    }
+  }
+
+  &--xm {
+    @apply min-h-7 min-w-7 flex-gap-x-2 p-x-2;
+
+    .icon {
+      @apply h-4 w-4;
+    }
+
+    .btn-label {
+      @apply font-rem-11 p-y-1.25;
+    }
+
+    .loading__loader {
+      @apply h-4;
     }
   }
 

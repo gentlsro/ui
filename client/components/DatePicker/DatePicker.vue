@@ -158,7 +158,10 @@ defineExpose({
       flex="~ 1 col grow"
       overflow="hidden"
     >
-      <DatePickerNavigation v-model="internalValue" />
+      <DatePickerNavigation
+        v-model="internalValue"
+        :utc
+      />
 
       <!-- Days -->
       <div
@@ -174,7 +177,7 @@ defineExpose({
           font="bold rem-13"
           h="8"
         >
-          {{ formatDate(day.dateValue, 'dayShort') }}
+          {{ formatDate(day.dateValue, utc ? 'utcDayShort' : 'dayShort') }}
         </div>
       </div>
 
@@ -189,6 +192,7 @@ defineExpose({
           :day="day"
           :is-selected="isSelected(day)"
           :disabled="isDayDisabled(day)"
+          :utc
           :events="eventsByDay?.[day.dateString]"
           @click="handleDaySelect(day)"
         />

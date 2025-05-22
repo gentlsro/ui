@@ -121,6 +121,7 @@ onMounted(() => {
 
       <MonthSelectorGrid
         v-model="model"
+        :utc
         @update:model-value="handleMonthSelect"
       />
     </MenuProxy>

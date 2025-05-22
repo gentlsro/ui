@@ -156,9 +156,9 @@ header.is-hidden ~ .page-drawer {
       @apply translate-x-0;
     }
 
-    @screen page {
-      margin-right: calc(calc(100% - var(--pageWidth)) / 2);
-    }
+    // @screen page {
+    //   margin-right: calc(calc(100% - var(--pageWidth)) / 2);
+    // }
   }
 }
 </style>

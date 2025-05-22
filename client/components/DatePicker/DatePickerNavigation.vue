@@ -22,12 +22,14 @@ const model = defineModel<Datetime>()
       v-model="model"
       flex="grow-max"
       :reference-target="navigationEl"
+      :utc
     />
 
     <YearSelector
       v-model="model"
       justify-end
       :reference-target="navigationEl"
+      :utc
     />
   </div>
 </template>

@@ -145,7 +145,7 @@ export type IBtnProps = IBtnNavigationProps & {
    *
    * @default 'md'
    */
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'auto'
+  size?: 'xs' | 'xm' | 'sm' | 'md' | 'lg' | 'auto'
 
   /**
    * Whether the button should be stacked ~ the icon is on top of the label (vertically)

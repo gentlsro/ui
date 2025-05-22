@@ -27,6 +27,11 @@ export type IDateInputProps = IInputProps & {
   format?: string
 
   /**
+   * Whether to hide the picker icon
+   */
+  noPickerIcon?: boolean
+
+  /**
    * Whether the date should be in UTC
    *
    * NOTE: This will not modify the actual value => only affects the display value

@@ -85,13 +85,6 @@ export default defineNuxtConfig({
     resolve('./client/css/colors.scss'),
   ],
 
-  // Runtime config https://nuxt.com/docs/api/configuration/nuxt-config#runtimeconfig
-  runtimeConfig: {
-    public: {
-      COOKIE_DOMAIN: undefined as string | undefined,
-    },
-  },
-
   srcDir: 'client/',
 
   // Alias
@@ -199,7 +192,7 @@ export default defineNuxtConfig({
       transformerDirectives(),
       transformerVariantGroup(),
     ],
-    safelist: ['i-emojione:flag-for-united-kingdom', 'i-emojione:flag-for-czechia'],
+    safelist: ['color-contrast', 'i-emojione:flag-for-united-kingdom', 'i-emojione:flag-for-czechia'],
     nuxtLayers: true,
   },
 })

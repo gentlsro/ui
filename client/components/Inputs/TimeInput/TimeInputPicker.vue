@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { type FactoryOpts, MaskedRange } from 'imask'
+import { MaskedRange } from 'imask'
+import type { FactoryOpts } from 'imask'
 
 // Types
 import type { ITimeInputPickerProps } from './types/time-input-picker-props.type'
@@ -64,8 +65,6 @@ const maskMinutes = computed<FactoryOpts>(() => {
 
 // Layout
 const menuProxyEl = useTemplateRef('menuProxyEl')
-const hInput = useTemplateRef('hInput')
-const mInput = useTemplateRef('mInput')
 const hourEl = useTemplateRef('hourEl')
 const minuteEl = useTemplateRef('minuteEl')
 const isPickerActive = ref(false)
@@ -171,7 +170,6 @@ defineExpose({
         items-center
       >
         <TextInput
-          ref="hInput"
           layout="regular"
           :model-value="localizedTimeParts.hh"
           class="w-[calc(50%-8px)]"
@@ -182,7 +180,6 @@ defineExpose({
           @update:model-value="setValue($event, 'h', true)"
         />
         <TextInput
-          ref="mInput"
           layout="regular"
           :model-value="localizedTimeParts.mm"
           class="w-[calc(50%-8px)]"
@@ -258,30 +255,32 @@ defineExpose({
     </div>
 
     <!-- Shortcuts -->
-    <Field
-      v-if="shortcuts"
-      :label="$t('general.shortcuts')"
-      has-content
-      dense
-      p="t-4"
-    >
-      <HorizontalScroller
-        class="shortcuts"
-        :ui="{ contentClass: 'gap-x-1 p-x-2' }"
-        arrows="outside"
+    <slot name="shortcuts">
+      <Field
+        v-if="shortcuts"
+        :label="$t('general.shortcuts')"
+        has-content
+        dense
+        p="t-4"
       >
-        <Chip
-          v-for="(shortcut, idx) in shortcuts"
-          :key="idx"
-          :label="shortcut.label"
-          ripple
-          center
-          class="shortcuts-chip"
-          :class="{ 'is-12h': is12h }"
-          @click="setValue(shortcut.value, 'both', true, true)"
-        />
-      </HorizontalScroller>
-    </Field>
+        <HorizontalScroller
+          class="shortcuts"
+          :ui="{ contentClass: 'gap-x-1 p-x-2' }"
+          arrows="outside"
+        >
+          <Chip
+            v-for="(shortcut, idx) in shortcuts"
+            :key="idx"
+            :label="shortcut.label"
+            ripple
+            center
+            class="shortcuts-chip"
+            :class="{ 'is-12h': is12h }"
+            @click="setValue(shortcut.value, 'both', true, true)"
+          />
+        </HorizontalScroller>
+      </Field>
+    </slot>
   </MenuProxy>
 </template>
 

@@ -60,13 +60,18 @@ const isModified = computed(() => {
     </div>
 
     <div class="value-container-card__content">
-      <div
-        class="value-container-card-label"
-        :class="mergedProps.ui?.labelClass"
-        :style="mergedProps.ui?.labelStyle"
+      <slot
+        name="label"
+        :ui="mergedProps.ui"
       >
-        {{ label }}
-      </div>
+        <div
+          class="value-container-card-label"
+          :class="mergedProps.ui?.labelClass"
+          :style="mergedProps.ui?.labelStyle"
+        >
+          {{ label }}
+        </div>
+      </slot>
 
       <ValueFormatter v-bind="valueFormatterProps">
         <template #default="{ val }">

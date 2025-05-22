@@ -2,6 +2,7 @@ import { createVNode, render } from 'vue'
 import { skipHydrate } from 'pinia'
 import type { CSSProperties } from 'vue'
 import { uiConfig } from '$uiConfig'
+import utilsConfig from '$utilsConfig'
 
 // Types
 import type { IUIState } from '../types/ui-state.type'
@@ -29,6 +30,7 @@ export const useUIStore = defineStore('__ui', () => {
         fit: uiConfig.table.props.autoFit().mode,
       },
     }),
+    domain: utilsConfig.general.domain ?? undefined,
   })
 
   function setState(state: Partial<IUIState>, extend = true) {
@@ -71,6 +73,7 @@ export const useUIStore = defineStore('__ui', () => {
   const lastPointerDownEl = ref<HTMLElement>()
   const lastPointerDownType = ref<string>()
   const lastPasteEvent = ref<ClipboardEvent>()
+
   if (!isInitialized.value) {
     document.documentElement.addEventListener('pointerdown', ev => {
       lastPointerDownEvent.value = ev

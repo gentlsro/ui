@@ -11,4 +11,5 @@ export type IDatePickerDayProps = {
   events?: Array<string | DayEvent>
   edge?: boolean
   disabled?: boolean
+  utc?: boolean
 }
