@@ -1,4 +1,5 @@
 import { skipHydrate } from 'pinia'
+import { klona } from 'klona/full'
 
 // Types
 import type { ITableProps } from '../types/table-props.type'
@@ -99,7 +100,10 @@ export function useTableStore(
 
     const syncStateColumns = useDebounceFn(() => {
       state.value.queryParams = decodeURIComponent(queryParams.value.toString())
-      state.value.columns = nonHelperColumns.value.map(getStateColumnData)
+
+      if (!noState.value) {
+        state.value.columns = nonHelperColumns.value.map(getStateColumnData)
+      }
     }, 50)
 
     // !SECTION
@@ -264,11 +268,14 @@ export function useTableStore(
       // Merge columns from all the sources, remove duplicates
       let cols = columnsMerged
 
+      const defaultSchema = modifiers.value?.defaultSchemaModifyFnc?.(state.value.layoutDefault?.schema ?? '')
+        ?? (state.value.layoutDefault?.schema ?? '')
+
       // Transform columns
       const { columns: _columns, queryBuilder: qb, pagination, isSchemaUsed, isUrlUsed } = tableTransformColumns({
         internalColumns: cols,
         modifiers: modifiers.value,
-        defaultSchema: state.value.layoutDefault?.schema ?? '',
+        defaultSchema,
         urlSchema: useRequestURL().searchParams,
         initialSchemaConfig: initialSchemaConfig.value,
 
@@ -288,10 +295,14 @@ export function useTableStore(
       // Set the query builder
       if (isSchemaUsed || isUrlUsed) {
         queryBuilder.value = qb.length ? qb : queryBuilderInitializeItems()
-        state.value.queryBuilder = queryBuilder.value
+
+        if (!noState.value) {
+          state.value.queryBuilder = queryBuilder.value
+        }
       } else {
         queryBuilder.value = state.value.queryBuilder ?? queryBuilderInitializeItems()
       }
+      
 
       // Set the pagination
       if (pagination?.take || pagination?.skip) {
@@ -370,13 +381,17 @@ export function useTableStore(
         return
       }
 
+      const originalRow = klona(cellEdit.value.row)
       const _row = { ...cellEdit.value.row, [cellEdit.value.column.field]: cellEditValue.value }
-      const originalRow = cellEdit.value.row
-
-      cellEdit.value.column.editComponent?.onSave?.(_row, cellEdit.value.column, originalRow)
 
       const { row, column } = cellEdit.value
-      set(row, column.field, cellEditValue.value)
+      const onSave = cellEdit.value.column.editComponent?.onSave
+
+      if (onSave) {
+        Object.assign(row, onSave(_row, cellEdit.value.column, originalRow))
+      } else {
+        set(row, column.field, cellEditValue.value)
+      }
     }
 
     function cancelCellEdit() {
@@ -484,7 +499,7 @@ export function useTableStore(
     watch(queryParams, queryParams => {
       console.log('Query params change', decodeURIComponent(queryParams.toString()))
 
-      // We should only sync the state once we're use every relevant part is loaded
+      // We should only sync the state once we're sure every relevant part is loaded
       // We can assume that the meta is loaded if `apiColumns` is not `undefined`
       // and `propsColumns` is not `undefined`
       if (apiColumns.value && propsColumns.value) {

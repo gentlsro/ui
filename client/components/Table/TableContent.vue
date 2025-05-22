@@ -7,7 +7,7 @@ import type { IVirtualScrollEvent } from '../VirtualScroller/types/virtual-scrol
 import { useTableStore } from './stores/table.store'
 import { tableEditMoveCell } from './functions/table-edit-move-cell'
 
-type IProps = Pick<ITableProps, 'editable' | 'ui' | 'to'>
+type IProps = Pick<ITableProps, 'editable' | 'ui' | 'to' | 'scrollerConfig'>
 
 defineProps<IProps>()
 
@@ -87,6 +87,7 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
           isCardView: isCardView.value,
           cellEdit: cellEdit.value,
           ev: { key: 'ArrowRight' },
+          virtualScrollEl: virtualScrollEl.value,
         })
       } else {
         cellEdit.value = undefined
@@ -100,6 +101,7 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
         isCardView: isCardView.value,
         cellEdit: cellEdit.value,
         ev,
+        virtualScrollEl: virtualScrollEl.value,
       })
     }
   }
@@ -109,6 +111,7 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
 <template>
   <VirtualScroller
     ref="virtualScrollEl"
+    v-bind="scrollerConfig"
     :rows="rowsSplit"
     class="table-content"
     :row-key
