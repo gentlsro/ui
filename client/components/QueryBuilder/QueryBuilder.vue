@@ -33,7 +33,6 @@ const {
   queryBuilderEl,
   draggedItem,
   isSmallerScreen,
-  breakpoint: storeBreakpoint,
   getFilterComponentFnc: storeGetFilterComponentFnc,
 } = storeToRefs(store)
 
@@ -72,7 +71,6 @@ const maxNestingLevel = toRef(props, 'maxLevel')
 syncRef(columns, storeColumns, { direction: 'ltr' })
 syncRef(items, storeItems, { direction: 'both' })
 syncRef(maxNestingLevel, storeMaxNestingLevel, { direction: 'ltr' })
-syncRef(toRef(props, 'breakpoint', 1024), storeBreakpoint, { direction: 'ltr' })
 syncRef(toRef(props, 'getFilterComponent'), storeGetFilterComponentFnc, { direction: 'ltr' })
 
 // Lifecycle
