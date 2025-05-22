@@ -27,6 +27,7 @@ export function useQueryBuilderStore(payload?: {
     const isSmallerScreen = ref(false)
     const queryBuilderEl = ref<HTMLElement>()
     const hoveredItem = ref<IQueryBuilderRow | undefined>()
+    const breakpoint = ref(queryBuilderProps?.breakpoint ?? 1024)
 
     const queryBuilderElRect = ref<DOMRect>()
 
@@ -36,7 +37,7 @@ export function useQueryBuilderStore(payload?: {
       requestAnimationFrame(() => {
         const { contentRect } = entries?.[0] ?? {}
 
-        isSmallerScreen.value = contentRect!.width < 1024
+        isSmallerScreen.value = contentRect!.width < breakpoint.value
         queryBuilderElRect.value = queryBuilderEl.value?.getBoundingClientRect()
       })
     })
@@ -54,6 +55,7 @@ export function useQueryBuilderStore(payload?: {
       hoveredItem,
       maxNestingLevel,
       isSmallerScreen,
+      breakpoint,
       getFilterComponentFnc,
     }
   })()
