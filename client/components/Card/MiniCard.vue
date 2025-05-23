@@ -208,7 +208,7 @@ const isModified = computed(() => {
   }
 
   &__content {
-    @apply w-full leading-4.5;
+    @apply w-full leading-4.5 flex flex-col;
   }
 
   .link {

@@ -128,10 +128,7 @@ defineExpose({
       v-if="$slots.append || hasCopyBtn || clearable"
       #append
     >
-      <div
-        flex="~ gap-1 items-center"
-        p="x-2"
-      >
+      <div :class="mergedProps.ui?.appendClass">
         <slot
           name="append"
           :clear="clear"

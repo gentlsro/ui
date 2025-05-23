@@ -17,6 +17,7 @@ export function useMiniCardUtils() {
       'previousValue',
       'originalValue',
       'navigateToOptions',
+      'ui',
     ])
   }
 

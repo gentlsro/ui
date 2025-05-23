@@ -100,6 +100,11 @@ export type IInputWrapperProps = {
    */
   ui?: {
     /**
+     * Class applied to the `append` slot
+     */
+    appendClass?: ClassType
+
+    /**
      * The border color of the input
      */
     borderColor?: {

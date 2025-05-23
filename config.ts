@@ -483,6 +483,7 @@ export const defaultComponentsConfig = {
       readonly: undefined,
       tooltip: undefined,
       ui: {
+        appendClass: 'flex gap-1 items-center p-x-2',
         borderRadius: '0.5rem',
         inputContainerClass: 'bg-white dark:bg-black',
         borderColor: {
@@ -1031,7 +1032,7 @@ export const defaultComponentsConfig = {
       'paginationConfig',
       'loadData',
       'initialSchemaConfig',
-      'scrollerConfig'
+      'scrollerConfig',
     ],
   },
 
@@ -1082,6 +1083,7 @@ export const defaultComponentsConfig = {
       stackLabel: true,
       ui: {
         borderRadius: '0.5rem',
+        appendClass: 'flex gap-1 items-center p-x-2',
       },
     },
     merge: ['ui'],
