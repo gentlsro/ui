@@ -1,7 +1,9 @@
 import type { Required } from 'utility-types'
 import type { FuseOptions } from '@vueuse/integrations/useFuse.mjs'
-import { type GroupItem, type SortItem, useSearching, useSorting } from '$utils'
-import { type IGroupRow, useGrouping } from '$utilsLayer/shared/composables/useGrouping'
+import { useSearching, useSorting } from '$utils'
+import type { GroupItem, SortItem } from '$utils'
+import { useGrouping } from '$utilsLayer/shared/composables/useGrouping'
+import type { IGroupRow } from '$utilsLayer/shared/composables/useGrouping'
 
 // Types
 import type { FuseResult } from 'fuse.js'
