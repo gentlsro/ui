@@ -33,7 +33,11 @@ const headerEl = useTemplateRef('headerEl')
 const navigationEl = useTemplateRef('navigationEl')
 const { height } = useElementSize(headerEl)
 
-syncRef(height, navigationHeight, { direction: 'ltr' })
+watchEffect(() => {
+  if (headerEl.value) {
+    navigationHeight.value = height.value
+  }
+})
 
 // Scroll utils
 const lastScrollDirection = ref<'up' | 'down'>('down')

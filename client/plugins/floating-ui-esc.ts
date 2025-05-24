@@ -1,3 +1,5 @@
+import { blurAnyFocusedInput } from '$utils'
+
 export default defineNuxtPlugin(() => {
   // Hide last floating element on ESC
   onKeyStroke('Escape', () => {
@@ -6,6 +8,9 @@ export default defineNuxtPlugin(() => {
     )
     const notificationsElement = document.querySelector('.notifications')
     const hasOngoingNotifications = document.querySelector('.notification-row')
+
+    // Blur any focused element to potentially trigger a blur event on them
+    blurAnyFocusedInput()
 
     if (lastFloatingElement && !hasOngoingNotifications) {
     // @ts-expect-error DOM

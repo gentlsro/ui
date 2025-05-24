@@ -5,7 +5,7 @@ import type { ITableFilterItem } from '../types/table-filter-item.type'
 import type { IQueryBuilderRow } from '../../QueryBuilder/types/query-builder-row-props.type'
 
 // Constants
-import { SELECTOR_COMPARATORS } from '$utils'
+import { NON_VALUE_COMPARATORS, SELECTOR_COMPARATORS } from '$utils'
 
 export function tableSerializeFilters(
   filtersOrQueryBuilder: Array<ITableFilterItem | IQueryBuilderRow>,
@@ -50,9 +50,20 @@ export function tableSerializeFilters(
           val = `(${item.value})`
         }
 
-        return val !== undefined
-          ? `[${item.filterField ?? item.field}].[${item.comparator}].[${val}]`
-          : `[${item.filterField ?? item.field}].[${item.comparator}]`
+        const isNonValueComparator = NON_VALUE_COMPARATORS
+          .includes(item.comparator)
+
+        if (isNonValueComparator) {
+          return `[${item.filterField ?? item.field}].[${item.comparator}]`
+        }
+
+        const hasNoValue = isNil(item.value)
+
+        if (hasNoValue) {
+          return undefined
+        }
+
+        return `[${item.filterField ?? item.field}].[${item.comparator}].[${val}]`
       }
     })
     .filter(Boolean)

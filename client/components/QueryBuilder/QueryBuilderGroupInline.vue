@@ -61,6 +61,7 @@ function handleAddCondition(useParent?: boolean) {
       comparator: firstColumn?.comparator as ComparatorEnum,
       value: undefined as unknown as string,
       path: newPath,
+      dataType: firstColumn?.dataType,
     },
   ]
 
