@@ -5,6 +5,13 @@ import type { IFieldProps } from '../../../Field/types/field-props.type'
 
 export type IColorInputProps = IFieldProps & {
   /**
+   * Whether the color picker should automatically close when a color is selected
+   *
+   * @default false
+   */
+  autoClose?: boolean
+
+  /**
    * A list of colors that are not allowed to be selected
    */
   disallowedColors?: string[]

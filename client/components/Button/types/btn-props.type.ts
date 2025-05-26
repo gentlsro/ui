@@ -59,7 +59,7 @@ export type IBtnProps = IBtnNavigationProps & {
   /**
    * The label of the button
    */
-  label?: string | number | false | (() => string | number | undefined | false)
+  label?: string | null | number | false | (() => string | number | undefined | false)
 
   /**
    * The breakpoint at which the labels are shown

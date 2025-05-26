@@ -14,6 +14,10 @@ type IProps = {
 }
 
 const props = defineProps<IProps>()
+const emits = defineEmits<{
+  (e: 'update:opacity', value: number | undefined): void
+  (e: 'update:color', value: string | undefined): void
+}>()
 
 // Utils
 const { getColor, hexToRgb, rgbaToHex, isRgba } = useColors()
@@ -80,6 +84,8 @@ const opacity = computed({
       const [r, g, b, _] = _model.split(',').map(trim)
 
       model.value = `rgba(${r}, ${g}, ${b}, ${(val ?? 0) / 100})`
+
+      emits('update:opacity', val)
     }
   },
 })
@@ -90,21 +96,22 @@ watch(sRGBHex, value => {
   } else {
     model.value = value
   }
+
+  emits('update:color', model.value)
 })
 
 // Methods
 function setColor(color: string) {
   if (!props.rgba) {
     model.value = color
+    $hide()
 
     return
   }
 
   model.value = hexToRgb(color)
 
-  if (!props.rgba) {
-    $hide()
-  }
+  emits('update:color', model.value)
 }
 </script>
 

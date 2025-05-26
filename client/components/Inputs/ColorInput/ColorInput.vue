@@ -41,6 +41,10 @@ const modelLabel = computed(() => {
 
 function handlePickColor(color?: string) {
   model.value = color
+
+  if (props.autoClose) {
+    isPickerActive.value = false
+  }
 }
 
 // Field
