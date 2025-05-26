@@ -1317,7 +1317,6 @@ export type IUIConfig = {
   yearSelector: IConfigItem<IYearSelectorProps>
 }
 
-// TODO: This shouldn't extend just `IItem` but idk what type it should be....
 export function extendUIConfig<T extends Partial<IUIConfig> & IItem>(config: T): T {
   return config
 }
