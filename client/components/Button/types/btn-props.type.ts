@@ -86,7 +86,7 @@ export type IBtnProps = IBtnNavigationProps & {
   /**
    * The native `name` of the button
    */
-  name?: string
+  name?: string | null
 
   /**
    * When true, the button will not be bold
