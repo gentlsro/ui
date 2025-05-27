@@ -1,6 +1,6 @@
 export type DayEvent = {
-  color: string
-  date: number
+  color: ClassType
+  date: Datetime
   icon?: string
 
   [key: string]: unknown

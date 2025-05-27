@@ -32,7 +32,12 @@ export type IDatePickerProps = {
   /**
    * Model value
    */
-  modelValue?: Datetime
+  modelValue?: Datetime | Datetime[]
+
+  /**
+   * Whether to allow multiple selection
+   */
+  multi?: boolean
 
   /**
    * When true, the date picker will not show `Today` button

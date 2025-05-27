@@ -17,7 +17,6 @@ const props = withDefaults(defineProps<IDatePickerProps>(), {
 const MIN_COUNT_OF_WEEKS = 6
 
 // Utils
-const { isDayjs } = useDayjs()
 const {
   formatDate,
   getPeriod,
@@ -51,6 +50,15 @@ const eventsByDay = computed(() => {
 })
 
 function handleSelectToday() {
+  if (props.multi) {
+    model.value = [
+      ...(Array.isArray(model.value) ? model.value : model.value ? [model.value] : []),
+      $date().startOf('d'),
+    ]
+
+    return
+  }
+
   model.value = $date().startOf('d')
 }
 
@@ -59,9 +67,9 @@ function isSelected(day: Day) {
     return false
   }
 
-  const mmdd = `${day.dateObj.month() + 1}-${day.dateObj.date()}`
-
-  return mmdd === modelMMDD.value
+  return Array.isArray(model.value)
+    ? model.value.some(m => $date(m).isSame(day.dateObj, 'd'))
+    : $date(model.value).isSame(day.dateObj, 'd')
 }
 
 function isDayDisabled(day: Day) {
@@ -83,8 +91,16 @@ function isDayDisabled(day: Day) {
 }
 
 // Data
-const model = computed<Datetime>({
+const model = computed<Datetime | Datetime[]>({
   get() {
+    if (props.multi) {
+      if (Array.isArray(originalModel.value)) {
+        return originalModel.value.map(m => $date(m, { utc: props.utc }))
+      }
+
+      return originalModel.value ? [$date(originalModel.value, { utc: props.utc })] : []
+    }
+
     if (isNil(originalModel.value) || originalModel.value === '') {
       return null
     }
@@ -96,25 +112,11 @@ const model = computed<Datetime>({
   },
 })
 
-const modelMMDD = computed(() => {
-  if (!model.value) {
-    return null
-  }
-
-  if (isDayjs(model.value)) {
-    return `${model.value?.month() + 1}-${model.value?.date()}`
-  }
-
-  const m = $date(model.value)
-
-  return `${m.month() + 1}-${m.date()}`
-})
-
 /**
  * Internal value is used to navigate through months/years in the picker without
  * changing the actual `model`
  */
-const internalValue = ref<Datetime>(model.value) as Ref<Datetime>
+const internalValue = ref<Datetime>(getLastValue())
 const excludedDays = toRef(props, 'excludedDays')
 
 const period = computed(() => {
@@ -130,19 +132,94 @@ const extendedPeriod = computed(() => {
 })
 
 const hasValue = computed(() => {
+  if (Array.isArray(model.value)) {
+    return model.value.length > 0
+  }
+
   return !isNil(model.value)
 })
 
-function handleDaySelect(day: Day) {
+function handleDaySelect(day: Day, event: MouseEvent) {
   if (isDayDisabled(day)) {
+    return
+  }
+
+  if (props.multi) {
+    const isCtrl = event.ctrlKey || event.metaKey
+    const isShift = event.shiftKey
+    const _isSelected = isSelected(day)
+
+    // Ctrl click
+    if (isCtrl) {
+      if (_isSelected && Array.isArray(model.value)) {
+        model.value = model.value.filter(val => !$date(val).isSame(day.dateObj, 'd'))
+
+        return
+      }
+
+      model.value = [
+        ...(Array.isArray(model.value) ? model.value : model.value ? [model.value] : []),
+        $date(day.dateString, { utc: props.utc }),
+      ]
+    }
+
+    // Shift click
+    else if (isShift) {
+      event.preventDefault()
+      event.stopPropagation()
+      // Remove DOM selection
+      document.getSelection()?.removeAllRanges()
+
+      const isOneSelected = Array.isArray(model.value) && model.value.length === 1
+
+      if (isOneSelected) {
+        const selectedDate = (model.value as any[])[0] as Datetime
+        const isSame = $date(selectedDate).isSame(day.dateObj, 'd')
+
+        if (isSame) {
+          model.value = []
+        } else {
+          const datesSorted = [$date(selectedDate), day.dateObj].sort((a, b) => a.diff(b, 'd'))
+          let firstDate = datesSorted[0]!
+          const lastDate = datesSorted[1]!
+          const dates = [firstDate] as Datetime[]
+
+          while (firstDate.isBefore(lastDate, 'd')) {
+            dates.push(firstDate.add(1, 'd'))
+
+            firstDate = firstDate.add(1, 'd')
+          }
+
+          model.value = dates
+        }
+      } else {
+        model.value = [$date(day.dateString, { utc: props.utc })]
+      }
+    }
+
+    // Regular click
+    else {
+      model.value = [$date(day.dateString, { utc: props.utc })]
+    }
+
     return
   }
 
   model.value = $date(day.dateString, { utc: props.utc })
 }
 
+// In case we are using `multi` mode, we sometimes need to get the last value to
+// set internal state or similar
+function getLastValue() {
+  if (Array.isArray(model.value)) {
+    return model.value[model.value.length - 1]
+  }
+
+  return model.value
+}
+
 defineExpose({
-  sync: () => (internalValue.value = model.value),
+  sync: () => internalValue.value = getLastValue(),
 })
 </script>
 
@@ -181,10 +258,9 @@ defineExpose({
         </div>
       </div>
 
-      <div
+      <ScrollArea
         data-onboarding="date-picker-days"
-        grid="~ cols-7"
-        relative
+        class="date-picker-days"
       >
         <DatePickerDay
           v-for="(day, idx) in daysInPeriod"
@@ -194,11 +270,11 @@ defineExpose({
           :disabled="isDayDisabled(day)"
           :utc
           :events="eventsByDay?.[day.dateString]"
-          @click="handleDaySelect(day)"
+          @click="handleDaySelect(day, $event)"
         />
 
-        <DatePickerDaySeparators />
-      </div>
+        <!-- <DatePickerDaySeparators /> -->
+      </ScrollArea>
     </div>
 
     <div
@@ -218,6 +294,10 @@ defineExpose({
 <style lang="scss" scoped>
 .date-picker {
   @apply flex flex-col bg-ca min-w-80 xm:w-90 overflow-auto;
+
+  &-days {
+    @apply grid grid-cols-7;
+  }
 
   &-controls {
     @apply flex items-center justify-end p-x-2 p-y-1 border-t-1 border-ca;

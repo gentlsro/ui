@@ -78,7 +78,8 @@ const eventsAdjusted = computed<Pick<DayEvent, 'color' | 'icon'>[]>(() => {
 
 <style lang="scss" scoped>
 .dp-day {
-  @apply flex flex-col cursor-pointer aspect-square font-thin relative;
+  @apply flex flex-col cursor-pointer aspect-square font-thin relative select-none;
+  @apply outline-1 outline-dashed outline-ca;
 
   &:not(.is-disabled):hover {
     @apply shadow-consistent dark:shadow-true-gray-700/50 shadow-true-gray-300/50;
