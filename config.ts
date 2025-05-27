@@ -276,7 +276,7 @@ export const defaultComponentsConfig = {
       ui: {
         borderRadius: '0.5rem',
       },
-      utc: utilsConfig.general.useUtc ?? true,
+      utc: utilsConfig.general.useUtc,
     },
     merge: ['ui'],
   },
@@ -286,7 +286,7 @@ export const defaultComponentsConfig = {
     props: {
       excludedDays: [],
       modelValue: undefined,
-      utc: utilsConfig.general.useUtc ?? true,
+      utc: utilsConfig.general.useUtc,
     },
   },
 
