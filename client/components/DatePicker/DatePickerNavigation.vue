@@ -13,22 +13,21 @@ const model = defineModel<Datetime>()
   <div
     ref="navigationEl"
     flex="~ xm:gap-x-1 shrink-0 items-center"
-    p="x-2 y-1"
     w="full"
     overflow="auto"
   >
     <MonthSelector
       v-model="model"
-      flex="grow-max"
       :reference-target="navigationEl"
+      grow
       :utc
     />
 
     <YearSelector
       v-model="model"
-      justify-end
       :reference-target="navigationEl"
       :utc
+      m="l-auto"
     />
   </div>
 </template>

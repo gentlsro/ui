@@ -287,9 +287,12 @@ defineExpose({
       v-if="!noControls"
       class="date-picker-controls"
     >
+      <slot name="controls" />
+
       <Btn
         data-onboarding="date-picker-today"
         size="sm"
+        m="l-auto"
         :label="$t('general.today')"
         @click="handleSelectToday"
       />
@@ -299,16 +302,16 @@ defineExpose({
 
 <style lang="scss" scoped>
 .date-picker {
-  @apply flex flex-col min-w-80 xm:w-80 overflow-auto;
+  @apply flex flex-col min-w-70 xm:w-70 overflow-auto;
 
   &-days {
-    @apply grid grid-cols-7;
+    @apply grid grid-cols-7 border-t-1 border-ca;
 
-    grid-auto-rows: 1fr;
+    grid-auto-rows: minmax(40px, auto);
   }
 
   &-controls {
-    @apply flex items-center justify-end p-x-1 p-y-px border-t-1 border-ca;
+    @apply flex items-center p-x-1 p-y-px border-t-1 border-ca;
   }
 }
 </style>

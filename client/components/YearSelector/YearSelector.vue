@@ -128,11 +128,11 @@ function addEventListener() {
       no-grouping
       :step="null"
       size="sm"
-      w="15"
+      w="10"
       grow
       no-border
       :ui="{
-        inputClass: 'text-center w-full !focus:(bg-white dark:bg-dark-950)',
+        inputClass: 'text-center !focus:(bg-white dark:bg-dark-950) !p-x-0',
         inputContainerClass: 'bg-transparent focus-within:bg-transparent',
       }"
       @update:model-value="handleManualYearInputChange"
