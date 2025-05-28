@@ -59,8 +59,8 @@ const eventsAdjusted = computed<Pick<DayEvent, 'color' | 'icon'>[]>(() => {
     <!-- Events -->
     <div
       v-if="eventsAdjusted.length"
-      flex="~ 1 wrap gap-1 center"
-      p="x-2"
+      flex="~ 1 wrap gap-px center"
+      p="x-2 y-2px"
       overflow="auto"
     >
       <div
@@ -69,7 +69,7 @@ const eventsAdjusted = computed<Pick<DayEvent, 'color' | 'icon'>[]>(() => {
         w="3"
         h="3"
         :class="[event.color, event.icon || 'i-ic:round-lens']"
-        hover="scale-150"
+        hover="scale-120"
         transition="transform-300"
       />
     </div>
@@ -78,15 +78,16 @@ const eventsAdjusted = computed<Pick<DayEvent, 'color' | 'icon'>[]>(() => {
 
 <style lang="scss" scoped>
 .dp-day {
-  @apply flex flex-col cursor-pointer aspect-square font-thin relative select-none;
+  @apply flex flex-col cursor-pointer font-thin relative select-none aspect-square bg-white;
   @apply outline-1 outline-dashed outline-ca;
 
   &:not(.is-disabled):hover {
-    @apply shadow-consistent dark:shadow-true-gray-700/50 shadow-true-gray-300/50;
+    @apply shadow-consistent shadow-primary dark:shadow-true-gray-700/50 shadow-true-gray-300/50 z-1;
+    @apply scale-105 transform-origin-center font-semibold;
   }
 
   .dayNo {
-    @apply flex flex-center w-7 h-7 relative m-1 rounded-full;
+    @apply flex flex-center w-6 h-6 relative rounded-full font-rem-14 leading-none;
   }
 
   .edge {
@@ -94,15 +95,15 @@ const eventsAdjusted = computed<Pick<DayEvent, 'color' | 'icon'>[]>(() => {
   }
 
   &.is-weekend {
-    @apply bg-true-gray-800/3 dark:bg-true-gray-200/3;
+    @apply bg-slate-100 dark:bg-true-gray-200/3;
   }
 
   &.is-not-current {
-    @apply bg-true-gray-800/7 dark:bg-true-gray-200/7;
+    @apply bg-slate-200 dark:bg-true-gray-200/7;
   }
 
   &.is-today .dayNo {
-    @apply rounded-full border-1 dark:border-white border-ca;
+    @apply rounded-full outline-1 outline-solid outline-ca;
   }
 
   &.is-selected .dayNo {

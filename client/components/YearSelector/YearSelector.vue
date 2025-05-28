@@ -130,7 +130,11 @@ function addEventListener() {
       size="sm"
       w="15"
       grow
-      :ui="{ inputClass: 'text-center w-full' }"
+      no-border
+      :ui="{
+        inputClass: 'text-center w-full !focus:(bg-white dark:bg-dark-950)',
+        inputContainerClass: 'bg-transparent focus-within:bg-transparent',
+      }"
       @update:model-value="handleManualYearInputChange"
     />
 

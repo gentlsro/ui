@@ -12,6 +12,9 @@ import { getComponentProps } from '../../functions/get-component-props'
 const props = withDefaults(defineProps<IDatePickerProps>(), {
   ...getComponentProps('datePicker'),
 })
+const emits = defineEmits<{
+  (e: 'update:period', payload: { period: Period, extendedPeriod: Period }): void
+}>()
 
 // Constants
 const MIN_COUNT_OF_WEEKS = 6
@@ -27,13 +30,13 @@ const {
 // Layout
 const originalModel = defineModel<any>()
 const daysCount = computed(() => 7 - props.excludedDays.length)
-const daysInPeriod = computed(() =>
-  getDaysInPeriod(extendedPeriod, {
+const daysInPeriod = computed(() => {
+  return getDaysInPeriod(extendedPeriod, {
     excludedDays: excludedDays.value,
     currentPeriod: period.value,
     utc: props.utc,
-  }),
-)
+  })
+})
 
 const eventsByDay = computed(() => {
   return props.events?.reduce((agg, event) => {
@@ -218,6 +221,12 @@ function getLastValue() {
   return model.value
 }
 
+watch(
+  extendedPeriod,
+  extendedPeriod => emits('update:period', { period: period.value, extendedPeriod }),
+  { immediate: true },
+)
+
 defineExpose({
   sync: () => internalValue.value = getLastValue(),
 })
@@ -243,7 +252,6 @@ defineExpose({
       <!-- Days -->
       <div
         flex="~"
-        p="t-2"
         bg="white dark:darker"
       >
         <div
@@ -251,7 +259,7 @@ defineExpose({
           :key="dayIdx"
           flex="~ center 1"
           capitalize
-          font="bold rem-13"
+          font="semibold rem-12"
           h="8"
         >
           {{ formatDate(day.dateValue, utc ? 'utcDayShort' : 'dayShort') }}
@@ -272,8 +280,6 @@ defineExpose({
           :events="eventsByDay?.[day.dateString]"
           @click="handleDaySelect(day, $event)"
         />
-
-        <!-- <DatePickerDaySeparators /> -->
       </ScrollArea>
     </div>
 
@@ -293,14 +299,16 @@ defineExpose({
 
 <style lang="scss" scoped>
 .date-picker {
-  @apply flex flex-col bg-ca min-w-80 xm:w-90 overflow-auto;
+  @apply flex flex-col min-w-80 xm:w-80 overflow-auto;
 
   &-days {
     @apply grid grid-cols-7;
+
+    grid-auto-rows: 1fr;
   }
 
   &-controls {
-    @apply flex items-center justify-end p-x-2 p-y-1 border-t-1 border-ca;
+    @apply flex items-center justify-end p-x-1 p-y-px border-t-1 border-ca;
   }
 }
 </style>

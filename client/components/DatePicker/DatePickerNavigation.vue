@@ -13,9 +13,8 @@ const model = defineModel<Datetime>()
   <div
     ref="navigationEl"
     flex="~ xm:gap-x-1 shrink-0 items-center"
-    p="x-2"
+    p="x-2 y-1"
     w="full"
-    h="12"
     overflow="auto"
   >
     <MonthSelector
