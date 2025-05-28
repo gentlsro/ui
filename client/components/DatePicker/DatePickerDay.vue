@@ -61,7 +61,7 @@ const eventsAdjusted = computed<Pick<DayEvent, 'color' | 'icon'>[]>(() => {
       v-if="eventsAdjusted.length"
       flex="~ 1 wrap gap-px center"
       p="x-2 y-2px"
-      overflow="auto"
+      overflow="hidden"
     >
       <div
         v-for="(event, idx) in eventsAdjusted"
@@ -78,7 +78,7 @@ const eventsAdjusted = computed<Pick<DayEvent, 'color' | 'icon'>[]>(() => {
 
 <style lang="scss" scoped>
 .dp-day {
-  @apply flex flex-col cursor-pointer font-thin relative select-none aspect-square bg-white;
+  @apply flex flex-col cursor-pointer font-thin relative select-none aspect-square;
   @apply outline-1 outline-dashed outline-ca;
 
   &:not(.is-disabled):hover {
