@@ -65,7 +65,7 @@ const eventsAdjusted = computed<Pick<DayEvent, 'color' | 'icon'>[]>(() => {
     >
       <div
         flex="~ 1 wrap gap-px center"
-        bg="white dark:dark-950"
+        bg="white/20 dark:dark-950/20"
         rounded="custom"
       >
         <div
