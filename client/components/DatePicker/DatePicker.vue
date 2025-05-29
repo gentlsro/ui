@@ -243,6 +243,7 @@ defineExpose({
     <div
       flex="~ 1 col grow"
       overflow="hidden"
+      p="t-1"
     >
       <DatePickerNavigation
         v-model="internalValue"
