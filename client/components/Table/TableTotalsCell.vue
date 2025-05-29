@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { formatValue } from '$utils'
+
 // Types
 import type { ITableProps } from './types/table-props.type'
 import type { ITableTotal } from './types/table-total.type'
@@ -12,6 +14,8 @@ type IProps = Pick<ITableProps, 'ui'> & {
 }
 
 const props = defineProps<IProps>()
+
+// Utils
 
 const totalsCellClass = computed(() => {
   return [props.ui?.totalsCellClass, props.column.totalsCellClass]
@@ -30,6 +34,10 @@ const totalText = computed(() => {
     return ''
   }
 
+  const valueFormatted = formatValue(props.total?.value, undefined, {
+    dataType: props.total?.dataType,
+  })
+
   const label = typeof props.total?.label === 'function'
     ? props.total?.label()
     : props.total?.label
@@ -39,7 +47,7 @@ const totalText = computed(() => {
     : ''
 
   const valueEl = props.total?.value
-    ? `<span font="semibold">${props.total?.value}</span>`
+    ? `<span font="semibold">${valueFormatted}</span>`
     : ''
 
   return `${labelEl}${valueEl}`
