@@ -122,6 +122,7 @@ function handleRemoveGroup() {
     class="condition-btn color-blue-500 self-center"
     :class="{
       'is-first-child': isFirstChild,
+      'is-negated': item.condition === 'NOT_AND' || item.condition === 'NOT_OR',
       '!color-blue-500': noConditionChange || !editable,
     }"
     :style="{ '--bracketColor': levelColor }"
@@ -238,6 +239,10 @@ function handleRemoveGroup() {
 
 <style scoped lang="scss">
 .condition-btn {
+  &.is-negated {
+    @apply color-negative;
+  }
+
   &.is-first-child {
     @apply m-l-2;
 
