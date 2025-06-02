@@ -80,6 +80,7 @@
     "collapse": "Collapse",
     "expand": "Expand",
     "addFirstCondition": "Add first condition",
-    "negation": "Negated"
+    "negation": "Negated",
+    "negation2": "Negation"
   }
 }

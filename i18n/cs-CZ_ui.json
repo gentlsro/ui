@@ -80,6 +80,7 @@
     "collapse": "Sbalit",
     "expand": "Rozbalit",
     "addFirstCondition": "Přidat první podmínku",
-    "negation": "Negováno"
+    "negation": "Negováno",
+    "negation2": "Negace"
   }
 }
