@@ -71,6 +71,8 @@
   "queryBuilder": {
     "and": "and",
     "or": "or",
+    "not_and": "not and",
+    "not_or": "not or",
     "addCondition": "Add Condition",
     "addGroup": "Add Group",
     "self": "Advanced Filtering",

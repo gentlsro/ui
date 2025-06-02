@@ -72,6 +72,8 @@
     "self": "Pokročilé filtrování",
     "and": "A",
     "or": "Nebo",
+    "not_and": "ne A",
+    "not_or": "ne Nebo",
     "addCondition": "Přidat podmínku",
     "addGroup": "Přidat skupinu",
     "value": "Hodnota...",
