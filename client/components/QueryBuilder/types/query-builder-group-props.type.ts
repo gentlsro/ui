@@ -5,7 +5,7 @@ import type { IQueryBuilderRow, IQueryBuilderRowProps } from './query-builder-ro
 export type IQueryBuilderGroup = {
   id: string | number
   path: string
-  condition: 'AND' | 'OR'
+  condition: 'AND' | 'OR' | 'NOT_AND' | 'NOT_OR'
   children: IQueryBuilderRow[]
   isGroup: true
   isNotDraggable?: boolean

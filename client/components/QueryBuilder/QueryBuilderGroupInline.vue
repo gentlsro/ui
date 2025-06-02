@@ -76,6 +76,31 @@ function handleAddCondition(useParent?: boolean) {
   })
 }
 
+function handleSetNegation() {
+  switch (item.value.condition) {
+    case 'AND':
+      item.value.condition = 'NOT_AND'
+      break
+
+    case 'OR':
+      item.value.condition = 'NOT_OR'
+      break
+
+    case 'NOT_AND':
+      item.value.condition = 'AND'
+      break
+
+    case 'NOT_OR':
+      item.value.condition = 'OR'
+      break
+
+    default:
+      break
+  }
+
+  conditionMenuEl.value?.hide()
+}
+
 function handleRemoveGroup() {
   const idx = item.value.path.split('.').pop()
   const parentPath = props.item.path.split('.').slice(0, -2).join('.')
@@ -121,7 +146,6 @@ function handleRemoveGroup() {
     <Menu
       ref="conditionMenuEl"
       :no-arrow="false"
-      w="20"
     >
       <!-- Condition - And -->
       <Btn
@@ -142,6 +166,14 @@ function handleRemoveGroup() {
       <Separator
         v-if="level"
         spaced
+      />
+
+      <!-- Negation -->
+      <Toggle
+        size="sm"
+        :label="$t('queryBuilder.negation')"
+        :model-value="item.condition === 'NOT_AND' || item.condition === 'NOT_OR'"
+        @update:model-value="handleSetNegation"
       />
 
       <!-- Delete btn -->

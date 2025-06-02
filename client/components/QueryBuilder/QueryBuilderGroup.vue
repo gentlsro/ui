@@ -103,7 +103,10 @@ const collapseProps = computed(() => {
       <div class="qb-group-condition">
         <!-- And -->
         <Btn
-          :class="{ 'is-active': item.condition === 'AND' }"
+          :class="{
+            'is-active': item.condition === 'AND' || item.condition === 'NOT_AND',
+            'is-negated': item.condition === 'NOT_AND',
+          }"
           :label="$t('queryBuilder.and')"
           size="xs"
           @click="item.condition = 'AND'"
@@ -112,7 +115,10 @@ const collapseProps = computed(() => {
         <!-- Or -->
         <Btn
           v-if="!noConditionChange"
-          :class="{ 'is-active': item.condition === 'OR' }"
+          :class="{
+            'is-active': item.condition === 'OR' || item.condition === 'NOT_OR',
+            'is-negated': item.condition === 'NOT_OR',
+          }"
           :label="$t('queryBuilder.or')"
           size="xs"
           @click="item.condition = 'OR'"
@@ -235,6 +241,10 @@ const collapseProps = computed(() => {
 
     .is-active {
       @apply bg-primary color-white;
+    }
+
+    .is-negated {
+      @apply bg-negative color-white;
     }
   }
 

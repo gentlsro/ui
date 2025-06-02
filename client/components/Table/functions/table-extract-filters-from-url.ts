@@ -16,6 +16,8 @@ import type { ITableProps } from '../types/table-props.type'
 
 const AND_CONDITION = 'AND'
 const OR_CONDITION = 'OR'
+const NOT_AND_CONDITION = 'NOT_AND'
+const NOT_OR_CONDITION = 'NOT_OR'
 
 // Temporary variables
 let columnsByField: Record<string, TableColumn<any>> = {}
@@ -72,6 +74,8 @@ function isGroupCondition(filterStr: string, idx: number): boolean {
   return (
     filterStr.startsWith(AND_CONDITION.toLowerCase(), idx)
     || filterStr.startsWith(OR_CONDITION.toLowerCase(), idx)
+    || filterStr.startsWith(NOT_AND_CONDITION.toLowerCase(), idx)
+    || filterStr.startsWith(NOT_OR_CONDITION.toLowerCase(), idx)
   )
 }
 
