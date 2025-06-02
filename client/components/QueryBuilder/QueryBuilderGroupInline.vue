@@ -38,7 +38,9 @@ const levelColor = computed(() => {
 })
 
 function handleSetCondition(val: 'AND' | 'OR') {
-  item.value.condition = val
+  const isNegated = item.value.condition === 'NOT_AND' || item.value.condition === 'NOT_OR'
+
+  item.value.condition = (isNegated ? 'NOT_' + val : val) as 'AND' | 'OR' | 'NOT_AND' | 'NOT_OR'
   conditionMenuEl.value?.hide()
 }
 

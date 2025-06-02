@@ -27,6 +27,39 @@ const { t } = useI18n()
 // Layout
 const group = toRef(props, 'item')
 
+const isNegated = computed(() => {
+  return group.value.condition === 'NOT_AND' || group.value.condition === 'NOT_OR'
+})
+
+function handleSetCondition(val: 'AND' | 'OR') {
+  const isNegated = group.value.condition === 'NOT_AND' || group.value.condition === 'NOT_OR'
+
+  group.value.condition = (isNegated ? 'NOT_' + val : val) as 'AND' | 'OR' | 'NOT_AND' | 'NOT_OR'
+}
+
+function handleSetNegation() {
+  switch (group.value.condition) {
+    case 'AND':
+      group.value.condition = 'NOT_AND'
+      break
+
+    case 'OR':
+      group.value.condition = 'NOT_OR'
+      break
+
+    case 'NOT_AND':
+      group.value.condition = 'AND'
+      break
+
+    case 'NOT_OR':
+      group.value.condition = 'OR'
+      break
+
+    default:
+      break
+  }
+}
+
 function handleAddCondition() {
   group.value.children = [
     ...group.value.children,
@@ -101,6 +134,15 @@ const collapseProps = computed(() => {
 
       <!-- Condition -->
       <div class="qb-group-condition">
+        <!-- Negation -->
+         <Btn
+          size="xs"
+          icon="i-material-symbols:exclamation-rounded"
+          :class="{ 'is-negated': isNegated }"
+          no-dim
+          @click="handleSetNegation"
+         />
+
         <!-- And -->
         <Btn
           :class="{
@@ -109,7 +151,7 @@ const collapseProps = computed(() => {
           }"
           :label="$t('queryBuilder.and')"
           size="xs"
-          @click="item.condition = 'AND'"
+          @click="handleSetCondition('AND')"
         />
 
         <!-- Or -->
@@ -121,7 +163,7 @@ const collapseProps = computed(() => {
           }"
           :label="$t('queryBuilder.or')"
           size="xs"
-          @click="item.condition = 'OR'"
+          @click="handleSetCondition('OR')"
         />
       </div>
 
