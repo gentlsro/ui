@@ -14,6 +14,11 @@ export type IQueryBuilderProps = {
   allowComparatorsOfSameType?: boolean
 
   /**
+   * Whether to allow negation of the group conditions
+   */
+  allowNegation?: boolean
+
+  /**
    * The breakpoint at which the query builder will be displayed in mobile mode
    */
   breakpoint?: number

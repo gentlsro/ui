@@ -34,6 +34,7 @@ provideLocal(queryBuilderIdKey, uuid)
 // Store
 const store = useQueryBuilderStore({ queryBuilderProps: props })
 const {
+  allowNegation: storeAllowNegation,
   queryBuilderEl,
   columns: storeColumns,
   items: storeItems,
@@ -105,10 +106,12 @@ const {
 // Init
 const columns = toRef(props, 'columns')
 const maxNestingLevel = toRef(props, 'maxLevel')
+const allowNegation = toRef(props, 'allowNegation')
 
 syncRef(columns, storeColumns, { direction: 'ltr' })
 syncRef(items, storeItems, { direction: 'both' })
 syncRef(maxNestingLevel, storeMaxNestingLevel, { direction: 'ltr' })
+syncRef(allowNegation, storeAllowNegation, { direction: 'ltr' })
 syncRef(toRef(props, 'getFilterComponent'), storeGetFilterComponentFnc, { direction: 'ltr' })
 
 // Lifecycle

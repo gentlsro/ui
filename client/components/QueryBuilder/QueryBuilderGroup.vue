@@ -14,6 +14,7 @@ const emits = defineEmits<{
 
 // Store
 const {
+  allowNegation,
   draggedItem,
   items,
   hoveredItem,
@@ -136,7 +137,7 @@ const collapseProps = computed(() => {
       <div class="qb-group-condition">
         <!-- Negation -->
          <Btn
-          v-if="!noConditionChange"
+          v-if="!noConditionChange && allowNegation"
           size="xs"
           icon="i-material-symbols:exclamation-rounded !w-5 !h-5"
           color="ca"

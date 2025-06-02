@@ -72,10 +72,10 @@ function extractFilterFromSearchParams(
  */
 function isGroupCondition(filterStr: string, idx: number): boolean {
   return (
-    filterStr.startsWith(AND_CONDITION.toLowerCase(), idx)
-    || filterStr.startsWith(OR_CONDITION.toLowerCase(), idx)
-    || filterStr.startsWith(NOT_AND_CONDITION.toLowerCase(), idx)
+    filterStr.startsWith(NOT_AND_CONDITION.toLowerCase(), idx)
     || filterStr.startsWith(NOT_OR_CONDITION.toLowerCase(), idx)
+    || filterStr.startsWith(AND_CONDITION.toLowerCase(), idx)
+    || filterStr.startsWith(OR_CONDITION.toLowerCase(), idx)
   )
 }
 

@@ -21,7 +21,7 @@ const emits = defineEmits<{
 }>()
 
 // Store
-const { columns, items, queryBuilderEl } = storeToRefs(useQueryBuilderStore())
+const { columns, items, queryBuilderEl, allowNegation } = storeToRefs(useQueryBuilderStore())
 
 // Utils
 const { getColor } = useColors()
@@ -176,6 +176,7 @@ function handleRemoveGroup() {
 
       <!-- Negation -->
       <Toggle
+        v-if="allowNegation"
         size="xs"
         :label="$t('queryBuilder.negation')"
         :model-value="item.condition === 'NOT_AND' || item.condition === 'NOT_OR'"
