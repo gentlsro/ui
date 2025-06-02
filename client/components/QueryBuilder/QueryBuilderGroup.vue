@@ -142,6 +142,7 @@ const collapseProps = computed(() => {
           bg="white dark:black"
           :class="{ 'is-negated': isNegated }"
           no-dim
+          :tooltip="{ label: $t('queryBuilder.negation2') }"
           @click="handleSetNegation"
          />
 
