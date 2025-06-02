@@ -145,10 +145,7 @@ const collapseProps = computed(() => {
 
         <!-- And -->
         <Btn
-          :class="{
-            'is-active': item.condition === 'AND' || item.condition === 'NOT_AND',
-            'is-negated': item.condition === 'NOT_AND',
-          }"
+          :class="{ 'is-active': item.condition === 'AND' || item.condition === 'NOT_AND' }"
           :label="$t('queryBuilder.and')"
           size="xs"
           @click="handleSetCondition('AND')"
@@ -157,10 +154,7 @@ const collapseProps = computed(() => {
         <!-- Or -->
         <Btn
           v-if="!noConditionChange"
-          :class="{
-            'is-active': item.condition === 'OR' || item.condition === 'NOT_OR',
-            'is-negated': item.condition === 'NOT_OR',
-          }"
+          :class="{ 'is-active': item.condition === 'OR' || item.condition === 'NOT_OR' }"
           :label="$t('queryBuilder.or')"
           size="xs"
           @click="handleSetCondition('OR')"
