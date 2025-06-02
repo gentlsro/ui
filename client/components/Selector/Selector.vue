@@ -36,6 +36,7 @@ const emits = defineEmits<ISelectorEmits>()
 
 defineExpose({
   focus: () => handleFocusOrClick(),
+  select: () => handleFocusOrClick(),
   blur: () => isPickerActive.value = false,
   clear: () => {
     model.value = props.emptyValue
