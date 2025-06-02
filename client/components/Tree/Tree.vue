@@ -3,6 +3,7 @@ import { getActivePinia } from 'pinia'
 
 // Types
 import type { ITreeProps } from './types/tree-props.type'
+import type { ITreeEmits } from './types/tree-emits.type'
 
 // Functions
 import { useTreeKeyboard } from './functions/useTreeKeyboard'
@@ -15,6 +16,8 @@ const props = withDefaults(defineProps<ITreeProps>(), {
   ...getComponentProps('tree'),
 })
 
+const emits = defineEmits<ITreeEmits>()
+
 // Utils
 const uuid = injectLocal(treeIdKey, useId()) as string
 
@@ -24,6 +27,7 @@ provideLocal(treeIdKey, uuid)
 const maxLevel = toRef(props, 'maxLevel')
 const selection = defineModel<ITreeProps['selection']>('selection')
 const search = defineModel<ITreeProps['search']>('search')
+const meta = defineModel<ITreeProps['meta']>('meta', { default: () => ({}) })
 const nodes = defineModel<NonNullable<ITreeProps['modelValue']>>({
   default: getComponentProps('tree').modelValue,
 })
@@ -42,10 +46,18 @@ const {
   searchConfig: storeSearchConfig,
   nodesVisible,
   maxLevel: storeMaxLevel,
+  nodeMetaById: storeNodeMetaById,
   collapsingConfig: storeCollapsingConfig,
   selection: storeSelection,
   selectionConfig: storeSelectionConfig,
+  childrenKey: storeChildrenKey,
+  emits: storeEmits,
 } = storeToRefs(store)
+
+storeEmits.value = {
+  nodeClick: payload => emits('click:node', payload),
+  nodeFocus: payload => emits('focus:node', payload),
+}
 
 // Sync with store
 syncRef(nodes, nodesSource, { direction: 'both' })
@@ -55,6 +67,8 @@ syncRef(toRef(mergedProps.value, 'selectionConfig'), storeSelectionConfig, { dir
 syncRef(selection, storeSelection, { direction: 'both' })
 syncRef(toRef(mergedProps.value, 'searchConfig'), storeSearchConfig, { direction: 'ltr' })
 syncRef(search, storeSearch, { direction: 'both' })
+syncRef(toRef(props, 'childrenKey', 'children'), storeChildrenKey, { direction: 'ltr' })
+syncRef(meta, storeNodeMetaById, { direction: 'rtl' })
 
 loadChildren.value = props.loadChildren
 
@@ -81,7 +95,10 @@ onUnmounted(() => {
       :search
       name="search"
     >
-      <TreeSearch v-if="mergedProps.searchConfig?.enabled" />
+      <TreeSearch
+        v-if="mergedProps.searchConfig?.enabled"
+        v-model:search="storeSearch"
+      />
     </slot>
 
     <!-- Nodes -->
@@ -105,6 +122,15 @@ onUnmounted(() => {
           >
             <slot
               name="node"
+              :node="row"
+              :collapse
+              :level
+            />
+          </template>
+
+          <template #node-content="{ collapse, level }">
+            <slot
+              name="node-content"
               :node="row"
               :collapse
               :level

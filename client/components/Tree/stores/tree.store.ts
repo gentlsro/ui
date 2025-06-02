@@ -2,6 +2,7 @@ import { useSearching } from '$utils'
 
 // Types
 import type { ITreeProps } from '../types/tree-props.type'
+import type { ITreeEmitFncs } from '../types/tree-emit-fncs.type'
 import type { TreeNodeModel } from '../models/tree-node.model'
 import type { ITreeNodeMeta } from '../types/tree-node-meta.type'
 
@@ -32,9 +33,15 @@ export function useTreeStore(config?: { treeId?: string, treeProps?: ITreeProps 
   const { handleRequest } = useRequest()
 
   return defineStore(`tree.${_treeId}`, () => {
+    // Utils
+    const emits = ref<ITreeEmitFncs>({
+      nodeClick: () => {},
+      nodeFocus: () => {},
+    })
+
     // Layout
+    const childrenKey = ref(treeProps?.childrenKey ?? 'children')
     const maxLevel = ref(treeProps?.maxLevel)
-    const nodeFocused = ref<ITreeNode>()
     const loadingByNodeId = ref<Record<ITreeNode['id'], boolean>>({})
 
     // Search
@@ -54,7 +61,7 @@ export function useTreeStore(config?: { treeId?: string, treeProps?: ITreeProps 
 
     const nodes = computedWithControl(
       () => nodesSource.value,
-      () => flattenTreeNodes(nodesSource.value, { nodeMetaById }),
+      () => flattenTreeNodes(nodesSource.value, { childrenKey: childrenKey.value, nodeMetaById }),
     )
 
     const nodesVisible = computedAsync(async () => {
@@ -64,8 +71,12 @@ export function useTreeStore(config?: { treeId?: string, treeProps?: ITreeProps 
         : await searchData({
           searchRef: search.value,
           rowsRef: nodes,
-          fuseOptions: { keys: ['name'], useExtendedSearch: true },
-          fuseSearchToken: "'",
+          fuseOptions: {
+            keys: ['name'],
+            useExtendedSearch: true,
+            ...searchConfig.value?.fuseOptions,
+          },
+          fuseSearchToken: searchConfig.value?.fuseSearchToken ?? "'",
         })
 
       const nodesSearchedRows = nodesSearched.map(res => {
@@ -97,8 +108,14 @@ export function useTreeStore(config?: { treeId?: string, treeProps?: ITreeProps 
 
     function insertNodes(_nodes: ITreeNode[], parent?: ITreeNode | null) {
       if (parent) {
-        parent.children = parent.children ?? []
-        parent.children.push(..._nodes)
+        let parentChildren = get(parent, childrenKey.value)
+
+        if (!parentChildren) {
+          set(parent, childrenKey.value, [])
+          parentChildren = get(parent, childrenKey.value)
+        }
+
+        parentChildren.push(..._nodes)
 
         // Trigger reactivity manually because we are changing nested data
         nodes.trigger()
@@ -114,7 +131,11 @@ export function useTreeStore(config?: { treeId?: string, treeProps?: ITreeProps 
         if (!parent) {
           nodesSource.value = nodesSource.value.filter(n => n.id !== node.id)
         } else {
-          parent.children = parent.children?.filter(n => n.id !== node.id)
+          const parentChildren = get(parent, childrenKey.value)
+          const parentChildrenFiltered = parentChildren
+            ?.filter((n: ITreeNode) => n.id !== node.id)
+
+          set(parent, childrenKey.value, parentChildrenFiltered)
         }
       })
 
@@ -133,12 +154,13 @@ export function useTreeStore(config?: { treeId?: string, treeProps?: ITreeProps 
     async function toggleCollapse(node: ITreeNode) {
       const nodeId = node.id
       const nodeMeta = nodeMetaById[node.id]
-
       if (!nodeMeta || !nodeMetaById[nodeId]) {
         return
       }
 
-      if (nodeMeta.childrenLoaded || !isNil(node.children)) {
+      const nodeChildren = get(node, childrenKey.value)
+
+      if (nodeMeta.childrenLoaded || !isNil(nodeChildren)) {
         noop()
       } else {
         loadingByNodeId.value[node.id] = true
@@ -187,10 +209,17 @@ export function useTreeStore(config?: { treeId?: string, treeProps?: ITreeProps 
       return idsSelected.includes(node.id)
     }
 
-    function handleSelect(node: ITreeNode) {
+    function handleSelect(payload: { node: ITreeNode, ev?: MouseEvent }) {
+      const { node, ev } = payload
+      emits.value.nodeClick({ node, ev })
+
+      if (!selectionConfig.value?.enabled) {
+        return
+      }
+
       const isEmitKey = !!selectionConfig.value?.emitKey
       const isMulti = selectionConfig.value?.multi
-      const children = getChildren([node])
+      const children = getChildren([node], { childrenKey: childrenKey.value })
       const _isSelected = isSelected(node)
 
       const model = Array.isArray(selection.value)
@@ -226,8 +255,16 @@ export function useTreeStore(config?: { treeId?: string, treeProps?: ITreeProps 
       }
     }
 
+    // Node focusing
+    const nodeFocused = ref<ITreeNode>()
+
+    whenever(nodeFocused, node => {
+      emits.value.nodeFocus({ node })
+    })
+
     return {
       // Layout
+      childrenKey,
       isSearched,
       maxLevel,
       loadingByNodeId,
@@ -235,6 +272,9 @@ export function useTreeStore(config?: { treeId?: string, treeProps?: ITreeProps 
       // Search
       search,
       searchConfig,
+
+      // Emits
+      emits,
 
       // Nodes
       nodesSource,

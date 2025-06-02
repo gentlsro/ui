@@ -302,7 +302,6 @@ export function useTableStore(
       } else {
         queryBuilder.value = state.value.queryBuilder ?? queryBuilderInitializeItems()
       }
-      
 
       // Set the pagination
       if (pagination?.take || pagination?.skip) {

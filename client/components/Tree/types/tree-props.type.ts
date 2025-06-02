@@ -2,6 +2,7 @@ import type { CSSProperties, DefineComponent } from 'vue'
 
 // Types
 import type { ITreeNodeMeta } from './tree-node-meta.type'
+import type { FuseOptions } from '@vueuse/integrations/useFuse.mjs'
 
 export type ITreeProps = {
   /**
@@ -10,6 +11,13 @@ export type ITreeProps = {
    * @default true
    */
   connectors?: boolean
+
+  /**
+   * The key to use for the children nodes
+   *
+   * @default 'children'
+   */
+  childrenKey?: string
 
   /**
    * The data (nodes) of the tree
@@ -30,7 +38,7 @@ export type ITreeProps = {
   /**
    * The element to use for the nodes
    */
-  nodeEl?: string | DefineComponent
+  nodeEl?: string | any
 
   /**
    * The search value
@@ -52,6 +60,19 @@ export type ITreeProps = {
      * Function that is used for the search
      */
     fnc?: (search: string | undefined, nodes: ITreeNode[]) => ITreeNode[] | Promise<ITreeNode[]>
+
+    /**
+     * The extended search token for fuse.js library
+     * https://www.fusejs.io/examples.html#extended-search
+     *
+     * @default "'" (contains)
+     */
+    fuseSearchToken?: "'" | '=' | '!' | '^' | '!^' | '$' | '!$'
+
+    /**
+     * Fuse.js options
+     */
+    fuseOptions?: FuseOptions<any>
   } | undefined
 
   /**
@@ -59,12 +80,25 @@ export type ITreeProps = {
    */
   collapsingConfig?: {
     /**
+     * By default, we assume that a node has children (~ the collapse button is shown)
+     * until proven otherwise (~ by clicking the collapse button).
+     *
+     * This function can be used to override this behavior.
+     */
+    hasChildrenFnc?: (node: ITreeNode) => boolean
+
+    /**
      * When true, the tree nodes will be shown even if their parents are collapsed
      * when searching
      *
      * @default true
      */
     showCollapsedWhenSearched?: boolean
+
+    /**
+     * Whether the collapse button takes space in case there are no children
+     */
+    collapseBtnTakesSpace?: boolean
   }
 
   /**

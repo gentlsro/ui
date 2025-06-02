@@ -1,12 +1,21 @@
-export function getChildren(nodes: ITreeNode[]): ITreeNode[] {
+export function getChildren(
+  nodes: ITreeNode[],
+  options?: {
+    childrenKey?: string
+  },
+): ITreeNode[] {
+  const { childrenKey = 'children' } = options ?? {}
+
   const children: ITreeNode[] = []
 
   nodes.forEach(node => {
-    node.children?.forEach(child => {
+    const nodeChildren = get(node, childrenKey)
+
+    nodeChildren?.forEach((child: ITreeNode) => {
       children.push(child)
 
-      if (child.children) {
-        children.push(...getChildren([child]))
+      if (child[childrenKey]) {
+        children.push(...getChildren([child], { childrenKey }))
       }
     })
   })

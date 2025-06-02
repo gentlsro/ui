@@ -88,7 +88,7 @@ export function useTreeKeyboard() {
         ev.preventDefault()
 
         if (nodeFocused.value) {
-          treeStore.handleSelect(nodeFocused.value)
+          treeStore.handleSelect({ node: nodeFocused.value })
         }
 
         break

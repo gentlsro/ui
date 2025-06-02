@@ -24,6 +24,8 @@ const {
   nodeFocused,
   loadingByNodeId,
   maxLevel,
+  childrenKey,
+  collapsingConfig,
 } = storeToRefs(treeStore)
 
 // Layout
@@ -60,15 +62,29 @@ const treeNodeClass = computed(() => {
 })
 
 const collapseBtnClass = computed(() => {
-  const hasPossiblyChildren = isNil(node.value.children)
-    || (!nodeMeta.value?.childrenLoaded && !node.value.children)
-    || node.value.children?.length
+  const {
+    hasChildrenFnc,
+    collapseBtnTakesSpace,
+  } = collapsingConfig.value ?? {}
+
+  const nodeChildren = get(node.value, childrenKey.value)
+  const hasChildren = hasChildrenFnc?.(node.value)
+
+  if (!isNil(hasChildren)) {
+    return hasChildren
+      ? 'visible'
+      : collapseBtnTakesSpace ? 'invisible' : '!hidden'
+  }
+
+  const hasPossiblyChildren = isNil(nodeChildren)
+    || (!nodeMeta.value?.childrenLoaded && !nodeChildren)
+    || nodeChildren?.length
 
   const isMaxLevel = nodeMeta.value?.level === maxLevel.value
 
   return hasPossiblyChildren && !isMaxLevel
     ? 'visible'
-    : 'invisible'
+    : collapseBtnTakesSpace ? 'invisible' : '!hidden'
 })
 
 const path = computed(() => {
@@ -83,12 +99,12 @@ const isSelected = computed(() => {
 })
 
 function handleSelect() {
-  treeStore.handleSelect(node.value)
+  treeStore.handleSelect({ node: node.value })
 }
 
-function handleClickNode() {
-  if (selectionConfig.value?.enabled && !selectionConfig.value?.multi) {
-    handleSelect()
+function handleClickNode(ev: MouseEvent) {
+  if (!selectionConfig.value?.multi) {
+    treeStore.handleSelect({ node: node.value, ev })
   }
 }
 
@@ -128,25 +144,31 @@ async function handleToggleCollapse() {
 
       <!-- Multi-select -->
       <Checkbox
-        v-if="selectionConfig.enabled && selectionConfig?.multi"
+        v-if="selectionConfig?.enabled && selectionConfig?.multi"
         size="sm"
         :model-value="isSelected"
         @update:model-value="handleSelect"
         @click.stop.prevent
       />
 
-      <div class="tree-node__content">
-        <span class="tree-node__content-label">
-          {{ node.name }}
-        </span>
+      <slot
+        name="node-content"
+        :collapse="handleToggleCollapse"
+        :level="nodeMeta?.level"
+      >
+        <div class="tree-node__content">
+          <span class="tree-node__content-label">
+            {{ node.name }}
+          </span>
 
-        <span
-          v-if="isSearched"
-          class="tree-node__content-path"
-        >
-          {{ path }}
-        </span>
-      </div>
+          <span
+            v-if="isSearched"
+            class="tree-node__content-path"
+          >
+            {{ path }}
+          </span>
+        </div>
+      </slot>
     </slot>
 
     <!-- Connectors -->

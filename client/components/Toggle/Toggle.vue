@@ -193,7 +193,7 @@ function handleKeyDown(e: KeyboardEvent) {
   }
 
   &--xs {
-    @apply w-8 h-4.5 m-y-0.75 m-l-3 m-r-1.5;
+    @apply w-8 h-4.5 m-y-0.75 m-l-1 m-r-1.5;
 
     &.is-contained {
       @apply m-x-1.5;

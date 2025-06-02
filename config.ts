@@ -1178,7 +1178,7 @@ export const defaultComponentsConfig = {
   // Tree
   tree: {
     props: {
-      collapsingConfig: { showCollapsedWhenSearched: true },
+      collapsingConfig: { showCollapsedWhenSearched: true, collapseBtnTakesSpace: true },
       connectors: true,
       loadChildren: undefined,
       maxLevel: Number.MAX_SAFE_INTEGER,
