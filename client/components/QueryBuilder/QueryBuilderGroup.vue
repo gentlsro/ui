@@ -136,6 +136,7 @@ const collapseProps = computed(() => {
       <div class="qb-group-condition">
         <!-- Negation -->
          <Btn
+          v-if="!noConditionChange"
           size="xs"
           icon="i-material-symbols:exclamation-rounded !w-5 !h-5"
           color="ca"
