@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { VNode } from 'vue'
+import { useTableStore } from '$ui'
 import { ComparatorEnum } from '$comparatorEnum'
 import { BOOLEANISH_COMPARATORS, FilterItem } from '$utils'
 
@@ -20,8 +21,12 @@ type IProps = {
 
 const props = defineProps<IProps>()
 
+// Store
+const { internalColumns } = storeToRefs(useTableStore())
+
 // Layout
 const isMounted = ref(false)
+const filteringItemEl = useTemplateRef('filteringItemEl')
 const column = toRef(props, 'column')
 
 const interactiveFilters = computed(() => {
@@ -81,6 +86,9 @@ function handleRemoveFilter(idx: number) {
 
 function handleClearFilter() {
   column.value.clearFilters()
+  const col = internalColumns.value.find(col => col.field === column.value.field)
+
+  col?.clearFilters()
 }
 
 function handleMountedFilteringItem(node: VNode) {
@@ -89,10 +97,16 @@ function handleMountedFilteringItem(node: VNode) {
   }
 }
 
-// We automatically add the first filter when the column has no filters
 watchOnce(isMounted, () => {
+  // We automatically add the first filter when the column has no filters
   if (!column.value.filters.length) {
     handleAddFilter()
+  }
+
+  // Or, in case we only have 1 filter, we focus it
+  else if (column.value.filters.length === 1) {
+    const el = filteringItemEl.value?.[0]
+    el?.focus()
   }
 })
 </script>
@@ -121,6 +135,7 @@ watchOnce(isMounted, () => {
     <div class="filtering__content">
       <TableHeaderColumnFilteringItem
         v-for="(item, idx) in interactiveFilters"
+        ref="filteringItemEl"
         :key="item.id"
         :item
         :column

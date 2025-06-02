@@ -60,7 +60,7 @@ async function getTotals() {
     v-if="totals?.length"
     ref="totalsEl"
     v-model:scroll-position="totalsX"
-    class="table-totals"
+    class="table-totals shrink-0"
     :ui="{ contentClass: 'gap-0' }"
   >
     <TableTotalsCell

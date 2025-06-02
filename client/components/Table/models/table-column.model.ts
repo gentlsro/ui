@@ -247,7 +247,7 @@ export class TableColumn<T = IItem> {
 
     /**
      * A function that is called when the cell is saved
-     * 
+     *
      * It must return the new `row` object
      */
     onSave?: (row: any, column?: TableColumn, originalRow?: any) => any
