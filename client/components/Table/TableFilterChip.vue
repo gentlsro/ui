@@ -155,6 +155,7 @@ const $z = useZod(
           ref="itemEditEl"
           :column
           :item="filterLocal"
+          @remove:item="handleRemoveFilter"
         />
       </Form>
     </MenuProxy>
