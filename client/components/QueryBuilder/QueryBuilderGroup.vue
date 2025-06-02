@@ -137,12 +137,11 @@ const collapseProps = computed(() => {
         <!-- Negation -->
          <Btn
           size="xs"
-          icon="i-material-symbols:exclamation-rounded"
+          icon="i-material-symbols:exclamation-rounded !w-5 !h-5"
           color="ca"
           bg="white dark:black"
           :class="{ 'is-negated': isNegated }"
           no-dim
-          :outlined="!isNegated"
           @click="handleSetNegation"
          />
 
