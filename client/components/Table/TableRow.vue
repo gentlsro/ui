@@ -453,7 +453,7 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
     @apply w-$colWidth;
 
     .link {
-      @apply truncate;
+      @apply truncate font-rem-13;
     }
   }
 }
