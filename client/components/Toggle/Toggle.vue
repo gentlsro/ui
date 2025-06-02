@@ -183,7 +183,10 @@ function handleKeyDown(e: KeyboardEvent) {
     }
   }
 
-  &-label--xs,
+  &-label--xs {
+    @apply text-xs;
+  }
+
   &-label--sm {
     @apply text-sm;
   }
