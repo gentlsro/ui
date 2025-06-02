@@ -21,7 +21,7 @@ const emits = defineEmits<{
 }>()
 
 // Store
-const { columns, items, queryBuilderEl } = storeToRefs(useQueryBuilderStore())
+const { columns, items, queryBuilderEl, allowNegation } = storeToRefs(useQueryBuilderStore())
 
 // Utils
 const { getColor } = useColors()
@@ -38,7 +38,9 @@ const levelColor = computed(() => {
 })
 
 function handleSetCondition(val: 'AND' | 'OR') {
-  item.value.condition = val
+  const isNegated = item.value.condition === 'NOT_AND' || item.value.condition === 'NOT_OR'
+
+  item.value.condition = (isNegated ? 'NOT_' + val : val) as 'AND' | 'OR' | 'NOT_AND' | 'NOT_OR'
   conditionMenuEl.value?.hide()
 }
 
@@ -76,6 +78,31 @@ function handleAddCondition(useParent?: boolean) {
   })
 }
 
+function handleSetNegation() {
+  switch (item.value.condition) {
+    case 'AND':
+      item.value.condition = 'NOT_AND'
+      break
+
+    case 'OR':
+      item.value.condition = 'NOT_OR'
+      break
+
+    case 'NOT_AND':
+      item.value.condition = 'AND'
+      break
+
+    case 'NOT_OR':
+      item.value.condition = 'OR'
+      break
+
+    default:
+      break
+  }
+
+  conditionMenuEl.value?.hide()
+}
+
 function handleRemoveGroup() {
   const idx = item.value.path.split('.').pop()
   const parentPath = props.item.path.split('.').slice(0, -2).join('.')
@@ -92,11 +119,12 @@ function handleRemoveGroup() {
 <template>
   <!-- Condition -->
   <Btn
-    :label="item.condition === 'AND' ? $t('queryBuilder.and') : $t('queryBuilder.or')"
+    :label="$t('queryBuilder.' + item.condition.toLowerCase())"
     size="xs"
     class="condition-btn color-blue-500 self-center"
     :class="{
       'is-first-child': isFirstChild,
+      'is-negated': item.condition === 'NOT_AND' || item.condition === 'NOT_OR',
       '!color-blue-500': noConditionChange || !editable,
     }"
     :style="{ '--bracketColor': levelColor }"
@@ -121,13 +149,15 @@ function handleRemoveGroup() {
     <Menu
       ref="conditionMenuEl"
       :no-arrow="false"
-      w="20"
     >
       <!-- Condition - And -->
       <Btn
         size="xs"
         :label="$t('queryBuilder.and')"
-        :class="{ 'color-blue-500': item.condition === 'AND' }"
+        :class="{
+          'color-blue-500': item.condition === 'AND',
+          'color-negative': item.condition === 'NOT_AND',
+        }"
         @click="handleSetCondition('AND')"
       />
 
@@ -135,13 +165,22 @@ function handleRemoveGroup() {
       <Btn
         size="xs"
         :label="$t('queryBuilder.or')"
-        :class="{ 'color-blue-500': item.condition === 'OR' }"
+        :class="{
+          'color-blue-500': item.condition === 'OR',
+          'color-negative': item.condition === 'NOT_OR',
+        }"
         @click="handleSetCondition('OR')"
       />
 
-      <Separator
-        v-if="level"
-        spaced
+      <Separator spaced />
+
+      <!-- Negation -->
+      <Toggle
+        v-if="allowNegation"
+        size="xs"
+        :label="$t('queryBuilder.negation')"
+        :model-value="item.condition === 'NOT_AND' || item.condition === 'NOT_OR'"
+        @update:model-value="handleSetNegation"
       />
 
       <!-- Delete btn -->
@@ -203,6 +242,10 @@ function handleRemoveGroup() {
 
 <style scoped lang="scss">
 .condition-btn {
+  &.is-negated {
+    @apply color-negative;
+  }
+
   &.is-first-child {
     @apply m-l-2;
 

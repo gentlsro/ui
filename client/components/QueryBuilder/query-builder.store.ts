@@ -23,6 +23,7 @@ export function useQueryBuilderStore(payload?: {
     const collapsedById = ref<Record<string | number, boolean>>({})
 
     // Layout
+    const allowNegation = ref(queryBuilderProps?.allowNegation ?? false)
     const maxNestingLevel = ref(queryBuilderProps?.maxLevel ?? 0)
     const isSmallerScreen = ref(false)
     const queryBuilderEl = ref<HTMLElement>()
@@ -48,8 +49,9 @@ export function useQueryBuilderStore(payload?: {
       items,
       draggedItem,
       collapsedById,
-
+      
       // Layout
+      allowNegation,
       queryBuilderEl,
       queryBuilderElRect,
       hoveredItem,

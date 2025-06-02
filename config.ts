@@ -821,6 +821,7 @@ export const defaultComponentsConfig = {
   // Query builder
   queryBuilder: {
     props: {
+      allowNegation: false,
       maxLevel: Number.POSITIVE_INFINITY,
       showColumnFilters: true,
     },
