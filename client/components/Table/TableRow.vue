@@ -266,7 +266,7 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
       class="link"
       :style="column.cellInnerStyle"
       :class="column.cellInnerClass"
-      @click.stop.prevent
+      @click.stop
     >
       {{ column.valueFormatted }}
     </NuxtLink>
