@@ -45,14 +45,15 @@ function handleClose() {
         </slot>
 
         <slot>
-          <h6
-            text="h6 center"
+          <span
+            fnot="rem-14"
+            text="center"
             p="x-4"
           >
             <span>
               {{ confirmationText }}
             </span>
-          </h6>
+          </span>
         </slot>
       </div>
 

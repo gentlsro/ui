@@ -247,6 +247,7 @@ defineExpose({
       <DatePickerNavigation
         v-model="internalValue"
         :utc
+        p="x-1 t-1"
       />
 
       <!-- Days -->
@@ -302,7 +303,7 @@ defineExpose({
 
 <style lang="scss" scoped>
 .date-picker {
-  @apply flex flex-col min-w-70 xm:w-70 overflow-auto;
+  @apply flex flex-col min-w-77 xm:w-70 overflow-auto;
 
   &-days {
     @apply grid grid-cols-7 border-t-1 border-ca;

@@ -5,6 +5,7 @@ import { arrow, flip, offset, shift, useFloating } from '@floating-ui/vue'
 import type { ITooltipProps } from './types/tooltip-props.type'
 
 // Functions
+import { useFloatingUIUtils } from '../FloatingUI/functions/useFloatingUIUtils'
 import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
 
 defineOptions({
@@ -13,6 +14,13 @@ defineOptions({
 
 const props = withDefaults(defineProps<ITooltipProps>(), {
   ...getComponentProps('tooltip'),
+})
+
+// Utils
+const { getLastFloatingUIZindex } = useFloatingUIUtils()
+
+const zIndex = computed(() => {
+  return getLastFloatingUIZindex()
 })
 
 function getTargetElement(target: any): any {
@@ -133,7 +141,7 @@ onMounted(() => {
       class="tooltip"
       p="x-2 y-1"
       :class="tooltipClass"
-      :style="{ ...floatingStyles, ...mergedProps.ui?.tooltipStyle }"
+      :style="{ ...floatingStyles, ...mergedProps.ui?.tooltipStyle, '--zIndex': zIndex }"
       :placement="placement"
       v-bind="$attrs"
     >
@@ -178,7 +186,7 @@ onMounted(() => {
 .tooltip {
   @apply dark:bg-darker bg-white border-ca border-custom rounded-custom;
 
-  z-index: calc(var(--zMenu) + 1);
+  z-index: var(--zIndex);
 
   @apply font-size-$Tooltip-font-size color-$Tooltip-font-color;
 
