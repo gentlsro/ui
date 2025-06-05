@@ -50,7 +50,7 @@ const classes = computed(() => {
 
       <!-- Input -->
       <div
-        class="input-wrapper__input  input-wrapper__inline-input-input"
+        class="input-wrapper__input  input-wrapper__inline-input-input overflow-auto"
         :class="ui?.inputInnerContainerClass"
         :style="ui?.inputInnerContainerStyle"
       >
