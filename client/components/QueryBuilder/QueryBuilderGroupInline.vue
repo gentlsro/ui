@@ -40,7 +40,7 @@ const levelColor = computed(() => {
 function handleSetCondition(val: 'AND' | 'OR') {
   const isNegated = item.value.condition === 'NOT_AND' || item.value.condition === 'NOT_OR'
 
-  item.value.condition = (isNegated ? 'NOT_' + val : val) as 'AND' | 'OR' | 'NOT_AND' | 'NOT_OR'
+  item.value.condition = (isNegated ? `NOT_${val}` : val) as 'AND' | 'OR' | 'NOT_AND' | 'NOT_OR'
   conditionMenuEl.value?.hide()
 }
 
@@ -119,7 +119,7 @@ function handleRemoveGroup() {
 <template>
   <!-- Condition -->
   <Btn
-    :label="$t('queryBuilder.' + item.condition.toLowerCase())"
+    :label="$t(`queryBuilder.${item.condition.toLowerCase()}`)"
     size="xs"
     class="condition-btn color-blue-500 self-center"
     :class="{
@@ -172,7 +172,10 @@ function handleRemoveGroup() {
         @click="handleSetCondition('OR')"
       />
 
-      <Separator spaced />
+      <Separator
+        v-if="allowNegation"
+        spaced
+      />
 
       <!-- Negation -->
       <Toggle

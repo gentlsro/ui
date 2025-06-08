@@ -99,7 +99,7 @@ whenever(isPickerActive, () => {
       const listElDom = unrefElement(listEl as any) as HTMLElement
       const contentElDom = listElDom?.querySelector('.virtual-scroll') as HTMLElement
 
-    contentElDom?.focus()
+      contentElDom?.focus()
     })
   }
 })
