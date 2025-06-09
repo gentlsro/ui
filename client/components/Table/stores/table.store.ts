@@ -548,7 +548,7 @@ export function useTableStore(
         defaultLayoutKey = 'defaultLayout',
       } = loadMetaData.value ?? {}
 
-      apiColumns.value = get(resModified, columnsKey) ?? []
+      apiColumns.value = get(resModified, columnsKey) ?? apiColumns.value ?? []
       state.value.layouts = get(resModified, layoutsKey) ?? state.value.layouts
       state.value.layoutDefault = get(resModified, defaultLayoutKey) ?? state.value.layoutDefault
 
