@@ -1,6 +1,7 @@
 // @unocss-include
 
-import { autoScrollPlugin, Draggable, PointerSensor, type PointerSensorMoveEvent } from 'dragdoll'
+import { autoScrollPlugin, Draggable, PointerSensor } from 'dragdoll'
+import type { PointerSensorMoveEvent } from 'dragdoll'
 import { moveItem } from '$utils'
 
 // Types
@@ -46,7 +47,7 @@ export function useListDragAndDrop() {
     }
 
     if (listElDom) {
-      const items = listElDom.querySelectorAll('.virtual-scroll__row') as NodeListOf<HTMLElement>
+      const items = listElDom.querySelectorAll('.content-row') as NodeListOf<HTMLElement>
 
       items.forEach(item => {
         item.style.transition = 'transform 125ms linear'
@@ -93,7 +94,7 @@ export function useListDragAndDrop() {
       return
     }
 
-    const t = (target as HTMLElement)?.closest('.virtual-scroll__row') as HTMLElement
+    const t = (target as HTMLElement)?.closest('.content-row') as HTMLElement
 
     if (!t) {
       return
@@ -125,7 +126,7 @@ export function useListDragAndDrop() {
           listItems.value.forEach((item, idx) => {
             const isPreceedingItem = idx >= idxStart && idx < idxEnd
             const el = (listElDom.querySelector(`[data-id="${item.id}"]`) as HTMLElement)
-              ?.closest('.virtual-scroll__row') as HTMLElement
+              ?.closest('.content-row') as HTMLElement
 
             if (isPreceedingItem && el) {
               el.style.setProperty('--translate3D', `0, ${dragMeta.value.sourceRect?.height}px, 0`)
@@ -146,7 +147,7 @@ export function useListDragAndDrop() {
           listItems.value.forEach((item, idx) => {
             const isFollowingItem = idx >= idxStart && idx < idxEnd
             const el = (listElDom.querySelector(`[data-id="${item.id}"]`) as HTMLElement)
-              ?.closest('.virtual-scroll__row') as HTMLElement
+              ?.closest('.content-row') as HTMLElement
 
             if (isFollowingItem && el) {
               el.style.setProperty('--translate3D', `0, -${dragMeta.value.sourceRect?.height}px, 0`)
@@ -162,7 +163,7 @@ export function useListDragAndDrop() {
 
         // Move the item itself
         const selfDom = (listElDom.querySelector(`[data-id="${draggedItem.value?.id}"]`) as HTMLElement)
-          ?.closest('.virtual-scroll__row') as HTMLElement
+          ?.closest('.content-row') as HTMLElement
         if (selfDom) {
           selfDom.style.setProperty('--translate3D', `0, ${moveSelf}px, 0`)
         }
@@ -216,7 +217,7 @@ export function useListDragAndDrop() {
     const listElDom = unrefElement(listEl as any) as HTMLElement
 
     if (listElDom) {
-      const items = listElDom.querySelectorAll('.virtual-scroll__row') as NodeListOf<HTMLElement>
+      const items = listElDom.querySelectorAll('.content-row') as NodeListOf<HTMLElement>
 
       items.forEach(item => {
         item.style.transition = ''

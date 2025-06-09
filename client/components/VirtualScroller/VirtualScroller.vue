@@ -546,7 +546,7 @@ function renderOnlyVisible(
 ) {
   const { firstIdx, lastIdx, rowHeight } = options ?? {}
 
-// Visible rows
+  // Visible rows
   const firstVisibleIdx = heightsCumulated.value.findIndex(h => h >= scrollY)
   let lastVisibleIdx = heightsCumulated.value.findIndex(
     h => h >= scrollY + (virtualScrollerRect.height.value),
@@ -576,6 +576,8 @@ function renderOnlyVisible(
   if (alsoRerender) {
     rerenderVisibleRows()
   }
+
+  return renderedRows.value
 }
 </script>
 
@@ -598,7 +600,7 @@ function renderOnlyVisible(
         :data-idx="row.idx"
         :data-key="row.id"
         :style="row.style"
-        class="virtual-scroll__row"
+        class="virtual-scroll__row content-row"
         @vue:mounted="handleMountedRow($event)"
       >
         <slot

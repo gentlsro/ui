@@ -9,6 +9,7 @@ import type { TableFeature } from './table-feature.type'
 import type { ISelection } from '../../../types/selection.type'
 import type { ITableFetchPayload } from './table-fetch-payload.type'
 import type { IQueryBuilderProps } from '../../QueryBuilder/types/query-builder-props.type'
+import type { IVirtualScrollEvent } from '../../VirtualScroller/types/virtual-scroll-event.type'
 
 // Models
 import type { TableColumn } from '../models/table-column.model'
@@ -197,6 +198,16 @@ export type ITableProps<
      * You can use this to modify to response to map the data or whatever
      */
     onFetch?: (payload: { res: any, getStore: () => ReturnType<typeof useTableStore> }) => IItem
+
+    /**
+     * A function that gets called when the virtual scroll happens
+     * This can be useful when you need to handle the `loadMore` logic manually
+     */
+    onVirtualScroll?: (payload: {
+      getStore: () => ReturnType<typeof useTableStore>
+      ev: IVirtualScrollEvent
+      isFetchMore: boolean
+    }) => void
   }
 
   /**
@@ -282,14 +293,14 @@ export type ITableProps<
 
     /**
      * A function that can be used to modify the default schema
-     * 
+     *
      * We may have a situation when we only need to use some parts of the default schema.
      * For example, the default schema uses a filter and fields selection. But we really only
      * need the fields selection. This function can be used to extract whatever is needed.
      *
      * If you return `undefined`, it falls back to the default schema.
      */
-    defaultSchemaModifyFnc?: (schema?: string) => string | undefined,
+    defaultSchemaModifyFnc?: (schema?: string) => string | undefined
 
     /**
      * Function that extracts the sorting from the URL

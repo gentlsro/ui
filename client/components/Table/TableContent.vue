@@ -29,6 +29,7 @@ const {
   isFetchMore,
   paginationConfig,
   isDataLoading,
+  loadData,
 } = storeToRefs(tableStore)
 
 // Layout
@@ -39,6 +40,12 @@ function handleVirtualScroll(ev: IVirtualScrollEvent) {
   if (isFetchMore && hasMore.value && !paginationConfig.value?.enabled && !isDataLoading.value) {
     tableStore.fetchAndSetData({ isFetchMore: true })
   }
+
+  loadData.value?.onVirtualScroll?.({
+    ev,
+    isFetchMore,
+    getStore: () => tableStore,
+  })
 }
 
 /**
@@ -51,14 +58,14 @@ watch(cellEdit, (cellEdit, oldCellEdit) => {
 
     const el = tableEl.value
       ?.querySelector(`[data-field="${columnField}"][data-key="${itemKey}"]`) as HTMLElement
-    const elRow = el?.closest('.virtual-scroll__row') as HTMLElement
+    const elRow = el?.closest('.content-row') as HTMLElement
     const elRowIdx = Number(elRow?.dataset.idx ?? 9999)
 
     const oldColumnField = oldCellEdit?.column?.field
     const oldItemKey = oldCellEdit?.row?.[rowKey.value]
     const oldEl = tableEl.value
       ?.querySelector(`[data-field="${oldColumnField}"][data-key="${oldItemKey}"]`) as HTMLElement
-    const oldElRow = oldEl?.closest('.virtual-scroll__row') as HTMLElement
+    const oldElRow = oldEl?.closest('.content-row') as HTMLElement
     const oldElRowIdx = Number(oldElRow?.dataset.idx ?? 9999)
 
     if (elRowIdx === oldElRowIdx) {
