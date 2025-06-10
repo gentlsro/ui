@@ -905,6 +905,7 @@ export const defaultComponentsConfig = {
       clearOptionsOnMenuHide: false,
       stackLabel: true,
       errorTakesSpace: true,
+      required: undefined,
       hasContent: undefined,
       ui: {
         borderRadius: '0.5rem',
