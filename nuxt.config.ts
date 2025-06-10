@@ -149,7 +149,7 @@ export default defineNuxtConfig({
       useCookie: true,
       cookieKey: 'lang',
       cookieDomain: undefined,
-      redirectOn: 'no prefix'
+      redirectOn: 'no prefix',
     },
     langDir: '../i18n',
     defaultLocale: 'en-US',
