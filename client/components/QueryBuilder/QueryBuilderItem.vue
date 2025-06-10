@@ -20,7 +20,7 @@ const emits = defineEmits<{
 }>()
 
 defineExpose({
-  focusInput: (input: 'field' | 'comparator' | 'value') => {
+  focusInput: (input?: 'field' | 'comparator' | 'value') => {
     switch (input) {
       case 'field':
         fieldInputEl.value?.focus?.()
