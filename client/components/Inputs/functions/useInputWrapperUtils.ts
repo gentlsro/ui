@@ -29,6 +29,7 @@ export function useInputWrapperUtils() {
       'noBorder',
       'validation',
       'zod',
+      'preferMargin',
     )
   }
 
