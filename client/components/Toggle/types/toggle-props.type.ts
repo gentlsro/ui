@@ -59,7 +59,7 @@ export type IToggleProps = {
   /**
    * The toggle label
    */
-  label?: string
+  label?: string | (() => string)
 
   /**
    * The props for the `Item` that wraps the `Toggle`

@@ -80,9 +80,18 @@ function handleStateChange() {
 // Layout
 const toggleEl = ref<HTMLDivElement>()
 
+const label = computed(() => {
+  if (typeof props.label === 'function') {
+    return props.label()
+  }
+
+  return props.label
+})
+
 function handleFocus() {
   toggleEl.value?.focus()
 }
+
 const classes = computed(() => {
   return {
     toggle: [
