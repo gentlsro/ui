@@ -16,6 +16,7 @@ type IProps = Pick<ITableProps, 'ui'> & {
 const props = defineProps<IProps>()
 
 // Utils
+const { currentLocale } = useLocale()
 
 const totalsCellClass = computed(() => {
   return [props.ui?.totalsCellClass, props.column.totalsCellClass]
@@ -36,6 +37,7 @@ const totalText = computed(() => {
 
   const valueFormatted = formatValue(props.total?.value, undefined, {
     dataType: props.total?.dataType,
+    localeIso: currentLocale.value.code,
   })
 
   const label = typeof props.total?.label === 'function'
@@ -71,7 +73,7 @@ const totalText = computed(() => {
 
 <style scoped lang="scss">
 .th {
-  @apply flex flex-center shrink-0;
+  @apply flex shrink-0;
   @apply w-$colWidth;
 
   &__totals-inner {

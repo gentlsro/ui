@@ -136,7 +136,9 @@ onMounted(() => {
       class="list-move-handle"
       :class="ui?.moveHandleClass"
       :style="ui?.moveHandleStyle"
-    />
+    >
+      <slot name="move-handle" />
+    </ListMoveHandle>
 
     <!-- Selection when using checkbox -->
     <slot

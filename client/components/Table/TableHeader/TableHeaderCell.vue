@@ -144,7 +144,10 @@ function handleSelect() {
       </span>
     </slot>
 
-    <div class="th__actions">
+    <div
+      v-if="hasFilterBtn || hasFreezeBtn"
+      class="th__actions"
+    >
       <TableHeaderFreezeBtn
         v-if="hasFreezeBtn"
         :column

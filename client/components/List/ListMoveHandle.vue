@@ -3,7 +3,9 @@
     class="list-move-handle"
     @click.stop.prevent
   >
-    <div class="i-akar-icons:drag-vertical list-move-handle" />
+    <slot>
+      <div class="i-akar-icons:drag-vertical list-move-handle" />
+    </slot>
   </div>
 </template>
 

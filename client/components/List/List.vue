@@ -180,6 +180,10 @@ defineExpose(listGetExposed())
             v-bind="itemData"
           />
         </template>
+
+        <template #move-handle>
+          <slot name="move-handle" />
+        </template>
       </ListContent>
     </slot>
 

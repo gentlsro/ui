@@ -97,7 +97,7 @@ const isVisible = computed(() => {
     >
       <div
         i-fluent:keyboard-shift-uppercase-16-filled
-        class="icon"
+        class="icon !h-3 !w-3"
       />
     </div>
 

@@ -110,6 +110,10 @@ const contentStyle = computed(() => {
               :is-disabled
             />
           </template>
+
+          <template #move-handle>
+            <slot name="move-handle" />
+          </template>
         </ListRowItem>
       </slot>
     </template>

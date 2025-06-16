@@ -10,6 +10,7 @@ export type IListSlots = {
   item?: (props: { row: IListItem, index: number }) => any
   noData?: () => any
   loading?: () => any
+  moveHandle?: () => any
   above?: (props: {
     items: NonNullable<IListProps['items']>
     listItems: Array<IListItem | IGroupRow>
