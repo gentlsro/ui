@@ -83,7 +83,9 @@ export function useFloatingUIUtils() {
   }
 
   function getLastFloatingUIZindex() {
-    const lastFloatingElement = document.querySelector('.floating-element:last-child') as HTMLElement
+    const lastFloatingElement = Array.from(document.body.children)
+      .toReversed()
+      .find(child => child.classList.contains('floating-element')) as HTMLElement
 
     if (!lastFloatingElement) {
       return 2999
