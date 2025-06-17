@@ -8,7 +8,7 @@ import type { IVirtualScrollEvent } from '../VirtualScroller/types/virtual-scrol
 import { useListStore } from './stores/list.store'
 import { useListKeyboard } from './composables/useListKeyboard'
 
-type IProps = Pick<IListProps, 'ui' | 'noHover' | 'reorderable' | 'disabledFnc' | 'scrollerConfig'>
+type IProps = Pick<IListProps, 'ui' | 'noHover' | 'reorderable' | 'disabledFnc' | 'scrollerConfig' | 'moveHandleTarget'>
 
 const props = defineProps<IProps>()
 defineEmits<{
@@ -100,6 +100,7 @@ const contentStyle = computed(() => {
           :ui
           :is-last="index === listItems.length - 1"
           :disabled-fnc
+          :move-handle-target
           @mouseover="handleMouseOver(row, index)"
         >
           <template #default="{ isDisabled }">

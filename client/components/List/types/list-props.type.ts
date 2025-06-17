@@ -180,6 +180,17 @@ export type IListProps = {
   }
 
   /**
+   * The move handle target
+   * If not explicitly provided, the "internal" move handle will be used
+   *
+   * Can be
+   *  DOM selector
+   *  DOM element
+   *  Vue component ref
+   */
+  moveHandleTarget?: any
+
+  /**
    * When true, the list will not be filtered locally
    * If `loadData.fnc` is not provided and `noFilter` is true, the SearchInput will not be shown
    */

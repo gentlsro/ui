@@ -172,6 +172,7 @@ defineExpose(listGetExposed())
         :disabled-fnc
         :ui="mergedProps.ui"
         :scroller-config="mergedProps.scrollerConfig"
+        :move-handle-target
         @change:content-size="$emit('change:contentSize', $event)"
       >
         <template #item="itemData">

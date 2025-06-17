@@ -9,8 +9,9 @@ import { isListItemSelected } from './functions/helpers/is-list-item-selected'
 // Store
 import { useListStore } from './stores/list.store'
 import { useListDragAndDrop } from './composables/useListDragAndDrop'
+import { useFloatingUIUtils } from '../FloatingUI/functions/useFloatingUIUtils'
 
-type IProps = Pick<IListProps, 'ui' | 'noHover' | 'reorderable' | 'disabledFnc'> & {
+type IProps = Pick<IListProps, 'ui' | 'noHover' | 'reorderable' | 'disabledFnc' | 'moveHandleTarget'> & {
   item: IListItem
   isLast: boolean
 }
@@ -34,6 +35,7 @@ const {
 
 // Utils
 const { createDraggable } = useListDragAndDrop()
+const { getElement } = useFloatingUIUtils()
 
 // Layout
 const el = useTemplateRef('el')
@@ -108,6 +110,7 @@ onMounted(() => {
     const _el = unrefElement(el as any) as HTMLElement
     const listElDom = unrefElement(listEl as any)
     const moveHandleElDom = unrefElement(moveHandleEl as any)
+      ?? getElement(props.moveHandleTarget, _el)
 
     createDraggable({
       el: _el,
@@ -131,7 +134,7 @@ onMounted(() => {
     @click="handleClick"
   >
     <ListMoveHandle
-      v-if="!isNew"
+      v-if="!isNew && !moveHandleTarget"
       ref="moveHandleEl"
       class="list-move-handle"
       :class="ui?.moveHandleClass"

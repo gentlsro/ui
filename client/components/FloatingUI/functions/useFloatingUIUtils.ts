@@ -51,6 +51,11 @@ export function useFloatingUIUtils() {
     elRef?: MaybeRefOrGetter<
       MaybeElement<ReferenceElement> | HTMLElement | string | null
     >,
+
+    /**
+     * When `parentEl` is provided, the element will be searched within it
+     */
+    parentEl?: HTMLElement,
   ) {
     if (!import.meta.client) {
       return
@@ -64,7 +69,7 @@ export function useFloatingUIUtils() {
 
     // When the string selector is provided, we need to find the element in the DOM
     if (typeof el === 'string') {
-      return document.querySelector(el)
+      return (parentEl ?? document).querySelector(el)
     }
 
     // When the element is already a DOM element, we just use it
