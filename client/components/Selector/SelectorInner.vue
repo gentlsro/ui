@@ -1,12 +1,17 @@
 <script setup lang="ts">
 // Types
 import type { ISelectorProps } from './types/selector-props.type'
+import type { ISelectorEmits } from './types/selector-emits.type'
 
 // Store
 import { useSelectorStore } from './stores/selector.store'
 import { getListItem, getListItemLabel } from '../List/functions/helpers'
 
-type IProps = Pick<ISelectorProps, 'useScroller' | 'ui' | 'maxChipsRows' | 'readonly' | 'disabled' | 'emptyValue' | 'multi' | 'optionLabel' | 'optionTo' | 'to'>
+type IProps = Pick<
+  ISelectorProps,
+  | 'useScroller' | 'ui' | 'maxChipsRows' | 'readonly' | 'disabled'
+  | 'emptyValue' | 'multi' | 'optionLabel' | 'optionTo' | 'to'
+> & { emits: ISelectorEmits }
 
 const props = defineProps<IProps>()
 
@@ -42,8 +47,12 @@ const isEditable = computed(() => {
 
 function handleRemove(idx: number) {
   if (Array.isArray(model.value)) {
-    model.value = model.value.filter((_, i) => i !== idx)
+    const item = model.value[idx]
+    props.emits('unselect:item', item)
+
+    model.value = model.value.toSpliced(idx, 1)
   } else {
+    props.emits('unselect:item', model.value)
     model.value = props.emptyValue
   }
 }
@@ -60,6 +69,7 @@ function handleRemove(idx: number) {
     <slot
       :item="getListItem(model, optionByKey) ?? model"
       :index="0"
+      :option-by-key
     >
       {{ getListItemLabel(model, optionLabel, optionByKey) }}
     </slot>
@@ -77,6 +87,7 @@ function handleRemove(idx: number) {
       <slot
         :item="getListItem(item, optionByKey) ?? item"
         :index="idx"
+        :option-by-key
       >
         <SelectorChip
           :chip="item"
@@ -107,6 +118,7 @@ function handleRemove(idx: number) {
       <slot
         :item="getListItem(item, optionByKey) ?? item"
         :index="idx"
+        :option-by-key
       >
         <SelectorChip
           :chip="item"

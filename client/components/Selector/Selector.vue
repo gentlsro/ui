@@ -252,13 +252,15 @@ onUnmounted(() => {
         :empty-value
         :multi
         :to
+        :emits
         :option-to
       >
-        <template #default="{ item, index }">
+        <template #default="{ item, index, optionByKey }">
           <slot
             name="selection-item"
             :item
             :index
+            :option-by-key
           />
         </template>
       </SelectorInner>
