@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'vue'
-import type { AlignedPlacement, Boundary, OffsetOptions, Side } from '@floating-ui/dom'
+import type { Boundary, OffsetOptions, Placement } from '@floating-ui/dom'
 
 export type IMenuProps = {
   /**
@@ -22,7 +22,7 @@ export type IMenuProps = {
   /**
    * The FloatingUI fallback placements
    */
-  fallbackPlacements?: Array<Side | AlignedPlacement>
+  fallbackPlacements?: Placement[]
 
   /**
    * When true, the `Menu` will try to fit the width of the reference element
@@ -114,7 +114,7 @@ export type IMenuProps = {
   /**
    * The FloatingUI placement
    */
-  placement?: Side | AlignedPlacement
+  placement?: Placement
 
   /**
    * The reference element that the `Menu` is attached to
