@@ -158,7 +158,10 @@ onMounted(() => {
 
     <slot :is-disabled="isDisabled">
       <div class="list-row-item__content">
-        <span v-html="item._highlighted" />
+        <span
+          break-words
+          v-html="item._highlighted"
+        />
 
         <!-- New item -->
         <span class="list-row-item__content-new">
@@ -179,7 +182,7 @@ onMounted(() => {
   @apply min-h-$defaultRowHeight;
 
   &__content {
-    @apply flex flex-col grow;
+    @apply flex flex-col grow overflow-hidden;
 
     &-new {
       @apply hidden text-caption font-rem-12;
