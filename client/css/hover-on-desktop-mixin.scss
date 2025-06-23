@@ -1,0 +1,10 @@
+@mixin on-desktop {
+  @media (pointer: fine) {
+    &:hover {
+      @content;
+    }
+  }
+  @media (pointer: coarse) {
+    @content;
+  }
+}

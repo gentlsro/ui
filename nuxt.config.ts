@@ -83,6 +83,7 @@ export default defineNuxtConfig({
     resolve('./client/css/zindex.scss'),
     resolve('./client/css/ripple.scss'),
     resolve('./client/css/colors.scss'),
+    resolve('./client/css/hover-on-desktop-mixin.scss'),
   ],
 
   srcDir: 'client/',
