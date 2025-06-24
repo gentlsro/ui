@@ -245,6 +245,7 @@ onUnmounted(() => {
       :ui="mergedProps.ui"
       :editable
       :to
+      :show-copy-btn
       :scroller-config="mergedProps.scrollerConfig"
     >
       <!-- Cell slots -->

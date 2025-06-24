@@ -549,6 +549,11 @@ export type ITableProps<
   }) => Promise<ITableTotal[]>)
 
   /**
+   * Whether to show the copy button
+   */
+  showCopyBtn?: boolean
+
+  /**
    * Visual configuration
    */
   ui?: {

@@ -6,6 +6,7 @@ const props = withDefaults(defineProps<IBtnProps & {
   modelValue?: any
   position?: 'left' | 'right' | 'top' | 'bottom'
   transform?: (model: any) => string
+  noText?: boolean
 }>(), {
   icon: 'i-bx:copy',
 })
@@ -72,6 +73,7 @@ function handleCopy() {
     </template>
 
     <BtnConfirmation
+      v-if="!noText"
       :model-value="copied"
       :position
       :label="$t('general.copied')"

@@ -17,7 +17,7 @@ import { tableSelectRow } from './functions/table-select-row'
 // Store
 import { useTableStore } from './stores/table.store'
 
-type IProps = Pick<ITableProps, 'ui' | 'editable' | 'to'> & {
+type IProps = Pick<ITableProps, 'ui' | 'editable' | 'to' | 'showCopyBtn'> & {
   row: any | any[]
   index: number
 }
@@ -421,6 +421,15 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
           :is-selectable="rowDataArray[0].isSelectable"
         />
       </slot>
+
+      <CopyBtn
+        v-if="showCopyBtn"
+        size="sm"
+        class="copy-btn"
+        :model-value="column.valueFormatted"
+        no-text
+        @click.stop.prevent
+      />
     </div>
 
     <!-- Used for absolutely position info/element -->
@@ -449,7 +458,7 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
   }
 
   .td {
-    @apply flex items-center border-ca;
+    @apply relative flex items-center border-ca;
     @apply w-$colWidth;
 
     .link {
@@ -536,5 +545,15 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
   .tr--row .td:last-child {
     @apply border-r-1;
   }
+}
+
+.td:hover {
+  .copy-btn {
+    @apply flex;
+  }
+}
+
+.copy-btn {
+  @apply absolute right-2 top-2 hidden;
 }
 </style>

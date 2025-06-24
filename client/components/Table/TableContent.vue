@@ -7,7 +7,7 @@ import type { IVirtualScrollEvent } from '../VirtualScroller/types/virtual-scrol
 import { useTableStore } from './stores/table.store'
 import { tableEditMoveCell } from './functions/table-edit-move-cell'
 
-type IProps = Pick<ITableProps, 'editable' | 'ui' | 'to' | 'scrollerConfig'>
+type IProps = Pick<ITableProps, 'editable' | 'ui' | 'to' | 'scrollerConfig' | 'showCopyBtn'>
 
 defineProps<IProps>()
 
@@ -139,6 +139,7 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
           :index
           :editable
           :to
+          :show-copy-btn
         >
           <!-- Field slots -->
           <template
