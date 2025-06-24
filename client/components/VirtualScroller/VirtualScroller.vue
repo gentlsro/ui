@@ -638,7 +638,7 @@ function renderOnlyVisible(
     @apply flex w-full;
 
     // transform: translate3d(var(--translate3D, 0, 0, 0));
-    min-height: calc(var(--defaultRowHeight) * 1px);
+    min-height: var(--defaultRowHeight);
     will-change: transform;
   }
 }
