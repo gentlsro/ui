@@ -637,7 +637,7 @@ function renderOnlyVisible(
   &__row {
     @apply flex w-full;
 
-    // transform: translate3d(var(--translate3D, 0, 0, 0));
+    transform: translate3d(var(--translate3D, 0, 0, 0));
     min-height: var(--defaultRowHeight);
     will-change: transform;
   }
