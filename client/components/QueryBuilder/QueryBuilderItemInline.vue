@@ -190,6 +190,7 @@ const $z = useZod({ scope: 'qb' })
         no-controls
         dense
         :focus-first-input="false"
+        :prevent-submit-on-enter="false"
         :submit-confirmation="false"
         @submit="handleSubmit"
       >

@@ -116,12 +116,15 @@ export function useListKeyboard(config?: { registerKeyStroke?: boolean }) {
       // Select
       case 'Enter':
         ev.preventDefault?.()
-        listStore.handleSelect(itemFocused.value)
 
         if (isCtrl) {
           self?.emit('submit')
           formSubmit()
+
+          break
         }
+
+        listStore.handleSelect(itemFocused.value)
 
         break
     }
