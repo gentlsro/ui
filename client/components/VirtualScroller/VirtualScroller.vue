@@ -637,8 +637,8 @@ function renderOnlyVisible(
   &__row {
     @apply flex w-full;
 
-    min-height: calc(var(--rowHeight) * 1px);
-    transform: translate3d(var(--translate3D, 0, 0, 0));
+    // transform: translate3d(var(--translate3D, 0, 0, 0));
+    min-height: calc(var(--defaultRowHeight) * 1px);
     will-change: transform;
   }
 }
@@ -647,6 +647,7 @@ function renderOnlyVisible(
   .virtual-scroll__row {
     @apply absolute;
 
+    min-height: calc(var(--rowHeight) * 1px);
     transform: translateY(calc(var(--translateY) * 1px)) translate3d(var(--translate3D, 0, 0, 0));
   }
 }
