@@ -14,11 +14,12 @@ defineProps<IProps>()
 
 // Store
 const uiStore = useUIStore()
-const { queryBuilder, internalColumns } = storeToRefs(useTableStore())
+const { queryBuilder, internalColumns, state } = storeToRefs(useTableStore())
 
 function handleClearFilters(filterType: 'queryBuilder' | 'columns' | 'all' = 'all') {
   if (filterType === 'queryBuilder') {
     queryBuilder.value = queryBuilderInitializeItems()
+    state.value.queryBuilder = queryBuilder.value
   } else if (filterType === 'columns') {
     internalColumns.value.forEach(col => col.clearFilters())
 
@@ -26,6 +27,7 @@ function handleClearFilters(filterType: 'queryBuilder' | 'columns' | 'all' = 'al
     internalColumns.value = [...internalColumns.value]
   } else if (filterType === 'all') {
     queryBuilder.value = queryBuilderInitializeItems()
+    state.value.queryBuilder = queryBuilder.value
     internalColumns.value.forEach(col => col.clearFilters())
 
     // Trigger the reactivity on columns
