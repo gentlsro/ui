@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { isNumeric } from '$utils'
 import { MODIFIER_BY_UNIT } from '$utilsLayer/shared/composables/useDuration'
 import type { DurationUnit } from '$utilsLayer/shared/composables/useDuration'
 
@@ -7,7 +8,6 @@ import type { IDurationInputProps } from './types/duration-input-props.type'
 
 // Functions
 import { getComponentMergedProps, getComponentProps } from '../../../functions/get-component-props'
-import { isNumeric } from '$utils'
 
 const props = withDefaults(defineProps<IDurationInputProps>(), {
   ...getComponentProps('durationInput'),
@@ -70,7 +70,7 @@ const model = computed({
 const units = computed(() => {
   return props.allowedUnits.map(unit => ({
     id: unit,
-    label: $t(`general.${unit}`, model.value),
+    label: $t(`general.${unit}`, 2),
     class: durationUnit.value === unit ? 'bg-primary color-white' : '',
     handler: () => handleDurationUnitChange(unit),
   }))
@@ -122,7 +122,7 @@ defineExpose({
       <Btn
         v-if="!readonly && !disabled"
         flex="shrink"
-        :label="$t(`general.${durationUnit}`, model).toLowerCase()"
+        :label="$t(`general.${durationUnit}`, Math.round(model)).toLowerCase()"
         size="xs"
         no-uppercase
         no-bold
