@@ -126,7 +126,7 @@ export function useListKeyboard(config?: { registerKeyStroke?: boolean }) {
 
         listStore.handleSelect(itemFocused.value)
 
-        break
+        return
     }
 
     const items = toValue(listItems) ?? []
