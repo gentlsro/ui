@@ -199,7 +199,7 @@ onUnmounted(() => {
       <TableTop
         v-if="hasTop"
         v-model:search="search"
-        v-model:query-builder="queryBuilder"
+        v-model:query-builder="queryBuilderStore"
         :query-builder-props="mergedProps.queryBuilderProps"
         :features
         :ui="mergedProps.ui"
