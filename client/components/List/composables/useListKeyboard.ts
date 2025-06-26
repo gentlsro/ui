@@ -146,7 +146,9 @@ export function useListKeyboard(config?: { registerKeyStroke?: boolean }) {
         itemFocusedIdx.value = -1
       }
 
-      handleKey(ev, { force: options?.force, repeated: true })
+      if (items.length) {
+        handleKey(ev, { force: options?.force, repeated: true })
+      }
     }
 
     // Got to a group
