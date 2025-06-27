@@ -127,6 +127,11 @@ export class TableColumn<T = IItem> {
   nonInteractive?: boolean
 
   /**
+   * When true, the column will not have a copy button
+   */
+  noCopyBtn?: boolean
+
+  /**
    * The column's original width
    *
    * Is used to potentially reset the column's width
@@ -636,6 +641,7 @@ export class TableColumn<T = IItem> {
     this.needsFields = col.needsFields
     this.local = col.local ?? false
     this.alwaysVisible = col.alwaysVisible ?? false
+    this.noCopyBtn = col.noCopyBtn ?? false
 
     // Editing
     this.noEdit = col.noEdit

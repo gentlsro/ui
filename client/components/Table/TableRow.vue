@@ -423,7 +423,7 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
       </slot>
 
       <CopyBtn
-        v-if="showCopyBtn"
+        v-if="showCopyBtn && !column.column.noCopyBtn && !column.column.isHelperColumn"
         size="sm"
         class="copy-btn"
         :model-value="column.valueFormatted"
