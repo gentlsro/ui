@@ -94,7 +94,7 @@ export const defaultComponentsConfig = {
     props: {
       align: 'center',
       disabled: undefined,
-      disableStyle: 'filled',
+      disableStyle: 'filled' as 'filled' | 'flat',
       download: undefined,
       exact: undefined,
       external: undefined,
