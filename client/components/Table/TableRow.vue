@@ -29,6 +29,15 @@ const props = defineProps<IProps>()
 const { currentLocaleCode } = useLocale()
 
 // Helpers
+function handleCopyBtnFormat(value: any) {
+  try {
+    return JSON.stringify(value)
+  }
+  catch {
+    return value
+  }
+}
+
 function isSelected(row: IItem) {
   const key = selectionConfig.value?.selectionKey ?? rowKey.value
 
@@ -428,6 +437,7 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
         class="copy-btn"
         :model-value="column.valueFormatted"
         no-text
+        :format="handleCopyBtnFormat"
         @click.stop.prevent
       />
     </div>
