@@ -7,7 +7,12 @@ import utilsConfig from '$utilsConfig'
 // Types
 import type { IUIState } from '../types/ui-state.type'
 
+// Functions
+import { useFloatingUIUtils } from '~~/libs/UI/client/components/FloatingUI/functions/useFloatingUIUtils'
+
 export const useUIStore = defineStore('__ui', () => {
+  const { getLastFloatingUI } = useFloatingUIUtils()
+
   // State
   const isInitialized = ref(false)
   const lastKeydownEvent = ref<KeyboardEvent>()
@@ -89,8 +94,15 @@ export const useUIStore = defineStore('__ui', () => {
       lastPasteEvent.value = ev
     })
 
+    // Floating UI tracking
+    useMutationObserver(document.body, () => {
+      isAnyFloatingUIOpen.value = !!getLastFloatingUI()
+    }, { childList: true })
+
     isInitialized.value = true
   }
+
+  const isAnyFloatingUIOpen = ref(false)
 
   // Active element
   const activeElement = useActiveElement()
@@ -118,6 +130,9 @@ export const useUIStore = defineStore('__ui', () => {
     // Active element
     activeElement,
     isActiveElementInput: skipHydrate(isActiveElementInput),
+
+    // Floating UI
+    isAnyFloatingUIOpen,
 
     // Temporary component
     setTempComponent: skipHydrate(setTempComponent),

@@ -97,8 +97,15 @@ export function useFloatingUIUtils() {
     return Number(zIndex)
   }
 
+  function getLastFloatingUI() {
+    return Array.from(document.body.children)
+      .toReversed()
+      .find(child => child.classList.contains('floating-element')) as HTMLElement
+  }
+
   return {
     getElement,
     getLastFloatingUIZindex,
+    getLastFloatingUI,
   }
 }
