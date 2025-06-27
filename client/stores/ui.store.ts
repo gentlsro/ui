@@ -8,7 +8,7 @@ import utilsConfig from '$utilsConfig'
 import type { IUIState } from '../types/ui-state.type'
 
 // Functions
-import { useFloatingUIUtils } from '~~/libs/UI/client/components/FloatingUI/functions/useFloatingUIUtils'
+import { useFloatingUIUtils } from '../../client/components/FloatingUI/functions/useFloatingUIUtils'
 
 export const useUIStore = defineStore('__ui', () => {
   const { getLastFloatingUI } = useFloatingUIUtils()
