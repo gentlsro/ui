@@ -24,7 +24,7 @@ type GetValue<T> = T extends (...args: any[]) => any ? ReturnType<T> : T
 export function getComponentProps<T extends ConfigWithPropsKeys<IUIConfig>>(
   componentName: T,
 ) {
-  return uiConfig[componentName].props as typeof uiConfig[T]['props'] as IUIConfig[T]['props']
+  return uiConfig[componentName].props as IUIConfig[T]['props']
 }
 
 export function getComponentMergedProps<
