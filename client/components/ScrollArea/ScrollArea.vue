@@ -1,17 +1,32 @@
 <script setup lang="ts">
 import { stringToFloat } from '$utils'
 import PerfectScrollbar from 'perfect-scrollbar'
+import type { MaybeElement } from '@vueuse/core'
 
 // Types
 import type { IScrollAreaProps } from './types/scroll-area-props.type'
 
-// Regex
-
 const props = defineProps<IScrollAreaProps>()
 
+// Layout
 const scrollArea = ref<HTMLDivElement>()
 const ps = ref<PerfectScrollbar>()
 const self = getCurrentInstance()
+
+const contentEls = computed(() => {
+  if (!scrollArea.value) {
+    return
+  }
+
+  const children = scrollArea.value?.children ?? []
+
+  return Array.from(children)
+    .slice(0, -2) as MaybeElement[]
+})
+
+watchEffect(() => {
+  console.log(contentEls.value)
+})
 
 function init() {
   if (scrollArea.value) {
@@ -46,7 +61,8 @@ onBeforeUnmount(() => {
   ps.value?.destroy()
 })
 
-useResizeObserver(scrollArea, () => {
+// @ts-expect-error This doesnt allow `computedRef` type but works totally fine
+useResizeObserver(contentEls, () => {
   requestAnimationFrame(() => {
     ps.value?.update()
   })
