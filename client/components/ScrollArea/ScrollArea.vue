@@ -24,10 +24,6 @@ const contentEls = computed(() => {
     .slice(0, -2) as MaybeElement[]
 })
 
-watchEffect(() => {
-  console.log(contentEls.value)
-})
-
 function init() {
   if (scrollArea.value) {
     ps.value = new PerfectScrollbar(scrollArea.value, {
