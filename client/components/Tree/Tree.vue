@@ -57,6 +57,7 @@ const {
 storeEmits.value = {
   nodeClick: payload => emits('click:node', payload),
   nodeFocus: payload => emits('focus:node', payload),
+  nodeBlur: payload => emits('blur:node', payload),
 }
 
 // Sync with store

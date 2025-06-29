@@ -37,6 +37,7 @@ export function useTreeStore(config?: { treeId?: string, treeProps?: ITreeProps 
     const emits = ref<ITreeEmitFncs>({
       nodeClick: () => {},
       nodeFocus: () => {},
+      nodeBlur: () => {},
     })
 
     // Layout
@@ -258,8 +259,12 @@ export function useTreeStore(config?: { treeId?: string, treeProps?: ITreeProps 
     // Node focusing
     const nodeFocused = ref<ITreeNode>()
 
-    whenever(nodeFocused, node => {
-      emits.value.nodeFocus({ node })
+    watch(nodeFocused, (node, oldNode) => {
+      if (!node) {
+        emits.value.nodeBlur({ node: oldNode })
+      } else {
+        emits.value.nodeFocus({ node })
+      }
     })
 
     return {
