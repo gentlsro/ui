@@ -86,7 +86,7 @@ onMounted(() => {
 label.label {
   @apply block ease-linear tracking-wide origin-top-left top-0 left-0
     leading-tight max-w-full p-x-3 break-words cursor-text;
-    
+
   // @apply z-10; // Is this needed? It fucks up a lot of things...
 
   // Layout ~ Inline
@@ -118,6 +118,10 @@ label.label {
 
     &.is-regular {
       @apply translate-y-23.5px;
+    }
+
+    &.is-inline {
+      @apply font-rem-12;
     }
   }
 

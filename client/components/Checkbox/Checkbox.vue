@@ -144,6 +144,7 @@ function handleKey(ev: KeyboardEvent) {
         'is-checked': toggleState.checked,
         'is-indeterminate': toggleState.indeterminate,
         'is-readonly': !editable,
+        'no-hover-effect': noHoverEffect,
       },
     ]"
     :style="toggleState.labelStyle"
@@ -195,11 +196,6 @@ function handleKey(ev: KeyboardEvent) {
     </slot>
 
     <slot name="append" />
-
-    <!-- <span
-      v-if="!noHoverEffect"
-      class="focus-helper"
-    /> -->
   </label>
 </template>
 
@@ -346,7 +342,7 @@ function handleKey(ev: KeyboardEvent) {
 //     rounded-inherit;
 // }
 
-.label:hover::before {
+.label:not(.no-hover-effect):hover::before {
   @apply content-empty absolute inset-0 bg-current opacity-10 cursor-pointer
     rounded-inherit pointer-events-none;
 }
