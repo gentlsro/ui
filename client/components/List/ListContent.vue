@@ -103,12 +103,13 @@ const contentStyle = computed(() => {
           :move-handle-target
           @mouseover="handleMouseOver(row, index)"
         >
-          <template #default="{ isDisabled }">
+          <template #default="{ isDisabled, isSelected }">
             <slot
               name="item"
               :row
               :index
               :is-disabled
+              :is-selected
             />
           </template>
 

@@ -156,7 +156,10 @@ onMounted(() => {
       />
     </slot>
 
-    <slot :is-disabled="isDisabled">
+    <slot
+      :is-disabled
+      :is-selected
+    >
       <div class="list-row-item__content">
         <span
           break-words
