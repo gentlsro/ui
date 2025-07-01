@@ -79,13 +79,19 @@ export function getInputByDataType(
     case 'dateSimple':
     case 'datetime':
     case 'datetimeSimple':
-    case 'timestamp':
-    case 'timestampSimple':
     case 'fullDateTime':
     case 'fullDateTimeSimple':
       return createComponent({
         component: DateInput,
         props,
+        icon: 'i-system-uicons:calendar-date',
+      })
+
+    case 'timestamp':
+    case 'timestampSimple':
+      return createComponent({
+        component: DateInput,
+        props: { ...props, utc: true },
         icon: 'i-system-uicons:calendar-date',
       })
 
