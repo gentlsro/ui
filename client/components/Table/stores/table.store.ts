@@ -679,7 +679,6 @@ export function useTableStore(
       // Selection
       selection,
       selectionByKey,
-      clearSelection,
 
       // Editing
       cellEdit,
