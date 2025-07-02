@@ -16,7 +16,6 @@ export function tableGetExposed() {
   return {
     refetch: tableStore.fetchAndSetData,
     store: () => tableStore,
-    clearSelection: tableStore.clearSelection,
     fitColumns,
     getFetchPayload: (payload?: Partial<Parameters<typeof tableBuildFetchPayload>[0]>) => tableStore.getFetchPayload(payload),
     getVirtualScroller: () => tableStore.virtualScrollEl,

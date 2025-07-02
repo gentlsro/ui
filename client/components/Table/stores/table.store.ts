@@ -352,10 +352,6 @@ export function useTableStore(
         return agg
       }, {} as Record<string, boolean>)
     })
-
-    function clearSelection() {
-      selection.value = undefined
-    }
     // !SECTION
 
     // SECTION Editing
