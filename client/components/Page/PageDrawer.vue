@@ -91,6 +91,7 @@ const styles = computed(() => {
           preset="CHEVRON_RIGHT"
           :ripple="false"
           w="!full"
+          size="sm"
           class="!color-black !dark:color-white"
           :class="{ 'rotate-180': !isMini }"
           @click="isMini = !isMini"

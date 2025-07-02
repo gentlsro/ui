@@ -46,6 +46,6 @@ watch(height, () => {
 
 <style scoped lang="scss">
 .list-content {
-  @apply m-x-2 p-b-2;
+  @apply p-b-2;
 }
 </style>

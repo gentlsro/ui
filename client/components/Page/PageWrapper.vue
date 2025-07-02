@@ -162,7 +162,7 @@ onMounted(() => {
   }
 }
 
-.page-drawer.is-absolute {
+.page-drawer.is-absolute:not(.is-mini) {
   ~ .page-wrapper {
     margin-left: 0 !important;
     margin-right: 0 !important;
