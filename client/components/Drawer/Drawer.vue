@@ -76,17 +76,21 @@ function handleTransition(
 <style scoped lang="scss">
 .drawer {
   @apply fixed flex flex-col flex-gap-1 top-0 opacity-0
-    bg-light-200 dark:bg-dark-800 z-$zDrawer max-w-full overflow-auto h-full;
+    bg-light-200 dark:bg-dark-800 z-$zDrawer max-w-full overflow-auto;
 
   transition:
     opacity ease-out 200ms,
     transform ease-out 200ms;
 
   &.is-absolute {
-    @apply absolute;
+    @apply absolute bottom-0;
   }
 
-  &:not(.is-full-height) {
+  &:not(.is-absolute) {
+    @apply h-full;
+  }
+
+  &:not(.is-full-height):not(.is-absolute) {
     @apply m-t-$navHeight;
     height: calc(100% - var(--navHeight, 0px));
   }
