@@ -68,6 +68,7 @@ export function useTableStore(
           columns: internalColumns.value,
           queryParams: queryParams.value,
           isInfiniteScroll: !paginationConfig.value?.enabled,
+          customData: customData.value,
         })
       }
     }

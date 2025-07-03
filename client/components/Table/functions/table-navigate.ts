@@ -4,6 +4,7 @@ export function tableNavigate(payload: {
   columns: TableColumn[]
   queryParams: URLSearchParams
   isInfiniteScroll?: boolean
+  customData?: IItem
 }) {
   const { columns, queryParams, isInfiniteScroll } = payload
   const currentParams = useRequestURL().searchParams
