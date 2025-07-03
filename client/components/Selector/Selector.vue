@@ -178,7 +178,7 @@ if (props.preselectFirst) {
 
 // Lifcecycle
 onMounted(() => {
-  referenceEl.value = unrefElement(fieldEl as any)?.querySelector('.wrapper__body') as HTMLDivElement
+  referenceEl.value = unrefElement(fieldEl as any)?.querySelector('.input-wrapper-border') as HTMLDivElement
 })
 
 // When layout changes, we need to set new reference target for menu
