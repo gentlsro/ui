@@ -1,7 +1,7 @@
 <script setup lang="ts">
-type IProps = {
-  search?: string
-}
+import type { ITreeProps } from '$ui'
+
+type IProps = Pick<ITreeProps, 'search' | 'searchConfig'>
 
 defineProps<IProps>()
 
@@ -10,10 +10,9 @@ const search = defineModel<string>('search')
 </script>
 
 <template>
-  <div class="tree-search">
-    <SearchInput
-      v-model="search"
-      autofocus
-    />
-  </div>
+  <SearchInput
+    v-model="search"
+    autofocus
+    v-bind="searchConfig?.props"
+  />
 </template>

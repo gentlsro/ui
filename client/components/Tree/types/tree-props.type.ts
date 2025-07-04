@@ -1,8 +1,9 @@
-import type { CSSProperties } from 'vue'
+import type { AllowedComponentProps, CSSProperties } from 'vue'
 
 // Types
 import type { ITreeNodeMeta } from './tree-node-meta.type'
 import type { FuseOptions } from '@vueuse/integrations/useFuse.mjs'
+import type { ITextInputProps } from '$ui'
 
 export type ITreeProps = {
   /**
@@ -73,6 +74,11 @@ export type ITreeProps = {
      * Fuse.js options
      */
     fuseOptions?: FuseOptions<any>
+
+    /**
+     * Props to pass to the search input
+     */
+    props?: ITextInputProps & AllowedComponentProps
   } | undefined
 
   /**

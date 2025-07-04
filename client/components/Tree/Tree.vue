@@ -99,6 +99,7 @@ onUnmounted(() => {
       <TreeSearch
         v-if="mergedProps.searchConfig?.enabled"
         v-model:search="storeSearch"
+        :search-config
       />
     </slot>
 
