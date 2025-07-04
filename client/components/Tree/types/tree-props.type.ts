@@ -1,4 +1,4 @@
-import type { CSSProperties, DefineComponent } from 'vue'
+import type { CSSProperties } from 'vue'
 
 // Types
 import type { ITreeNodeMeta } from './tree-node-meta.type'
