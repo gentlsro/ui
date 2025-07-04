@@ -170,7 +170,7 @@ export type ITreeProps = {
     /**
      * Class to apply to the nodes
      */
-    nodeClass?: ClassType
+    nodeClass?: ClassType | ((payload: { node: T, isSelected: boolean }) => ClassType)
 
     /**
      * Style to apply to the nodes

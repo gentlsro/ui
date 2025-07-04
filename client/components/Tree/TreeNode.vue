@@ -116,14 +116,26 @@ async function handleToggleCollapse() {
 
   treeStore.toggleCollapse(node.value)
 }
+
+const nodeClass = computed(() => {
+  return typeof props.ui?.nodeClass === 'function'
+    ? props.ui.nodeClass({ node: node.value, isSelected: isSelected.value })
+    : props.ui?.nodeClass
+})
+
+const nodeStyle = computed(() => {
+  return typeof props.ui?.nodeStyle === 'function'
+    ? props.ui.nodeStyle({ node: node.value, isSelected: isSelected.value })
+    : props.ui?.nodeStyle
+})
 </script>
 
 <template>
   <Component
     :is="nodeEl ?? 'div'"
     class="tree-node"
-    :class="[treeNodeClass, ui?.nodeClass]"
-    :style="[treeNodeStyle, ui?.nodeStyle]"
+    :class="[treeNodeClass, nodeClass]"
+    :style="[treeNodeStyle, nodeStyle]"
     @click="handleClickNode"
   >
     <slot
