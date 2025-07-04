@@ -3,7 +3,6 @@ import { useSearching } from '$utils'
 // Types
 import type { ITreeProps } from '../types/tree-props.type'
 import type { ITreeEmitFncs } from '../types/tree-emit-fncs.type'
-import type { TreeNodeModel } from '../models/tree-node.model'
 import type { ITreeNodeMeta } from '../types/tree-node-meta.type'
 
 // Functions
@@ -16,7 +15,10 @@ export const treeIdKey = Symbol('__treeId')
 // Utils
 const { searchData } = useSearching()
 
-function getParents(node: ITreeNode, nodeMetaById: Record<ITreeNode['id'], ITreeNodeMeta>): ITreeNode[] {
+function getParents(
+  node: ITreeNode,
+  nodeMetaById: Record<ITreeNode['id'], ITreeNodeMeta>,
+): ITreeNode[] {
   const parent = nodeMetaById[node.id]?.parent
 
   if (!parent) {
@@ -26,7 +28,10 @@ function getParents(node: ITreeNode, nodeMetaById: Record<ITreeNode['id'], ITree
   return [parent, ...getParents(parent, nodeMetaById)]
 }
 
-export function useTreeStore(config?: { treeId?: string, treeProps?: ITreeProps }) {
+export function useTreeStore<T extends IItem = IItem>(config?: {
+  treeId?: string
+  treeProps?: ITreeProps<T>
+}) {
   const { treeId, treeProps } = config ?? {}
 
   const _treeId = injectLocal(treeIdKey, treeId ?? useId())
@@ -34,29 +39,29 @@ export function useTreeStore(config?: { treeId?: string, treeProps?: ITreeProps 
 
   return defineStore(`tree.${_treeId}`, () => {
     // Utils
-    const emits = ref<ITreeEmitFncs>({
+    const emits = ref<ITreeEmitFncs<T>>({
       nodeClick: () => {},
       nodeFocus: () => {},
       nodeBlur: () => {},
     })
 
     // Layout
-    const childrenKey = ref(treeProps?.childrenKey ?? 'children')
+    const childrenKey = ref(treeProps?.childrenKey ?? 'children') as Ref<string>
     const maxLevel = ref(treeProps?.maxLevel)
     const loadingByNodeId = ref<Record<ITreeNode['id'], boolean>>({})
 
     // Search
     const search = ref(treeProps?.search)
 
-    const searchConfig = ref<ITreeProps['searchConfig']>(
+    const searchConfig = ref(
       treeProps?.searchConfig ?? getComponentProps('tree').searchConfig(),
-    )
+    ) as Ref<ITreeProps<T>['searchConfig']>
 
     const isSearched = computed(() => !!search.value)
 
     // Nodes
-    const nodesSource = ref<ITreeNode[]>(treeProps?.modelValue ?? [])
-    const nodeMetaById = reactive<Record<ITreeNode['id'], ITreeNodeMeta>>(
+    const nodesSource = ref(treeProps?.modelValue ?? []) as Ref<ITreeNode<T>[]>
+    const nodeMetaById = reactive<Record<ITreeNode['id'], ITreeNodeMeta<T>>>(
       treeProps?.meta ?? {},
     )
 
@@ -70,25 +75,25 @@ export function useTreeStore(config?: { treeId?: string, treeProps?: ITreeProps 
       const nodesSearched = searchConfig.value?.fnc
         ? await searchConfig.value.fnc(search.value, nodes.value)
         : await searchData({
-          searchRef: search.value,
-          rowsRef: nodes,
-          fuseOptions: {
-            keys: ['name'],
-            useExtendedSearch: true,
-            ...searchConfig.value?.fuseOptions,
-          },
-          fuseSearchToken: searchConfig.value?.fuseSearchToken ?? "'",
-        })
+            searchRef: search.value,
+            rowsRef: nodes,
+            fuseOptions: {
+              keys: ['name'],
+              useExtendedSearch: true,
+              ...searchConfig.value?.fuseOptions,
+            },
+            fuseSearchToken: searchConfig.value?.fuseSearchToken ?? "'",
+          })
 
       const nodesSearchedRows = nodesSearched.map(res => {
         return searchConfig.value?.fnc
           ? res
           : res.item
-      }) as ITreeNode[]
+      }) as ITreeNode<T>[]
 
       // When `showCollapsedWhenSearched` is true, we show all nodes
       if (collapsingConfig.value?.showCollapsedWhenSearched && search.value) {
-        return nodesSearchedRows as ITreeNode[]
+        return nodesSearchedRows as ITreeNode<T>[]
       }
 
       // Otherwise, we only show nodes that are not collapsed
@@ -96,18 +101,18 @@ export function useTreeStore(config?: { treeId?: string, treeProps?: ITreeProps 
         const parents = getParents(node as ITreeNode, nodeMetaById)
 
         return parents.every(parent => !nodeMetaById[parent.id]?.collapsed)
-      }) as ITreeNode[]
+      }) as ITreeNode<T>[]
     })
 
     const nodeById = computed(() => {
-      return nodes.value.reduce<Record<ITreeNode['id'], ITreeNode>>((agg, node) => {
+      return nodes.value.reduce<Record<ITreeNode['id'], ITreeNode<T>>>((agg, node) => {
         agg[node.id] = node
 
         return agg
-      }, {} as Record<ITreeNode['id'], ITreeNode>)
+      }, {} as Record<ITreeNode['id'], ITreeNode<T>>)
     })
 
-    function insertNodes(_nodes: ITreeNode[], parent?: ITreeNode | null) {
+    function insertNodes(_nodes: ITreeNode<T>[], parent?: ITreeNode<T> | null) {
       if (parent) {
         let parentChildren = get(parent, childrenKey.value)
 
@@ -125,7 +130,7 @@ export function useTreeStore(config?: { treeId?: string, treeProps?: ITreeProps 
       }
     }
 
-    function removeNodes(_nodes: TreeNodeModel[]) {
+    function removeNodes(_nodes: ITreeNode<T>[]) {
       _nodes.forEach(node => {
         const parent = nodeMetaById[node.id]?.parent
 
@@ -145,14 +150,14 @@ export function useTreeStore(config?: { treeId?: string, treeProps?: ITreeProps 
     }
 
     // Data fetching
-    const loadChildren = ref<ITreeProps['loadChildren']>(treeProps?.loadChildren)
+    const loadChildren = ref<ITreeProps<T>['loadChildren']>(treeProps?.loadChildren)
 
     // Collapsing
-    const collapsingConfig = ref<ITreeProps['collapsingConfig']>(
+    const collapsingConfig = ref<ITreeProps<T>['collapsingConfig']>(
       treeProps?.collapsingConfig ?? getComponentProps('tree').collapsingConfig(),
     )
 
-    async function toggleCollapse(node: ITreeNode) {
+    async function toggleCollapse(node: ITreeNode<T>) {
       const nodeId = node.id
       const nodeMeta = nodeMetaById[node.id]
       if (!nodeMeta || !nodeMetaById[nodeId]) {
@@ -167,6 +172,7 @@ export function useTreeStore(config?: { treeId?: string, treeProps?: ITreeProps 
         loadingByNodeId.value[node.id] = true
 
         const res = await handleRequest(
+          // @ts-expect-error Some weird type
           () => loadChildren.value?.fnc(node) ?? [],
           {
             onComplete: () => loadingByNodeId.value[node.id] = false,
@@ -188,13 +194,13 @@ export function useTreeStore(config?: { treeId?: string, treeProps?: ITreeProps 
     }
 
     // Selection
-    const selection = ref<ITreeProps['selection']>(treeProps?.selection)
+    const selection = ref(treeProps?.selection) as Ref<ITreeProps<T>['selection']>
 
-    const selectionConfig = ref<ITreeProps['selectionConfig']>(
+    const selectionConfig = ref<ITreeProps<T>['selectionConfig']>(
       treeProps?.selectionConfig ?? getComponentProps('tree').selectionConfig(),
     )
 
-    function isSelected(node: ITreeNode) {
+    function isSelected(node: ITreeNode<T>) {
       if (!selectionConfig.value?.enabled) {
         return false
       }
@@ -210,7 +216,7 @@ export function useTreeStore(config?: { treeId?: string, treeProps?: ITreeProps 
       return idsSelected.includes(node.id)
     }
 
-    function handleSelect(payload: { node: ITreeNode, ev?: MouseEvent }) {
+    function handleSelect(payload: { node: ITreeNode<T>, ev?: MouseEvent }) {
       const { node, ev } = payload
       emits.value.nodeClick({ node, ev })
 
@@ -257,7 +263,7 @@ export function useTreeStore(config?: { treeId?: string, treeProps?: ITreeProps 
     }
 
     // Node focusing
-    const nodeFocused = ref<ITreeNode>()
+    const nodeFocused = ref<ITreeNode<T>>()
 
     watch(nodeFocused, (node, oldNode) => {
       if (!node) {

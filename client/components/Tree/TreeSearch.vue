@@ -1,7 +1,7 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends IItem = IItem">
 import type { ITreeProps } from '$ui'
 
-type IProps = Pick<ITreeProps, 'search' | 'searchConfig'>
+type IProps = Pick<ITreeProps<T>, 'search' | 'searchConfig'>
 
 defineProps<IProps>()
 

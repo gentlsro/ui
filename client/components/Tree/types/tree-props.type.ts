@@ -1,11 +1,11 @@
+import type { ITextInputProps } from '$ui'
 import type { AllowedComponentProps, CSSProperties } from 'vue'
 
 // Types
 import type { ITreeNodeMeta } from './tree-node-meta.type'
 import type { FuseOptions } from '@vueuse/integrations/useFuse.mjs'
-import type { ITextInputProps } from '$ui'
 
-export type ITreeProps = {
+export type ITreeProps<T extends IItem = IItem> = {
   /**
    * Whether to show connectors between nodes
    *
@@ -23,7 +23,7 @@ export type ITreeProps = {
   /**
    * The data (nodes) of the tree
    */
-  modelValue?: ITreeNode[]
+  modelValue?: T[]
 
   /**
    * The maximum level of the tree
@@ -34,7 +34,7 @@ export type ITreeProps = {
    * The meta containing info if the current state of nodes
    * (e.g. if they are collapsed, or children are loaded, ...)
    */
-  meta?: Record<ITreeNode['id'], ITreeNodeMeta>
+  meta?: Record<T['id'], ITreeNodeMeta<T>>
 
   /**
    * The element to use for the nodes
@@ -60,7 +60,7 @@ export type ITreeProps = {
     /**
      * Function that is used for the search
      */
-    fnc?: (search: string | undefined, nodes: ITreeNode[]) => ITreeNode[] | Promise<ITreeNode[]>
+    fnc?: (search: string | undefined, nodes: T[]) => T[] | Promise<T[]>
 
     /**
      * The extended search token for fuse.js library
@@ -73,7 +73,7 @@ export type ITreeProps = {
     /**
      * Fuse.js options
      */
-    fuseOptions?: FuseOptions<any>
+    fuseOptions?: FuseOptions<T>
 
     /**
      * Props to pass to the search input
@@ -91,7 +91,7 @@ export type ITreeProps = {
      *
      * This function can be used to override this behavior.
      */
-    hasChildrenFnc?: (node: ITreeNode) => boolean
+    hasChildrenFnc?: (node: T) => boolean
 
     /**
      * When true, the tree nodes will be shown even if their parents are collapsed
@@ -114,7 +114,7 @@ export type ITreeProps = {
     /**
      * Function to be used for loading the children nodes
      */
-    fnc: (node: ITreeNode) => any
+    fnc: (node: T) => Promise<T[]> | T[]
 
     /**
      * Key to get the payload from the `fnc` response
@@ -125,7 +125,7 @@ export type ITreeProps = {
   /**
    * The selected nodes
    */
-  selection?: ITreeNode | ITreeNode['id'] | Array<Pick<ITreeNode, 'id'> | ITreeNode['id']>
+  selection?: T | ITreeNode<T>['id'] | Array<T> | Array<ITreeNode<T>['id']>
 
   /**
    * The selection configuration
@@ -170,12 +170,12 @@ export type ITreeProps = {
     /**
      * Class to apply to the nodes
      */
-    nodeClass?: ClassType | ((payload: { node: T, isSelected: boolean }) => ClassType)
+    nodeClass?: ((payload: { node: T, isSelected: boolean }) => ClassType)
 
     /**
      * Style to apply to the nodes
      */
-    nodeStyle?: CSSProperties
+    nodeStyle?: ((payload: { node: T, isSelected: boolean }) => CSSProperties)
 
     /**
      * Margin (left) for the tree nodes. Uses regular CSS `margin-left` syntax

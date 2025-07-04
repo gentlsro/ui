@@ -1,9 +1,10 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends ITreeNode">
 import { getActivePinia } from 'pinia'
 
 // Types
 import type { ITreeProps } from './types/tree-props.type'
 import type { ITreeEmits } from './types/tree-emits.type'
+import type { ITreeNodeMeta } from './types/tree-node-meta.type'
 
 // Functions
 import { useTreeKeyboard } from './functions/useTreeKeyboard'
@@ -12,11 +13,11 @@ import { getComponentMergedProps, getComponentProps } from '../../functions/get-
 // Store
 import { treeIdKey, useTreeStore } from './stores/tree.store'
 
-const props = withDefaults(defineProps<ITreeProps>(), {
+const props = withDefaults(defineProps<ITreeProps<T>>(), {
   ...getComponentProps('tree'),
 })
 
-const emits = defineEmits<ITreeEmits>()
+const emits = defineEmits<ITreeEmits<T>>()
 
 // Utils
 const uuid = injectLocal(treeIdKey, useId()) as string
@@ -24,17 +25,18 @@ const uuid = injectLocal(treeIdKey, useId()) as string
 provideLocal(treeIdKey, uuid)
 
 // Layout
-const maxLevel = toRef(props, 'maxLevel')
-const selection = defineModel<ITreeProps['selection']>('selection')
-const search = defineModel<ITreeProps['search']>('search')
-const meta = defineModel<ITreeProps['meta']>('meta', { default: () => ({}) })
-const nodes = defineModel<NonNullable<ITreeProps['modelValue']>>({
+const maxLevel = toRef(props, 'maxLevel') as Ref<number | undefined>
+const childrenKey = toRef(props, 'childrenKey') as Ref<string>
+const selection = defineModel('selection') as Ref<ITreeProps<T>['selection']>
+const search = defineModel<ITreeProps<T>['search']>('search')
+const meta = defineModel<Record<ITreeNode['id'], ITreeNodeMeta<T>>>('meta', { default: () => ({}) })
+const nodes = defineModel<NonNullable<ITreeNode<T>[]>>({
   default: getComponentProps('tree').modelValue,
 })
 
 // Merged props
 const mergedProps = computed(() => {
-  return getComponentMergedProps('tree', props)
+  return getComponentMergedProps('tree', props) as ITreeProps<T>
 })
 
 // Store
@@ -65,11 +67,13 @@ syncRef(nodes, nodesSource, { direction: 'both' })
 syncRef(maxLevel, storeMaxLevel, { direction: 'ltr' })
 syncRef(toRef(mergedProps.value, 'collapsingConfig'), storeCollapsingConfig, { direction: 'ltr' })
 syncRef(toRef(mergedProps.value, 'selectionConfig'), storeSelectionConfig, { direction: 'ltr' })
-syncRef(selection, storeSelection, { direction: 'both' })
 syncRef(toRef(mergedProps.value, 'searchConfig'), storeSearchConfig, { direction: 'ltr' })
 syncRef(search, storeSearch, { direction: 'both' })
-syncRef(toRef(props, 'childrenKey', 'children'), storeChildrenKey, { direction: 'ltr' })
+syncRef(childrenKey, storeChildrenKey, { direction: 'ltr' })
 syncRef(meta, storeNodeMetaById, { direction: 'rtl' })
+
+// @ts-expect-error Some scuffed type
+syncRef(selection, storeSelection, { direction: 'both' })
 
 loadChildren.value = props.loadChildren
 

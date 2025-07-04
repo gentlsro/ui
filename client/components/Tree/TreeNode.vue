@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends IItem = IItem">
 // Types
 import type { ITreeProps } from './types/tree-props.type'
 
@@ -8,9 +8,9 @@ import { getParents } from './functions/get-parents'
 
 type IProps = {
   connectors?: boolean
-  node: ITreeNode
-  nodeEl?: ITreeProps['nodeEl']
-  ui?: ITreeProps['ui']
+  node: ITreeNode<T>
+  nodeEl?: ITreeProps<T>['nodeEl']
+  ui?: ITreeProps<T>['ui']
 }
 
 const props = defineProps<IProps>()
@@ -29,7 +29,7 @@ const {
 } = storeToRefs(treeStore)
 
 // Layout
-const node = toRef(props, 'node')
+const node = toRef(props, 'node') as Ref<ITreeNode<T>>
 
 const isLoading = computed(() => {
   return loadingByNodeId.value[node.value.id] ?? false

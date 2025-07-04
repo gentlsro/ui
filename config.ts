@@ -1187,6 +1187,7 @@ export const defaultComponentsConfig = {
       meta: undefined,
       modelValue: [],
       search: '',
+      childrenKey: 'children',
       searchConfig: { enabled: true, fnc: undefined },
       selection: undefined,
       selectionConfig: { multi: false, emitKey: false },

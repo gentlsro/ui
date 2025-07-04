@@ -1,5 +1,5 @@
-export type ITreeEmitFncs = {
-  nodeClick: (payload: { node: ITreeNode, ev?: MouseEvent }) => void
-  nodeFocus: (payload: { node: ITreeNode }) => void
-  nodeBlur: (payload: { node?: ITreeNode }) => void
+export type ITreeEmitFncs<T extends IItem = IItem> = {
+  nodeClick: (payload: { node: T, ev?: MouseEvent }) => void
+  nodeFocus: (payload: { node: T }) => void
+  nodeBlur: (payload: { node?: T }) => void
 }

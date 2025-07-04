@@ -1,6 +1,6 @@
-export type ITreeNodeMeta = {
+export type ITreeNodeMeta<T extends IItem = IItem> = {
   level: number
   childrenLoaded: boolean
-  parent?: ITreeNode | null
+  parent?: ITreeNode<T> | null
   collapsed?: boolean
 }

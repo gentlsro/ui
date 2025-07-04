@@ -1,5 +1,5 @@
-export type ITreeEmits = {
-  (e: 'click:node', payload: { node: ITreeNode, ev?: MouseEvent }): void
-  (e: 'focus:node', payload: { node: ITreeNode }): void
-  (e: 'blur:node', payload: { node?: ITreeNode }): void
+export type ITreeEmits<T extends IItem = IItem> = {
+  (e: 'click:node', payload: { node: T, ev?: MouseEvent }): void
+  (e: 'focus:node', payload: { node: T }): void
+  (e: 'blur:node', payload: { node?: T }): void
 }

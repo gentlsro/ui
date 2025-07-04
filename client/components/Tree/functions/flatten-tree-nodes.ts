@@ -10,13 +10,13 @@ function getDefaultNodeMeta(): ITreeNodeMeta {
   }
 }
 
-export function flattenTreeNodes(
-  nodes: ITreeNode[],
+export function flattenTreeNodes<T extends IItem = IItem>(
+  nodes: ITreeNode<T>[],
   options?: {
     childrenKey?: string
     level?: number
-    nodeMetaById?: Record<ITreeNode['id'], ITreeNodeMeta>
-    parent?: ITreeNode | null
+    nodeMetaById?: Record<ITreeNode['id'], ITreeNodeMeta<T>>
+    parent?: ITreeNode<T> | null
   },
 ) {
   const {
@@ -26,11 +26,11 @@ export function flattenTreeNodes(
     parent,
   } = options ?? {}
 
-  const _nodes: ITreeNode[] = []
+  const _nodes: ITreeNode<T>[] = []
 
   nodes.forEach(node => {
     // We adjust the meta
-    const nodeMeta = nodeMetaById[node.id] ?? getDefaultNodeMeta() as ITreeNodeMeta
+    const nodeMeta = nodeMetaById[node.id] ?? getDefaultNodeMeta() as ITreeNodeMeta<T>
     nodeMeta.level = level
     nodeMeta.parent = parent
 
@@ -39,7 +39,7 @@ export function flattenTreeNodes(
     // We add the node
     _nodes.push(node)
 
-    const children = get(node, childrenKey) as ITreeNode[]
+    const children = get(node, childrenKey) as ITreeNode<T>[]
     if (children) {
       _nodes.push(
         ...flattenTreeNodes(
