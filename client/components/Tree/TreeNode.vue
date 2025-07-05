@@ -5,6 +5,7 @@ import type { ITreeProps } from './types/tree-props.type'
 // Functions
 import { useTreeStore } from './stores/tree.store'
 import { getParents } from './functions/get-parents'
+import { useTreeDragAndDrop } from './composables/useTreeDragAndDrop'
 
 type IProps = {
   connectors?: boolean
@@ -14,6 +15,9 @@ type IProps = {
 }
 
 const props = defineProps<IProps>()
+
+// Utils
+const { createDraggable } = useTreeDragAndDrop()
 
 // Store
 const treeStore = useTreeStore()
@@ -26,9 +30,13 @@ const {
   maxLevel,
   childrenKey,
   collapsingConfig,
+  emits,
+  dndConfig,
+  dragMeta,
 } = storeToRefs(treeStore)
 
 // Layout
+const treeNodeEl = useTemplateRef('treeNodeEl')
 const node = toRef(props, 'node') as Ref<ITreeNode<T>>
 
 const isLoading = computed(() => {
@@ -58,6 +66,7 @@ const treeNodeClass = computed(() => {
     'is-multi': selectionConfig.value?.multi,
     'is-selectable': selectionConfig.value?.enabled && !selectionConfig.value?.multi,
     'is-focused': nodeFocused.value?.id === node.value.id,
+    'is-open': !isCollapsed.value,
   }
 })
 
@@ -90,7 +99,10 @@ const collapseBtnClass = computed(() => {
 const path = computed(() => {
   const parents = getParents(node.value, nodeMetaById.value)
 
-  return parents.toReversed().map(p => p.name).join(' > ')
+  return {
+    path: nodeMeta.value?.path,
+    pathLabel: parents.toReversed().map(p => p.name).join(' > '),
+  }
 })
 
 // Selection
@@ -106,6 +118,10 @@ function handleClickNode(ev: MouseEvent) {
   if (!selectionConfig.value?.multi) {
     treeStore.handleSelect({ node: node.value, ev })
   }
+}
+
+function handleContextMenu(ev: MouseEvent) {
+  emits.value.nodeContextMenu({ node: node.value, ev })
 }
 
 // Collapsing
@@ -128,15 +144,36 @@ const nodeStyle = computed(() => {
     ? props.ui.nodeStyle({ node: node.value, isSelected: isSelected.value })
     : props.ui?.nodeStyle
 })
+
+// D'n'D
+onMounted(() => {
+  if (!dndConfig.value?.enabled) {
+    return
+  }
+
+  nextTick(() => {
+    // @ts-expect-error
+    const _el = unrefElement(treeNodeEl) as HTMLElement
+
+    createDraggable({
+      el: _el,
+      item: node.value,
+    })
+  })
+})
 </script>
 
 <template>
   <Component
     :is="nodeEl ?? 'div'"
+    ref="treeNodeEl"
     class="tree-node"
     :class="[treeNodeClass, nodeClass]"
     :style="[treeNodeStyle, nodeStyle]"
+    :data-id="node.id"
+    :data-path="path.path"
     @click="handleClickNode"
+    @contextmenu="handleContextMenu"
   >
     <slot
       :collapse="handleToggleCollapse"
@@ -177,7 +214,7 @@ const nodeStyle = computed(() => {
             v-if="isSearched"
             class="tree-node__content-path"
           >
-            {{ path }}
+            {{ path.pathLabel }}
           </span>
         </div>
       </slot>

@@ -21,6 +21,13 @@ export type ITreeProps<T extends IItem = IItem> = {
   childrenKey?: string
 
   /**
+   * The key to use for the parent node
+   *
+   * @default 'parentId'
+   */
+  parentIdKey?: string
+
+  /**
    * The data (nodes) of the tree
    */
   modelValue?: T[]
@@ -105,6 +112,65 @@ export type ITreeProps<T extends IItem = IItem> = {
      * Whether the collapse button takes space in case there are no children
      */
     collapseBtnTakesSpace?: boolean
+  }
+
+  dndConfig?: {
+    /**
+     * Whether the drag and drop is enabled
+     */
+    enabled?: boolean
+
+    /**
+     * The mode used for dropping the node
+     *
+     * @default 'parent'
+     *
+     * - `parent`: The node will be dropped as a child of the parent node
+     * - `place`: The node will be dropped at specific place (e.g. above or below a node)
+     */
+    dropMode?: 'parent' | 'place'
+
+    /**
+     * Function that is used to check if a node can be dropped at given node
+     */
+    canBeDropped?: (payload: {
+      draggedNode: T
+      targetNode?: T
+      nodeById: Record<string, T>
+      nodeMetaById: Record<string, ITreeNodeMeta<T>>
+    }) => boolean
+
+    /**
+     * Function used to get the parent node when dropping over some node
+     * Return `null` or `undefined` if no parent node is found
+     *
+     * This is useful when we have a structure of different "types" of nodes,
+     * let's say "ITEM" and "GROUP"
+     *
+     * Obviously, we cannot drop "ITEM" on an "ITEM", souse this fnc to return the
+     * parent "GROUP" node (if there is any)
+     *
+     * NOTE: This is relevant only for `dropMode = parent`
+     */
+    getParentNode?: (payload: {
+      draggedNode: T
+      targetNode?: T
+      nodeById: Record<string, T>
+      nodeMetaById?: Record<string, ITreeNodeMeta<T>>
+    }) => ITreeNode<T> | undefined | null
+
+    /**
+     * Function that is called when a node is moved
+     *
+     * Use-case: Call API
+     */
+    onMoved?: (payload: {
+      node: T
+      to?: T | null
+      nodeById: Record<string, T>
+      nodeMetaById?: Record<string, ITreeNodeMeta<T>>
+      revert: () => void
+    }) => void | Promise<void>
   }
 
   /**

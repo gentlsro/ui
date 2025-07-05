@@ -8,6 +8,7 @@ import type { ITreeNodeMeta } from './types/tree-node-meta.type'
 
 // Functions
 import { useTreeKeyboard } from './functions/useTreeKeyboard'
+import { treeGetExposed } from './functions/tree-get-exposed'
 import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
 
 // Store
@@ -27,6 +28,7 @@ provideLocal(treeIdKey, uuid)
 // Layout
 const maxLevel = toRef(props, 'maxLevel') as Ref<number | undefined>
 const childrenKey = toRef(props, 'childrenKey') as Ref<string>
+const parentIdKey = toRef(props, 'parentIdKey') as Ref<string>
 const selection = defineModel('selection') as Ref<ITreeProps<T>['selection']>
 const search = defineModel<ITreeProps<T>['search']>('search')
 const meta = defineModel<Record<ITreeNode['id'], ITreeNodeMeta<T>>>('meta', { default: () => ({}) })
@@ -42,6 +44,7 @@ const mergedProps = computed(() => {
 // Store
 const store = useTreeStore({ treeProps: props })
 const {
+  treeEl,
   nodesSource,
   loadChildren,
   search: storeSearch,
@@ -53,13 +56,16 @@ const {
   selection: storeSelection,
   selectionConfig: storeSelectionConfig,
   childrenKey: storeChildrenKey,
+  parentIdKey: storeParentIdKey,
   emits: storeEmits,
+  dndConfig: storeDndConfig,
 } = storeToRefs(store)
 
 storeEmits.value = {
   nodeClick: payload => emits('click:node', payload),
   nodeFocus: payload => emits('focus:node', payload),
   nodeBlur: payload => emits('blur:node', payload),
+  nodeContextMenu: payload => emits('contextmenu:node', payload),
 }
 
 // Sync with store
@@ -68,8 +74,10 @@ syncRef(maxLevel, storeMaxLevel, { direction: 'ltr' })
 syncRef(toRef(mergedProps.value, 'collapsingConfig'), storeCollapsingConfig, { direction: 'ltr' })
 syncRef(toRef(mergedProps.value, 'selectionConfig'), storeSelectionConfig, { direction: 'ltr' })
 syncRef(toRef(mergedProps.value, 'searchConfig'), storeSearchConfig, { direction: 'ltr' })
+syncRef(toRef(mergedProps.value, 'dndConfig'), storeDndConfig, { direction: 'ltr' })
 syncRef(search, storeSearch, { direction: 'both' })
 syncRef(childrenKey, storeChildrenKey, { direction: 'ltr' })
+syncRef(parentIdKey, storeParentIdKey, { direction: 'ltr' })
 syncRef(meta, storeNodeMetaById, { direction: 'rtl' })
 
 // @ts-expect-error Some scuffed type
@@ -78,7 +86,7 @@ syncRef(selection, storeSelection, { direction: 'both' })
 loadChildren.value = props.loadChildren
 
 // Init keyboard navigation
-const { treeEl } = useTreeKeyboard()
+useTreeKeyboard()
 
 // Lifecycle
 // Dispose of store on unmount
@@ -87,6 +95,8 @@ onUnmounted(() => {
   const pinia = getActivePinia()
   delete pinia?.state.value[store.$id]
 })
+
+defineExpose(treeGetExposed())
 </script>
 
 <template>
@@ -143,6 +153,14 @@ onUnmounted(() => {
             />
           </template>
         </TreeNode>
+      </template>
+
+      <!-- Drop indicator -->
+      <template
+        v-if="storeDndConfig?.enabled"
+        #inner
+      >
+        <TreeDropIndicator />
       </template>
     </VirtualScroller>
   </div>

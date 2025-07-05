@@ -1188,12 +1188,14 @@ export const defaultComponentsConfig = {
       modelValue: [],
       search: '',
       childrenKey: 'children',
+      parentIdKey: 'parentId',
       searchConfig: { enabled: true, fnc: undefined },
       selection: undefined,
       selectionConfig: { multi: false, emitKey: false },
+      dndConfig: { enabled: false, dropMode: 'parent' },
       ui: { nodePadding: '1rem' },
     },
-    merge: ['collapsingConfig', 'searchConfig', 'selectionConfig', 'ui'],
+    merge: ['collapsingConfig', 'searchConfig', 'selectionConfig', 'dndConfig', 'ui'],
   },
 
   // ValueFormatter

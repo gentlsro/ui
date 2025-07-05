@@ -15,6 +15,10 @@ const isEditable = computed(() => {
 })
 
 function handleClick() {
+  if (!isEditable.value) {
+    return
+  }
+
   if (!props.multi) {
     props.openFileDialog()
   }

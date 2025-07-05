@@ -5,13 +5,11 @@ export function useTreeKeyboard() {
   // Store
   const treeStore = useTreeStore()
   const {
+    treeEl,
     nodesVisible,
     nodeMetaById,
     nodeFocused,
   } = storeToRefs(treeStore)
-
-  // Layout
-  const treeEl = ref<HTMLDivElement>()
 
   const { focused } = useFocusWithin(treeEl)
 
@@ -93,9 +91,5 @@ export function useTreeKeyboard() {
 
         break
     }
-  }
-
-  return {
-    treeEl,
   }
 }

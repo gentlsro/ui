@@ -1,14 +1,16 @@
+import { klona } from 'klona/full'
 import { useSearching } from '$utils'
 
 // Types
 import type { ITreeProps } from '../types/tree-props.type'
 import type { ITreeEmitFncs } from '../types/tree-emit-fncs.type'
 import type { ITreeNodeMeta } from '../types/tree-node-meta.type'
+import type { ITreeDragMeta } from '../types/tree-drag-meta.type'
 
 // Functions
 import { getChildren } from '../functions/get-children'
-import { flattenTreeNodes } from '../functions/flatten-tree-nodes'
 import { getComponentProps } from '../../../functions/get-component-props'
+import { flattenTreeNodes, getTreeNodeMeta } from '../functions/flatten-tree-nodes'
 
 export const treeIdKey = Symbol('__treeId')
 
@@ -43,10 +45,13 @@ export function useTreeStore<T extends IItem = IItem>(config?: {
       nodeClick: () => {},
       nodeFocus: () => {},
       nodeBlur: () => {},
+      nodeContextMenu: () => {},
     })
 
     // Layout
+    const treeEl = ref<any>()
     const childrenKey = ref(treeProps?.childrenKey ?? 'children') as Ref<string>
+    const parentIdKey = ref(treeProps?.parentIdKey ?? 'parentId') as Ref<string>
     const maxLevel = ref(treeProps?.maxLevel)
     const loadingByNodeId = ref<Record<ITreeNode['id'], boolean>>({})
 
@@ -123,10 +128,30 @@ export function useTreeStore<T extends IItem = IItem>(config?: {
 
         parentChildren.push(..._nodes)
 
+        _nodes.forEach(node => {
+          set(node, parentIdKey.value, parent?.id)
+
+          nodeMetaById[node.id] = getTreeNodeMeta({
+            node,
+            nodeMetaById,
+            parent,
+          })
+        })
+
         // Trigger reactivity manually because we are changing nested data
         nodes.trigger()
       } else {
-        nodesSource.value.push(..._nodes)
+        nodesSource.value = [...nodesSource.value, ..._nodes]
+
+        _nodes.forEach(node => {
+          set(node, parentIdKey.value, null)
+
+          nodeMetaById[node.id] = getTreeNodeMeta({
+            node,
+            nodeMetaById,
+            parent: null,
+          })
+        })
       }
     }
 
@@ -193,6 +218,56 @@ export function useTreeStore<T extends IItem = IItem>(config?: {
       nodes.trigger()
     }
 
+    function collapseAll() {
+      function collapseNodeRecursively(node: ITreeNode<T>) {
+        const nodeMeta = nodeMetaById[node.id]
+
+        if (nodeMeta) {
+          nodeMeta.collapsed = true
+        }
+
+        // Get children using the dynamic childrenKey
+        const children = get(node, childrenKey.value) as ITreeNode<T>[]
+
+        if (children && Array.isArray(children)) {
+          children.forEach(child => {
+            collapseNodeRecursively(child)
+          })
+        }
+      }
+
+      nodesSource.value.forEach(node => {
+        collapseNodeRecursively(node)
+      })
+
+      nodes.trigger()
+    }
+
+    function expandAll() {
+      function expandNodeRecursively(node: ITreeNode<T>) {
+        const nodeMeta = nodeMetaById[node.id]
+
+        if (nodeMeta) {
+          nodeMeta.collapsed = false
+        }
+
+        // Get children using the dynamic childrenKey
+        const children = get(node, childrenKey.value) as ITreeNode<T>[]
+
+        if (children && Array.isArray(children)) {
+          children.forEach(child => {
+            expandNodeRecursively(child)
+          })
+        }
+      }
+
+      nodesSource.value.forEach(node => {
+        expandNodeRecursively(node)
+      })
+
+      nodes.trigger()
+    }
+
     // Selection
     const selection = ref(treeProps?.selection) as Ref<ITreeProps<T>['selection']>
 
@@ -243,8 +318,6 @@ export function useTreeStore<T extends IItem = IItem>(config?: {
 
           selection.value = model
             .filter(s => !ids.includes(typeof s === 'object' ? s.id : s))
-        } else {
-          selection.value = undefined
         }
       }
 
@@ -273,9 +346,47 @@ export function useTreeStore<T extends IItem = IItem>(config?: {
       }
     })
 
+    // D'n'D
+    const dndConfig = ref<ITreeProps<T>['dndConfig']>(
+      treeProps?.dndConfig ?? getComponentProps('tree').dndConfig(),
+    )
+
+    const draggedNode = ref<ITreeNode<T>>()
+    const dragMeta = ref<ITreeDragMeta<T>>({})
+
+    async function moveNode(payload: {
+      node: ITreeNode<T>
+      to?: ITreeNode<T> | null
+    }) {
+      const snapshot = klona(nodesSource.value)
+      const { node, to } = payload
+
+      removeNodes([node])
+
+      if (to?.id === '__ROOT__') {
+        insertNodes([node])
+      } else {
+        insertNodes([node], to)
+      }
+
+      function revert() {
+        nodesSource.value = snapshot
+      }
+
+      await dndConfig.value?.onMoved?.({
+        node: payload.node,
+        to: payload.to?.id === '__ROOT__' ? null : payload.to,
+        nodeById: nodeById.value,
+        nodeMetaById,
+        revert,
+      })
+    }
+
     return {
       // Layout
+      treeEl,
       childrenKey,
+      parentIdKey,
       isSearched,
       maxLevel,
       loadingByNodeId,
@@ -297,12 +408,15 @@ export function useTreeStore<T extends IItem = IItem>(config?: {
 
       removeNodes,
       insertNodes,
+      moveNode,
 
       // Data fetching
       loadChildren,
 
       // Collapsing
       collapsingConfig,
+      collapseAll,
+      expandAll,
       toggleCollapse,
 
       // Selection
@@ -310,6 +424,11 @@ export function useTreeStore<T extends IItem = IItem>(config?: {
       selectionConfig,
       isSelected,
       handleSelect,
+
+      // D'n'D
+      dndConfig,
+      draggedNode,
+      dragMeta,
     }
   })()
 }
