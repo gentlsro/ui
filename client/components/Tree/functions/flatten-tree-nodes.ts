@@ -7,6 +7,7 @@ function getDefaultNodeMeta(): ITreeNodeMeta {
     childrenLoaded: false,
     parent: null,
     collapsed: true,
+    path: '',
   }
 }
 
@@ -33,6 +34,9 @@ export function flattenTreeNodes<T extends IItem = IItem>(
     const nodeMeta = nodeMetaById[node.id] ?? getDefaultNodeMeta() as ITreeNodeMeta<T>
     nodeMeta.level = level
     nodeMeta.parent = parent
+    nodeMeta.path = parent
+      ? `${nodeMetaById[parent.id]?.path ?? ''}.children.${node.id}`
+      : node.id.toString()
 
     nodeMetaById[node.id] = nodeMeta
 

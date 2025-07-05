@@ -3,4 +3,5 @@ export type ITreeNodeMeta<T extends IItem = IItem> = {
   childrenLoaded: boolean
   parent?: ITreeNode<T> | null
   collapsed?: boolean
+  path?: string
 }
