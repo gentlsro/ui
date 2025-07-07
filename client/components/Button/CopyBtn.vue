@@ -53,6 +53,7 @@ function handleCopy() {
     :no-uppercase
     bg="white dark:darker"
     no-dim
+    :ripple="false"
     no-hover-effect
     outline="1px"
     :class="[
