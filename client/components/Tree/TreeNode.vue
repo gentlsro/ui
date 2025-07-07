@@ -32,7 +32,7 @@ const {
   collapsingConfig,
   emits,
   dndConfig,
-  dragMeta,
+  nodeById,
 } = storeToRefs(treeStore)
 
 // Layout
@@ -70,13 +70,18 @@ const treeNodeClass = computed(() => {
   }
 })
 
+const nodeChildren = computed(() => {
+  const _node = nodeById.value[node.value.id]
+
+  return get(_node, childrenKey.value)
+})
+
 const collapseBtnClass = computed(() => {
   const {
     hasChildrenFnc,
     collapseBtnTakesSpace,
   } = collapsingConfig.value ?? {}
 
-  const nodeChildren = get(node.value, childrenKey.value)
   const hasChildren = hasChildrenFnc?.(node.value)
 
   if (!isNil(hasChildren)) {
@@ -86,8 +91,8 @@ const collapseBtnClass = computed(() => {
   }
 
   const hasPossiblyChildren = isNil(nodeChildren)
-    || (!nodeMeta.value?.childrenLoaded && !nodeChildren)
-    || nodeChildren?.length
+    || (!nodeMeta.value?.childrenLoaded && !nodeChildren.value)
+    || nodeChildren.value?.length
 
   const isMaxLevel = nodeMeta.value?.level === maxLevel.value
 
