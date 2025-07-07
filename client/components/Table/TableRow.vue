@@ -440,6 +440,7 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
         :ripple="false"
         :transform="handleCopyBtnFormat"
         @click.stop.prevent
+        @mousedown.stop.prevent
       />
     </div>
 
