@@ -235,7 +235,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .tree-node {
-  @apply flex relative items-center p-l-1 rounded-2;
+  @apply flex relative items-center p-l-1 rounded-r-2;
 
   margin-left: calc(var(--level) * var(--treePadding));
 

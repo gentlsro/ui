@@ -38,6 +38,9 @@ function getLabel(tab: ITabProps) {
       :key="tab.id"
       :idx
       :name="`${tab.name}-label`"
+      :btn-style="ui?.tabNavBtnStyle?.(model === tab.name, idx)"
+      :btn-class="ui?.tabNavBtnClass?.(model === tab.name, idx)"
+      :btn-props="tab.props.btnProps?.(model === tab.name, idx)"
       :change-fn="() => model = tab.name"
     >
       <Btn
