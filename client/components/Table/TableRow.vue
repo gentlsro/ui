@@ -437,7 +437,7 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
         class="copy-btn"
         :model-value="column.valueFormatted"
         no-text
-        :format="handleCopyBtnFormat"
+        :transform="handleCopyBtnFormat"
         @click.stop.prevent
       />
     </div>
