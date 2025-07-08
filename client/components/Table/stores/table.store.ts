@@ -225,6 +225,12 @@ export function useTableStore(
 
       return (currentPage.value - 1) * pageSize
     })
+
+    whenever(
+      () => paginationConfig.value?.pageSize,
+      pageSize => { currentPage.value = Math.floor(skip.value / pageSize) + 1 },
+    )
+
     // !SECTION
 
     // SECTION Columns
