@@ -3,7 +3,7 @@
 import type { IQueryBuilderItem } from './types/query-builder-item-props.type'
 
 type IProps = {
-  item: Pick<IQueryBuilderItem, 'value' | 'comparator'>
+  modelValue?: boolean | string
   noDelete?: boolean
   readonly?: boolean
 }
@@ -15,20 +15,20 @@ const emits = defineEmits<{
 }>()
 
 // Layout
-const item = toRef(props, 'item')
+const model = defineModel<boolean | string>()
 
-const model = computed({
+const modelHandler = computed({
   get() {
-    if (isNil(item.value.value)) {
+    if (isNil(model.value)) {
       return null
     }
 
-    return JSON.parse(item.value.value)
+    return JSON.parse(model.value)
   },
   set(val?: any) {
-    item.value.value = val
+    model.value = val
 
-    emits('update:item', item.value)
+    emits('update:item', model.value)
   },
 })
 
