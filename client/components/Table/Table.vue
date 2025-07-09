@@ -165,7 +165,7 @@ const hasToolbar = computed(() => {
 })
 
 tableInitialize()
-defineExpose(tableGetExposed({ initialize: tableInitialize }))
+defineExpose(tableGetExposed({ initialize: () => tableInitialize() }))
 
 // On mount, we get the column' real widths
 onMounted(() => {
