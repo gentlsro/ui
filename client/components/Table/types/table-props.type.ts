@@ -251,7 +251,7 @@ export type ITableProps<
     /**
      * The function that handles the response in case of an error
      */
-    onError?: (error: any, res: any) => void
+    onError?: (error: any, res: any, getStore: () => ReturnType<typeof useTableStore>) => void
 
     /**
      * A function that gets called when the metadata is fetched

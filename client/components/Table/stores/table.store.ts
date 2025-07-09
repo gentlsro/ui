@@ -541,7 +541,7 @@ export function useTableStore(
           onComplete: () => isMetaLoading.value = false,
           onError: (error, res) => {
             isMetaLoading.value = false
-            loadMetaData.value?.onError?.(error, res)
+            loadMetaData.value?.onError?.(error, res, getStore)
           },
         },
       )
