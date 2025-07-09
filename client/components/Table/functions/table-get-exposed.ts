@@ -1,7 +1,7 @@
 import type { Required } from 'utility-types'
+import type { tableInitialize } from './table-initialize'
 
 // Functions
-import { tableInitialize } from './table-initialize'
 import { useTableAutoFit } from '../composables/useTableAutoFit'
 import type { tableBuildFetchPayload } from './table-build-fetch-payload'
 
@@ -9,7 +9,9 @@ import type { tableBuildFetchPayload } from './table-build-fetch-payload'
 import { useTableStore } from '../stores/table.store'
 import { tableSelectRow } from './table-select-row'
 
-export function tableGetExposed() {
+export function tableGetExposed(payload: {
+  initialize: typeof tableInitialize
+}) {
   const { fitColumns } = useTableAutoFit()
   const tableStore = useTableStore()
   const { rowKey, selectionConfig, selection, selectionByKey } = toRefs(tableStore)
@@ -32,6 +34,6 @@ export function tableGetExposed() {
       tableSelectRow(_payload)
     },
     cancelEdit: () => tableStore.cancelCellEdit(),
-    reinitialize: () => tableInitialize(),
+    reinitialize: () => payload.initialize(),
   }
 }
