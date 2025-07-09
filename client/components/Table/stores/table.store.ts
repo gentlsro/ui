@@ -583,9 +583,9 @@ export function useTableStore(
         {
           noResolve: true,
           onComplete: () => isDataLoading.value = false,
-          onError: error => {
+          onError: (error, res) => {
             isDataLoading.value = false
-            loadData.value?.onError?.(error)
+            loadData.value?.onError?.(error, res, getStore)
           },
         },
       )
