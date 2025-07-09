@@ -1,6 +1,7 @@
 import type { Required } from 'utility-types'
 
 // Functions
+import { tableInitialize } from './table-initialize'
 import { useTableAutoFit } from '../composables/useTableAutoFit'
 import type { tableBuildFetchPayload } from './table-build-fetch-payload'
 
@@ -31,5 +32,6 @@ export function tableGetExposed() {
       tableSelectRow(_payload)
     },
     cancelEdit: () => tableStore.cancelCellEdit(),
+    reinitialize: () => tableInitialize(),
   }
 }
