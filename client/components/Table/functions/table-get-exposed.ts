@@ -9,9 +9,7 @@ import type { tableBuildFetchPayload } from './table-build-fetch-payload'
 import { useTableStore } from '../stores/table.store'
 import { tableSelectRow } from './table-select-row'
 
-export function tableGetExposed(payload: {
-  initialize: typeof tableInitialize
-}) {
+export function tableGetExposed() {
   const { fitColumns } = useTableAutoFit()
   const tableStore = useTableStore()
   const { rowKey, selectionConfig, selection, selectionByKey } = toRefs(tableStore)
@@ -34,6 +32,5 @@ export function tableGetExposed(payload: {
       tableSelectRow(_payload)
     },
     cancelEdit: () => tableStore.cancelCellEdit(),
-    reinitialize: () => payload.initialize(),
   }
 }
