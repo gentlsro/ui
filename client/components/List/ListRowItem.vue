@@ -110,7 +110,7 @@ onMounted(() => {
     const _el = unrefElement(el as any) as HTMLElement
     const listElDom = unrefElement(listEl as any)
     const moveHandleElDom = unrefElement(moveHandleEl as any)
-      ?? getElement(props.moveHandleTarget, _el)
+      ?? getElement({ elRef: props.moveHandleTarget, parentEl: _el })
 
     createDraggable({
       el: _el,

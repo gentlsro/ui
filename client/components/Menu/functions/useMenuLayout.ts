@@ -73,8 +73,8 @@ export function useMenuLayout(model: Ref<boolean>, props: IMenuProps) {
     }
 
     // Assign the elements
-    triggerEl.value = getElement(props.target ?? parentEl)
-    referenceEl.value = getElement(props.referenceTarget ?? parentEl)
+    triggerEl.value = getElement({ elRef: props.target ?? parentEl, parentEl })
+    referenceEl.value = getElement({ elRef: props.referenceTarget ?? parentEl, parentEl })
 
     if (referenceEl.value && referenceEl.value instanceof Element) {
       referenceEl.value.classList.add('has-menu')
