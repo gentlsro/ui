@@ -201,7 +201,7 @@ const filterComponentProps = computed(() => {
   <!-- $Empty/Boolean value -->
   <QueryBuilderBooleanInput
     v-else-if="isBooleanishComparator"
-    :item
+    v-model="filterValue"
     no-delete
     :readonly="!editable"
   />
