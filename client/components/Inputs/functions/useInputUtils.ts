@@ -121,8 +121,8 @@ export function useInputUtils(options: IInputUtilsOptions) {
   const getInputElement = () => inputElement.value
   const select = () => inputElement.value?.select()
 
-  const focus = (alignCursor?: boolean) => {
-    inputElement.value?.focus()
+  const focus = (alignCursor?: boolean, preventScroll?: boolean) => {
+    inputElement.value?.focus({ preventScroll })
 
     if (alignCursor === true) {
       mask.value?.alignCursorFriendly()
@@ -269,7 +269,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
   // Autofocus on init
   setTimeout(() => {
     if (props.autofocus) {
-      focus()
+      focus(undefined, true)
     }
   }, props.autofocusTimeout ?? 0)
 
