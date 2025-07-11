@@ -17,7 +17,7 @@ import { tableSelectRow } from './functions/table-select-row'
 // Store
 import { useTableStore } from './stores/table.store'
 
-type IProps = Pick<ITableProps, 'ui' | 'editable' | 'to' | 'showCopyBtn'> & {
+type IProps = Pick<ITableProps, 'ui' | 'editable' | 'to' | 'showCopyBtn' | 'toLinkProps'> & {
   row: any | any[]
   index: number
 }
@@ -307,7 +307,7 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
       :is="RowComponent"
       v-for="(rowData, idx) in rowDataArray"
       :key="idx"
-      v-bind="$attrs"
+      v-bind="{ ...$attrs, ...toLinkProps }"
       class="tr tr--card"
       :class="[rowClassArray[idx], { 'is-selected': isSelected(rowData.row), 'is-clickable': rowClickable }]"
       :style="rowStyleArray[idx]"
@@ -406,7 +406,7 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
   <Component
     :is="RowComponent"
     v-else-if="rowDataArray[0]"
-    v-bind="$attrs"
+    v-bind="{ ...$attrs, ...toLinkProps }"
     class="tr tr--row"
     :class="[
       rowClassArray[0],

@@ -36,6 +36,7 @@ import type { tableExtractPaginationFromUrl } from '../functions/table-extract-p
 import type { tableSerializePagination } from '../functions/table-serialize-pagination'
 import type { tableGetLayoutMeta } from '../functions/table-get-layout-meta'
 import type { ITableFilterItem } from './table-filter-item.type'
+import type { NuxtLinkProps } from '#app'
 
 export type ITableProps<
   K extends typeof tableBuildFetchPayload = typeof tableBuildFetchPayload,
@@ -538,6 +539,11 @@ export type ITableProps<
    * Link to the detail from page
    */
   to?: (row: any, options?: { rowKey?: string }) => RouteLocationRaw
+
+  /**
+   * Props to pass to the NuxtLink component
+   */
+  toLinkProps?: NuxtLinkProps
 
   /**
    * Totals

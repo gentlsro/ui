@@ -1023,6 +1023,7 @@ export const defaultComponentsConfig = {
       },
       initialSchemaConfig: {},
       getFilterComponent: () => undefined,
+      toLinkProps: {},
     },
     merge: [
       'autoFit',
@@ -1035,6 +1036,7 @@ export const defaultComponentsConfig = {
       'loadData',
       'initialSchemaConfig',
       'scrollerConfig',
+      'toLinkProps',
     ],
   },
 
