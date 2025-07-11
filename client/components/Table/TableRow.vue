@@ -206,6 +206,7 @@ function handleSaveCellEditValue() {
 
 function handleSelectToggle(row: IItem, ev?: MouseEvent) {
   const isCtrl = ev && !(ev.ctrlKey || ev.metaKey)
+  console.log('what')
   const isLink = ev && ev.target instanceof HTMLAnchorElement
 
   if (isLink) {
