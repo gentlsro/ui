@@ -245,6 +245,7 @@ onUnmounted(() => {
       :ui="mergedProps.ui"
       :editable
       :to
+      :to-link-props="mergedProps.toLinkProps"
       :show-copy-btn
       :scroller-config="mergedProps.scrollerConfig"
     >
