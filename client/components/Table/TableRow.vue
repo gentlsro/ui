@@ -208,6 +208,12 @@ function handleSelectToggle(row: IItem, ev?: MouseEvent) {
   const isCtrl = ev && (ev.ctrlKey || ev.metaKey)
   const isLink = ev && ev.target instanceof HTMLAnchorElement
 
+  if (isLink) {
+    ev.stopPropagation()
+
+    return
+  }
+
   tableSelectRow({
     row,
     selection,
@@ -219,8 +225,6 @@ function handleSelectToggle(row: IItem, ev?: MouseEvent) {
 
   if (isCtrl) {
     ev.preventDefault()
-    ev.stopPropagation()
-  } else if (isLink) {
     ev.stopPropagation()
   }
 }
