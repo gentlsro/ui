@@ -205,7 +205,7 @@ function handleSaveCellEditValue() {
 }
 
 function handleSelectToggle(row: IItem, ev?: MouseEvent) {
-  const isCtrl = ev && !(ev.ctrlKey || ev.metaKey)
+  const isCtrl = ev && (ev.ctrlKey || ev.metaKey)
 
   tableSelectRow({
     row,
@@ -213,7 +213,7 @@ function handleSelectToggle(row: IItem, ev?: MouseEvent) {
     selectionConfig: selectionConfig.value,
     rowKey: rowKey.value,
     selectionByKey: selectionByKey.value,
-    isSet: isCtrl,
+    isSet: !isCtrl,
   })
 
   if (isCtrl) {
