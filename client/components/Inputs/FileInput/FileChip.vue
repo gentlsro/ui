@@ -9,8 +9,8 @@ import type { FileModel } from '$utils'
 import { getFileLabel } from './functions/get-file-label'
 import { handleDownloadFile } from '$utilsLayer/client/functions/download-file'
 
-type IProps = Pick<IFileInputProps, 'disabled' | 'readonly' | 'downloadUrl'> &
-  { chip: File | IFile | FileModel }
+type IProps = Pick<IFileInputProps, 'disabled' | 'readonly' | 'downloadUrl'>
+  & { chip: File | IFile | FileModel }
 
 defineProps<IProps>()
 
