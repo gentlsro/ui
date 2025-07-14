@@ -54,6 +54,13 @@ export function useTableStore(
     const isMetaLoading = ref(false)
     const isDataLoading = ref(false)
     const isExporting = ref(false)
+
+    /**
+     * By default, reacts to changes in the filter, query builder, search, etc.
+     * This flag is used to prevent that temporarily, for example when we want
+     * to "silently" set the filters without refetching the data.
+     */
+    const isSilentChange = refAutoReset(false, 200)
     const { handleRequest } = useRequest()
 
     /**
@@ -508,7 +515,7 @@ export function useTableStore(
       // We should only sync the state once we're sure every relevant part is loaded
       // We can assume that the meta is loaded if `apiColumns` is not `undefined`
       // and `propsColumns` is not `undefined`
-      if (apiColumns.value && propsColumns.value) {
+      if (apiColumns.value && propsColumns.value && !isSilentChange.value) {
         syncStateColumns()
 
         // Load data with new query params
@@ -613,6 +620,7 @@ export function useTableStore(
       tableName: _storageKey,
       isMetaLoading,
       isDataLoading,
+      isSilentChange,
       isExporting,
       navigate,
 
