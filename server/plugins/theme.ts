@@ -20,7 +20,7 @@ export default defineNitroPlugin(nitroApp => {
 
           const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
           const setting = cookieByName.theme || (prefersDark ? 'dark' : 'light')
-          // cookieByName.theme = setting
+          cookieByName.theme = setting
 
           document.documentElement.setAttribute('class', setting)
         })()
