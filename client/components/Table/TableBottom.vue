@@ -72,13 +72,14 @@ const isLimitReached = computed(() => {
       class="limit-reached"
     >
       <div class="color-warning i-bi:info-lg" />
-      <span>{{ $t('table.limitRowsReached') }}</span>
+      <span font="rem-14 semibold">{{ $t('table.limitRowsReached') }}</span>
 
       <Tooltip
         placement="top"
         w="120"
         :offset="8"
-        text="center"
+        text="center caption"
+        font="rem-14"
       >
         {{ $t('table.limitRowsReachedTooltip') }}
       </Tooltip>
