@@ -24,6 +24,8 @@ const isLimitReached = computed(() => {
     return false
   }
 
+  console.log(rows.value.length, rowsLimit.value)
+
   return rows.value.length >= rowsLimit.value
 })
 
