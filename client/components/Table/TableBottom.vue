@@ -79,7 +79,7 @@ const isLimitReached = computed(() => {
         w="120"
         :offset="8"
         text="center caption"
-        font="rem-14"
+        font="!rem-14"
       >
         {{ $t('table.limitRowsReachedTooltip') }}
       </Tooltip>
