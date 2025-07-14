@@ -196,10 +196,7 @@ defineExpose(listGetExposed())
     </slot>
 
     <!-- Loading -->
-    <slot
-      v-if="isLoading && !items?.length"
-      name="loading"
-    >
+    <slot name="loading">
       <ListLoading />
     </slot>
 
