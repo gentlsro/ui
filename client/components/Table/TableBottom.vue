@@ -7,7 +7,17 @@ const {
   isDataLoading,
   isMetaLoading,
   paginationConfig,
+  rowsLimit,
+  rows,
 } = storeToRefs(useTableStore())
+
+const isLimitReached = computed(() => {
+  if (!rowsLimit.value) {
+    return false
+  }
+
+  return rows.value.length >= rowsLimit.value
+})
 </script>
 
 <template>
@@ -17,6 +27,7 @@ const {
 
     <!-- Center -->
     <TablePagination v-if="paginationConfig?.enabled" />
+
     <!-- Loading -->
     <div
       v-else
@@ -54,6 +65,24 @@ const {
         :no-menu-match-width="true"
       />
     </div>
+
+    <!-- Limit reached -->
+    <div
+      v-if="isLimitReached"
+      class="limit-reached"
+    >
+      <div class="color-warning i-bi:info-lg" />
+      <span>{{ $t('table.limitRowsReached') }}</span>
+
+      <Tooltip
+        placement="top"
+        w="120"
+        :offset="8"
+        text="center"
+      >
+        {{ $t('table.limitRowsReachedTooltip') }}
+      </Tooltip>
+    </div>
   </div>
 </template>
 
@@ -65,6 +94,10 @@ const {
 
   .is-loading {
     @apply absolute left-1/2 -translate-x-1/2 top-0;
+  }
+
+  .limit-reached {
+    @apply absolute inset-0 flex flex-center gap-2 bg-white dark:bg-black rounded-custom;
   }
 }
 </style>

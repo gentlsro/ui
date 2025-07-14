@@ -11,23 +11,11 @@ const {
   isMetaLoading,
   totalPages,
   currentPage,
-  rows,
-  rowsLimit,
   paginationConfig,
 } = storeToRefs(useTableStore())
 
 const isFirstPage = computed(() => currentPage.value === 1)
 const isLastPage = computed(() => currentPage.value === totalPages.value)
-
-const isLimitReached = computed(() => {
-  if (!rowsLimit.value) {
-    return false
-  }
-
-  console.log(rows.value.length, rowsLimit.value)
-
-  return rows.value.length >= rowsLimit.value
-})
 
 const pages = computed(() => {
   // Less than 5 pages
@@ -142,24 +130,6 @@ const pages = computed(() => {
         roudned-full
       />
     </div>
-
-    <!-- Limit reached -->
-    <div
-      v-if="isLimitReached"
-      class="limit-reached"
-    >
-      <div class="color-warning i-bi:info-lg" />
-      <span>{{ $t('table.limitRowsReached') }}</span>
-
-      <Tooltip
-        placement="top"
-        w="120"
-        :offset="8"
-        text="center"
-      >
-        {{ $t('table.limitRowsReachedTooltip') }}
-      </Tooltip>
-    </div>
   </div>
 </template>
 
@@ -177,10 +147,6 @@ const pages = computed(() => {
 
   .is-loading {
     @apply flex flex-center absolute inset-0 rounded-full backdrop-blur-2;
-  }
-
-  .limit-reached {
-    @apply absolute inset-0 flex flex-center gap-2 bg-white dark:bg-black rounded-custom;
   }
 }
 </style>
