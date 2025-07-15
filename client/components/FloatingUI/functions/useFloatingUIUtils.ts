@@ -60,7 +60,7 @@ export function useFloatingUIUtils() {
     const { elRef, parentEl } = payload ?? {}
 
     if (!import.meta.client) {
-      return
+      return null
     }
 
     const el = unref(elRef)
@@ -80,7 +80,7 @@ export function useFloatingUIUtils() {
 
     // When we provided a function to resolve the element, we call it
     else if (typeof el === 'function') {
-      return el(parentEl)
+      return el(parentEl) as HTMLElement
     }
 
     // Otherwise, we assume it's a reference element
