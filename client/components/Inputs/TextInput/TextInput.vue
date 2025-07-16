@@ -106,6 +106,9 @@ defineExpose({
       :readonly
       :disabled
       autocomplete="off"
+      autocorrect="off"
+      autocapitalize="off"
+      spellcheck="false"
       :label="label || placeholder"
       :name="name || path || label || placeholder"
       class="control"
