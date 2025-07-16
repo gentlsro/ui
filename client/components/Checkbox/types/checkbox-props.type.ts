@@ -58,7 +58,7 @@ export type ICheckboxProps = {
   /**
    * Label of the checkbox
    */
-  label?: string | (() => string)
+  label?: string | (() => string) | null
 
   /**
    * Class of the label
