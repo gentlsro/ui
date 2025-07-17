@@ -317,9 +317,6 @@ export function useTableStore(
         queryBuilder.value = state.value.queryBuilder ?? queryBuilderInitializeItems()
       }
 
-      console.log('\n\nQuery builder')
-      console.log(queryBuilder.value)
-
       // Set the pagination
       if (pagination?.take || pagination?.skip) {
         paginationConfig.value.pageSize = pagination.take
