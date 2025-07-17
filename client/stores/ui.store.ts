@@ -79,7 +79,7 @@ export const useUIStore = defineStore('__ui', () => {
   const lastPointerDownType = ref<string>()
   const lastPasteEvent = ref<ClipboardEvent>()
 
-  if (!isInitialized.value) {
+  if (!isInitialized.value && import.meta.client) {
     document.documentElement.addEventListener('pointerdown', ev => {
       lastPointerDownEvent.value = ev
       lastPointerDownEl.value = ev.target as HTMLElement

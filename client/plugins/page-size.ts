@@ -1,5 +1,10 @@
 export default defineNuxtPlugin(() => {
   const { isActiveElementInput } = useUIStore()
+
+  if (!import.meta.client) {
+    return
+  }
+
   const { width, height } = useElementSize(document.documentElement)
   const { isMobile } = useDevice()
 
