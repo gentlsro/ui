@@ -298,6 +298,8 @@ export function useTableStore(
         shouldSchemaBeUsed: noState.value || !state.value?.columns?.length || !uiState.value.table?.autoSaveSchema,
       })
 
+      console.log(qb)
+
       cols = _columns
 
       // Extend columns with grouping and selection
