@@ -298,8 +298,6 @@ export function useTableStore(
         shouldSchemaBeUsed: noState.value || !state.value?.columns?.length || !uiState.value.table?.autoSaveSchema,
       })
 
-      console.log(qb)
-
       cols = _columns
 
       // Extend columns with grouping and selection
@@ -318,6 +316,9 @@ export function useTableStore(
       } else {
         queryBuilder.value = state.value.queryBuilder ?? queryBuilderInitializeItems()
       }
+
+      console.log('\n\nQuery builder')
+      console.log(queryBuilder.value)
 
       // Set the pagination
       if (pagination?.take || pagination?.skip) {
