@@ -36,11 +36,12 @@ export function tableNavigate(payload: {
     currentParams.set(key, value)
   })
 
-  const query = currentParams.entries().reduce((agg, [key, value]) => {
+  // Sentry throws errors here for some reason...
+  const query = currentParams.entries()?.reduce((agg, [key, value]) => {
     agg[key] = decodeURIComponent(value)
 
     return agg
-  }, {} as IItem)
+  }, {} as IItem) ?? {}
 
   navigateTo({ query, replace: true })
 }

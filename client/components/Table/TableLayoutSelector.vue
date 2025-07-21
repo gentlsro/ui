@@ -36,6 +36,7 @@ const isOptionsDialogOpen = ref(false)
 const isLayoutSaveDialogOpen = ref(false)
 const layoutSelected = ref<ITableLayout>()
 const isActionsVisibleLayoutId = ref<string | number>()
+const search = ref('')
 
 function handleLayoutEdit(layout: any) {
   $hide()
@@ -115,6 +116,7 @@ function handleLayoutApply(layout?: ITableLayout) {
       no-uplift
     >
       <List
+        v-model:search="search"
         :items="state.layouts"
         item-label="name"
         data-cy="scheme-search"
@@ -201,6 +203,7 @@ function handleLayoutApply(layout?: ITableLayout) {
     <TableLayoutSaveDialog
       v-model="isLayoutSaveDialogOpen"
       :layout="layoutSelected"
+      :search
       @hide="layoutSelected = undefined"
     />
   </Btn>

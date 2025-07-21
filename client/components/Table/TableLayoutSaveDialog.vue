@@ -15,6 +15,7 @@ import { tableExtractDataFromUrl } from './functions/table-extract-data-from-url
 type IProps = {
   layout?: ITableLayout
   modelValue?: boolean
+  search?: string
 }
 
 const props = defineProps<IProps>()
@@ -70,7 +71,7 @@ const model = defineModel<boolean>({ default: false })
 const {
   model: layout,
   syncFromParent,
-} = useRefReset<ITableLayout>(() => props.layout ?? {} as ITableLayout)
+} = useRefReset<ITableLayout>(() => props.layout ?? { name: props.search ?? '' } as ITableLayout)
 
 const toSave = ref({
   columns: false,
