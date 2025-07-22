@@ -282,6 +282,12 @@ export type ITableProps<
    */
   modifiers?: {
     /**
+     * When true, the table will automatically save the schema to the local storage
+     * on any save to the table (= filter, sort, select, etc.)
+     */
+    autoSaveSchema?: boolean
+
+    /**
      * When true, the table will primarily use the URL to get the proper structure
      * of columns, filters, sorting, etc.
      */

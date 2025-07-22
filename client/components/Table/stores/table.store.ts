@@ -263,7 +263,7 @@ export function useTableStore(
         propsColumns: propsColumns.value,
         apiColumns: apiColumns.value,
         stateColumns: state.value.columns,
-        useState: uiState.value.table?.autoSaveSchema && !noState.value,
+        useState: modifiers.value?.autoSaveSchema && !noState.value,
       }),
     )
 
