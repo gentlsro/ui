@@ -47,6 +47,7 @@ export const useUIStore = defineStore('__ui', () => {
       uiState.value = state as IUIState
     }
   }
+  console.log('Fuck')
 
   // Temporary component
   // Usage: When we need to render a component temporarily to calculate its
