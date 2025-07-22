@@ -985,6 +985,7 @@ export const defaultComponentsConfig = {
         { breakpoint: 1000, count: 1 },
       ],
       modifiers: {
+        autoSaveSchema: true,
         caseInsensitive: true,
         useUrl: true,
       },

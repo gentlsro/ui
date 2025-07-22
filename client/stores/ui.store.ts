@@ -31,7 +31,7 @@ export const useUIStore = defineStore('__ui', () => {
         },
       },
       table: {
-        autoSaveSchema: true,
+        autoSaveSchema: uiConfig.table.props.modifiers?.().autoSaveSchema ?? true,
         fit: uiConfig.table.props.autoFit().mode,
       },
     }),
