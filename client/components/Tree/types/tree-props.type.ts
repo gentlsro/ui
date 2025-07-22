@@ -234,6 +234,16 @@ export type ITreeProps<T extends IItem = IItem> = {
     contentStyle?: CSSProperties
 
     /**
+     * Class to apply to the collapse button
+     */
+    collapseBtnClass?: ClassType
+
+    /**
+     * Style to apply to the collapse button
+     */
+    collapseBtnStyle?: CSSProperties
+
+    /**
      * Class to apply to the nodes
      */
     nodeClass?: ((payload: { node: T, isSelected: boolean }) => ClassType)
