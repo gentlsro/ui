@@ -383,7 +383,7 @@ export function useTableStore(
           return
         }
 
-        return row[field]
+        return get(row, field)
       },
     )
 
