@@ -233,7 +233,7 @@ function handleEditCell(
   rowData: typeof rowDataArray.value[number],
   column: IRowColumn,
 ) {
-  if (!isEditableRow.value) {
+  if (!column.isEditable) {
     return
   }
 
