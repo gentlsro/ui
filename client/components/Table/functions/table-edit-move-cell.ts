@@ -80,7 +80,9 @@ export function tableEditMoveCell(payload: {
     }
   }
 
-  const nextCellEditBtn = nextCell?.querySelector('.edit-btn') as HTMLElement
+  const nextCellEditBtn = isCardView
+    ? nextCell?.querySelector('.edit-btn') as HTMLElement
+    : nextCell as HTMLElement
 
   if (nextCellEditBtn) {
     nextCellEditBtn.click()

@@ -229,7 +229,14 @@ function handleSelectToggle(row: IItem, ev?: MouseEvent) {
   }
 }
 
-function handleEditCell(rowData: typeof rowDataArray.value[number], column: IRowColumn) {
+function handleEditCell(
+  rowData: typeof rowDataArray.value[number],
+  column: IRowColumn,
+) {
+  if (!isEditableRow.value) {
+    return
+  }
+
   cellEdit.value = { row: rowData.row, column: column.column }
   tableStore.loadCellEditValue()
 }
@@ -424,8 +431,24 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
       :class="column.cellClass"
       :data-field="column.column.field"
       :data-key="rowDataArray[0].rowKey"
+      @click="handleEditCell(rowDataArray[0], column)"
     >
+      <!-- Editing -->
+      <template v-if="isEditingCell(rowDataArray[0], column)">
+        <Component
+          :is="column.column._editComponent.component"
+          v-model="cellEditValue"
+          v-bind="column.column._editComponent.props"
+          size="sm"
+          class="active-edit-cell"
+          grow
+          @vue:mounted="handleEditCellMounted"
+          @click.stop.prevent
+        />
+      </template>
+
       <slot
+        v-else
         :name="column.column.field"
         :row="rowDataArray[0].row"
         :column="column.column"
