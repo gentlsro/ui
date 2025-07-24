@@ -31,8 +31,6 @@ const copyBtnSize = computed(() => {
 })
 
 function handleCopy() {
-  console.log('Log ~ handleCopy ~ props.transform:')
-
   if (props.transform) {
     copy(props.transform(props.modelValue))
 
