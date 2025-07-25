@@ -8,6 +8,7 @@ import type { ISelectorEmits } from './types/selector-emits.type'
 import { useSelector } from './composables/useSelector'
 import { useFieldUtils } from '../Field/functions/useFieldUtils'
 import { listFetchData } from '../List/functions/list-fetch-data'
+import { useInputValidationUtils } from '../Inputs/functions/useInputValidationUtils'
 import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
 
 // Store
@@ -43,6 +44,9 @@ defineExpose({
     search.value = ''
   },
 })
+
+// Validations
+const { path } = useInputValidationUtils(props)
 
 // Utils
 const { handleRequest } = useRequest()
@@ -254,6 +258,7 @@ onUnmounted(() => {
         :to
         :emits
         :option-to
+        :name="name || path || label || placeholder"
       >
         <template #default="{ item, index, optionByKey }">
           <slot
