@@ -10,7 +10,7 @@ import { getListItem, getListItemLabel } from '../List/functions/helpers'
 type IProps = Pick<
   ISelectorProps,
   | 'useScroller' | 'ui' | 'maxChipsRows' | 'readonly' | 'disabled'
-  | 'emptyValue' | 'multi' | 'optionLabel' | 'optionTo' | 'to'
+  | 'emptyValue' | 'multi' | 'optionLabel' | 'optionTo' | 'to' | 'name'
 > & { emits: ISelectorEmits }
 
 const props = defineProps<IProps>()
