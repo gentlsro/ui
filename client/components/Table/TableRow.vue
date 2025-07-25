@@ -101,7 +101,7 @@ const rowDataArray = computed(() => {
             return undefined
           }
 
-          const colEditable = !(typeof col.noEdit === 'function' ? col.noEdit(row) : col.noEdit)
+          const colEditable = !col.isHelperCol && !(typeof col.noEdit === 'function' ? col.noEdit(row) : col.noEdit)
           const isEditable = isEditableRow.value && colEditable
 
           const cellValue = col.valueGetter(row)
