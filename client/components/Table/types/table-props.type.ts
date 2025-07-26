@@ -487,6 +487,11 @@ export type ITableProps<
        * When true, only given row will should selected, others should be deselected
        */
       isSet?: boolean
+
+      /**
+       * Whether the selection is forced
+       */
+      isForced?: boolean
     }) => void | false | Promise<void | false>
 
     /**

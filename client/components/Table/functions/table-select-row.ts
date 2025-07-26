@@ -15,6 +15,12 @@ export async function tableSelectRow(payload: {
    * When true, only given row will be selected, others will be deselected
    */
   isSet?: boolean
+
+  /**
+   * When true, the result of `onSelect` will be ignored.
+   * By default, if `onSelect` returns `false`, the selection event will be cancelled.
+   */
+  isForced?: boolean
 }) {
   const {
     selection,
@@ -23,6 +29,7 @@ export async function tableSelectRow(payload: {
     row,
     rowKey,
     isSet,
+    isForced,
   } = payload
 
   if (!selectionConfig?.enabled) {
@@ -30,9 +37,9 @@ export async function tableSelectRow(payload: {
   }
 
   if (selectionConfig.onSelect) {
-    const shouldContinue = await selectionConfig.onSelect({ row, selection, isSet })
+    const shouldContinue = await selectionConfig.onSelect({ row, selection, isSet, isForced })
 
-    if (shouldContinue === false) {
+    if (shouldContinue === false && !isForced) {
       return
     }
   }
