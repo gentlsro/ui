@@ -21,7 +21,7 @@ function setFitColumns(mode: NonNullable<IUIState['table']>['fit'], unset?: bool
 function setAutoSaveSchema(value?: boolean | null) {
   set(uiState.value, 'table', {
     ...(get(uiState.value, 'table') ?? {}),
-    enabled: !!value,
+    autoSaveSchema: !!value,
   })
 }
 </script>
