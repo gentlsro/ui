@@ -295,7 +295,7 @@ export function useTableStore(
 
         // Schema should be used only in case we don't have anything in the state
         // or we don't use the `autoSaveSchema` feature
-        shouldSchemaBeUsed: noState.value || !state.value?.columns?.length || !uiState.value.table?.autoSaveSchema,
+        shouldSchemaBeUsed: noState.value || !state.value?.columns?.length || !modifiers.value?.autoSaveSchema,
       })
 
       cols = _columns
