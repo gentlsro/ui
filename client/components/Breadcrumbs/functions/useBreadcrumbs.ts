@@ -14,6 +14,8 @@ export function useBreadcrumbs(
     trigger?: MaybeRefOrGetter<any>
   },
 ) {
+  const { $i18n } = useNuxtApp()
+
   const {
     useLastBreadcrumbAsTitle = uiConfig.breadcrumbs.misc.useLastBreadcrumbAsTitle,
     title,
@@ -49,6 +51,9 @@ export function useBreadcrumbs(
   if (trigger) {
     watch(trigger, setTitle)
   }
+
+  // Make sure to update the breadcrumbs when the locale changes
+  watch($i18n.locale, setTitle)
 
   return { breadcrumbs: injectedBreadcrumbs, refresh: setTitle }
 }
