@@ -17,6 +17,13 @@ const { uiState } = storeToRefs(useUIStore())
 function setFitColumns(mode: NonNullable<IUIState['table']>['fit'], unset?: boolean) {
   set(uiState.value, 'table.fit', unset ? null : mode)
 }
+
+function setAutoSaveSchema(value?: boolean | null) {
+  set(uiState.value, 'table', {
+    ...(get(uiState.value, 'table') ?? {}),
+    enabled: !!value,
+  })
+}
 </script>
 
 <template>
@@ -30,8 +37,9 @@ function setFitColumns(mode: NonNullable<IUIState['table']>['fit'], unset?: bool
   >
     <!-- Auto-save table layout -->
     <Toggle
-      v-model="uiState.table.autoSaveSchema"
+      :model-value="uiState.table?.autoSaveSchema"
       :label="$t('table.autoSaveLayout')"
+      @update:model-value="setAutoSaveSchema"
     />
 
     <span class="hint">
