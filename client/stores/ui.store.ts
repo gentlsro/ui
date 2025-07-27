@@ -1,4 +1,5 @@
 import { createVNode, render } from 'vue'
+import { defu } from 'defu'
 import { skipHydrate } from 'pinia'
 import type { CSSProperties } from 'vue'
 import { uiConfig } from '$uiConfig'
@@ -19,20 +20,13 @@ export const useUIStore = defineStore('__ui', () => {
   const hasUserLeftPage = usePageLeave()
 
   const uiState = useCookie<IUIState>('__ui', {
-    default: () => ({
-      general: {
-        keyboardShortcuts: false,
-      },
+    default: () => defu(uiConfig.misc.uiState, {
       form: {
         confirmation: {
           enabled: uiConfig.form.confirmationInit.enabled,
           required: uiConfig.form.confirmationInit.required,
           editable: uiConfig.form.confirmationInit.editable,
         },
-      },
-      table: {
-        autoSaveSchema: uiConfig.table.props.modifiers?.().autoSaveSchema ?? true,
-        fit: uiConfig.table.props.autoFit().mode,
       },
     }),
     domain: utilsConfig.general.domain ?? undefined,

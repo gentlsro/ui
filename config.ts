@@ -2,6 +2,9 @@
 
 import utilsConfig from '$utilsConfig'
 
+// Types
+import type { IUIState } from './client/types/ui-state.type'
+
 // Component types
 import type { IBadgeProps } from './client/components/Badge/types/badge-props.type'
 import type { IBannerProps } from './client/components/Banner/types/banner-props.type'
@@ -985,7 +988,6 @@ export const defaultComponentsConfig = {
         { breakpoint: 1000, count: 1 },
       ],
       modifiers: {
-        autoSaveSchema: true,
         caseInsensitive: true,
         useUrl: true,
       },
@@ -1241,6 +1243,19 @@ export const defaultComponentsConfig = {
       referenceTarget: undefined,
     },
   },
+
+  // Misc
+  misc: {
+    uiState: {
+      general: {
+        keyboardShortcuts: false,
+      },
+      table: {
+        fit: 'fit-with-header',
+        autoSaveSchema: true,
+      },
+    },
+  },
 } satisfies IUIConfig
 
 type IConfigItem<T> = {
@@ -1323,6 +1338,10 @@ export type IUIConfig = {
   virtualScroller: IConfigItem<IVirtualScrollerProps<any>>
   yearMonthSelector: IConfigItem<IYearMonthSelectorProps>
   yearSelector: IConfigItem<IYearSelectorProps>
+
+  misc: {
+    uiState?: Partial<IUIState>
+  }
 }
 
 export function extendUIConfig<T extends Partial<IUIConfig> & IItem>(config: T): T {

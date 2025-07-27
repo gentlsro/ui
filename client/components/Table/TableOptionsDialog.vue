@@ -2,9 +2,6 @@
 // Types
 import type { IUIState } from '../../types/ui-state.type'
 
-// Store
-import { useTableStore } from './stores/table.store'
-
 type IProps = {
   modelValue?: boolean
 }
@@ -16,19 +13,9 @@ const model = defineModel<boolean>({ default: false })
 
 // Store
 const { uiState } = storeToRefs(useUIStore())
-const { modifiers } = storeToRefs(useTableStore())
 
 function setFitColumns(mode: NonNullable<IUIState['table']>['fit'], unset?: boolean) {
   set(uiState.value, 'table.fit', unset ? null : mode)
-}
-
-function setAutoSaveSchema(value: boolean) {
-  set(uiState.value, 'table.autoSaveSchema', !!value)
-
-  if (modifiers.value) {
-    modifiers.value.autoSaveSchema = !!value
-    console.log('🚀 ~ setAutoSaveSchema ~ modifiers.value.autoSaveSchema:', modifiers.value.autoSaveSchema)
-  }
 }
 </script>
 
@@ -43,9 +30,8 @@ function setAutoSaveSchema(value: boolean) {
   >
     <!-- Auto-save table layout -->
     <Toggle
-      :model-value="!!modifiers?.autoSaveSchema"
+      v-model="uiState.table.autoSaveSchema"
       :label="$t('table.autoSaveLayout')"
-      @update:model-value="setAutoSaveSchema"
     />
 
     <span class="hint">

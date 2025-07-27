@@ -284,6 +284,8 @@ export type ITableProps<
     /**
      * When true, the table will automatically save the schema to the local storage
      * on any save to the table (= filter, sort, select, etc.)
+     *
+     * NOTE: This will override the `uiState.table.autoSaveSchema` value
      */
     autoSaveSchema?: boolean
 
