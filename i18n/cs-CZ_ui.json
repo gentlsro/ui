@@ -62,7 +62,7 @@
     "autoJustifyColumnsExplain": "Když otevřete tabulku, šířky sloupců budou sjednoceny – všechny budou stejně široké.",
     "autoJustifyColumns": "Stejné šířky sloupců",
     "autoJustifyColumnsExplain2": "Poznámka: V některých případech se šířka sloupců automaticky upraví podle předem definovaných hodnot.",
-    "autoFitColumns": "ŠÍřka sloupců podle jejich obsahu",
+    "autoFitColumns": "Šířka sloupců podle jejich obsahu",
     "autoFitColumnsExplain": "Když otevřete tabulku, šířky sloupců se přizpůsobí podle obsahu.",
     "filteredManually": "Vyfiltrováno manuálně",
     "autoFitColumnsWithHeader": "ŠÍřka sloupců podle jejich obsahu, s přihlédnutím k velikosti nadpisu",
