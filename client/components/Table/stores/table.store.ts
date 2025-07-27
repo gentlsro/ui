@@ -257,6 +257,8 @@ export function useTableStore(
     const propsColumns = shallowRef<TableColumn<any>[]>(tableProps?.columns as TableColumn<any>[])
 
     const isAutoSaveSchema = computed(() => {
+      console.log(modifiers.value?.autoSaveSchema)
+
       // If there is `autoSaveSchema` is set through modifiers, we use that
       if (!isNil(modifiers.value?.autoSaveSchema)) {
         return modifiers.value.autoSaveSchema
