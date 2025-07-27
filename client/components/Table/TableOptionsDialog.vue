@@ -17,13 +17,6 @@ const { uiState } = storeToRefs(useUIStore())
 function setFitColumns(mode: NonNullable<IUIState['table']>['fit'], unset?: boolean) {
   set(uiState.value, 'table.fit', unset ? null : mode)
 }
-
-function setAutoSaveSchema(value?: boolean | null) {
-  set(uiState.value, 'table', {
-    ...(get(uiState.value, 'table') ?? {}),
-    autoSaveSchema: !!value,
-  })
-}
 </script>
 
 <template>
@@ -39,7 +32,7 @@ function setAutoSaveSchema(value?: boolean | null) {
     <Toggle
       :model-value="uiState.table?.autoSaveSchema"
       :label="$t('table.autoSaveLayout')"
-      @update:model-value="setAutoSaveSchema"
+      @update:model-value="set(uiState, 'table.autoSaveSchema', $event)"
     />
 
     <span class="hint">
