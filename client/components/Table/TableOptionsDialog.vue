@@ -27,6 +27,7 @@ function setAutoSaveSchema(value: boolean) {
 
   if (modifiers.value) {
     modifiers.value.autoSaveSchema = !!value
+    console.log('🚀 ~ setAutoSaveSchema ~ modifiers.value.autoSaveSchema:', modifiers.value.autoSaveSchema)
   }
 }
 </script>
