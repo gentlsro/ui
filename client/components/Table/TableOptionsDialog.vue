@@ -43,7 +43,7 @@ function setAutoSaveSchema(value: boolean) {
   >
     <!-- Auto-save table layout -->
     <Toggle
-      :model-value="uiState.table?.autoSaveSchema"
+      :model-value="!!modifiers?.autoSaveSchema"
       :label="$t('table.autoSaveLayout')"
       @update:model-value="setAutoSaveSchema"
     />
