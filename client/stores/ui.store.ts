@@ -36,6 +36,7 @@ export const useUIStore = defineStore('__ui', () => {
       },
     }),
     domain: utilsConfig.general.domain ?? undefined,
+    watch: true,
   })
 
   function setState(state: Partial<IUIState>, extend = true) {
