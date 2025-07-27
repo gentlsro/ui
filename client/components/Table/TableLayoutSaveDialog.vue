@@ -193,7 +193,6 @@ const $z = useZod(
         v-model="layout.name"
         :label="$t('table.layoutName')"
         stack-label
-        :readonly="!!layout.id"
         col=" md:span-2"
         zod="layout.name"
       />
