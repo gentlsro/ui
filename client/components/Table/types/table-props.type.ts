@@ -5,6 +5,7 @@ import type { RouteLocationRaw } from '#vue-router'
 
 // Types
 import type { ITableTotal } from './table-total.type'
+import type { ITableLayout } from './table-layout.type'
 import type { TableFeature } from './table-feature.type'
 import type { ISelection } from '../../../types/selection.type'
 import type { ITableFetchPayload } from './table-fetch-payload.type'
@@ -355,6 +356,13 @@ export type ITableProps<
      * Function that exports the table data to a file
      */
     exportData?: typeof tableExportData
+
+    /**
+     * Function that gets called when the table layout is about to be applied
+     *
+     * It should return the adjusted `ITableLayout`
+     */
+    onLayoutApply?: (layout: ITableLayout) => ITableLayout | undefined
 
     /**
      * Function that saves the table layout

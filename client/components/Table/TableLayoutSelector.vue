@@ -5,6 +5,7 @@ import type { ITableLayout } from './types/table-layout.type'
 // Functions
 import { useTableAutoFit } from './composables/useTableAutoFit'
 import { tableDeleteLayout } from './functions/table-delete-layout'
+import { tableOnLayoutApply } from './functions/table-on-layout-apply'
 import { tableGetLayoutMeta } from './functions/table-get-layout-meta'
 import { tableTransformColumns } from './functions/table-transform-columns'
 import { queryBuilderInitializeItems } from '../QueryBuilder/functions/query-builder-initialize-items'
@@ -73,13 +74,16 @@ function handleLayoutApply(layout?: ITableLayout) {
     onDataFetchQueue.value.push(fitColumns)
   }
 
+  const { onLayoutApply = tableOnLayoutApply } = modifiers.value ?? {}
+  const _layout = onLayoutApply(layout!)
+
   const {
     columns,
     queryBuilder,
   } = tableTransformColumns({
     internalColumns: internalColumns.value,
     modifiers: modifiers.value,
-    defaultSchema: layout?.schema ?? '',
+    defaultSchema: _layout?.schema ?? '',
     urlSchema: '',
     shouldUrlBeUsed: false,
   })
