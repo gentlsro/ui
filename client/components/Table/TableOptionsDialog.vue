@@ -30,9 +30,8 @@ function setFitColumns(mode: NonNullable<IUIState['table']>['fit'], unset?: bool
   >
     <!-- Auto-save table layout -->
     <Toggle
-      :model-value="uiState.table?.autoSaveSchema"
+      v-model="uiState.table.autoSaveSchema"
       :label="$t('table.autoSaveLayout')"
-      @update:model-value="set(uiState, 'table.autoSaveSchema', $event)"
     />
 
     <span class="hint">

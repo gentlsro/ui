@@ -256,6 +256,16 @@ export function useTableStore(
     const apiColumns = shallowRef<Partial<TableColumn<any>>[]>()
     const propsColumns = shallowRef<TableColumn<any>[]>(tableProps?.columns as TableColumn<any>[])
 
+    const isAutoSaveSchema = computed(() => {
+      // If there is `autoSaveSchema` is set through modifiers, we use that
+      if (!isNil(modifiers.value?.autoSaveSchema)) {
+        return modifiers.value.autoSaveSchema
+      }
+
+      // Otherwise, we fallback to the UI state
+      return uiState.value.table?.autoSaveSchema
+    })
+
     // Column initialization
     const columnsMerged = computedWithControl(
       () => [apiColumns.value, propsColumns.value],
@@ -263,7 +273,7 @@ export function useTableStore(
         propsColumns: propsColumns.value,
         apiColumns: apiColumns.value,
         stateColumns: state.value.columns,
-        useState: modifiers.value?.autoSaveSchema && !noState.value,
+        useState: isAutoSaveSchema.value && !noState.value,
       }),
     )
 
@@ -295,7 +305,7 @@ export function useTableStore(
 
         // Schema should be used only in case we don't have anything in the state
         // or we don't use the `autoSaveSchema` feature
-        shouldSchemaBeUsed: noState.value || !state.value?.columns?.length || !uiState.value.table?.autoSaveSchema,
+        shouldSchemaBeUsed: noState.value || !state.value?.columns?.length || !isAutoSaveSchema.value,
       })
 
       cols = _columns
