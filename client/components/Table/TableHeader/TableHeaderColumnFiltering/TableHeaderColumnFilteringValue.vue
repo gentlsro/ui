@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import type { IInputProps } from '$ui'
+import utilsConfig from '$utilsConfig'
+
 // Types
 import type { ITableFilterItem } from '../../types/table-filter-item.type'
 
@@ -110,6 +113,21 @@ const isInValueSimple = computed(() => {
   return !column.value?.getDistinctData && canUseSelectorComparator(item.value.comparator, column.value)
 })
 
+const inInputProps = computed(() => {
+  const isNumberDataType = utilsConfig.dataTypeExtend.numberDataTypes.includes(column.value.dataType)
+
+  // Allow only numbers, commas, spaces and dots
+  if (isNumberDataType) {
+    return {
+      mask: {
+        mask: /^[0-9,.\s]+$/,
+      },
+    } as IInputProps
+  }
+
+  return {}
+})
+
 const inValueSimple = computed({
   get() {
     return item.value.value?.join(',')
@@ -176,6 +194,7 @@ const filterComponentProps = computed(() => {
     v-else-if="isInValueSimple"
     ref="valueInputEl"
     v-model="inValueSimple"
+    v-bind="inInputProps"
     size="sm"
     :placeholder="`${$t('table.filterValue')}...`"
     empty-value=""
