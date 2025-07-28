@@ -18,6 +18,7 @@ const { isLoading, handleRequest } = useRequest()
 const { fitColumns } = useTableAutoFit()
 
 // Store
+const store = useTableStore()
 const {
   internalColumns,
   state,
@@ -25,7 +26,7 @@ const {
   queryBuilder: queryBuilderStore,
   onDataFetchQueue,
   customData,
-} = storeToRefs(useTableStore())
+} = storeToRefs(store)
 
 const {
   deleteLayout = tableDeleteLayout,
@@ -75,7 +76,12 @@ function handleLayoutApply(layout?: ITableLayout) {
   }
 
   const { onLayoutApply = tableOnLayoutApply } = modifiers.value ?? {}
-  const _layout = onLayoutApply(layout!)
+  const _layout = onLayoutApply({
+    layout: layout as ITableLayout,
+    columns: internalColumns.value,
+    modifiers: modifiers.value,
+    getStore: () => store,
+  })
 
   const {
     columns,

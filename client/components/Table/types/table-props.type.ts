@@ -362,7 +362,12 @@ export type ITableProps<
      *
      * It should return the adjusted `ITableLayout`
      */
-    onLayoutApply?: (layout: ITableLayout) => ITableLayout | undefined
+    onLayoutApply?: (payload: {
+      layout: ITableLayout
+      columns: TableColumn<any>[]
+      modifiers?: ITableProps['modifiers']
+      getStore: () => ReturnType<typeof useTableStore>
+    }) => ITableLayout | undefined
 
     /**
      * Function that saves the table layout
