@@ -81,6 +81,8 @@ export function tableTransformColumns(payload: {
     stateSchema,
   } = payload
 
+  console.log('🚀 Modifiers', modifiers)
+
   // Create a copy of the columns
   let _columns = internalColumns.map(col => new TableColumn(col))
 
