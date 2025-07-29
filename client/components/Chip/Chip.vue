@@ -66,7 +66,7 @@ const classes = computed(() => {
     />
 
     <div
-      v-if="label || $slots.default"
+      v-if="!isNil(label) || $slots.default"
       class="chip-label"
       :class="[labelClass, { 'justify-center': center }]"
     >
