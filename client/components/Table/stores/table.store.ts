@@ -294,7 +294,7 @@ export function useTableStore(
         console.log('💀 Modifiers are not set')
         console.log(modifiers.value, tableProps?.modifiers)
 
-        nextTick(() => {
+        setTimeout(() => {
           console.log('🚀 Next tick')
           console.log(modifiers.value, tableProps?.modifiers)
         })
