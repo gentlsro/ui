@@ -102,7 +102,7 @@ function handleSelect() {
 
   // All selected
   else if (selectionState.value === true) {
-    selection.value = selectionConfig.value.multi ? [] : undefined
+    selection.value = selectionConfig.value?.multi ? [] : undefined
   }
 
   // Not all selected
