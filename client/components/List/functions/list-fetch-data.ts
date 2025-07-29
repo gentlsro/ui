@@ -42,7 +42,6 @@ export async function listFetchData(payload: {
   }
 
   // Get last row
-  console.log('Log ~ listFetchData ~ listItems.toReversed():', listItems.toReversed())
   const lastRow = listItems.toReversed().find(item => {
     if ('isGroup' in item) {
       return false
@@ -52,8 +51,6 @@ export async function listFetchData(payload: {
       || '_isCreate' in item
       || '_isNew' in item.ref
       || '_isCreate' in item.ref
-
-    console.log(item, isNew)
 
     return !isNew
   })
