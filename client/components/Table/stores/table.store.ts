@@ -296,6 +296,8 @@ export function useTableStore(
         ?? (state.value.layoutDefault?.schema ?? '')
 
       // Transform columns
+      console.log('🚀 Modifiers', modifiers.value)
+
       const { columns: _columns, queryBuilder: qb, pagination, isSchemaUsed, isUrlUsed } = tableTransformColumns({
         internalColumns: cols,
         modifiers: modifiers.value,
@@ -337,7 +339,7 @@ export function useTableStore(
       if (propsColumns.value && apiColumns.value) {
         syncStateColumns()
       }
-    }, { immediate: true, flush: 'post' })
+    }, { immediate: true })
     // !SECTION
 
     // SECTION Horizontal scroll syncing

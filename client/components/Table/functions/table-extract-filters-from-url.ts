@@ -174,7 +174,6 @@ function parseItemSegment(
   const isComparator = Object.values(ComparatorEnum).includes(comparator)
   const isSelectorComparator = SELECTOR_COMPARATORS.includes(comparator)
   console.log('\n\n💀 And this is very fucking wrong')
-  console.log(col, field, comparator)
 
   if (!isComparator) {
     throw new Error(`Invalid comparator: ${comparator}`)
