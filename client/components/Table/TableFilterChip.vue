@@ -3,7 +3,7 @@
 import { FilterItem, formatValue, NON_VALUE_COMPARATORS } from '$utils'
 
 // Functions
-import { useTableStore } from './stores/table.store'
+import { useTableStore } from './stores/table2.store'
 
 type IProps = {
   filter: FilterItem
@@ -12,7 +12,7 @@ type IProps = {
 const props = defineProps<IProps>()
 
 // Store
-const { internalColumns } = storeToRefs(useTableStore())
+const { internalColumns } = useTableStore()
 
 // Utils
 const { currentLocaleCode } = useLocale()

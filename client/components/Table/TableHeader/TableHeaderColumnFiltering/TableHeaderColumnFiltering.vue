@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { VNode } from 'vue'
-import { useTableStore } from '$ui'
 import { ComparatorEnum } from '$comparatorEnum'
 import { BOOLEANISH_COMPARATORS, FilterItem } from '$utils'
 
@@ -13,6 +12,9 @@ import type { TableColumn } from '../../models/table-column.model'
 // Functions
 import { getAvailableComparators } from '../../functions/get-available-comparators'
 
+// Store
+import { useTableStore } from '../../stores/table2.store'
+
 type IProps = {
   column: TableColumn
   modifyFnc?: (filter: ITableFilterItem, debounceMs?: number) => void
@@ -22,7 +24,7 @@ type IProps = {
 const props = defineProps<IProps>()
 
 // Store
-const { internalColumns } = storeToRefs(useTableStore())
+const { internalColumns } = useTableStore()
 
 // Layout
 const isMounted = ref(false)

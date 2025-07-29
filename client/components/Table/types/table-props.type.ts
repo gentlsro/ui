@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'vue'
+import type { NuxtLinkProps } from '#app'
 import type { Required } from 'utility-types'
 import type { IVirtualScrollerProps } from '$ui'
 import type { RouteLocationRaw } from '#vue-router'
@@ -32,12 +33,11 @@ import type { tableDeleteLayout } from '../functions/table-delete-layout'
 import type { tableFilterValueChangeDebounce } from '../functions/table-filter-value-change-debounce'
 
 // Store
-import type { useTableStore } from '../stores/table.store'
+import type { useTableStore } from '../stores/table2.store'
 import type { tableExtractPaginationFromUrl } from '../functions/table-extract-pagination-from-url'
 import type { tableSerializePagination } from '../functions/table-serialize-pagination'
 import type { tableGetLayoutMeta } from '../functions/table-get-layout-meta'
 import type { ITableFilterItem } from './table-filter-item.type'
-import type { NuxtLinkProps } from '#app'
 
 export type ITableProps<
   K extends typeof tableBuildFetchPayload = typeof tableBuildFetchPayload,

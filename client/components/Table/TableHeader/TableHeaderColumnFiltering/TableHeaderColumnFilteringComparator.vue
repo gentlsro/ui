@@ -12,7 +12,7 @@ import { getAvailableComparators } from '../../functions/get-available-comparato
 import { useQueryBuilderItemUtils } from '../../../QueryBuilder/functions/useQueryBuilderItemUtils'
 
 // Store
-import { useTableStore } from '../../stores/table.store'
+import { useTableStore } from '../../stores/table2.store'
 
 type IProps = {
   column: TableColumn
@@ -32,7 +32,7 @@ defineExpose({
 })
 
 // Store
-const { allowComparatorsOfSameType } = storeToRefs(useTableStore())
+const { allowComparatorsOfSameType } = useTableStore()
 
 // Layout
 const comparatorInputEl = useTemplateRef('comparatorInputEl')

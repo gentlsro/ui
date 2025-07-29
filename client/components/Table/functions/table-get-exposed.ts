@@ -1,18 +1,17 @@
 import type { Required } from 'utility-types'
-import type { tableInitialize } from './table-initialize'
 
 // Functions
+import { tableSelectRow } from './table-select-row'
 import { useTableAutoFit } from '../composables/useTableAutoFit'
 import type { tableBuildFetchPayload } from './table-build-fetch-payload'
 
 // Store
-import { useTableStore } from '../stores/table.store'
-import { tableSelectRow } from './table-select-row'
+import { useTableStore } from '../stores/table2.store'
 
 export function tableGetExposed() {
   const { fitColumns } = useTableAutoFit()
   const tableStore = useTableStore()
-  const { rowKey, selectionConfig, selection, selectionByKey } = toRefs(tableStore)
+  const { rowKey, selectionConfig, selection, selectionByKey } = tableStore
 
   return {
     refetch: tableStore.fetchAndSetData,

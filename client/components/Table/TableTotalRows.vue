@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // Store
-import { useTableStore } from './stores/table.store'
+import { useTableStore } from './stores/table2.store'
 
 // Store
 const {
@@ -8,7 +8,7 @@ const {
   currentPage,
   rows,
   totalRows,
-} = storeToRefs(useTableStore())
+} = useTableStore()
 
 const pageSize = computed(() => paginationConfig.value?.pageSize ?? 1)
 </script>

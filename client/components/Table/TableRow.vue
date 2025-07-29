@@ -15,7 +15,7 @@ import type { IRowColumn } from './types/table-row-column.type'
 import { tableSelectRow } from './functions/table-select-row'
 
 // Store
-import { useTableStore } from './stores/table.store'
+import { useTableStore } from './stores/table2.store'
 
 type IProps = Pick<ITableProps, 'ui' | 'editable' | 'to' | 'showCopyBtn' | 'toLinkProps'> & {
   row: any | any[]
@@ -66,7 +66,7 @@ const {
   cellEditValue,
   emits,
   rowClickable,
-} = storeToRefs(tableStore)
+} = tableStore
 
 // Layout
 const [DefineValueTemplate, ReuseValueTemplate] = createReusableTemplate<{

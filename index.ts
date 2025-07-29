@@ -44,7 +44,7 @@ export type { IQueryBuilderGroup } from './client/components/QueryBuilder/types/
 export { queryBuilderDefault } from './client/components/QueryBuilder/constants/query-builder-default.constant'
 
 // Table
-export { useTableStore } from './client/components/Table/stores/table.store'
+export { useTableStore } from './client/components/Table/stores/table2.store'
 export { TableColumn } from './client/components/Table/models/table-column.model'
 export type { ITableSortItem } from './client/components/Table/types/table-sort-item.type'
 export type { ITableTotal } from './client/components/Table/types/table-total.type'

@@ -4,7 +4,7 @@ import type { ITableLayout } from '../types/table-layout.type'
 import type { TableColumn } from '../models/table-column.model'
 
 // Store
-import type { useTableStore } from '../stores/table.store'
+import type { useTableStore } from '../stores/table2.store'
 
 export function tableOnLayoutApply(payload: {
   layout: ITableLayout

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // Store
-import { useTableStore } from './stores/table.store'
+import { useTableStore } from './stores/table2.store'
 
 // Store
 const {
@@ -9,7 +9,7 @@ const {
   paginationConfig,
   rowsLimit,
   rows,
-} = storeToRefs(useTableStore())
+} = useTableStore()
 
 const isLimitReached = computed(() => {
   if (!rowsLimit.value) {

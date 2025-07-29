@@ -1,8 +1,9 @@
 <script setup lang="ts">
+// Types
 import type { ITableProps } from './types/table-props.type'
 
 // Store
-import { useTableStore } from './stores/table.store'
+import { useTableStore } from './stores/table2.store'
 
 type IProps = Pick<ITableProps, 'totals' | 'ui'>
 
@@ -19,7 +20,7 @@ const {
   totalsEl,
   totalsX,
   visibleColumns,
-} = storeToRefs(tableStore)
+} = tableStore
 
 // Layout
 const totalsByField = computed(() => {

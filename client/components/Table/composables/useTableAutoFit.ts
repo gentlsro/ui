@@ -1,5 +1,5 @@
 // Store
-import { useTableStore } from '../stores/table.store'
+import { useTableStore } from '../stores/table2.store'
 
 // Provide / Inject
 import { tableSlotsKey } from '../provide/table.provide'
@@ -15,7 +15,7 @@ export function useTableAutoFit() {
     virtualScrollEl,
     visibleColumns,
     uiConfig,
-  } = storeToRefs(useTableStore())
+  } = useTableStore()
 
   const tableSlots = injectLocal(tableSlotsKey)
 

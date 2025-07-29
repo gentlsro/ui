@@ -1,10 +1,10 @@
 import { useTableAutoFit } from '../composables/useTableAutoFit'
-import { useTableStore } from '../stores/table.store'
+import { useTableStore } from '../stores/table2.store'
 
 export function tableInitialize() {
   const { fitColumns } = useTableAutoFit()
   const tableStore = useTableStore()
-  const { onDataFetchQueue, isInitialLoad, rows, loadData, autofitConfig } = storeToRefs(tableStore)
+  const { onDataFetchQueue, isInitialLoad, rows, loadData, autofitConfig } = tableStore
 
   const isImmediate = loadData.value?.immediate || !rows.value.length
 

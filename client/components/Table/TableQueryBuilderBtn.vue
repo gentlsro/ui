@@ -1,13 +1,13 @@
 <script setup lang="ts">
 // Types
 import type { ITableProps } from './types/table-props.type'
+import type { IQueryBuilderItem } from '../QueryBuilder/types/query-builder-item-props.type'
 
 // Models
 import { FilterItem } from '$utils'
 
 // Store
-import { useTableStore } from './stores/table.store'
-import type { IQueryBuilderItem } from '../QueryBuilder/types/query-builder-item-props.type'
+import { useTableStore } from './stores/table2.store'
 
 type IProps = Pick<ITableProps, 'queryBuilder' | 'queryBuilderProps'>
 
@@ -18,7 +18,7 @@ const {
   internalColumnsByField,
   nonHelperColumns,
   getFilterComponent,
-} = storeToRefs(useTableStore())
+} = useTableStore()
 
 // Layout
 const queryBuilderEl = useTemplateRef('queryBuilderEl')

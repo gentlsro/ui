@@ -11,7 +11,7 @@ import { tableTransformColumns } from './functions/table-transform-columns'
 import { queryBuilderInitializeItems } from '../QueryBuilder/functions/query-builder-initialize-items'
 
 // Store
-import { useTableStore } from './stores/table.store'
+import { useTableStore } from './stores/table2.store'
 
 // Utils
 const { isLoading, handleRequest } = useRequest()
@@ -26,7 +26,7 @@ const {
   queryBuilder: queryBuilderStore,
   onDataFetchQueue,
   customData,
-} = storeToRefs(store)
+} = store
 
 const {
   deleteLayout = tableDeleteLayout,

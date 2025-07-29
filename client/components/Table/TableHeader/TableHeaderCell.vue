@@ -6,7 +6,7 @@ import type { ITableProps } from '../types/table-props.type'
 import type { TableColumn } from '../models/table-column.model'
 
 // Store
-import { useTableStore } from '../stores/table.store'
+import { useTableStore } from '../stores/table2.store'
 import { getListItemKey } from '../../List/functions/helpers'
 
 type IProps = Pick<ITableProps, 'ui'> & {
@@ -24,7 +24,7 @@ const {
   selectionByKey,
   features,
   isCardView,
-} = storeToRefs(useTableStore())
+} = useTableStore()
 
 // Layout
 const hasFilterBtn = computed(() => {
@@ -102,7 +102,7 @@ function handleSelect() {
 
   // All selected
   else if (selectionState.value === true) {
-    selection.value = selectionConfig.value.multi ? [] : undefined
+    selection.value = selectionConfig.value?.multi ? [] : undefined
   }
 
   // Not all selected

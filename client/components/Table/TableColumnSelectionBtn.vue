@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { klona } from 'klona/full'
+import { moveItem } from '$utils'
 
 // Types
 import type { IListItem } from '../List/types/list-item.type'
@@ -11,15 +12,14 @@ import type { TableColumn } from './models/table-column.model'
 import { reorderArray } from '$utilsLayer/client/functions/reorder-array'
 
 // Store
-import { moveItem } from '$utils'
-import { useTableStore } from './stores/table.store'
+import { useTableStore } from './stores/table2.store'
 
 // Store
 const {
   internalColumns,
   visibleColumns: visibleColumnsStore,
   nonHelperColumns,
-} = storeToRefs(useTableStore())
+} = useTableStore()
 
 // Layout
 const visibleColumnsLocal = ref<TableColumn[]>([])

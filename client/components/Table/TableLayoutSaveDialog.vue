@@ -4,7 +4,7 @@ import type { ITableLayout } from './types/table-layout.type'
 import type { ITableSortItem } from './types/table-sort-item.type'
 
 // Store
-import { useTableStore } from './stores/table.store'
+import { useTableStore } from './stores/table2.store'
 import { tableSaveLayout } from './functions/table-save-layout'
 import { tableDeleteLayout } from './functions/table-delete-layout'
 import { tableSerializeFilters } from './functions/table-serialize-filters'
@@ -33,7 +33,7 @@ const {
   state,
   customData,
   rowKey,
-} = storeToRefs(tableStore)
+} = tableStore
 
 // Helpers
 function getUnifiedSchema(schema: string | URLSearchParams) {

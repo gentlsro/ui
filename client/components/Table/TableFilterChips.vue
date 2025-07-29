@@ -1,9 +1,9 @@
 <script setup lang="ts">
 // Store
-import { useTableStore } from './stores/table.store'
+import { useTableStore } from './stores/table2.store'
 
 // Store
-const { nonHelperColumns } = storeToRefs(useTableStore())
+const { nonHelperColumns } = useTableStore()
 
 const columnFilters = computed(() => {
   return nonHelperColumns.value
