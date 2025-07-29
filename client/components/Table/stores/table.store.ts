@@ -30,7 +30,6 @@ import { queryBuilderInitializeItems } from '../../QueryBuilder/functions/query-
 
 // Components
 import type HorizontalScroller from '../../Scroller/HorizontalScroller.vue'
-import { useRequestURL } from 'nuxt/app'
 
 // Provide / Inject
 export const tableIdKey = Symbol('__tableId')
@@ -290,14 +289,13 @@ export function useTableStore(
 
     watch(columnsMerged, columnsMerged => {
       // There is some extreme edge case where the modifiers are not set
+      // This happens when you spam tables like crazy
+      // I don't know if this is even possible to fix because it might be related
+      // to `pinia dispose` or something like that... Probably using https://vueuse.org/shared/createInjectionState/
+      // instead of pinia would fix this, but that requires refactor.
       if (!modifiers.value) {
         console.log('💀 Modifiers are not set')
-        console.log(modifiers.value, tableProps?.modifiers)
-
-        setTimeout(() => {
-          console.log('🚀 Next tick')
-          console.log(modifiers.value, tableProps?.modifiers)
-        })
+        location.reload()
 
         return
       }
