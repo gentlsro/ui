@@ -132,7 +132,7 @@ export function useTableStore(
     // !SECTION
 
     // SECTION Configs
-    const modifiers = ref<ITableProps['modifiers']>()
+    const modifiers = ref<ITableProps['modifiers']>(tableProps?.modifiers)
     const uiConfig = ref<ITableProps['ui']>(tableProps?.ui)
     const splitRowsConfig = ref<ITableProps['splitRows']>(tableProps?.splitRows ?? [])
     const loadMetaData = ref<ITableProps['loadMetaData']>(tableProps?.loadMetaData)

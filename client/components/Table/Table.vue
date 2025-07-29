@@ -61,8 +61,6 @@ const tableClass = computed(() => {
 
 // Stores
 const store = useTableStore({ tableProps: { ...props, ...mergedProps.value } })
-store.modifiers = mergedProps.value.modifiers
-console.log('🚀 Table modifiers', mergedProps.value.modifiers)
 
 const {
   headerEl,
@@ -103,6 +101,8 @@ const {
 storeEmits.value = {
   rowClick: (payload: { ev?: MouseEvent, row: any }) => emits('click:row', payload),
 }
+
+modifiers.value = mergedProps.value.modifiers
 
 // Sync refs with store
 syncRef(toRef(props, 'rowKey'), rowKey, { direction: 'ltr' })
