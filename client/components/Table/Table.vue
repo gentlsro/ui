@@ -101,7 +101,7 @@ storeEmits.value = {
   rowClick: (payload: { ev?: MouseEvent, row: any }) => emits('click:row', payload),
 }
 
-storeModifiers.value = mergedProps.value.modifiers
+modifiers.value = mergedProps.value.modifiers
 
 // Sync refs with store
 syncRef(toRef(props, 'rowKey'), rowKey, { direction: 'ltr' })
