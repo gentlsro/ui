@@ -288,9 +288,7 @@ export function useTableStore(
       return internalColumns.value.filter(col => !col.isHelperCol)
     })
 
-    watch(columnsMerged, async columnsMerged => {
-      await nextTick()
-
+    watch(columnsMerged, columnsMerged => {
       // Merge columns from all the sources, remove duplicates
       let cols = columnsMerged
 
