@@ -289,6 +289,11 @@ export function useTableStore(
     })
 
     watch(columnsMerged, columnsMerged => {
+      // There is some extreme edge case where the modifiers are not set
+      if (!modifiers.value) {
+        return
+      }
+
       // Merge columns from all the sources, remove duplicates
       let cols = columnsMerged
 
@@ -296,8 +301,6 @@ export function useTableStore(
         ?? (state.value.layoutDefault?.schema ?? '')
 
       // Transform columns
-      console.log('🚀 Modifiers', modifiers.value)
-
       const { columns: _columns, queryBuilder: qb, pagination, isSchemaUsed, isUrlUsed } = tableTransformColumns({
         internalColumns: cols,
         modifiers: modifiers.value,
