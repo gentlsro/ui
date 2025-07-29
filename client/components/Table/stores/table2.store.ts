@@ -33,20 +33,19 @@ import type HorizontalScroller from '../../Scroller/HorizontalScroller.vue'
 type IConfig = {
   tableProps?: ITableProps
   storageKey?: string
-  tableId?: string
 }
 
 const [
   useProvideTableStore,
   useConsumeTableStore,
 ] = createInjectionState((config?: IConfig) => {
-  const { tableProps, storageKey, tableId } = config ?? {}
+  const { tableProps, storageKey } = config ?? {}
 
   // Init
-  const _storageKey = tableId ?? useId()
+  const _storageKey = storageKey ?? useId()
 
   function getStore() {
-    return useTableStore()
+    return useConsumeTableStore()
   }
 
   // Store

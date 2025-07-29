@@ -30,6 +30,9 @@ const slots = useSlots()
 provideLocal(tableSlotsKey, slots)
 
 // Init
+const self = getCurrentInstance()
+const storageKey = tableGetStorageKey(props.storageKey, self)
+
 const mergedProps = computed(() => {
   return getComponentMergedProps('table', props)
 })
@@ -50,9 +53,7 @@ const tableClass = computed(() => {
 })
 
 // Stores
-console.log('🚀 Table props', !!mergedProps.value.modifiers)
-
-const store = useTableStore({ tableProps: { ...props, ...mergedProps.value } })
+const store = useTableStore({ tableProps: { ...props, ...mergedProps.value }, storageKey })
 
 const {
   headerEl,
