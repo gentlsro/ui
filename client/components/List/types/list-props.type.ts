@@ -414,6 +414,7 @@ export type IListProps = {
     rowClass?: (
       payload: {
         isSelected: boolean
+        isFocused?: boolean
         row: IItem
         groupsCount: number
         isLast: boolean
@@ -425,6 +426,7 @@ export type IListProps = {
      */
     rowStyle?: (payload: {
       isSelected: boolean
+      isFocused?: boolean
       row: IItem
       groupsCount: number
       isLast: boolean
