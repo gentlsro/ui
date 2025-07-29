@@ -337,7 +337,7 @@ export function useTableStore(
       if (propsColumns.value && apiColumns.value) {
         syncStateColumns()
       }
-    }, { immediate: true })
+    }, { immediate: true, flush: 'post' })
     // !SECTION
 
     // SECTION Horizontal scroll syncing
