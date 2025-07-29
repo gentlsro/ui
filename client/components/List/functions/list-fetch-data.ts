@@ -42,13 +42,14 @@ export async function listFetchData(payload: {
   }
 
   // Get last row
+  console.log('Log ~ listFetchData ~ listItems.toReversed():', listItems.toReversed())
   const lastRow = listItems.toReversed().find(item => {
     if ('isGroup' in item) {
       return false
     }
 
     // @ts-expect-error
-    return !item._isNew && !item._isCreate
+    return !item._isNew && !item._isCreate && !item.ref._isNew && !item.ref._isCreate
   })
   const res = await handleRequest<IItem>(abortController => {
     return fnc!({
