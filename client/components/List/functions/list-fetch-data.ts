@@ -47,8 +47,7 @@ export async function listFetchData(payload: {
       return false
     }
 
-    // @ts-expect-error
-    return !item._isNew && !item._isCreate
+    return !item.ref._isNew && !item.ref._isCreate
   })
   const res = await handleRequest<IItem>(abortController => {
     return fnc!({
