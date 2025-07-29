@@ -45,7 +45,107 @@ const [
   const _storageKey = storageKey ?? useId()
 
   function getStore() {
-    return useConsumeTableStore()
+    return {
+      // Utils
+      tableName: _storageKey,
+      isMetaLoading,
+      isDataLoading,
+      isSilentChange,
+      isExporting,
+      navigate,
+
+      // State,
+      state,
+      customData,
+
+      // Layout
+      tableEl,
+      virtualScrollEl,
+      headerEl,
+      totalsEl,
+
+      // Emits
+      emits,
+
+      // Configs
+      modifiers,
+      loadMetaData,
+      loadData,
+      queryBuilderProps,
+      autofitConfig,
+      features,
+      paginationConfig,
+      selectionConfig,
+      splitRowsConfig,
+      initialSchemaConfig,
+      uiConfig,
+
+      // General
+      rowKey,
+      search,
+      queryBuilder,
+      emptyValue,
+      allowComparatorsOfSameType,
+      minimumColumnWidth,
+      breakpoint,
+      totals,
+
+      // Rows
+      rows,
+      rowsColumnCount,
+      rowsSplit,
+      isCardView,
+      rowsLimit,
+      isInitialLoad,
+      hasMore,
+      isFetchMore,
+      rowClickable,
+
+      // Columns
+      internalColumns,
+      internalColumnsByField,
+      propsColumns,
+      apiColumns,
+      visibleColumns,
+      nonHelperColumns,
+
+      // Pagination
+      totalRows,
+      currentPage,
+      totalPages,
+      skip,
+
+      // Horizontal scroll syncing
+      headerX,
+      totalsX,
+      contentX,
+      isContentVerticallyScrollable,
+
+      // Selection
+      selection,
+      selectionByKey,
+
+      // Editing
+      cellEdit,
+      isEditingCell,
+      cellEditValue,
+      loadCellEditValue,
+      saveCellEditValue,
+      cancelCellEdit,
+
+      // Query
+      queryParams,
+      getFetchPayload,
+
+      // Miscellaneous
+      onDataFetchQueue,
+      getFilterComponent,
+
+      // Data fetching
+      fetchAndSetMetaData,
+      fetchAndSetData,
+      runOnDataFetchQueue,
+    }
   }
 
   // Store
