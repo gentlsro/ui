@@ -296,7 +296,7 @@ export function useTableStore(
         ?? (state.value.layoutDefault?.schema ?? '')
 
       // Transform columns
-      console.log('🚀 Modifiers', modifiers.value, tableProps?.modifiers)
+      console.log('🚀 Modifiers', modifiers.value)
 
       const { columns: _columns, queryBuilder: qb, pagination, isSchemaUsed, isUrlUsed } = tableTransformColumns({
         internalColumns: cols,
