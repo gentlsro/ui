@@ -60,6 +60,8 @@ const tableClass = computed(() => {
 })
 
 // Stores
+console.log('🚀 Table props', !!mergedProps.value.modifiers)
+
 const store = useTableStore({ tableProps: { ...props, ...mergedProps.value } })
 
 const {
