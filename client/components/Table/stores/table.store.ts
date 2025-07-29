@@ -291,6 +291,14 @@ export function useTableStore(
     watch(columnsMerged, columnsMerged => {
       // There is some extreme edge case where the modifiers are not set
       if (!modifiers.value) {
+        console.log('💀 Modifiers are not set')
+        console.log(modifiers.value, tableProps?.modifiers)
+
+        nextTick(() => {
+          console.log('🚀 Next tick')
+          console.log(modifiers.value, tableProps?.modifiers)
+        })
+
         return
       }
 

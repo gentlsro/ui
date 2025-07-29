@@ -173,7 +173,6 @@ function parseItemSegment(
   const col = columnsByFilterField[field] ?? columnsByField[field]
   const isComparator = Object.values(ComparatorEnum).includes(comparator)
   const isSelectorComparator = SELECTOR_COMPARATORS.includes(comparator)
-  console.log('\n\n💀 And this is very fucking wrong')
 
   if (!isComparator) {
     throw new Error(`Invalid comparator: ${comparator}`)
