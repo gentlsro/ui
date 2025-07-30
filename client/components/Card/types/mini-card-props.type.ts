@@ -23,7 +23,7 @@ export type IMiniCardProps = IValueFormatterProps & {
   /**
    * The link we want to redirect to
    */
-  to?: any // should be RouteLocationRaw but that breaks some projects for whatever reason
+  to?: any | ((payload: { value: any, parsedValue: any, label?: string }) => any) // should be RouteLocationRaw but that breaks some projects for whatever reason
 
   /**
    * The options to pass to the NuxtLink component

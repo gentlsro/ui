@@ -65,6 +65,7 @@ const rowProps = computed(() => {
     class: [
       props.ui?.rowClass?.({
         isSelected: isSelected.value,
+        isFocused: itemFocused.value?.id === item.value?.id,
         groupsCount: groupBy.value.length,
         row: item.value.ref,
         isLast: props.isLast,
@@ -84,6 +85,7 @@ const rowProps = computed(() => {
     ],
     style: props.ui?.rowStyle?.({
       isSelected: isSelected.value,
+      isFocused: itemFocused.value?.id === item.value?.id,
       groupsCount: groupBy.value.length,
       row: item.value.ref,
       isLast: props.isLast,

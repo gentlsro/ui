@@ -35,7 +35,7 @@ export async function listHandleAddSearch(payload: {
 
   const labelKey = typeof itemLabel === 'function' ? 'label' : itemLabel
 
-  const id = generateUUID()
+  const id = generateUUID().split('-')[0] as string
 
   if (preAddedItem.value) {
     preAddedItem.value.label = search

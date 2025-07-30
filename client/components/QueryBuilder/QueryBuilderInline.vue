@@ -50,11 +50,11 @@ const noItemOverlay = toRef(props, 'noItemOverlay')
 provide('noItemOverlay', noItemOverlay)
 
 const noChildren = computed(() => {
-  return !(items.value[0] as IQueryBuilderGroup)?.children.length
+  return !(storeItems.value[0] as IQueryBuilderGroup)?.children.length
 })
 
 function clearFilter() {
-  items.value = [
+  storeItems.value = [
     {
       id: generateUUID(),
       isGroup: true,
@@ -66,7 +66,7 @@ function clearFilter() {
 }
 
 function handleAddFirstCondition() {
-  const firstGroup = items.value[0] as IQueryBuilderGroup
+  const firstGroup = storeItems.value[0] as IQueryBuilderGroup
 
   const path = `${firstGroup.path}.children.0`
   const firstColumn = toValue(columns)[0]
@@ -117,7 +117,7 @@ syncRef(toRef(props, 'getFilterComponent'), storeGetFilterComponentFnc, { direct
 // Lifecycle
 // When no items are provided, initialize the items with a group
 if (!props.items.length && !props.noInitialization) {
-  items.value = queryBuilderInitializeItems()
+  storeItems.value = queryBuilderInitializeItems()
 }
 
 // Dispose of store on unmount
@@ -154,7 +154,7 @@ defineExpose({
       />
 
       <Separator
-        v-if="items.length"
+        v-if="storeItems.length"
         vertical
         m="r-2 l-1"
         border="!dark:truegray-500 !primary !r-2px"
@@ -162,7 +162,7 @@ defineExpose({
     </template>
 
     <QueryBuilderRowInline
-      v-for="item in items"
+      v-for="item in storeItems"
       :key="item.id"
       :item
       :level

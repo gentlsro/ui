@@ -41,7 +41,19 @@ export async function listFetchData(payload: {
     }
   }
 
-  const lastRow = listItems.at(-1) as IListItem
+  // Get last row
+  const lastRow = listItems.toReversed().find(item => {
+    if ('isGroup' in item) {
+      return false
+    }
+
+    const isNew = '_isNew' in item
+      || '_isCreate' in item
+      || '_isNew' in item.ref
+      || '_isCreate' in item.ref
+
+    return !isNew
+  })
   const res = await handleRequest<IItem>(abortController => {
     return fnc!({
       abortController: abortController(),
