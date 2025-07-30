@@ -295,10 +295,15 @@ onUnmounted(() => {
     <TableEmpty v-else />
 
     <!-- Totals -->
-    <TableTotals
-      :totals
+    <slot
+      name="totals"
       :ui="mergedProps.ui"
-    />
+    >
+      <TableTotals
+        :totals
+        :ui="mergedProps.ui"
+      />
+    </slot>
 
     <!-- Bottom -->
     <TableBottom />
