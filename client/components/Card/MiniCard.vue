@@ -93,7 +93,7 @@ const isModified = computed(() => {
 
             <NuxtLink
               v-else
-              :to
+              :to="typeof to === 'function' ? to({ value: val }) : to"
               class="link"
               v-bind="navigateToOptions"
               :class="[
