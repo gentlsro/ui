@@ -9,6 +9,7 @@ import type { TableColumn } from './models/table-column.model'
 
 // Functions
 import { reorderArray } from '$utilsLayer/client/functions/reorder-array'
+import { useTableAutoFit } from './composables/useTableAutoFit'
 
 // Store
 import { moveItem } from '$utils'
