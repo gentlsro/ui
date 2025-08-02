@@ -1,3 +1,6 @@
+// FIXME: Those `nodes.trigger()` should not call the `flattenTreeNodes()`
+// There should be a separate mechanism to trigger the nodes change
+
 import { klona } from 'klona/full'
 import { useSearching } from '$utils'
 

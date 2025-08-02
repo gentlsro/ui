@@ -1,9 +1,11 @@
+import { destr } from 'destr'
+
 export function useDuplicate() {
   const route = useRoute()
 
   function parseValue(val?: string | null) {
     try {
-      return JSON.parse(val ?? '')
+      return destr<IItem>(val ?? '')
     } catch (error) {
       return undefined
     }

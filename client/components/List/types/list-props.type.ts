@@ -1,4 +1,4 @@
-import type { z } from 'zod'
+import type { z } from 'zod/v4'
 import type { IVirtualScrollerProps } from '$ui'
 import type { ConcreteComponent, CSSProperties } from 'vue'
 import type { FuseOptions } from '@vueuse/integrations/useFuse'

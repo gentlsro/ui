@@ -36,9 +36,11 @@ const breadcrumbsItems = computed(() => {
         label: uiConfig.breadcrumbs.home.label,
       }
 
+  const usedBreadcrumbs = props.breadcrumbs ?? breadcrumbs.value
+
   return [
     homeBreacrumb,
-    ...breadcrumbs.value,
+    ...usedBreadcrumbs,
   ]
     .flatMap(breadcrumb => [breadcrumb, 'splitter'])
     .slice(0, -1)

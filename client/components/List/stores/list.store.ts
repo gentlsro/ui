@@ -1,4 +1,4 @@
-import { ZodType } from 'zod'
+import { ZodType } from 'zod/v4'
 import { skipHydrate } from 'pinia'
 import type { Required } from 'utility-types'
 import type { GroupItem, SortItem } from '$utils'

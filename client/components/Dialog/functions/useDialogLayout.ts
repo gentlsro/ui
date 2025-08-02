@@ -29,7 +29,7 @@ export function useDialogLayout(model: Ref<boolean>, props: IDialogProps) {
         triggerEl.value?.removeEventListener(props.trigger ?? 'click', toggle)
       }
 
-      triggerEl.value = getElement(props.target ?? parentEl)
+      triggerEl.value = getElement({ elRef: props.target ?? parentEl, parentEl })
 
       // Add event listeners when not using the `manual` mode
       if (!props.manual && triggerEl.value instanceof HTMLElement) {
@@ -45,7 +45,7 @@ export function useDialogLayout(model: Ref<boolean>, props: IDialogProps) {
     const parentEl = instance?.vnode?.el?.parentNode
 
     // Assign the elements
-    triggerEl.value = getElement(props.target ?? parentEl)
+    triggerEl.value = getElement({ elRef: props.target ?? parentEl, parentEl })
 
     // Add event listeners when not using the `manual` mode
     if (!props.manual && triggerEl.value instanceof HTMLElement) {
