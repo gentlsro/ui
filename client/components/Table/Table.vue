@@ -102,8 +102,6 @@ storeEmits.value = {
   rowClick: (payload: { ev?: MouseEvent, row: any }) => emits('click:row', payload),
 }
 
-console.log(props)
-
 // Sync refs with store
 syncRef(toRef(props, 'rowKey'), rowKey, { direction: 'ltr' })
 syncRef(toRef(props, 'columns', []), propsColumns, { direction: 'ltr' })
