@@ -67,7 +67,7 @@ export function useTableStore(
      */
     function navigate() {
       // When using URL, we navigate to the new URL
-      if (modifiers.value?.useUrl) {
+      if (modifiers.value?.useUrl && tableEl.value) {
         const { navigate = tableNavigate } = modifiers.value ?? {}
 
         navigate({
@@ -288,16 +288,8 @@ export function useTableStore(
     })
 
     watch(columnsMerged, columnsMerged => {
-      // There is some extreme edge case where the modifiers are not set
-      // This happens when you spam tables like crazy
-      // I don't know if this is even possible to fix because it might be related
-      // to `pinia dispose` or something like that... Probably using https://vueuse.org/shared/createInjectionState/
-      // instead of pinia would fix this, but that requires refactor.
       if (!modifiers.value) {
         console.log('💀 Modifiers are not set')
-        // location.reload()
-
-        // return
       }
 
       // Merge columns from all the sources, remove duplicates
