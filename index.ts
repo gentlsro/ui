@@ -55,6 +55,7 @@ export type { ITableFilterRow } from './client/components/Table/types/table-filt
 export type { TableFeature } from './client/components/Table/types/table-feature.type'
 export type { ITableEmits } from './client/components/Table/types/table-emits.type'
 export type { ITableDistinctData } from './client/components/Table/types/table-distinct-data.type'
+export type { ITableLayout } from './client/components/Table/types/table-layout.type'
 
 export { tableExtractDataFromUrl } from './client/components/Table/functions/table-extract-data-from-url'
 
