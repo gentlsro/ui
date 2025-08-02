@@ -152,6 +152,13 @@ function handleRemove(idx: number) {
         <DocumentationBtn
           path="columnSelection"
         />
+
+        <!-- <Btn
+          size="sm"
+          no-uppercase
+          icon="i-carbon:reset"
+          :label="$t('table.resetColumnVisibility')"
+        /> -->
       </template>
 
       <Form
