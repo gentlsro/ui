@@ -295,9 +295,9 @@ export function useTableStore(
       // instead of pinia would fix this, but that requires refactor.
       if (!modifiers.value) {
         console.log('💀 Modifiers are not set')
-        location.reload()
+        // location.reload()
 
-        return
+        // return
       }
 
       // Merge columns from all the sources, remove duplicates

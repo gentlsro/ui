@@ -10,6 +10,7 @@ import type { TableColumn } from './models/table-column.model'
 
 // Functions
 import { reorderArray } from '$utilsLayer/client/functions/reorder-array'
+import { useTableAutoFit } from './composables/useTableAutoFit'
 
 // Store
 import { useTableStore } from './stores/table2.store'
@@ -20,6 +21,9 @@ const {
   visibleColumns: visibleColumnsStore,
   nonHelperColumns,
 } = useTableStore()
+
+// Utils
+const { fitColumns } = useTableAutoFit()
 
 // Layout
 const visibleColumnsLocal = ref<TableColumn[]>([])

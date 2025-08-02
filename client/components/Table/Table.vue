@@ -53,7 +53,10 @@ const tableClass = computed(() => {
 })
 
 // Stores
-const store = useTableStore({ tableProps: { ...props, ...mergedProps.value }, storageKey })
+const store = useTableStore({
+  tableProps: { ...props, ...mergedProps.value },
+  storageKey,
+})
 
 const {
   headerEl,
@@ -279,10 +282,15 @@ onMounted(() => {
     <TableEmpty v-else />
 
     <!-- Totals -->
-    <TableTotals
-      :totals
+    <slot
+      name="totals"
       :ui="mergedProps.ui"
-    />
+    >
+      <TableTotals
+        :totals
+        :ui="mergedProps.ui"
+      />
+    </slot>
 
     <!-- Bottom -->
     <TableBottom />
