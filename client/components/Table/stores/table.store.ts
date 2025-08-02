@@ -293,12 +293,12 @@ export function useTableStore(
       // I don't know if this is even possible to fix because it might be related
       // to `pinia dispose` or something like that... Probably using https://vueuse.org/shared/createInjectionState/
       // instead of pinia would fix this, but that requires refactor.
-      // if (!modifiers.value) {
-      //   console.log('💀 Modifiers are not set')
-      //   location.reload()
+      if (!modifiers.value) {
+        console.log('💀 Modifiers are not set')
+        // location.reload()
 
-      //   return
-      // }
+        // return
+      }
 
       // Merge columns from all the sources, remove duplicates
       let cols = columnsMerged
