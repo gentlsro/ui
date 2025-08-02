@@ -4,6 +4,7 @@ import type { ITableLayout } from './types/table-layout.type'
 
 // Functions
 import { useTableAutoFit } from './composables/useTableAutoFit'
+import { tableApplyLayout } from './functions/table-apply-layout'
 import { tableDeleteLayout } from './functions/table-delete-layout'
 import { tableOnLayoutApply } from './functions/table-on-layout-apply'
 import { tableGetLayoutMeta } from './functions/table-get-layout-meta'
@@ -58,45 +59,9 @@ async function handleDelete(layout: any) {
 }
 
 function handleLayoutApply(layout?: ITableLayout) {
-  if (!layout) {
-    // We reset filters, query builder, sorting and selection
-    queryBuilderStore.value = queryBuilderInitializeItems()
+  tableApplyLayout({ layout, getStore: () => store })
 
-    internalColumns.value.forEach(col => {
-      if (!col.nonInteractive && !col.isHelperCol) {
-        col.clearFilters()
-        col.sort = undefined
-        col.sortOrder = undefined
-        col.hidden = true
-      }
-    })
-
-    layout = state.value.layoutDefault
-    onDataFetchQueue.value.push(fitColumns)
-  }
-
-  const { onLayoutApply = tableOnLayoutApply } = modifiers.value ?? {}
-  const _layout = onLayoutApply({
-    layout: layout as ITableLayout,
-    columns: internalColumns.value,
-    modifiers: modifiers.value,
-    getStore: () => store,
-  })
-
-  const {
-    columns,
-    queryBuilder,
-  } = tableTransformColumns({
-    internalColumns: internalColumns.value,
-    modifiers: modifiers.value,
-    defaultSchema: _layout?.schema ?? '',
-    urlSchema: '',
-    shouldUrlBeUsed: false,
-  })
-
-  internalColumns.value = columns
-  queryBuilderStore.value = queryBuilder.length ? queryBuilder : queryBuilderInitializeItems()
-
+  onDataFetchQueue.value.push(fitColumns)
   $hide()
 }
 </script>

@@ -1,13 +1,16 @@
 import type { Required } from 'utility-types'
-import type { tableInitialize } from './table-initialize'
+
+// Types
+import type { ITableLayout } from '../types/table-layout.type'
 
 // Functions
 import { useTableAutoFit } from '../composables/useTableAutoFit'
 import type { tableBuildFetchPayload } from './table-build-fetch-payload'
 
 // Store
-import { useTableStore } from '../stores/table.store'
 import { tableSelectRow } from './table-select-row'
+import { useTableStore } from '../stores/table.store'
+import { tableApplyLayout } from './table-apply-layout'
 
 export function tableGetExposed() {
   const { fitColumns } = useTableAutoFit()
@@ -18,6 +21,10 @@ export function tableGetExposed() {
     refetch: tableStore.fetchAndSetData,
     store: () => tableStore,
     fitColumns,
+    applyLayout: (payload: { layout?: ITableLayout }) => tableApplyLayout({
+      ...payload,
+      getStore: () => tableStore,
+    }),
     getFetchPayload: (payload?: Partial<Parameters<typeof tableBuildFetchPayload>[0]>) => tableStore.getFetchPayload(payload),
     getVirtualScroller: () => tableStore.virtualScrollEl,
     selectRow: (payload: Required<Partial<Parameters<typeof tableSelectRow>[0]>, 'row'>) => {
