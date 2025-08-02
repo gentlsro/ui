@@ -396,10 +396,10 @@ const [
     // to `pinia dispose` or something like that... Probably using https://vueuse.org/shared/createInjectionState/
     // instead of pinia would fix this, but that requires refactor.
     if (!modifiers.value) {
-      console.log('💀 Modifiers are not set')
-      location.reload()
+      console.log('💀 Modifiers are not set', modifiers.value, tableProps?.modifiers)
+      // location.reload()
 
-      return
+      // return
     }
 
     // Merge columns from all the sources, remove duplicates
