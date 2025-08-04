@@ -248,7 +248,7 @@ export class TableColumn<T = IItem> {
    */
   editComponent?: {
     component: any
-    props?: Record<string, any>
+    props?: Record<string, any> | ((payload: { row: T, column: TableColumn }) => Record<string, any>)
 
     /**
      * A function that is called when the cell is saved
