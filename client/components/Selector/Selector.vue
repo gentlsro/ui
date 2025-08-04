@@ -258,7 +258,7 @@ onUnmounted(() => {
         :to
         :emits
         :option-to
-        :name="name || path || label || placeholder"
+        :name="name || path || placeholder"
       >
         <template #default="{ item, index, optionByKey }">
           <slot

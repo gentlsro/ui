@@ -6,7 +6,7 @@ import {
   presetAttributify,
   presetIcons,
   presetTypography,
-  presetUno,
+  presetWind3,
   transformerDirectives,
   transformerVariantGroup,
 } from 'unocss'
@@ -183,7 +183,7 @@ export default defineNuxtConfig({
   unocss: {
     preflight: false,
     presets: [
-      presetUno(),
+      presetWind3(),
       presetIcons(),
       presetAttributify({ ignoreAttributes: ['size'] }),
       presetTypography(),
