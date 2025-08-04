@@ -23,6 +23,14 @@ export function useFieldUtils(options?: {
     return unrefElement(el) as HTMLElement | undefined
   })
 
+  const label = computed(() => {
+    if (typeof props?.label === 'function') {
+      return props?.label()
+    }
+
+    return props?.label
+  })
+
   const isEditable = computed(() => {
     return !props?.readonly && !props?.disabled
   })
@@ -77,6 +85,7 @@ export function useFieldUtils(options?: {
       })
     }
 
+    el.value?.focus?.()
     isBlurred.value = false
     instance?.emit('focus')
   }
@@ -112,6 +121,7 @@ export function useFieldUtils(options?: {
     inputId,
     isEditable,
     hasClearableBtn,
+    label,
     getFieldProps,
     handleClickWrapper,
     handleFocusOrClick,

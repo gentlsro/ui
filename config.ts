@@ -21,6 +21,7 @@ import type { IDialogProps } from './client/components/Dialog/types/dialog-props
 import type { IDrawerProps } from './client/components/Drawer/types/drawer-props.type'
 import type { IFieldProps } from './client/components/Field/types/field-props.type'
 import type { IHeadingProps } from './client/components/Typography/types/heading-props.type'
+import type { IIconInputProps } from './client/components/Inputs/IconInput/types/icon-input-props.type'
 import type { IInputLabelProps } from './client/components/InputLabel/types/input-label-props.type'
 import type { IInputWrapperProps } from './client/components/InputWrapper/types/input-wrapper-props.type'
 import type { IItemProps } from './client/components/Item/types/item-props.type'
@@ -447,6 +448,26 @@ export const defaultComponentsConfig = {
       highlighted: false,
       ui: {
         contentClass: 'min-h-10',
+      },
+    },
+    merge: ['ui'],
+  },
+
+  // Icon input
+  iconInput: {
+    props: {
+      debounce: 0,
+      disabled: undefined,
+      emptyValue: undefined,
+      errorTakesSpace: true,
+      errorVisible: true,
+      mask: { mask: /.*/ },
+      required: undefined,
+      size: 'md',
+      stackLabel: true,
+      ui: {
+        borderRadius: '0.5rem',
+        appendClass: 'flex gap-1 items-center p-x-2',
       },
     },
     merge: ['ui'],
@@ -1297,6 +1318,7 @@ export type IUIConfig = {
     confirmationInit?: { enabled?: boolean, required?: boolean, editable?: boolean }
   }
   heading: IConfigItem<IHeadingProps>
+  iconInput: IConfigItem<IIconInputProps>
   inputLabel: IConfigItem<IInputLabelProps>
   inputWrapper: IConfigItem<IInputWrapperProps>
   item: IConfigItem<IItemProps>
