@@ -263,6 +263,12 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
     emits.value.rowClick(payload)
   }
 }
+
+function getEditComponentProps(row: IItem, column: IRowColumn) {
+  return typeof column.column._editComponent.props === 'function'
+    ? column.column._editComponent.props({ row, column: column.column })
+    : column.column._editComponent.props
+}
 </script>
 
 <template>
@@ -370,7 +376,7 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
             <Component
               :is="column.column._editComponent.component"
               v-model="cellEditValue"
-              v-bind="column.column._editComponent.props"
+              v-bind="getEditComponentProps(rowData.row, column)"
               size="sm"
               class="active-edit-cell"
               grow
@@ -442,7 +448,7 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
         <Component
           :is="column.column._editComponent.component"
           v-model="cellEditValue"
-          v-bind="column.column._editComponent.props"
+          v-bind="getEditComponentProps(rowDataArray[0].row, column)"
           size="sm"
           class="active-edit-cell"
           grow
