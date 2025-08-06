@@ -65,7 +65,6 @@ function handleRemove(idx: number) {
     :to
     :target="to ? '_blank' : undefined"
     truncate
-    :name
   >
     <slot
       :item="getListItem(model, optionByKey) ?? model"
@@ -80,7 +79,6 @@ function handleRemove(idx: number) {
     v-else-if="useScroller"
     :class="ui?.innerClass"
     :style="ui?.innerStyle"
-    :name
   >
     <template
       v-for="(item, idx) in modelArray"
