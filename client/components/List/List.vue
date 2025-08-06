@@ -131,11 +131,11 @@ onMounted(() => {
     : [selection.value].filter(Boolean)
 
   if (_selection.length === 1) {
-    const itemKey = getListItemKey(_selection[0], props.itemKey)
-    const itemIdx = listItems.value?.findIndex(item => item.id === itemKey)
-    console.log('🚀 ~ listItems.value:', listItems.value, itemKey)
-
     requestAnimationFrame(() => {
+      const itemKey = getListItemKey(_selection[0], props.itemKey)
+      const itemIdx = listItems.value?.findIndex(item => item.id === itemKey)
+      console.log('🚀 ~ listItems.value:', listItems.value, itemKey)
+
       listEl.value?.scrollTo(itemIdx)
     })
   }
