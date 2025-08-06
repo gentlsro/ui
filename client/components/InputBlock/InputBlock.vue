@@ -40,6 +40,7 @@ const path = computed(() => {
     v-if="!editable"
     :name="name || path"
     v-bind="{ ...miniCardProps, ...$attrs }"
+    class="input-block__readonly"
     bg="white dark:darker"
   >
     <template #default="{ val }">
@@ -52,7 +53,7 @@ const path = computed(() => {
 
   <div
     v-show="editable"
-    flex="~ items-center"
+    class="input-block flex items-center"
     :name="name || path"
     v-bind="$attrs"
   >
