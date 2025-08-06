@@ -129,17 +129,18 @@ onMounted(() => {
   const _selection = Array.isArray(selection.value)
     ? selection.value
     : [selection.value].filter(Boolean)
-  console.log('🚀 ~ _selection:', _selection)
 
   if (_selection.length === 1) {
     const itemKey = getListItemKey(_selection[0], props.itemKey)
-    console.log('🚀 ~ itemKey:', itemKey)
-    const domEl = listEl.value?.el.querySelector(`[data-id="${itemKey}"]`) as HTMLElement
-    console.log('🚀 ~ domEl:', domEl)
 
-    if (domEl) {
-      domEl.scrollIntoView({ behavior: 'instant', block: 'nearest' })
-    }
+    nextTick(() => {
+      const domEl = listEl.value?.el.querySelector(`[data-id="${itemKey}"]`) as HTMLElement
+      console.log('🚀 ~ domEl:', domEl)
+
+      if (domEl) {
+        domEl.scrollIntoView({ behavior: 'instant', block: 'nearest' })
+      }
+    })
   }
 })
 
