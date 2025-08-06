@@ -134,7 +134,7 @@ onMounted(() => {
     requestAnimationFrame(() => {
       const itemKey = getListItemKey(_selection[0], props.itemKey)
       const itemIdx = listItems.value?.findIndex(item => item.id === itemKey)
-      console.log('🚀 ~ listItems.value:', listItems.value, itemKey)
+      itemFocusedIdx.value = itemIdx
 
       listEl.value?.scrollTo(itemIdx)
     })
