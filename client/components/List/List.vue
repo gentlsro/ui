@@ -132,14 +132,11 @@ onMounted(() => {
 
   if (_selection.length === 1) {
     const itemKey = getListItemKey(_selection[0], props.itemKey)
+    const itemIdx = listItems.value?.findIndex(item => item.id === itemKey)
+    console.log('🚀 ~ itemIdx:', itemIdx)
 
-    nextTick(() => {
-      const domEl = listEl.value?.el.querySelector(`[data-id="${itemKey}"]`) as HTMLElement
-      console.log('🚀 ~ domEl:', domEl)
-
-      if (domEl) {
-        domEl.scrollIntoView({ behavior: 'instant', block: 'nearest' })
-      }
+    requestAnimationFrame(() => {
+      listEl.value?.scrollTo(itemIdx)
     })
   }
 })
