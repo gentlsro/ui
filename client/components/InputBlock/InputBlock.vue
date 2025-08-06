@@ -51,7 +51,7 @@ const path = computed(() => {
   </MiniCard>
 
   <div
-    v-else
+    v-show="editable"
     flex="~ items-center"
     :name="name || path"
     v-bind="$attrs"
