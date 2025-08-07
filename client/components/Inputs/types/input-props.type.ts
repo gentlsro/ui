@@ -58,7 +58,7 @@ export type IInputProps = {
   }
 
   /**
-   * The input name (for testing purposes)
+   * The input name
    */
   name?: string
 

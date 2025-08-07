@@ -102,6 +102,7 @@ export function useFieldUtils(options?: {
       'label',
       'layout',
       'loading',
+      'name',
       'noBorder',
       'noContent',
       'placeholder',
