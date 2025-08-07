@@ -34,7 +34,6 @@ export default defineNuxtConfig({
     'pinia-plugin-persistedstate/nuxt',
     '@nuxtjs/i18n',
     '@nuxtjs/device',
-    'nuxt-lodash',
   ],
 
   // SSR https://nuxt.com/docs/api/configuration/nuxt-config#ssr
@@ -171,9 +170,6 @@ export default defineNuxtConfig({
       },
     ],
   },
-
-  // Lodash
-  lodash: { prefix: '' },
 
   pinia: {
     storesDirs: [],
