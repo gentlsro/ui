@@ -196,6 +196,7 @@ function parseItemSegment(
     filterField: col?.filterField ?? field,
     comparator: comparator as ComparatorEnum,
     value: parsedValue,
+    dataType: col?.dataType,
   }
 
   results.push(item)
