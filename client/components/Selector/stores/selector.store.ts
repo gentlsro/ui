@@ -28,8 +28,7 @@ export function useSelectorStore(payload?: {
     const optionByKey = computed(() => {
       return options.value.reduce((agg, option) => {
         const key = get(option, optionKey)
-
-        set(agg, key, option)
+        agg[key] = option
 
         return agg
       }, initialMap.value)
