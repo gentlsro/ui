@@ -159,6 +159,7 @@ onMounted(() => {
         :model-value="isSelected"
         :editable="!isDisabled"
         class="list-row-item__selection-checkbox"
+        size="sm"
       />
     </slot>
 
