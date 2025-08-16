@@ -34,11 +34,14 @@ const {
 } = storeToRefs(listStore)
 
 // Utils
-const { createDraggable } = useListDragAndDrop()
 const { getElement } = useFloatingUIUtils()
+const { createDraggable } = useListDragAndDrop({
+  onDragEnd: () => requestAnimationFrame(() => isDragging.value = false),
+})
 
 // Layout
 const el = useTemplateRef('el')
+const isDragging = ref(false)
 const moveHandleEl = useTemplateRef('moveHandleEl')
 const item = toRef(props, 'item')
 
@@ -94,7 +97,7 @@ const rowProps = computed(() => {
 })
 
 function handleClick() {
-  if (isDisabled.value) {
+  if (isDisabled.value || isDragging.value) {
     return
   }
 
@@ -141,6 +144,7 @@ onMounted(() => {
       class="list-move-handle"
       :class="ui?.moveHandleClass"
       :style="ui?.moveHandleStyle"
+      @mousedown="isDragging = true"
     >
       <slot name="move-handle" />
     </ListMoveHandle>
