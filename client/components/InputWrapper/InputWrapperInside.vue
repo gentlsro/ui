@@ -27,7 +27,8 @@ const classes = computed(() => {
 <template>
   <div
     class="input-wrapper__inside"
-    :class="classes"
+    :class="[classes, ui?.inputContainerClass]"
+    :style="ui?.inputContainerStyle"
   >
     <!-- Input -->
     <div
@@ -45,11 +46,7 @@ const classes = computed(() => {
     />
 
     <!-- Border -->
-    <div
-      class="input-wrapper__inside-border input-wrapper-border"
-      :class="ui?.inputContainerClass"
-      :style="ui?.inputContainerStyle"
-    />
+    <div class="input-wrapper__inside-border input-wrapper-border" />
 
     <!-- Prepend -->
     <div class="input-wrapper__prepend input-wrapper__inside-prepend input-wrapper__focusable">
