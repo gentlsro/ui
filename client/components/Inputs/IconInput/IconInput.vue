@@ -4,8 +4,8 @@ import { getComponentMergedProps, getComponentProps } from '$ui'
 import type { NonUndefined } from 'utility-types'
 
 // Functions
+import { useInputUtils } from '../functions/useInputUtils'
 import { useInputValidationUtils } from '../functions/useInputValidationUtils'
-import { useInputUtils } from '~~/libs/UI/client/components/Inputs/functions/useInputUtils'
 
 // Types
 import type { IIconInputProps } from './types/icon-input-props.type'

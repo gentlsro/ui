@@ -47,11 +47,7 @@ async function fetchAndSetIcons() {
     return
   }
 
-  const res = await handleRequest<any>(
-    getIcons,
-    { notification: { error: false } },
-  )
-
+  const res = await handleRequest<any>(getIcons)
   icons.value = res.icons
 }
 
