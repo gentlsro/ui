@@ -1,4 +1,4 @@
-import type { FactoryOpts } from 'imask'
+import type { FactoryOpts, MaskedNumber } from 'imask'
 import type { CSSProperties } from 'vue'
 
 // Types
@@ -56,6 +56,11 @@ export type IInputProps = {
     onAccept?: (val: any) => void
     onCompleted?: (val: any) => void
   }
+
+  /**
+   * A function to adjust the `mask`
+   */
+  formatMask?: (mask: MaskedNumber) => MaskedNumber
 
   /**
    * The input name

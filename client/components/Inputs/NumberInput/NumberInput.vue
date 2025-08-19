@@ -30,11 +30,7 @@ const mergedProps = computed(() => {
 
 // Mask
 const mask = computed<MaskedNumber>(() => {
-  if (props.mask) {
-    return props.mask as MaskedNumber
-  }
-
-  return new MaskedNumber({
+  let mask = new MaskedNumber({
     thousandsSeparator: props.noGrouping
       ? ''
       : separators.value.thousandSeparator,
@@ -52,6 +48,12 @@ const mask = computed<MaskedNumber>(() => {
       return value.toString()
     },
   })
+
+  if (props.mask) {
+    mask = props.mask as MaskedNumber
+  }
+
+  return props.formatMask?.(mask) ?? mask
 })
 
 const {
