@@ -36,6 +36,11 @@ export default defineNuxtConfig({
     '@nuxtjs/device',
   ],
 
+  // Layer meta
+  $meta: {
+    name: 'ui',
+  },
+
   // SSR https://nuxt.com/docs/api/configuration/nuxt-config#ssr
   ssr: false,
 
