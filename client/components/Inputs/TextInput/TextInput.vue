@@ -35,6 +35,7 @@ const {
   isBlurred,
   hasClearableBtn,
   label,
+  isTouched,
   handleBlur,
   handleClickWrapper,
   handleFocusOrClick,
@@ -57,6 +58,7 @@ const hasCopyBtn = computed(() => {
 const { path } = useInputValidationUtils(props)
 
 defineExpose({
+  isTouched: () => isTouched.value,
   focus,
   select,
   blur,

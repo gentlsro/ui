@@ -65,6 +65,7 @@ const {
   hasNoValue,
   hasClearableBtn,
   label,
+  isTouched,
   focus,
   select,
   blur,
@@ -92,6 +93,7 @@ function handlePaste(ev: ClipboardEvent) {
 }
 
 defineExpose({
+  isTouched: () => isTouched.value,
   focus,
   select,
   blur,

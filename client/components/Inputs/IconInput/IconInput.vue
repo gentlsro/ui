@@ -39,6 +39,7 @@ const {
   label,
   masked,
   model,
+  isTouched,
   handleBlur,
   handleClickWrapper,
   handleFocusOrClick,
@@ -77,6 +78,7 @@ onMounted(() => {
 })
 
 defineExpose({
+  isTouched: () => isTouched.value,
   focus,
   select,
   blur,

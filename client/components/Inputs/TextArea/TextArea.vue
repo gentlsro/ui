@@ -34,6 +34,7 @@ const {
   hasContent,
   isBlurred,
   label,
+  isTouched,
   focus,
   select,
   blur,
@@ -63,6 +64,7 @@ const resizeClass = computed(() => {
 const { path } = useInputValidationUtils(props)
 
 defineExpose({
+  isTouched: () => isTouched.value,
   focus,
   select,
   blur,

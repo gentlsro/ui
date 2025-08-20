@@ -18,6 +18,7 @@ export function useFieldUtils(options?: {
   const el = ref<HTMLDivElement>()
   const inputId = props?.id ?? useId()
   const isBlurred = ref(true)
+  const isTouched = ref(false)
 
   const inputElement = computed(() => {
     return unrefElement(el) as HTMLElement | undefined
@@ -86,6 +87,7 @@ export function useFieldUtils(options?: {
     }
 
     el.value?.focus?.()
+    isTouched.value = isEditable.value
     isBlurred.value = false
     instance?.emit('focus')
   }
@@ -123,6 +125,7 @@ export function useFieldUtils(options?: {
     isEditable,
     hasClearableBtn,
     label,
+    isTouched,
     getFieldProps,
     handleClickWrapper,
     handleFocusOrClick,
