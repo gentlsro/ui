@@ -6,12 +6,12 @@ import { useListStore } from '../stores/list.store'
 
 export function listGetExposed() {
   const listStore = useListStore()
-  const { listItems, recalculationTrigger } = storeToRefs(listStore)
+  const { listItems, refreshTrigger } = storeToRefs(listStore)
   const { handleKey } = useListKeyboard({ registerKeyStroke: false })
 
   return {
     handleKey,
-    recalculate: () => recalculationTrigger.value++,
+    refresh: () => refreshTrigger.value++,
     getListItems: () => listItems.value,
     store: () => listStore,
   }

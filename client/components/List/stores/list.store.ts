@@ -41,7 +41,7 @@ export function useListStore(listId?: string, listProps?: IListProps) {
     )
 
     // Utils
-    const recalculationTrigger = ref(0)
+    const refreshTrigger = ref(0)
     const isLoadingSource = ref(listProps?.loading ?? false)
     const { isLoading: isRequestLoading, handleRequest, abortController } = useRequest()
     const itemKey = toRef(listProps ?? {}, 'itemKey', 'id')
@@ -203,7 +203,7 @@ export function useListStore(listId?: string, listProps?: IListProps) {
     })
 
     watchDebounced(
-      ([items, addedItems, isHiddenByItemKey, recalculationTrigger]),
+      ([items, addedItems, isHiddenByItemKey, refreshTrigger]),
       async ([items, addedItems]) => {
         const _items = [...items, ...addedItems.map(item => item.ref)]
           .filter(item => !isHiddenByItemKey.value[getListItemKey(item, itemKey.value)])
@@ -375,7 +375,7 @@ export function useListStore(listId?: string, listProps?: IListProps) {
 
     return {
       // Utils
-      recalculationTrigger,
+      refreshTrigger,
 
       // Configs
       loadData,
