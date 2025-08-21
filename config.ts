@@ -1070,6 +1070,7 @@ export const defaultComponentsConfig = {
       stackLabel: true,
       ui: {
         borderRadius: '0.5rem',
+        appendClass: 'flex gap-1 items-center p-x-2 h-full',
       },
     },
     merge: ['ui'],
