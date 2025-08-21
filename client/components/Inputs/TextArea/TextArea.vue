@@ -130,7 +130,7 @@ defineExpose({
           v-if="hasClearableBtn"
           :clear-confirmation
           :size
-          class="self-start m-t-2"
+          class="self-start m-t-1.5"
           @click.stop.prevent="!clearConfirmation && clear()"
         />
       </div>
