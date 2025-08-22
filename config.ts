@@ -1221,8 +1221,9 @@ export const defaultComponentsConfig = {
       selectionConfig: { multi: false, emitKey: false },
       dndConfig: { enabled: false, dropMode: 'parent' },
       ui: { nodePadding: '1rem' },
+      collapseBtnProps: {},
     },
-    merge: ['collapsingConfig', 'searchConfig', 'selectionConfig', 'dndConfig', 'ui'],
+    merge: ['collapsingConfig', 'searchConfig', 'selectionConfig', 'dndConfig', 'ui', 'collapseBtnProps'],
   },
 
   // ValueFormatter

@@ -33,6 +33,7 @@ const {
   emits,
   dndConfig,
   nodeById,
+  collapseBtnProps,
 } = storeToRefs(treeStore)
 
 // Layout
@@ -191,6 +192,7 @@ onMounted(() => {
         icon="i-flowbite:chevron-right-outline !h-5 !w-5"
         color="ca"
         class="collapse-btn self-start m-t-1"
+        v-bind="collapseBtnProps"
         :class="[collapseBtnClass, ui?.collapseBtnClass]"
         :style="ui?.collapseBtnStyle"
         :loading="isLoading"
