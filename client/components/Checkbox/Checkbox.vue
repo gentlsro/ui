@@ -206,10 +206,6 @@ function handleKey(ev: KeyboardEvent) {
 
   @apply '!outline-none';
 
-  .checkbox {
-    @apply self-start;
-  }
-
   &:focus-visible,
   &:focus {
     .checkbox {
@@ -277,8 +273,7 @@ function handleKey(ev: KeyboardEvent) {
 }
 
 .checkbox {
-  @apply flex flex-center rounded-2 border-primary border-2 shrink-0
-    self-start;
+  @apply flex flex-center rounded-2 border-primary border-2 shrink-0;
 
   &-label {
     @apply leading-tight;
