@@ -59,6 +59,7 @@ const {
   parentIdKey: storeParentIdKey,
   emits: storeEmits,
   dndConfig: storeDndConfig,
+  nodeById: storeNodeById,
 } = storeToRefs(store)
 
 storeEmits.value = {
@@ -141,6 +142,7 @@ defineExpose(treeGetExposed())
               :node="row"
               :collapse
               :level
+              :parent="storeNodeById[row.parentId]"
             />
           </template>
 
@@ -150,6 +152,7 @@ defineExpose(treeGetExposed())
               :node="row"
               :collapse
               :level
+              :parent="storeNodeById[row.parentId]"
             />
           </template>
         </TreeNode>

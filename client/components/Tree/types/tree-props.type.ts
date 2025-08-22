@@ -180,7 +180,7 @@ export type ITreeProps<T extends IItem = IItem> = {
     /**
      * Function to be used for loading the children nodes
      */
-    fnc: (node: T) => Promise<T[]> | T[]
+    fnc: (node: T) => Promise<any> | any
 
     /**
      * Key to get the payload from the `fnc` response
