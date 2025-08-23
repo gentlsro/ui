@@ -6,6 +6,8 @@ export * from './client/types/component-props.type'
 export { BREAKPOINTS } from './shared/constants/breakpoints'
 export { extendNestedComponentProps } from './client/functions/extend-nested-component-props'
 export { getComponentMergedProps, getComponentProps } from './client/functions/get-component-props'
+export { COLORS_PREDEFINED } from './shared/constants/colors-predefined.constant'
+export { getRandomColor } from './shared/functions/get-random-color'
 
 // Btn
 export { BUTTON_PRESET } from './client/components/Button/constants/button-preset.constant'
