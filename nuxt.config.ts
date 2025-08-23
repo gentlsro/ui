@@ -184,14 +184,21 @@ export default defineNuxtConfig({
   unocss: {
     preflight: false,
     presets: [
+      // @ts-expect-error
       presetWind3(),
+      // @ts-expect-error
       presetIcons(),
+      // @ts-expect-error
       presetAttributify({ ignoreAttributes: ['size'] }),
+      // @ts-expect-error
       presetTypography(),
+      // @ts-expect-error
       gentlUIPreset(),
     ],
     transformers: [
+      // @ts-expect-error
       transformerDirectives(),
+      // @ts-expect-error
       transformerVariantGroup(),
     ],
     safelist: ['color-contrast', 'i-emojione:flag-for-united-kingdom', 'i-emojione:flag-for-czechia'],
