@@ -114,7 +114,7 @@ export type IListProps = {
     /**
      * The key to use for the items from the server response
      */
-    payloadKey?: string
+    payloadKey?: string | null
 
     /**
      * The key to use for the total count of items from the server response
