@@ -126,7 +126,7 @@ defineExpose({
       @click.stop.prevent
     >
       <Loader
-        :type="loaderVariant"
+        :variant="loaderVariant"
         :color="loadingColor"
         class="loading__loader"
       />

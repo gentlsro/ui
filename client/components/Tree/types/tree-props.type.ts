@@ -3,6 +3,7 @@ import type { AllowedComponentProps, CSSProperties } from 'vue'
 
 // Types
 import type { ITreeNodeMeta } from './tree-node-meta.type'
+import type { IBtnProps } from '../../Button/types/btn-props.type'
 import type { FuseOptions } from '@vueuse/integrations/useFuse.mjs'
 
 export type ITreeProps<T extends IItem = IItem> = {
@@ -12,6 +13,11 @@ export type ITreeProps<T extends IItem = IItem> = {
    * @default true
    */
   connectors?: boolean
+
+  /**
+   * The props to pass to the collapse button
+   */
+  collapseBtnProps?: IBtnProps
 
   /**
    * The key to use for the children nodes
@@ -180,7 +186,7 @@ export type ITreeProps<T extends IItem = IItem> = {
     /**
      * Function to be used for loading the children nodes
      */
-    fnc: (node: T) => Promise<T[]> | T[]
+    fnc: (node: T) => Promise<any> | any
 
     /**
      * Key to get the payload from the `fnc` response
@@ -232,6 +238,16 @@ export type ITreeProps<T extends IItem = IItem> = {
      * Style to apply to the content
      */
     contentStyle?: CSSProperties
+
+    /**
+     * Class to apply to the collapse button
+     */
+    collapseBtnClass?: ClassType
+
+    /**
+     * Style to apply to the collapse button
+     */
+    collapseBtnStyle?: CSSProperties
 
     /**
      * Class to apply to the nodes

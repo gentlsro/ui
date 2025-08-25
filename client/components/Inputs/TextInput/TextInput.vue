@@ -35,6 +35,7 @@ const {
   isBlurred,
   hasClearableBtn,
   label,
+  isTouched,
   handleBlur,
   handleClickWrapper,
   handleFocusOrClick,
@@ -57,6 +58,7 @@ const hasCopyBtn = computed(() => {
 const { path } = useInputValidationUtils(props)
 
 defineExpose({
+  isTouched: () => isTouched.value,
   focus,
   select,
   blur,
@@ -106,6 +108,9 @@ defineExpose({
       :readonly
       :disabled
       autocomplete="off"
+      autocorrect="off"
+      autocapitalize="off"
+      spellcheck="false"
       :label="label || placeholder"
       :name="name || path || label || placeholder"
       class="control"

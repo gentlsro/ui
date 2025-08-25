@@ -147,9 +147,10 @@ const {
   hasNoValue,
   hasContent,
   hasClearableBtn,
+  label,
+  isTouched,
   handleFocusOrClick,
   handleClickWrapper,
-  label,
   focus,
   select,
   handleBlur,
@@ -173,6 +174,7 @@ const {
 const { path } = useInputValidationUtils(props)
 
 defineExpose({
+  isTouched: () => isTouched.value,
   focus,
   select,
   blur,

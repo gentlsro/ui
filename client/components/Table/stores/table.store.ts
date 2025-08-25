@@ -59,7 +59,7 @@ export function useTableStore(
      * This flag is used to prevent that temporarily, for example when we want
      * to "silently" set the filters without refetching the data.
      */
-    const isSilentChange = refAutoReset(false, 200)
+    const isSilentChange = refAutoReset(false, 50)
     const { handleRequest } = useRequest()
 
     /**

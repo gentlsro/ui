@@ -167,6 +167,7 @@ const {
   hasContent,
   hasClearableBtn,
   hasNoValue,
+  isTouched,
   focus,
   select,
   blur,
@@ -233,6 +234,7 @@ watch(model, () => {
 const { path } = useInputValidationUtils(props)
 
 defineExpose({
+  isTouched: () => isTouched.value,
   focus,
   select,
   blur,

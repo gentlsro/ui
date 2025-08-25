@@ -33,6 +33,7 @@ const {
   emits,
   dndConfig,
   nodeById,
+  collapseBtnProps,
 } = storeToRefs(treeStore)
 
 // Layout
@@ -190,8 +191,10 @@ onMounted(() => {
         size="xs"
         icon="i-flowbite:chevron-right-outline !h-5 !w-5"
         color="ca"
-        class="collapse-btn"
-        :class="collapseBtnClass"
+        class="collapse-btn self-start m-t-1"
+        v-bind="collapseBtnProps"
+        :class="[collapseBtnClass, ui?.collapseBtnClass]"
+        :style="ui?.collapseBtnStyle"
         :loading="isLoading"
         @click.stop.prevent="handleToggleCollapse"
       />
@@ -262,7 +265,8 @@ onMounted(() => {
     }
 
     &.horizontal-connector::after {
-      @apply content-empty absolute top-1/2 border-t-1 border-ca border-dashed;
+      @apply content-empty absolute border-t-1 border-ca border-dashed;
+      top: min(24px, 50%);
 
       width: var(--treePadding);
     }

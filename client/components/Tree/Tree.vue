@@ -59,6 +59,8 @@ const {
   parentIdKey: storeParentIdKey,
   emits: storeEmits,
   dndConfig: storeDndConfig,
+  nodeById: storeNodeById,
+  collapseBtnProps: storeCollapseBtnProps,
 } = storeToRefs(store)
 
 storeEmits.value = {
@@ -79,6 +81,7 @@ syncRef(search, storeSearch, { direction: 'both' })
 syncRef(childrenKey, storeChildrenKey, { direction: 'ltr' })
 syncRef(parentIdKey, storeParentIdKey, { direction: 'ltr' })
 syncRef(meta, storeNodeMetaById, { direction: 'rtl' })
+syncRef(toRef(mergedProps.value, 'collapseBtnProps'), storeCollapseBtnProps, { direction: 'ltr' })
 
 // @ts-expect-error Some scuffed type
 syncRef(selection, storeSelection, { direction: 'both' })
@@ -141,6 +144,7 @@ defineExpose(treeGetExposed())
               :node="row"
               :collapse
               :level
+              :parent="storeNodeById[row.parentId]"
             />
           </template>
 
@@ -150,6 +154,7 @@ defineExpose(treeGetExposed())
               :node="row"
               :collapse
               :level
+              :parent="storeNodeById[row.parentId]"
             />
           </template>
         </TreeNode>

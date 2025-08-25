@@ -72,6 +72,7 @@ const {
   lastValidValue,
   hasClearableBtn,
   label,
+  isTouched,
   focus,
   select,
   blur,
@@ -238,6 +239,7 @@ function handleBeforeInput(ev: Event) {
 }
 
 defineExpose({
+  isTouched: () => isTouched.value,
   focus,
   select,
   blur,

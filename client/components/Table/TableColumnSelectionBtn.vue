@@ -20,6 +20,7 @@ const {
   internalColumns,
   visibleColumns: visibleColumnsStore,
   nonHelperColumns,
+  onDataFetchQueue,
 } = storeToRefs(useTableStore())
 
 // Utils
@@ -81,6 +82,7 @@ function handleApply() {
     }
   })
 
+  onDataFetchQueue.value.push(fitColumns)
   $hide()
 }
 

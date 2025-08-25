@@ -54,7 +54,7 @@ export function listHandleAdd(payload: {
       emits.add(_item)
 
       if (noLocalAdd) {
-        return
+        return _item
       }
 
       addedItems.value = [...addedItems.value, _item]
@@ -79,7 +79,7 @@ export function listHandleAdd(payload: {
       emits.add(_item)
 
       if (noLocalAdd) {
-        return
+        return _item
       }
 
       addedItems.value = [_item]

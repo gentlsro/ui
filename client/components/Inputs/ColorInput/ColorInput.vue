@@ -48,7 +48,13 @@ function handlePickColor(color?: string) {
 }
 
 // Field
-const { el, getFieldProps, handleFocusOrClick, hasClearableBtn } = useFieldUtils({
+const {
+  el,
+  isTouched,
+  hasClearableBtn,
+  getFieldProps,
+  handleFocusOrClick,
+} = useFieldUtils({
   props,
   onBeforeFocus: ev => onBeforeFocus?.(ev, isPickerActive) ?? {},
   onFocus: ev => onFocus ? onFocus(ev, isPickerActive) : isPickerActive.value = true,
@@ -60,6 +66,11 @@ const fieldProps = getFieldProps(props)
 onMounted(() => {
   referenceEl.value = unrefElement(fieldEl as any)
     ?.querySelector('.wrapper__body') as HTMLDivElement
+})
+
+defineExpose({
+  isTouched: () => isTouched.value,
+  focus: handleFocusOrClick,
 })
 </script>
 

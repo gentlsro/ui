@@ -1,3 +1,6 @@
+// FIXME: Those `nodes.trigger()` should not call the `flattenTreeNodes()`
+// There should be a separate mechanism to trigger the nodes change
+
 import { klona } from 'klona/full'
 import { useSearching } from '$utils'
 
@@ -69,6 +72,7 @@ export function useTreeStore<T extends IItem = IItem>(config?: {
     const nodeMetaById = reactive<Record<ITreeNode['id'], ITreeNodeMeta<T>>>(
       treeProps?.meta ?? {},
     )
+    const collapseBtnProps = ref(treeProps?.collapseBtnProps)
 
     const nodes = computedWithControl(
       () => nodesSource.value,
@@ -197,7 +201,6 @@ export function useTreeStore<T extends IItem = IItem>(config?: {
         loadingByNodeId.value[node.id] = true
 
         const res = await handleRequest(
-          // @ts-expect-error Some weird type
           () => loadChildren.value?.fnc(node) ?? [],
           {
             onComplete: () => loadingByNodeId.value[node.id] = false,
@@ -390,6 +393,7 @@ export function useTreeStore<T extends IItem = IItem>(config?: {
       isSearched,
       maxLevel,
       loadingByNodeId,
+      collapseBtnProps,
 
       // Search
       search,
