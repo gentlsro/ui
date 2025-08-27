@@ -153,6 +153,7 @@ const collapseProps = computed(() => {
           :class="{ 'is-active': item.condition === 'AND' || item.condition === 'NOT_AND' }"
           :label="$t('queryBuilder.and')"
           size="xs"
+          :disabled="!editable"
           @click="handleSetCondition('AND')"
         />
 
@@ -162,6 +163,7 @@ const collapseProps = computed(() => {
           :class="{ 'is-active': item.condition === 'OR' || item.condition === 'NOT_OR' }"
           :label="$t('queryBuilder.or')"
           size="xs"
+          :disabled="!editable"
           @click="handleSetCondition('OR')"
         />
       </div>
