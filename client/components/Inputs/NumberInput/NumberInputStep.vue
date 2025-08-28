@@ -38,6 +38,7 @@ function handleStep() {
 
   if (
     isNil(currentValue)
+    || Number.isNaN(+currentValue)
     || currentValue === ''
     || currentValue === props.emptyValue
   ) {
