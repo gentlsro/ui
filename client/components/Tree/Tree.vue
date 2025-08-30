@@ -1,5 +1,6 @@
 <script setup lang="ts" generic="T extends ITreeNode">
 import { getActivePinia } from 'pinia'
+import type { IVirtualScrollerProps } from '$ui'
 
 // Types
 import type { ITreeProps } from './types/tree-props.type'
@@ -39,6 +40,10 @@ const nodes = defineModel<NonNullable<ITreeNode<T>[]>>({
 // Merged props
 const mergedProps = computed(() => {
   return getComponentMergedProps('tree', props) as ITreeProps<T>
+})
+
+const scrollerConfig = computed(() => {
+  return mergedProps.value.scrollerConfig as IVirtualScrollerProps<T>
 })
 
 // Store
@@ -127,7 +132,7 @@ defineExpose(treeGetExposed())
       class="nodes"
       :class="mergedProps.ui?.contentClass"
       :style="mergedProps.ui?.contentStyle"
-      v-bind="mergedProps.scrollerConfig"
+      v-bind="scrollerConfig"
     >
       <template #default="{ row }">
         <TreeNode
