@@ -152,6 +152,11 @@ defineExpose({
       @paste.stop.prevent="handlePaste"
     >
 
+    <!-- Hint -->
+    <template #hint>
+      <slot name="hint" />
+    </template>
+
     <!-- Append -->
     <template
       v-if="$slots.append || hasClearableBtn || (!readonly && !disabled)"
