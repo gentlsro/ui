@@ -57,7 +57,7 @@ export type ITreeProps<T extends IItem = IItem> = {
   /**
    * Scroller configuration
    */
-  scrollerConfig?: Pick<IVirtualScrollerProps<any>, 'rowHeight' | 'overscan' | 'threshold' | 'watchWidth'>
+  scrollerConfig?: Pick<IVirtualScrollerProps<any>, 'rowKey' | 'rowHeight' | 'overscan' | 'threshold' | 'watchWidth'>
 
   /**
    * The search value
