@@ -127,6 +127,7 @@ defineExpose(treeGetExposed())
       class="nodes"
       :class="mergedProps.ui?.contentClass"
       :style="mergedProps.ui?.contentStyle"
+      v-bind="mergedProps.scrollerConfig"
     >
       <template #default="{ row }">
         <TreeNode

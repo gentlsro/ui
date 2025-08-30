@@ -1,4 +1,4 @@
-import type { ITextInputProps } from '$ui'
+import type { ITextInputProps, IVirtualScrollerProps } from '$ui'
 import type { AllowedComponentProps, CSSProperties } from 'vue'
 
 // Types
@@ -53,6 +53,11 @@ export type ITreeProps<T extends IItem = IItem> = {
    * The element to use for the nodes
    */
   nodeEl?: string | any
+
+  /**
+   * Scroller configuration
+   */
+  scrollerConfig?: Pick<IVirtualScrollerProps<any>, 'rowHeight' | 'overscan' | 'threshold' | 'watchWidth'>
 
   /**
    * The search value

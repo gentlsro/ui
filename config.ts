@@ -1222,8 +1222,17 @@ export const defaultComponentsConfig = {
       dndConfig: { enabled: false, dropMode: 'parent' },
       ui: { nodePadding: '1rem' },
       collapseBtnProps: {},
+      scrollerConfig: {},
     },
-    merge: ['collapsingConfig', 'searchConfig', 'selectionConfig', 'dndConfig', 'ui', 'collapseBtnProps'],
+    merge: [
+      'collapsingConfig',
+      'searchConfig',
+      'selectionConfig',
+      'dndConfig',
+      'ui',
+      'collapseBtnProps',
+      'scrollerConfig',
+    ],
   },
 
   // ValueFormatter
