@@ -45,7 +45,7 @@ function handleStep() {
     currentValue = 0
   }
 
-  const nextValue = +currentValue! + stepAdjusted.value * modifier.value
+  const nextValue = +currentValue! + stepAdjusted.value * modifier.value + Number.EPSILON
   model.value = nextValue
 }
 
