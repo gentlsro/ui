@@ -169,23 +169,12 @@ defineExpose({
           :focus="focus"
         />
 
-        <Btn
+        <InputClearBtn
           v-if="hasClearableBtn"
-          icon="i-eva:close-fill h-6 w-6"
-          color="ca"
-          size="auto"
-          h="7"
-          w="7"
-          tabindex="-1"
+          :clear-confirmation
+          :size
           @click.stop.prevent="!clearConfirmation && clear()"
-        >
-          <MenuConfirmation
-            v-if="clearConfirmation"
-            @ok="clear"
-          >
-            {{ clearConfirmation }}
-          </MenuConfirmation>
-        </Btn>
+        />
 
         <!-- Step -->
         <NumberInputStep
