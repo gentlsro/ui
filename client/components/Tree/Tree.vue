@@ -94,7 +94,9 @@ syncRef(selection, storeSelection, { direction: 'both' })
 loadChildren.value = props.loadChildren
 
 // Init keyboard navigation
-useTreeKeyboard()
+if (!props.noKeyboard) {
+  useTreeKeyboard()
+}
 
 // Lifecycle
 // Dispose of store on unmount

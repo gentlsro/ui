@@ -55,6 +55,11 @@ export type ITreeProps<T extends IItem = IItem> = {
   nodeEl?: string | any
 
   /**
+   * When true, the keyboard navigation will be disabled
+   */
+  noKeyboard?: boolean
+
+  /**
    * Scroller configuration
    */
   scrollerConfig?: Pick<IVirtualScrollerProps<any>, 'rowKey' | 'rowHeight' | 'overscan' | 'threshold' | 'watchWidth'>
