@@ -112,9 +112,10 @@ export function useInputUtils(options: IInputUtilsOptions) {
   })
 
   const hasClearableBtn = computed(() => {
-    return (
-      !props.readonly && !props.disabled && props.clearable && hasContent.value
-    )
+    return !props.readonly
+      && !props.disabled
+      && props.clearable
+      && hasContent.value
   })
 
   // Input methods
