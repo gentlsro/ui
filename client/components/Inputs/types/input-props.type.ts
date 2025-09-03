@@ -3,6 +3,7 @@ import type { CSSProperties } from 'vue'
 
 // Types
 import type { IInputWrapperProps } from '../../InputWrapper/types/input-wrapper-props.type'
+import type { INumberInputProps } from '$ui'
 
 export type IInputProps = {
   /**
@@ -60,7 +61,7 @@ export type IInputProps = {
   /**
    * A function to adjust the `mask`
    */
-  formatMask?: (mask: MaskedNumber) => MaskedNumber
+  formatMask?: (payload: { mask: MaskedNumber, props: INumberInputProps }) => MaskedNumber
 
   /**
    * The input name
