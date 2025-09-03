@@ -53,7 +53,10 @@ const mask = computed<MaskedNumber>(() => {
     mask = props.mask as MaskedNumber
   }
 
-  return props.formatMask?.({ mask, props: { ...props, ...mergedProps.value } }) ?? mask
+  return props.formatMask?.({
+    mask,
+    props: { ...props, ...mergedProps.value },
+  }) ?? mask
 })
 
 const {
