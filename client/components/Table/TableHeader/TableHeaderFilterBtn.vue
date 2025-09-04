@@ -129,7 +129,7 @@ onKeyStroke('Enter', ev => {
   const isCtrlKey = ev.ctrlKey || ev.metaKey
 
   if (isCtrlKey && isFocusedWithin) {
-    // $hide({ all: true })
+    $hide({ all: true, type: 'menu' })
   }
 })
 </script>
