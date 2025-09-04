@@ -49,7 +49,7 @@ function handleClick(ev: PointerEvent) {
 
   // When shift is not used, we open the menu
   if (!isShift) {
-    $hide({ all: true })
+    $hide({ all: true, type: 'menu' })
     isMenuOpen.value = true
 
     return
