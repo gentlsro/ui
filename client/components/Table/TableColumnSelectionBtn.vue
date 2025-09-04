@@ -166,9 +166,9 @@ function handleRemove(idx: number) {
         :ui="{
           contentClass: 'grow grid grid-cols-2 gap-2 overflow-auto',
           controlsClass: 'p-x-0 p-b-0 p-t-1 border-t-1 border-ca',
-          submitClass: '!w-auto',
+          submitClass: '!w-auto bg-primary color-white',
         }"
-        :submit-btn-props="{ size: 'sm' }"
+        :submit-btn-props="{ size: 'sm', noUppercase: true }"
         no-shortcuts
         :label="$t('table.applyColumns')"
         :submit-disabled="!visibleColumnsLocal.length"
