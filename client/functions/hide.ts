@@ -52,6 +52,7 @@ export function $hide(options?: {
   }
 
   const floatingEls = Array.from(document.querySelectorAll(selector))
+  console.log('Log ~ $hide ~ floatingEls:', floatingEls)
 
   if (all) {
     if (ignoreUntilEl) {
