@@ -125,6 +125,10 @@ async function handleMenuBeforeHide() {
 }
 
 const $z = useZod({ scope: 'qb' })
+
+onMounted(() => {
+  console.log(item.value)
+})
 </script>
 
 <template>

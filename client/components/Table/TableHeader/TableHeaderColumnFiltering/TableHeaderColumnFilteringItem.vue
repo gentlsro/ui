@@ -44,6 +44,7 @@ defineExpose({ focus: () => valueInputEl.value?.focus() })
       <Btn
         preset="TRASH"
         size="sm"
+        tabindex="-1"
         @click="$emit('remove:item')"
       />
     </div>
