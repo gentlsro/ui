@@ -25,9 +25,11 @@ const { modifiers, internalColumns } = storeToRefs(useTableStore())
 const { filterValueChangeDebounce = tableFilterValueChangeDebounce } = modifiers.value ?? {}
 
 // Layout
+const filteringEl = useTemplateRef('filteringEl')
 const column = toRef(props, 'column')
 const columnCopy = ref(klona(column.value))
 const isMenuOpen = ref(false)
+const { focused: isFocusedWithin } = useFocusWithin(filteringEl)
 
 const isTooltipAccessible = computed(() => {
   const col = column.value
@@ -47,6 +49,7 @@ function handleClick(ev: PointerEvent) {
 
   // When shift is not used, we open the menu
   if (!isShift) {
+    $hide({ all: true })
     isMenuOpen.value = true
 
     return
@@ -121,6 +124,14 @@ function debouncedSync(ms: number) {
     column.value.filters = columnCopy.value.filters.map(f => new FilterItem(f))
   }, ms)
 }
+
+onKeyStroke('Enter', ev => {
+  const isCtrlKey = ev.ctrlKey || ev.metaKey
+
+  if (isCtrlKey && isFocusedWithin) {
+    $hide({ all: true })
+  }
+})
 </script>
 
 <template>
@@ -179,6 +190,7 @@ function debouncedSync(ms: number) {
 
       <TableHeaderColumnFiltering
         v-if="column.filterable"
+        ref="filteringEl"
         :column="columnCopy"
         :modify-fnc
         :remove-fnc
