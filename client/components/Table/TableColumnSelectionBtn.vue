@@ -166,6 +166,7 @@ function handleRemove(idx: number) {
         :ui="{
           contentClass: 'grow grid grid-cols-2 gap-2 overflow-auto',
           controlsClass: 'p-x-0 p-b-0 p-t-1 border-t-1 border-ca',
+          submitClass: '!w-auto',
         }"
         :submit-btn-props="{ size: 'sm' }"
         no-shortcuts
