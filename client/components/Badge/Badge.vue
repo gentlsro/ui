@@ -19,7 +19,9 @@ withDefaults(defineProps<IBadgeProps>(), {
     color="white"
     border="white"
   >
-    {{ counter }}
+    <slot>
+      {{ counter }}
+    </slot>
   </div>
 </template>
 
