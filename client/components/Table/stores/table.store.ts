@@ -615,18 +615,16 @@ export function useTableStore(
 
       const rowsFetched = payloadKey ? (get(resModified, payloadKey) ?? []) : resModified
       const countFetched = get(resModified, countKey) ?? 0
-      const hasNoRows = rows.value.length === 0
+      const hadNoRows = rows.value.length === 0
 
       rows.value = isFetchMore.value ? [...rows.value, ...rowsFetched] : rowsFetched
       totalRows.value = isFetchMore.value ? totalRows.value : countFetched
       hasMore.value = rows.value.length < totalRows.value
 
       if (!isFetchMore.value) {
-        console.log('hasNoRows', hasNoRows)
         // If there were no rows in the table before, and now there are,
         // we need to reset the X-axis scroll position
-        if (hasNoRows && rows.value.length > 0) {
-          console.log('Resetting X-axis scroll position')
+        if (hadNoRows && rows.value.length > 0) {
           headerX.value = 0
         }
 
