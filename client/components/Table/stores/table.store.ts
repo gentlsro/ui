@@ -622,9 +622,11 @@ export function useTableStore(
       hasMore.value = rows.value.length < totalRows.value
 
       if (!isFetchMore.value) {
+        console.log('hasNoRows', hasNoRows)
         // If there were no rows in the table before, and now there are,
         // we need to reset the X-axis scroll position
         if (hasNoRows && rows.value.length > 0) {
+          console.log('Resetting X-axis scroll position')
           headerX.value = 0
         }
 
