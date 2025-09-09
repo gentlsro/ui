@@ -196,10 +196,6 @@ const {
   transform: false,
 })
 
-watchEffect(() => {
-  console.log('menuPlacement', menuPlacement.value)
-})
-
 useResizeObserver(contentEl, () => {
   requestAnimationFrame(() => {
     if (!props.noMove) {
