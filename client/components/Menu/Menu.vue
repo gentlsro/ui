@@ -196,6 +196,10 @@ const {
   transform: false,
 })
 
+watchEffect(() => {
+  console.log('menuPlacement', menuPlacement.value)
+})
+
 useResizeObserver(contentEl, () => {
   requestAnimationFrame(() => {
     if (!props.noMove) {
@@ -427,7 +431,7 @@ const isOverlayVisible = computed(() => {
 }
 
 .menu[placement^='left'] > .menu__arrow {
-  @apply right--5px border-r-custom border-t-custom border-ca;
+  @apply right--4px border-r-custom border-t-custom border-ca;
 }
 
 .menu[placement^='right'] > .menu__arrow {
