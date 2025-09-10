@@ -84,15 +84,15 @@ export function useTreeStore<T extends IItem = IItem>(config?: {
       const nodesSearched = searchConfig.value?.fnc
         ? await searchConfig.value.fnc(search.value, nodes.value)
         : await searchData({
-            searchRef: search.value,
-            rowsRef: nodes,
-            fuseOptions: {
-              keys: ['name'],
-              useExtendedSearch: true,
-              ...searchConfig.value?.fuseOptions,
-            },
-            fuseSearchToken: searchConfig.value?.fuseSearchToken ?? "'",
-          })
+          searchRef: search.value,
+          rowsRef: nodes,
+          fuseOptions: {
+            keys: ['name'],
+            useExtendedSearch: true,
+            ...searchConfig.value?.fuseOptions,
+          },
+          fuseSearchToken: searchConfig.value?.fuseSearchToken ?? "'",
+        })
 
       const nodesSearchedRows = nodesSearched.map(res => {
         return searchConfig.value?.fnc
@@ -365,7 +365,13 @@ export function useTreeStore<T extends IItem = IItem>(config?: {
       let { node, to } = payload
 
       if (dndConfig.value?.beforeMoved) {
-        node = await dndConfig.value?.beforeMoved?.({ node, to, nodeById: nodeById.value, nodeMetaById })
+        node = await dndConfig.value?.beforeMoved?.({
+          node: payload.node,
+          to: payload.to?.id === '__ROOT__' ? null : payload.to,
+          nodeById: nodeById.value,
+          nodeMetaById,
+          revert,
+        })
       }
 
       removeNodes([node])

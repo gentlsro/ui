@@ -186,6 +186,7 @@ export type ITreeProps<T extends IItem = IItem> = {
       to?: T | null
       nodeById: Record<string, T>
       nodeMetaById?: Record<string, ITreeNodeMeta<T>>
+      revert: () => void
     }) => ITreeNode<T> | Promise<ITreeNode<T>>
 
     /**
