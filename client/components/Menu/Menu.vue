@@ -321,7 +321,7 @@ const isOverlayVisible = computed(() => {
         v-if="model"
         ref="floatingEl"
         class="floating-element menu"
-        bg="white dark:bg-darker"
+        bg="white dark:darker"
         :style="floatingStyles"
         :data-open="model"
         :class="{
