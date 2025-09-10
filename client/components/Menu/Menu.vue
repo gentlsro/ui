@@ -385,6 +385,7 @@ const isOverlayVisible = computed(() => {
           class="menu__content"
           :class="mergedProps.ui?.contentClass ?? 'p-1'"
           :style="mergedProps.ui?.contentStyle"
+          bg="inherit"
         >
           <slot :hide="hide" />
         </div>
@@ -419,19 +420,31 @@ const isOverlayVisible = computed(() => {
 
 // Arrow placement
 .menu[placement^='top'] > .menu__arrow {
-  @apply bottom--5px border-b-custom border-r-custom border-ca;
+  @apply bottom--4px shadow-darker/12;
+  // @apply border-b-custom border-r-custom border-ca;
+
+  box-shadow: 1px 1px 2px 1px var(--un-shadow-color);
 }
 
 .menu[placement^='bottom'] > .menu__arrow {
-  @apply top--5px border-t-custom border-l-custom border-ca;
+  @apply top--4px shadow-darker/12;
+  // @apply border-t-custom border-l-custom border-ca;
+
+  box-shadow: -1px -1px 2px 1px var(--un-shadow-color);
 }
 
 .menu[placement^='left'] > .menu__arrow {
-  @apply right--4px border-r-custom border-t-custom border-ca;
+  @apply right--4px shadow-darker/12;
+  // @apply border-r-custom border-t-custom border-ca;
+
+  box-shadow: 1px -1px 2px 1px var(--un-shadow-color);
 }
 
 .menu[placement^='right'] > .menu__arrow {
-  @apply left--5px border-l-custom border-b-custom border-ca;
+  @apply left--4px shadow-darker/12;
+  // @apply border-l-custom border-b-custom border-ca;
+
+  box-shadow: -1px 1px 2px 1px var(--un-shadow-color);
 }
 
 // Transition
