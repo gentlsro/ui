@@ -176,9 +176,20 @@ export type ITreeProps<T extends IItem = IItem> = {
     }) => ITreeNode<T> | undefined | null
 
     /**
-     * Function that is called when a node is moved
+     * Function that is called before a node is moved
+     * Must return the (adjusted) node
      *
      * Use-case: Call API
+     */
+    beforeMoved?: (payload: {
+      node: T
+      to?: T | null
+      nodeById: Record<string, T>
+      nodeMetaById?: Record<string, ITreeNodeMeta<T>>
+    }) => ITreeNode<T> | Promise<ITreeNode<T>>
+
+    /**
+     * Function that is called when a node is moved
      */
     onMoved?: (payload: {
       node: T

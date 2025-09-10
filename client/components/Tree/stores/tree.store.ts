@@ -362,7 +362,11 @@ export function useTreeStore<T extends IItem = IItem>(config?: {
       to?: ITreeNode<T> | null
     }) {
       const snapshot = klona(nodesSource.value)
-      const { node, to } = payload
+      let { node, to } = payload
+
+      if (dndConfig.value?.beforeMoved) {
+        node = await dndConfig.value?.beforeMoved?.({ node, to, nodeById: nodeById.value, nodeMetaById })
+      }
 
       removeNodes([node])
 
