@@ -274,14 +274,12 @@ onMounted(() => {
 
   &.is-selected:not(.is-multi) {
     .tree-node__content {
-      @apply p-x-3;
-
       &::before {
-        @apply content-empty absolute left-0 top-0 h-full w-1 bg-primary rounded-l-custom;
+        @apply content-empty absolute left--1 top-2px bottom-2px w-1 bg-primary rounded-l-custom;
       }
 
       &::after {
-        @apply content-empty absolute right-0 top-0 h-full w-1 bg-primary rounded-r-custom;
+        @apply content-empty absolute right--1 top-2px bottom-2px w-1 bg-primary rounded-r-custom;
       }
     }
   }

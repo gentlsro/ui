@@ -245,6 +245,17 @@ export type ITreeProps<T extends IItem = IItem> = {
      * Whether the selection is multi-select
      */
     multi?: boolean
+
+    /**
+     * Function that is called before a node is selected
+     *
+     * Return `false` to prevent the selection from happening, any other value
+     * will not do anything
+     */
+    beforeSelect?: (payload: {
+      node: T
+      ev?: MouseEvent
+    }) => void | boolean | undefined | Promise<void | boolean | undefined>
   }
 
   /**

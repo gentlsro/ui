@@ -321,6 +321,7 @@ const isOverlayVisible = computed(() => {
         v-if="model"
         ref="floatingEl"
         class="floating-element menu"
+        bg="white dark:bg-darker"
         :style="floatingStyles"
         :data-open="model"
         :class="{
@@ -397,7 +398,7 @@ const isOverlayVisible = computed(() => {
 <style lang="scss" scoped>
 .menu {
   @apply flex flex-col max-w-95vw max-h-95% rounded-custom z-$zIndex
-    rounded-custom border-1 border-ca bg-white dark:bg-darker;
+    rounded-custom border-1 border-ca;
 
   @apply shadow-consistent-xs shadow-darker/20;
 

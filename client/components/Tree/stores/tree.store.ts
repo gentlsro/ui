@@ -294,12 +294,20 @@ export function useTreeStore<T extends IItem = IItem>(config?: {
       return idsSelected.includes(node.id)
     }
 
-    function handleSelect(payload: { node: ITreeNode<T>, ev?: MouseEvent }) {
+    async function handleSelect(payload: { node: ITreeNode<T>, ev?: MouseEvent }) {
       const { node, ev } = payload
       emits.value.nodeClick({ node, ev })
 
       if (!selectionConfig.value?.enabled) {
         return
+      }
+
+      if (selectionConfig.value?.beforeSelect) {
+        const shouldContinue = await selectionConfig.value?.beforeSelect({ node, ev })
+
+        if (shouldContinue === false) {
+          return
+        }
       }
 
       const isEmitKey = !!selectionConfig.value?.emitKey
