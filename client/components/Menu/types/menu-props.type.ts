@@ -151,6 +151,24 @@ export type IMenuProps = {
    */
   virtual?: boolean
 
+  /**
+   * The position of the `Menu` when it is virtual
+   */
+  virtualPosition?: {
+    x: number
+    y: number
+  }
+
+  /**
+   * When true, the `Menu` will be movable
+   */
+  movable?: boolean
+
+  /**
+   * When true, the `Menu` will be resizable
+   */
+  resizable?: boolean
+
   ui?: {
     /**
      * Class to apply to the `content`

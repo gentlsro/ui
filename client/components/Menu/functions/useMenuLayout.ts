@@ -23,7 +23,28 @@ export function useMenuLayout(model: Ref<boolean>, props: IMenuProps) {
   const virtualEl = ref<any>()
 
   watch(model, () => {
-    if (!props.virtual || !lastPointerDownEvent.value) {
+    if (!props.virtual) {
+      return null
+    }
+
+    // Virtual based on virtual position
+    if (props.virtual && props.virtualPosition) {
+      virtualEl.value = {
+        getBoundingClientRect: () => ({
+          width: 0,
+          height: 0,
+          x: props.virtualPosition?.x ?? 0,
+          y: props.virtualPosition?.y ?? 0,
+          left: props.virtualPosition?.x ?? 0,
+          top: props.virtualPosition?.y ?? 0,
+        }),
+      }
+
+      return
+    }
+
+    // Virtual based on last pointer down event
+    if (!lastPointerDownEvent.value) {
       return null
     }
 
@@ -35,10 +56,8 @@ export function useMenuLayout(model: Ref<boolean>, props: IMenuProps) {
         height: 0,
         x: clientX,
         y: clientY,
-        top: clientY,
         left: clientX,
-        right: clientX,
-        bottom: clientY,
+        top: clientY,
       }),
     }
   })

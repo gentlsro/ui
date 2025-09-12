@@ -215,7 +215,7 @@ const {
   // @ts-expect-error Bad element type
 } = useElementBounding(referenceEl, { windowResize: true })
 
-if (!props.noMove) {
+if (!props.noMove && !props.virtual) {
   watchThrottled([pageX, pageY], update, {
     trailing: true,
     throttle: 100,
