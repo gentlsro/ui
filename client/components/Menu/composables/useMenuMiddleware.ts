@@ -52,7 +52,6 @@ export function useMenuMiddleware(
         fallbackPlacements: props.fallbackPlacements,
         fallbackStrategy: 'initialPlacement',
       }),
-
     ]
 
     // Offset

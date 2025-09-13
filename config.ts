@@ -69,6 +69,7 @@ import type { IFormProps } from './client/components/Form/types/form-props.type'
 import type { ISelectorProps } from './client/components/Selector/types/selector-props.type'
 import type { ITableProps } from './client/components/Table/types/table-props.type'
 import type { IQueryBuilderProps } from './client/components/QueryBuilder/types/query-builder-props.type'
+import type { IElementMovementProps } from './client/components/ElementMovement/types/element-movement-props.type'
 
 export const defaultComponentsConfig = {
   // Badge
@@ -343,6 +344,12 @@ export const defaultComponentsConfig = {
       },
     },
     merge: ['ui'],
+  },
+
+  // ElementMovement
+  elementMovement: {
+    props: {},
+    merge: [],
   },
 
   // Field
@@ -621,8 +628,7 @@ export const defaultComponentsConfig = {
       placement: undefined,
       persistent: undefined,
       title: undefined,
-      transitionDuration: 250,
-      virtual: undefined,
+      transitionDuration: 180,
       ui: {
         headerClass: 'font-semibold',
       },
@@ -667,7 +673,6 @@ export const defaultComponentsConfig = {
       ui: {
         contentClass: 'p-1 gap-y-3',
       },
-      virtual: undefined,
 
     },
     merge: ['ui'],
@@ -705,7 +710,6 @@ export const defaultComponentsConfig = {
       referenceTarget: undefined,
       target: undefined,
       trigger: 'click',
-      virtual: undefined,
 
       // Dialog props
       position: 'center',
@@ -1350,6 +1354,7 @@ export type IUIConfig = {
   progressBar: IConfigItem<IProgressBarProps>
   queryBuilder: IConfigItem<IQueryBuilderProps>
   radio: IConfigItem<IRadioProps>
+  elementMovement: IConfigItem<IElementMovementProps>
   scroller: IConfigItem<IScrollerProps>
   scrollArea: IConfigItem<IScrollAreaProps>
   searchInput: IConfigItem<ITextInputProps>
