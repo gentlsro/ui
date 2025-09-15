@@ -128,11 +128,11 @@ function debouncedSync(ms: number) {
 onKeyStroke('Enter', ev => {
   const isCtrlKey = ev.ctrlKey || ev.metaKey
 
-  if (isCtrlKey && isFocusedWithin) {
+  if (isCtrlKey && isFocusedWithin.value) {
     ev.stopPropagation()
     ev.preventDefault()
 
-    // $hide({ all: true, type: 'menu' })
+    $hide({ all: true, type: 'menu' })
   }
 })
 </script>
