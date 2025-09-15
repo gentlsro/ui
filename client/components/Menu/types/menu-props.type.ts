@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'vue'
 import type { Boundary, OffsetOptions, Placement } from '@floating-ui/dom'
+import type { IElementMovementProps } from '$ui'
 
 export type IMenuProps = {
   /**
@@ -147,9 +148,41 @@ export type IMenuProps = {
   trigger?: 'click' | 'contextmenu'
 
   /**
-   * When true, the `referenceTarget` will use the last position the user clicked
+   * The position of the `Menu` when it is virtual
+   *
+   * You can set `x` and `y` to `null` or `undefined` to let the `Menu` calculate the position
    */
-  virtual?: boolean
+  virtualDimensions?: {
+    x?: number | null
+    y?: number | null
+    w?: number | null
+    h?: number | null
+  }
+
+  /**
+   * Configuration for the virtual movement and resizing
+   */
+  virtualConfiguration?: {
+    /**
+     * When true, the `referenceTarget` will use the last position the user clicked
+     */
+    enabled?: boolean
+
+    /**
+     * Limits for the movement and resizing
+     */
+    limits?: IElementMovementProps['limits']
+
+    /**
+     * When true, the `Menu` will be movable
+     */
+    movable?: boolean
+
+    /**
+     * When true, the `Menu` will be resizable
+     */
+    resizable?: boolean
+  }
 
   ui?: {
     /**

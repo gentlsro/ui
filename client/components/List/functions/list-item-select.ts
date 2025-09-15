@@ -43,6 +43,9 @@ export async function listItemSelect(payload: {
     $z,
   } = payload
 
+  // This is a helper to determine whether the `listHandleAdd` function has been called
+  let isAddCalled = false
+
   const isEmitKey = !!selectionConfig?.emitKey
   const isMulti = selectionConfig?.multi
   const isClearable = isNil(clearable) ? true : clearable
@@ -80,6 +83,22 @@ export async function listItemSelect(payload: {
         return
       }
 
+      isAddCalled = true
+      const itemAdded = listHandleAdd({
+        isMulti,
+        isSelected,
+        addedItems,
+        addConfig,
+        item,
+        emits,
+        isAddedItem,
+      })
+
+      if (itemAdded) {
+        item.ref.id = itemAdded.ref.id
+        item.ref.label = itemAdded.ref.label
+      }
+
       // Add the _isCreate flag
       item.ref._isCreate = true
     }
@@ -106,7 +125,7 @@ export async function listItemSelect(payload: {
 
   $z.value.$reset()
 
-  if ('_isNew' in item || isAddedItem) {
+  if (!isAddCalled && ('_isNew' in item || isAddedItem)) {
     listHandleAdd({
       isMulti,
       isSelected,

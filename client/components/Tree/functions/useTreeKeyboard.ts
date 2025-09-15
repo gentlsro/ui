@@ -3,6 +3,8 @@ import { useTreeStore } from '../stores/tree.store'
 
 export function useTreeKeyboard() {
   // Store
+  const uiStore = useUIStore()
+  const { activeElement } = storeToRefs(uiStore)
   const treeStore = useTreeStore()
   const {
     treeEl,
@@ -24,7 +26,10 @@ export function useTreeKeyboard() {
   )
 
   function handleKey(ev: KeyboardEvent) {
-    if (!nodesVisible.value || !focused.value) {
+    const _isActiveElementInput = uiStore.isActiveElementInput()
+    const isActiveElementTreeSearch = _isActiveElementInput && activeElement.value?.closest('.tree-search')
+
+    if (!nodesVisible.value || !focused.value || (_isActiveElementInput && !isActiveElementTreeSearch)) {
       return
     }
 
