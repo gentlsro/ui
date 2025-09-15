@@ -45,11 +45,12 @@ const btnClass = computed(() => {
 })
 
 function handleClick(ev: PointerEvent) {
+  console.log('🚀 ~ handleClick ~ ev:', ev)
   const isShift = ev.shiftKey
 
   // When shift is not used, we open the menu
   if (!isShift) {
-    // $hide({ all: true, type: 'menu' })
+    $hide({ all: true, type: 'menu' })
     isMenuOpen.value = true
 
     return
@@ -125,16 +126,16 @@ function debouncedSync(ms: number) {
   }, ms)
 }
 
-// onKeyStroke('Enter', ev => {
-//   const isCtrlKey = ev.ctrlKey || ev.metaKey
+onKeyStroke('Enter', ev => {
+  const isCtrlKey = ev.ctrlKey || ev.metaKey
 
-//   if (isCtrlKey && isFocusedWithin) {
-//     ev.stopPropagation()
-//     ev.preventDefault()
+  if (isCtrlKey && isFocusedWithin) {
+    ev.stopPropagation()
+    ev.preventDefault()
 
-//     $hide({ all: true, type: 'menu' })
-//   }
-// })
+    $hide({ all: true, type: 'menu' })
+  }
+})
 </script>
 
 <template>
