@@ -125,16 +125,16 @@ function debouncedSync(ms: number) {
   }, ms)
 }
 
-onKeyStroke('Enter', ev => {
-  const isCtrlKey = ev.ctrlKey || ev.metaKey
+// onKeyStroke('Enter', ev => {
+//   const isCtrlKey = ev.ctrlKey || ev.metaKey
 
-  if (isCtrlKey && isFocusedWithin) {
-    ev.stopPropagation()
-    ev.preventDefault()
+//   if (isCtrlKey && isFocusedWithin) {
+//     ev.stopPropagation()
+//     ev.preventDefault()
 
-    $hide({ all: true, type: 'menu' })
-  }
-})
+//     $hide({ all: true, type: 'menu' })
+//   }
+// })
 </script>
 
 <template>
