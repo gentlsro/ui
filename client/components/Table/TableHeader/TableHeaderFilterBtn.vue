@@ -45,12 +45,12 @@ const btnClass = computed(() => {
 })
 
 function handleClick(ev: PointerEvent) {
-  console.log('🚀 ~ handleClick ~ ev:', ev)
   const isShift = ev.shiftKey
 
   // When shift is not used, we open the menu
   if (!isShift) {
-    $hide({ all: true, type: 'menu' })
+    console.log('🚀 ~ handleClick ~ ev:', ev)
+    // $hide({ all: true, type: 'menu' })
     isMenuOpen.value = true
 
     return
