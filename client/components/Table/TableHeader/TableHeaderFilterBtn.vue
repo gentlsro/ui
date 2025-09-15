@@ -49,8 +49,7 @@ function handleClick(ev: PointerEvent) {
 
   // When shift is not used, we open the menu
   if (!isShift) {
-    console.log('🚀 ~ handleClick ~ ev:', ev)
-    // $hide({ all: true, type: 'menu' })
+    $hide({ all: true, type: 'menu' })
     isMenuOpen.value = true
 
     return
@@ -133,7 +132,7 @@ onKeyStroke('Enter', ev => {
     ev.stopPropagation()
     ev.preventDefault()
 
-    $hide({ all: true, type: 'menu' })
+    // $hide({ all: true, type: 'menu' })
   }
 })
 </script>
