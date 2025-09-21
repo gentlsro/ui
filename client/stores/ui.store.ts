@@ -107,6 +107,7 @@ export const useUIStore = defineStore('__ui', () => {
       activeElement.value?.tagName === 'INPUT'
       || activeElement.value?.tagName === 'TEXTAREA'
       || activeElement.value?.contentEditable !== 'inherit'
+      || activeElement.value?.role === 'textbox' // For Monaco editor
     )
   }
 
