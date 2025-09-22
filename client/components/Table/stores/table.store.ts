@@ -80,21 +80,27 @@ export function useTableStore(
     }
 
     // SECTION State
-    const state = useLocalStorage(_storageKey, {
-      columns: [] as ITableStateColumn[],
-      layouts: [] as ITableLayout[],
-      layoutDefault: undefined as ITableLayout | undefined,
-      metaRaw: null as any,
-      queryBuilder: [] as IQueryBuilderRow[],
-      search: '',
-      queryParams: '',
+    function getDefaultState() {
+      return {
+        columns: [] as ITableStateColumn[],
+        layouts: [] as ITableLayout[],
+        layoutDefault: undefined as ITableLayout | undefined,
+        metaRaw: null as any,
+        queryBuilder: [] as IQueryBuilderRow[],
+        search: '',
+        queryParams: '',
 
-      /**
-       * We sometimes need to save some custom data in table context to access it in
-       * a component or similar.
-       */
-      customData: {} as IItem,
-    })
+        /**
+         * We sometimes need to save some custom data in table context to access it in
+         * a component or similar.
+         */
+        customData: {} as IItem,
+      }
+    }
+
+    const state = tableProps?.storageKey
+      ? useLocalStorage(_storageKey, getDefaultState())
+      : ref(getDefaultState())
 
     const customData = computed({
       get() {
