@@ -98,9 +98,7 @@ export function useTableStore(
       }
     }
 
-    const state = tableProps?.storageKey !== null
-      ? useLocalStorage(_storageKey, getDefaultState())
-      : ref(getDefaultState())
+    const state = useLocalStorage(_storageKey, getDefaultState())
 
     const customData = computed({
       get() {
