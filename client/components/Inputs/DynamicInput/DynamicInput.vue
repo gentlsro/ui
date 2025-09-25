@@ -14,13 +14,20 @@ const props = defineProps<IProps>()
 
 const component = computed(() => getInputByDataType(props.dataType))
 const model = defineModel<any>()
+
+const el = ref<any>()
+
+defineExpose({
+  focus: () => el.value?.focus?.(),
+})
 </script>
 
 <template>
   <Component
     :is="component?.component"
-    v-model="model"
     v-bind="component?.props"
+    ref="el"
+    v-model="model"
   >
     <template #prepend>
       <slot name="prepend" />

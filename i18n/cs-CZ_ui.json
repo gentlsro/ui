@@ -1,9 +1,13 @@
 {
   "file": {
+    "self": "Soubor | Soubory",
     "add": "Přidat soubor | Přidat soubory",
     "upload": "Nahrát soubor kliknutím zde nebo přetažením soubor | Nahrát soubory kliknutím zde nebo přetažením souborů",
     "download": "Stáhnout soubor",
     "added": "Soubor k nahrání",
+    "added2": "Přidaný soubor | Přidané soubory",
+    "removed": "Soubor k odebrání",
+    "removed2": "Odebraný soubor | Odebrané soubory",
     "remove": "Odebrat soubor",
     "uploading": "Nahrávání souboru",
     "uploaded": "Soubor úspěšně nahrán",
@@ -82,5 +86,8 @@
     "addFirstCondition": "Přidat první podmínku",
     "negation": "Negováno",
     "negation2": "Negace"
+  },
+  "general": {
+    "moveAndResizeAvailable": "Tento element lze přesouvat a měnit jeho velikost"
   }
 }

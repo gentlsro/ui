@@ -14,5 +14,6 @@ const search = defineModel<string>('search')
     v-model="search"
     autofocus
     v-bind="searchConfig?.props"
+    class="tree-search"
   />
 </template>

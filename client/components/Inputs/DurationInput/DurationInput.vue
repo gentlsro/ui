@@ -88,6 +88,7 @@ function handleDurationUnitChange(unit: DurationUnit) {
 }
 
 defineExpose({
+  isTouched: numberInputEl.value?.isTouched,
   focus: () => numberInputEl.value?.focus(),
   select: () => numberInputEl.value?.select(),
   blur: () => numberInputEl.value?.blur(),

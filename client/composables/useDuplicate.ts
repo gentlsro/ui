@@ -4,7 +4,7 @@ export function useDuplicate() {
   function parseValue(val?: string | null) {
     try {
       return JSON.parse(val ?? '')
-    } catch (error) {
+    } catch {
       return undefined
     }
   }

@@ -1,36 +1,17 @@
 <script setup lang="ts">
-// Types
-import type { IQueryBuilderItem } from './types/query-builder-item-props.type'
-
 type IProps = {
   modelValue?: boolean | string
   noDelete?: boolean
   readonly?: boolean
 }
 
-const props = defineProps<IProps>()
-const emits = defineEmits<{
-  (e: 'update:item', val: any): void
+defineProps<IProps>()
+defineEmits<{
   (e: 'remove:item'): void
 }>()
 
 // Layout
 const model = defineModel<boolean | string>()
-
-const modelHandler = computed({
-  get() {
-    if (isNil(model.value)) {
-      return null
-    }
-
-    return JSON.parse(model.value)
-  },
-  set(val?: any) {
-    model.value = val
-
-    emits('update:item', model.value)
-  },
-})
 
 const positiveBtnClass = computed(() => {
   return model.value

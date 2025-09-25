@@ -68,6 +68,7 @@ const {
   hasNoValue,
   hasClearableBtn,
   label,
+  isTouched,
   focus,
   select,
   blur,
@@ -95,6 +96,7 @@ function handlePaste(ev: ClipboardEvent) {
 }
 
 defineExpose({
+  isTouched: () => isTouched.value,
   focus,
   select,
   blur,
@@ -153,6 +155,11 @@ defineExpose({
       @paste.stop.prevent="handlePaste"
     >
 
+    <!-- Hint -->
+    <template #hint>
+      <slot name="hint" />
+    </template>
+
     <!-- Append -->
     <template
       v-if="$slots.append || hasClearableBtn || (!readonly && !disabled)"
@@ -170,23 +177,12 @@ defineExpose({
           :focus="focus"
         />
 
-        <Btn
+        <InputClearBtn
           v-if="hasClearableBtn"
-          icon="i-eva:close-fill h-6 w-6"
-          color="ca"
-          size="auto"
-          h="7"
-          w="7"
-          tabindex="-1"
+          :clear-confirmation
+          :size
           @click.stop.prevent="!clearConfirmation && clear()"
-        >
-          <MenuConfirmation
-            v-if="clearConfirmation"
-            @ok="clear"
-          >
-            {{ clearConfirmation }}
-          </MenuConfirmation>
-        </Btn>
+        />
 
         <!-- Step -->
         <NumberInputStep

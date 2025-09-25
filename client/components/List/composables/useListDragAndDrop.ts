@@ -13,7 +13,11 @@ import { getListItemKey } from '../functions/helpers'
 
 const LIST_ITEM_CLASSES = ['list-row-item', 'list-row-group']
 
-export function useListDragAndDrop() {
+export function useListDragAndDrop(payload?: {
+  onDragEnd?: () => void
+}) {
+  const { onDragEnd } = payload ?? {}
+
   // Store
   const {
     listEl,
@@ -205,6 +209,7 @@ export function useListDragAndDrop() {
     }
 
     // Reset dragging
+    onDragEnd?.()
     draggedItem.value = undefined
     dragMeta.value = {
       targetEl: undefined,

@@ -154,14 +154,16 @@ export function useTreeDragAndDrop() {
     }
 
     // Reset dragging
-    draggedNode.value = undefined
-    dragMeta.value = {
-      targetEl: undefined,
-      target: undefined,
-      placement: undefined,
-      dropIndicatorCSS: undefined,
-      sourceEl: undefined,
-    }
+    requestAnimationFrame(() => {
+      draggedNode.value = undefined
+      dragMeta.value = {
+        targetEl: undefined,
+        target: undefined,
+        placement: undefined,
+        dropIndicatorCSS: undefined,
+        sourceEl: undefined,
+      }
+    })
   }
 
   function handleScroll() {

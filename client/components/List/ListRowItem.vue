@@ -34,11 +34,14 @@ const {
 } = storeToRefs(listStore)
 
 // Utils
-const { createDraggable } = useListDragAndDrop()
 const { getElement } = useFloatingUIUtils()
+const { createDraggable } = useListDragAndDrop({
+  onDragEnd: () => requestAnimationFrame(() => isDragging.value = false),
+})
 
 // Layout
 const el = useTemplateRef('el')
+const isDragging = ref(false)
 const moveHandleEl = useTemplateRef('moveHandleEl')
 const item = toRef(props, 'item')
 
@@ -94,7 +97,7 @@ const rowProps = computed(() => {
 })
 
 function handleClick() {
-  if (isDisabled.value) {
+  if (isDisabled.value || isDragging.value) {
     return
   }
 
@@ -112,7 +115,7 @@ onMounted(() => {
     const _el = unrefElement(el as any) as HTMLElement
     const listElDom = unrefElement(listEl as any)
     const moveHandleElDom = unrefElement(moveHandleEl as any)
-      ?? getElement(props.moveHandleTarget, _el)
+      ?? getElement({ elRef: props.moveHandleTarget, parentEl: _el })
 
     createDraggable({
       el: _el,
@@ -141,6 +144,7 @@ onMounted(() => {
       class="list-move-handle"
       :class="ui?.moveHandleClass"
       :style="ui?.moveHandleStyle"
+      @mousedown="isDragging = true"
     >
       <slot name="move-handle" />
     </ListMoveHandle>
@@ -155,6 +159,7 @@ onMounted(() => {
         :model-value="isSelected"
         :editable="!isDisabled"
         class="list-row-item__selection-checkbox"
+        size="sm"
       />
     </slot>
 

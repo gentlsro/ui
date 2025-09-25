@@ -179,6 +179,7 @@ function handleKeyDown(e: KeyboardEvent) {
 .toggle {
   -webkit-tap-highlight-color: transparent;
   @apply flex items-center cursor-pointer select-none relative shrink-0;
+  @apply self-start;
 
   &.is-readonly {
     @apply border-dotted cursor-default;

@@ -1,8 +1,9 @@
-import type { ITextInputProps } from '$ui'
+import type { ITextInputProps, IVirtualScrollerProps } from '$ui'
 import type { AllowedComponentProps, CSSProperties } from 'vue'
 
 // Types
 import type { ITreeNodeMeta } from './tree-node-meta.type'
+import type { IBtnProps } from '../../Button/types/btn-props.type'
 import type { FuseOptions } from '@vueuse/integrations/useFuse.mjs'
 
 export type ITreeProps<T extends IItem = IItem> = {
@@ -12,6 +13,11 @@ export type ITreeProps<T extends IItem = IItem> = {
    * @default true
    */
   connectors?: boolean
+
+  /**
+   * The props to pass to the collapse button
+   */
+  collapseBtnProps?: IBtnProps
 
   /**
    * The key to use for the children nodes
@@ -47,6 +53,16 @@ export type ITreeProps<T extends IItem = IItem> = {
    * The element to use for the nodes
    */
   nodeEl?: string | any
+
+  /**
+   * When true, the keyboard navigation will be disabled
+   */
+  noKeyboard?: boolean
+
+  /**
+   * Scroller configuration
+   */
+  scrollerConfig?: Pick<IVirtualScrollerProps<any>, 'rowKey' | 'rowHeight' | 'overscan' | 'threshold' | 'watchWidth'>
 
   /**
    * The search value
@@ -160,9 +176,21 @@ export type ITreeProps<T extends IItem = IItem> = {
     }) => ITreeNode<T> | undefined | null
 
     /**
-     * Function that is called when a node is moved
+     * Function that is called before a node is moved
+     * Must return the (adjusted) node
      *
      * Use-case: Call API
+     */
+    beforeMoved?: (payload: {
+      node: T
+      to?: T | null
+      nodeById: Record<string, T>
+      nodeMetaById?: Record<string, ITreeNodeMeta<T>>
+      revert: () => void
+    }) => ITreeNode<T> | Promise<ITreeNode<T>>
+
+    /**
+     * Function that is called when a node is moved
      */
     onMoved?: (payload: {
       node: T
@@ -180,7 +208,7 @@ export type ITreeProps<T extends IItem = IItem> = {
     /**
      * Function to be used for loading the children nodes
      */
-    fnc: (node: T) => Promise<T[]> | T[]
+    fnc: (node: T) => Promise<any> | any
 
     /**
      * Key to get the payload from the `fnc` response
@@ -217,6 +245,17 @@ export type ITreeProps<T extends IItem = IItem> = {
      * Whether the selection is multi-select
      */
     multi?: boolean
+
+    /**
+     * Function that is called before a node is selected
+     *
+     * Return `false` to prevent the selection from happening, any other value
+     * will not do anything
+     */
+    beforeSelect?: (payload: {
+      node: T
+      ev?: MouseEvent
+    }) => void | boolean | undefined | Promise<void | boolean | undefined>
   }
 
   /**
@@ -232,6 +271,16 @@ export type ITreeProps<T extends IItem = IItem> = {
      * Style to apply to the content
      */
     contentStyle?: CSSProperties
+
+    /**
+     * Class to apply to the collapse button
+     */
+    collapseBtnClass?: ClassType
+
+    /**
+     * Style to apply to the collapse button
+     */
+    collapseBtnStyle?: CSSProperties
 
     /**
      * Class to apply to the nodes

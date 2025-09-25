@@ -1,4 +1,4 @@
-import type { z } from 'zod'
+import type { z } from 'zod/v4'
 import type { IVirtualScrollerProps } from '$ui'
 import type { ConcreteComponent, CSSProperties } from 'vue'
 import type { FuseOptions } from '@vueuse/integrations/useFuse'
@@ -114,7 +114,7 @@ export type IListProps = {
     /**
      * The key to use for the items from the server response
      */
-    payloadKey?: string
+    payloadKey?: string | null
 
     /**
      * The key to use for the total count of items from the server response

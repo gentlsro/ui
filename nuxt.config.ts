@@ -6,7 +6,7 @@ import {
   presetAttributify,
   presetIcons,
   presetTypography,
-  presetUno,
+  presetWind3,
   transformerDirectives,
   transformerVariantGroup,
 } from 'unocss'
@@ -23,7 +23,7 @@ const isMonorepo = import.meta.env.VITE_MONOREPO === 'true'
 export default defineNuxtConfig({
   extends: isMonorepo
     ? [['../Utilities']]
-    : [['github:gentlsro/Utilities#master']],
+    : [['github:gentlsro/Utilities#nuxt-v4']],
 
   // Modules https://nuxt.com/docs/api/configuration/nuxt-config#modules
   modules: [
@@ -35,6 +35,11 @@ export default defineNuxtConfig({
     '@nuxtjs/i18n',
     '@nuxtjs/device',
   ],
+
+  // Layer meta
+  $meta: {
+    name: 'ui',
+  },
 
   // SSR https://nuxt.com/docs/api/configuration/nuxt-config#ssr
   ssr: false,
@@ -179,14 +184,21 @@ export default defineNuxtConfig({
   unocss: {
     preflight: false,
     presets: [
-      presetUno(),
+      // @ts-expect-error
+      presetWind3(),
+      // @ts-expect-error
       presetIcons(),
+      // @ts-expect-error
       presetAttributify({ ignoreAttributes: ['size'] }),
+      // @ts-expect-error
       presetTypography(),
+      // @ts-expect-error
       gentlUIPreset(),
     ],
     transformers: [
+      // @ts-expect-error
       transformerDirectives(),
+      // @ts-expect-error
       transformerVariantGroup(),
     ],
     safelist: ['color-contrast', 'i-emojione:flag-for-united-kingdom', 'i-emojione:flag-for-czechia'],

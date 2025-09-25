@@ -74,7 +74,7 @@ export const useUIStore = defineStore('__ui', () => {
   const lastPointerDownType = ref<string>()
   const lastPasteEvent = ref<ClipboardEvent>()
 
-  if (!isInitialized.value) {
+  if (!isInitialized.value && import.meta.client) {
     document.documentElement.addEventListener('pointerdown', ev => {
       lastPointerDownEvent.value = ev
       lastPointerDownEl.value = ev.target as HTMLElement
@@ -107,6 +107,7 @@ export const useUIStore = defineStore('__ui', () => {
       activeElement.value?.tagName === 'INPUT'
       || activeElement.value?.tagName === 'TEXTAREA'
       || activeElement.value?.contentEditable !== 'inherit'
+      || activeElement.value?.role === 'textbox' // For Monaco editor
     )
   }
 

@@ -31,10 +31,10 @@ provideLocal(tableSlotsKey, slots)
 
 // Init
 const self = getCurrentInstance()
-const uuid = injectLocal(tableIdKey, useId())
+const uuid = injectLocal(tableIdKey, generateUUID())
 const storageKey = injectLocal(
   tableStorageKey,
-  tableGetStorageKey(props.storageKey, self) ?? useId(),
+  tableGetStorageKey(props.storageKey, self) ?? generateUUID(),
 )
 
 provideLocal(tableIdKey, uuid)

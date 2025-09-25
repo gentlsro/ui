@@ -1,4 +1,4 @@
-import { ZodType } from 'zod'
+import { ZodType } from 'zod/v4'
 import { skipHydrate } from 'pinia'
 import type { Required } from 'utility-types'
 import type { GroupItem, SortItem } from '$utils'
@@ -41,6 +41,7 @@ export function useListStore(listId?: string, listProps?: IListProps) {
     )
 
     // Utils
+    const refreshTrigger = ref(0)
     const isLoadingSource = ref(listProps?.loading ?? false)
     const { isLoading: isRequestLoading, handleRequest, abortController } = useRequest()
     const itemKey = toRef(listProps ?? {}, 'itemKey', 'id')
@@ -104,7 +105,7 @@ export function useListStore(listId?: string, listProps?: IListProps) {
     )
 
     // We make sure to have at least one sortBy item
-    if (sortingConfig.value) {
+    if (sortingConfig.value && !sortingConfig.value.sortBy?.length) {
       const defaultSortBy = getListDefaultSortBy(itemLabel.value)
       sortingConfig.value.sortBy = defaultSortBy
     }
@@ -202,7 +203,7 @@ export function useListStore(listId?: string, listProps?: IListProps) {
     })
 
     watchDebounced(
-      ([items, addedItems, isHiddenByItemKey]),
+      ([items, addedItems, isHiddenByItemKey, refreshTrigger]),
       async ([items, addedItems]) => {
         const _items = [...items, ...addedItems.map(item => item.ref)]
           .filter(item => !isHiddenByItemKey.value[getListItemKey(item, itemKey.value)])
@@ -373,6 +374,9 @@ export function useListStore(listId?: string, listProps?: IListProps) {
     })
 
     return {
+      // Utils
+      refreshTrigger,
+
       // Configs
       loadData,
       modifiers,

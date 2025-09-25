@@ -1,15 +1,17 @@
 <script setup lang="ts">
-import { useFloating } from '@floating-ui/vue'
-import type { Placement } from '@floating-ui/vue'
-
 // Types
 import type { IMenuProps } from './types/menu-props.type'
+import type { IMenuEmits } from './types/menu-emits.type'
 
 // Functions
-import { useMenuLayout } from './functions/useMenuLayout'
-import { useMenuMiddleware } from './functions/useMenuMiddleware'
-import { useFloatingUIUtils } from '../FloatingUI/functions/useFloatingUIUtils'
+import { useMenu } from './composables/useMenu'
+import { useElementMovement } from '../ElementMovement/composables/useElementMovement'
 import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
+
+// Store
+import { MENU_INJECTION_KEY, useMenuStore } from './store/menu.store'
+import { menuUplift } from './functions/menu-uplift'
+import { menuGetExposed } from './functions/menu-get-exposed'
 
 defineOptions({ inheritAttrs: false })
 
@@ -17,183 +19,87 @@ const props = withDefaults(defineProps<IMenuProps>(), {
   ...getComponentProps('menu'),
 })
 
-const emits = defineEmits<{
-  (e: 'update:modelValue', val: boolean): void
-  (e: 'hide'): void
-  (e: 'show'): void
-  (e: 'update:placement', placement: Placement): void
-  (e: 'beforeHide'): void
-  (e: 'beforeShow'): void
-}>()
+const emits = defineEmits<IMenuEmits>()
 
-defineExpose({
-  show: () => (modelHandler.value = true),
-  hide: (force?: boolean) => {
-    isChangeForced.value = !!force
-    modelHandler.value = false
-  },
-  toggle: () => (modelHandler.value = !modelHandler.value),
-  getFloatingEl: () => floatingEl.value,
-  refreshAnchors: () => refreshAnchors(),
-  recomputePosition: (_bounce?: boolean) => {
-    if (_bounce) {
-      bounce()
-    }
-
-    update()
-  },
-})
-
-// Utils
-const { color } = useTheme()
-const { getLastFloatingUIZindex } = useFloatingUIUtils()
+// Init
+const instance = getCurrentInstance()
+provideLocal(MENU_INJECTION_KEY, generateUUID())
 
 const mergedProps = computed(() => {
   return getComponentMergedProps('menu', props)
 })
 
-// Layout
-const model = defineModel({ default: false })
-const isChangeForced = ref(false)
-const debouncedModel = ref(model.value)
-const zIndex = ref(0)
-
-const title = computed(() => {
-  if (typeof props.title === 'function') {
-    return props.title()
-  }
-
-  return props.title
-})
-
-const modelHandler = computed({
-  get: () => model.value,
-  set: async val => {
-    let shouldContinue = true
-
-    if (!val && !isChangeForced.value) {
-      shouldContinue = (await props.beforeHideFnc?.()) ?? !props.persistent
-    }
-
-    if (shouldContinue) {
-      model.value = val
-    } else {
-      bounce()
-    }
-
-    isChangeForced.value = false
-  },
-})
-
+// Store
 const {
-  arrowEl,
+  // Template
   contentEl,
   floatingEl,
   referenceEl,
   isReferenceElTransparent,
+
+  // State
+  model,
+  title,
   referenceElZIndex,
-  floatingReferenceEl,
-  refreshAnchors,
-} = useMenuLayout(modelHandler, props)
+  zIndex,
 
-const transitionClass = computed(() => {
-  switch (menuPlacement.value) {
-    case 'top':
-    case 'top-end':
-    case 'top-start':
-      return 'opacity-0 transform-origin-top translate-y-6'
+  // Virtual
+  isVirtual,
+  virtualConfiguration,
+  virtualDimensions,
+} = useMenuStore({ menuProps: props, instance })
 
-    case 'bottom':
-    case 'bottom-end':
-    case 'bottom-start':
-      return 'opacity-0 transform-origin-bottom translate-y--6'
-
-    case 'left':
-    case 'left-end':
-    case 'left-start':
-      return 'opacity-0 transform-origin-left translate-x-6'
-
-    case 'right':
-    case 'right-end':
-    case 'right-start':
-      return 'opacity-0 transform-origin-right translate-x--6'
-
-    default:
-      return 'opacity-0 transform-origin-center scale-20'
-  }
+// Utils
+const { color } = useTheme()
+const { onMoveMouseDown } = useElementMovement({
+  // @ts-expect-error Fuck this
+  dimensions: virtualDimensions,
+  referenceEl: floatingEl,
 })
 
-function hide(force?: boolean) {
-  isChangeForced.value = !!force
-  modelHandler.value = false
-}
+const {
+  // State
+  debouncedModel,
+  isChangeForced,
+  modelHandler,
+  hide,
+  commitHide,
 
-function commitHide() {
-  if (model.value) {
-    return
-  }
+  // Floating UI
+  arrowStyles,
+  floatingStyles,
+  menuPlacement,
+  update,
 
-  debouncedModel.value = false
+  // Template
+  transitionClass,
+  transitionStyle,
+  menuWrapperClass,
+  menuWrapperStyle,
+  bounce,
+  handleClickOutside,
 
-  const referenceEl = floatingReferenceEl.value as HTMLElement
-
-  if (referenceEl instanceof Element) {
-    referenceEl.classList.remove('is-menu-active')
-    referenceEl.style.zIndex = referenceElZIndex.value!
-
-    if (isReferenceElTransparent.value && !props.noUplift) {
-      referenceEl.style.backgroundColor = ''
-    }
-  }
-
-  emits('hide')
-}
+  // Refresh
+  refreshAnchors,
+} = useMenu({ menuProps: props, instance })
 
 // We sync the model with the debouncedModel immediately when the value is `true`
 // to show the content immediately to trigger the transition
 whenever(model, isVisible => {
-  zIndex.value = getLastFloatingUIZindex() + 1
   debouncedModel.value = isVisible
 
-  const referenceEl = floatingReferenceEl.value as HTMLElement
-
-  if (!(referenceEl instanceof Element)) {
-    return
-  }
-
-  const referenceElStyle = getComputedStyle(referenceEl as any)
-
-  referenceEl.classList.add('is-menu-active')
-  referenceElZIndex.value = referenceElStyle.zIndex
-
-  isReferenceElTransparent.value = referenceElStyle.backgroundColor === 'rgba(0, 0, 0, 0)'
-
-  if ((!props.noOverlay || !props.noUplift) && !props.cover) {
-    referenceEl.style.zIndex = `${zIndex.value + 1}`
-  }
-
-  if (isReferenceElTransparent.value && !props.noUplift && !props.cover) {
-    if (color.value === 'light') {
-      referenceEl.style.backgroundColor = 'white'
-    } else {
-      referenceEl.style.backgroundColor = 'black'
-    }
-  }
-})
-
-// Floating UI
-const { middleware } = useMenuMiddleware(props, { arrowEl })
-
-const {
-  floatingStyles,
-  middlewareData,
-  placement: menuPlacement,
-  update,
-} = useFloating(floatingReferenceEl, floatingEl, {
-  middleware,
-  placement: props.placement,
-  strategy: 'fixed',
-  transform: false,
+  menuUplift({
+    zIndex,
+    referenceElZIndex,
+    isReferenceElTransparent,
+    referenceEl,
+    color,
+    modifiers: {
+      overlay: !props.noOverlay,
+      uplift: !props.noUplift,
+      cover: props.cover,
+    },
+  })
 })
 
 useResizeObserver(contentEl, () => {
@@ -208,14 +114,18 @@ watch(menuPlacement, placement => {
   emits('update:placement', placement)
 })
 
-// We react to page resize/scroll to reposition the floating UI
-const {
-  x: pageX,
-  y: pageY,
-  // @ts-expect-error Bad element type
-} = useElementBounding(referenceEl, { windowResize: true })
+// Watch the virtual position to update the floating UI
+watch(virtualDimensions, () => {
+  requestAnimationFrame(() => {
+    update()
+  })
+}, { deep: true })
 
-if (!props.noMove) {
+// We react to page resize/scroll to reposition the floating UI
+// @ts-expect-error Bad element type
+const { x: pageX, y: pageY } = useElementBounding(referenceEl, { windowResize: true })
+
+if (!props.noMove && !props.virtualConfiguration?.enabled) {
   watchThrottled([pageX, pageY], update, {
     trailing: true,
     throttle: 100,
@@ -223,68 +133,27 @@ if (!props.noMove) {
 }
 
 // Click outside
-onClickOutside(floatingEl, handleClickOutside, {
-  ignore: props.ignoreClickOutside,
-})
+onClickOutside(
+  floatingEl,
+  handleClickOutside,
+  { ignore: props.ignoreClickOutside },
+)
 
-function handleClickOutside(ev: Event) {
-  if (!model.value) {
+function handleMoveMouseDown(ev: MouseEvent) {
+  if (!isVirtual.value || !virtualConfiguration?.value?.movable) {
     return
   }
 
-  const targetEl = ev.target as HTMLElement
-
-  const isTargetBody = targetEl === document.body
-  const isPartOfFloatingUI = floatingEl.value?.contains(targetEl)
-  const isPartOfReferenceEl = !props.virtual && (floatingReferenceEl.value as any)!.contains(targetEl)
-
-  const lastFloatingElement = Array.from(document.querySelectorAll('.floating-element')).pop()
-  const isNotifications = !!targetEl.closest('.notifications')
-
-  if (
-    !isTargetBody
-    && !isPartOfFloatingUI
-    && !isPartOfReferenceEl
-    && !isNotifications
-    && lastFloatingElement === floatingEl.value
-  ) {
-    if (props.persistent) {
-      bounce()
-
-      return
-    }
-
-    hide()
-  }
+  onMoveMouseDown(ev)
 }
 
-function bounce() {
-  if (props.noBounce) {
-    return
-  }
-
-  const _floatingEl = floatingEl.value as HTMLElement
-
-  _floatingEl.addEventListener('animationend', () => {
-    _floatingEl.classList.remove('bounce')
-  })
-  _floatingEl.classList.add('bounce')
-}
-
-// Arrow
-const arrowStyles = computed(() => {
-  const { x, y } = middlewareData.value?.arrow ?? {}
-
-  return {
-    ...(x && { left: `${x}px` }),
-    ...(y && { top: `${y}px` }),
-  }
-})
-
-// Overlay
-const isOverlayVisible = computed(() => {
-  return !props.noOverlay
-})
+defineExpose(menuGetExposed({
+  modelHandler,
+  isChangeForced,
+  refreshAnchors,
+  bounce,
+  update,
+}))
 </script>
 
 <template>
@@ -293,14 +162,9 @@ const isOverlayVisible = computed(() => {
     to="body"
   >
     <!-- Overlay -->
-    <div
-      v-if="isOverlayVisible"
-      class="backdrop"
-      :style="{
-        '--transitionDuration': `${transitionDuration}ms`,
-        '--zIndex': zIndex,
-      }"
-      :class="{ 'is-open': model }"
+    <MenuOverlay
+      v-if="!noOverlay"
+      :transition-duration
     />
 
     <Transition
@@ -308,10 +172,7 @@ const isOverlayVisible = computed(() => {
       :css="!noTransition"
       :enter-from-class="transitionClass"
       :leave-to-class="transitionClass"
-      :style="{
-        '--transitionDuration': `${transitionDuration}ms`,
-        '--zIndex': zIndex,
-      }"
+      :style="transitionStyle"
       @before-enter="$emit('beforeShow')"
       @before-leave="$emit('beforeHide')"
       @after-leave="commitHide"
@@ -321,23 +182,17 @@ const isOverlayVisible = computed(() => {
         v-if="model"
         ref="floatingEl"
         class="floating-element menu"
-        :style="floatingStyles"
+        bg="white dark:darker"
         :data-open="model"
-        :class="{
-          'is-cover': cover,
-          'is-fit': fit,
-          'is-match-width': matchWidth,
-          'has-transition': !noTransition,
-        }"
+        :class="menuWrapperClass"
+        :style="{ ...menuWrapperStyle, ...floatingStyles }"
         :placement="menuPlacement"
         .hide="hide"
         v-bind="$attrs"
       >
         <!-- Arrow -->
-        <div
-          v-if="!noArrow"
-          ref="arrowEl"
-          class="menu__arrow"
+        <MenuArrow
+          v-if="!noArrow && !isVirtual"
           :style="arrowStyles"
         />
 
@@ -345,49 +200,42 @@ const isOverlayVisible = computed(() => {
         <slot
           v-if="$slots.title || $slots.header || title"
           name="header"
-          :hide="hide"
+          :hide
         >
-          <div
-            class="menu__header"
-            :class="mergedProps.ui?.headerClass"
-            :style="mergedProps.ui?.headerStyle"
+          <MenuHeader
+            :ui="mergedProps.ui"
+            :hide
+            @mousedown="handleMoveMouseDown"
           >
             <!-- Title -->
-            <slot
-              v-if="$slots.title || $slots.header || title"
-              name="title"
-              :hide="hide"
+            <template
+              v-if="$slots.title"
+              #title="titleProps"
             >
-              <h6
-                class="menu__header-title"
-                :class="mergedProps.ui?.titleClass"
-                :style="mergedProps.ui?.titleStyle"
-              >
-                {{ title }}
-              </h6>
-            </slot>
-
-            <slot name="header-right" />
-
-            <!-- Close -->
-            <Btn
-              v-if="!noClose"
-              preset="CLOSE"
-              size="sm"
-              self="start"
-              @click="hide(true)"
-            />
-          </div>
+              <slot
+                name="title"
+                v-bind="titleProps"
+              />
+            </template>
+          </MenuHeader>
         </slot>
 
+        <!-- Content -->
         <div
           ref="contentEl"
           class="menu__content"
           :class="mergedProps.ui?.contentClass ?? 'p-1'"
           :style="mergedProps.ui?.contentStyle"
+          bg="inherit"
         >
           <slot :hide="hide" />
         </div>
+
+        <!-- Resizing -->
+        <ElementResize
+          v-if="isVirtual && virtualConfiguration?.resizable"
+          v-model:dimensions="virtualDimensions"
+        />
       </div>
     </Transition>
   </Teleport>
@@ -396,42 +244,13 @@ const isOverlayVisible = computed(() => {
 <style lang="scss" scoped>
 .menu {
   @apply flex flex-col max-w-95vw max-h-95% rounded-custom z-$zIndex
-    rounded-custom border-1 border-ca bg-white dark:bg-darker;
+    rounded-custom border-1 border-ca;
 
-  @apply shadow-consistent-xs shadow-darker/20;
-
-  &__header {
-    @apply flex items-center gap-2 p-l-3 p-r-1 p-y-2 rounded-t-custom;
-
-    &-title {
-      @apply grow;
-    }
-  }
-
-  &__arrow {
-    @apply absolute w-2 h-2 rotate-45 bg-white dark:bg-darker z--1;
-  }
+  @apply shadow-consistent-xs shadow-darker/20 shadow-light/8;
 
   &__content {
     @apply relative flex flex-col grow gap-1 overflow-auto rounded-custom;
   }
-}
-
-// Arrow placement
-.menu[placement^='top'] > .menu__arrow {
-  @apply bottom--5px border-b-custom border-r-custom border-ca;
-}
-
-.menu[placement^='bottom'] > .menu__arrow {
-  @apply top--5px border-t-custom border-l-custom border-ca;
-}
-
-.menu[placement^='left'] > .menu__arrow {
-  @apply right--5px border-r-custom border-t-custom border-ca;
-}
-
-.menu[placement^='right'] > .menu__arrow {
-  @apply left--5px border-l-custom border-b-custom border-ca;
 }
 
 // Transition
@@ -493,21 +312,6 @@ s .menu[placement='right-end'] {
   transition:
     opacity 0.3s ease,
     transform 0.3s cubic-bezier(0.19, 1, 0.22, 1);
-}
-
-// .v-enter-from,
-// .v-leave-to {
-//   @apply opacity-0 scale-100;
-// }
-
-// Backdrop
-.backdrop {
-  @apply fixed inset-0 transition-background-color z-$zIndex
-    duration-$transitionDuration ease bg-transparent;
-}
-
-.backdrop.is-open {
-  @apply bg-darker/70;
 }
 
 // Bounce
