@@ -476,7 +476,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
         v-if="showCopyBtn && !column.column.noCopyBtn && !column.column.isHelperCol"
         size="sm"
         class="copy-btn"
-        :model-value="column.value"
+        :model-value="column.valueFormatted"
         no-text
         :transform="handleCopyBtnFormat"
         @click.stop.prevent
