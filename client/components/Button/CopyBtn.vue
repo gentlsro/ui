@@ -37,6 +37,13 @@ async function handleCopy() {
     return
   }
 
+  // Object handling
+  if (typeof props.modelValue === 'object' && props.modelValue) {
+    copy(JSON.stringify(props.modelValue))
+
+    return
+  }
+
   copy(String(props.modelValue))
 }
 </script>
