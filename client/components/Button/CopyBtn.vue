@@ -5,13 +5,13 @@ import type { IBtnProps } from './types/btn-props.type'
 const props = withDefaults(defineProps<IBtnProps & {
   modelValue?: any
   position?: 'left' | 'right' | 'top' | 'bottom'
-  transform?: (model: any) => string
+  transform?: (model: any) => string | Promise<string>
   noText?: boolean
 }>(), {
   icon: 'i-bx:copy',
 })
 
-// COPY
+// Copy
 const { copy, copied, isSupported } = useClipboard({ copiedDuring: 2000 })
 
 const copyBtnSize = computed(() => {
@@ -30,9 +30,16 @@ const copyBtnSize = computed(() => {
   }
 })
 
-function handleCopy() {
+async function handleCopy() {
   if (props.transform) {
-    copy(props.transform(props.modelValue))
+    copy(await props.transform(props.modelValue))
+
+    return
+  }
+
+  // Object handling
+  if (typeof props.modelValue === 'object' && props.modelValue) {
+    copy(JSON.stringify(props.modelValue))
 
     return
   }
