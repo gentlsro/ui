@@ -33,7 +33,6 @@ function handleCopyBtnFormat(value: any) {
   console.log('Log ~ handleCopyBtnFormat ~ value:', value)
   if (typeof value === 'object') {
     try {
-      console.log('Log ~ handleCopyBtnFormat ~ JSON.stringify(value, null, 2):', JSON.stringify(value, null, 2))
       return JSON.stringify(value, null, 2)
     }
     catch {
