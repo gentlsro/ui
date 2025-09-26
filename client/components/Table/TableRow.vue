@@ -32,7 +32,8 @@ const { currentLocaleCode } = useLocale()
 function handleCopyBtnFormat(value: any) {
   if (typeof value === 'object') {
     try {
-      return JSON.stringify(value)
+      console.log('Log ~ handleCopyBtnFormat ~ JSON.stringify(value, null, 2):', JSON.stringify(value, null, 2))
+      return JSON.stringify(value, null, 2)
     }
     catch {
       return value
