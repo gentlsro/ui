@@ -30,6 +30,7 @@ const { currentLocaleCode } = useLocale()
 
 // Helpers
 function handleCopyBtnFormat(value: any) {
+  console.log('Log ~ handleCopyBtnFormat ~ value:', value)
   if (typeof value === 'object') {
     try {
       console.log('Log ~ handleCopyBtnFormat ~ JSON.stringify(value, null, 2):', JSON.stringify(value, null, 2))
@@ -476,7 +477,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
         v-if="showCopyBtn && !column.column.noCopyBtn && !column.column.isHelperCol"
         size="sm"
         class="copy-btn"
-        :model-value="column.valueFormatted"
+        :model-value="column.value"
         no-text
         :transform="handleCopyBtnFormat"
         @click.stop.prevent
