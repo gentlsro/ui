@@ -14,6 +14,7 @@ export function tableApplyLayout(payload: {
   getStore: () => ReturnType<typeof useTableStore>
 }) {
   let { layout, getStore } = payload
+  console.log('Log ~ tableApplyLayout ~ layout:', layout)
 
   const store = getStore()
   const {
@@ -46,6 +47,7 @@ export function tableApplyLayout(payload: {
     modifiers: modifiers.value,
     getStore: () => store,
   })
+  console.log('Log ~ tableApplyLayout ~ _layout:', _layout)
 
   const {
     columns,
