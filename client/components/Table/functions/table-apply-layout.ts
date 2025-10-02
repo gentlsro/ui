@@ -58,6 +58,15 @@ export function tableApplyLayout(payload: {
     shouldUrlBeUsed: false,
   })
 
+  // Make sure that if no columns are selected, we fallback to showing all of them
+  const isAllColumnsHidden = columns.every(col => col.hidden)
+
+  if (isAllColumnsHidden) {
+    columns.forEach(col => {
+      col.hidden = false
+    })
+  }
+
   internalColumns.value = columns
   queryBuilderStore.value = queryBuilder.length ? queryBuilder : queryBuilderInitializeItems()
 }
