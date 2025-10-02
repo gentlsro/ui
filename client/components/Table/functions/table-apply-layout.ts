@@ -14,7 +14,6 @@ export function tableApplyLayout(payload: {
   getStore: () => ReturnType<typeof useTableStore>
 }) {
   let { layout, getStore } = payload
-  console.log('Log ~ tableApplyLayout ~ layout:', layout)
 
   const store = getStore()
   const {
@@ -47,7 +46,6 @@ export function tableApplyLayout(payload: {
     modifiers: modifiers.value,
     getStore: () => store,
   })
-  console.log('Log ~ tableApplyLayout ~ _layout:', _layout)
 
   const {
     columns,
@@ -62,7 +60,6 @@ export function tableApplyLayout(payload: {
 
   // Make sure that if no columns are selected, we fallback to showing all of them
   const isAllColumnsHidden = columns.every(col => col.hidden || col.isHelperCol)
-  console.log('Log ~ tableApplyLayout ~ columns:', columns, isAllColumnsHidden)
 
   if (isAllColumnsHidden) {
     columns.forEach(col => {
