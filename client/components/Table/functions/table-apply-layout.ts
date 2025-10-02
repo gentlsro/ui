@@ -59,7 +59,7 @@ export function tableApplyLayout(payload: {
   })
 
   // Make sure that if no columns are selected, we fallback to showing all of them
-  const isAllColumnsHidden = columns.every(col => col.hidden)
+  const isAllColumnsHidden = columns.every(col => col.hidden || col.isHelperCol)
 
   if (isAllColumnsHidden) {
     columns.forEach(col => {
