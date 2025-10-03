@@ -53,6 +53,7 @@ if (props.autogrow) {
   useTextareaAutosize({
     element: el as MaybeElementRef<HTMLTextAreaElement>,
     input: masked,
+    styleProp: 'minHeight',
   })
 }
 
@@ -165,3 +166,14 @@ defineExpose({
     </Menu>
   </InputWrapper>
 </template>
+
+<style lang="scss" scoped>
+textarea {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+textarea::-webkit-scrollbar {
+  display: none;
+}
+</style>
