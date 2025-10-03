@@ -136,7 +136,8 @@ export function useInputUtils(options: IInputUtilsOptions) {
   }
 
   const clear = (shouldFocusAfterClear?: boolean) => {
-    typed.value = ''
+    // typed.value = ''
+    masked.value = ''
 
     if (shouldFocusAfterClear || !isBlurred.value) {
       setTimeout(() => focus(), 0)
