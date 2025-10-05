@@ -53,7 +53,6 @@ if (props.autogrow) {
   useTextareaAutosize({
     element: el as MaybeElementRef<HTMLTextAreaElement>,
     input: masked,
-    styleProp: 'minHeight',
   })
 }
 
