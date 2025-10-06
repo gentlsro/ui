@@ -106,7 +106,7 @@ const isModified = computed(() => {
             >
               <span class="link__label">
                 <span class="link__label-icon" />
-                {{ getShownValue(val) }}
+                <span>{{ getShownValue(val) }}</span>
 
                 <OriginalValueBtn v-if="isModified" />
               </span>
