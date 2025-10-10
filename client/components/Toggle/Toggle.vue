@@ -81,9 +81,8 @@ function handleStateChange() {
 const toggleEl = ref<HTMLDivElement>()
 
 const label = computed(() => {
-  console.log(props.label)
   if (typeof props.label === 'function') {
-    return props.label({ state: 'wtf' })
+    return props.label({ state: model.value })
   }
 
   return props.label
