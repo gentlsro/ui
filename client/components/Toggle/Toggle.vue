@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // Types
-import type { IToggleProps, ToggleClass, ToggleState } from './types/toggle-props.type'
+import type { IToggleProps } from './types/toggle-props.type'
 
 // Functions
 import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
@@ -82,7 +82,7 @@ const toggleEl = ref<HTMLDivElement>()
 
 const label = computed(() => {
   if (typeof props.label === 'function') {
-    return props.label()
+    return props.label({ state: model.value })
   }
 
   return props.label
