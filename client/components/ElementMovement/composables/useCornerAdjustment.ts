@@ -1,5 +1,8 @@
 import type { MaybeElementRef } from '@vueuse/core'
 
+// Types
+import type { ICornerResizeProps } from '../types/corner-resize-props.type'
+
 type Corner = 'nw' | 'n' | 'ne' | 'w' | 'e' | 'sw' | 's' | 'se'
 
 type CornerLimits = { min?: number, max?: number }
@@ -47,7 +50,7 @@ function enableTextSelection() {
 }
 
 export function useCornerAdjustment(payload: {
-  corners: Ref<Record<Corner, number> | undefined>
+  corners: Ref<ICornerResizeProps['modelValue']>
   referenceEl?: MaybeElementRef<any>
   limits?: Partial<Record<Corner, CornerLimits>>
   step?: number
@@ -144,7 +147,6 @@ export function useCornerAdjustment(payload: {
 
     // Apply inversion if needed
     if (isCornerInverted(corner)) {
-      console.log('🚀 ~ onCornerMouseMove ~ corner:', corner)
       delta = -delta
     }
 
@@ -167,7 +169,10 @@ export function useCornerAdjustment(payload: {
       }
     }
 
-    (corners.value as Record<Corner, number>)[corner] = newValue
+    (corners.value as Record<Corner, number>) = {
+      ...(corners.value as Record<Corner, number>),
+      [corner]: newValue,
+    }
   }
 
   function onCornerMouseUp() {

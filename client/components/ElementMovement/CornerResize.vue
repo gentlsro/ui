@@ -1,21 +1,25 @@
+<!-- eslint-disable antfu/consistent-list-newline -->
 <script setup lang="ts">
 // Types
 import type { Corner } from './types/corner.type'
 import type { ICornerResizeProps } from './types/corner-resize-props.type'
 
 const props = defineProps<ICornerResizeProps>()
+const emits = defineEmits<{
+  (e: 'update:modelValue', value: ICornerResizeProps['modelValue']): void
+}>()
 
 // Template
-const corners = defineModel<Record<Corner, number>>('modelValue', {
+const corners = defineModel<ICornerResizeProps['modelValue']>({
   default: () => ({
-    nw: 0,
-    n: 0,
-    ne: 0,
-    w: 0,
-    e: 0,
-    sw: 0,
-    s: 0,
-    se: 0,
+    // Top
+    nw: 0, n: 0, ne: 0,
+
+    // Middle
+    w: 0, e: 0,
+
+    // Bottom
+    sw: 0, s: 0, se: 0,
   }),
 })
 
