@@ -18,6 +18,7 @@ defineEmits<{
   (e: 'blur'): void
   (e: 'focus'): void
   (e: 'clear'): void
+  (e: 'enter', event: KeyboardEvent): void
 }>()
 
 // Utils
@@ -153,6 +154,7 @@ defineExpose({
       @focus="handleFocusOrClick"
       @blur="handleBlur"
       @paste.stop.prevent="handlePaste"
+      @keypress.enter="$emit('enter', $event)"
     >
 
     <!-- Hint -->
