@@ -46,7 +46,11 @@ function handleStep() {
   }
 
   const nextValue = +currentValue! + stepAdjusted.value * modifier.value
-  model.value = nextValue
+
+  // Round to avoid floating point precision issues with decimal steps
+  const stepDecimalPlaces = stepAdjusted.value.toString().split('.')[1]?.length ?? 0
+  const precision = 10 ** stepDecimalPlaces
+  model.value = Math.round(nextValue * precision) / precision
 }
 
 function startStep(_: PointerEvent, increment = true) {
