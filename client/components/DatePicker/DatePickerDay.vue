@@ -41,6 +41,8 @@ const eventsAdjusted = computed<Pick<DayEvent, 'color' | 'icon'>[]>(() => {
     class="dp-day"
     :class="classes"
   >
+    <slot name="day" />
+
     <!-- Edge -->
     <div
       v-if="edge && (day.isEdge.start.month || day.isEdge.end.month)"

@@ -280,7 +280,17 @@ defineExpose({
           :utc
           :events="eventsByDay?.[day.dateString]"
           @click="handleDaySelect(day, $event)"
-        />
+        >
+          <template
+            v-if="$slots.day"
+            #day
+          >
+            <slot
+              name="day"
+              :day
+            />
+          </template>
+        </DatePickerDay>
       </ScrollArea>
     </div>
 
