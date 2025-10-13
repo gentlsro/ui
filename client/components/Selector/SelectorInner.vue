@@ -10,7 +10,7 @@ import { getListItem, getListItemLabel } from '../List/functions/helpers'
 type IProps = Pick<
   ISelectorProps,
   | 'useScroller' | 'ui' | 'maxChipsRows' | 'readonly' | 'disabled'
-  | 'emptyValue' | 'multi' | 'optionLabel' | 'optionTo' | 'to' | 'name'
+  | 'emptyValue' | 'multi' | 'optionLabel' | 'to' | 'name'
 > & { emits: ISelectorEmits }
 
 const props = defineProps<IProps>()
@@ -98,7 +98,7 @@ function handleRemove(idx: number) {
           :readonly
           :disabled
           :navigate-to-options="{ target: '_blank' }"
-          :to="optionTo?.(item)"
+          :to="typeof to === 'function' ? to(item) : to"
           @remove="handleRemove(idx)"
         />
       </slot>
@@ -129,7 +129,7 @@ function handleRemove(idx: number) {
           :readonly
           :disabled
           :navigate-to-options="{ target: '_blank' }"
-          :to="optionTo?.(item)"
+          :to="typeof to === 'function' ? to(item) : to"
           @remove="handleRemove(idx)"
         />
       </slot>
