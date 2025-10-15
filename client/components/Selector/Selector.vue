@@ -110,6 +110,8 @@ const fieldEl = useTemplateRef('fieldEl')
 const referenceEl = ref<HTMLDivElement>()
 const search = defineModel<string>('search')
 const model = defineModel<any>()
+const size = toRef(props, 'size')
+const readonly = toRef(props, 'readonly')
 const addedItems = defineModel<IListProps['addedItems']>(
   'addedItems',
   { default: () => [] },
@@ -257,7 +259,6 @@ onUnmounted(() => {
         :multi
         :to
         :emits
-        :option-to
         :name="name || path || placeholder"
       >
         <template #default="{ item, index, optionByKey }">

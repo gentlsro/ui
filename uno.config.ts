@@ -3,7 +3,7 @@ import {
   presetAttributify,
   presetIcons,
   presetTypography,
-  presetUno,
+  presetWind3,
   toEscapedSelector,
   transformerDirectives,
   transformerVariantGroup,
@@ -14,6 +14,7 @@ import { FileSystemIconLoader } from '@iconify/utils/lib/loader/node-loaders'
 
 // Breakpoints
 import { BREAKPOINTS_PX } from './shared/constants/breakpoints'
+import { gentlUIPreset } from './client/functions/unocss-preset'
 
 const fontSize = 16
 const rounding = 2
@@ -155,7 +156,7 @@ export default defineConfig({
     ],
   ],
   presets: [
-    presetUno(),
+    presetWind3(),
     presetIcons({
       scale: 1.2,
       collections: {
@@ -166,6 +167,7 @@ export default defineConfig({
     }),
     presetAttributify({ ignoreAttributes: ['size'] }),
     presetTypography(),
+    gentlUIPreset(),
   ],
   transformers: [
     transformerDirectives({ applyVariable: ['--apply', '@apply'] }),

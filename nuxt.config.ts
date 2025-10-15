@@ -1,19 +1,10 @@
 // @unocss-include
 import { writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-
-import {
-  presetAttributify,
-  presetIcons,
-  presetTypography,
-  presetWind3,
-  transformerDirectives,
-  transformerVariantGroup,
-} from 'unocss'
-
 import { createResolver } from 'nuxt/kit'
 
-// Preset
+// UnoCSS
+import { presetWind3 } from 'unocss'
 import { gentlUIPreset } from './client/functions/unocss-preset'
 
 const { resolve } = createResolver(import.meta.url)
@@ -96,7 +87,6 @@ export default defineNuxtConfig({
   alias: {
     $ui: join(process.cwd(), 'generated', 'ui.ts'),
     $uiConfig: join(process.cwd(), 'generated', 'uiConfig.ts'),
-    $uiLayer: resolve('.'),
   },
 
   build: {
@@ -183,24 +173,8 @@ export default defineNuxtConfig({
   // UnoCSS
   unocss: {
     preflight: false,
-    presets: [
-      // @ts-expect-error
-      presetWind3(),
-      // @ts-expect-error
-      presetIcons(),
-      // @ts-expect-error
-      presetAttributify({ ignoreAttributes: ['size'] }),
-      // @ts-expect-error
-      presetTypography(),
-      // @ts-expect-error
-      gentlUIPreset(),
-    ],
-    transformers: [
-      // @ts-expect-error
-      transformerDirectives(),
-      // @ts-expect-error
-      transformerVariantGroup(),
-    ],
+    // @ts-expect-error - Idk, some weird types
+    presets: [presetWind3(), gentlUIPreset()],
     safelist: ['color-contrast', 'i-emojione:flag-for-united-kingdom', 'i-emojione:flag-for-czechia'],
     nuxtLayers: true,
   },

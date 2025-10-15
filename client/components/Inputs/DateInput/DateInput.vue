@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Dayjs } from 'dayjs'
+import type { Dayjs } from '$utils'
 
 import { MaskedRange } from 'imask'
 import type { FactoryOpts } from 'imask'
@@ -219,8 +219,8 @@ defineExpose({
       type="text"
       :value="masked"
       :placeholder="placeholder"
-      :readonly="readonly"
-      :disabled="disabled"
+      :readonly
+      :disabled
       autocomplete="off"
       :label="label || placeholder"
       :name="name || path || label || placeholder"
