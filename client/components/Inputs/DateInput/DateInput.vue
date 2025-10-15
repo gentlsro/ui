@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Dayjs } from '$utils'
+import type { Dayjs } from 'dayjs'
 
 import { MaskedRange } from 'imask'
 import type { FactoryOpts } from 'imask'
