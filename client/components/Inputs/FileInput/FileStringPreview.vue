@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // Functions
-import { handleDownloadFile } from '$utilsLayer/client/functions/download-file'
+import { handleDownloadFile } from '#layers/utilities/client/functions/download-file'
 
 // Constants
 import { ICON_BY_FILE_EXTENSION } from './constants/icon-by-file-extension'

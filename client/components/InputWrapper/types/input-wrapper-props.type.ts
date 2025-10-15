@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'vue'
 import type { IZodValidationItem } from '$utils'
-import type { IZodValidationOptions } from '$utilsLayer/client/types/zod'
+import type { IZodValidationOptions } from '#layers/utilities/client/types/zod'
 
 // Types
 import type { IInputLabelProps } from '../../InputLabel/types/input-label-props.type'

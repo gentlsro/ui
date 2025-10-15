@@ -8,7 +8,7 @@ import type { IListItem } from '../List/types/list-item.type'
 import type { TableColumn } from './models/table-column.model'
 
 // Functions
-import { reorderArray } from '$utilsLayer/client/functions/reorder-array'
+import { reorderArray } from '#layers/utilities/client/functions/reorder-array'
 import { useTableAutoFit } from './composables/useTableAutoFit'
 
 // Store

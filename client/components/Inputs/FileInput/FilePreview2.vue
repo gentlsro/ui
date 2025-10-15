@@ -5,7 +5,7 @@ import type { Required } from 'utility-types'
 import { FileModel } from '$utils'
 
 // Functions
-import { handleDownloadFile } from '$utilsLayer/client/functions/download-file'
+import { handleDownloadFile } from '#layers/utilities/client/functions/download-file'
 
 // Constants
 import { IMAGE_TYPES } from './constants/image-types'

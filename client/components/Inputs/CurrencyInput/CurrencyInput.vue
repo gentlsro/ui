@@ -11,7 +11,7 @@ import { useInputValidationUtils } from '../functions/useInputValidationUtils'
 import { getComponentMergedProps, getComponentProps } from '../../../functions/get-component-props'
 
 // Constants
-import { CURRENCY_DEFAULT } from '$utilsLayer/shared/i18n'
+import { CURRENCY_DEFAULT } from '#layers/utilities/shared/i18n'
 
 const props = withDefaults(defineProps<ICurrencyInputProps>(), {
   ...getComponentProps('currencyInput'),

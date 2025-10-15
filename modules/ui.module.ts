@@ -18,7 +18,7 @@ export default defineNuxtModule({
       })
       .filter(({ path }) => existsSync(`${path}.ts`))
 
-    const code = `import { customDefu } from '$utilsLayer/shared/functions/custom-defu'
+    const code = `import { customDefu } from '#layers/utilities/shared/functions/custom-defu'
 ${configPaths.map(({ path }, idx) => `import config${idx} from '${path}'`).join('\n')}
 
 const uiConfigMerged = customDefu(${configPaths.map((_, idx) => `config${idx}`).join(', ')})
