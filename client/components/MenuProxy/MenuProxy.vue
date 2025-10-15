@@ -34,6 +34,7 @@ const mergedProps = computed(() => {
 
 // Layout
 const model = defineModel<boolean>({ default: false })
+const virtualDimensions = defineModel<IMenuProxyProps['virtualDimensions']>('virtualDimensions')
 const menuProxyEl = ref<InstanceType<typeof Menu | typeof Dialog>>()
 
 const isMenu = computed(() => $bp[props.breakpoint].value)
@@ -69,6 +70,7 @@ defineExpose({
     ref="menuProxyEl"
     v-bind="$props"
     v-model="model"
+    v-model:virtual-dimensions="virtualDimensions"
     :ui="mergedProps.ui"
     :no-overlay
     h="auto"
