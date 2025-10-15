@@ -45,7 +45,6 @@ const {
   searchConfig: storeSearchConfig,
   sortingConfig: storeSortingConfig,
   itemFocusedIdx,
-  isLoading,
   loadData: storeLoadData,
   noFilter: storeNoFilter,
   addedItems: storeAddedItems,

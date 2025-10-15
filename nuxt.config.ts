@@ -173,7 +173,6 @@ export default defineNuxtConfig({
   // UnoCSS
   unocss: {
     preflight: false,
-    // @ts-expect-error - Idk, some weird types
     presets: [presetWind3(), gentlUIPreset()],
     safelist: ['color-contrast', 'i-emojione:flag-for-united-kingdom', 'i-emojione:flag-for-czechia'],
     nuxtLayers: true,

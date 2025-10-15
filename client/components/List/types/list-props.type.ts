@@ -314,7 +314,7 @@ export type IListProps = {
   /**
    * The selection value
    */
-  selection?: ISelection
+  selection?: ISelection<any>
 
   /**
    * The list selection
