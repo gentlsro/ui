@@ -35,7 +35,7 @@ const iconClass = computed(() => {
     color="ca"
     size="auto"
     tabindex="-1"
-    :class="`sie--${size}`"
+    :class="`size--${size}`"
     @click.stop.prevent="!clearConfirmation && $emit('clear')"
   >
     <MenuConfirmation
