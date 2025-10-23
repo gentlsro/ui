@@ -44,7 +44,6 @@ function isMaskString(val?: string) {
 }
 
 function localizeTime(time?: string | undefined) {
-  console.log('Log ~ localizeTime ~ time:', time)
   if (!isTime(time) || isMaskString(time)) {
     return ''
   }
