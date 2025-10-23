@@ -25,7 +25,7 @@ const props = withDefaults(defineProps<IProps>(), {
   editable: true,
 })
 
-const fillColor = computedEager(() => {
+const fillColor = computed(() => {
   if (!props.editable) {
     return 'fill-true-gray'
   }

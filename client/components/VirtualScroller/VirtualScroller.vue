@@ -503,7 +503,10 @@ watch([containerRect.height, virtualScrollerRect.height], async heights => {
 // Height watcher for currently rendered rows
 const hasJustRerendered = ref(false)
 
-const { pause: pauseRowHeightWatcher, resume: resumeRowHeightWatcher } = watchPausable(
+const {
+  pause: pauseRowHeightWatcher,
+  resume: resumeRowHeightWatcher,
+} = watch(
   () => renderedRows.value.rows,
   () => {
     if (!isVirtual.value) {
