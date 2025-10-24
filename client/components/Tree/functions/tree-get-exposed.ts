@@ -1,4 +1,5 @@
-import { useTreeStore } from '$ui'
+// Store
+import { useTreeStore } from '../stores/tree.store'
 
 export function treeGetExposed() {
   const treeStore = useTreeStore()

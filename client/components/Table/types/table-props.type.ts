@@ -1,6 +1,5 @@
 import type { CSSProperties } from 'vue'
 import type { Required } from 'utility-types'
-import type { IVirtualScrollerProps } from '$ui'
 import type { RouteLocationRaw } from '#vue-router'
 
 // Types
@@ -11,6 +10,7 @@ import type { ISelection } from '../../../types/selection.type'
 import type { ITableFetchPayload } from './table-fetch-payload.type'
 import type { IQueryBuilderProps } from '../../QueryBuilder/types/query-builder-props.type'
 import type { IVirtualScrollEvent } from '../../VirtualScroller/types/virtual-scroll-event.type'
+import type { IVirtualScrollerProps } from '../../VirtualScroller/types/virtual-scroller-props.type'
 
 // Models
 import type { TableColumn } from '../models/table-column.model'

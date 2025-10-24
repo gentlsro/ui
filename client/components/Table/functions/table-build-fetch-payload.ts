@@ -1,4 +1,5 @@
-import type { useTableStore } from '$ui'
+// Functions
+import type { useTableStore } from '../stores/table.store'
 
 // Types
 import type { ITableSortItem } from '../types/table-sort-item.type'

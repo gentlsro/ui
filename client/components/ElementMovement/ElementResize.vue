@@ -1,7 +1,11 @@
 <script setup lang="ts">
-import type { IElementMovementProps } from '$ui'
-import { getComponentProps } from '$ui'
 import type { NonUndefined } from 'utility-types'
+
+// Types
+import type { IElementMovementProps } from './types/element-movement-props.type'
+
+// Functions
+import { getComponentProps } from '../../functions/get-component-props'
 
 type Corner = 'nw' | 'n' | 'ne' | 'w' | 'e' | 'sw' | 's' | 'se'
 

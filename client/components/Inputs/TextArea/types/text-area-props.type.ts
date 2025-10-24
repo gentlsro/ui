@@ -1,5 +1,5 @@
 // Types
-import type { IMenuProps } from '$ui'
+import type { IMenuProps } from '../../../Menu/types/menu-props.type'
 import type { IInputProps } from '../../types/input-props.type'
 
 export type ITextAreaInputProps = IInputProps & {

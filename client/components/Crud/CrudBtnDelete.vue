@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
+
+// Types
 import type { ICrudBtnProps } from './types/crud-btn-props.type'
-import type { IMenuConfirmationProps } from '$ui'
+import type { IMenuConfirmationProps } from '../MenuConfirmation/types/menu-confirmation-props.type'
+
+// Functions
 import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
 
 type IProps = ICrudBtnProps & {

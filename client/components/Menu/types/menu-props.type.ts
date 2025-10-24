@@ -1,6 +1,8 @@
 import type { CSSProperties } from 'vue'
 import type { Boundary, OffsetOptions, Placement } from '@floating-ui/dom'
-import type { IElementMovementProps } from '$ui'
+
+// Types
+import type { IElementMovementProps } from '../../ElementMovement/types/element-movement-props.type'
 
 export type IMenuProps = {
   /**

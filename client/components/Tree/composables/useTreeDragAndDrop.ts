@@ -1,6 +1,8 @@
-import { useTreeStore } from '$ui'
 import { autoScrollPlugin, Draggable, PointerSensor } from 'dragdoll'
 import type { PointerSensorMoveEvent } from 'dragdoll'
+
+// Store
+import { useTreeStore } from '../stores/tree.store'
 
 const TREE_NODE_CLASSES = ['tree-node']
 

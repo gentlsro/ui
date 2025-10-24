@@ -1,10 +1,11 @@
-import type { ITextInputProps, IVirtualScrollerProps } from '$ui'
 import type { AllowedComponentProps, CSSProperties } from 'vue'
+import type { FuseOptions } from '@vueuse/integrations/useFuse.mjs'
 
 // Types
 import type { ITreeNodeMeta } from './tree-node-meta.type'
 import type { IBtnProps } from '../../Button/types/btn-props.type'
-import type { FuseOptions } from '@vueuse/integrations/useFuse.mjs'
+import type { IVirtualScrollerProps } from '../../VirtualScroller/types/virtual-scroller-props.type'
+import type { ITextInputProps } from '../../Inputs/TextInput/types/text-input-props.type'
 
 export type ITreeProps<T extends IItem = IItem> = {
   /**

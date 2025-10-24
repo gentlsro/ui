@@ -1,5 +1,8 @@
-import type { ITableFetchPayload, ITableFilterItem } from '$ui'
 import { useFiltering, useSorting } from '$utils'
+
+// Types
+import type { ITableFetchPayload } from '../components/Table/types/table-fetch-payload.type'
+import type { ITableFilterItem } from '../components/Table/types/table-filter-item.type'
 
 export function useTableDataClient() {
   // Utils

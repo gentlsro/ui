@@ -1,5 +1,4 @@
 import type { z } from 'zod/v4'
-import type { IVirtualScrollerProps } from '$ui'
 import type { ConcreteComponent, CSSProperties } from 'vue'
 import type { FuseOptions } from '@vueuse/integrations/useFuse'
 import type { GroupItem, SortItem } from '$utils'
@@ -10,6 +9,7 @@ import type { IListItem } from './list-item.type'
 import type { IListFetchFnc } from './list-fetch.type'
 import type { ISelection } from '../../../types/selection.type'
 import type { IListItemToAdd } from './list-item-to-add.type'
+import type { IVirtualScrollerProps } from '../../VirtualScroller/types/virtual-scroller-props.type'
 
 export type IListProps = {
   /**

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
-import { getComponentMergedProps, getComponentProps } from '$ui'
 import type { NonUndefined } from 'utility-types'
 
 // Functions
 import { useInputUtils } from '../functions/useInputUtils'
 import { useInputValidationUtils } from '../functions/useInputValidationUtils'
+import { getComponentMergedProps, getComponentProps } from '../../../functions/get-component-props'
 
 // Types
 import type { IIconInputProps } from './types/icon-input-props.type'

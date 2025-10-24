@@ -1,5 +1,7 @@
-import { useColors } from '$ui'
 import { useSemiRandom } from '$utils'
+
+// Functions
+import { useColors } from '../composables/useColors'
 
 // Constants
 import { COLORS_PREDEFINED } from '../constants/colors-predefined.constant'

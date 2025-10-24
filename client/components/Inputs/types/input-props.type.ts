@@ -2,8 +2,8 @@ import type { FactoryOpts, MaskedNumber } from 'imask'
 import type { CSSProperties } from 'vue'
 
 // Types
+import type { INumberInputProps } from '../NumberInput/types/number-input-props.type'
 import type { IInputWrapperProps } from '../../InputWrapper/types/input-wrapper-props.type'
-import type { INumberInputProps } from '$ui'
 
 export type IInputProps = {
   /**

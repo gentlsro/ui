@@ -1,11 +1,11 @@
 <script setup lang="ts" generic="T extends ITreeNode">
 import { getActivePinia } from 'pinia'
-import type { IVirtualScrollerProps } from '$ui'
 
 // Types
 import type { ITreeProps } from './types/tree-props.type'
 import type { ITreeEmits } from './types/tree-emits.type'
 import type { ITreeNodeMeta } from './types/tree-node-meta.type'
+import type { IVirtualScrollerProps } from '../VirtualScroller/types/virtual-scroller-props.type'
 
 // Functions
 import { useTreeKeyboard } from './functions/useTreeKeyboard'
