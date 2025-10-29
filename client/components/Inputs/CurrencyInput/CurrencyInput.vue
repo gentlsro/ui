@@ -41,8 +41,8 @@ const mask = computed<MaskedNumber>(() => {
     padFractionalZeros: true,
     scale: props.fractionDigits,
     mask: Number,
-    min: props.min,
-    max: props.max,
+    min: props.min ?? Number.MIN_SAFE_INTEGER,
+    max: props.max ?? Number.MAX_SAFE_INTEGER,
     format: (value: any) => {
       if (isNil(value)) {
         return ''
