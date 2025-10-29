@@ -640,10 +640,6 @@ export function useTableStore(
 
       runOnDataFetchQueue()
     }
-
-    watchEffect(() => {
-      console.log(headerX.value, contentX.value)
-    })
     // !SECTION
 
     return {
