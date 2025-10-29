@@ -629,7 +629,10 @@ export function useTableStore(
         // If there were no rows in the table before, and now there are,
         // we need to reset the X-axis scroll position
         if (hadNoRows && rows.value.length > 0) {
-          headerX.value = 0
+          // headerX.value = 0
+          nextTick(() => {
+            contentX.value = headerX.value
+          })
         }
 
         onDataFetchQueue.value.push(navigate)
@@ -637,6 +640,10 @@ export function useTableStore(
 
       runOnDataFetchQueue()
     }
+
+    watchEffect(() => {
+      console.log(headerX.value, contentX.value)
+    })
     // !SECTION
 
     return {
