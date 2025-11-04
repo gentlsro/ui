@@ -30,6 +30,7 @@ export function getScrollbarWidth() {
 export type IOverflowOptions = {
   direction?: 'any' | 'horizontal' | 'vertical'
   returnDiff?: boolean
+  threshold?: number
 }
 
 export function useOverflow() {
@@ -40,17 +41,17 @@ export function useOverflow() {
     { clientWidth, clientHeight, scrollWidth, scrollHeight }: Element,
     options?: IOverflowOptions,
   ) => {
-    const { direction = 'any', returnDiff } = options || {}
+    const { direction = 'any', returnDiff, threshold = 0 } = options || {}
     const xDiff = scrollWidth - clientWidth
     const yDiff = scrollHeight - clientHeight
 
     switch (direction) {
       case 'any':
-        return returnDiff ? { xDiff, yDiff } : xDiff > 0 || yDiff > 0
+        return returnDiff ? { xDiff, yDiff } : xDiff > threshold || yDiff > threshold
       case 'horizontal':
-        return returnDiff ? { xDiff } : xDiff > 0
+        return returnDiff ? { xDiff } : xDiff > threshold
       case 'vertical':
-        return returnDiff ? { yDiff } : yDiff > 0
+        return returnDiff ? { yDiff } : yDiff > threshold
     }
   }
 
