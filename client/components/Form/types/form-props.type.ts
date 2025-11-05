@@ -110,6 +110,11 @@ export type IFormProps = {
   noSubmit?: boolean
 
   /**
+   * If true, the form will not be submitted on `enter`, nor on `ctrl+enter`
+   */
+  noEnter?: boolean
+
+  /**
    * If true, the form will not submit on enter.
    *
    * Note: Will be sumitted on ctrl+enter.

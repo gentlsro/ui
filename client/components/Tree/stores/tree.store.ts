@@ -53,6 +53,7 @@ export function useTreeStore<T extends IItem = IItem>(config?: {
 
     // Layout
     const treeEl = ref<any>()
+    const searchEl = ref<any>()
     const childrenKey = ref(treeProps?.childrenKey ?? 'children') as Ref<string>
     const parentIdKey = ref(treeProps?.parentIdKey ?? 'parentId') as Ref<string>
     const maxLevel = ref(treeProps?.maxLevel)
@@ -84,15 +85,15 @@ export function useTreeStore<T extends IItem = IItem>(config?: {
       const nodesSearched = searchConfig.value?.fnc
         ? await searchConfig.value.fnc(search.value, nodes.value)
         : await searchData({
-          searchRef: search.value,
-          rowsRef: nodes,
-          fuseOptions: {
-            keys: ['name'],
-            useExtendedSearch: true,
-            ...searchConfig.value?.fuseOptions,
-          },
-          fuseSearchToken: searchConfig.value?.fuseSearchToken ?? "'",
-        })
+            searchRef: search.value,
+            rowsRef: nodes,
+            fuseOptions: {
+              keys: ['name'],
+              useExtendedSearch: true,
+              ...searchConfig.value?.fuseOptions,
+            },
+            fuseSearchToken: searchConfig.value?.fuseSearchToken ?? "'",
+          })
 
       const nodesSearchedRows = nodesSearched.map(res => {
         return searchConfig.value?.fnc
@@ -294,7 +295,7 @@ export function useTreeStore<T extends IItem = IItem>(config?: {
       return idsSelected.includes(node.id)
     }
 
-    async function handleSelect(payload: { node: ITreeNode<T>, ev?: MouseEvent }) {
+    async function handleSelect(payload: { node: ITreeNode<T>, ev?: MouseEvent | KeyboardEvent }) {
       const { node, ev } = payload
       emits.value.nodeClick({ node, ev })
 
@@ -406,6 +407,7 @@ export function useTreeStore<T extends IItem = IItem>(config?: {
     return {
       // Layout
       treeEl,
+      searchEl,
       childrenKey,
       parentIdKey,
       isSearched,

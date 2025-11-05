@@ -255,7 +255,7 @@ export type ITreeProps<T extends IItem = IItem> = {
      */
     beforeSelect?: (payload: {
       node: T
-      ev?: MouseEvent
+      ev?: MouseEvent | KeyboardEvent
     }) => void | boolean | undefined | Promise<void | boolean | undefined>
   }
 
