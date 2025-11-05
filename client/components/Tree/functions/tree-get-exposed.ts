@@ -8,6 +8,8 @@ export function treeGetExposed() {
   return {
     nodes,
     focusSearch: () => searchEl.value?.focus(),
+    selectSearch: () => searchEl.value?.select(),
+    clearSearch: () => searchEl.value?.clear(),
     collapseAll: treeStore.collapseAll,
     expandAll: treeStore.expandAll,
     store: () => treeStore,
