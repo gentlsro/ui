@@ -43,7 +43,10 @@ export type IListProps = {
     /**
      * The function to use for transforming the added item
      */
-    transformAddedItem?: (item: IItem) => IItem
+    transformAddedItem?: (
+      item: IItem,
+      transformFnc: (fnc: (payload: { item: IListItemToAdd }) => IListItemToAdd) => void
+    ) => IItem
 
     /**
      * Validation schema for search input if creating of new item is allowed (allowAdd is set to true)

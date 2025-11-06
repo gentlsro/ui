@@ -28,11 +28,15 @@ export function listHandleAdd(payload: {
   } = payload
   const { noLocalAdd, keepAddedItems, transformAddedItem } = addConfig ?? {}
 
+  function handleTransformFnc(fnc: (payload: { item: IListItemToAdd }) => IListItemToAdd) {
+    return fnc({ item: _item })
+  }
+
   // Transform the item
   const _item = (klona(item)) as IListItemToAdd
   _item.ref = isSelected
     ? _item.ref
-    : transformAddedItem?.(_item.ref) ?? _item.ref
+    : transformAddedItem?.(_item.ref, handleTransformFnc) ?? _item.ref
 
   _item._isNew = true
 
