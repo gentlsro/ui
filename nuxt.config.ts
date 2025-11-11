@@ -1,7 +1,7 @@
 // @unocss-include
 import { writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { createResolver } from 'nuxt/kit'
+import { createResolver } from '@nuxt/kit'
 
 // UnoCSS
 import { presetWind3 } from 'unocss'
