@@ -104,18 +104,16 @@ export default uiConfig
     })
 
     nuxt.hook('vite:extendConfig', config => {
-      if (!config.resolve) {
-        config.resolve = {}
-      }
+      if (config.resolve) {
+        if (!config.resolve.alias) {
+          config.resolve.alias = {}
+        }
 
-      if (!config.resolve.alias) {
-        config.resolve.alias = {}
-      }
-
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        $ui: `${nuxt.options.rootDir}/generated/ui.ts`,
-        $uiConfig: `${nuxt.options.rootDir}/generated/uiConfig.ts`,
+        config.resolve.alias = {
+          ...config.resolve.alias,
+          $ui: `${nuxt.options.rootDir}/generated/ui.ts`,
+          $uiConfig: `${nuxt.options.rootDir}/generated/uiConfig.ts`,
+        }
       }
     })
   },
