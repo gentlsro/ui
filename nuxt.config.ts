@@ -20,7 +20,6 @@ export default defineNuxtConfig({
   // Modules https://nuxt.com/docs/api/configuration/nuxt-config#modules
   modules: [
     resolve('./modules/ui.module'),
-    '@vueuse/nuxt',
     '@unocss/nuxt',
     '@pinia/nuxt',
     'pinia-plugin-persistedstate/nuxt',
