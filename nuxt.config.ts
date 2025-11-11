@@ -9,12 +9,13 @@ import { gentlUIPreset } from './client/functions/unocss-preset'
 
 const { resolve } = createResolver(import.meta.url)
 const isMonorepo = import.meta.env.VITE_MONOREPO === 'true'
+const isInstallLayerDeps = import.meta.env.VITE_INSTALL_LAYER_DEPS === 'true'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   extends: isMonorepo
     ? [['../Utilities']]
-    : [['github:gentlsro/Utilities#nuxt-v4']],
+    : [['github:gentlsro/Utilities#nuxt-v4', { install: isInstallLayerDeps }]],
 
   // Modules https://nuxt.com/docs/api/configuration/nuxt-config#modules
   modules: [
