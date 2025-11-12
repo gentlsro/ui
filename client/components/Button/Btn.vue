@@ -229,6 +229,12 @@ defineExpose({
     @apply dark:bg-darker bg-white border-solid border-2 border-current;
   }
 
+  &--auto {
+    .btn-label {
+      @apply font-rem-12;
+    }
+  }
+
   &--xs {
     @apply min-h-6 min-w-6 gap-x-2 p-x-2;
 
