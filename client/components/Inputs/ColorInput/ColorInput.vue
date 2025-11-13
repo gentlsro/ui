@@ -3,7 +3,8 @@
 import type { IColorInputProps } from './types/color-props.type'
 
 // Functions
-import { useFieldUtils } from '../../Field/functions/useFieldUtils'
+import { useInputUtils } from '../functions/useInputUtils'
+import { useInputValidationUtils } from '../functions/useInputValidationUtils'
 import { getComponentMergedProps, getComponentProps } from '../../../functions/get-component-props'
 
 const props = withDefaults(defineProps<IColorInputProps>(), {
@@ -15,29 +16,18 @@ defineEmits<{
   (e: 'focus'): void
   (e: 'blur', ev: FocusEvent): void
 }>()
-// Utils
-const onFocus = props.eventHandlers?.onFocus
-const onBeforeFocus = props.eventHandlers?.onBeforeFocus
 
+// Utils
 const mergedProps = computed(() => {
   return getComponentMergedProps('colorInput', props)
 })
 
 // Layout
-const fieldEl = useTemplateRef('fieldEl')
+const wrapperEl = useTemplateRef('wrapperEl')
+const menuProxyEl = useTemplateRef('menuProxyEl')
 const referenceEl = ref<HTMLDivElement>()
-const model = defineModel<string>()
 const isPickerActive = ref(false)
-
-const modelLabel = computed(() => {
-  if (!model.value) {
-    return ''
-  }
-
-  const label = $t(`color.${model.value}`)
-
-  return label === `color.${model.value}` ? model.value : label
-})
+const size = toRef(props, 'size')
 
 function handlePickColor(color?: string) {
   model.value = color
@@ -47,42 +37,59 @@ function handlePickColor(color?: string) {
   }
 }
 
-// Field
+// Input
 const {
   el,
-  isTouched,
+  inputId,
+  wrapperProps,
+  hasContent,
   hasClearableBtn,
-  getFieldProps,
+  label,
+  masked,
+  model,
+  isTouched,
+  handleBlur,
+  handleClickWrapper,
   handleFocusOrClick,
-} = useFieldUtils({
+  focus,
+  select,
+  blur,
+  clear,
+  getInputElement,
+} = useInputUtils({
   props,
-  onBeforeFocus: ev => onBeforeFocus?.(ev, isPickerActive) ?? {},
-  onFocus: ev => onFocus ? onFocus(ev, isPickerActive) : isPickerActive.value = true,
+  maskRef: ref({ mask: /.*/ }),
+  menuElRef: menuProxyEl,
 })
 
-const fieldProps = getFieldProps(props)
+// Validations
+const { path } = useInputValidationUtils(props)
 
 // Lifcecycle
 onMounted(() => {
-  referenceEl.value = unrefElement(fieldEl as any)
-    ?.querySelector('.wrapper__body') as HTMLDivElement
+  referenceEl.value = unrefElement(wrapperEl as any)
+    ?.querySelector('.input-wrapper-border') as HTMLDivElement
 })
 
 defineExpose({
   isTouched: () => isTouched.value,
-  focus: handleFocusOrClick,
+  focus,
+  select,
+  blur,
+  clear,
+  getInputElement,
 })
 </script>
 
 <template>
-  <Field
-    ref="fieldEl"
-    v-bind="fieldProps"
+  <InputWrapper
+    v-bind="wrapperProps"
+    :id="inputId"
+    ref="wrapperEl"
+    :has-content
     :ui="mergedProps.ui"
-    :has-content="!!model"
-    .focus="handleFocusOrClick"
-    @focus="handleFocusOrClick"
-    @click="handleFocusOrClick"
+    .focus="focus"
+    @click="handleClickWrapper"
   >
     <template #prepend>
       <div
@@ -92,11 +99,35 @@ defineExpose({
       />
     </template>
 
-    <span ref="el">
+    <input
+      :id="inputId"
+      ref="el"
+      :value="masked"
+      flex="1"
+      :placeholder
+      :readonly
+      :disabled
+      autocomplete="off"
+      autocorrect="off"
+      autocapitalize="off"
+      spellcheck="false"
+      :label="label || placeholder"
+      :name="name || path || label || placeholder"
+      class="control"
+      role="presentation"
+      :class="[ui?.inputClass]"
+      :style="ui?.inputStyle"
+      v-bind="inputProps"
+      @focus="handleFocusOrClick"
+      @blur="handleBlur"
+    >
+
+    <!-- <span ref="el">
       {{ modelLabel }}
-    </span>
+    </span> -->
 
     <MenuProxy
+      ref="menuProxyEl"
       v-model="isPickerActive"
       manual
       tabindex="-1"
@@ -129,5 +160,5 @@ defineExpose({
         cursor="pointer"
       />
     </template>
-  </Field>
+  </InputWrapper>
 </template>

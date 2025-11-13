@@ -217,6 +217,8 @@ export const defaultComponentsConfig = {
     props: {
       stackLabel: true,
       disallowedColors: [],
+      size: 'md',
+      noIcon: true,
       ui: {
         borderRadius: '0.5rem',
       },
