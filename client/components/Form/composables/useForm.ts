@@ -24,7 +24,7 @@ export function useForm(props: IFormProps) {
     const isInputWithCustomEnterHandler = isInput && hasCustomEnterHandler
 
     if (noEnter.value) {
-      ev.preventDefault()
+      // ev.preventDefault()
 
       return
     }
