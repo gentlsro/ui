@@ -122,10 +122,6 @@ defineExpose({
       @blur="handleBlur"
     >
 
-    <!-- <span ref="el">
-      {{ modelLabel }}
-    </span> -->
-
     <MenuProxy
       ref="menuProxyEl"
       v-model="isPickerActive"
