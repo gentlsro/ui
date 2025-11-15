@@ -164,7 +164,7 @@ export type ITreeProps<T extends IItem = IItem> = {
      * This is useful when we have a structure of different "types" of nodes,
      * let's say "ITEM" and "GROUP"
      *
-     * Obviously, we cannot drop "ITEM" on an "ITEM", souse this fnc to return the
+     * Obviously, we cannot drop "ITEM" on an "ITEM", so use this fnc to return the
      * parent "GROUP" node (if there is any)
      *
      * NOTE: This is relevant only for `dropMode = parent`
