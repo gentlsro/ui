@@ -1,16 +1,18 @@
 // @unocss-include
 
+import { getElementSize } from '$utils'
 import type { ComponentInternalInstance } from 'vue'
 import { shift, useFloating } from '@floating-ui/vue'
 
 // Types
-import { useMenuStore } from '../store/menu.store'
 import type { IMenuProps } from '../types/menu-props.type'
 
 // Functions
 import { useMenuMiddleware } from './useMenuMiddleware'
 import { useFloatingUIUtils } from '../../FloatingUI/functions/useFloatingUIUtils'
-import { getElementSize } from '$utils'
+
+// Store
+import { useMenuStore } from '../store/menu.store'
 
 export function useMenu(payload: {
   menuProps: IMenuProps

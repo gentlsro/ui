@@ -17,40 +17,12 @@ const props = withDefaults(defineProps<ITooltipProps>(), {
 })
 
 // Utils
-const { getLastFloatingUIZindex } = useFloatingUIUtils()
+const instance = getCurrentInstance()
+const { getLastFloatingUIZindex, getElement } = useFloatingUIUtils()
 
 const zIndex = computed(() => {
   return getLastFloatingUIZindex()
 })
-
-function getTargetElement(target: any): any {
-  if (!import.meta.client) {
-    return
-  }
-
-  // Target is an element
-  if (target instanceof Element) {
-    return target as Element
-  }
-
-  // Target is a selector
-  else if (typeof target === 'string') {
-    return document?.querySelector(target) || document?.body || undefined
-  }
-
-  // Target is Vue component
-  else if (target) {
-    const el = unrefElement(target)
-
-    if (el) {
-      return el
-    }
-  }
-
-  return instance?.vnode.el?.parentNode
-}
-
-const instance = getCurrentInstance()
 
 // Utils
 const mergedProps = computed(() => {
@@ -58,6 +30,7 @@ const mergedProps = computed(() => {
 })
 
 // Layout
+const referenceTarget = toRef(props, 'referenceTarget')
 const model = defineModel({ default: false })
 const tooltipEl = ref<HTMLElement>()
 const referenceEl = ref<Element>() // Element that menu is attached to
@@ -73,7 +46,7 @@ const { floatingStyles, placement, middlewareData } = useFloating(
   referenceEl,
   tooltipEl,
   {
-    placement: props.placement,
+    placement: () => props.placement,
     middleware,
     strategy: 'fixed',
   },
@@ -86,49 +59,68 @@ const tooltipClass = computed(() => {
   ]
 })
 
+function assignReferenceEl() {
+  const parentEl = instance?.vnode?.el?.parentNode
+  const target = getElement({ elRef: props.referenceTarget ?? parentEl, parentEl })
+
+  if (!target) {
+    return
+  }
+
+  referenceEl.value = target
+  referenceEl.value?.classList.add('has-tooltip')
+}
+
+function assignEvents() {
+  referenceEl.value?.addEventListener('mouseenter', () => {
+    referenceEl.value?.classList.add('tooltip-hovered')
+
+    setTimeout(() => {
+      const isStillInside = referenceEl.value?.classList.contains('tooltip-hovered')
+
+      if (isStillInside) {
+        model.value = true
+      }
+    }, props.delay?.[0] || 0)
+  })
+
+  referenceEl.value?.addEventListener('mouseleave', () => {
+    referenceEl.value?.classList.remove('tooltip-hovered')
+
+    setTimeout(() => {
+      const isStillInside = referenceEl.value?.classList.contains('tooltip-hovered')
+
+      if (!isStillInside) {
+        model.value = false
+      }
+    }, props.delay?.[1] || 0)
+  })
+}
+
 watch(middlewareData, middlewareData => {
-  if (middlewareData.arrow) {
+  if (middlewareData.arrow && arrowEl.value) {
     const { x, y } = middlewareData.arrow
 
-    Object.assign(arrowEl.value!.style, {
+    Object.assign(arrowEl.value.style, {
       left: x != null ? `${x}px` : '',
       top: y != null ? `${y}px` : '',
     })
   }
 })
 
+watch(referenceTarget, () => {
+  assignReferenceEl()
+})
+
 onMounted(() => {
   nextTick(() => {
-    referenceEl.value = getTargetElement(props.referenceTarget)
-    referenceEl.value?.classList.add('has-tooltip')
+    assignReferenceEl()
 
     if (props.manual) {
       return
     }
 
-    referenceEl.value?.addEventListener('mouseenter', () => {
-      referenceEl.value?.classList.add('tooltip-hovered')
-
-      setTimeout(() => {
-        const isStillInside = referenceEl.value?.classList.contains('tooltip-hovered')
-
-        if (isStillInside) {
-          model.value = true
-        }
-      }, props.delay?.[0] || 0)
-    })
-
-    referenceEl.value?.addEventListener('mouseleave', () => {
-      referenceEl.value?.classList.remove('tooltip-hovered')
-
-      setTimeout(() => {
-        const isStillInside = referenceEl.value?.classList.contains('tooltip-hovered')
-
-        if (!isStillInside) {
-          model.value = false
-        }
-      }, props.delay?.[1] || 0)
-    })
+    assignEvents()
   })
 })
 </script>
@@ -142,7 +134,7 @@ onMounted(() => {
       p="x-2 y-1"
       :class="tooltipClass"
       :style="{ ...floatingStyles, ...mergedProps.ui?.tooltipStyle, '--zIndex': zIndex }"
-      :placement="placement"
+      :placement
       v-bind="$attrs"
     >
       <!-- Arrow -->

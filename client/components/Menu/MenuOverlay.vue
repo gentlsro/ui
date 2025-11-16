@@ -1,12 +1,12 @@
 <script setup lang="ts">
+// Store
+import { useMenuStore } from './store/menu.store'
+
 type IProps = {
   transitionDuration?: number
 }
 
 const props = defineProps<IProps>()
-
-// Store
-import { useMenuStore } from './store/menu.store'
 
 // Store
 const { zIndex, model } = useMenuStore()
