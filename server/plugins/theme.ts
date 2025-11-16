@@ -1,3 +1,9 @@
+const config = useRuntimeConfig()
+
+const theme = config.public.theme === 'auto'
+  ? undefined
+  : config.public.theme
+
 export default defineNitroPlugin(nitroApp => {
   // Set theme & lang
   nitroApp.hooks.hook('render:html', html => {
@@ -18,8 +24,9 @@ export default defineNitroPlugin(nitroApp => {
               return agg
             }, {})
 
+          const manualTheme = ${theme}
           const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-          const setting = cookieByName.theme || (prefersDark ? 'dark' : 'light')
+          const setting = manualTheme ?? cookieByName.theme || (prefersDark ? 'dark' : 'light')
           cookieByName.theme = setting
 
           document.documentElement.setAttribute('class', setting)
