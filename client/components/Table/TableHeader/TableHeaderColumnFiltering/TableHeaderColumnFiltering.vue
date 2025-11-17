@@ -13,7 +13,7 @@ import type { TableColumn } from '../../models/table-column.model'
 import { getAvailableComparators } from '../../functions/get-available-comparators'
 
 // Store
-import { useTableStore } from '../../stores/table.store'
+import { useTableStore } from '../../stores/table2.store'
 
 type IProps = {
   column: TableColumn
@@ -24,7 +24,7 @@ type IProps = {
 const props = defineProps<IProps>()
 
 // Store
-const { internalColumns } = storeToRefs(useTableStore())
+const { internalColumns } = useTableStore()
 
 // Layout
 const isMounted = ref(false)

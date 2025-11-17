@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { klona } from 'klona/full'
+import { moveItem } from '$utils'
 
 // Types
 import type { IListItem } from '../List/types/list-item.type'
@@ -12,8 +13,7 @@ import { reorderArray } from '#layers/utilities/client/functions/reorder-array'
 import { useTableAutoFit } from './composables/useTableAutoFit'
 
 // Store
-import { moveItem } from '$utils'
-import { useTableStore } from './stores/table.store'
+import { useTableStore } from './stores/table2.store'
 
 // Store
 const {
@@ -21,7 +21,7 @@ const {
   visibleColumns: visibleColumnsStore,
   nonHelperColumns,
   onDataFetchQueue,
-} = storeToRefs(useTableStore())
+} = useTableStore()
 
 // Utils
 const { fitColumns } = useTableAutoFit()

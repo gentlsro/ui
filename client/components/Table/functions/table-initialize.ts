@@ -1,10 +1,17 @@
 import { useTableAutoFit } from '../composables/useTableAutoFit'
-import { useTableStore } from '../stores/table.store'
+import { useTableStore } from '../stores/table2.store'
 
 export function tableInitialize() {
   const { fitColumns } = useTableAutoFit()
   const tableStore = useTableStore()
-  const { onDataFetchQueue, isInitialLoad, rows, loadData, autofitConfig } = storeToRefs(tableStore)
+  const {
+    onDataFetchQueue,
+    isInitialLoad,
+    rows,
+    loadData,
+    autofitConfig,
+    visibleColumns,
+  } = tableStore
 
   const isImmediate = loadData.value?.immediate || !rows.value.length
 
@@ -13,6 +20,10 @@ export function tableInitialize() {
 
     if (autofitConfig.value?.onInit === 'forced') {
       mode = autofitConfig.value.mode
+    }
+
+    if (visibleColumns.value.length > 15) {
+      return
     }
 
     nextTick(() => fitColumns(undefined, { mode }))

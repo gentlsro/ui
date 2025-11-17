@@ -8,7 +8,7 @@ import type { IQueryBuilderItem } from '../QueryBuilder/types/query-builder-item
 import { FilterItem } from '$utils'
 
 // Store
-import { useTableStore } from './stores/table.store'
+import { useTableStore } from './stores/table2.store'
 
 type IProps = Pick<ITableProps, 'queryBuilder' | 'queryBuilderProps'>
 
@@ -20,7 +20,7 @@ const {
   nonHelperColumns,
   queryBuilderProps,
   getFilterComponent,
-} = storeToRefs(useTableStore())
+} = useTableStore()
 
 // Layout
 const queryBuilderEl = useTemplateRef('queryBuilderEl')

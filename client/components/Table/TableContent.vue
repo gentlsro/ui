@@ -4,7 +4,7 @@ import type { ITableProps } from './types/table-props.type'
 import type { IVirtualScrollEvent } from '../VirtualScroller/types/virtual-scroll-event.type'
 
 // Store
-import { useTableStore } from './stores/table.store'
+import { useTableStore } from './stores/table2.store'
 import { tableEditMoveCell } from './functions/table-edit-move-cell'
 
 type IProps = Pick<ITableProps, 'editable' | 'ui' | 'to' | 'scrollerConfig' | 'showCopyBtn' | 'toLinkProps'>
@@ -30,9 +30,59 @@ const {
   paginationConfig,
   isDataLoading,
   loadData,
-} = storeToRefs(tableStore)
+  tableWidth,
+  headerX,
+} = tableStore
 
 // Layout
+const isVisibleByColumnField = ref<Record<string, boolean>>({})
+
+const colWidths = computed(() => {
+  return visibleColumns.value.map(col => ({ field: col.field, width: col._width }))
+})
+
+// watchDebounced([colWidths, headerX], ([widths]) => {
+//   let width = 0
+
+//   const widthsCumulated = widths.map(w => {
+//     width += w.width
+
+//     return width
+//   })
+
+//   isVisibleByColumnField.value = widths.reduce((agg, width, idx) => {
+//     const isVisible = isColumnVisible({
+//       columnIdx: idx,
+//       widthsCumulated,
+//     }) ?? false
+
+//     agg[width.field] = isVisible
+
+//     return agg
+//   }, {} as Record<string, boolean>) ?? {}
+// }, { immediate: true, debounce: 25 })
+
+// function isColumnVisible(payload: {
+//   columnIdx: number
+//   widthsCumulated: number[]
+// }) {
+//   const { columnIdx, widthsCumulated } = payload
+
+//   // Get the start position of the column (previous cumulative width, or 0 for first column)
+//   const columnStart = columnIdx === 0 ? 0 : widthsCumulated[columnIdx - 1] ?? 0
+
+//   // Get the end position of the column (current cumulative width)
+//   const columnEnd = widthsCumulated[columnIdx] ?? 0
+
+//   // Calculate the visible area boundaries
+//   const visibleStart = headerX.value
+//   const visibleEnd = headerX.value + tableWidth.value
+
+//   // Column is visible if it overlaps with the visible area
+//   // Overlap occurs when: columnStart < visibleEnd AND columnEnd > visibleStart
+//   return columnStart < visibleEnd && columnEnd > visibleStart
+// }
+
 function handleVirtualScroll(ev: IVirtualScrollEvent) {
   const { visibleEndItem } = ev
   const isFetchMore = rowsSplit.value.length - visibleEndItem.index - 1 < FETCH_MORE_THRESHOLD
@@ -141,6 +191,7 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
           :to
           :show-copy-btn
           :to-link-props
+          :is-visible-by-column-field
         >
           <!-- Field slots -->
           <template

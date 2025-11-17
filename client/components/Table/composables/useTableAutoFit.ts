@@ -1,5 +1,5 @@
 // Store
-import { useTableStore } from '../stores/table.store'
+import { useTableStore } from '../stores/table2.store'
 
 // Provide / Inject
 import { tableSlotsKey } from '../provide/table.provide'
@@ -15,7 +15,7 @@ export function useTableAutoFit() {
     virtualScrollEl,
     visibleColumns,
     uiConfig,
-  } = storeToRefs(useTableStore())
+  } = useTableStore()
 
   const tableSlots = injectLocal(tableSlotsKey)
 
@@ -36,7 +36,10 @@ export function useTableAutoFit() {
       isJustify = !!(ev?.ctrlKey || ev?.metaKey)
     }
 
-    const resizableColumns = visibleColumns.value.filter(col => col.resizable && !col.isHelperCol)
+    const resizableColumns = visibleColumns.value
+      .filter(col => col.resizable && !col.isHelperCol)
+      .slice(0, 25)
+
     const helperColsWidth = internalColumns.value
       .filter(col => col.isHelperCol)
       .reduce((agg, col) => {

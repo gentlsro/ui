@@ -3,7 +3,7 @@
 import { ICON_BY_FILE_EXTENSION } from '../Inputs/FileInput/constants/icon-by-file-extension'
 
 // Store
-import { useTableStore } from './stores/table.store'
+import { useTableStore } from './stores/table2.store'
 
 // Constants
 import { tableExportData } from './functions/table-export-data'
@@ -14,7 +14,7 @@ const {
   visibleColumns,
   isExporting,
   modifiers,
-} = storeToRefs(useTableStore())
+} = useTableStore()
 
 // Utils
 const { exportData = tableExportData } = modifiers.value ?? {}

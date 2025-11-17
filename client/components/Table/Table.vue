@@ -17,7 +17,7 @@ import { tableGetStorageKey } from './functions/table-get-storage-key'
 import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
 
 // Stores
-import { tableIdKey, tableStorageKey, useTableStore } from './stores/table.store'
+import { useTableStore } from './stores/table2.store'
 
 const props = withDefaults(defineProps<ITableProps>(), {
   ...getComponentProps('table'),
@@ -31,14 +31,7 @@ provideLocal(tableSlotsKey, slots)
 
 // Init
 const self = getCurrentInstance()
-const uuid = injectLocal(tableIdKey, generateUUID())
-const storageKey = injectLocal(
-  tableStorageKey,
-  tableGetStorageKey(props.storageKey, self) ?? generateUUID(),
-)
-
-provideLocal(tableIdKey, uuid)
-provideLocal(tableStorageKey, storageKey)
+const storageKey = tableGetStorageKey(props.storageKey, self)
 
 const mergedProps = computed(() => {
   return getComponentMergedProps('table', props)
@@ -60,7 +53,10 @@ const tableClass = computed(() => {
 })
 
 // Stores
-const store = useTableStore({ tableProps: { ...props, ...mergedProps.value } })
+const store = useTableStore({
+  tableProps: { ...props, ...mergedProps.value },
+  storageKey,
+})
 
 const {
   headerEl,
@@ -95,7 +91,7 @@ const {
   rowClickable,
   initialSchemaConfig,
   uiConfig,
-} = storeToRefs(store)
+} = store
 
 // Set emits
 storeEmits.value = {
@@ -131,7 +127,9 @@ syncRef(toRef(mergedProps.value, 'ui'), uiConfig, { direction: 'ltr', immediate:
 // When columns change, make sure to get their real widths
 watch(visibleColumns, cols => {
   nextTick(() => {
+    console.time('get column widths')
     cols.forEach(col => col._width = col.getWidth())
+    console.timeEnd('get column widths')
 
     // Idk, it just requires a second tick re-measure the scrollbars
     nextTick(() => {
@@ -171,15 +169,10 @@ defineExpose(tableGetExposed())
 // On mount, we get the column' real widths
 onMounted(() => {
   nextTick(() => {
+    console.time('get column widths')
     visibleColumns.value.forEach(col => col._width = col.getWidth())
+    console.timeEnd('get column widths')
   })
-})
-
-// We need to reset the store when the component is unmounted
-onUnmounted(() => {
-  store.$dispose()
-  const pinia = getActivePinia()
-  delete pinia?.state.value[store.$id]
 })
 </script>
 

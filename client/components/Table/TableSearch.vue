@@ -3,14 +3,14 @@
 import type { ITableProps } from './types/table-props.type'
 
 // Store
-import { useTableStore } from './stores/table.store'
+import { useTableStore } from './stores/table2.store'
 
 type IProps = Pick<ITableProps, 'search'>
 
 defineProps<IProps>()
 
 // Store
-const { isDataLoading, internalColumns } = storeToRefs(useTableStore())
+const { isDataLoading, internalColumns } = useTableStore()
 
 // Layout
 const search = defineModel<string>('search')

@@ -3,7 +3,7 @@
 import type { TableColumn } from '../models/table-column.model'
 
 // Store
-import { useTableStore } from '../stores/table.store'
+import { useTableStore } from '../stores/table2.store'
 
 type IProps = {
   column: TableColumn
@@ -12,7 +12,7 @@ type IProps = {
 defineProps<IProps>()
 
 // Store
-const { emptyValue } = storeToRefs(useTableStore())
+const { emptyValue } = useTableStore()
 </script>
 
 <template>

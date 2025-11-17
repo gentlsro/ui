@@ -13,7 +13,7 @@ import { getInputByDataType } from '../../../Inputs/DynamicInput/constants/input
 import { useQueryBuilderItemUtils } from '../../../QueryBuilder/functions/useQueryBuilderItemUtils'
 
 // Store
-import { useTableStore } from '../../stores/table.store'
+import { useTableStore } from '../../stores/table2.store'
 
 type IProps = {
   column: TableColumn
@@ -27,7 +27,7 @@ defineExpose({
 })
 
 // Store
-const { getFilterComponent } = storeToRefs(useTableStore())
+const { getFilterComponent } = useTableStore()
 
 // Layout
 const valueInputEl = ref<any>()

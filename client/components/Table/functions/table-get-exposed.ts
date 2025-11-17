@@ -4,18 +4,18 @@ import type { Required } from 'utility-types'
 import type { ITableLayout } from '../types/table-layout.type'
 
 // Functions
+import { tableSelectRow } from './table-select-row'
 import { useTableAutoFit } from '../composables/useTableAutoFit'
+import { tableApplyLayout } from './table-apply-layout'
 import type { tableBuildFetchPayload } from './table-build-fetch-payload'
 
 // Store
-import { tableSelectRow } from './table-select-row'
-import { useTableStore } from '../stores/table.store'
-import { tableApplyLayout } from './table-apply-layout'
+import { useTableStore } from '../stores/table2.store'
 
 export function tableGetExposed() {
   const { fitColumns } = useTableAutoFit()
   const tableStore = useTableStore()
-  const { rowKey, selectionConfig, selection, selectionByKey } = toRefs(tableStore)
+  const { rowKey, selectionConfig, selection, selectionByKey } = tableStore
 
   return {
     refetch: tableStore.fetchAndSetData,

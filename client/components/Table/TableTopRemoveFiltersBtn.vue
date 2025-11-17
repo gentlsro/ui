@@ -3,8 +3,10 @@
 import type { TableFeature } from './types/table-feature.type'
 
 // Functions
-import { useTableStore } from './stores/table.store'
 import { queryBuilderInitializeItems } from '../QueryBuilder/functions/query-builder-initialize-items'
+
+// Store
+import { useTableStore } from './stores/table2.store'
 
 type IProps = {
   featuresEnabledByName: Record<TableFeature, boolean>
@@ -14,7 +16,7 @@ defineProps<IProps>()
 
 // Store
 const uiStore = useUIStore()
-const { queryBuilder, internalColumns, state } = storeToRefs(useTableStore())
+const { queryBuilder, internalColumns, state } = useTableStore()
 
 function handleClearFilters(filterType: 'queryBuilder' | 'columns' | 'all' = 'all') {
   if (filterType === 'queryBuilder') {

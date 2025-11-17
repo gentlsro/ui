@@ -12,7 +12,7 @@ import type { TableColumn } from '../models/table-column.model'
 import { tableFilterValueChangeDebounce } from '../functions/table-filter-value-change-debounce'
 
 // Store
-import { useTableStore } from '../stores/table.store'
+import { useTableStore } from '../stores/table2.store'
 
 type IProps = {
   column: TableColumn
@@ -21,7 +21,7 @@ type IProps = {
 const props = defineProps<IProps>()
 
 // Store
-const { modifiers, internalColumns } = storeToRefs(useTableStore())
+const { modifiers, internalColumns } = useTableStore()
 const { filterValueChangeDebounce = tableFilterValueChangeDebounce } = modifiers.value ?? {}
 
 // Layout
