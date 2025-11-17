@@ -30,9 +30,57 @@ const {
   paginationConfig,
   isDataLoading,
   loadData,
+  tableWidth,
+  headerX,
 } = tableStore
 
 // Layout
+const colWidths = computed(() => {
+  return visibleColumns.value.map(col => ({ field: col.field, width: col._width }))
+})
+
+watchDebounced([colWidths, headerX], ([widths]) => {
+  let width = 0
+
+  const widthsCumulated = widths.map(w => {
+    width += w.width
+
+    return width
+  })
+
+  const _visibleColumns = visibleColumns.value.map((col, idx) => {
+    const isVisible = isColumnVisible({
+      columnIdx: idx,
+      widthsCumulated,
+    })
+
+    return { field: col.field, isVisible }
+  }).filter(col => col.isVisible)
+
+  console.log('🚀 ~ _visibleColumns:', _visibleColumns.map(c => c.field))
+}, { immediate: true, debounce: 25 })
+
+function isColumnVisible(payload: {
+  columnIdx: number
+  widthsCumulated: number[]
+}) {
+  const { columnIdx, widthsCumulated } = payload
+
+  // Get the start position of the column (previous cumulative width, or 0 for first column)
+  const columnStart = columnIdx === 0 ? 0 : widthsCumulated[columnIdx - 1] ?? 0
+
+  // Get the end position of the column (current cumulative width)
+  const columnEnd = widthsCumulated[columnIdx] ?? 0
+
+  // Calculate the visible area boundaries
+  const visibleStart = headerX.value
+  const visibleEnd = headerX.value + tableWidth.value
+
+  // Column is visible if it overlaps with the visible area
+  // Overlap occurs when: columnStart < visibleEnd AND columnEnd > visibleStart
+  return columnStart < visibleEnd && columnEnd > visibleStart
+}
+
 function handleVirtualScroll(ev: IVirtualScrollEvent) {
   const { visibleEndItem } = ev
   const isFetchMore = rowsSplit.value.length - visibleEndItem.index - 1 < FETCH_MORE_THRESHOLD

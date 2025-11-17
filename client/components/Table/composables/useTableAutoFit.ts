@@ -36,7 +36,10 @@ export function useTableAutoFit() {
       isJustify = !!(ev?.ctrlKey || ev?.metaKey)
     }
 
-    const resizableColumns = visibleColumns.value.filter(col => col.resizable && !col.isHelperCol)
+    const resizableColumns = visibleColumns.value
+      .filter(col => col.resizable && !col.isHelperCol)
+      .slice(0, 25)
+
     const helperColsWidth = internalColumns.value
       .filter(col => col.isHelperCol)
       .reduce((agg, col) => {
