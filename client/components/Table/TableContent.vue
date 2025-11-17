@@ -50,15 +50,6 @@ watchDebounced([colWidths, headerX], ([widths]) => {
     return width
   })
 
-  // const _visibleColumns = visibleColumns.value.map((col, idx) => {
-  //   const isVisible = isColumnVisible({
-  //     columnIdx: idx,
-  //     widthsCumulated,
-  //   })
-
-  //   return { field: col.field, isVisible }
-  // }).filter(col => col.isVisible)
-
   isVisibleByColumnField.value = widths.reduce((agg, width, idx) => {
     const isVisible = isColumnVisible({
       columnIdx: idx,
@@ -69,8 +60,6 @@ watchDebounced([colWidths, headerX], ([widths]) => {
 
     return agg
   }, {} as Record<string, boolean>) ?? {}
-
-  console.log('🚀 ~ isVisibleByColumnField.value:', isVisibleByColumnField.value)
 }, { immediate: true, debounce: 25 })
 
 function isColumnVisible(payload: {

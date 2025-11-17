@@ -444,13 +444,13 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
       :data-key="rowDataArray[0].rowKey"
       @click="handleEditCell(rowDataArray[0], column)"
     >
-      <div
+      <!-- <div
         v-if="!isVisibleByColumnField[column.column.field]"
         class="td__placeholder"
-      />
+      /> -->
 
       <!-- Editing -->
-      <template v-else-if="isEditingCell(rowDataArray[0], column)">
+      <template v-if="isEditingCell(rowDataArray[0], column)">
         <Component
           :is="column.column._editComponent.component"
           v-model="cellEditValue"
