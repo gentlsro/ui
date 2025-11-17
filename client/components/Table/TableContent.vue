@@ -70,7 +70,7 @@ watchDebounced([colWidths, headerX], ([widths]) => {
     return agg
   }, {} as Record<string, boolean>) ?? {}
 
-  console.log('🚀 ~ isVisibleByColumnField.value:', Object.keys(isVisibleByColumnField.value))
+  console.log('🚀 ~ isVisibleByColumnField.value:', isVisibleByColumnField.value)
 }, { immediate: true, debounce: 25 })
 
 function isColumnVisible(payload: {
