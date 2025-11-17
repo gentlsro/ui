@@ -445,7 +445,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
       @click="handleEditCell(rowDataArray[0], column)"
     >
       <div
-        v-if="isVisibleByColumnField[column.column.field]"
+        v-if="!isVisibleByColumnField[column.column.field]"
         class="td__placeholder"
       />
 
