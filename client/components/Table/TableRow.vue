@@ -20,6 +20,7 @@ import { useTableStore } from './stores/table2.store'
 type IProps = Pick<ITableProps, 'ui' | 'editable' | 'to' | 'showCopyBtn' | 'toLinkProps'> & {
   row: any | any[]
   index: number
+  isVisibleByColumnField: Record<string, boolean>
 }
 
 defineOptions({ inheritAttrs: false })

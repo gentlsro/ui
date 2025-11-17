@@ -35,6 +35,8 @@ const {
 } = tableStore
 
 // Layout
+const isVisibleByColumnField = ref<Record<string, boolean>>({})
+
 const colWidths = computed(() => {
   return visibleColumns.value.map(col => ({ field: col.field, width: col._width }))
 })
@@ -48,16 +50,27 @@ watchDebounced([colWidths, headerX], ([widths]) => {
     return width
   })
 
-  const _visibleColumns = visibleColumns.value.map((col, idx) => {
+  // const _visibleColumns = visibleColumns.value.map((col, idx) => {
+  //   const isVisible = isColumnVisible({
+  //     columnIdx: idx,
+  //     widthsCumulated,
+  //   })
+
+  //   return { field: col.field, isVisible }
+  // }).filter(col => col.isVisible)
+
+  isVisibleByColumnField.value = widths.reduce((agg, width, idx) => {
     const isVisible = isColumnVisible({
       columnIdx: idx,
       widthsCumulated,
-    })
+    }) ?? false
 
-    return { field: col.field, isVisible }
-  }).filter(col => col.isVisible)
+    agg[width.field] = isVisible
 
-  console.log('🚀 ~ _visibleColumns:', _visibleColumns.map(c => c.field))
+    return agg
+  }, {} as Record<string, boolean>) ?? {}
+
+  console.log('🚀 ~ isVisibleByColumnField.value:', Object.keys(isVisibleByColumnField.value))
 }, { immediate: true, debounce: 25 })
 
 function isColumnVisible(payload: {
@@ -189,6 +202,7 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
           :to
           :show-copy-btn
           :to-link-props
+          :is-visible-by-column-field
         >
           <!-- Field slots -->
           <template
