@@ -3,7 +3,7 @@
 import type { IChipProps } from './types/chip-props.type'
 
 // Directives
-import { vRipple } from '$utilsLayer/client/directives/ripple.directive'
+import { vRipple } from '#layers/utilities/client/directives/ripple.directive'
 
 // Functions
 import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'

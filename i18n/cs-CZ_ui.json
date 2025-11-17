@@ -86,5 +86,8 @@
     "addFirstCondition": "Přidat první podmínku",
     "negation": "Negováno",
     "negation2": "Negace"
+  },
+  "general": {
+    "moveAndResizeAvailable": "Tento element lze přesouvat a měnit jeho velikost"
   }
 }

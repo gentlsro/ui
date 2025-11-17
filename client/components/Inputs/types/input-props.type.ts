@@ -1,7 +1,8 @@
-import type { FactoryOpts } from 'imask'
+import type { FactoryOpts, MaskedNumber } from 'imask'
 import type { CSSProperties } from 'vue'
 
 // Types
+import type { INumberInputProps } from '../NumberInput/types/number-input-props.type'
 import type { IInputWrapperProps } from '../../InputWrapper/types/input-wrapper-props.type'
 
 export type IInputProps = {
@@ -58,7 +59,12 @@ export type IInputProps = {
   }
 
   /**
-   * The input name (for testing purposes)
+   * A function to adjust the `mask`
+   */
+  formatMask?: (payload: { mask: MaskedNumber, props: INumberInputProps }) => MaskedNumber
+
+  /**
+   * The input name
    */
   name?: string
 

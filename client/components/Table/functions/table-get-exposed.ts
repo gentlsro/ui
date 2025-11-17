@@ -1,8 +1,12 @@
 import type { Required } from 'utility-types'
 
+// Types
+import type { ITableLayout } from '../types/table-layout.type'
+
 // Functions
 import { tableSelectRow } from './table-select-row'
 import { useTableAutoFit } from '../composables/useTableAutoFit'
+import { tableApplyLayout } from './table-apply-layout'
 import type { tableBuildFetchPayload } from './table-build-fetch-payload'
 
 // Store
@@ -17,6 +21,10 @@ export function tableGetExposed() {
     refetch: tableStore.fetchAndSetData,
     store: () => tableStore,
     fitColumns,
+    applyLayout: (payload: { layout?: ITableLayout }) => tableApplyLayout({
+      ...payload,
+      getStore: () => tableStore,
+    }),
     getFetchPayload: (payload?: Partial<Parameters<typeof tableBuildFetchPayload>[0]>) => tableStore.getFetchPayload(payload),
     getVirtualScroller: () => tableStore.virtualScrollEl,
     selectRow: (payload: Required<Partial<Parameters<typeof tableSelectRow>[0]>, 'row'>) => {

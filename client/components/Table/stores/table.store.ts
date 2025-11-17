@@ -67,7 +67,7 @@ export function useTableStore(
      */
     function navigate() {
       // When using URL, we navigate to the new URL
-      if (modifiers.value?.useUrl) {
+      if (modifiers.value?.useUrl && tableEl.value) {
         const { navigate = tableNavigate } = modifiers.value ?? {}
 
         navigate({
@@ -80,21 +80,25 @@ export function useTableStore(
     }
 
     // SECTION State
-    const state = useLocalStorage(_storageKey, {
-      columns: [] as ITableStateColumn[],
-      layouts: [] as ITableLayout[],
-      layoutDefault: undefined as ITableLayout | undefined,
-      metaRaw: null as any,
-      queryBuilder: [] as IQueryBuilderRow[],
-      search: '',
-      queryParams: '',
+    function getDefaultState() {
+      return {
+        columns: [] as ITableStateColumn[],
+        layouts: [] as ITableLayout[],
+        layoutDefault: undefined as ITableLayout | undefined,
+        metaRaw: null as any,
+        queryBuilder: [] as IQueryBuilderRow[],
+        search: '',
+        queryParams: '',
 
-      /**
-       * We sometimes need to save some custom data in table context to access it in
-       * a component or similar.
-       */
-      customData: {} as IItem,
-    })
+        /**
+         * We sometimes need to save some custom data in table context to access it in
+         * a component or similar.
+         */
+        customData: {} as IItem,
+      }
+    }
+
+    const state = useLocalStorage(_storageKey, getDefaultState())
 
     const customData = computed({
       get() {
@@ -288,16 +292,8 @@ export function useTableStore(
     })
 
     watch(columnsMerged, columnsMerged => {
-      // There is some extreme edge case where the modifiers are not set
-      // This happens when you spam tables like crazy
-      // I don't know if this is even possible to fix because it might be related
-      // to `pinia dispose` or something like that... Probably using https://vueuse.org/shared/createInjectionState/
-      // instead of pinia would fix this, but that requires refactor.
       if (!modifiers.value) {
         console.log('💀 Modifiers are not set')
-        // location.reload()
-
-        // return
       }
 
       // Merge columns from all the sources, remove duplicates
@@ -623,12 +619,22 @@ export function useTableStore(
 
       const rowsFetched = payloadKey ? (get(resModified, payloadKey) ?? []) : resModified
       const countFetched = get(resModified, countKey) ?? 0
+      const hadNoRows = rows.value.length === 0
 
       rows.value = isFetchMore.value ? [...rows.value, ...rowsFetched] : rowsFetched
       totalRows.value = isFetchMore.value ? totalRows.value : countFetched
       hasMore.value = rows.value.length < totalRows.value
 
       if (!isFetchMore.value) {
+        // If there were no rows in the table before, and now there are,
+        // we need to reset the X-axis scroll position
+        if (hadNoRows && rows.value.length > 0) {
+          // headerX.value = 0
+          nextTick(() => {
+            contentX.value = headerX.value
+          })
+        }
+
         onDataFetchQueue.value.push(navigate)
       }
 

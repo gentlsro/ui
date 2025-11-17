@@ -11,7 +11,7 @@ import { useInputValidationUtils } from '../functions/useInputValidationUtils'
 import { getComponentMergedProps, getComponentProps } from '../../../functions/get-component-props'
 
 // Constants
-import { CURRENCY_DEFAULT } from '$utilsLayer/shared/i18n'
+import { CURRENCY_DEFAULT } from '#layers/utilities/shared/i18n'
 
 const props = withDefaults(defineProps<ICurrencyInputProps>(), {
   ...getComponentProps('currencyInput'),
@@ -41,8 +41,8 @@ const mask = computed<MaskedNumber>(() => {
     padFractionalZeros: true,
     scale: props.fractionDigits,
     mask: Number,
-    min: props.min,
-    max: props.max,
+    min: props.min ?? Number.MIN_SAFE_INTEGER,
+    max: props.max ?? Number.MAX_SAFE_INTEGER,
     format: (value: any) => {
       if (isNil(value)) {
         return ''
@@ -72,6 +72,7 @@ const {
   lastValidValue,
   hasClearableBtn,
   label,
+  isTouched,
   focus,
   select,
   blur,
@@ -238,6 +239,7 @@ function handleBeforeInput(ev: Event) {
 }
 
 defineExpose({
+  isTouched: () => isTouched.value,
   focus,
   select,
   blur,

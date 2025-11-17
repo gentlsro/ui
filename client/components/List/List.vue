@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getActivePinia } from 'pinia'
-import type { IGroupRow } from '$utilsLayer/shared/composables/useGrouping'
+import type { IGroupRow } from '#layers/utilities/shared/composables/useGrouping'
 
 // Types
 import type { IListItem } from './types/list-item.type'
@@ -12,6 +12,7 @@ import type { IListItemToAdd } from './types/list-item-to-add.type'
 // Functions
 import { listGetExposed } from './functions/list-get-exposed'
 import { useListItemAdding } from './composables/useListItemAdding'
+import { getListItemKey } from './functions/helpers/get-list-item-key'
 import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
 
 // Store
@@ -44,7 +45,6 @@ const {
   searchConfig: storeSearchConfig,
   sortingConfig: storeSortingConfig,
   itemFocusedIdx,
-  isLoading,
   loadData: storeLoadData,
   noFilter: storeNoFilter,
   addedItems: storeAddedItems,
@@ -57,6 +57,7 @@ const {
   isClearable: storeIsClearable,
   hiddenItems: storeHiddenItems,
   modifiers,
+  listEl,
 } = storeToRefs(listStore)
 
 // Set emits
@@ -121,6 +122,23 @@ else if (storeItems.value) {
   storeItems.value = [...storeItems.value]
   isFirstFetch.value = false
 }
+
+// We want to scroll to the selected item when the list is mounted
+onMounted(() => {
+  const _selection = Array.isArray(selection.value)
+    ? selection.value
+    : [selection.value].filter(Boolean)
+
+  if (_selection.length === 1) {
+    requestAnimationFrame(() => {
+      const itemKey = getListItemKey(_selection[0], props.itemKey)
+      const itemIdx = listItems.value?.findIndex(item => item.id === itemKey)
+      itemFocusedIdx.value = itemIdx
+
+      listEl.value?.scrollTo(itemIdx)
+    })
+  }
+})
 
 // Dispose of store on unmount
 onUnmounted(() => {

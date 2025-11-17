@@ -10,7 +10,7 @@ import { getListItem, getListItemLabel } from '../List/functions/helpers'
 type IProps = Pick<
   ISelectorProps,
   | 'useScroller' | 'ui' | 'maxChipsRows' | 'readonly' | 'disabled'
-  | 'emptyValue' | 'multi' | 'optionLabel' | 'optionTo' | 'to' | 'name'
+  | 'emptyValue' | 'multi' | 'optionLabel' | 'to' | 'name'
 > & { emits: ISelectorEmits }
 
 const props = defineProps<IProps>()
@@ -20,14 +20,15 @@ const { model, optionByKey } = storeToRefs(useSelectorStore())
 
 // Layout
 const isMulti = toRef(props, 'multi')
+const readonly = toRef(props, 'readonly')
 
-const to = computed(() => {
+function resolveTo(item: any) {
   if (typeof props.to === 'function') {
-    return props.to(model.value)
+    return props.to(item)
   }
 
   return props.to
-})
+}
 
 const modelArray = computed(() => {
   if (!model.value || model.value === props.emptyValue) {
@@ -98,7 +99,7 @@ function handleRemove(idx: number) {
           :readonly
           :disabled
           :navigate-to-options="{ target: '_blank' }"
-          :to="optionTo?.(item)"
+          :to="resolveTo(item)"
           @remove="handleRemove(idx)"
         />
       </slot>
@@ -129,7 +130,7 @@ function handleRemove(idx: number) {
           :readonly
           :disabled
           :navigate-to-options="{ target: '_blank' }"
-          :to="optionTo?.(item)"
+          :to="resolveTo(item)"
           @remove="handleRemove(idx)"
         />
       </slot>

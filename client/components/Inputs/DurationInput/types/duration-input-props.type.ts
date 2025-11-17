@@ -1,5 +1,5 @@
 // Types
-import type { DurationUnit } from '$utilsLayer/shared/composables/useDuration'
+import type { DurationUnit } from '#layers/utilities/shared/composables/useDuration'
 import type { INumberInputProps } from '../../NumberInput/types/number-input-props.type'
 
 export type IDurationInputProps = INumberInputProps & {

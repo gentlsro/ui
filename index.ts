@@ -6,6 +6,8 @@ export * from './client/types/component-props.type'
 export { BREAKPOINTS } from './shared/constants/breakpoints'
 export { extendNestedComponentProps } from './client/functions/extend-nested-component-props'
 export { getComponentMergedProps, getComponentProps } from './client/functions/get-component-props'
+export { COLORS_PREDEFINED } from './shared/constants/colors-predefined.constant'
+export { getRandomColor } from './shared/functions/get-random-color'
 
 // Btn
 export { BUTTON_PRESET } from './client/components/Button/constants/button-preset.constant'
@@ -55,6 +57,7 @@ export type { ITableFilterRow } from './client/components/Table/types/table-filt
 export type { TableFeature } from './client/components/Table/types/table-feature.type'
 export type { ITableEmits } from './client/components/Table/types/table-emits.type'
 export type { ITableDistinctData } from './client/components/Table/types/table-distinct-data.type'
+export type { ITableLayout } from './client/components/Table/types/table-layout.type'
 
 export { tableExtractDataFromUrl } from './client/components/Table/functions/table-extract-data-from-url'
 

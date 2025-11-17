@@ -28,11 +28,15 @@ export function listHandleAdd(payload: {
   } = payload
   const { noLocalAdd, keepAddedItems, transformAddedItem } = addConfig ?? {}
 
+  function handleTransformFnc(fnc: (payload: { item: IListItemToAdd }) => IListItemToAdd) {
+    return fnc({ item: _item })
+  }
+
   // Transform the item
   const _item = (klona(item)) as IListItemToAdd
   _item.ref = isSelected
     ? _item.ref
-    : transformAddedItem?.(_item.ref) ?? _item.ref
+    : transformAddedItem?.(_item.ref, handleTransformFnc) ?? _item.ref
 
   _item._isNew = true
 
@@ -54,7 +58,7 @@ export function listHandleAdd(payload: {
       emits.add(_item)
 
       if (noLocalAdd) {
-        return
+        return _item
       }
 
       addedItems.value = [...addedItems.value, _item]
@@ -79,7 +83,7 @@ export function listHandleAdd(payload: {
       emits.add(_item)
 
       if (noLocalAdd) {
-        return
+        return _item
       }
 
       addedItems.value = [_item]

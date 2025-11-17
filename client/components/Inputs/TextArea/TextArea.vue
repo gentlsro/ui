@@ -34,6 +34,7 @@ const {
   hasContent,
   isBlurred,
   label,
+  isTouched,
   focus,
   select,
   blur,
@@ -63,6 +64,7 @@ const resizeClass = computed(() => {
 const { path } = useInputValidationUtils(props)
 
 defineExpose({
+  isTouched: () => isTouched.value,
   focus,
   select,
   blur,
@@ -119,33 +121,19 @@ defineExpose({
       v-if="$slots.append || hasClearableBtn"
       #append
     >
-      <div
-        flex="~ center gap-1"
-        self="start"
-        @click="handleFocusOrClick"
-      >
-        <Btn
-          v-if="hasClearableBtn"
-          icon="i-eva:close-fill h-6 w-6"
-          color="ca"
-          size="auto"
-          h="7"
-          w="7"
-          tabindex="-1"
-          @click.stop.prevent="!clearConfirmation && clear()"
-        >
-          <MenuConfirmation
-            v-if="clearConfirmation"
-            @ok="clear"
-          >
-            {{ clearConfirmation }}
-          </MenuConfirmation>
-        </Btn>
-
+      <div :class="mergedProps.ui?.appendClass">
         <slot
           name="append"
           :clear="clear"
           :focus="focus"
+        />
+
+        <InputClearBtn
+          v-if="hasClearableBtn"
+          :clear-confirmation
+          :size
+          class="self-start m-t-1.5"
+          @click.stop.prevent="!clearConfirmation && clear()"
         />
       </div>
     </template>
@@ -177,3 +165,14 @@ defineExpose({
     </Menu>
   </InputWrapper>
 </template>
+
+<style lang="scss" scoped>
+textarea {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+textarea::-webkit-scrollbar {
+  display: none;
+}
+</style>

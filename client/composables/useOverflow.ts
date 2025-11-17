@@ -30,6 +30,7 @@ export function getScrollbarWidth() {
 export type IOverflowOptions = {
   direction?: 'any' | 'horizontal' | 'vertical'
   returnDiff?: boolean
+  threshold?: MaybeRefOrGetter<number>
 }
 
 export function useOverflow() {
@@ -40,24 +41,26 @@ export function useOverflow() {
     { clientWidth, clientHeight, scrollWidth, scrollHeight }: Element,
     options?: IOverflowOptions,
   ) => {
-    const { direction = 'any', returnDiff } = options || {}
+    const { direction = 'any', returnDiff, threshold = 0 } = options || {}
     const xDiff = scrollWidth - clientWidth
     const yDiff = scrollHeight - clientHeight
 
+    const _threshold = toValue(threshold)
+
     switch (direction) {
       case 'any':
-        return returnDiff ? { xDiff, yDiff } : xDiff > 0 || yDiff > 0
+        return returnDiff ? { xDiff, yDiff } : xDiff > _threshold || yDiff > _threshold
       case 'horizontal':
-        return returnDiff ? { xDiff } : xDiff > 0
+        return returnDiff ? { xDiff } : xDiff > _threshold
       case 'vertical':
-        return returnDiff ? { yDiff } : yDiff > 0
+        return returnDiff ? { yDiff } : yDiff > _threshold
     }
   }
 
   const onOverflow = (
     elRef: MaybeElementRef,
     handler: (
-      isOverflown: boolean | { xDiff?: number, yDiff?: number }
+      isOverflown: boolean | { xDiff?: number, yDiff?: number },
     ) => void,
     options?: IOverflowOptions,
   ) => {

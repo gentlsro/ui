@@ -1,5 +1,7 @@
 import type { CSSProperties } from 'vue'
-import type { IBreadcrumb } from '~~/libs/UI/client/components/Breadcrumbs/types/breadcrumb.type'
+
+// Types
+import type { IBreadcrumb } from './breadcrumb.type'
 
 export type IBreadcrumbsProps = {
   /**

@@ -9,7 +9,7 @@ import type { IListItem } from '../List/types/list-item.type'
 import type { TableColumn } from './models/table-column.model'
 
 // Functions
-import { reorderArray } from '$utilsLayer/client/functions/reorder-array'
+import { reorderArray } from '#layers/utilities/client/functions/reorder-array'
 import { useTableAutoFit } from './composables/useTableAutoFit'
 
 // Store
@@ -154,6 +154,13 @@ function handleRemove(idx: number) {
         <DocumentationBtn
           path="columnSelection"
         />
+
+        <!-- <Btn
+          size="sm"
+          no-uppercase
+          icon="i-carbon:reset"
+          :label="$t('table.resetColumnVisibility')"
+        /> -->
       </template>
 
       <Form
@@ -161,8 +168,9 @@ function handleRemove(idx: number) {
         :ui="{
           contentClass: 'grow grid grid-cols-2 gap-2 overflow-auto',
           controlsClass: 'p-x-0 p-b-0 p-t-1 border-t-1 border-ca',
+          submitClass: '!w-auto bg-primary color-white',
         }"
-        :submit-btn-props="{ size: 'sm' }"
+        :submit-btn-props="{ size: 'sm', noUppercase: true }"
         no-shortcuts
         :label="$t('table.applyColumns')"
         :submit-disabled="!visibleColumnsLocal.length"

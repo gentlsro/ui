@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { IGroupRow } from '$utilsLayer/shared/composables/useGrouping'
+import type { IGroupRow } from '#layers/utilities/shared/composables/useGrouping'
 
 // Types
 import type { IListProps } from './types/list-props.type'

@@ -12,6 +12,7 @@ export function useFormUtils() {
       'loading',
       'noSubmit',
       'noControls',
+      'noEnter',
       'preventSubmitOnEnter',
       'reset',
       'submitBtnProps',

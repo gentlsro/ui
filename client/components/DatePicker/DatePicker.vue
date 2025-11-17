@@ -4,7 +4,7 @@ import type { IDatePickerProps } from './types/datepicker-props.type'
 import type { DayEvent } from './types/DayEvent.type'
 
 // Models
-import type { Day } from '$utilsLayer/shared/models/day.model'
+import type { Day } from '#layers/utilities/shared/models/day.model'
 
 // Functions
 import { getComponentProps } from '../../functions/get-component-props'
@@ -280,7 +280,17 @@ defineExpose({
           :utc
           :events="eventsByDay?.[day.dateString]"
           @click="handleDaySelect(day, $event)"
-        />
+        >
+          <template
+            v-if="$slots.day"
+            #day
+          >
+            <slot
+              name="day"
+              :day
+            />
+          </template>
+        </DatePickerDay>
       </ScrollArea>
     </div>
 

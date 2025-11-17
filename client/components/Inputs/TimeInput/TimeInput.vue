@@ -1,6 +1,4 @@
 <script setup lang="ts">
-// TODO: am/pm values are not reactive on language change (broken only for 13h for some reason...)
-
 import { MaskedRange } from 'imask'
 import type { FactoryOpts } from 'imask'
 
@@ -52,7 +50,7 @@ function localizeTime(time?: string | undefined) {
 
   const [hh = '00', mm = '00'] = time!.split(':')
 
-  if (is12h.value && +hh > 13) {
+  if (is12h.value && +hh >= 13) {
     return `${padStart(String(+hh % 12), 2, '0')}:${mm}`
   } else if (is12h.value && +hh < 1) {
     return `12:${mm}`
@@ -79,6 +77,7 @@ function delocalizeTime(time?: string | undefined) {
 const PATTERN = 'HH:mm'
 
 // Layout
+const readonly = toRef(props, 'readonly')
 const preventNextIsAmChange = autoResetRef(false, 50)
 
 const delocalizedTimeParts = computed(() => {
@@ -167,6 +166,7 @@ const {
   hasContent,
   hasClearableBtn,
   hasNoValue,
+  isTouched,
   focus,
   select,
   blur,
@@ -233,6 +233,7 @@ watch(model, () => {
 const { path } = useInputValidationUtils(props)
 
 defineExpose({
+  isTouched: () => isTouched.value,
   focus,
   select,
   blur,

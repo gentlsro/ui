@@ -91,11 +91,6 @@ export type ISelectorProps = IFieldProps & {
   options?: any[]
 
   /**
-   * A link to the option (for multi selection)
-   */
-  optionTo?: (item: any) => RouteLocationRaw
-
-  /**
    * A link to the item (for single selection)
    */
   to?: RouteLocationRaw | ((item: any) => RouteLocationRaw)

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { isNumeric } from '$utils'
-import { MODIFIER_BY_UNIT } from '$utilsLayer/shared/composables/useDuration'
-import type { DurationUnit } from '$utilsLayer/shared/composables/useDuration'
+import { MODIFIER_BY_UNIT } from '#layers/utilities/shared/composables/useDuration'
+import type { DurationUnit } from '#layers/utilities/shared/composables/useDuration'
 
 // Types
 import type { IDurationInputProps } from './types/duration-input-props.type'
@@ -88,6 +88,7 @@ function handleDurationUnitChange(unit: DurationUnit) {
 }
 
 defineExpose({
+  isTouched: numberInputEl.value?.isTouched,
   focus: () => numberInputEl.value?.focus(),
   select: () => numberInputEl.value?.select(),
   blur: () => numberInputEl.value?.blur(),

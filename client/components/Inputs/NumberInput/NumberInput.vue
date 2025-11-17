@@ -18,6 +18,7 @@ defineEmits<{
   (e: 'blur'): void
   (e: 'focus'): void
   (e: 'clear'): void
+  (e: 'enter', event: KeyboardEvent): void
 }>()
 
 // Utils
@@ -30,11 +31,7 @@ const mergedProps = computed(() => {
 
 // Mask
 const mask = computed<MaskedNumber>(() => {
-  if (props.mask) {
-    return props.mask as MaskedNumber
-  }
-
-  return new MaskedNumber({
+  let mask = new MaskedNumber({
     thousandsSeparator: props.noGrouping
       ? ''
       : separators.value.thousandSeparator,
@@ -52,6 +49,15 @@ const mask = computed<MaskedNumber>(() => {
       return value.toString()
     },
   })
+
+  if (props.mask) {
+    mask = props.mask as MaskedNumber
+  }
+
+  return props.formatMask?.({
+    mask,
+    props: { ...props, ...mergedProps.value },
+  }) ?? mask
 })
 
 const {
@@ -63,6 +69,7 @@ const {
   hasNoValue,
   hasClearableBtn,
   label,
+  isTouched,
   focus,
   select,
   blur,
@@ -90,6 +97,7 @@ function handlePaste(ev: ClipboardEvent) {
 }
 
 defineExpose({
+  isTouched: () => isTouched.value,
   focus,
   select,
   blur,
@@ -146,7 +154,13 @@ defineExpose({
       @focus="handleFocusOrClick"
       @blur="handleBlur"
       @paste.stop.prevent="handlePaste"
+      @keypress.enter="$emit('enter', $event)"
     >
+
+    <!-- Hint -->
+    <template #hint>
+      <slot name="hint" />
+    </template>
 
     <!-- Append -->
     <template
@@ -165,23 +179,12 @@ defineExpose({
           :focus="focus"
         />
 
-        <Btn
+        <InputClearBtn
           v-if="hasClearableBtn"
-          icon="i-eva:close-fill h-6 w-6"
-          color="ca"
-          size="auto"
-          h="7"
-          w="7"
-          tabindex="-1"
+          :clear-confirmation
+          :size
           @click.stop.prevent="!clearConfirmation && clear()"
-        >
-          <MenuConfirmation
-            v-if="clearConfirmation"
-            @ok="clear"
-          >
-            {{ clearConfirmation }}
-          </MenuConfirmation>
-        </Btn>
+        />
 
         <!-- Step -->
         <NumberInputStep

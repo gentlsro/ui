@@ -13,7 +13,7 @@ import { BUTTON_PRESET } from './constants/button-preset.constant'
 import BtnOrNuxtLinkResolver from './BtnOrNuxtLinkResolver.vue'
 
 // Directives
-import { vRipple } from '$utilsLayer/client/directives/ripple.directive'
+import { vRipple } from '#layers/utilities/client/directives/ripple.directive'
 
 const props = withDefaults(defineProps<IBtnProps>(), {
   ...getComponentProps('button'),
@@ -227,6 +227,12 @@ defineExpose({
 
   &.is-outlined {
     @apply dark:bg-darker bg-white border-solid border-2 border-current;
+  }
+
+  &--auto {
+    .btn-label {
+      @apply font-rem-12;
+    }
   }
 
   &--xs {
