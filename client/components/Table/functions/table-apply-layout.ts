@@ -7,7 +7,7 @@ import { tableTransformColumns } from './table-transform-columns'
 import { queryBuilderInitializeItems } from '../../QueryBuilder/functions/query-builder-initialize-items'
 
 // Store
-import type { useTableStore } from '../stores/table.store'
+import type { useTableStore } from '../stores/table2.store'
 
 export function tableApplyLayout(payload: {
   layout?: ITableLayout
@@ -21,7 +21,7 @@ export function tableApplyLayout(payload: {
     state,
     modifiers,
     queryBuilder: queryBuilderStore,
-  } = storeToRefs(store)
+  } = store
 
   if (!layout) {
     // We reset filters, query builder, sorting and selection
