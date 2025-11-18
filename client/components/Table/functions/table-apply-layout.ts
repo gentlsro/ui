@@ -7,7 +7,7 @@ import { tableTransformColumns } from './table-transform-columns'
 import { queryBuilderInitializeItems } from '../../QueryBuilder/functions/query-builder-initialize-items'
 
 // Store
-import type { useTableStore } from '../stores/table2.store'
+import type { useTableStore } from '../stores/table.store'
 
 export function tableApplyLayout(payload: {
   layout?: ITableLayout

@@ -33,7 +33,7 @@ import type { tableDeleteLayout } from '../functions/table-delete-layout'
 import type { tableFilterValueChangeDebounce } from '../functions/table-filter-value-change-debounce'
 
 // Store
-import type { useTableStore } from '../stores/table2.store'
+import type { useTableStore } from '../stores/table.store'
 import type { tableExtractPaginationFromUrl } from '../functions/table-extract-pagination-from-url'
 import type { tableSerializePagination } from '../functions/table-serialize-pagination'
 import type { tableGetLayoutMeta } from '../functions/table-get-layout-meta'
@@ -91,7 +91,7 @@ export type ITableProps<
    */
   getFilterComponent?: (
     column: TableColumn<any>,
-    filterItem: ITableFilterItem
+    filterItem: ITableFilterItem,
   ) => Required<Partial<NonNullable<TableColumn['filterComponent']>>, 'component'> | undefined
 
   /**
@@ -161,7 +161,7 @@ export type ITableProps<
      */
     mergeFnc?: (
       initialParams: URLSearchParams,
-      stateOrDefaultParams: URLSearchParams
+      stateOrDefaultParams: URLSearchParams,
     ) => URLSearchParams
   }
 
@@ -269,7 +269,7 @@ export type ITableProps<
     onFetch?: (payload: {
       res: any
       getStore: () => ReturnType<typeof useTableStore>
-    }
+    },
     ) => IItem & { _preventFetchData?: boolean }
   }
 

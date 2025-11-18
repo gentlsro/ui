@@ -3,7 +3,7 @@
 import { FilterItem, formatValue, NON_VALUE_COMPARATORS } from '$utils'
 
 // Functions
-import { useTableStore } from './stores/table2.store'
+import { useTableStore } from './stores/table.store'
 
 type IProps = {
   filter: FilterItem

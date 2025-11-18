@@ -10,7 +10,7 @@ import { tableApplyLayout } from './table-apply-layout'
 import type { tableBuildFetchPayload } from './table-build-fetch-payload'
 
 // Store
-import { useTableStore } from '../stores/table2.store'
+import { useTableStore } from '../stores/table.store'
 
 export function tableGetExposed() {
   const { fitColumns } = useTableAutoFit()

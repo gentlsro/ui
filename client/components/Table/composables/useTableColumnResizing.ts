@@ -10,7 +10,7 @@ import { tableSlotsKey } from '../provide/table.provide'
 import { stringToFloat } from '$utils'
 
 // Store
-import { useTableStore } from '../stores/table2.store'
+import { useTableStore } from '../stores/table.store'
 
 export function useTableColumnResizing() {
   const tableSlots = inject(tableSlotsKey)

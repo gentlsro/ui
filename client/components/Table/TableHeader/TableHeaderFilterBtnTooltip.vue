@@ -3,7 +3,7 @@
 import type { TableColumn } from '../models/table-column.model'
 
 // Store
-import { useTableStore } from '../stores/table2.store'
+import { useTableStore } from '../stores/table.store'
 
 type IProps = {
   column: TableColumn

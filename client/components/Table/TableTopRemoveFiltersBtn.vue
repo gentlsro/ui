@@ -6,7 +6,7 @@ import type { TableFeature } from './types/table-feature.type'
 import { queryBuilderInitializeItems } from '../QueryBuilder/functions/query-builder-initialize-items'
 
 // Store
-import { useTableStore } from './stores/table2.store'
+import { useTableStore } from './stores/table.store'
 
 type IProps = {
   featuresEnabledByName: Record<TableFeature, boolean>

@@ -17,7 +17,7 @@ import { tableGetStorageKey } from './functions/table-get-storage-key'
 import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
 
 // Stores
-import { useTableStore } from './stores/table2.store'
+import { useTableStore } from './stores/table.store'
 
 const props = withDefaults(defineProps<ITableProps>(), {
   ...getComponentProps('table'),

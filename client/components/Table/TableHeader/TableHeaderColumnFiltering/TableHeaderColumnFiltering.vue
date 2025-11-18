@@ -13,7 +13,7 @@ import type { TableColumn } from '../../models/table-column.model'
 import { getAvailableComparators } from '../../functions/get-available-comparators'
 
 // Store
-import { useTableStore } from '../../stores/table2.store'
+import { useTableStore } from '../../stores/table.store'
 
 type IProps = {
   column: TableColumn

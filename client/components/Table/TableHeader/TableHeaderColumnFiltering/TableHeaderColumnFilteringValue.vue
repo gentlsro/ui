@@ -13,7 +13,7 @@ import { getInputByDataType } from '../../../Inputs/DynamicInput/constants/input
 import { useQueryBuilderItemUtils } from '../../../QueryBuilder/functions/useQueryBuilderItemUtils'
 
 // Store
-import { useTableStore } from '../../stores/table2.store'
+import { useTableStore } from '../../stores/table.store'
 
 type IProps = {
   column: TableColumn

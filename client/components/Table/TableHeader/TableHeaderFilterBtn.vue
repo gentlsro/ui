@@ -12,7 +12,7 @@ import type { TableColumn } from '../models/table-column.model'
 import { tableFilterValueChangeDebounce } from '../functions/table-filter-value-change-debounce'
 
 // Store
-import { useTableStore } from '../stores/table2.store'
+import { useTableStore } from '../stores/table.store'
 
 type IProps = {
   column: TableColumn

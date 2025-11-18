@@ -12,7 +12,7 @@ import { tableTransformColumns } from './functions/table-transform-columns'
 import { queryBuilderInitializeItems } from '../QueryBuilder/functions/query-builder-initialize-items'
 
 // Store
-import { useTableStore } from './stores/table2.store'
+import { useTableStore } from './stores/table.store'
 
 // Utils
 const { isLoading, handleRequest } = useRequest()

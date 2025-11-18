@@ -4,7 +4,7 @@ import type { ITableLayout } from './types/table-layout.type'
 import type { ITableSortItem } from './types/table-sort-item.type'
 
 // Store
-import { useTableStore } from './stores/table2.store'
+import { useTableStore } from './stores/table.store'
 import { tableSaveLayout } from './functions/table-save-layout'
 import { tableDeleteLayout } from './functions/table-delete-layout'
 import { tableSerializeFilters } from './functions/table-serialize-filters'

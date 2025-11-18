@@ -1,4 +1,4 @@
-import type { useTableStore } from '../stores/table2.store'
+import type { useTableStore } from '../stores/table.store'
 
 // Types
 import type { ITableSortItem } from '../types/table-sort-item.type'

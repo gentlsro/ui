@@ -4,7 +4,7 @@ import type { ITableProps } from './types/table-props.type'
 import type { ITableSplitter } from './types/table-splitter.type'
 
 // Store
-import { useTableStore } from './stores/table2.store'
+import { useTableStore } from './stores/table.store'
 import { useTableColumnResizing } from './composables/useTableColumnResizing'
 
 type IProps = Pick<ITableProps, 'ui'>

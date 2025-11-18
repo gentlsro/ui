@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // Store
-import { useTableStore } from './stores/table2.store'
+import { useTableStore } from './stores/table.store'
 
 // Store
 const { nonHelperColumns } = useTableStore()

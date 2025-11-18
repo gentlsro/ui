@@ -4,7 +4,7 @@ import type { ITableProps } from './types/table-props.type'
 import type { TableFeature } from './types/table-feature.type'
 
 // Store
-import { useTableStore } from './stores/table2.store'
+import { useTableStore } from './stores/table.store'
 
 type IProps = Pick<ITableProps, 'features' | 'ui'>
 

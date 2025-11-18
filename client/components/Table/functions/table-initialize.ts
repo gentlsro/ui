@@ -1,5 +1,5 @@
 import { useTableAutoFit } from '../composables/useTableAutoFit'
-import { useTableStore } from '../stores/table2.store'
+import { useTableStore } from '../stores/table.store'
 
 export function tableInitialize() {
   const { fitColumns } = useTableAutoFit()

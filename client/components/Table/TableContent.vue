@@ -4,7 +4,7 @@ import type { ITableProps } from './types/table-props.type'
 import type { IVirtualScrollEvent } from '../VirtualScroller/types/virtual-scroll-event.type'
 
 // Store
-import { useTableStore } from './stores/table2.store'
+import { useTableStore } from './stores/table.store'
 import { tableEditMoveCell } from './functions/table-edit-move-cell'
 
 type IProps = Pick<ITableProps, 'editable' | 'ui' | 'to' | 'scrollerConfig' | 'showCopyBtn' | 'toLinkProps'>

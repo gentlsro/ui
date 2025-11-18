@@ -13,7 +13,7 @@ import { reorderArray } from '#layers/utilities/client/functions/reorder-array'
 import { useTableAutoFit } from './composables/useTableAutoFit'
 
 // Store
-import { useTableStore } from './stores/table2.store'
+import { useTableStore } from './stores/table.store'
 
 // Store
 const {
