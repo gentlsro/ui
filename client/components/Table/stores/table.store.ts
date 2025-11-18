@@ -701,11 +701,16 @@ const [
     const isOverLimit = rows.value.length >= rowsLimit.value
     const isInitial = isInitialLoad.value && !payload?.force
 
-    if (isOverLimit || isDataLoading.value || isInvalidFetchMore || isInitial || !loadData.value?.fnc) {
+    if (isDataLoading.value || isInvalidFetchMore || isInitial || !loadData.value?.fnc) {
       return
     }
 
     isFetchMore.value = hasMore.value && !!payload?.isFetchMore
+
+    if (isOverLimit && !isFetchMore.value) {
+      return
+    }
+
     const fetchPayload = getFetchPayload()
 
     isDataLoading.value = true
