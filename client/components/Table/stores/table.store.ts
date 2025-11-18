@@ -707,7 +707,7 @@ const [
 
     isFetchMore.value = hasMore.value && !!payload?.isFetchMore
 
-    if (isOverLimit && !isFetchMore.value) {
+    if (isOverLimit && isFetchMore.value) {
       return
     }
 
