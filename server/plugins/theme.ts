@@ -21,6 +21,7 @@ export default defineNitroPlugin(nitroApp => {
             }, {})
 
           const manualTheme = ${theme === 'auto' ? undefined : `'${theme}'`}
+          console.log('🚀 ~ manualTheme:', manualTheme)
           const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
           const setting = manualTheme || cookieByName.theme || (prefersDark ? 'dark' : 'light')
           cookieByName.theme = setting
