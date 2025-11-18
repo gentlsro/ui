@@ -15,7 +15,7 @@ import { useTableStore } from '../stores/table.store'
 export function tableGetExposed() {
   const { fitColumns } = useTableAutoFit()
   const tableStore = useTableStore()
-  const { rowKey, selectionConfig, selection, selectionByKey } = tableStore
+  const { rowKey, selectionConfig, selection, selectionByKey, virtualScrollEl } = tableStore
 
   return {
     refetch: tableStore.fetchAndSetData,
@@ -26,7 +26,7 @@ export function tableGetExposed() {
       getStore: () => tableStore,
     }),
     getFetchPayload: (payload?: Partial<Parameters<typeof tableBuildFetchPayload>[0]>) => tableStore.getFetchPayload(payload),
-    getVirtualScroller: () => tableStore.virtualScrollEl,
+    getVirtualScroller: () => virtualScrollEl.value,
     selectRow: (payload: Required<Partial<Parameters<typeof tableSelectRow>[0]>, 'row'>) => {
       const _payload = {
         ...payload,
