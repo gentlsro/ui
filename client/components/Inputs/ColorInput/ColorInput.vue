@@ -140,21 +140,25 @@ defineExpose({
       />
     </MenuProxy>
 
-    <template #append>
-      <InputClearBtn
-        v-if="hasClearableBtn && model && model !== emptyValue"
-        :clear-confirmation
-        :size
-        @click.stop.prevent="model = emptyValue"
-      />
+    <!-- Append -->
+    <template
+      v-if="$slots.append || hasClearableBtn"
+      #append
+    >
+      <div :class="mergedProps.ui?.appendClass">
+        <slot
+          name="append"
+          :clear="clear"
+          :focus="focus"
+        />
 
-      <div
-        v-if="!noIcon"
-        :class="icon"
-        m="x-2"
-        tabindex="-1"
-        cursor="pointer"
-      />
+        <InputClearBtn
+          v-if="hasClearableBtn"
+          :clear-confirmation
+          :size
+          @click.stop.prevent="!clearConfirmation && clear()"
+        />
+      </div>
     </template>
   </InputWrapper>
 </template>

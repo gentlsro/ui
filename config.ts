@@ -221,6 +221,7 @@ export const defaultComponentsConfig = {
       noIcon: true,
       ui: {
         borderRadius: '0.5rem',
+        appendClass: 'flex gap-1 items-center p-x-2',
       },
     },
     merge: ['ui'],
