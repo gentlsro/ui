@@ -113,5 +113,17 @@ function handleComparatorChange(comparator: ComparatorEnum) {
     :list-props="{ hiddenItems: usedComparators }"
     data-cy="comparator"
     @update:model-value="handleComparatorChange"
-  />
+  >
+    <template #option="{ item }">
+      {{ item.label }}
+
+      <Tooltip
+        placement="right"
+        :content="{
+          title: item.label,
+          description: $t(`comparator.${item.id.replaceAll('.', '|')}Description`),
+        }"
+      />
+    </template>
+  </Selector>
 </template>
