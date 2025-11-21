@@ -200,6 +200,13 @@ defineExpose(listGetExposed())
           />
         </template>
 
+        <template #item-group="itemData">
+          <slot
+            name="item-group"
+            v-bind="itemData"
+          />
+        </template>
+
         <template #move-handle>
           <slot name="move-handle" />
         </template>
