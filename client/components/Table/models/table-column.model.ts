@@ -642,7 +642,6 @@ export class TableColumn<T = IItem> {
     this.local = col.local ?? false
     this.alwaysVisible = col.alwaysVisible ?? false
     this.noCopyBtn = col.noCopyBtn ?? false
-    this._width = col._width ?? 0
 
     // Editing
     this.noEdit = col.noEdit
