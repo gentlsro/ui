@@ -57,7 +57,7 @@ const totalHeight = computed(() => {
 
 // Column virtualizer
 const columnWidths = computed(() => {
-  return columns.value.map(col => col._width).join(',')
+  return columns.value.map((col: any) => col._width).join(',')
 })
 
 const columnVirtualizerOptions = computedWithControl(
@@ -67,17 +67,9 @@ const columnVirtualizerOptions = computedWithControl(
       horizontal: true,
       count: columns.value.length,
       overscan: 1,
-      estimateSize: (idx: number) => {
-        console.log('💀 Estimate Size', idx, '=>', columns.value[idx]?.field, 'w:', columns.value[idx]?._width)
-
-        return columns.value[idx]?._width ?? 0
-      },
+      estimateSize: (idx: number) => columns.value[idx]?._width ?? 0,
       getScrollElement: () => containerEl.value,
-      getItemKey: (idx: number) => {
-        console.log('💀 Index', idx, '=>', columns.value[idx]?.field)
-
-        return columns.value[idx]?.field
-      },
+      getItemKey: (idx: number) => columns.value[idx]?.field,
     }
   },
 )
@@ -92,13 +84,13 @@ const visibleColumns = computed(() => {
   return virtualColumns.value.map(virtualColumn => columns.value[virtualColumn.index])
 })
 
-watchEffect(() => {
-  console.log('\n\n--------------------------------')
-  console.log('💀 Columns', columns.value.map(col => `${col.field}, w:${col._width}`))
-  console.log('😂 Virtual Columns', virtualColumns.value)
-  console.log('❤️ Visible Columns', visibleColumns.value.map(col => `${col.field}, w:${col._width}`))
-  console.log('\n\n--------------------------------')
-})
+// watchEffect(() => {
+//   console.log('\n\n--------------------------------')
+//   console.log('💀 Columns', columns.value.map(col => `${col.field}, w:${col._width}`))
+//   console.log('😂 Virtual Columns', virtualColumns.value)
+//   console.log('❤️ Visible Columns', visibleColumns.value.map(col => `${col.field}, w:${col._width}`))
+//   console.log('\n\n--------------------------------')
+// })
 
 const totalWidth = computed(() => {
   return columnVirtualizer.value.getTotalSize()
@@ -158,6 +150,7 @@ function emitVirtualScrollEvent() {
   const firstVisible = rowVirtualizer.value.getVirtualItemForOffset(y.value)
   const lastVisible = rowVirtualizer.value.getVirtualItemForOffset(y.value + height.value)
 
+  // @ts-expect-error Idk
   emits('virtualScroll', {
     visibleStartItem: firstVisible,
     visibleEndItem: lastVisible,
