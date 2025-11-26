@@ -78,8 +78,8 @@ const visibleColumns = computed(() => {
 })
 
 watchEffect(() => {
-  console.log(visibleColumns.value.map(col => col.field))
   console.log(virtualColumns.value)
+  console.log(visibleColumns.value.map(col => col.field))
 })
 
 const totalWidth = computed(() => {
