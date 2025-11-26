@@ -384,7 +384,7 @@ export class TableColumn<T = IItem> {
    * Usage: For getting distinct values from the server
    */
   getDistinctData?: (
-    col: TableColumn<T>
+    col: TableColumn<T>,
   ) => Promise<ITableDistinctData[]> | ITableDistinctData[]
 
   // Styling
@@ -642,6 +642,7 @@ export class TableColumn<T = IItem> {
     this.local = col.local ?? false
     this.alwaysVisible = col.alwaysVisible ?? false
     this.noCopyBtn = col.noCopyBtn ?? false
+    this._width = col._width ?? 0
 
     // Editing
     this.noEdit = col.noEdit

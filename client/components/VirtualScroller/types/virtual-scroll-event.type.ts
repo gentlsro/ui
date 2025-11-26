@@ -5,6 +5,8 @@ type VirtualItem = {
 }
 
 export type IVirtualScrollEvent = {
+  virtualStartItem?: VirtualItem
+  virtualEndItem?: VirtualItem
   visibleStartItem: VirtualItem
   visibleEndItem: VirtualItem
 }
