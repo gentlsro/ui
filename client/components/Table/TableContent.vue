@@ -178,11 +178,12 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
     :style="ui?.contentStyle"
     @virtual-scroll="handleVirtualScroll"
   >
-    <template #default="{ row, index }">
+    <template #default="{ row, index, columns }">
       <slot
         name="row"
         :row
         :index
+        :columns
       >
         <TableRow
           :row
@@ -193,10 +194,11 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
           :show-copy-btn
           :to-link-props
           :is-visible-by-column-field
+          :visible-columns="columns"
         >
           <!-- Field slots -->
           <template
-            v-for="col in visibleColumns"
+            v-for="col in columns"
             :key="col.name"
             #[col.name]="{ row, column, value }"
           >

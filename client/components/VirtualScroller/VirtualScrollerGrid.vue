@@ -67,6 +67,10 @@ const virtualColumns = computed(() => {
   return columnVirtualizer.value.getVirtualItems()
 })
 
+const visibleColumns = computed(() => {
+  return virtualColumns.value.map((_, idx) => columns.value[idx])
+})
+
 const totalWidth = computed(() => {
   return columnVirtualizer.value.getTotalSize()
 })
@@ -200,8 +204,14 @@ defineExpose({
           <!-- Empty space - Left -->
           <div :style="{ width: `${columnWidth[0]}px` }" />
 
+          <slot
+            :columns="visibleColumns"
+            :row="rows[virtualRow.index]"
+            :index="virtualRow.index"
+          />
+
           <!-- Columns content -->
-          <div
+          <!-- <div
             v-for="virtualColumn in virtualColumns"
             :key="virtualColumn.key"
             :style="{
@@ -215,7 +225,7 @@ defineExpose({
             >
               Slot.
             </slot>
-          </div>
+          </div> -->
 
           <!-- Empty space - Right -->
           <div :style="{ width: `${columnWidth[1]}px` }" />
