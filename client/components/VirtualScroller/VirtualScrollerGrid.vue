@@ -63,7 +63,11 @@ const columnVirtualizerOptions = computed(() => {
     overscan: 1,
     estimateSize: (idx: number) => columns.value[idx]?._width ?? 0,
     getScrollElement: () => containerEl.value,
-    getItemKey: (idx: number) => columns.value[idx]?.field,
+    getItemKey: (idx: number) => {
+      console.log('💀 Index', idx, '=>', columns.value[idx]?.field)
+
+      return columns.value[idx]?.field
+    },
   }
 })
 
@@ -117,7 +121,7 @@ function measureElement(el?: any) {
 const contentStyle = computed(() => {
   return {
     height: `${totalHeight.value}px`,
-    width: `${totalWidth.value}px`,
+    // width: `${totalWidth.value}px`,
   }
 })
 
