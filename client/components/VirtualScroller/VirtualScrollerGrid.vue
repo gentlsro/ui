@@ -56,24 +56,31 @@ const totalHeight = computed(() => {
 })
 
 // Column virtualizer
-const columnVirtualizerOptions = computed(() => {
-  return {
-    horizontal: true,
-    count: columns.value.length,
-    overscan: 1,
-    estimateSize: (idx: number) => {
-      console.log('💀 Estimate Size', idx, '=>', columns.value[idx]?.field, 'w:', columns.value[idx]?._width)
-
-      return columns.value[idx]?._width ?? 0
-    },
-    getScrollElement: () => containerEl.value,
-    getItemKey: (idx: number) => {
-      console.log('💀 Index', idx, '=>', columns.value[idx]?.field)
-
-      return columns.value[idx]?.field
-    },
-  }
+const columnWidths = computed(() => {
+  return columns.value.map(col => col._width).join(',')
 })
+
+const columnVirtualizerOptions = computedWithControl(
+  [columnWidths],
+  () => {
+    return {
+      horizontal: true,
+      count: columns.value.length,
+      overscan: 1,
+      estimateSize: (idx: number) => {
+        console.log('💀 Estimate Size', idx, '=>', columns.value[idx]?.field, 'w:', columns.value[idx]?._width)
+
+        return columns.value[idx]?._width ?? 0
+      },
+      getScrollElement: () => containerEl.value,
+      getItemKey: (idx: number) => {
+        console.log('💀 Index', idx, '=>', columns.value[idx]?.field)
+
+        return columns.value[idx]?.field
+      },
+    }
+  },
+)
 
 const columnVirtualizer = useVirtualizer(columnVirtualizerOptions)
 
@@ -226,15 +233,15 @@ defineExpose({
           <!-- Empty space - Left -->
           <div :style="{ width: `${columnWidth[0]}px` }" />
 
-          <!-- <slot
+          <!-- Columns content -->
+          <slot
             :columns="visibleColumns"
             :row="rows[virtualRow.index]"
             :index="virtualRow.index"
             :style="{ minHeight: `${rowHeight}px` }"
-          /> -->
+          />
 
-          <!-- Columns content -->
-          <div
+          <!-- <div
             v-for="virtualColumn in virtualColumns"
             :key="virtualColumn.key"
             :style="{
@@ -243,7 +250,7 @@ defineExpose({
             }"
           >
             {{ get(rows[virtualRow.index], columns[virtualColumn.index].field) }}
-          </div>
+          </div> -->
 
           <!-- Empty space - Right -->
           <div :style="{ width: `${columnWidth[1]}px` }" />
