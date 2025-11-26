@@ -61,7 +61,11 @@ const columnVirtualizerOptions = computed(() => {
     horizontal: true,
     count: columns.value.length,
     overscan: 1,
-    estimateSize: (idx: number) => columns.value[idx]?._width ?? 0,
+    estimateSize: (idx: number) => {
+      console.log('💀 Estimate Size', idx, '=>', columns.value[idx]?.field, 'w:', columns.value[idx]?._width)
+
+      return columns.value[idx]?._width ?? 0
+    },
     getScrollElement: () => containerEl.value,
     getItemKey: (idx: number) => {
       console.log('💀 Index', idx, '=>', columns.value[idx]?.field)
@@ -83,9 +87,9 @@ const visibleColumns = computed(() => {
 
 watchEffect(() => {
   console.log('\n\n--------------------------------')
-  console.log('💀 Columns', columns.value.map(col => col.field))
+  console.log('💀 Columns', columns.value.map(col => `${col.field}, w:${col._width}`))
   console.log('😂 Virtual Columns', virtualColumns.value)
-  console.log('❤️ Visible Columns', visibleColumns.value.map(col => col.field))
+  console.log('❤️ Visible Columns', visibleColumns.value.map(col => `${col.field}, w:${col._width}`))
   console.log('\n\n--------------------------------')
 })
 
