@@ -156,7 +156,7 @@ const rowDataArray = computed(() => {
             valueFormatted: cellFormattedValue,
             column: col,
             isEditable,
-            cellStyle: Object.assign({}, columnCellStyle, uiCellStyle, { '--colWidth': col.width }),
+            cellStyle: Object.assign({}, columnCellStyle, uiCellStyle, { '--colWidth': `${col._width}px` }),
             cellInnerStyle: uiCellInnerStyle,
             cellClass: [columnCellClass, uiCellClass, { 'is-editable': isEditable }],
             cellInnerClass: uiCellInnerClass,

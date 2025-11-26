@@ -8,13 +8,20 @@ import type { IVirtualScrollEvent } from './types/virtual-scroll-event.type'
 // Models
 import type { TableColumn } from '../Table/models/table-column.model'
 
-const props = defineProps<{
+// Functions
+import { getComponentProps } from '../../functions/get-component-props'
+
+type IProps<T extends IItem> = {
   rows: T[]
   columns: TableColumn<T>[]
   rowHeight?: number
   rowKey?: keyof T
-}>()
+}
 
+const props = withDefaults(
+  defineProps<IProps<T>>(),
+  { ...getComponentProps('virtualScroller') },
+)
 const emits = defineEmits<{
   (e: 'virtualScroll', payload: IVirtualScrollEvent): void
   (e: 'change:contentSize', payload: { height: number, width: number }): void
@@ -53,9 +60,8 @@ const columnVirtualizerOptions = computed(() => {
   return {
     horizontal: true,
     count: columns.value.length,
-    scrollMargin: 0,
-    overscan: 5,
-    estimateSize: () => 40,
+    overscan: 1,
+    estimateSize: (idx: number) => columns.value[idx]?._width ?? 0,
     getScrollElement: () => containerEl.value,
     getItemKey: (idx: number) => columns.value[idx]?.field,
   }
@@ -68,7 +74,7 @@ const virtualColumns = computed(() => {
 })
 
 const visibleColumns = computed(() => {
-  return virtualColumns.value.map((_, idx) => columns.value[idx])
+  return virtualColumns.value.map(virtualColumn => columns.value[virtualColumn.index])
 })
 
 const totalWidth = computed(() => {
@@ -208,6 +214,7 @@ defineExpose({
             :columns="visibleColumns"
             :row="rows[virtualRow.index]"
             :index="virtualRow.index"
+            :style="{ minHeight: `${rowHeight}px` }"
           />
 
           <!-- Columns content -->
@@ -219,12 +226,11 @@ defineExpose({
               width: `${getColumnWidth(virtualColumn.index)}px`,
             }"
           >
-            <slot
-              :row="rows[virtualRow.index]"
-              :index="virtualRow.index"
-            >
-              Slot.
-            </slot>
+            {{ columns[virtualColumn.index]?.name }}
+
+            <div v-if="virtualRow.index % 3 === 0">
+              loading...
+            </div>
           </div> -->
 
           <!-- Empty space - Right -->

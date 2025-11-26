@@ -52,7 +52,7 @@ const styles = computed(() => {
     : props.ui?.cellInnerStyle
 
   return {
-    cell: Object.assign({}, columnCellStyle, rowCellStyle, { '--colWidth': props.column.width }),
+    cell: Object.assign({}, columnCellStyle, rowCellStyle, { '--colWidth': `${props.column._width}px` }),
     cellInner: rowCellInnerStyle,
   }
 })

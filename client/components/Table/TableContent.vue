@@ -178,7 +178,7 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
     :style="ui?.contentStyle"
     @virtual-scroll="handleVirtualScroll"
   >
-    <template #default="{ row, index, columns }">
+    <template #default="{ row, index, columns, style }">
       <slot
         name="row"
         :row
@@ -195,6 +195,7 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
           :to-link-props
           :is-visible-by-column-field
           :visible-columns="columns"
+          :style
         >
           <!-- Field slots -->
           <template
