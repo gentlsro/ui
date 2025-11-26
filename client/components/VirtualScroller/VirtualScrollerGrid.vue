@@ -77,6 +77,10 @@ const visibleColumns = computed(() => {
   return virtualColumns.value.map(virtualColumn => columns.value[virtualColumn.index])
 })
 
+watchEffect(() => {
+  console.log(visibleColumns.value.map(col => col.field))
+})
+
 const totalWidth = computed(() => {
   return columnVirtualizer.value.getTotalSize()
 })
@@ -95,10 +99,6 @@ const columnWidth = computed(() => {
     totalSize - virtualColumnsEnd,
   ] as const
 })
-
-function getColumnWidth(index: number) {
-  return columns.value[index]?._width ?? 0
-}
 
 function measureElement(el?: any) {
   if (!el) {
