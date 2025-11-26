@@ -108,6 +108,10 @@ const columnWidth = computed(() => {
   ] as const
 })
 
+function getColumnWidth(index: number) {
+  return columns.value[index]?._width ?? 0
+}
+
 function measureElement(el?: any) {
   if (!el) {
     return
@@ -121,7 +125,7 @@ function measureElement(el?: any) {
 const contentStyle = computed(() => {
   return {
     height: `${totalHeight.value}px`,
-    // width: `${totalWidth.value}px`,
+    width: `${totalWidth.value}px`,
   }
 })
 
@@ -218,15 +222,15 @@ defineExpose({
           <!-- Empty space - Left -->
           <div :style="{ width: `${columnWidth[0]}px` }" />
 
-          <slot
+          <!-- <slot
             :columns="visibleColumns"
             :row="rows[virtualRow.index]"
             :index="virtualRow.index"
             :style="{ minHeight: `${rowHeight}px` }"
-          />
+          /> -->
 
           <!-- Columns content -->
-          <!-- <div
+          <div
             v-for="virtualColumn in virtualColumns"
             :key="virtualColumn.key"
             :style="{
@@ -234,12 +238,8 @@ defineExpose({
               width: `${getColumnWidth(virtualColumn.index)}px`,
             }"
           >
-            {{ columns[virtualColumn.index]?.name }}
-
-            <div v-if="virtualRow.index % 3 === 0">
-              loading...
-            </div>
-          </div> -->
+            {{ get(rows[virtualRow.index], columns[virtualColumn.index].field) }}
+          </div>
 
           <!-- Empty space - Right -->
           <div :style="{ width: `${columnWidth[1]}px` }" />
