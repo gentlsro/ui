@@ -255,7 +255,7 @@ defineExpose({
 
 <style lang="scss" scoped>
 .virtual-scroll {
-  @apply relative overflow-auto;
+  @apply relative overflow-auto outline-none;
 
   &__content {
     @apply relative;
