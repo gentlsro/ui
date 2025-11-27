@@ -8,7 +8,6 @@ export default defineNuxtPlugin(() => {
     const lastFloatingElement = document.querySelector(
       '.floating-element:last-child, .floating-element',
     )
-    console.log('🚀 ~ lastFloatingElement:', lastFloatingElement)
     const notificationsElement = document.querySelector('.notifications')
     const hasOngoingNotifications = document.querySelector('.notification-row')
     const isActiveElementInput = uiStore.isActiveElementInput()
