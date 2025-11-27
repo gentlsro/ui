@@ -136,9 +136,10 @@ defineExpose(treeGetExposed())
       :style="mergedProps.ui?.contentStyle"
       v-bind="scrollerConfig"
     >
-      <template #default="{ row }">
+      <template #default="{ row, index }">
         <TreeNode
           :node="row"
+          :index
           :ui="mergedProps.ui"
           :node-el
           :connectors
@@ -152,6 +153,7 @@ defineExpose(treeGetExposed())
               :node="row"
               :collapse
               :level
+              :index
               :parent="storeNodeById[row.parentId]"
             />
           </template>
@@ -162,6 +164,7 @@ defineExpose(treeGetExposed())
               :node="row"
               :collapse
               :level
+              :index
               :parent="storeNodeById[row.parentId]"
             />
           </template>

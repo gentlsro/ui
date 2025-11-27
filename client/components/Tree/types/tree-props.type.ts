@@ -84,7 +84,10 @@ export type ITreeProps<T extends IItem = IItem> = {
     /**
      * Function that is used for the search
      */
-    fnc?: (search: string | undefined, nodes: T[]) => T[] | Promise<T[]>
+    fnc?: (
+      search: string | undefined,
+      nodes: T[],
+    ) => T[] | Promise<T[]>
 
     /**
      * The extended search token for fuse.js library
@@ -286,12 +289,12 @@ export type ITreeProps<T extends IItem = IItem> = {
     /**
      * Class to apply to the nodes
      */
-    nodeClass?: ((payload: { node: T, isSelected: boolean }) => ClassType)
+    nodeClass?: ((payload: { node: T, isSelected: boolean, index: number }) => ClassType)
 
     /**
      * Style to apply to the nodes
      */
-    nodeStyle?: ((payload: { node: T, isSelected: boolean }) => CSSProperties)
+    nodeStyle?: ((payload: { node: T, isSelected: boolean, index: number }) => CSSProperties)
 
     /**
      * Margin (left) for the tree nodes. Uses regular CSS `margin-left` syntax

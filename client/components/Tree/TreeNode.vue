@@ -12,6 +12,7 @@ type IProps = {
   node: ITreeNode<T>
   nodeEl?: ITreeProps<T>['nodeEl']
   ui?: ITreeProps<T>['ui']
+  index: number
 }
 
 const props = defineProps<IProps>()
@@ -141,13 +142,13 @@ async function handleToggleCollapse() {
 
 const nodeClass = computed(() => {
   return typeof props.ui?.nodeClass === 'function'
-    ? props.ui.nodeClass({ node: node.value, isSelected: isSelected.value })
+    ? props.ui.nodeClass({ node: node.value, isSelected: isSelected.value, index: props.index })
     : props.ui?.nodeClass
 })
 
 const nodeStyle = computed(() => {
   return typeof props.ui?.nodeStyle === 'function'
-    ? props.ui.nodeStyle({ node: node.value, isSelected: isSelected.value })
+    ? props.ui.nodeStyle({ node: node.value, isSelected: isSelected.value, index: props.index })
     : props.ui?.nodeStyle
 })
 

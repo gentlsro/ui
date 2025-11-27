@@ -338,6 +338,14 @@ onUnmounted(() => {
           />
         </template>
 
+        <!-- Option group -->
+        <template #option-group="data">
+          <slot
+            name="option-group"
+            v-bind="data"
+          />
+        </template>
+
         <!-- Below -->
         <template #below>
           <slot name="menu-below" />

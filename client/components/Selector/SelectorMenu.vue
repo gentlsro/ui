@@ -172,6 +172,14 @@ whenever(isPickerActive, () => {
               :index
             />
           </template>
+
+          <template #item-group="{ row, index }">
+            <slot
+              name="option-group"
+              :item="row"
+              :index
+            />
+          </template>
         </ListContent>
       </template>
 
