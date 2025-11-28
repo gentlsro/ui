@@ -17,7 +17,7 @@ export default defineNuxtPlugin(() => {
 
     if (lastFloatingElement && !hasOngoingNotifications) {
     // @ts-expect-error DOM
-      lastFloatingElement.hide(!isActiveElementInput)
+      lastFloatingElement.hide(false)
     }
 
     if (notificationsElement) {
