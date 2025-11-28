@@ -6,7 +6,7 @@ export default defineNuxtPlugin(() => {
     const uiStore = useUIStore()
 
     const lastFloatingElement = document.querySelector(
-      '.floating-element:last-child, .floating-element',
+      '.floating-element:last-child',
     )
     const notificationsElement = document.querySelector('.notifications')
     const hasOngoingNotifications = document.querySelector('.notification-row')
@@ -17,7 +17,7 @@ export default defineNuxtPlugin(() => {
 
     if (lastFloatingElement && !hasOngoingNotifications) {
     // @ts-expect-error DOM
-      lastFloatingElement.hide(false)
+      lastFloatingElement.hide(!isActiveElementInput)
     }
 
     if (notificationsElement) {
