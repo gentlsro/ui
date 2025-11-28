@@ -5,9 +5,7 @@ export default defineNuxtPlugin(() => {
   onKeyStroke('Escape', () => {
     const uiStore = useUIStore()
 
-    const lastFloatingElement = document.querySelector(
-      '.floating-element:last-child',
-    )
+    const lastFloatingElement = Array.from(document.body.children).toReversed().find(child => child.classList.contains('floating-element')) as HTMLElement
     const notificationsElement = document.querySelector('.notifications')
     const hasOngoingNotifications = document.querySelector('.notification-row')
     const isActiveElementInput = uiStore.isActiveElementInput()
