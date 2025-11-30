@@ -555,7 +555,9 @@ export class TableColumn<T = IItem> {
         considerHeader ? headerWidth : 0,
         maxContentWidth + 1, // + 1 for the border
       ),
-      maxColumnWidthChars * 6 + 20, // When autofitting, we don't want to go over some predefined value
+
+      // When autofitting, we don't want to go over some predefined (arbitrary) value
+      maxColumnWidthChars * 6 + 20,
     )
 
     this.width = `${Math.ceil(colMinWidth)}px`
