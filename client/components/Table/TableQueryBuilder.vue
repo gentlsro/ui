@@ -34,7 +34,6 @@ function handleUpdateColumnFilter(columnFilter: IQueryBuilderItem) {
   const modifiedColumnFilters = queryBuilderEl.value
     ?.getModifiedColumnFilter(columnFilter) as Array<{ field: string, filters: IQueryBuilderItem[] }>
 
-  console.log('Log ~ handleUpdateColumnFilter ~ modifiedColumnFilters:', modifiedColumnFilters)
   modifiedColumnFilters.forEach(col => {
     const column = internalColumnsByField.value[col.field]
 
@@ -43,7 +42,7 @@ function handleUpdateColumnFilter(columnFilter: IQueryBuilderItem) {
         ...column.filters.filter(f => f.nonInteractive),
         ...col.filters.map(f => new FilterItem({ ...column, ...f })),
       ]
-      console.log('Log ~ handleUpdateColumnFilter ~ column.filters:', column.filters)
+      console.log('Log ~ handleUpdateColumnFilter ~ column.filters:', column)
     }
   })
 }
