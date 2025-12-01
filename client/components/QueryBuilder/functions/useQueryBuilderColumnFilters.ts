@@ -109,10 +109,10 @@ export function useQueryBuilderColumnFilters(props: Pick<IQueryBuilderProps, 'co
 
     return [
       // New column
-      { field: newField!, filters: [...newColumn?.filters, filter] },
+      { field: newField!, filterField: newColumn?.filterField, filters: [...newColumn?.filters, filter] },
 
       // Old column
-      { field: oldField!, filters: oldColumn?.filters.filter(f => f.id !== filterId) },
+      { field: oldField!, filterField: oldColumn?.filterField, filters: oldColumn?.filters.filter(f => f.id !== filterId) },
     ]
   }
 
