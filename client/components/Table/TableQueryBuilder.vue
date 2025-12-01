@@ -16,6 +16,7 @@ defineProps<IProps>()
 
 // Store
 const {
+  internalColumns,
   internalColumnsByField,
   nonHelperColumns,
   queryBuilderProps,
@@ -35,7 +36,7 @@ function handleUpdateColumnFilter(columnFilter: IQueryBuilderItem) {
     ?.getModifiedColumnFilter(columnFilter) as Array<{ field: string, filters: IQueryBuilderItem[] }>
 
   modifiedColumnFilters.forEach(col => {
-    const column = internalColumnsByField.value[col.field]
+    const column = internalColumns.value.find(c => c.field === col.field)
 
     if (column) {
       column.filters = [
