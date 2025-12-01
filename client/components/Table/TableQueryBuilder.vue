@@ -43,6 +43,7 @@ function handleUpdateColumnFilter(columnFilter: IQueryBuilderItem) {
         ...column.filters.filter(f => f.nonInteractive),
         ...col.filters.map(f => new FilterItem({ ...column, ...f })),
       ]
+      console.log('Log ~ handleUpdateColumnFilter ~ column.filters:', column.filters)
     }
   })
 }
