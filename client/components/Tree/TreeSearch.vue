@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T extends IItem = IItem">
 // Types
-import type { ITreeProps } from './types/tree-props.type'
+import type { ITreeProps } from './types/tree-props.new.type'
 
 // Store
 import { useTreeStore } from './stores/tree.store'

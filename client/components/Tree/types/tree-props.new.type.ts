@@ -18,7 +18,14 @@ export type ITreeProps<T extends IItem = IItem> = {
   /**
    * The props to pass to the collapse button
    */
-  collapseBtnProps?: IBtnProps
+  collapseBtnProps?: IBtnProps & AllowedComponentProps
+
+  /**
+   * The key to use for the id of the node
+   *
+   * @default 'id'
+   */
+  idKey?: string
 
   /**
    * The key to use for the children nodes
@@ -32,7 +39,14 @@ export type ITreeProps<T extends IItem = IItem> = {
    *
    * @default 'parentId'
    */
-  parentIdKey?: string
+  parentKey?: string
+
+  /**
+   * The key to use for the label of the node
+   *
+   * @default 'label'
+   */
+  labelKey?: string
 
   /**
    * The data (nodes) of the tree
@@ -48,7 +62,7 @@ export type ITreeProps<T extends IItem = IItem> = {
    * The meta containing info if the current state of nodes
    * (e.g. if they are collapsed, or children are loaded, ...)
    */
-  meta?: Record<T['id'], ITreeNodeMeta<T>>
+  meta?: Record<string | number, Partial<ITreeNodeMeta>>
 
   /**
    * The element to use for the nodes
@@ -87,7 +101,7 @@ export type ITreeProps<T extends IItem = IItem> = {
     fnc?: (
       search: string | undefined,
       nodes: T[],
-    ) => T[] | Promise<T[]>
+    ) => ITreeNode<T>[] | Promise<ITreeNode<T>[]>
 
     /**
      * The extended search token for fuse.js library
@@ -106,6 +120,21 @@ export type ITreeProps<T extends IItem = IItem> = {
      * Props to pass to the search input
      */
     props?: ITextInputProps & AllowedComponentProps
+  } | undefined
+
+  /**
+   * Actions configuration
+   */
+  actionsConfig?: {
+    /**
+     * Whether the actions are enabled
+     */
+    enabled?: boolean
+
+    /**
+     * The props to pass to the collapse all / expand all buttons
+     */
+    btnProps?: IBtnProps & AllowedComponentProps
   } | undefined
 
   /**
@@ -157,7 +186,7 @@ export type ITreeProps<T extends IItem = IItem> = {
       draggedNode: T
       targetNode?: T
       nodeById: Record<string, T>
-      nodeMetaById: Record<string, ITreeNodeMeta<T>>
+      nodeMetaById: Record<string, ITreeNodeMeta>
     }) => boolean
 
     /**
@@ -176,7 +205,7 @@ export type ITreeProps<T extends IItem = IItem> = {
       draggedNode: T
       targetNode?: T
       nodeById: Record<string, T>
-      nodeMetaById?: Record<string, ITreeNodeMeta<T>>
+      nodeMetaById?: Record<string, ITreeNodeMeta>
     }) => ITreeNode<T> | undefined | null
 
     /**
@@ -189,7 +218,7 @@ export type ITreeProps<T extends IItem = IItem> = {
       node: T
       to?: T | null
       nodeById: Record<string, T>
-      nodeMetaById?: Record<string, ITreeNodeMeta<T>>
+      nodeMetaById?: Record<string, ITreeNodeMeta>
       revert: () => void
     }) => ITreeNode<T> | Promise<ITreeNode<T>>
 
@@ -200,7 +229,7 @@ export type ITreeProps<T extends IItem = IItem> = {
       node: T
       to?: T | null
       nodeById: Record<string, T>
-      nodeMetaById?: Record<string, ITreeNodeMeta<T>>
+      nodeMetaById?: Record<string, ITreeNodeMeta>
       revert: () => void
     }) => void | Promise<void>
   }
@@ -208,7 +237,7 @@ export type ITreeProps<T extends IItem = IItem> = {
   /**
    * A definition of how to load children nodes
    */
-  loadChildren?: {
+  loadChildrenConfig?: {
     /**
      * Function to be used for loading the children nodes
      */
@@ -223,7 +252,7 @@ export type ITreeProps<T extends IItem = IItem> = {
   /**
    * The selected nodes
    */
-  selection?: T | ITreeNode<T>['id'] | Array<T> | Array<ITreeNode<T>['id']>
+  selection?: T | string | number | Array<T> | Array<string | number>
 
   /**
    * The selection configuration
@@ -307,9 +336,14 @@ export type ITreeProps<T extends IItem = IItem> = {
     nodeStyle?: ((payload: { node: T, isSelected: boolean, index: number }) => CSSProperties)
 
     /**
-     * Margin (left) for the tree nodes. Uses regular CSS `margin-left` syntax
+     * Class to apply to the node content (excluding the collapse button)
      */
-    nodePadding?: string
+    nodeContentClass?: ((payload: { node: T, isSelected: boolean, index: number }) => ClassType)
+
+    /**
+     * Style to apply to the node content (excluding the collapse button)
+     */
+    nodeContentStyle?: ((payload: { node: T, isSelected: boolean, index: number }) => CSSProperties)
 
     /**
      * Class to apply to the tree content
@@ -320,5 +354,20 @@ export type ITreeProps<T extends IItem = IItem> = {
      * Style to apply to the tree content
      */
     treeContentStyle?: CSSProperties
+
+    /**
+     * Class to apply to the tree actions (wrapper)
+     */
+    treeActionsClass?: ClassType
+
+    /**
+     * Style to apply to the tree actions (wrapper)
+     */
+    treeActionsStyle?: CSSProperties
+
+    /**
+     * Margin (left) for the tree nodes. Uses regular CSS `margin-left` syntax
+     */
+    nodePadding?: string
   }
 }

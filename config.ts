@@ -50,6 +50,7 @@ import type { ITextSplitterProps } from './client/components/TextSplitter/types/
 import type { IToggleProps } from './client/components/Toggle/types/toggle-props.type'
 import type { ITooltipProps } from './client/components/Tooltip/types/tooltip-props.type'
 import type { ITreeProps } from './client/components/Tree/types/tree-props.type'
+import type { ITreeProps as ITreePropsNew } from './client/components/Tree/types/tree-props.new.type'
 import type { IVirtualScrollerProps } from './client/components/VirtualScroller/types/virtual-scroller-props.type'
 import type { IYearMonthSelectorProps } from './client/components/YearMonthSelector/types/year-month-selector-props.type'
 import type { IYearSelectorProps } from './client/components/YearSelector/types/year-selector-props.type'
@@ -1227,8 +1228,12 @@ export const defaultComponentsConfig = {
       selection: undefined,
       selectionConfig: { multi: false, emitKey: false },
       dndConfig: { enabled: false, dropMode: 'parent' },
-      ui: { nodePadding: '1rem' },
-      collapseBtnProps: {},
+      ui: {
+        nodePadding: '1rem',
+        nodeClass: () => 'flex gap-1 items-start',
+        nodeContentClass: () => 'p-y-2px',
+      },
+      collapseBtnProps: { size: 'xs', class: 'self-start m-t-2 color-ca' },
       scrollerConfig: {},
     },
     merge: [
@@ -1239,6 +1244,44 @@ export const defaultComponentsConfig = {
       'ui',
       'collapseBtnProps',
       'scrollerConfig',
+      'actionsConfig',
+    ],
+  },
+
+  // TreeNew
+  treeNew: {
+    props: {
+      collapsingConfig: { showCollapsedWhenSearched: true, collapseBtnTakesSpace: true },
+      connectors: true,
+      loadChildrenConfig: undefined,
+      maxLevel: Number.MAX_SAFE_INTEGER,
+      meta: undefined,
+      modelValue: [],
+      search: '',
+      childrenKey: 'children',
+      parentKey: 'parentId',
+      searchConfig: { enabled: true, fnc: undefined },
+      selection: undefined,
+      selectionConfig: { multi: false, emitKey: false },
+      dndConfig: { enabled: false, dropMode: 'parent' },
+      ui: {
+        treeClass: 'p-2 rounded-custom bg-white dark:bg-dark-950',
+        nodePadding: '1rem',
+        nodeClass: () => 'flex gap-1 items-start',
+        nodeContentClass: () => 'p-y-2px',
+      },
+      collapseBtnProps: { size: 'xs', class: 'self-start m-t-2 color-ca' },
+      scrollerConfig: {},
+    },
+    merge: [
+      'collapsingConfig',
+      'searchConfig',
+      'selectionConfig',
+      'dndConfig',
+      'ui',
+      'collapseBtnProps',
+      'scrollerConfig',
+      'actionsConfig',
     ],
   },
 
@@ -1375,6 +1418,7 @@ export type IUIConfig = {
   toggle: IConfigItem<IToggleProps>
   tooltip: IConfigItem<ITooltipProps>
   tree: IConfigItem<ITreeProps>
+  treeNew: IConfigItem<ITreePropsNew>
   valueFormatter: IConfigItem<IValueFormatterProps>
   virtualScroller: IConfigItem<IVirtualScrollerProps<any>>
   yearMonthSelector: IConfigItem<IYearMonthSelectorProps>
