@@ -166,10 +166,11 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
 </script>
 
 <template>
-  <VirtualScroller
+  <VirtualScrollerGrid
     ref="virtualScrollEl"
     v-bind="scrollerConfig"
     :rows="rowsSplit"
+    :columns="visibleColumns"
     class="table-content"
     :row-key
     :fetch-more="isFetchMore"
@@ -177,11 +178,12 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
     :style="ui?.contentStyle"
     @virtual-scroll="handleVirtualScroll"
   >
-    <template #default="{ row, index }">
+    <template #default="{ row, index, columns, style }">
       <slot
         name="row"
         :row
         :index
+        :columns
       >
         <TableRow
           :row
@@ -192,10 +194,12 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
           :show-copy-btn
           :to-link-props
           :is-visible-by-column-field
+          :visible-columns="columns"
+          :style
         >
           <!-- Field slots -->
           <template
-            v-for="col in visibleColumns"
+            v-for="col in columns"
             :key="col.name"
             #[col.name]="{ row, column, value }"
           >
@@ -219,5 +223,5 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
         </TableRow>
       </slot>
     </template>
-  </VirtualScroller>
+  </VirtualScrollerGrid>
 </template>

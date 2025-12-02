@@ -11,6 +11,9 @@ import { formatValue } from '$utils'
 import type { ITableProps } from './types/table-props.type'
 import type { IRowColumn } from './types/table-row-column.type'
 
+// Models
+import type { TableColumn } from './models/table-column.model'
+
 // Functions
 import { tableSelectRow } from './functions/table-select-row'
 
@@ -21,6 +24,7 @@ type IProps = Pick<ITableProps, 'ui' | 'editable' | 'to' | 'showCopyBtn' | 'toLi
   row: any | any[]
   index: number
   isVisibleByColumnField: Record<string, boolean>
+  visibleColumns: TableColumn[]
 }
 
 defineOptions({ inheritAttrs: false })
@@ -63,7 +67,6 @@ const {
   selection,
   selectionByKey,
   selectionConfig,
-  visibleColumns,
   rowsColumnCount,
   isCardView,
   cellEdit,
@@ -100,7 +103,7 @@ const rowDataArray = computed(() => {
       row,
       isSelectable: !selectionConfig.value?.disabled?.(row),
       rowKey: row[rowKey.value],
-      columns: visibleColumns.value
+      columns: props.visibleColumns
         .map(col => {
           if (col.field === '_selectable' && isCardView.value) {
             return undefined
