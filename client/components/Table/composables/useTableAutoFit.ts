@@ -124,6 +124,8 @@ export function useTableAutoFit() {
 
     // Trigger the reactivity on columns
     internalColumns.value = [...internalColumns.value]
+
+    virtualScrollEl.value?.rerender(true)
   }
 
   return { fitColumns }
