@@ -397,7 +397,7 @@ const [
 
       console.log('👀 Columns merging watcher...')
 
-      tableMergeColumns({
+      return tableMergeColumns({
         propsColumns: propsColumns.value,
         apiColumns: apiColumns.value,
         stateColumns: state.value.columns,
