@@ -443,8 +443,19 @@ export const defaultComponentsConfig = {
       ui: {
         submitWrapperClass: 'm-l-auto',
         contentClass: 'flex flex-col grow p-2 gap-2 overflow-auto',
-        controlsClass: 'border-t-1 border-ca sticky bottom-0 bg-white dark:bg-darker p-y-1 p-x-2',
-        containerClass: 'flex flex-col grow overflow-auto',
+        controlsClass: [
+          'sticky flex items-center shrink-0 gap-2 bottom-0',
+
+          // Border
+          'border-t-1 border-ca',
+
+          // Background
+          'bg-white dark:bg-dark-950',
+
+          // Padding
+          'p-y-1 p-x-2',
+        ],
+        containerClass: 'flex flex-col gap-2 grow overflow-auto',
         submitClass: 'bg-primary color-white w-40',
         cancelClass: 'w-40',
       },
@@ -635,7 +646,26 @@ export const defaultComponentsConfig = {
       title: undefined,
       transitionDuration: 180,
       ui: {
+        menuClass: [
+          'flex flex-col z-$zIndex bg-white',
+
+          // Background
+          'dark:bg-dark-950/90 bg-white/90 backdrop-blur-2px',
+
+          // Border
+          'rounded-custom border-1 border-ca',
+
+          // Limits
+          'max-w-95vw max-h-95%',
+
+          // Shadow
+          'shadow-consistent-xs shadow-darker/20 shadow-light/8',
+        ],
+        contentClass: [
+          'relative flex flex-col grow gap-1 overflow-auto rounded-custom p-1',
+        ],
         headerClass: 'font-semibold',
+        overlayClass: 'fixed inset-0 transition-background-color z-$zIndex duration-$transitionDuration ease bg-transparent bg-darker-70',
       },
     },
     merge: ['ui'],
