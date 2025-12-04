@@ -276,16 +276,18 @@ export function useMenu(payload: {
     }
   })
 
-  const menuWrapperClass = computed(() => {
-    return {
-      'is-cover': menuProps.cover,
-      'is-fit': menuProps.fit,
-      'is-match-width': menuProps.matchWidth,
-      'has-transition': !menuProps.noTransition,
-    }
+  const menuClass = computed(() => {
+    return [
+      {
+        'is-cover': menuProps.cover,
+        'is-fit': menuProps.fit,
+        'is-match-width': menuProps.matchWidth,
+        'has-transition': !menuProps.noTransition,
+      },
+    ]
   })
 
-  const menuWrapperStyle = computed(() => {
+  const menuStyle = computed(() => {
     return {
       ...(menuProps.virtualDimensions && {
         width: `${menuProps.virtualDimensions.w}px`,
@@ -355,6 +357,7 @@ export function useMenu(payload: {
     debouncedModel,
     isChangeForced,
     modelHandler,
+    calculateVirtualElement,
     hide,
     commitHide,
 
@@ -368,8 +371,8 @@ export function useMenu(payload: {
     // Template
     transitionClass,
     transitionStyle,
-    menuWrapperClass,
-    menuWrapperStyle,
+    menuClass,
+    menuStyle,
     bounce,
     handleClickOutside,
 

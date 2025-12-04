@@ -27,9 +27,9 @@ function createStore(injectionKey?: string) {
       props: menuProps,
     })
 
-    const virtualConfiguration = initRef({
+    const virtualConfig = initRef({
       instance,
-      propName: 'virtualConfiguration',
+      propName: 'virtualConfig',
       props: menuProps,
       defaultValue: {
         enabled: false,
@@ -48,7 +48,7 @@ function createStore(injectionKey?: string) {
     const referenceElZIndex = ref<string>()
 
     const isVirtual = computed(() => {
-      return !!virtualConfiguration.value?.enabled
+      return !!virtualConfig.value?.enabled
     })
 
     const floatingReferenceEl = computed(() => {
@@ -96,7 +96,7 @@ function createStore(injectionKey?: string) {
 
       // Virtual
       isVirtual,
-      virtualConfiguration,
+      virtualConfig,
       virtualEl,
       virtualDimensions,
     }

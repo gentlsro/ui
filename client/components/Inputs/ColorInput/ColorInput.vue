@@ -28,6 +28,7 @@ const menuProxyEl = useTemplateRef('menuProxyEl')
 const referenceEl = ref<HTMLDivElement>()
 const isPickerActive = ref(false)
 const size = toRef(props, 'size')
+const readonly = toRef(props, 'readonly')
 
 function handlePickColor(color?: string) {
   model.value = color

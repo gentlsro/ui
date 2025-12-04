@@ -1,11 +1,15 @@
+import type { SortItem } from '$utils'
 import type { AllowedComponentProps, CSSProperties } from 'vue'
 import type { FuseOptions } from '@vueuse/integrations/useFuse.mjs'
 
 // Types
-import type { ITreeNodeMeta } from './tree-node-meta.type'
+import type { ITreeNode } from './tree-node.new.type'
+import type { ITreeNodeMeta } from './tree-node-meta.new.type'
 import type { IBtnProps } from '../../Button/types/btn-props.type'
-import type { IVirtualScrollerProps } from '../../VirtualScroller/types/virtual-scroller-props.type'
+import type { ITreeDragMeta } from '../../Tree/types/tree-drag-meta.type'
+import type { ICheckboxProps } from '../../Checkbox/types/checkbox-props.type'
 import type { ITextInputProps } from '../../Inputs/TextInput/types/text-input-props.type'
+import type { IVirtualScrollerVerticalProps } from '../../VirtualScroller/types/virtual-scroller-vertical-props.type'
 
 export type ITreeProps<T extends IItem = IItem> = {
   /**
@@ -14,11 +18,6 @@ export type ITreeProps<T extends IItem = IItem> = {
    * @default true
    */
   connectors?: boolean
-
-  /**
-   * The props to pass to the collapse button
-   */
-  collapseBtnProps?: IBtnProps & AllowedComponentProps
 
   /**
    * The key to use for the id of the node
@@ -77,7 +76,7 @@ export type ITreeProps<T extends IItem = IItem> = {
   /**
    * Scroller configuration
    */
-  scrollerConfig?: Pick<IVirtualScrollerProps<any>, 'rowKey' | 'rowHeight' | 'overscan' | 'threshold' | 'watchWidth'>
+  scrollerConfig?: Partial<IVirtualScrollerVerticalProps<T>>
 
   /**
    * The search value
@@ -135,12 +134,17 @@ export type ITreeProps<T extends IItem = IItem> = {
      * The props to pass to the collapse all / expand all buttons
      */
     btnProps?: IBtnProps & AllowedComponentProps
+
+    /**
+     * Whether to automatically load children nodes when expanding all nodes
+     */
+    autoLoadChildrenOnExpandAll?: boolean
   } | undefined
 
   /**
    * Collapsing configuration
    */
-  collapsingConfig?: {
+  collapseConfig?: {
     /**
      * By default, we assume that a node has children (~ the collapse button is shown)
      * until proven otherwise (~ by clicking the collapse button).
@@ -160,7 +164,21 @@ export type ITreeProps<T extends IItem = IItem> = {
     /**
      * Whether the collapse button takes space in case there are no children
      */
-    collapseBtnTakesSpace?: boolean
+    btnTakesSpace?: boolean
+
+    /**
+     * The props to pass to the collapse button
+     */
+    btnProps?: IBtnProps & AllowedComponentProps
+
+    /**
+     * Expanded level on init
+     *
+     * For example, if set to 1, the first level of nodes will be expanded on init
+     *
+     * @default 0 (no levels expanded on init)
+     */
+    expandedLevelOnInit?: number
   }
 
   dndConfig?: {
@@ -180,12 +198,12 @@ export type ITreeProps<T extends IItem = IItem> = {
     dropMode?: 'parent' | 'place'
 
     /**
-     * Function that is used to check if a node can be dropped at given node
+     * Function that is used to check if the draged node can be dropped at given node
      */
     canBeDropped?: (payload: {
-      draggedNode: T
-      targetNode?: T
-      nodeById: Record<string, T>
+      draggedNode: ITreeNode<T>
+      targetNode?: ITreeNode<T>
+      nodeById: Record<string, ITreeNode<T>>
       nodeMetaById: Record<string, ITreeNodeMeta>
     }) => boolean
 
@@ -202,35 +220,37 @@ export type ITreeProps<T extends IItem = IItem> = {
      * NOTE: This is relevant only for `dropMode = parent`
      */
     getParentNode?: (payload: {
-      draggedNode: T
-      targetNode?: T
-      nodeById: Record<string, T>
-      nodeMetaById?: Record<string, ITreeNodeMeta>
+      childrenKey: string
+      dragMeta: ITreeDragMeta<T>
+      draggedNode: ITreeNode<T>
+      targetNode?: ITreeNode<T>
+      nodeById: Record<string, ITreeNode<T>>
+      nodeMetaById: Record<string, ITreeNodeMeta>
     }) => ITreeNode<T> | undefined | null
 
     /**
      * Function that is called before a node is moved
-     * Must return the (adjusted) node
+     * Must return the (adjusted) node or `false` to prevent the move
      *
      * Use-case: Call API
      */
-    beforeMoved?: (payload: {
-      node: T
-      to?: T | null
-      nodeById: Record<string, T>
+    onBeforeMoved?: (payload: {
+      node: ITreeNode<T>
+      target?: ITreeNode<T> | null
+      targetParent?: ITreeNode<T> | null
+      nodeById: Record<string, ITreeNode<T>>
       nodeMetaById?: Record<string, ITreeNodeMeta>
-      revert: () => void
-    }) => ITreeNode<T> | Promise<ITreeNode<T>>
+    }) => ITreeNode<T> | Promise<ITreeNode<T>> | false | Promise<false>
 
     /**
      * Function that is called when a node is moved
      */
     onMoved?: (payload: {
-      node: T
-      to?: T | null
-      nodeById: Record<string, T>
+      node: ITreeNode<T>
+      target?: ITreeNode<T> | null
+      targetParent?: ITreeNode<T> | null
+      nodeById: Record<string, ITreeNode<T>>
       nodeMetaById?: Record<string, ITreeNodeMeta>
-      revert: () => void
     }) => void | Promise<void>
   }
 
@@ -241,7 +261,7 @@ export type ITreeProps<T extends IItem = IItem> = {
     /**
      * Function to be used for loading the children nodes
      */
-    fnc: (node: T) => Promise<any> | any
+    fnc: (node: ITreeNode<T>) => Promise<any> | any
 
     /**
      * Key to get the payload from the `fnc` response
@@ -270,14 +290,14 @@ export type ITreeProps<T extends IItem = IItem> = {
     enabled?: boolean
 
     /**
-     * The value to use when the selection is empty
-     */
-    emptyValue?: any
-
-    /**
      * Whether the selection is multi-select
      */
     multi?: boolean
+
+    /**
+     * The props to pass to the select checkbox
+     */
+    checkboxProps?: ICheckboxProps & AllowedComponentProps
 
     /**
      * Function that is called before a node is selected
@@ -289,6 +309,23 @@ export type ITreeProps<T extends IItem = IItem> = {
       node: T
       ev?: MouseEvent | KeyboardEvent
     }) => void | boolean | undefined | Promise<void | boolean | undefined>
+  }
+
+  /**
+   * Sorting configuration
+   */
+  sortingConfig?: {
+    /**
+     * When false, the sorting will be disabled
+     *
+     * @default true
+     */
+    enabled?: boolean
+
+    /**
+     * The sorting itemscons
+     */
+    sortBy?: SortItem[]
   }
 
   /**
@@ -326,24 +363,64 @@ export type ITreeProps<T extends IItem = IItem> = {
     collapseBtnStyle?: CSSProperties
 
     /**
+     * Class to apply to the select checkbox
+     */
+    selectCheckboxClass?: ClassType
+
+    /**
+     * Style to apply to the select checkbox
+     */
+    selectCheckboxStyle?: CSSProperties
+
+    /**
      * Class to apply to the nodes
      */
-    nodeClass?: ((payload: { node: T, isSelected: boolean, index: number }) => ClassType)
+    nodeClass?: ((payload: {
+      node: T
+      isSelected: boolean
+      index: number
+      isFocused: boolean
+    }) => ClassType)
 
     /**
      * Style to apply to the nodes
      */
-    nodeStyle?: ((payload: { node: T, isSelected: boolean, index: number }) => CSSProperties)
+    nodeStyle?: ((payload: {
+      node: T
+      isSelected: boolean
+      index: number
+      isFocused: boolean
+    }) => CSSProperties)
 
     /**
      * Class to apply to the node content (excluding the collapse button)
      */
-    nodeContentClass?: ((payload: { node: T, isSelected: boolean, index: number }) => ClassType)
+    nodeContentClass?: ((payload: {
+      node: T
+      isSelected: boolean
+      index: number
+      isFocused: boolean
+    }) => ClassType)
 
     /**
      * Style to apply to the node content (excluding the collapse button)
      */
-    nodeContentStyle?: ((payload: { node: T, isSelected: boolean, index: number }) => CSSProperties)
+    nodeContentStyle?: ((payload: {
+      node: T
+      isSelected: boolean
+      index: number
+      isFocused: boolean
+    }) => CSSProperties)
+
+    /**
+     * Class to apply to the no data component
+     */
+    noDataClass?: ClassType
+
+    /**
+     * Style to apply to the no data component
+     */
+    noDataStyle?: CSSProperties
 
     /**
      * Class to apply to the tree content
@@ -364,6 +441,16 @@ export type ITreeProps<T extends IItem = IItem> = {
      * Style to apply to the tree actions (wrapper)
      */
     treeActionsStyle?: CSSProperties
+
+    /**
+     * Class to apply to the tree search
+     */
+    treeSearchClass?: ClassType
+
+    /**
+     * Class to apply to the tree search
+     */
+    treeSearchStyle?: CSSProperties
 
     /**
      * Margin (left) for the tree nodes. Uses regular CSS `margin-left` syntax

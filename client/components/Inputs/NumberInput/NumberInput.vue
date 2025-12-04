@@ -87,6 +87,8 @@ const {
 const { path } = useInputValidationUtils(props)
 
 // Layout
+const readonly = toRef(props, 'readonly')
+
 function handlePaste(ev: ClipboardEvent) {
   const pastedText = ev.clipboardData?.getData('text')
   const parsedValue = parseNumber(pastedText)

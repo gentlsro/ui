@@ -35,7 +35,7 @@ const negativeBtnClass = computed(() => {
       border="l-4"
       :class="positiveBtnClass"
       :label="$t('general.yes')"
-      :disabled="readonly"
+      :disabled="!!readonly"
       @click="model = true"
     />
     <Btn
@@ -45,7 +45,7 @@ const negativeBtnClass = computed(() => {
       border="r-4"
       :class="negativeBtnClass"
       :label="$t('general.no')"
-      :disabled="readonly"
+      :disabled="!!readonly"
       @click="model = false"
     />
 

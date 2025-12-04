@@ -227,7 +227,7 @@ function handleKey(ev: KeyboardEvent) {
     @apply min-h-6 p-x-5px;
 
     .checkbox {
-      @apply h-3.5 w-3.5 rounded-1 m-t-5px;
+      @apply h-4 w-4 rounded-1 m-t-4px;
     }
 
     .checkbox-label {

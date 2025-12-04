@@ -6,8 +6,16 @@ export function menuGetExposed(payload: {
   refreshAnchors: () => void
   bounce: () => void
   update: () => void
+  calculateVirtualElement: () => void
 }) {
-  const { modelHandler, isChangeForced, refreshAnchors, bounce, update } = payload
+  const {
+    modelHandler,
+    isChangeForced,
+    refreshAnchors,
+    bounce,
+    update,
+    calculateVirtualElement,
+  } = payload
 
   // Store
   const store = useMenuStore()
@@ -27,6 +35,7 @@ export function menuGetExposed(payload: {
         bounce()
       }
 
+      calculateVirtualElement()
       update()
     },
     getStore: () => store,

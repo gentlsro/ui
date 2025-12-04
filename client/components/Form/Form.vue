@@ -80,10 +80,7 @@ const classes = computed(() => {
   return {
     container: [
       mergedProps.value.ui?.containerClass,
-      {
-        'form--dense': props.dense,
-        'is-label-forced-visible': props.labelForcedVisibility,
-      },
+      { 'is-label-forced-visible': props.labelForcedVisibility },
     ],
     content: mergedProps.value.ui?.contentClass,
     controls: mergedProps.value.ui?.controlsClass,
@@ -211,21 +208,3 @@ onUnmounted(() => {
     </slot>
   </form>
 </template>
-
-<style lang="scss" scoped>
-.form {
-  &--dense {
-    .form__content {
-      @apply p-0;
-    }
-  }
-
-  &__content {
-    @apply flex-gap-2 border-ca;
-  }
-
-  &__controls {
-    @apply flex gap-2 items-center shrink-0;
-  }
-}
-</style>

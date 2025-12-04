@@ -85,7 +85,8 @@ defineExpose({
       <div
         v-if="icon || preset"
         class="icon"
-        :class="[icon || preset?.icon]"
+        :class="[icon || preset?.icon, mergedProps.ui?.iconClass]"
+        :style="mergedProps.ui?.iconStyle"
       />
     </slot>
 

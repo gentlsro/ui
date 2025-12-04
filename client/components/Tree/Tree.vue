@@ -4,6 +4,7 @@ import { getActivePinia } from 'pinia'
 // Types
 import type { ITreeProps } from './types/tree-props.type'
 import type { ITreeEmits } from './types/tree-emits.type'
+import type { ITreeNode } from './types/tree-node.type'
 import type { ITreeNodeMeta } from './types/tree-node-meta.type'
 import type { IVirtualScrollerProps } from '../VirtualScroller/types/virtual-scroller-props.type'
 

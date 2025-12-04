@@ -1,3 +1,6 @@
+// Types
+import type { ITreeNode } from '../types/tree-node.type'
+
 export function getChildren<T extends IItem = IItem>(
   nodes: ITreeNode<T>[],
   options?: {

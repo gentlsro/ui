@@ -11,10 +11,10 @@ type IProps = Pick<IMenuProps, 'ui' | 'noClose'>
 defineProps<IProps>()
 
 // Store
-const { title, virtualConfiguration } = useMenuStore()
+const { title, virtualConfig } = useMenuStore()
 
 const isMovable = computed(() => {
-  return virtualConfiguration?.value?.enabled && virtualConfiguration?.value?.movable
+  return virtualConfig?.value?.enabled && virtualConfig?.value?.movable
 })
 </script>
 

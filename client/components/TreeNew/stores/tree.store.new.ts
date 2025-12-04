@@ -1,17 +1,20 @@
-import { useSearching } from '$utils'
-
 // Types
+import type { ITreeNode } from '../types/tree-node.new.type'
 import type { ITreeProps } from '../types/tree-props.new.type'
-import type { ITreeEmitFncs } from '../types/tree-emit-fncs.type'
-import type { ITreeNodeMeta } from '../types/tree-node-meta.type'
-import type { ITreeDragMeta } from '../types/tree-drag-meta.type'
+import type { ITreeEmitFncs } from '../types/tree-emit-fncs.new.type'
+import type { ITreeNodeMeta } from '../types/tree-node-meta.new.type'
+import type { ITreeDragMeta } from '../../Tree/types/tree-drag-meta.type'
 
 // Functions
+import { moveNode } from '../functions/move-node'
 import { searchNodes } from '../functions/search-nodes'
+import { insertNodes } from '../functions/insert-nodes'
+import { removeNodes } from '../functions/remove-nodes'
 import { flattenTreeNodes } from '../functions/flatten-tree-nodes.new'
 
 // Constants
 import { TREE_INJECTION_KEY } from '../constants/tree-injection-key.constant'
+import { toggleNodeCollapse } from '../functions/toggle-node-collapse'
 
 type IConfig = {
   treeProps?: ITreeProps
@@ -61,45 +64,18 @@ function createStore(injectionKey?: string) {
     }) as Ref<number | undefined>
 
     // Configs
-    const loadChildrenConfig = initRef({
-      propName: 'loadChildrenConfig',
-      instance,
-      props: treeProps,
-      defaultValue: treeProps?.loadChildrenConfig,
-    }) as Ref<ITreeProps['loadChildrenConfig']>
-
-    const searchConfig = initRef({
-      propName: 'searchConfig',
-      instance,
-      props: treeProps,
-      defaultValue: treeProps?.searchConfig,
-    }) as Ref<ITreeProps['searchConfig']>
-
-    const selectionConfig = initRef({
-      propName: 'selectionConfig',
-      instance,
-      props: treeProps,
-      defaultValue: treeProps?.selectionConfig,
-    }) as Ref<ITreeProps['selectionConfig']>
-
-    const dndConfig = initRef({
-      propName: 'dndConfig',
-      instance,
-      props: treeProps,
-      defaultValue: treeProps?.dndConfig,
-    }) as Ref<ITreeProps['dndConfig']>
-
-    const collapsingConfig = initRef({
-      propName: 'collapsingConfig',
-      instance,
-      props: treeProps,
-      defaultValue: treeProps?.collapsingConfig,
-    }) as Ref<ITreeProps['collapsingConfig']>
+    const actionsConfig = ref(treeProps?.actionsConfig) as Ref<ITreeProps['actionsConfig']>
+    const loadChildrenConfig = ref(treeProps?.loadChildrenConfig) as Ref<ITreeProps['loadChildrenConfig']>
+    const searchConfig = ref(treeProps?.searchConfig) as Ref<ITreeProps['searchConfig']>
+    const selectionConfig = ref(treeProps?.selectionConfig) as Ref<ITreeProps['selectionConfig']>
+    const dndConfig = ref(treeProps?.dndConfig) as Ref<ITreeProps['dndConfig']>
+    const collapseConfig = ref(treeProps?.collapseConfig) as Ref<ITreeProps['collapseConfig']>
+    const sortingConfig = ref(treeProps?.sortingConfig) as Ref<ITreeProps['sortingConfig']>
+    const ui = ref(treeProps?.ui) as Ref<ITreeProps['ui']>
 
     // Layout
     const treeEl = ref<HTMLElement>()
     const searchEl = ref<any>()
-    const collapseBtnProps = ref<ITreeProps['collapseBtnProps']>(treeProps?.collapseBtnProps)
 
     // Search
     const search = initRef({
@@ -119,8 +95,23 @@ function createStore(injectionKey?: string) {
       defaultValue: treeProps?.selection,
     }) as Ref<ITreeProps['selection']>
 
+    // Focusing
+    const nodeFocused = ref<ITreeNode<IItem> | undefined>()
+
+    watch(nodeFocused, (node, oldNode) => {
+      if (node) {
+        emits.value.nodeFocus({ node })
+      } else {
+        emits.value.nodeBlur({ node: oldNode })
+      }
+    })
+
+    // D'n'D
+    const draggedNode = ref<ITreeNode<IItem> | undefined>()
+    const dragMeta = ref<ITreeDragMeta<IItem>>({})
+
     // Nodes
-    const nodesFlattened = ref<ITreeNode<IItem>[]>([])
+    const nodesFlattened = shallowRef<ITreeNode<IItem>[]>([])
 
     const nodeMetaById = initRef({
       propName: 'meta',
@@ -129,12 +120,12 @@ function createStore(injectionKey?: string) {
       defaultValue: {},
     }) as Ref<Record<ITreeNode['id'], ITreeNodeMeta>>
 
-    const nodesSource = initRef({
+    const model = initRef({
       propName: 'modelValue',
       instance,
       props: treeProps,
       defaultValue: treeProps?.modelValue,
-    }) as Ref<ITreeNode<IItem>[]>
+    }) as Ref<IItem[]>
 
     const nodeById = computed(() => {
       return nodesFlattened.value.reduce((agg, node) => {
@@ -144,7 +135,7 @@ function createStore(injectionKey?: string) {
       }, {} as Record<ITreeNode['id'], ITreeNode<IItem>>)
     })
 
-    // Nodes visible
+    // Nodes search & visible
     const nodesVisible = ref<ITreeNode<IItem>[]>([])
     const nodesSearched = ref<ITreeNode<IItem>[]>([])
 
@@ -152,41 +143,41 @@ function createStore(injectionKey?: string) {
       return nodesSearched.value
         .filter(node => nodeMetaById.value[node.id]?.isCollapsed)
         .map(node => node.id)
+        .join(',')
     })
 
-    watch(nodesSource, nodes => {
-      nodesFlattened.value = flattenTreeNodes({
+    const { trigger: flattenTrigger } = watchTriggerable(model, async nodes => {
+      nodesFlattened.value = await flattenTreeNodes({
         nodes,
+        nodeMetaById,
         idKey: idKey.value,
         childrenKey: childrenKey.value,
-        parentKey: parentKey.value,
         labelKey: labelKey.value,
-        collapsingConfig: collapsingConfig.value,
-        treeNodeMetaById: nodeMetaById.value,
+        collapseConfig: collapseConfig.value,
+        sortingConfig: sortingConfig.value,
       })
-    }, { immediate: true })
+    })
 
-    watch(
-      search,
-      async search => {
+    const { trigger: searchTrigger } = watchTriggerable(
+      [search, nodesFlattened],
+      async ([search, nodesFlattened]) => {
         let searchedNodes: ITreeNode<IItem>[] = []
 
         if (!search) {
-          searchedNodes = nodesFlattened.value
+          searchedNodes = nodesFlattened
         } else {
           searchedNodes = await searchNodes({
-            nodesFlattened: nodesFlattened.value,
+            nodesFlattened,
             search,
             idKey: idKey.value,
             labelKey: labelKey.value,
             searchConfig: searchConfig.value,
-            collapsingConfig: collapsingConfig.value,
+            collapseConfig: collapseConfig.value,
           })
         }
 
         nodesSearched.value = searchedNodes
       },
-      { immediate: true },
     )
 
     watch([nodesSearched, collapsedIds], ([nodes]) => {
@@ -209,46 +200,136 @@ function createStore(injectionKey?: string) {
         })
     }, { immediate: true })
 
+    // Sync the flattened nodes back to the source nodes
+    // (we must keep the hierarchy)
+
     // Emits
     const emits = ref<ITreeEmitFncs<IItem>>({
       nodeClick: () => {},
       nodeFocus: () => {},
       nodeBlur: () => {},
-      nodeContextMenu: () => {},
+      nodeSelect: () => {},
+      nodeUnselect: () => {},
     })
+
+    /**
+     * We have bunch of async function here that we might want to run on component init
+     * for SSR reasons
+     */
+    async function init() {
+      await flattenTrigger()
+      await searchTrigger()
+    }
+
+    // Helper functions
+    function collapseNode(node: ITreeNode<IItem>) {
+      const isCollapsed = nodeMetaById.value[node.id]?.isCollapsed
+
+      if (isCollapsed) {
+        return
+      }
+
+      toggleNodeCollapse({ node, getStore: () => returnedData })
+    }
+
+    function expandNode(node: ITreeNode<IItem>) {
+      const isCollapsed = nodeMetaById.value[node.id]?.isCollapsed
+
+      if (!isCollapsed) {
+        return
+      }
+
+      toggleNodeCollapse({ node, getStore: () => returnedData })
+    }
+
+    async function insertNode(
+      node: IItem,
+      options?: {
+        parent?: ITreeNode<IItem>
+        commit?: boolean
+        nodes?: ITreeNode<IItem>[]
+      },
+    ) {
+      const index = parent
+        ? nodesFlattened.value.findIndex(n => n.id === options?.parent?.id)
+        : nodesFlattened.value.length + 1
+
+      const { added } = await insertNodes({
+        items: [node],
+        nodesFlattened: options?.nodes ? ref(options.nodes) : nodesFlattened,
+        childrenKey: childrenKey.value,
+        model,
+        nodeMetaById,
+        idKey: idKey.value,
+        commit: options?.commit ?? true,
+        index,
+        parent: options?.parent,
+      })
+
+      return added[0] as ITreeNode<IItem>
+    }
+
+    function removeNode(node: ITreeNode<IItem>, options?: { commit?: boolean }) {
+      return removeNodes({
+        nodesToRemove: [node],
+        nodesFlattened,
+        childrenKey: childrenKey.value,
+        model,
+        nodeMetaById: nodeMetaById.value,
+        commit: options?.commit ?? true,
+      })
+    }
 
     const returnedData = {
       // Utils
       idKey,
       childrenKey,
+      labelKey,
       parentKey,
       maxLevel,
+      init,
 
       // Configs
       dndConfig,
       searchConfig,
       selectionConfig,
-      collapsingConfig,
+      collapseConfig,
       loadChildrenConfig,
+      actionsConfig,
+      sortingConfig,
+      ui,
 
       // Layout
       treeEl,
       searchEl,
-      collapseBtnProps,
 
       // Search
       search,
       isSearched,
+      searchTrigger,
 
       // Selection
       selection,
 
+      // Focusing
+      nodeFocused,
+
+      // D'n'D
+      draggedNode,
+      dragMeta,
+
       // Nodes
       nodeById,
-      nodesSource,
+      model,
       nodesVisible,
       nodeMetaById,
       nodesFlattened,
+
+      // Helper functions
+      insertNode,
+      removeNode,
+      collapseNode,
+      expandNode,
 
       // Emits
       emits,

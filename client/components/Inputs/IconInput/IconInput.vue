@@ -26,6 +26,7 @@ const mergedProps = computed(() => {
 })
 
 // Layout
+const readonly = toRef(props, 'readonly')
 const menuProxyEl = useTemplateRef('menuProxyEl')
 const referenceEl = ref<HTMLDivElement>()
 const wrapperEl = useTemplateRef('wrapperEl')

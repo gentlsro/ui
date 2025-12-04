@@ -1,6 +1,9 @@
 import { autoScrollPlugin, Draggable, PointerSensor } from 'dragdoll'
 import type { PointerSensorMoveEvent } from 'dragdoll'
 
+// Types
+import type { ITreeNode } from '../types/tree-node.type'
+
 // Store
 import { useTreeStore } from '../stores/tree.store'
 

@@ -1,7 +1,8 @@
 import { useSearching } from '$utils'
 
 // Types
-import type { ITreeProps } from '../types/tree-props.type'
+import type { ITreeNode } from '../types/tree-node.new.type'
+import type { ITreeProps } from '../types/tree-props.new.type'
 
 // Utils
 const { searchData } = useSearching()
@@ -12,7 +13,7 @@ export async function searchNodes(payload: {
   idKey?: string
   labelKey?: string
   searchConfig?: ITreeProps['searchConfig']
-  collapsingConfig?: ITreeProps['collapsingConfig']
+  collapseConfig?: ITreeProps['collapseConfig']
 }): Promise<ITreeNode<IItem>[]> {
   const {
     nodesFlattened,
@@ -20,7 +21,7 @@ export async function searchNodes(payload: {
     idKey = 'id',
     labelKey = 'label',
     searchConfig,
-    collapsingConfig = { showCollapsedWhenSearched: true },
+    collapseConfig = { showCollapsedWhenSearched: true },
   } = payload
 
   // Filter nodes

@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// Types
+import type { ITreeNode } from './types/tree-node.type'
+
 // Store
 import { useTreeStore } from './stores/tree.store'
 

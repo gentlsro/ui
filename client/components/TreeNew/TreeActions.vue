@@ -14,7 +14,7 @@ type IProps = Pick<ITreeProps<T>, 'ui' | 'actionsConfig'>
 defineProps<IProps>()
 
 // Store
-const { nodeMetaById } = useTreeStore()
+const store = useTreeStore()
 </script>
 
 <template>
@@ -23,28 +23,24 @@ const { nodeMetaById } = useTreeStore()
     :class="ui?.treeActionsClass"
     :style="ui?.treeActionsStyle"
   >
+    <slot name="left" />
+
     <!-- Collapse all -->
     <Btn
-      size="xs"
-      icon="i-codicon:collapse-all !w-4 !h-4"
+      icon="i-codicon:collapse-all"
       :tooltip="{ label: $t('general.collapseAll') }"
       v-bind="actionsConfig?.btnProps"
-      @click="treeCollapseAll({ nodeMetaById })"
+      @click="treeCollapseAll({ getStore: () => store })"
     />
 
     <!-- Expand all -->
     <Btn
-      size="xs"
-      icon="i-codicon:expand-all !w-4 !h-4"
+      icon="i-codicon:expand-all"
       :tooltip="{ label: $t('general.expandAll') }"
       v-bind="actionsConfig?.btnProps"
-      @click="treeExpandAll({ nodeMetaById })"
+      @click="treeExpandAll({ getStore: () => store })"
     />
+
+    <slot name="right" />
   </div>
 </template>
-
-<style scoped lang="scss">
-.tree__actions {
-  @apply flex gap-1 items-center;
-}
-</style>

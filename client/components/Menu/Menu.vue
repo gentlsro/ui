@@ -45,7 +45,7 @@ const {
 
   // Virtual
   isVirtual,
-  virtualConfiguration,
+  virtualConfig,
   virtualDimensions,
 } = useMenuStore({ menuProps: props, instance })
 
@@ -62,6 +62,7 @@ const {
   debouncedModel,
   isChangeForced,
   modelHandler,
+  calculateVirtualElement,
   hide,
   commitHide,
 
@@ -74,8 +75,8 @@ const {
   // Template
   transitionClass,
   transitionStyle,
-  menuWrapperClass,
-  menuWrapperStyle,
+  menuClass,
+  menuStyle,
   bounce,
   handleClickOutside,
 
@@ -125,7 +126,7 @@ watch(virtualDimensions, () => {
 // @ts-expect-error Bad element type
 const { x: pageX, y: pageY } = useElementBounding(referenceEl, { windowResize: true })
 
-if (!props.noMove && !props.virtualConfiguration?.enabled) {
+if (!props.noMove && !props.virtualConfig?.enabled) {
   watchThrottled([pageX, pageY], update, {
     trailing: true,
     throttle: 100,
@@ -140,7 +141,7 @@ onClickOutside(
 )
 
 function handleMoveMouseDown(ev: MouseEvent) {
-  if (!isVirtual.value || !virtualConfiguration?.value?.movable) {
+  if (!isVirtual.value || !virtualConfig?.value?.movable) {
     return
   }
 
@@ -153,6 +154,7 @@ defineExpose(menuGetExposed({
   refreshAnchors,
   bounce,
   update,
+  calculateVirtualElement,
 }))
 </script>
 
@@ -165,6 +167,7 @@ defineExpose(menuGetExposed({
     <MenuOverlay
       v-if="!noOverlay"
       :transition-duration
+      :ui="mergedProps.ui"
     />
 
     <Transition
@@ -182,10 +185,9 @@ defineExpose(menuGetExposed({
         v-if="model"
         ref="floatingEl"
         class="floating-element menu"
-        bg="white dark:darker"
         :data-open="model"
-        :class="menuWrapperClass"
-        :style="{ ...menuWrapperStyle, ...floatingStyles }"
+        :class="[mergedProps.ui?.menuClass, menuClass]"
+        :style="{ ...mergedProps.ui?.menuStyle, ...menuStyle, ...floatingStyles }"
         :placement="menuPlacement"
         .hide="hide"
         v-bind="$attrs"
@@ -233,7 +235,7 @@ defineExpose(menuGetExposed({
 
         <!-- Resizing -->
         <ElementResize
-          v-if="isVirtual && virtualConfiguration?.resizable"
+          v-if="isVirtual && virtualConfig?.resizable"
           v-model:dimensions="virtualDimensions"
         />
       </div>
@@ -242,17 +244,6 @@ defineExpose(menuGetExposed({
 </template>
 
 <style lang="scss" scoped>
-.menu {
-  @apply flex flex-col max-w-95vw max-h-95% rounded-custom z-$zIndex
-    rounded-custom border-1 border-ca;
-
-  @apply shadow-consistent-xs shadow-darker/20 shadow-light/8;
-
-  &__content {
-    @apply relative flex flex-col grow gap-1 overflow-auto rounded-custom;
-  }
-}
-
 // Transition
 .menu[placement='top'] {
   @apply transform-origin-bottom;

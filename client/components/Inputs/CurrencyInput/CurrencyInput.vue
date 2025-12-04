@@ -60,6 +60,8 @@ const mask = computed<MaskedNumber>(() => {
 })
 
 // Layout
+const readonly = toRef(props, 'readonly')
+
 const {
   el,
   inputId,
@@ -289,9 +291,9 @@ defineExpose({
       flex="1"
       :value="masked"
       inputmode="numeric"
-      :placeholder="placeholder"
-      :readonly="readonly"
-      :disabled="disabled"
+      :placeholder
+      :readonly
+      :disabled
       :label="label || placeholder"
       :name="name || path || label || placeholder"
       class="control"

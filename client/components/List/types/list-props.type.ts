@@ -45,7 +45,7 @@ export type IListProps = {
      */
     transformAddedItem?: (
       item: IItem,
-      transformFnc: (fnc: (payload: { item: IListItemToAdd }) => IListItemToAdd) => void
+      transformFnc: (fnc: (payload: { item: IListItemToAdd }) => IListItemToAdd) => void,
     ) => IItem
 
     /**
@@ -304,7 +304,7 @@ export type IListProps = {
        *
        * In short, if there is an "exact match", you should set `_extra.hasExactMatch = true`
        */
-      _extra?: { hasExactMatch?: boolean }
+      _extra?: { hasExactMatch?: boolean },
     ) => IItem[] | Promise<IItem[]>
 
     /**
@@ -421,7 +421,7 @@ export type IListProps = {
         row: IItem
         groupsCount: number
         isLast: boolean
-      }
+      },
     ) => ClassType
 
     /**

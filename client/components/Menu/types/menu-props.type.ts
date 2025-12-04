@@ -164,7 +164,7 @@ export type IMenuProps = {
   /**
    * Configuration for the virtual movement and resizing
    */
-  virtualConfiguration?: {
+  virtualConfig?: {
     /**
      * When true, the `referenceTarget` will use the last position the user clicked
      */
@@ -187,6 +187,26 @@ export type IMenuProps = {
   }
 
   ui?: {
+    /**
+     * Class to apply to the `menu` itself
+     */
+    menuClass?: ClassType
+
+    /**
+     * Style to apply to the `menu` itself
+     */
+    menuStyle?: CSSProperties
+
+    /**
+     * Class to apply to the `overlay`
+     */
+    overlayClass?: ClassType
+
+    /**
+     * Style to apply to the `overlay`
+     */
+    overlayStyle?: CSSProperties
+
     /**
      * Class to apply to the `content`
      */

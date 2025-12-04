@@ -21,27 +21,26 @@ defineExpose({
 </script>
 
 <template>
-  <div class="tree-search">
+  <div
+    class="tree-search"
+    :class="ui?.treeSearchClass"
+    :style="ui?.treeSearchStyle"
+  >
     <SearchInput
       ref="searchEl"
       v-model="search"
       autofocus
       grow
+      data-tree-search
       v-bind="searchConfig?.props"
     />
 
     <slot name="actions">
-      <!-- <TreeActions
+      <TreeActions
         v-if="actionsConfig?.enabled"
         :ui
         :actions-config
-      /> -->
+      />
     </slot>
   </div>
 </template>
-
-<style scoped lang="scss">
-.tree-search {
-  @apply flex gap-1 items-center;
-}
-</style>

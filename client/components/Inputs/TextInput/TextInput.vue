@@ -25,6 +25,8 @@ const mergedProps = computed(() => {
 })
 
 // Layout
+const readonly = toRef(props, 'readonly')
+
 const {
   el,
   inputId,

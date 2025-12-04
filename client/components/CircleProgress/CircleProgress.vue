@@ -13,6 +13,7 @@ const { formatNumber } = useNumber()
 
 // Layout
 const animatedProgress = ref(0)
+const size = toRef(props, 'size')
 
 // Watch for changes in progress prop and update animatedProgress with smooth transition
 watch(

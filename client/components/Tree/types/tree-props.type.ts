@@ -2,6 +2,7 @@ import type { AllowedComponentProps, CSSProperties } from 'vue'
 import type { FuseOptions } from '@vueuse/integrations/useFuse.mjs'
 
 // Types
+import type { ITreeNode } from './tree-node.type'
 import type { ITreeNodeMeta } from './tree-node-meta.type'
 import type { IBtnProps } from '../../Button/types/btn-props.type'
 import type { IVirtualScrollerProps } from '../../VirtualScroller/types/virtual-scroller-props.type'

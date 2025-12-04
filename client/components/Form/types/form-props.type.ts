@@ -11,13 +11,6 @@ export type IFormProps = {
   bordered?: boolean
 
   /**
-   * When true, the class `form--dense` will be added to the form.
-   *
-   * Usage: for using `<Section />` inside the form.
-   */
-  dense?: boolean
-
-  /**
    * Control elements to display in the form
    */
   editControls?:

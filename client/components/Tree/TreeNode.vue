@@ -1,5 +1,6 @@
 <script setup lang="ts" generic="T extends IItem = IItem">
 // Types
+import type { ITreeNode } from './types/tree-node.type'
 import type { ITreeProps } from './types/tree-props.type'
 
 // Functions

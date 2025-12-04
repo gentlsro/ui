@@ -1,4 +1,5 @@
 // Types
+import type { ITreeNode } from '../types/tree-node.new.type'
 import type { ITreeProps } from '../types/tree-props.new.type'
 
 export function isNodeSelected(payload: {

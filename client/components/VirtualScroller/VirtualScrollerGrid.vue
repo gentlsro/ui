@@ -84,14 +84,6 @@ const visibleColumns = computed(() => {
   return virtualColumns.value.map(virtualColumn => columns.value[virtualColumn.index])
 })
 
-// watchEffect(() => {
-//   console.log('\n\n--------------------------------')
-//   console.log('💀 Columns', columns.value.map(col => `${col.field}, w:${col._width}`))
-//   console.log('😂 Virtual Columns', virtualColumns.value)
-//   console.log('❤️ Visible Columns', visibleColumns.value.map(col => `${col.field}, w:${col._width}`))
-//   console.log('\n\n--------------------------------')
-// })
-
 const totalWidth = computed(() => {
   return columnVirtualizer.value.getTotalSize()
 })
@@ -233,17 +225,6 @@ defineExpose({
             :index="virtualRow.index"
             :style="{ minHeight: `${rowHeight}px` }"
           />
-
-          <!-- <div
-            v-for="virtualColumn in virtualColumns"
-            :key="virtualColumn.key"
-            :style="{
-              minHeight: `${virtualRow.size}px`,
-              width: `${getColumnWidth(virtualColumn.index)}px`,
-            }"
-          >
-            {{ get(rows[virtualRow.index], columns[virtualColumn.index].field) }}
-          </div> -->
 
           <!-- Empty space - Right -->
           <div :style="{ width: `${columnWidth[1]}px` }" />

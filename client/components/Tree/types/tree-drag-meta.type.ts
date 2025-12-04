@@ -1,5 +1,8 @@
 import type { CSSProperties } from 'vue'
 
+// Types
+import type { ITreeNode } from './tree-node.type'
+
 export type ITreeDragMeta<T extends IItem = IItem> = {
   /**
    * The source item element (to get the actual source item, you can use the `draggedNode` from store)
@@ -19,7 +22,12 @@ export type ITreeDragMeta<T extends IItem = IItem> = {
   /**
    * The target item
    */
-  target?: ITreeNode<T> | { id: '__ROOT__' } | null
+  target?: ITreeNode<T> | null
+
+  /**
+   * The target parent item
+   */
+  targetParent?: ITreeNode<T> | { id: '__ROOT__' } | null
 
   /**
    * Placement of the indicator - above or below the target item

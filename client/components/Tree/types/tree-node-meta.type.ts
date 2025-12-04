@@ -1,30 +1,10 @@
-export type ITreeNodeMeta = {
-  /**
-   * The level of the node
-   *
-   * Root level is 0
-   */
+// Types
+import type { ITreeNode } from './tree-node.type'
+
+export type ITreeNodeMeta<T extends IItem = IItem> = {
   level: number
-
-  /**
-   * The path of the node
-   *
-   * For example: `0.children.1.children.2`
-   */
-  path: string
-
-  /**
-   * Whether the node has children loaded
-   */
-  isChildrenLoaded: boolean
-
-  /**
-   * Whether the node is collapsed
-   */
-  isCollapsed?: boolean
-
-  /**
-   * Whether the node is loading
-   */
-  isLoading?: boolean
+  childrenLoaded: boolean
+  parent?: ITreeNode<T> | null
+  collapsed?: boolean
+  path?: string
 }

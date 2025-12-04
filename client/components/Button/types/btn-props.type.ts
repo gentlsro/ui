@@ -175,6 +175,16 @@ export type IBtnProps = IBtnNavigationProps & {
     btnStyle?: CSSProperties
 
     /**
+     * Classes applied to the icon
+     */
+    iconClass?: ClassType
+
+    /**
+     * Style applied to the icon
+     */
+    iconStyle?: CSSProperties
+
+    /**
      * Style applied to the `label`
      */
     labelStyle?: CSSProperties

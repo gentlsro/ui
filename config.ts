@@ -50,7 +50,7 @@ import type { ITextSplitterProps } from './client/components/TextSplitter/types/
 import type { IToggleProps } from './client/components/Toggle/types/toggle-props.type'
 import type { ITooltipProps } from './client/components/Tooltip/types/tooltip-props.type'
 import type { ITreeProps } from './client/components/Tree/types/tree-props.type'
-import type { ITreeProps as ITreePropsNew } from './client/components/Tree/types/tree-props.new.type'
+import type { ITreeProps as ITreePropsNew } from './client/components/TreeNew/types/tree-props.new.type'
 import type { IVirtualScrollerProps } from './client/components/VirtualScroller/types/virtual-scroller-props.type'
 import type { IYearMonthSelectorProps } from './client/components/YearMonthSelector/types/year-month-selector-props.type'
 import type { IYearSelectorProps } from './client/components/YearSelector/types/year-selector-props.type'
@@ -71,6 +71,7 @@ import type { ISelectorProps } from './client/components/Selector/types/selector
 import type { ITableProps } from './client/components/Table/types/table-props.type'
 import type { IQueryBuilderProps } from './client/components/QueryBuilder/types/query-builder-props.type'
 import type { IElementMovementProps } from './client/components/ElementMovement/types/element-movement-props.type'
+import type { IVirtualScrollerVerticalProps } from './client/components/VirtualScroller/types/virtual-scroller-vertical-props.type'
 
 export const defaultComponentsConfig = {
   // Badge
@@ -1231,9 +1232,7 @@ export const defaultComponentsConfig = {
       ui: {
         nodePadding: '1rem',
         nodeClass: () => 'flex gap-1 items-start',
-        nodeContentClass: () => 'p-y-2px',
       },
-      collapseBtnProps: { size: 'xs', class: 'self-start m-t-2 color-ca' },
       scrollerConfig: {},
     },
     merge: [
@@ -1244,14 +1243,18 @@ export const defaultComponentsConfig = {
       'ui',
       'collapseBtnProps',
       'scrollerConfig',
-      'actionsConfig',
     ],
   },
 
   // TreeNew
   treeNew: {
     props: {
-      collapsingConfig: { showCollapsedWhenSearched: true, collapseBtnTakesSpace: true },
+      collapseConfig: {
+        expandedLevelOnInit: 0,
+        showCollapsedWhenSearched: true,
+        btnTakesSpace: true,
+        btnProps: { size: 'xs', class: 'self-start m-t-1 color-ca' },
+      },
       connectors: true,
       loadChildrenConfig: undefined,
       maxLevel: Number.MAX_SAFE_INTEGER,
@@ -1262,26 +1265,57 @@ export const defaultComponentsConfig = {
       parentKey: 'parentId',
       searchConfig: { enabled: true, fnc: undefined },
       selection: undefined,
-      selectionConfig: { multi: false, emitKey: false },
+      selectionConfig: {
+        multi: false,
+        emitKey: false,
+        checkboxProps: { size: 'xs', class: 'm-t-1' },
+      },
       dndConfig: { enabled: false, dropMode: 'parent' },
       ui: {
-        treeClass: 'p-2 rounded-custom bg-white dark:bg-dark-950',
+        treeSearchClass: 'flex gap-1 items-center',
+        treeActionsClass: 'flex gap-1 items-center',
+        noDataClass: 'p-x-4 p-b-2 color-ca font-rem-14',
+        treeContentClass: 'p-y-2.5',
+        treeClass: ' p-2 rounded-custom bg-white dark:bg-dark-950',
         nodePadding: '1rem',
-        nodeClass: () => 'flex gap-1 items-start',
-        nodeContentClass: () => 'p-y-2px',
+        nodeClass: ({ isSelected, isFocused }) => {
+          const classes = [
+            // Base
+            'flex gap-1 p-x-2 items-start rounded-custom border-1 border-white dark:border-dark-950 w-full',
+
+            // Hover
+            'hover:bg-slate-100 dark:hover:bg-slate-800',
+          ]
+
+          if (isSelected) {
+            classes.push('bg-slate-100 color-primary dark:(bg-slate-800 color-blue-400)')
+          }
+
+          if (isFocused) {
+            classes.push('outline-1 outline-solid outline-primary outline-offset--1')
+          }
+
+          return classes
+        },
+        nodeContentClass: () => 'flex flex-col leading-20px p-y-1.5',
       },
-      collapseBtnProps: { size: 'xs', class: 'self-start m-t-2 color-ca' },
-      scrollerConfig: {},
+      scrollerConfig: { rowHeight: 32 },
+      actionsConfig: {
+        enabled: true,
+        btnProps: { size: 'sm' },
+        autoLoadChildrenOnExpandAll: false,
+      },
     },
     merge: [
-      'collapsingConfig',
+      'collapseConfig',
       'searchConfig',
       'selectionConfig',
       'dndConfig',
       'ui',
-      'collapseBtnProps',
       'scrollerConfig',
       'actionsConfig',
+      'loadChildrenConfig',
+      'sortingConfig',
     ],
   },
 
@@ -1305,6 +1339,19 @@ export const defaultComponentsConfig = {
       threshold: 80,
       watchWidth: undefined,
     },
+  },
+
+  // VirtualScrollerVertical
+  virtualScrollerVertical: {
+    props: {
+      rows: undefined,
+      rowHeight: 40,
+      rowKey: 'id' as any,
+      virtualizerOptions: {
+        overscan: 5,
+      },
+    },
+    merge: ['virtualizerOptions'],
   },
 
   // YearMonthSelector
@@ -1421,6 +1468,7 @@ export type IUIConfig = {
   treeNew: IConfigItem<ITreePropsNew>
   valueFormatter: IConfigItem<IValueFormatterProps>
   virtualScroller: IConfigItem<IVirtualScrollerProps<any>>
+  virtualScrollerVertical: IConfigItem<IVirtualScrollerVerticalProps<any>>
   yearMonthSelector: IConfigItem<IYearMonthSelectorProps>
   yearSelector: IConfigItem<IYearSelectorProps>
 

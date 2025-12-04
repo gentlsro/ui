@@ -1,49 +1,58 @@
-// Types
-import type { ITreeProps } from '../types/tree-props.new.type'
-import type { ITreeNodeMeta } from '../types/tree-node-meta.type'
+import { useSorting } from '$utils'
 
-function traverseNodes<T extends IItem = IItem>(payload: {
+// Types
+import type { ITreeNode } from '../types/tree-node.new.type'
+import type { ITreeProps } from '../types/tree-props.new.type'
+import type { ITreeNodeMeta } from '../types/tree-node-meta.new.type'
+
+const { sortData } = useSorting()
+
+async function traverseNodes<T extends IItem = IItem>(payload: {
   flattenedNodes?: ITreeNode<IItem<T>>[]
   nodes: IItem<T>[]
   childrenKey: string
-  parentKey: string
   idKey: string
   labelKey?: string
   level?: number
   path?: string
-  treeNodeMetaById: Record<ITreeNode['id'], ITreeNodeMeta>
-  collapsingConfig?: ITreeProps<T>['collapsingConfig']
-}): ITreeNode<IItem<T>>[] {
+  nodeMetaById: Ref<Record<ITreeNode['id'], ITreeNodeMeta>>
+  collapseConfig?: ITreeProps<T>['collapseConfig']
+  sortingConfig?: ITreeProps<T>['sortingConfig']
+}): Promise<ITreeNode<IItem<T>>[]> {
   const {
     flattenedNodes = [],
     nodes,
     childrenKey,
-    parentKey,
     idKey,
     labelKey,
     level = 0,
     path,
-    treeNodeMetaById,
-    collapsingConfig,
+    nodeMetaById,
+    collapseConfig,
+    sortingConfig,
   } = payload
 
-  nodes.forEach((node, index) => {
+  const nodesSorted = sortingConfig?.enabled
+    ? await sortData(nodes, sortingConfig.sortBy ?? [])
+    : nodes
+
+  for await (const node of nodesSorted) {
     // Get node id using idKey
     const nodeId = get(node, idKey) as string | number
 
     if (!nodeId) {
-      return // Skip nodes without id
+      continue // Skip nodes without id
     }
 
     // Get children
     const children = get(node, childrenKey) as IItem<T>[] | undefined
 
-    // Determine if node has children using collapsingConfig.hasChildrenFnc if available
-    const hasChildrenFnc = collapsingConfig?.hasChildrenFnc
+    // Determine if node has children using collapseConfig.hasChildrenFnc if available
+    const hasChildrenFnc = collapseConfig?.hasChildrenFnc
     let hasChildren: boolean
     let isChildrenLoaded: boolean
 
-    // Use collapsingConfig.hasChildrenFnc if available
+    // Use collapseConfig.hasChildrenFnc if available
     if (hasChildrenFnc) {
       hasChildren = hasChildrenFnc(node as T)
       // If function returns false, we know for sure it has no children (loaded)
@@ -57,7 +66,7 @@ function traverseNodes<T extends IItem = IItem>(payload: {
 
     // Default behavior: check if children exist
     else {
-      hasChildren = !!children && children.length > 0
+      hasChildren = !!children
       isChildrenLoaded = hasChildren
     }
 
@@ -71,61 +80,74 @@ function traverseNodes<T extends IItem = IItem>(payload: {
 
     // Create ITreeNode from IItem
     const treeNode: ITreeNode<IItem<T>> = {
-      ...node,
       id: nodeId,
       label,
       ref: node,
     }
 
-    // Upsert treeNodeMetaById
-    const existingMeta = treeNodeMetaById[nodeId]
-    const nodeMeta: ITreeNodeMeta = {
+    // Upsert nodeMetaById
+    const isExpanded = level < (collapseConfig?.expandedLevelOnInit ?? 0)
+
+    const existingMeta = nodeMetaById.value[nodeId]
+    nodeMetaById.value[nodeId] = {
       level,
       path: nodePath,
-      isChildrenLoaded,
-      isCollapsed: existingMeta?.isCollapsed ?? true,
+      isChildrenLoaded: existingMeta?.isChildrenLoaded ?? isChildrenLoaded,
+      isCollapsed: existingMeta?.isCollapsed ?? !isExpanded,
       isLoading: existingMeta?.isLoading ?? false,
     }
-
-    treeNodeMetaById[nodeId] = nodeMeta
 
     // Add node to flattened array
     flattenedNodes.push(treeNode)
 
     // Recursively process children if they exist
     if (children && children.length > 0) {
-      traverseNodes({
+      await traverseNodes({
         flattenedNodes,
         nodes: children,
         childrenKey,
-        parentKey,
         idKey,
         labelKey,
         level: level + 1,
         path: nodePath,
-        treeNodeMetaById,
-        collapsingConfig,
+        nodeMetaById,
+        collapseConfig,
+        sortingConfig,
       })
     }
-  })
+  }
 
   return flattenedNodes
 }
 
-export function flattenTreeNodes<T extends IItem = IItem>(payload: {
+export async function flattenTreeNodes<T extends IItem = IItem>(payload: {
   nodes: IItem<T>[]
+  parent?: ITreeNode<IItem<T>> | null
+
+  // Keys
   childrenKey: string
-  parentKey: string
   idKey: string
   labelKey?: string
-  collapsingConfig?: ITreeProps<T>['collapsingConfig']
-  treeNodeMetaById: Record<ITreeNode['id'], ITreeNodeMeta>
-}): ITreeNode<IItem<T>>[] {
-  console.log('Flattening tree nodes...')
+  nodeMetaById: Ref<Record<ITreeNode['id'], ITreeNodeMeta>>
+
+  // Configs
+  collapseConfig?: ITreeProps<T>['collapseConfig']
+  sortingConfig?: ITreeProps<T>['sortingConfig']
+}): Promise<ITreeNode<IItem<T>>[]> {
+  const { nodeMetaById, parent } = payload
+
+  const args: IItem = {}
+  if (parent) {
+    const { level = 0, path } = nodeMetaById.value[parent.id] ?? {}
+
+    args.level = level + 1
+    args.path = path
+  }
 
   const _nodes: ITreeNode<IItem<T>>[] = []
-  const flattenedNodes = traverseNodes({
+  const flattenedNodes = await traverseNodes({
     ...payload,
+    ...args,
     flattenedNodes: _nodes,
   })
 

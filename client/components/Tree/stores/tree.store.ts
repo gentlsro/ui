@@ -7,6 +7,7 @@ import { useSearching } from '$utils'
 // Types
 import type { ITreeProps } from '../types/tree-props.type'
 import type { ITreeEmitFncs } from '../types/tree-emit-fncs.type'
+import type { ITreeNode } from '../types/tree-node.type'
 import type { ITreeNodeMeta } from '../types/tree-node-meta.type'
 import type { ITreeDragMeta } from '../types/tree-drag-meta.type'
 

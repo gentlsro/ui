@@ -1,4 +1,10 @@
 <script setup lang="ts">
+// Types
+import type { ITreeNode } from './types/tree-node.new.type'
+
+// Functions
+import { toggleNodeCollapse } from './functions/toggle-node-collapse'
+
 // Store
 import { useTreeStore } from './stores/tree.store.new'
 
@@ -9,13 +15,13 @@ type IProps = {
 const props = defineProps<IProps>()
 
 // Store
+const store = useTreeStore()
 const {
   nodeMetaById,
-  collapseBtnProps,
   childrenKey,
-  collapsingConfig,
+  collapseConfig,
   maxLevel,
-} = useTreeStore()
+} = store
 
 // Layout
 const nodeMeta = computed(() => {
@@ -28,7 +34,7 @@ const collapseBtnClass = computed(() => {
   }
 
   const { isChildrenLoaded, level } = nodeMeta.value
-  const { collapseBtnTakesSpace } = collapsingConfig.value ?? {}
+  const { btnTakesSpace } = collapseConfig.value ?? {}
 
   // Over max depth level
   const isOverMaxLevel = level >= (maxLevel.value ?? Number.MAX_SAFE_INTEGER)
@@ -38,31 +44,28 @@ const collapseBtnClass = computed(() => {
   }
 
   // Check if has children
-  const hasChildren = !isChildrenLoaded || get(props.node, childrenKey.value)?.length
-  console.log('🚀 ~ hasChildren:', props.node.id, hasChildren)
+  const hasChildren = !isChildrenLoaded || get(props.node.ref, childrenKey.value)?.length
 
   if (hasChildren) {
     return 'visible'
   }
 
-  return collapseBtnTakesSpace ? 'invisible' : '!hidden'
+  return btnTakesSpace ? 'invisible' : '!hidden'
 })
 
 function handleToggleCollapse() {
-  if (nodeMetaById.value[props.node.id]) {
-    nodeMetaById.value[props.node.id]!.isCollapsed = !nodeMeta.value?.isCollapsed
-    nodeMetaById.value[props.node.id]!.isChildrenLoaded = true
-  }
+  toggleNodeCollapse({ node: props.node, getStore: () => store })
 }
 </script>
 
 <template>
   <Btn
-    v-bind="collapseBtnProps"
+    v-bind="collapseConfig?.btnProps"
     icon="i-flowbite:chevron-right-outline !h-5 !w-5"
     class="tree-collapse-btn"
     :class="collapseBtnClass"
-    @click="handleToggleCollapse"
+    :loading="nodeMeta?.isLoading"
+    @click.stop.prevent="handleToggleCollapse"
   />
 </template>
 

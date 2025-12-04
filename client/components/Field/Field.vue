@@ -37,7 +37,7 @@ const hasContent = computed(() => {
     return props.hasContent
   }
 
-  return props.placeholder || !!props.modelValue
+  return !!(props.placeholder || !!props.modelValue)
 })
 
 defineExpose({

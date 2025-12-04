@@ -25,7 +25,7 @@ export function useMenuUtils() {
       'transitionDuration',
       'target',
       'referenceTarget',
-      'virtualConfiguration',
+      'virtualConfig',
       'virtualDimensions',
     ])
   }

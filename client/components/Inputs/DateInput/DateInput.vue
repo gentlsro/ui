@@ -27,7 +27,6 @@ defineEmits<{
 const { getCurrentLocaleDateFormat } = useLocale()
 const { formatDate, parseDate } = useDateUtils()
 
-// Utils
 const mergedProps = computed(() => {
   return getComponentMergedProps('dateInput', props)
 })
@@ -111,6 +110,7 @@ function isMaskString(val?: string) {
 }
 
 // Layout
+const readonly = toRef(props, 'readonly')
 const preventSync = autoResetRef(false, 50)
 
 function handleDateSelect(val: Dayjs) {

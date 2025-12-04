@@ -1,0 +1,160 @@
+<script setup lang="ts">
+// Types
+import type { ITreeEmits } from './types/tree-emits.new.type'
+import type { ITreeProps } from './types/tree-props.new.type'
+
+// Composables
+import { useTreeKeyboard } from './composables/useTreeKeyboard.new'
+
+// Functions
+import { treeGetExposed } from './functions/tree-get-exposed.new'
+import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
+
+// Store
+import { useTreeStore } from './stores/tree.store.new'
+
+// Constants
+import { TREE_INJECTION_KEY } from './constants/tree-injection-key.constant'
+
+const props = withDefaults(defineProps<ITreeProps>(), {
+  ...getComponentProps('treeNew'),
+})
+
+const emits = defineEmits<ITreeEmits>()
+
+// Init
+provideLocal(TREE_INJECTION_KEY, generateUUID())
+
+// Utils
+const mergedProps = computed(() => {
+  return getComponentMergedProps('treeNew', props)
+})
+
+// Store
+const {
+  init,
+  emits: storeEmits,
+  treeEl,
+  search,
+  nodesVisible,
+  dndConfig,
+  loadChildrenConfig,
+  collapseConfig,
+  selectionConfig,
+  searchConfig,
+  actionsConfig,
+  sortingConfig,
+  ui,
+} = useTreeStore({ treeProps: props })
+
+// Syncing merged props with store
+syncRef(toRef(mergedProps.value, 'ui'), ui, { direction: 'ltr' })
+
+syncRef(toRef(mergedProps.value, 'searchConfig'), searchConfig, { direction: 'ltr' })
+syncRef(toRef(mergedProps.value, 'actionsConfig'), actionsConfig, { direction: 'ltr' })
+syncRef(toRef(mergedProps.value, 'dndConfig'), dndConfig, { direction: 'ltr' })
+syncRef(toRef(mergedProps.value, 'loadChildrenConfig'), loadChildrenConfig, { direction: 'ltr' })
+syncRef(toRef(mergedProps.value, 'collapseConfig'), collapseConfig, { direction: 'ltr' })
+syncRef(toRef(mergedProps.value, 'selectionConfig'), selectionConfig, { direction: 'ltr' })
+syncRef(toRef(mergedProps.value, 'sortingConfig'), sortingConfig, { direction: 'ltr' })
+
+// Init keyboard navigation
+if (!props.noKeyboard) {
+  useTreeKeyboard()
+}
+// Emits
+storeEmits.value = {
+  nodeClick: payload => emits('click:node', payload),
+  nodeFocus: payload => emits('focus:node', payload),
+  nodeBlur: payload => emits('blur:node', payload),
+  nodeSelect: payload => emits('select:node', payload),
+  nodeUnselect: payload => emits('unselect:node', payload),
+}
+
+defineExpose(treeGetExposed())
+
+// Init
+await init()
+</script>
+
+<template>
+  <div
+    ref="treeEl"
+    class="tree"
+    :class="mergedProps.ui?.treeClass"
+    :style="mergedProps.ui?.treeStyle"
+  >
+    <slot
+      v-if="searchConfig?.enabled"
+      name="search"
+      :ui="mergedProps.ui"
+      :search-config="mergedProps.searchConfig"
+      :actions-config="mergedProps.actionsConfig"
+    >
+      <TreeSearchNew
+        v-model:search="search"
+        :search-config="mergedProps.searchConfig"
+        :actions-config="mergedProps.actionsConfig"
+        :ui="mergedProps.ui"
+      >
+        <template #actions>
+          <slot name="actions" />
+        </template>
+      </TreeSearchNew>
+    </slot>
+
+    <VirtualScrollerVertical
+      class="tree__content"
+      :rows="nodesVisible"
+      :class="mergedProps.ui?.treeContentClass"
+      :style="mergedProps.ui?.treeContentStyle"
+      v-bind="mergedProps.scrollerConfig"
+      :row-height="mergedProps.scrollerConfig?.rowHeight"
+    >
+      <template #default="{ row, index }">
+        <TreeNodeNew
+          :node="row"
+          :index
+          :connectors
+          :ui="mergedProps.ui"
+          :node-el
+        >
+          <template #content>
+            <slot
+              name="node"
+              :node="row"
+              :index
+            />
+          </template>
+        </TreeNodeNew>
+      </template>
+
+      <!-- Drop indicator -->
+      <template
+        v-if="dndConfig?.enabled"
+        #inner
+      >
+        <TreeDropIndicatorNew />
+      </template>
+    </VirtualScrollerVertical>
+
+    <slot name="no-data">
+      <TreeNoData
+        v-if="nodesVisible.length === 0"
+        :ui="mergedProps.ui"
+      />
+    </slot>
+
+    <slot name="inner" />
+  </div>
+</template>
+
+<style scoped>
+.tree {
+  @apply flex flex-col;
+
+  &__content {
+    @apply flex flex-col grow;
+  }
+}
+</style>
