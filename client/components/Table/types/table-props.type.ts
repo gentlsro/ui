@@ -555,9 +555,8 @@ export type ITableProps<
   splitRows?: Array<{ breakpoint: number, count: number }>
 
   /**
-   * Key for the local storage, if not provided, the key will be generated
-   * based on the parent component of the table
-   * use `null` to disable this functionality
+   * Key for the local storage, if not provided (or `null` is used), the key
+   * will be generated based on the parent component of the table
    */
   storageKey?: string | null
 
