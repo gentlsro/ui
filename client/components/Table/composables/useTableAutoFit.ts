@@ -23,8 +23,8 @@ export function useTableAutoFit() {
     ev?: Partial<Pick<PointerEvent, 'shiftKey' | 'ctrlKey' | 'metaKey'>>,
     options?: { mode?: 'fit' | 'stretch' | 'justify' | 'fit-with-header' | null },
   ) {
+    console.log('💀 Autofitting columns...')
     const { mode = uiState.value.table?.fit } = options ?? {}
-    console.log('🚀 ~ fitColumns ~ mode:', mode)
     if (!ev && !mode) {
       return
     }

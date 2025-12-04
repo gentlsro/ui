@@ -17,7 +17,6 @@ export function tableInitialize() {
 
   function autoFit() {
     let mode: 'fit' | 'stretch' | 'justify' | 'fit-with-header' | null | undefined
-    console.log('🚀 ~ autoFit ~ autofitConfig.value?.onInit:', autofitConfig.value?.onInit)
 
     if (autofitConfig.value?.onInit === 'forced') {
       mode = autofitConfig.value.mode
