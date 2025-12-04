@@ -385,6 +385,7 @@ const [
 
   // Column initialization
   const columnsMerged = computedWithControl(
+    () => [],
     // () => [apiColumns.value, propsColumns.value],
     () => {
       console.log('👀 Columns merging watcher...')
