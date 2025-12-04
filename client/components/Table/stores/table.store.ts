@@ -384,14 +384,22 @@ const [
   })
 
   // Column initialization
+  let isFirst = true
   const columnsMerged = computedWithControl(
-    () => [apiColumns.value],
-    () => tableMergeColumns({
-      propsColumns: propsColumns.value,
-      apiColumns: apiColumns.value,
-      stateColumns: state.value.columns,
-      useState: isAutoSaveSchema.value && !noState.value,
-    }),
+    () => [apiColumns.value, propsColumns.value],
+    () => {
+      if (isFirst) {
+        isFirst = false
+        return
+      }
+
+      tableMergeColumns({
+        propsColumns: propsColumns.value,
+        apiColumns: apiColumns.value,
+        stateColumns: state.value.columns,
+        useState: isAutoSaveSchema.value && !noState.value,
+      })
+    },
     { immediate: false },
   )
 
