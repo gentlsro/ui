@@ -392,6 +392,7 @@ const [
       stateColumns: state.value.columns,
       useState: isAutoSaveSchema.value && !noState.value,
     }),
+    { immediate: false },
   )
 
   // Manually trigger at the initialization
