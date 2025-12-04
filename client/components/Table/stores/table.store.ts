@@ -32,7 +32,7 @@ import type HorizontalScroller from '../../Scroller/HorizontalScroller.vue'
 
 type IConfig = {
   tableProps?: ITableProps
-  storageKey?: string
+  storageKey?: string | null
 }
 
 const [
@@ -183,7 +183,7 @@ const [
   }
 
   // SECTION State
-  const state = useLocalStorage(_storageKey, {
+  const defaultState = {
     columns: [] as ITableStateColumn[],
     layouts: [] as ITableLayout[],
     layoutDefault: undefined as ITableLayout | undefined,
@@ -197,7 +197,11 @@ const [
      * a component or similar.
      */
     customData: {} as IItem,
-  })
+  }
+
+  const state = !storageKey
+    ? ref(defaultState)
+    : useLocalStorage(_storageKey, defaultState)
 
   const customData = computed({
     get() {
@@ -335,10 +339,21 @@ const [
     return (currentPage.value - 1) * pageSize
   })
 
-  whenever(
-    () => paginationConfig.value?.pageSize,
-    pageSize => { currentPage.value = Math.floor(skip.value / pageSize) + 1 },
-  )
+  watch(() => paginationConfig.value?.pageSize, (newPageSize, oldPageSize) => {
+    if (!oldPageSize) {
+      return
+    }
+
+    if (newPageSize !== oldPageSize) {
+      const _currentPage = currentPage.value || 1
+      const currentSkip = (_currentPage - 1) * oldPageSize
+      const newPageNumber = Math.floor(currentSkip / (newPageSize ?? 0)) + 1
+
+      if (currentPage.value !== undefined) {
+        currentPage.value = newPageNumber
+      }
+    }
+  })
 
   // !SECTION
 
