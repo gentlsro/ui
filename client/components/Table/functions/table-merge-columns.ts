@@ -11,13 +11,19 @@ export function tableMergeColumns(payload: {
   apiColumns?: Partial<TableColumn<any>>[]
   stateColumns?: ITableStateColumn[]
   useState?: boolean
+  isMetaLoading?: boolean
 }) {
   const {
     propsColumns = [],
     apiColumns = [],
     stateColumns = [],
     useState = true,
+    isMetaLoading = false,
   } = payload
+
+  if (isMetaLoading) {
+    return []
+  }
 
   const colFields = uniq([...propsColumns, ...apiColumns, ...stateColumns]
     .map(col => col.field))
@@ -29,7 +35,7 @@ export function tableMergeColumns(payload: {
 
     // Make sure to remove columns that are only in the state but not in any other sources
     // But only if there actually are some api columns
-    if (apiColumns.length && !apiCol && !propsCol) {
+    if ((apiColumns.length || !isMetaLoading) && !apiCol && !propsCol) {
       return null
     }
 
