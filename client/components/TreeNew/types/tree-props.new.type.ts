@@ -230,17 +230,17 @@ export type ITreeProps<T extends IItem = IItem> = {
 
     /**
      * Function that is called before a node is moved
-     * Must return the (adjusted) node or `false` to prevent the move
+     * Must return the (adjusted) node or throw an error to prevent the move
      *
      * Use-case: Call API
      */
-    onBeforeMoved?: (payload: {
+    onBeforeMove?: (payload: {
       node: ITreeNode<T>
       target?: ITreeNode<T> | null
       targetParent?: ITreeNode<T> | null
       nodeById: Record<string, ITreeNode<T>>
       nodeMetaById?: Record<string, ITreeNodeMeta>
-    }) => ITreeNode<T> | Promise<ITreeNode<T>> | false | Promise<false>
+    }) => T | Promise<T>
 
     /**
      * Function that is called when a node is moved

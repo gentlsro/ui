@@ -17,7 +17,7 @@ export async function moveNode<T extends IItem = IItem>(payload: {
   mode: 'parent' | 'place'
   getStore: () => ReturnType<typeof useTreeStore<T>>
 }) {
-  let { nodeToMove, getStore, dragMeta, mode } = payload
+  const { nodeToMove, getStore, dragMeta, mode } = payload
   const { target: _target, placement } = dragMeta
   const target = _target as ITreeNode<T> | null | undefined
   let targetParent: ITreeNode<T> | { id: '__ROOT__' } | null | undefined = dragMeta.targetParent as ITreeNode<T> | { id: '__ROOT__' } | null | undefined
@@ -38,7 +38,7 @@ export async function moveNode<T extends IItem = IItem>(payload: {
 
   // When moving above a parent node, we need to recalculate the parent target
   if (target && mode === 'place' && target === targetParent && placement === 'above') {
-    const parentTargetParent = getParentsFromPath<T>({
+    const parentTargetParent = getParentsFromPath({
       childrenKey: childrenKey.value,
       nodeById: nodeById.value,
       path: nodeMetaById.value[target?.id]?.path ?? '',
@@ -51,23 +51,24 @@ export async function moveNode<T extends IItem = IItem>(payload: {
     }
   }
 
-  if (dndConfig.value?.onBeforeMoved) {
-    const result = await dndConfig.value?.onBeforeMoved?.({
-      node: nodeToMove,
-      target,
-      targetParent: targetParent?.id === '__ROOT__' ? null : targetParent as ITreeNode<T>,
-      nodeById: nodeById.value,
-      nodeMetaById: nodeMetaById.value,
-    })
+  if (dndConfig.value?.onBeforeMove) {
+    try {
+      const resultNode = await dndConfig.value?.onBeforeMove?.({
+        node: nodeToMove,
+        target,
+        targetParent: targetParent?.id === '__ROOT__' ? null : targetParent as ITreeNode<T>,
+        nodeById: nodeById.value,
+        nodeMetaById: nodeMetaById.value,
+      })
 
-    if (result === false) {
+      nodeToMove.ref = resultNode
+    }
+    catch {
       return
     }
-
-    nodeToMove = result
   }
 
-  let newNodes = removeNodes<T>({
+  let newNodes = removeNodes({
     model,
     nodesToRemove: [nodeToMove],
     childrenKey: childrenKey.value,
