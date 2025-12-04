@@ -398,6 +398,8 @@ const [
         return
       }
 
+      console.log('👀 Columns merging watcher...')
+
       return tableMergeColumns({
         propsColumns: propsColumns.value,
         apiColumns: apiColumns.value,
