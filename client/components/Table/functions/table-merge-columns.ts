@@ -29,7 +29,12 @@ export function tableMergeColumns(payload: {
 
     // Make sure to remove columns that are only in the state but not in any other sources
     // But only if there actually are some api columns
-    if (apiColumns.length && !apiCol && !propsCol) {
+    if (!apiCol && !propsCol) {
+      console.log('💀 Removing column', colField)
+      console.log('💀 API columns', apiCol)
+      console.log('💀 Props columns', propsCol)
+      console.log('💀 State columns', stateCol)
+
       return null
     }
 
