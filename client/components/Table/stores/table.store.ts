@@ -671,6 +671,7 @@ const [
     // When there is no `loadMetaData.fnc`, we just set empty columns
     if (!loadMetaData.value?.fnc) {
       apiColumns.value = []
+      isMetaLoading.value = false
 
       return
     }
