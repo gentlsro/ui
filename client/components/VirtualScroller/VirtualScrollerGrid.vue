@@ -81,7 +81,8 @@ const virtualColumns = computed(() => {
 })
 
 const visibleColumns = computed(() => {
-  return virtualColumns.value.map(virtualColumn => columns.value[virtualColumn.index])
+  return virtualColumns.value
+    .map(virtualColumn => columns.value[virtualColumn.index]) as TableColumn<T>[]
 })
 
 const totalWidth = computed(() => {
