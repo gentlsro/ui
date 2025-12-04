@@ -48,6 +48,15 @@ const search = defineModel<string>('search')
           data-cy="list-search"
         />
 
+        <Btn
+          size="sm"
+          icon="i-eva:close-fill !w-6 !h-6"
+          color="negative"
+          m="l-1"
+          class="mobile-close-btn"
+          @click="$hide"
+        />
+
         <slot name="right" />
       </div>
     </slot>
@@ -80,5 +89,19 @@ const search = defineModel<string>('search')
 // we put the search input on the bottom
 .selector-menu[placement^='top'] .list-search__container {
   @apply order-last;
+}
+
+.mobile-close-btn {
+  @apply hidden;
+}
+
+.dialog .list-search {
+  :deep(.input-wrapper__regular-append) {
+    @apply hidden;
+  }
+
+  .mobile-close-btn {
+    @apply flex;
+  }
 }
 </style>
