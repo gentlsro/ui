@@ -11,13 +11,19 @@ export function tableMergeColumns(payload: {
   apiColumns?: Partial<TableColumn<any>>[]
   stateColumns?: ITableStateColumn[]
   useState?: boolean
+  isLoading?: boolean
 }) {
   const {
     propsColumns = [],
     apiColumns = [],
     stateColumns = [],
     useState = true,
+    isLoading = false,
   } = payload
+
+  if (isLoading) {
+    return []
+  }
 
   const colFields = uniq([...propsColumns, ...apiColumns, ...stateColumns]
     .map(col => col.field))

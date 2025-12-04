@@ -391,15 +391,12 @@ const [
       apiColumns: apiColumns.value,
       stateColumns: state.value.columns,
       useState: isAutoSaveSchema.value && !noState.value,
+      isLoading: isMetaLoading.value || isDataLoading.value,
     }),
   )
 
   // Manually trigger at the initialization
-  nextTick(() => {
-    if (!isMetaLoading.value) {
-      columnsMerged.trigger()
-    }
-  })
+  columnsMerged.trigger()
 
   const visibleColumns = computed(() => {
     return internalColumns.value.filter(col => !col.hidden)
@@ -724,6 +721,7 @@ const [
       return
     }
 
+    isInitialLoad.value = false
     isFetchMore.value = hasMore.value && !!payload?.isFetchMore
 
     if (isOverLimit && isFetchMore.value) {
