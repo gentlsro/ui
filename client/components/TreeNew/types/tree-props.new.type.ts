@@ -99,7 +99,7 @@ export type ITreeProps<T extends IItem = IItem> = {
      */
     fnc?: (
       search: string | undefined,
-      nodes: T[],
+      nodes: ITreeNode<T>[],
     ) => ITreeNode<T>[] | Promise<ITreeNode<T>[]>
 
     /**
@@ -306,7 +306,7 @@ export type ITreeProps<T extends IItem = IItem> = {
      * will not do anything
      */
     beforeSelect?: (payload: {
-      node: T
+      node: ITreeNode<T>
       ev?: MouseEvent | KeyboardEvent
     }) => void | boolean | undefined | Promise<void | boolean | undefined>
   }

@@ -59,7 +59,7 @@ export async function selectNode<T extends IItem = IItem>(payload: {
       ]
 
       selection.value = model
-        .filter(s => !ids.includes(typeof s === 'object' ? s.id : s))
+        .filter(s => !ids.includes(typeof s === 'object' ? s.id : s)) as any
     } else {
       selection.value = undefined
     }
@@ -74,9 +74,9 @@ export async function selectNode<T extends IItem = IItem>(payload: {
         ...model,
         isEmitKey ? node.id : node,
         ...(isEmitKey ? children.map(c => c.id) : children),
-      ]
+      ] as any
     } else {
-      selection.value = isEmitKey ? node.id : node
+      selection.value = (isEmitKey ? node.id : node) as any
     }
 
     emits.value.nodeSelect({ node, ev })

@@ -3,7 +3,7 @@ import type { ITreeNode } from '../types/tree-node.new.type'
 
 export function getParentsFromPath<T extends IItem = IItem>(payload: {
   path: string
-  nodeById: Record<string, ITreeNode<T>>
+  nodeById: Record<ITreeNode<T>['id'], ITreeNode<T>>
   childrenKey: string
 }): ITreeNode<T>[] {
   const { path, nodeById, childrenKey } = payload

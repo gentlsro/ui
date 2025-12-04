@@ -21,7 +21,7 @@ const props = withDefaults(defineProps<ITreeProps<T>>(), {
   ...getComponentProps('treeNew'),
 })
 
-const emits = defineEmits<ITreeEmits>()
+const emits = defineEmits<ITreeEmits<T>>()
 
 // Init
 provideLocal(TREE_INJECTION_KEY, generateUUID())

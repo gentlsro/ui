@@ -136,7 +136,7 @@ export async function flattenTreeNodes<T extends IItem = IItem>(payload: {
 }): Promise<ITreeNode<T>[]> {
   const { nodeMetaById, parent } = payload
 
-  const args: Partial<{ level: number; path: string }> = {}
+  const args: Partial<{ level: number, path: string }> = {}
   if (parent) {
     const { level = 0, path } = nodeMetaById.value[parent.id] ?? {}
 
