@@ -26,7 +26,7 @@ export function tableInitialize() {
       return
     }
 
-    nextTick(() => fitColumns(undefined, { mode }))
+    requestAnimationFrame(() => fitColumns(undefined, { mode }))
   }
 
   tableStore.fetchAndSetMetaData()

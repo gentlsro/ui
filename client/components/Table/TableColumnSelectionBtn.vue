@@ -167,7 +167,7 @@ function handleRemove(idx: number) {
         no-edit-controls
         :ui="{
           contentClass: 'grow grid grid-cols-2 gap-2 overflow-auto',
-          controlsClass: 'p-x-0 p-b-0 p-t-1 border-t-1 border-ca',
+          controlsClass: 'flex gap-2 items-center shrink-0 p-x-0 p-b-0 p-t-1 border-t-1 border-ca',
           submitClass: '!w-auto bg-primary color-white',
         }"
         :submit-btn-props="{ size: 'sm', noUppercase: true }"
