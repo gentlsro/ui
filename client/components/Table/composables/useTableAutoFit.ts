@@ -24,6 +24,7 @@ export function useTableAutoFit() {
     options?: { mode?: 'fit' | 'stretch' | 'justify' | 'fit-with-header' | null },
   ) {
     const { mode = uiState.value.table?.fit } = options ?? {}
+    console.log('🚀 ~ fitColumns ~ mode:', mode)
     if (!ev && !mode) {
       return
     }
