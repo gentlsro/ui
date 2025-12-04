@@ -29,7 +29,7 @@ export function tableMergeColumns(payload: {
 
     // Make sure to remove columns that are only in the state but not in any other sources
     // But only if there actually are some api columns
-    if (!apiCol && !propsCol) {
+    if (apiColumns.length && !apiCol && !propsCol) {
       return null
     }
 
@@ -41,13 +41,6 @@ export function tableMergeColumns(payload: {
 
     // Merge the column objects, with given priority: state > props > api
     const col = merge({}, apiCol, propsCol, stateCol) as TableColumn<any>
-
-    if (colField === 'specialTags') {
-      console.log('💀 Col', col)
-      console.log('💀 API Col', apiCol)
-      console.log('💀 Props Col', propsCol)
-      console.log('💀 State Col', stateCol)
-    }
 
     col.misc = {
       ...col.misc,
