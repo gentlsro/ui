@@ -23,6 +23,7 @@ export function useTableAutoFit() {
     ev?: Partial<Pick<PointerEvent, 'shiftKey' | 'ctrlKey' | 'metaKey'>>,
     options?: { mode?: 'fit' | 'stretch' | 'justify' | 'fit-with-header' | null },
   ) {
+    console.log('💀 Autofitting columns...')
     const { mode = uiState.value.table?.fit } = options ?? {}
     if (!ev && !mode) {
       return
@@ -124,6 +125,10 @@ export function useTableAutoFit() {
 
     // Trigger the reactivity on columns
     internalColumns.value = [...internalColumns.value]
+
+    requestAnimationFrame(() => {
+      virtualScrollEl.value?.rerender(true)
+    })
   }
 
   return { fitColumns }

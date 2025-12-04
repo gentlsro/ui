@@ -395,7 +395,11 @@ const [
   )
 
   // Manually trigger at the initialization
-  columnsMerged.trigger()
+  nextTick(() => {
+    if (!isMetaLoading.value) {
+      columnsMerged.trigger()
+    }
+  })
 
   const visibleColumns = computed(() => {
     return internalColumns.value.filter(col => !col.hidden)
