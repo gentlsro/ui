@@ -153,7 +153,7 @@ const [
   const { uiState } = storeToRefs(useUIStore())
 
   // Utils
-  const isMetaLoading = ref(false)
+  const isMetaLoading = ref(!!tableProps?.loadMetaData?.fnc)
   const isDataLoading = ref(false)
   const isExporting = ref(false)
 
