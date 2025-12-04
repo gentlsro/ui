@@ -704,7 +704,6 @@ const [
       },
     )
 
-    columnsMerged.trigger()
     state.value.metaRaw = res
     const resModified = loadMetaData.value?.onFetch?.({ res, getStore }) ?? res
 
