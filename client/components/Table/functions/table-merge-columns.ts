@@ -24,7 +24,7 @@ export function tableMergeColumns(payload: {
   const colFields = uniq([...propsColumns, ...apiColumns, ...stateColumns]
     .map(col => col.field))
 
-  console.log(2)
+  console.log(2, isMetaLoading)
   return colFields.map(colField => {
     const propsCol = (propsColumns.find(col => col.field === colField))
     const apiCol = (apiColumns.find(col => col.field === colField))
