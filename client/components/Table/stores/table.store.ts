@@ -385,7 +385,7 @@ const [
 
   // Column initialization
   const columnsMerged = computedWithControl(
-    () => [apiColumns.value, propsColumns.value],
+    // () => [apiColumns.value, propsColumns.value],
     () => {
       console.log('👀 Columns merging watcher...')
 
@@ -698,6 +698,7 @@ const [
       },
     )
 
+    columnsMerged.trigger()
     state.value.metaRaw = res
     const resModified = loadMetaData.value?.onFetch?.({ res, getStore }) ?? res
 
