@@ -384,14 +384,10 @@ const [
   })
 
   // Column initialization
-  let isFirst = true
   const columnsMerged = computedWithControl(
     () => [apiColumns.value, propsColumns.value],
     () => {
-      if (isFirst) {
-        isFirst = false
-        return
-      }
+      console.log('👀 Columns merging watcher...')
 
       tableMergeColumns({
         propsColumns: propsColumns.value,
