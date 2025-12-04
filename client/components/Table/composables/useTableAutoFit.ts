@@ -126,6 +126,7 @@ export function useTableAutoFit() {
     internalColumns.value = [...internalColumns.value]
 
     setTimeout(() => {
+      console.log('rerendering')
       virtualScrollEl.value?.rerender(true)
     }, 100)
   }
