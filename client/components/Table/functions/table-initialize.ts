@@ -20,6 +20,8 @@ export function tableInitialize() {
 
     if (autofitConfig.value?.onInit === 'forced') {
       mode = autofitConfig.value.mode
+    } else if (autofitConfig.value?.onInit === false) {
+      return
     }
 
     if (visibleColumns.value.length > 15) {
