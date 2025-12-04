@@ -424,7 +424,7 @@ const [
     }
 
     // Merge columns from all the sources, remove duplicates
-    let cols = columnsMerged
+    let cols = columnsMerged ?? []
 
     const defaultSchema = modifiers.value?.defaultSchemaModifyFnc?.(state.value.layoutDefault?.schema ?? '')
       ?? (state.value.layoutDefault?.schema ?? '')
