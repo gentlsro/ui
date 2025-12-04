@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends IItem">
+<script setup lang="ts" generic="T extends IItem = IItem">
 import { getRect } from 'mezr'
 import { useVirtualizer } from '@tanstack/vue-virtual'
 
@@ -19,7 +19,7 @@ const emits = defineEmits<{
 }>()
 
 // Layout
-const rows = toRef(props, 'rows')
+const rows = toRef(props, 'rows') as Ref<T[]>
 const containerEl = useTemplateRef('containerEl')
 const contentEl = useTemplateRef('contentEl')
 
@@ -36,7 +36,7 @@ const rowVirtualizerOptions = computed(() => {
   }
 })
 
-const rowVirtualizer = useVirtualizer(rowVirtualizerOptions)
+const rowVirtualizer = useVirtualizer(rowVirtualizerOptions as any)
 
 const virtualRows = computed(() => {
   return rowVirtualizer.value.getVirtualItems()
@@ -153,7 +153,7 @@ defineExpose({
         >
           <!-- Content -->
           <slot
-            :row="rows[virtualRow.index]"
+            :row="rows[virtualRow.index]!"
             :index="virtualRow.index"
             :style="{ minHeight: `${rowHeight}px` }"
           />

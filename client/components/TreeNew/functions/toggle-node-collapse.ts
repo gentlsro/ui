@@ -8,9 +8,9 @@ import { insertNodes } from './insert-nodes'
 // Store
 import type { useTreeStore } from '../stores/tree.store.new'
 
-export async function toggleNodeCollapse(payload: {
-  node: ITreeNode<IItem>
-  getStore: () => ReturnType<typeof useTreeStore>
+export async function toggleNodeCollapse<T extends IItem = IItem>(payload: {
+  node: ITreeNode<T>
+  getStore: () => ReturnType<typeof useTreeStore<T>>
 }) {
   const { node, getStore } = payload
   const {
@@ -51,7 +51,7 @@ export async function toggleNodeCollapse(payload: {
           ? get(children, loadChildrenConfig.value?.payloadKey) ?? []
           : (children ?? [])
 
-        await insertNodes({
+        await insertNodes<T>({
           items,
           model,
           parent: node,

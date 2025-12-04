@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends IItem = IItem">
 // Types
 import type { ITreeNode } from './types/tree-node.new.type'
 
@@ -9,7 +9,7 @@ import { toggleNodeCollapse } from './functions/toggle-node-collapse'
 import { useTreeStore } from './stores/tree.store.new'
 
 type IProps = {
-  node: ITreeNode<IItem>
+  node: ITreeNode<T>
 }
 
 const props = defineProps<IProps>()

@@ -1,13 +1,13 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends IItem = IItem">
 // Types
 import type { ITreeNode } from './types/tree-node.new.type'
 
 // Store
 import { useTreeStore } from './stores/tree.store.new'
 
-const { treeEl, dragMeta, nodeMetaById, childrenKey } = useTreeStore()
+const { treeEl, dragMeta, nodeMetaById, childrenKey } = useTreeStore<T>()
 
-function getCss(node: Pick<ITreeNode<IItem>, 'id'>) {
+function getCss(node: Pick<ITreeNode<T>, 'id'>) {
   const path = nodeMetaById.value[node.id]?.path
 
   if (!path) {

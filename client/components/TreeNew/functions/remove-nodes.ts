@@ -6,14 +6,14 @@ import type { ITreeNodeMeta } from '../types/tree-node-meta.new.type'
 import { getChildren } from './get-children-from-path'
 import { createHierarchyFromFlattenedNodes } from './create-hierarchy-from-flattened-nodes'
 
-export function removeNodes(payload: {
+export function removeNodes<T extends IItem = IItem>(payload: {
   // Keys
   childrenKey: string
 
   // Data
-  model: Ref<IItem[]>
-  nodesToRemove: ITreeNode<IItem>[]
-  nodesFlattened: Ref<ITreeNode<IItem>[]>
+  model: Ref<T[]>
+  nodesToRemove: ITreeNode<T>[]
+  nodesFlattened: Ref<ITreeNode<T>[]>
   nodeMetaById: Record<ITreeNode['id'], ITreeNodeMeta>
 
   // Options
@@ -36,7 +36,7 @@ export function removeNodes(payload: {
   const nodesToRemoveWithChildrenIds = nodesToRemove
     .flatMap(node => [
       node,
-      ...getChildren({
+      ...getChildren<T>({
         node,
         childrenKey,
         nodesFlattened: nodesFlattened.value,

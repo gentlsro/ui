@@ -4,9 +4,9 @@ import { set } from 'lodash-es'
 import type { ITreeNode } from '../types/tree-node.new.type'
 import type { ITreeNodeMeta } from '../types/tree-node-meta.new.type'
 
-function recursivelyBuildHierarchy(payload: {
-  node: ITreeNode<IItem>
-  nodesFlattened: ITreeNode<IItem>[]
+function recursivelyBuildHierarchy<T extends IItem = IItem>(payload: {
+  node: ITreeNode<T>
+  nodesFlattened: ITreeNode<T>[]
   childrenKey: string
   nodeMetaById: Record<ITreeNode['id'], ITreeNodeMeta>
 }): void {
@@ -46,8 +46,8 @@ function recursivelyBuildHierarchy(payload: {
   })
 }
 
-export function createHierarchyFromFlattenedNodes(payload: {
-  nodesFlattened: ITreeNode<IItem>[]
+export function createHierarchyFromFlattenedNodes<T extends IItem = IItem>(payload: {
+  nodesFlattened: ITreeNode<T>[]
   childrenKey: string
   nodeMetaById: Record<ITreeNode['id'], ITreeNodeMeta>
 }) {
@@ -73,6 +73,6 @@ export function createHierarchyFromFlattenedNodes(payload: {
     })
   })
 
-  // Return the refs of root nodes (the actual IItem objects with hierarchy)
-  return rootNodes.map(node => node.ref)
+  // Return the refs of root nodes (the actual T objects with hierarchy)
+  return rootNodes.map(node => node.ref) as T[]
 }

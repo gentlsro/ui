@@ -8,10 +8,10 @@ import { getChildren } from './get-children-from-path'
 import type { useTreeStore } from '../stores/tree.store.new'
 import { isNodeSelected } from './is-node-selected'
 
-export async function selectNode(payload: {
-  node: ITreeNode<IItem>
+export async function selectNode<T extends IItem = IItem>(payload: {
+  node: ITreeNode<T>
   ev?: MouseEvent | KeyboardEvent
-  getStore: () => ReturnType<typeof useTreeStore>
+  getStore: () => ReturnType<typeof useTreeStore<T>>
 }) {
   const { node, ev, getStore } = payload
   const {
@@ -39,7 +39,7 @@ export async function selectNode(payload: {
   const isMulti = selectionConfig.value?.multi
   const isSelected = isNodeSelected({ node, selection: selection.value, idKey: 'id' })
 
-  const children = getChildren({
+  const children = getChildren<T>({
     node,
     nodesFlattened: nodesFlattened.value,
     childrenKey: childrenKey.value,

@@ -31,7 +31,7 @@ export function useTreeDragAndDrop() {
   let lastY = 0
   let startMousePosition = { x: 0, y: 0 }
 
-  function handleDragStart(payload: { item: ITreeNode, el: HTMLElement }) {
+  function handleDragStart<T extends IItem = IItem>(payload: { item: ITreeNode<T>, el: HTMLElement }) {
     // Turn off selection while dragging
     getSelection()?.removeAllRanges()
     document.documentElement.classList.add('select-none')
@@ -251,9 +251,9 @@ export function useTreeDragAndDrop() {
     return undefined
   }
 
-  function createDraggable(payload: {
+  function createDraggable<T extends IItem = IItem>(payload: {
     el: HTMLElement
-    item: ITreeNode
+    item: ITreeNode<T>
   }) {
     const { el, item } = payload
     const treeElDom = unrefElement(treeEl) as HTMLElement

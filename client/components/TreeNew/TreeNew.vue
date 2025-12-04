@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends IItem = IItem">
 // Types
 import type { ITreeEmits } from './types/tree-emits.new.type'
 import type { ITreeProps } from './types/tree-props.new.type'
@@ -15,8 +15,9 @@ import { useTreeStore } from './stores/tree.store.new'
 
 // Constants
 import { TREE_INJECTION_KEY } from './constants/tree-injection-key.constant'
+import type { ITreeNode } from './types/tree-node.new.type'
 
-const props = withDefaults(defineProps<ITreeProps>(), {
+const props = withDefaults(defineProps<ITreeProps<T>>(), {
   ...getComponentProps('treeNew'),
 })
 
@@ -27,7 +28,7 @@ provideLocal(TREE_INJECTION_KEY, generateUUID())
 
 // Utils
 const mergedProps = computed(() => {
-  return getComponentMergedProps('treeNew', props)
+  return getComponentMergedProps('treeNew', props) as ITreeProps<T>
 })
 
 // Store
@@ -49,7 +50,6 @@ const {
 
 // Syncing merged props with store
 syncRef(toRef(mergedProps.value, 'ui'), ui, { direction: 'ltr' })
-
 syncRef(toRef(mergedProps.value, 'searchConfig'), searchConfig, { direction: 'ltr' })
 syncRef(toRef(mergedProps.value, 'actionsConfig'), actionsConfig, { direction: 'ltr' })
 syncRef(toRef(mergedProps.value, 'dndConfig'), dndConfig, { direction: 'ltr' })
@@ -105,7 +105,7 @@ await init()
 
     <VirtualScrollerVertical
       class="tree__content"
-      :rows="nodesVisible"
+      :rows="(nodesVisible as T[])"
       :class="mergedProps.ui?.treeContentClass"
       :style="mergedProps.ui?.treeContentStyle"
       v-bind="mergedProps.scrollerConfig"
@@ -113,7 +113,7 @@ await init()
     >
       <template #default="{ row, index }">
         <TreeNodeNew
-          :node="row"
+          :node="(row as unknown as ITreeNode<T>)"
           :index
           :connectors
           :ui="mergedProps.ui"
@@ -122,7 +122,7 @@ await init()
           <template #content>
             <slot
               name="node"
-              :node="row"
+              :node="(row as unknown as ITreeNode<T>)"
               :index
             />
           </template>

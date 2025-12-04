@@ -56,7 +56,7 @@ export function useTreeNode<T extends IItem = IItem>(payload: ITreeNodeProps<T>)
       return ''
     }
 
-    const parents = getParentsFromPath({
+    const parents = getParentsFromPath<T>({
       path: nodeMeta.value.path,
       nodeById: nodeById.value,
       childrenKey: childrenKey.value,

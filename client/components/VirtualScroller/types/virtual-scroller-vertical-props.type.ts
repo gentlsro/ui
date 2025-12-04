@@ -1,6 +1,6 @@
 import type { VirtualizerOptions } from '@tanstack/vue-virtual'
 
-export type IVirtualScrollerVerticalProps<T extends IItem> = {
+export type IVirtualScrollerVerticalProps<T extends IItem = IItem> = {
   /**
    * The data rows
    */

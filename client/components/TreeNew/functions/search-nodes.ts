@@ -7,14 +7,14 @@ import type { ITreeProps } from '../types/tree-props.new.type'
 // Utils
 const { searchData } = useSearching()
 
-export async function searchNodes(payload: {
-  nodesFlattened: ITreeNode<IItem>[]
+export async function searchNodes<T extends IItem = IItem>(payload: {
+  nodesFlattened: ITreeNode<T>[]
   search: string
   idKey?: string
   labelKey?: string
-  searchConfig?: ITreeProps['searchConfig']
-  collapseConfig?: ITreeProps['collapseConfig']
-}): Promise<ITreeNode<IItem>[]> {
+  searchConfig?: ITreeProps<T>['searchConfig']
+  collapseConfig?: ITreeProps<T>['collapseConfig']
+}): Promise<ITreeNode<T>[]> {
   const {
     nodesFlattened,
     search,
@@ -25,10 +25,10 @@ export async function searchNodes(payload: {
   } = payload
 
   // Filter nodes
-  let nodesFiltered: ITreeNode<IItem>[] = []
+  let nodesFiltered: ITreeNode<T>[] = []
 
   if (searchConfig?.fnc) {
-    nodesFiltered = await searchConfig.fnc(search, nodesFlattened) as ITreeNode<IItem>[]
+    nodesFiltered = await searchConfig.fnc(search, nodesFlattened) as ITreeNode<T>[]
   } else {
     const fuseResult = await searchData({
       searchRef: search,
@@ -40,7 +40,7 @@ export async function searchNodes(payload: {
       },
     })
 
-    nodesFiltered = fuseResult.map(res => res.item) as ITreeNode<IItem>[]
+    nodesFiltered = fuseResult.map(res => res.item) as ITreeNode<T>[]
   }
 
   // TODO: Implement the `showCollapsedWhenSearched` logic

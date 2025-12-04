@@ -1,8 +1,8 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends IItem = IItem">
 // Types
 import type { ITreeProps } from './types/tree-props.new.type'
 
-type IProps = Pick<ITreeProps, 'ui'>
+type IProps = Pick<ITreeProps<T>, 'ui'>
 
 defineProps<IProps>()
 </script>

@@ -8,8 +8,8 @@ import type { ITreeNodeMeta } from '../types/tree-node-meta.new.type'
 const { sortData } = useSorting()
 
 async function traverseNodes<T extends IItem = IItem>(payload: {
-  flattenedNodes?: ITreeNode<IItem<T>>[]
-  nodes: IItem<T>[]
+  flattenedNodes?: ITreeNode<T>[]
+  nodes: T[]
   childrenKey: string
   idKey: string
   labelKey?: string
@@ -18,7 +18,7 @@ async function traverseNodes<T extends IItem = IItem>(payload: {
   nodeMetaById: Ref<Record<ITreeNode['id'], ITreeNodeMeta>>
   collapseConfig?: ITreeProps<T>['collapseConfig']
   sortingConfig?: ITreeProps<T>['sortingConfig']
-}): Promise<ITreeNode<IItem<T>>[]> {
+}): Promise<ITreeNode<T>[]> {
   const {
     flattenedNodes = [],
     nodes,
@@ -45,7 +45,7 @@ async function traverseNodes<T extends IItem = IItem>(payload: {
     }
 
     // Get children
-    const children = get(node, childrenKey) as IItem<T>[] | undefined
+    const children = get(node, childrenKey) as T[] | undefined
 
     // Determine if node has children using collapseConfig.hasChildrenFnc if available
     const hasChildrenFnc = collapseConfig?.hasChildrenFnc
@@ -79,7 +79,7 @@ async function traverseNodes<T extends IItem = IItem>(payload: {
     const label = labelKey ? get(node, labelKey) as string | number | undefined : nodeId
 
     // Create ITreeNode from IItem
-    const treeNode: ITreeNode<IItem<T>> = {
+    const treeNode: ITreeNode<T> = {
       id: nodeId,
       label,
       ref: node,
@@ -121,8 +121,8 @@ async function traverseNodes<T extends IItem = IItem>(payload: {
 }
 
 export async function flattenTreeNodes<T extends IItem = IItem>(payload: {
-  nodes: IItem<T>[]
-  parent?: ITreeNode<IItem<T>> | null
+  nodes: T[]
+  parent?: ITreeNode<T> | null
 
   // Keys
   childrenKey: string
@@ -133,10 +133,10 @@ export async function flattenTreeNodes<T extends IItem = IItem>(payload: {
   // Configs
   collapseConfig?: ITreeProps<T>['collapseConfig']
   sortingConfig?: ITreeProps<T>['sortingConfig']
-}): Promise<ITreeNode<IItem<T>>[]> {
+}): Promise<ITreeNode<T>[]> {
   const { nodeMetaById, parent } = payload
 
-  const args: IItem = {}
+  const args: Partial<{ level: number; path: string }> = {}
   if (parent) {
     const { level = 0, path } = nodeMetaById.value[parent.id] ?? {}
 
@@ -144,7 +144,7 @@ export async function flattenTreeNodes<T extends IItem = IItem>(payload: {
     args.path = path
   }
 
-  const _nodes: ITreeNode<IItem<T>>[] = []
+  const _nodes: ITreeNode<T>[] = []
   const flattenedNodes = await traverseNodes({
     ...payload,
     ...args,

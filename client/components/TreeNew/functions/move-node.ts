@@ -11,14 +11,16 @@ import type { useTreeStore } from '../stores/tree.store.new'
 import { createHierarchyFromFlattenedNodes } from './create-hierarchy-from-flattened-nodes'
 import { getParentsFromPath } from './get-parents-from-path'
 
-export async function moveNode(payload: {
-  nodeToMove: ITreeNode<IItem>
-  dragMeta: Pick<ITreeDragMeta<IItem>, 'target' | 'targetParent' | 'placement'>
+export async function moveNode<T extends IItem = IItem>(payload: {
+  nodeToMove: ITreeNode<T>
+  dragMeta: Pick<ITreeDragMeta<T>, 'target' | 'targetParent' | 'placement'>
   mode: 'parent' | 'place'
-  getStore: () => ReturnType<typeof useTreeStore>
+  getStore: () => ReturnType<typeof useTreeStore<T>>
 }) {
   let { nodeToMove, getStore, dragMeta, mode } = payload
-  let { target, targetParent, placement } = dragMeta
+  const { target: _target, placement } = dragMeta
+  const target = _target as ITreeNode<T> | null | undefined
+  let targetParent: ITreeNode<T> | { id: '__ROOT__' } | null | undefined = dragMeta.targetParent as ITreeNode<T> | { id: '__ROOT__' } | null | undefined
 
   const store = getStore()
   const {
@@ -36,16 +38,16 @@ export async function moveNode(payload: {
 
   // When moving above a parent node, we need to recalculate the parent target
   if (target && mode === 'place' && target === targetParent && placement === 'above') {
-    const parentTargetParent = getParentsFromPath({
+    const parentTargetParent = getParentsFromPath<T>({
       childrenKey: childrenKey.value,
       nodeById: nodeById.value,
       path: nodeMetaById.value[target?.id]?.path ?? '',
     }).at(-1)
 
     if (parentTargetParent) {
-      targetParent = parentTargetParent
+      targetParent = parentTargetParent as ITreeNode<T>
     } else {
-      targetParent = { id: '__ROOT__' }
+      targetParent = { id: '__ROOT__' } as { id: '__ROOT__' }
     }
   }
 
@@ -53,7 +55,7 @@ export async function moveNode(payload: {
     const result = await dndConfig.value?.onBeforeMoved?.({
       node: nodeToMove,
       target,
-      targetParent: targetParent?.id === '__ROOT__' ? null : targetParent as ITreeNode<IItem>,
+      targetParent: targetParent?.id === '__ROOT__' ? null : targetParent as ITreeNode<T>,
       nodeById: nodeById.value,
       nodeMetaById: nodeMetaById.value,
     })
@@ -65,7 +67,7 @@ export async function moveNode(payload: {
     nodeToMove = result
   }
 
-  let newNodes = removeNodes({
+  let newNodes = removeNodes<T>({
     model,
     nodesToRemove: [nodeToMove],
     childrenKey: childrenKey.value,
@@ -86,10 +88,10 @@ export async function moveNode(payload: {
     }
   }
 
-  const { nodes } = await insertNodes({
+  const { nodes } = await insertNodes<T>({
     model,
     items: [nodeToMove.ref],
-    nodesFlattened: ref(newNodes),
+    nodesFlattened: ref(newNodes) as Ref<ITreeNode<T>[]>,
     idKey: idKey.value,
     childrenKey: childrenKey.value,
     labelKey: labelKey.value,
@@ -97,12 +99,12 @@ export async function moveNode(payload: {
     sortingConfig: sortingConfig.value,
     nodeMetaById,
     index,
-    parent: targetParent?.id === '__ROOT__' ? null : targetParent as ITreeNode<IItem>,
+    parent: targetParent?.id === '__ROOT__' ? null : targetParent as ITreeNode<T>,
   })
 
   newNodes = nodes
 
-  model.value = createHierarchyFromFlattenedNodes({
+  model.value = createHierarchyFromFlattenedNodes<T>({
     nodesFlattened: newNodes,
     childrenKey: childrenKey.value,
     nodeMetaById: nodeMetaById.value,
@@ -111,7 +113,7 @@ export async function moveNode(payload: {
   await dndConfig.value?.onMoved?.({
     node: nodeToMove,
     target,
-    targetParent: targetParent?.id === '__ROOT__' ? null : targetParent as ITreeNode<IItem>,
+    targetParent: targetParent?.id === '__ROOT__' ? null : targetParent as ITreeNode<T>,
     nodeById: nodeById.value,
     nodeMetaById: nodeMetaById.value,
   })

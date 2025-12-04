@@ -34,7 +34,7 @@ const {
 // Layout
 const treeNodeEl = useTemplateRef('treeNodeEl')
 const treeCollapseBtnEl = useTemplateRef('treeCollapseBtnEl')
-const node = toRef(props, 'node') as Ref<ITreeNode<IItem>>
+const node = toRef(props, 'node') as Ref<ITreeNode<T>>
 
 function handleClick(ev: MouseEvent) {
   emits.value.nodeClick({ node: node.value, ev })

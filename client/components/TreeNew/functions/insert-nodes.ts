@@ -7,7 +7,7 @@ import type { ITreeNodeMeta } from '../types/tree-node-meta.new.type'
 import { flattenTreeNodes } from './flatten-tree-nodes.new'
 import { createHierarchyFromFlattenedNodes } from './create-hierarchy-from-flattened-nodes'
 
-export async function insertNodes(payload: {
+export async function insertNodes<T extends IItem = IItem>(payload: {
   // Keys
   idKey: string
   childrenKey: string
@@ -15,15 +15,15 @@ export async function insertNodes(payload: {
 
   // Data
   index: number
-  parent?: ITreeNode<IItem> | null
-  items: IItem[]
-  model: Ref<IItem[]>
-  nodesFlattened: Ref<ITreeNode<IItem>[]>
+  parent?: ITreeNode<T> | null
+  items: T[]
+  model: Ref<T[]>
+  nodesFlattened: Ref<ITreeNode<T>[]>
   nodeMetaById: Ref<Record<ITreeNode['id'], ITreeNodeMeta>>
 
   // Configs
-  collapseConfig?: ITreeProps<IItem>['collapseConfig']
-  sortingConfig?: ITreeProps<IItem>['sortingConfig']
+  collapseConfig?: ITreeProps<T>['collapseConfig']
+  sortingConfig?: ITreeProps<T>['sortingConfig']
 
   // Options
   /**
@@ -44,25 +44,25 @@ export async function insertNodes(payload: {
     model,
   } = payload
 
-  const nodes = await flattenTreeNodes({
+  const nodes = await flattenTreeNodes<T>({
     ...payload,
     parent,
     nodes: items,
-  }) as ITreeNode<IItem>[]
+  })
 
   const newNodes = nodesFlattened.value.toSpliced(index + 1, 0, ...nodes)
 
   if (commit) {
     if (commit === 'with-next-tick') {
       nextTick(() => {
-        model.value = createHierarchyFromFlattenedNodes({
+        model.value = createHierarchyFromFlattenedNodes<T>({
           nodesFlattened: newNodes,
           childrenKey,
           nodeMetaById: nodeMetaById.value,
         })
       })
     } else {
-      model.value = createHierarchyFromFlattenedNodes({
+      model.value = createHierarchyFromFlattenedNodes<T>({
         nodesFlattened: newNodes,
         childrenKey,
         nodeMetaById: nodeMetaById.value,
@@ -70,5 +70,5 @@ export async function insertNodes(payload: {
     }
   }
 
-  return { nodes: newNodes, added: nodes }
+  return { nodes: newNodes as ITreeNode<T>[], added: nodes }
 }

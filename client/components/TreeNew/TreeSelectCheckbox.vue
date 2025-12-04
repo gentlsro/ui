@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends IItem = IItem">
 // Types
 import type { ITreeNode } from './types/tree-node.new.type'
 import type { ITreeProps } from './types/tree-props.new.type'
@@ -10,8 +10,8 @@ import { useTreeStore } from './stores/tree.store.new'
 import { selectNode } from './functions/select-node'
 import { isNodeSelected } from './functions/is-node-selected'
 
-type IProps = Pick<ITreeProps, 'ui'> & {
-  node: ITreeNode<IItem>
+type IProps = Pick<ITreeProps<T>, 'ui'> & {
+  node: ITreeNode<T>
 }
 
 const props = defineProps<IProps>()
