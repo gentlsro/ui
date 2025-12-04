@@ -387,6 +387,7 @@ const [
   const columnsMerged = computedWithControl(
     () => [apiColumns.value, propsColumns.value],
     () => tableMergeColumns({
+      isMetaLoading: isMetaLoading.value,
       propsColumns: propsColumns.value,
       apiColumns: apiColumns.value,
       stateColumns: state.value.columns,
