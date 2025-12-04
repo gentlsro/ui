@@ -384,18 +384,19 @@ const [
   })
 
   // Column initialization
-  let isFirst = true
+
+  // The `immediate` flag in `computedWithControl` seems to be bugged
+  // (= it triggers on init anyway...), so we need to have our own flag to prevent
+  // the first trigger from happening
+  let _isFirstColumnsMerging = true
   const columnsMerged = computedWithControl(
-    () => [],
-    // () => [apiColumns.value, propsColumns.value],
+    () => [apiColumns.value, propsColumns.value],
     () => {
-      if (isFirst) {
-        isFirst = false
+      if (_isFirstColumnsMerging) {
+        _isFirstColumnsMerging = false
 
         return
       }
-
-      console.log('👀 Columns merging watcher...')
 
       return tableMergeColumns({
         propsColumns: propsColumns.value,
@@ -404,11 +405,8 @@ const [
         useState: isAutoSaveSchema.value && !noState.value,
       })
     },
-    { immediate: false },
+    // { immediate: false }, // <-- this is bugged
   )
-
-  // Manually trigger at the initialization
-  // columnsMerged.trigger()
 
   const visibleColumns = computed(() => {
     return internalColumns.value.filter(col => !col.hidden)
