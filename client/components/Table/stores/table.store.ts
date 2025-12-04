@@ -32,7 +32,7 @@ import type HorizontalScroller from '../../Scroller/HorizontalScroller.vue'
 
 type IConfig = {
   tableProps?: ITableProps
-  storageKey?: string
+  storageKey?: string | null
 }
 
 const [
@@ -183,7 +183,7 @@ const [
   }
 
   // SECTION State
-  const state = useLocalStorage(_storageKey, {
+  const defaultState = {
     columns: [] as ITableStateColumn[],
     layouts: [] as ITableLayout[],
     layoutDefault: undefined as ITableLayout | undefined,
@@ -197,7 +197,11 @@ const [
      * a component or similar.
      */
     customData: {} as IItem,
-  })
+  }
+
+  const state = !storageKey
+    ? ref(defaultState)
+    : useLocalStorage(_storageKey, defaultState)
 
   const customData = computed({
     get() {
