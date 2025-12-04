@@ -125,9 +125,9 @@ export function useTableAutoFit() {
     // Trigger the reactivity on columns
     internalColumns.value = [...internalColumns.value]
 
-    requestAnimationFrame(() => {
+    setTimeout(() => {
       virtualScrollEl.value?.rerender(true)
-    })
+    }, 100)
   }
 
   return { fitColumns }
