@@ -339,10 +339,21 @@ const [
     return (currentPage.value - 1) * pageSize
   })
 
-  whenever(
-    () => paginationConfig.value?.pageSize,
-    pageSize => { currentPage.value = Math.floor(skip.value / pageSize) + 1 },
-  )
+  watch(() => paginationConfig.value?.pageSize, (newPageSize, oldPageSize) => {
+    if (!oldPageSize) {
+      return
+    }
+
+    if (newPageSize !== oldPageSize) {
+      const _currentPage = currentPage.value || 1
+      const currentSkip = (_currentPage - 1) * oldPageSize
+      const newPageNumber = Math.floor(currentSkip / (newPageSize ?? 0)) + 1
+
+      if (currentPage.value !== undefined) {
+        currentPage.value = newPageNumber
+      }
+    }
+  })
 
   // !SECTION
 
