@@ -385,7 +385,7 @@ const [
 
   // Column initialization
   const columnsMerged = computedWithControl(
-    () => [apiColumns.value, propsColumns.value],
+    () => [apiColumns.value],
     () => tableMergeColumns({
       propsColumns: propsColumns.value,
       apiColumns: apiColumns.value,
