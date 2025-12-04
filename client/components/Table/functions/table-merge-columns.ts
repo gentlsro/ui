@@ -11,17 +11,17 @@ export function tableMergeColumns(payload: {
   apiColumns?: Partial<TableColumn<any>>[]
   stateColumns?: ITableStateColumn[]
   useState?: boolean
-  isMetaLoading?: boolean
+  isLoading?: boolean
 }) {
   const {
     propsColumns = [],
     apiColumns = [],
     stateColumns = [],
     useState = true,
-    isMetaLoading = false,
+    isLoading = false,
   } = payload
 
-  if (isMetaLoading) {
+  if (isLoading) {
     return []
   }
 

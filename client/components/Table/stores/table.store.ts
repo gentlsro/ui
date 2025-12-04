@@ -391,7 +391,7 @@ const [
       apiColumns: apiColumns.value,
       stateColumns: state.value.columns,
       useState: isAutoSaveSchema.value && !noState.value,
-      isMetaLoading: isMetaLoading.value,
+      isLoading: isMetaLoading.value || isDataLoading.value,
     }),
   )
 
