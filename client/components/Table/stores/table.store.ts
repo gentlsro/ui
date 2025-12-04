@@ -391,12 +391,11 @@ const [
       apiColumns: apiColumns.value,
       stateColumns: state.value.columns,
       useState: isAutoSaveSchema.value && !noState.value,
-      isLoading: isMetaLoading.value || isDataLoading.value,
     }),
   )
 
   // Manually trigger at the initialization
-  columnsMerged.trigger()
+  // columnsMerged.trigger()
 
   const visibleColumns = computed(() => {
     return internalColumns.value.filter(col => !col.hidden)
@@ -675,6 +674,7 @@ const [
     // When there is no `loadMetaData.fnc`, we just set empty columns
     if (!loadMetaData.value?.fnc) {
       apiColumns.value = []
+      columnsMerged.trigger()
 
       return
     }
