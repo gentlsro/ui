@@ -45,6 +45,13 @@ export function tableMergeColumns(payload: {
     // Merge the column objects, with given priority: state > props > api
     const col = merge({}, apiCol, propsCol, stateCol) as TableColumn<any>
 
+    if (colField === 'name') {
+      console.log('💀 API Col', apiCol)
+      console.log('💀 Props Col', propsCol)
+      console.log('💀 State Col', stateCol)
+      console.log('💀 Col', col)
+    }
+
     col.misc = {
       ...col.misc,
       isApiCol: !!apiCol,
