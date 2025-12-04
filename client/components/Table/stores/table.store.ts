@@ -153,7 +153,7 @@ const [
   const { uiState } = storeToRefs(useUIStore())
 
   // Utils
-  const isMetaLoading = ref(false)
+  const isMetaLoading = ref(!!tableProps?.loadMetaData?.fnc)
   const isDataLoading = ref(false)
   const isExporting = ref(false)
 
@@ -384,31 +384,16 @@ const [
   })
 
   // Column initialization
-  let isFirst = true
   const columnsMerged = computedWithControl(
-    () => [],
-    // () => [apiColumns.value, propsColumns.value],
-    () => {
-      if (isFirst) {
-        isFirst = false
-
-        return
-      }
-
-      console.log('👀 Columns merging watcher...')
-
-      return tableMergeColumns({
-        propsColumns: propsColumns.value,
-        apiColumns: apiColumns.value,
-        stateColumns: state.value.columns,
-        useState: isAutoSaveSchema.value && !noState.value,
-      })
-    },
-    { immediate: false },
+    () => [apiColumns.value, propsColumns.value],
+    () => tableMergeColumns({
+      isMetaLoading: isMetaLoading.value,
+      propsColumns: propsColumns.value,
+      apiColumns: apiColumns.value,
+      stateColumns: state.value.columns,
+      useState: isAutoSaveSchema.value && !noState.value,
+    }),
   )
-
-  // Manually trigger at the initialization
-  // columnsMerged.trigger()
 
   const visibleColumns = computed(() => {
     return internalColumns.value.filter(col => !col.hidden)
@@ -432,7 +417,7 @@ const [
     }
 
     // Merge columns from all the sources, remove duplicates
-    let cols = columnsMerged ?? []
+    let cols = columnsMerged
 
     const defaultSchema = modifiers.value?.defaultSchemaModifyFnc?.(state.value.layoutDefault?.schema ?? '')
       ?? (state.value.layoutDefault?.schema ?? '')
@@ -687,7 +672,6 @@ const [
     // When there is no `loadMetaData.fnc`, we just set empty columns
     if (!loadMetaData.value?.fnc) {
       apiColumns.value = []
-      columnsMerged.trigger()
 
       return
     }
@@ -706,7 +690,6 @@ const [
       },
     )
 
-    columnsMerged.trigger()
     state.value.metaRaw = res
     const resModified = loadMetaData.value?.onFetch?.({ res, getStore }) ?? res
 
