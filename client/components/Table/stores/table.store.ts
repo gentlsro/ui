@@ -671,7 +671,6 @@ const [
     // When there is no `loadMetaData.fnc`, we just set empty columns
     if (!loadMetaData.value?.fnc) {
       apiColumns.value = []
-      isMetaLoading.value = false
 
       return
     }
@@ -689,6 +688,7 @@ const [
         },
       },
     )
+    console.log(1)
 
     state.value.metaRaw = res
     const resModified = loadMetaData.value?.onFetch?.({ res, getStore }) ?? res
@@ -700,6 +700,7 @@ const [
     } = loadMetaData.value ?? {}
 
     apiColumns.value = get(resModified, columnsKey) ?? apiColumns.value ?? []
+    console.log(3)
     state.value.layouts = get(resModified, layoutsKey) ?? state.value.layouts
     state.value.layoutDefault = get(resModified, defaultLayoutKey) ?? state.value.layoutDefault
 
