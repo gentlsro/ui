@@ -104,6 +104,7 @@ await init()
     </slot>
 
     <VirtualScrollerVertical
+      v-if="!loading"
       class="tree__content"
       :rows="(nodesVisible as T[])"
       :class="mergedProps.ui?.treeContentClass"
@@ -140,9 +141,13 @@ await init()
 
     <slot name="no-data">
       <TreeNoData
-        v-if="nodesVisible.length === 0"
+        v-if="nodesVisible.length === 0 && !loading"
         :ui="mergedProps.ui"
       />
+    </slot>
+
+    <slot name="loading">
+      <TreeLoading v-if="loading" />
     </slot>
 
     <slot name="inner" />
@@ -151,10 +156,10 @@ await init()
 
 <style scoped>
 .tree {
-  @apply flex flex-col;
+  @apply flex flex-col overflow-auto;
 
   &__content {
-    @apply flex flex-col grow;
+    @apply flex flex-col grow overflow-auto;
   }
 }
 </style>

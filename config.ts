@@ -442,7 +442,7 @@ export const defaultComponentsConfig = {
       },
       ui: {
         submitWrapperClass: 'm-l-auto',
-        contentClass: 'flex flex-col grow p-2 gap-2 overflow-auto',
+        contentClass: 'relative flex flex-col grow p-2 gap-2 overflow-auto',
         controlsClass: [
           'sticky flex items-center shrink-0 gap-2 bottom-0',
 
@@ -1293,7 +1293,10 @@ export const defaultComponentsConfig = {
       search: '',
       childrenKey: 'children',
       parentKey: 'parentId',
-      searchConfig: { enabled: true, fnc: undefined },
+      searchConfig: {
+        enabled: true,
+        fnc: undefined,
+      },
       selection: undefined,
       selectionConfig: {
         multi: false,
@@ -1306,12 +1309,12 @@ export const defaultComponentsConfig = {
         treeActionsClass: 'flex gap-1 items-center',
         noDataClass: 'p-x-4 p-b-2 color-ca font-rem-14',
         treeContentClass: 'p-y-2.5',
-        treeClass: ' p-2 rounded-custom bg-white dark:bg-dark-950',
+        treeClass: 'p-2 rounded-custom bg-white dark:bg-dark-950',
         nodePadding: '1rem',
         nodeClass: ({ isSelected, isFocused }) => {
           const classes = [
             // Base
-            'flex gap-1 p-x-2 items-start rounded-custom border-1 border-white dark:border-dark-950 w-full',
+            'flex gap-1 p-x-2 items-start rounded-custom border-1 border-white dark:border-dark-950 w-full overflow-auto',
 
             // Hover
             'hover:bg-slate-100 dark:hover:bg-slate-800',
@@ -1327,7 +1330,7 @@ export const defaultComponentsConfig = {
 
           return classes
         },
-        nodeContentClass: () => 'flex flex-col leading-20px p-y-1.5',
+        nodeContentClass: () => 'overflow-auto flex flex-col leading-20px p-y-1.5',
       },
       scrollerConfig: { rowHeight: 32 },
       actionsConfig: {

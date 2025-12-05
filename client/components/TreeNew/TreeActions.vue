@@ -23,7 +23,7 @@ const store = useTreeStore()
     :class="ui?.treeActionsClass"
     :style="ui?.treeActionsStyle"
   >
-    <slot name="left" />
+    <slot name="prepend" />
 
     <!-- Collapse all -->
     <Btn
@@ -41,6 +41,6 @@ const store = useTreeStore()
       @click="treeExpandAll({ getStore: () => store })"
     />
 
-    <slot name="right" />
+    <slot name="append" />
   </div>
 </template>

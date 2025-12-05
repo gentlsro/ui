@@ -34,7 +34,7 @@ export async function searchNodes<T extends IItem = IItem>(payload: {
       searchRef: search,
       rowsRef: nodesFlattened,
       fuseOptions: {
-        keys: [idKey, labelKey],
+        keys: [`ref.${idKey}`, `ref.${labelKey}`],
         useExtendedSearch: true,
         ...searchConfig?.fuseOptions,
       },

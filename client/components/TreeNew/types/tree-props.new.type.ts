@@ -48,6 +48,11 @@ export type ITreeProps<T extends IItem = IItem> = {
   labelKey?: string
 
   /**
+   * Whether to show the loading component
+   */
+  loading?: boolean
+
+  /**
    * The data (nodes) of the tree
    */
   modelValue?: T[]

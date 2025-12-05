@@ -185,7 +185,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
         .filter(node => {
           const { path } = nodeMetaById.value[node.id] ?? {}
 
-          if (!path) {
+          if (!path || isSearched.value) {
             return true
           }
 

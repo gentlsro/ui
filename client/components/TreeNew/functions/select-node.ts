@@ -76,7 +76,7 @@ export async function selectNode<T extends IItem = IItem>(payload: {
         ...(isEmitKey ? children.map(c => c.id) : children),
       ] as any
     } else {
-      selection.value = (isEmitKey ? node.id : node) as any
+      selection.value = isEmitKey ? node.id : node.ref
     }
 
     emits.value.nodeSelect({ node, ev })
