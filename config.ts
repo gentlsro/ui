@@ -1314,7 +1314,7 @@ export const defaultComponentsConfig = {
         nodeClass: ({ isSelected, isFocused }) => {
           const classes = [
             // Base
-            'flex gap-1 p-x-2 items-start rounded-custom border-1 border-white dark:border-dark-950 w-full overflow-auto',
+            'flex gap-1 p-x-2 items-start rounded-custom w-full overflow-auto',
 
             // Hover
             'hover:bg-slate-100 dark:hover:bg-slate-800',
@@ -1330,7 +1330,7 @@ export const defaultComponentsConfig = {
 
           return classes
         },
-        nodeContentClass: () => 'overflow-auto flex flex-col leading-20px p-y-1.5',
+        nodeContentClass: () => 'overflow-auto flex flex-col grow leading-20px p-y-1.5',
       },
       scrollerConfig: { rowHeight: 32 },
       actionsConfig: {

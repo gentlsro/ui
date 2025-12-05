@@ -99,9 +99,9 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
 
     watch(nodeFocused, (node, oldNode) => {
       if (node) {
-        emits.value.nodeFocus({ node })
+        emits.value.nodeFocus({ node, focusEvent: 'focus' })
       } else {
-        emits.value.nodeBlur({ node: oldNode })
+        emits.value.nodeBlur({ node: oldNode, focusEvent: 'blur' })
       }
     })
 
