@@ -1309,7 +1309,7 @@ export const defaultComponentsConfig = {
         treeActionsClass: 'flex gap-1 items-center',
         noDataClass: 'p-x-4 p-b-2 color-ca font-rem-14',
         treeContentClass: 'p-y-2.5',
-        treeClass: 'p-2 rounded-custom bg-white dark:bg-dark-950',
+        treeClass: 'p-1',
         nodePadding: '1rem',
         nodeClass: ({ isSelected, isFocused }) => {
           const classes = [

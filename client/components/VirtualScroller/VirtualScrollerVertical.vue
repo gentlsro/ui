@@ -147,6 +147,7 @@ defineExpose({
             'top': 0,
             'left': 0,
             'display': 'flex',
+            'minHeight': `${virtualRow.size}px`,
             '--rowHeight': virtualRow.size,
             '--translateY': virtualRow.start - rowVirtualizer.options.scrollMargin,
           }"
