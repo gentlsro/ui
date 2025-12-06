@@ -35,8 +35,13 @@ const {
 const treeNodeEl = useTemplateRef('treeNodeEl')
 const treeCollapseBtnEl = useTemplateRef('treeCollapseBtnEl')
 const node = toRef(props, 'node') as Ref<ITreeNode<T>>
+const isPreventClick = refAutoReset(false, 100)
 
 function handleClick(ev: MouseEvent) {
+  if (isPreventClick.value) {
+    return
+  }
+
   emits.value.nodeClick({ node: node.value, ev })
 
   const isRightClick = ev.button === 2
@@ -60,6 +65,11 @@ onMounted(() => {
     createDraggable({
       el: _el,
       item: node.value,
+
+      // When dragging happened (`onEnd` is called), we want to prevent the click
+      onEnd: () => {
+        isPreventClick.value = true
+      },
     })
   })
 })

@@ -29,6 +29,7 @@ export function useTreeDragAndDrop() {
   // Utils
   const { x, y } = useSharedMouse()
   let lastY = 0
+  let shouldMove = true
   let startMousePosition = { x: 0, y: 0 }
 
   function handleDragStart<T extends IItem = IItem>(payload: { item: ITreeNode<T>, el: HTMLElement }) {
@@ -52,6 +53,7 @@ export function useTreeDragAndDrop() {
     const { x, y, target } = ev
     lastY = y
     const elements = document.elementsFromPoint(x, y)
+    shouldMove = true
 
     const draggedOverItem = elements.find(el => {
       return TREE_NODE_CLASSES.some(cls => el.classList.contains(cls))
@@ -66,6 +68,8 @@ export function useTreeDragAndDrop() {
     if (isSelf || isInsideSelf || !draggedNode.value) {
       dragMeta.value.target = null
       dragMeta.value.targetEl = undefined
+
+      shouldMove = false
 
       return
     }
@@ -89,6 +93,8 @@ export function useTreeDragAndDrop() {
           nodeMetaById: nodeMetaById.value,
         }) ?? true
       }
+
+      // shouldMove = false
 
       return
     }
@@ -180,7 +186,7 @@ export function useTreeDragAndDrop() {
     dragItem?.element.remove()
 
     // Resolve the drag
-    if (draggedNode.value && !isDragOutOfTree) {
+    if (draggedNode.value && !isDragOutOfTree && shouldMove) {
       moveNode({
         mode: dndConfig.value?.dropMode ?? 'parent',
         dragMeta: dragMeta.value,
@@ -254,8 +260,9 @@ export function useTreeDragAndDrop() {
   function createDraggable<T extends IItem = IItem>(payload: {
     el: HTMLElement
     item: ITreeNode<T>
+    onEnd?: () => void
   }) {
-    const { el, item } = payload
+    const { el, item, onEnd } = payload
     const treeElDom = unrefElement(treeEl) as HTMLElement
 
     const pointerSensor = new PointerSensor(el)
@@ -271,6 +278,7 @@ export function useTreeDragAndDrop() {
       },
       onMove: drag => handleDragMove(drag.moveEvent as PointerSensorMoveEvent, drag.moveEvent.y - lastY),
       onEnd: drag => {
+        onEnd?.()
         treeElDom.removeEventListener('scroll', handleScroll)
         treeElDom.classList.remove('hide-scrollbar')
 

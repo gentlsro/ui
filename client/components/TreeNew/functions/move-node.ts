@@ -22,6 +22,11 @@ export async function moveNode<T extends IItem = IItem>(payload: {
   const target = _target as ITreeNode<T> | null | undefined
   let targetParent: ITreeNode<T> | { id: '__ROOT__' } | null | undefined = dragMeta.targetParent as ITreeNode<T> | { id: '__ROOT__' } | null | undefined
 
+  // When targeting self, we don't do anything
+  if (target && target === nodeToMove) {
+    return
+  }
+
   const store = getStore()
   const {
     model,
