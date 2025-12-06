@@ -95,13 +95,15 @@ const search = defineModel<string>('search')
   @apply hidden;
 }
 
-.dialog .list-search {
-  :deep(.input-wrapper__regular-append) {
-    @apply hidden;
-  }
+@media (pointer: coarse) {
+  .dialog .list-search {
+    :deep(.input-wrapper__regular-append) {
+      @apply hidden;
+    }
 
-  .mobile-close-btn {
-    @apply flex;
+    .mobile-close-btn {
+      @apply flex;
+    }
   }
 }
 </style>

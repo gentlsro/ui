@@ -28,7 +28,7 @@ export type IFormProps = {
   /**
    * Label of the submit button
    */
-  label?: string
+  label?: string | (() => string)
 
   /**
    * Icon of the submit button (technically the same as `submitBtnProps.icon`)
