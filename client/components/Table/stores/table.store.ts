@@ -652,11 +652,13 @@ const [
     // We should only sync the state once we're sure every relevant part is loaded
     // We can assume that the meta is loaded if `apiColumns` is not `undefined`
     // and `propsColumns` is not `undefined`
-    if (apiColumns.value && propsColumns.value && !isSilentChange.value) {
+    if (apiColumns.value && propsColumns.value) {
       syncStateColumns()
 
       // Load data with new query params
-      fetchAndSetData()
+      if (!isSilentChange.value) {
+        fetchAndSetData()
+      }
     }
   })
 
