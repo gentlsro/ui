@@ -32,7 +32,7 @@ export function useTreeNode<T extends IItem = IItem>(payload: ITreeNodeProps<T>)
   })
 
   const hasMultiSelect = computed(() => {
-    return selectionConfig.value?.enabled && selectionConfig.value?.multi
+    return !!selectionConfig.value?.enabled && selectionConfig.value?.multi
   })
 
   const isSelected = computed(() => {
@@ -92,6 +92,7 @@ export function useTreeNode<T extends IItem = IItem>(payload: ITreeNodeProps<T>)
           isSelected: isSelected.value,
           index,
           isFocused: isFocused.value,
+          isMulti: hasMultiSelect.value,
         })
       : ui?.nodeClass
   })
@@ -103,6 +104,7 @@ export function useTreeNode<T extends IItem = IItem>(payload: ITreeNodeProps<T>)
           isSelected: isSelected.value,
           index,
           isFocused: isFocused.value,
+          isMulti: hasMultiSelect.value,
         })
       : ui?.nodeStyle
   })
@@ -115,6 +117,7 @@ export function useTreeNode<T extends IItem = IItem>(payload: ITreeNodeProps<T>)
           isSelected: isSelected.value,
           index,
           isFocused: isFocused.value,
+          isMulti: hasMultiSelect.value,
         })
       : ui?.nodeContentClass
   })
@@ -126,6 +129,7 @@ export function useTreeNode<T extends IItem = IItem>(payload: ITreeNodeProps<T>)
           isSelected: isSelected.value,
           index,
           isFocused: isFocused.value,
+          isMulti: hasMultiSelect.value,
         })
       : ui?.nodeContentStyle
   })

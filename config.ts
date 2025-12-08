@@ -444,7 +444,7 @@ export const defaultComponentsConfig = {
         submitWrapperClass: 'm-l-auto',
         contentClass: 'relative flex flex-col grow p-2 gap-2 overflow-auto',
         controlsClass: [
-          'sticky flex items-center shrink-0 gap-2 bottom-0',
+          'sticky flex items-center shrink-0 gap-2 bottom-0 z-1',
 
           // Border
           'border-t-1 border-ca',
@@ -576,7 +576,7 @@ export const defaultComponentsConfig = {
         enabled: true,
         sortBy: undefined,
       },
-      scrollerConfig: { rowHeight: 36 },
+      scrollerConfig: { rowHeight: 32 },
       selection: undefined,
       selectionConfig: {
         enabled: false,
@@ -647,7 +647,7 @@ export const defaultComponentsConfig = {
       transitionDuration: 180,
       ui: {
         menuClass: [
-          'flex flex-col z-$zIndex bg-white',
+          'flex flex-col z-$zIndex bg-white grow',
 
           // Background
           'dark:bg-dark-950/90 bg-white/90 backdrop-blur-2px',
@@ -1283,7 +1283,7 @@ export const defaultComponentsConfig = {
         expandedLevelOnInit: 0,
         showCollapsedWhenSearched: true,
         btnTakesSpace: true,
-        btnProps: { size: 'xs', class: 'self-start m-t-1 color-ca' },
+        btnProps: { size: 'xs', noHoverEffect: true, class: 'self-start m-t-1 color-ca' },
       },
       connectors: true,
       loadChildrenConfig: undefined,
@@ -1301,7 +1301,7 @@ export const defaultComponentsConfig = {
       selectionConfig: {
         multi: false,
         emitKey: false,
-        checkboxProps: { size: 'xs', class: 'm-t-1' },
+        checkboxProps: { size: 'sm', noHoverEffect: true, class: 'm-l--2' },
       },
       dndConfig: { enabled: false, dropMode: 'parent' },
       ui: {
@@ -1311,16 +1311,16 @@ export const defaultComponentsConfig = {
         treeContentClass: 'p-y-2.5',
         treeClass: 'p-1',
         nodePadding: '1rem',
-        nodeClass: ({ isSelected, isFocused }) => {
+        nodeClass: ({ isSelected, isFocused, isMulti }) => {
           const classes = [
             // Base
-            'flex gap-1 p-x-2 items-start rounded-custom w-full overflow-auto',
+            'flex gap-1 p-x-1 items-start rounded-custom w-full',
 
             // Hover
             'hover:bg-slate-100 dark:hover:bg-slate-800',
           ]
 
-          if (isSelected) {
+          if (isSelected && !isMulti) {
             classes.push('bg-slate-100 color-primary dark:(bg-slate-800 color-blue-400)')
           }
 

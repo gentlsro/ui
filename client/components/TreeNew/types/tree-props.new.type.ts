@@ -385,6 +385,7 @@ export type ITreeProps<T extends IItem = IItem> = {
       isSelected: boolean
       index: number
       isFocused: boolean
+      isMulti: boolean
     }) => ClassType)
 
     /**
@@ -395,6 +396,7 @@ export type ITreeProps<T extends IItem = IItem> = {
       isSelected: boolean
       index: number
       isFocused: boolean
+      isMulti: boolean
     }) => CSSProperties)
 
     /**
@@ -405,6 +407,7 @@ export type ITreeProps<T extends IItem = IItem> = {
       isSelected: boolean
       index: number
       isFocused: boolean
+      isMulti: boolean
     }) => ClassType)
 
     /**
@@ -415,6 +418,7 @@ export type ITreeProps<T extends IItem = IItem> = {
       isSelected: boolean
       index: number
       isFocused: boolean
+      isMulti: boolean
     }) => CSSProperties)
 
     /**

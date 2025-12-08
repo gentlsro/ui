@@ -200,7 +200,7 @@ onMounted(() => {
   }
 
   &__selection-checkbox {
-    @apply self-start m-t-0.5 shrink-0 pointer-events-none;
+    @apply self-start shrink-0 pointer-events-none;
   }
 
   &.is-dragging {

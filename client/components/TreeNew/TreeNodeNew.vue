@@ -108,7 +108,7 @@ onMounted(() => {
     >
       <slot name="content">
         <span class="tree-node__content-label">
-          {{ node.id }}: {{ node.label }}
+          {{ node.label ?? node.id }}
         </span>
 
         <span
@@ -159,7 +159,7 @@ onMounted(() => {
     &::before {
       @apply content-empty absolute top-0 h-full border-l-1 border-ca border-dashed;
 
-      left: calc(calc(-1 * var(--level) * var(--treePadding)) + 4px);
+      left: calc(calc(-1 * var(--level) * var(--treePadding)));
     }
 
     &.horizontal-connector::after {
@@ -167,7 +167,7 @@ onMounted(() => {
       top: min(24px, 50%);
       left: 4px;
 
-      width: calc(var(--treePadding) - 8px);
+      width: calc(var(--treePadding) - 12px);
     }
   }
 }
