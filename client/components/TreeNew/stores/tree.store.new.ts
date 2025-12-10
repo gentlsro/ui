@@ -75,6 +75,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     // Layout
     const treeEl = ref<HTMLElement>()
     const searchEl = ref<any>()
+    const scrollerEl = ref<any>()
 
     // Search
     const search = initRef({
@@ -301,6 +302,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       // Layout
       treeEl,
       searchEl,
+      scrollerEl,
 
       // Search
       search,

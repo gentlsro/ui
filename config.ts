@@ -1314,7 +1314,7 @@ export const defaultComponentsConfig = {
         nodeClass: ({ isSelected, isFocused, isMulti }) => {
           const classes = [
             // Base
-            'flex gap-1 p-x-1 items-start rounded-custom w-full',
+            'flex gap-1 p-x-1 items-start rounded-custom w-full overflow-auto',
 
             // Hover
             'hover:bg-slate-100 dark:hover:bg-slate-800',

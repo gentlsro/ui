@@ -180,7 +180,7 @@ async function handleDelete() {
 
   if (modifiers.value?.onItemDelete) {
     try {
-      await modifiers.value?.onItemDelete?.({ item: nodeContextMenu.value })
+      await modifiers.value?.onItemDelete?.({ item: nodeContextMenu.value?.ref })
     } catch {
       return
     }

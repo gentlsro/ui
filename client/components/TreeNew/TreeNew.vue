@@ -36,6 +36,7 @@ const {
   init,
   emits: storeEmits,
   treeEl,
+  scrollerEl,
   search,
   nodesVisible,
   dndConfig,
@@ -105,6 +106,7 @@ await init()
 
     <VirtualScrollerVertical
       v-if="!loading"
+      ref="scrollerEl"
       class="tree__content"
       :rows="(nodesVisible as T[])"
       :class="mergedProps.ui?.treeContentClass"

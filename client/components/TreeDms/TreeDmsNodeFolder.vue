@@ -92,7 +92,10 @@ defineExpose({ focus, select })
 </script>
 
 <template>
-  <div class="folder">
+  <div
+    class="folder"
+    :title="node.ref.name"
+  >
     <LoaderBlock
       v-if="isLoadingByNodeId[node.id]"
       size="h-5 w-5"

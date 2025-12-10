@@ -10,6 +10,7 @@ export function useTreeKeyboard() {
   const store = useTreeStore()
   const {
     treeEl,
+    scrollerEl,
     nodesVisible,
     nodeMetaById,
     nodeFocused,
@@ -97,6 +98,10 @@ export function useTreeKeyboard() {
         }
 
         break
+    }
+
+    if (scrollerEl.value && nodeFocused.value) {
+      scrollerEl.value.scrollTo?.(focusedNodeIdx)
     }
   }
 }

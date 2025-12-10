@@ -69,7 +69,7 @@ export async function handleItemBlur<T extends IItem>(payload: {
           nodeById: nodeById.value,
           nodeMetaById: nodeMetaById.value,
           childrenKey: childrenKey.value,
-        }),
+        })?.ref,
       })
     }
     catch {
