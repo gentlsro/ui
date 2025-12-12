@@ -12,6 +12,7 @@ type IProps = {
   disallowedColors?: string[]
   modelValue?: string
   rgba?: boolean
+  tw?: boolean
 }
 
 const props = defineProps<IProps>()
@@ -21,7 +22,7 @@ const emits = defineEmits<{
 }>()
 
 // Utils
-const { getColor, hexToRgb, rgbaToHex, isRgba } = useColors()
+const { getColor, hexToRgb, rgbaToHex, isRgba, isHex } = useColors()
 
 // Layout
 const model = defineModel<string>()
@@ -35,7 +36,7 @@ const themeColors = computed(() => {
   return [
     ...(hasTransparent
       ? [{
-          color: 'transparent',
+          tw: 'transparent',
           style: {
             backgroundImage: `
               linear-gradient(45deg, #ccc 25%, transparent 25%),
@@ -48,10 +49,14 @@ const themeColors = computed(() => {
           },
         }]
       : []),
-    ...(hasWhite ? [{ color: '#FFFFFF', style: { border: '1px solid #000' } }] : []),
-    ...(hasBlack ? [{ color: '#000000' }] : []),
-    ...THEME_COLORS.map(color => ({ color: getColor(color, undefined, true) })),
-  ] as { color: string, style?: CSSProperties }[]
+    ...(hasWhite ? [{ tw: 'white', hex: '#FFFFFF', style: { border: '1px solid #000' } }] : []),
+    ...(hasBlack ? [{ tw: 'black', hex: '#000000' }] : []),
+    ...THEME_COLORS.map(color => ({
+      tw: color,
+      hex: getColor(color, undefined, true),
+      rgba: hexToRgb(getColor(color, undefined, true)),
+    })),
+  ] as { style?: CSSProperties, tw: string, hex: string, rgba: string }[]
 })
 
 const colorSelected = computed(() => {
@@ -59,7 +64,19 @@ const colorSelected = computed(() => {
     return undefined
   }
 
-  return isRgba(model.value) ? rgbaToHex(model.value) : model.value
+  const _isHex = isHex(model.value)
+
+  if (_isHex) {
+    return model.value
+  }
+
+  const _isRgba = isRgba(model.value)
+
+  if (_isRgba) {
+    return rgbaToHex(model.value)
+  }
+
+  return getColor(model.value.replace(/-/g, '.'), undefined, true)
 })
 
 const standardColorsByColumn = computed(() => {
@@ -67,23 +84,21 @@ const standardColorsByColumn = computed(() => {
   const _disallowedColors = props.disallowedColors?.map(color => color.toLocaleLowerCase()) ?? []
 
   return Object.entries(_colors).reduce((agg, [key, value]) => {
-    const colorShades = new Set(Object.values(value as any))
+    const colors = Object.entries(value)
+      .map(([shade, color]) => {
+        const tw = `${key.toLowerCase()}-${shade}`
+        const hex = color
+        const rgba = hexToRgb(hex)
 
-    agg[key] = Array.from(colorShades) as string[]
-
-    if (agg[key]) {
-      agg[key]?.splice(agg[key]!.length - 2, 1)
-    }
-
-    // Pick every second color
-    agg[key] = agg[key]
-      ?.filter((_, i) => i % 2 === 0)
-      .filter((color: any) => {
-        return !_disallowedColors?.includes(color)
+        return { tw, hex, rgba }
       })
+      .slice(9, -1)
+      .filter((_, i) => i % 2 === 1)
+
+    agg[key] = colors
 
     return agg
-  }, {} as Record<string, string[]>)
+  }, {} as Record<string, Array<{ tw: string, hex: string, rgba: string }>>)
 })
 
 const opacity = computed({
@@ -118,17 +133,40 @@ watch(sRGBHex, value => {
 })
 
 // Methods
-function setColor(color: string) {
-  if (!props.rgba) {
-    model.value = color
+function setColor(color: { tw: string, hex: string, rgba: string }) {
+  const { tw } = color
+
+  // Handle transparent color
+  if (tw === 'transparent') {
+    model.value = 'transparent'
+    emits('update:color', model.value)
     $hide()
 
     return
   }
 
-  model.value = hexToRgb(color)
+  // RGBA
+  if (props.rgba) {
+    model.value = color.rgba
+    emits('update:color', model.value)
+    $hide()
 
+    return
+  }
+
+  // TW
+  if (props.tw) {
+    model.value = color.tw
+    emits('update:color', model.value)
+    $hide()
+
+    return
+  }
+
+  // Hex
+  model.value = color.hex
   emits('update:color', model.value)
+  $hide()
 }
 </script>
 
@@ -157,11 +195,11 @@ function setColor(color: string) {
 
           <div
             v-for="themeColor in themeColors"
-            :key="themeColor.color"
-            :style="{ backgroundColor: themeColor.color, ...themeColor.style }"
+            :key="themeColor.tw"
+            :style="{ backgroundColor: themeColor.hex, ...themeColor.style }"
             class="color-block"
-            :class="{ 'is-selected': lowerCase(colorSelected) === lowerCase(themeColor.color) }"
-            @click="setColor(themeColor.color)"
+            :class="{ 'is-selected': lowerCase(colorSelected) === lowerCase(themeColor.hex) }"
+            @click="setColor(themeColor)"
           />
         </div>
 
@@ -189,17 +227,17 @@ function setColor(color: string) {
 
       <div grid="~ gap-x-px flow-col">
         <div
-          v-for="(shades, colorKey) in standardColorsByColumn"
+          v-for="(columnColors, colorKey) in standardColorsByColumn"
           :key="colorKey"
           grid="~ gap-y-px"
         >
           <div
-            v-for="shade in shades"
-            :key="shade"
-            :style="{ backgroundColor: shade }"
-            :class="{ 'is-selected': colorSelected === shade }"
+            v-for="columnColor in columnColors"
+            :key="columnColor.tw"
+            :style="{ backgroundColor: columnColor.hex }"
+            :class="{ 'is-selected': colorSelected === columnColor.hex }"
             class="color-block"
-            @click="setColor(shade)"
+            @click="setColor(columnColor)"
           />
         </div>
       </div>
@@ -207,7 +245,7 @@ function setColor(color: string) {
       <!-- Opacity -->
       <div
         v-if="typeof opacity === 'number' && rgba"
-        flex="~ gap-2"
+        flex="~ gap-2 items-center"
       >
         <div class="i-ic:sharp-opacity self-center color-ca m-l-1" />
 

@@ -4,6 +4,7 @@ import type { IColorInputProps } from './types/color-props.type'
 
 // Functions
 import { useInputUtils } from '../functions/useInputUtils'
+import { useColors } from '../../../../shared/composables/useColors'
 import { useInputValidationUtils } from '../functions/useInputValidationUtils'
 import { getComponentMergedProps, getComponentProps } from '../../../functions/get-component-props'
 
@@ -18,6 +19,8 @@ defineEmits<{
 }>()
 
 // Utils
+const { getColor, hexToRgb, rgbaToHex, isRgba, isHex } = useColors()
+
 const mergedProps = computed(() => {
   return getComponentMergedProps('colorInput', props)
 })
@@ -29,6 +32,26 @@ const referenceEl = ref<HTMLDivElement>()
 const isPickerActive = ref(false)
 const size = toRef(props, 'size')
 const readonly = toRef(props, 'readonly')
+
+const colorSelected = computed(() => {
+  if (!model.value) {
+    return undefined
+  }
+
+  const _isHex = isHex(model.value)
+
+  if (_isHex) {
+    return model.value
+  }
+
+  const _isRgba = isRgba(model.value)
+
+  if (_isRgba) {
+    return rgbaToHex(model.value)
+  }
+
+  return getColor(model.value.replace(/-/g, '.'), undefined, true)
+})
 
 function handlePickColor(color?: string) {
   model.value = color
@@ -95,7 +118,7 @@ defineExpose({
     <template #prepend>
       <div
         class="w-6 h-6 rounded-custom border-1 border-ca m-l-2"
-        :style="{ backgroundColor: model }"
+        :style="{ backgroundColor: colorSelected }"
         data-cy="color-picker-preview"
       />
     </template>
@@ -136,6 +159,7 @@ defineExpose({
       <ColorBrandingPicker
         v-model="model"
         :rgba
+        :tw
         :disallowed-colors
         @update:model-value="handlePickColor"
       />

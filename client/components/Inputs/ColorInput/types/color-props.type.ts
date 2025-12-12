@@ -35,4 +35,9 @@ export type IColorInputProps = IFieldProps & {
    * When true, the color picker will use RGBA values
    */
   rgba?: boolean
+
+  /**
+   * When true, the color picker will use TW colors
+   */
+  tw?: boolean
 } & IFieldProps
