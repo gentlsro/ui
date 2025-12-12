@@ -38,6 +38,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     const isContextMenuOpen = ref(false)
     const nodeEditing = ref<ITreeNode<T>>()
     const isLoadingByNodeId = ref<Record<ITreeNode<T>['id'], boolean>>({})
+    const isCurrentlyAddingItem = ref(false)
 
     const returnedData = {
       // Utils
@@ -51,6 +52,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       nodeContextMenu,
       isContextMenuOpen,
       isLoadingByNodeId,
+      isCurrentlyAddingItem,
     }
 
     return returnedData

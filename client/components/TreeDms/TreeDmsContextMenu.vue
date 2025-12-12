@@ -6,8 +6,25 @@ import { useTreeDmsStore } from './stores/tree-dms.store'
 import { useTreeStore } from '#layers/ui/client/components/TreeNew/stores/tree.store.new'
 
 // Store
-const { selection, idKey, childrenKey, insertNode, removeNode, expandNode } = useTreeStore()
-const { isContextMenuOpen, nodeContextMenu, nodeEditing, fileKey, folderKey, modifiers } = useTreeDmsStore()
+const {
+  selection,
+  idKey,
+  childrenKey,
+  insertNode,
+  removeNode,
+  expandNode,
+} = useTreeStore()
+
+const {
+  isContextMenuOpen,
+  nodeContextMenu,
+  nodeEditing,
+  fileKey,
+  folderKey,
+  modifiers,
+  isCurrentlyAddingItem,
+} = useTreeDmsStore()
+
 // Layout
 const menuEl = useTemplateRef('menuEl')
 const isDelete = ref(false)
@@ -50,7 +67,7 @@ const menuItems = computed<Array<IBtnProps & { id: string }>>(() => {
           icon: 'i-hugeicons:file-add',
           label: $t('misc.createFile'),
           onClick: async () => {
-            if (!nodeContextMenu.value) {
+            if (!nodeContextMenu.value || isCurrentlyAddingItem.value) {
               return
             }
 
@@ -75,7 +92,7 @@ const menuItems = computed<Array<IBtnProps & { id: string }>>(() => {
           icon: 'i-hugeicons:folder-add',
           label: $t('misc.createFolder'),
           onClick: async () => {
-            if (!nodeContextMenu.value) {
+            if (!nodeContextMenu.value || isCurrentlyAddingItem.value) {
               return
             }
 
@@ -126,6 +143,10 @@ const menuItems = computed<Array<IBtnProps & { id: string }>>(() => {
           icon: 'i-hugeicons:file-add',
           label: $t('misc.createFile'),
           onClick: async () => {
+            if (isCurrentlyAddingItem.value) {
+              return
+            }
+
             const id = generateUUID()
 
             const addedNode = await insertNode(
@@ -146,6 +167,10 @@ const menuItems = computed<Array<IBtnProps & { id: string }>>(() => {
           icon: 'i-hugeicons:folder-add',
           label: $t('misc.createFolder'),
           onClick: async () => {
+            if (isCurrentlyAddingItem.value) {
+              return
+            }
+
             const id = generateUUID()
 
             const addedNode = await insertNode(

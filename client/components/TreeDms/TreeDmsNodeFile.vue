@@ -61,6 +61,8 @@ function handleKeyPress(ev: KeyboardEvent) {
 whenever(
   () => nodeEditing.value?.id === props.node.id,
   () => {
+    inputEl.value?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+
     nextTick(select)
   },
 )

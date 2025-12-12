@@ -17,12 +17,12 @@ export async function handleItemBlur<T extends IItem>(payload: {
   getTreeStore: () => ReturnType<typeof useTreeStore>
   getTreeDmsStore: () => ReturnType<typeof useTreeDmsStore>
 }) {
+  console.log('🚀 ~ handleItemBlur ~ payload:', payload)
   const { inputEl, node, select, getTreeStore, getTreeDmsStore } = payload
-  const { isLoadingByNodeId, modifiers, nodeEditing } = getTreeDmsStore()
+  const { isLoadingByNodeId, modifiers, nodeEditing, isCurrentlyAddingItem } = getTreeDmsStore()
 
   const treeStore = getTreeStore()
   const {
-    idKey,
     selection,
     removeNode,
     insertNode,
@@ -33,6 +33,8 @@ export async function handleItemBlur<T extends IItem>(payload: {
   } = treeStore
 
   if (!inputEl || isLoadingByNodeId.value[node.value.id] || nodeEditing.value?.id !== node.value.id) {
+    isCurrentlyAddingItem.value = false
+
     return
   }
 
@@ -47,6 +49,7 @@ export async function handleItemBlur<T extends IItem>(payload: {
     // @ts-expect-error Bad type but fuck off
     node.value.ref[labelKey.value] = inputEl?.textContent ?? ''
     nodeEditing.value = undefined
+    isCurrentlyAddingItem.value = false
 
     return
   }
@@ -89,6 +92,8 @@ export async function handleItemBlur<T extends IItem>(payload: {
   if ('__isNew' in item) {
     delete item.__isNew
   }
+  isCurrentlyAddingItem.value = false
+
   const parent = getDirectParent({
     node: node.value,
     nodeById: nodeById.value,

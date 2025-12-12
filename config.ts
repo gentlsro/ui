@@ -647,7 +647,7 @@ export const defaultComponentsConfig = {
       transitionDuration: 180,
       ui: {
         menuClass: [
-          'flex flex-col z-$zIndex bg-white grow',
+          'flex flex-col z-$zIndex bg-white grow rounded-custom overflow-auto',
 
           // Background
           'dark:bg-dark-950/90 bg-white/90 backdrop-blur-2px',

@@ -15,7 +15,7 @@ defineEmits<{
 }>()
 
 // Store
-const { fileKey, folderKey, nodeEditing } = useTreeDmsStore()
+const { fileKey, folderKey, nodeEditing, isCurrentlyAddingItem } = useTreeDmsStore()
 const { insertNode, childrenKey } = useTreeStore()
 
 // Layout
@@ -26,6 +26,10 @@ const label = computed(() => {
 })
 
 async function handleCreateItem(type: string) {
+  if (isCurrentlyAddingItem.value) {
+    return
+  }
+
   const addedNode = await insertNode({
     id: generateUUID(),
     label: '',
@@ -34,6 +38,8 @@ async function handleCreateItem(type: string) {
 
     __isNew: true,
   })
+
+  isCurrentlyAddingItem.value = true
 
   requestAnimationFrame(() => {
     nodeEditing.value = addedNode
