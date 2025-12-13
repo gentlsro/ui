@@ -10,6 +10,9 @@ import { getComponentMergedProps, getComponentProps } from '../../../functions/g
 // Types
 import type { IIconInputProps } from './types/icon-input-props.type'
 
+// Constants
+import { INPUT_WRAPPER_DEFAULT_PROPS } from '../../InputWrapper/constants/input-wrapper-default-props'
+
 const props = withDefaults(defineProps<IIconInputProps>(), {
   ...getComponentProps('iconInput'),
 })
@@ -67,6 +70,18 @@ const iconClassBySize = {
 
 const iconSize = computed(() => {
   return iconClassBySize[props.size ?? 'md']
+})
+
+// Styles - append
+const appendClass = computed(() => {
+  return mergedProps.value.ui?.appendClass?.({
+    defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.appendClass(),
+  })
+})
+
+// Styles - append
+const appendStyle = computed(() => {
+  return mergedProps.value.ui?.appendStyle?.()
 })
 
 // Validations
@@ -158,13 +173,17 @@ defineExpose({
     </template>
 
     <template #append>
-      <InputClearBtn
-        v-if="hasClearableBtn && model && model !== emptyValue"
-        :clear-confirmation
-        :size
-        m="r-2"
-        @click.stop.prevent="model = emptyValue"
-      />
+      <div
+        :class="appendClass"
+        :style="appendStyle"
+      >
+        <InputClearBtn
+          v-if="hasClearableBtn && model && model !== emptyValue"
+          :clear-confirmation
+          :size
+          @click.stop.prevent="model = emptyValue"
+        />
+      </div>
     </template>
   </InputWrapper>
 </template>

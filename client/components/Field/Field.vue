@@ -8,6 +8,9 @@ import { getComponentMergedProps, getComponentProps } from '../../functions/get-
 import { useInputWrapperUtils } from '../Inputs/functions/useInputWrapperUtils'
 import { useInputValidationUtils } from '../Inputs/functions/useInputValidationUtils'
 
+// Constants
+import { INPUT_WRAPPER_DEFAULT_PROPS } from '../InputWrapper/constants/input-wrapper-default-props'
+
 const props = withDefaults(defineProps<IFieldProps>(), {
   ...getComponentProps('field'),
 })
@@ -96,13 +99,7 @@ defineExpose({
       v-if="$slots.append || (!readonly && !disabled)"
       #append
     >
-      <div
-        flex="~ center"
-        fit
-        @click="$emit('focus', $event)"
-      >
-        <slot name="append" />
-      </div>
+      <slot name="append" />
     </template>
   </InputWrapper>
 </template>

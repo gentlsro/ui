@@ -12,6 +12,7 @@ import { getComponentMergedProps, getComponentProps } from '../../../functions/g
 
 // Constants
 import { CURRENCY_DEFAULT } from '#layers/utilities/shared/i18n'
+import { INPUT_WRAPPER_DEFAULT_PROPS } from '../../InputWrapper/constants/input-wrapper-default-props'
 
 const props = withDefaults(defineProps<ICurrencyInputProps>(), {
   ...getComponentProps('currencyInput'),
@@ -240,6 +241,18 @@ function handleBeforeInput(ev: Event) {
   }
 }
 
+// Styles - append
+const appendClass = computed(() => {
+  return mergedProps.value.ui?.appendClass?.({
+    defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.appendClass(),
+  })
+})
+
+// Styles - append
+const appendStyle = computed(() => {
+  return mergedProps.value.ui?.appendStyle?.()
+})
+
 defineExpose({
   isTouched: () => isTouched.value,
   focus,
@@ -314,7 +327,8 @@ defineExpose({
       #append
     >
       <div
-        class="currency-input__append"
+        :class="appendClass"
+        :style="appendStyle"
         @click="handleFocusOrClick"
       >
         <span
@@ -361,10 +375,6 @@ defineExpose({
 </template>
 
 <style lang="scss" scoped>
-.currency-input__append {
-  @apply flex gap-x-2 flex-center p-x-2;
-}
-
 .currency-input__symbol {
   @apply text-caption font-semibold pointer-events-none;
 

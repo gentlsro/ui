@@ -10,6 +10,9 @@ import { useInputUtils } from '../functions/useInputUtils'
 import { useInputValidationUtils } from '../functions/useInputValidationUtils'
 import { getComponentMergedProps, getComponentProps } from '../../../functions/get-component-props'
 
+// Constants
+import { INPUT_WRAPPER_DEFAULT_PROPS } from '../../InputWrapper/constants/input-wrapper-default-props'
+
 const props = withDefaults(defineProps<ITimeInputProps>(), {
   ...getComponentProps('timeInput'),
 })
@@ -232,6 +235,18 @@ watch(model, () => {
 
 const { path } = useInputValidationUtils(props)
 
+// Styles - append
+const appendClass = computed(() => {
+  return mergedProps.value.ui?.appendClass?.({
+    defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.appendClass(),
+  })
+})
+
+// Styles - append
+const appendStyle = computed(() => {
+  return mergedProps.value.ui?.appendStyle?.()
+})
+
 defineExpose({
   isTouched: () => isTouched.value,
   focus,
@@ -301,7 +316,8 @@ defineExpose({
     <template #append>
       <div
         v-if="$slots.append || hasClearableBtn || (!readonly && !disabled)"
-        flex="~ gap-x-1 center"
+        :class="appendClass"
+        :style="appendStyle"
         @click="handleFocusOrClick"
       >
         <slot

@@ -12,6 +12,9 @@ import { useInputUtils } from '../functions/useInputUtils'
 import { getComponentMergedProps, getComponentProps } from '../../../functions/get-component-props'
 import { useInputValidationUtils } from '../functions/useInputValidationUtils'
 
+// Constants
+import { INPUT_WRAPPER_DEFAULT_PROPS } from '../../InputWrapper/constants/input-wrapper-default-props'
+
 const props = withDefaults(defineProps<IDateInputProps>(), {
   ...getComponentProps('dateInput'),
 })
@@ -173,6 +176,18 @@ const {
 
 const { path } = useInputValidationUtils(props)
 
+// Styles - append
+const appendClass = computed(() => {
+  return mergedProps.value.ui?.appendClass?.({
+    defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.appendClass(),
+  })
+})
+
+// Styles - append
+const appendStyle = computed(() => {
+  return mergedProps.value.ui?.appendStyle?.()
+})
+
 defineExpose({
   isTouched: () => isTouched.value,
   focus,
@@ -241,7 +256,8 @@ defineExpose({
     <template #append>
       <div
         v-if="$slots.append || (!readonly && !disabled)"
-        flex="~ gap-1 center"
+        :class="appendClass"
+        :style="appendStyle"
         @click="handleFocusOrClick"
       >
         <slot
@@ -310,7 +326,7 @@ defineExpose({
 
 <style lang="scss" scoped>
 .picker-icon {
-  @apply cursor-pointer color-ca m-x-2 h-6 w-6;
+  @apply cursor-pointer color-ca h-6 w-6;
 }
 
 .input-wrapper {

@@ -7,6 +7,9 @@ import { useInputUtils } from '../functions/useInputUtils'
 import { getComponentMergedProps, getComponentProps } from '../../../functions/get-component-props'
 import { useInputValidationUtils } from '../functions/useInputValidationUtils'
 
+// Constants
+import { INPUT_WRAPPER_DEFAULT_PROPS } from '../../InputWrapper/constants/input-wrapper-default-props'
+
 const props = withDefaults(defineProps<ITextInputProps>(), {
   ...getComponentProps('textInput'),
 })
@@ -54,6 +57,18 @@ const {
 
 const hasCopyBtn = computed(() => {
   return props.readonly && !props.disabled && !props.noCopy && hasContent.value
+})
+
+// Styles - append
+const appendClass = computed(() => {
+  return mergedProps.value.ui?.appendClass?.({
+    defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.appendClass(),
+  })
+})
+
+// Styles - append
+const appendStyle = computed(() => {
+  return mergedProps.value.ui?.appendStyle?.()
 })
 
 // Validations
@@ -154,7 +169,10 @@ defineExpose({
       v-if="$slots.append || hasCopyBtn || clearable"
       #append
     >
-      <div :class="mergedProps.ui?.appendClass">
+      <div
+        :class="appendClass"
+        :style="appendStyle"
+      >
         <slot
           name="append"
           :clear="clear"

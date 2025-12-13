@@ -10,6 +10,9 @@ import { getComponentMergedProps, getComponentProps } from '../../../functions/g
 import { useInputUtils } from '../functions/useInputUtils'
 import { useInputValidationUtils } from '../functions/useInputValidationUtils'
 
+// Constants
+import { INPUT_WRAPPER_DEFAULT_PROPS } from '../../InputWrapper/constants/input-wrapper-default-props'
+
 const props = withDefaults(defineProps<ITextAreaInputProps>(), {
   ...getComponentProps('textArea'),
 })
@@ -60,6 +63,18 @@ if (props.autogrow) {
 
 const resizeClass = computed(() => {
   return props.autogrow ? 'resize-none' : props.resize
+})
+
+// Styles - append
+const appendClass = computed(() => {
+  return mergedProps.value.ui?.appendClass?.({
+    defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.appendClass(),
+  })
+})
+
+// Styles - append
+const appendStyle = computed(() => {
+  return mergedProps.value.ui?.appendStyle?.()
 })
 
 // Validation
@@ -144,7 +159,10 @@ defineExpose({
       v-if="$slots.append || hasClearableBtn"
       #append
     >
-      <div :class="mergedProps.ui?.appendClass">
+      <div
+        :class="appendClass"
+        :style="appendStyle"
+      >
         <slot
           name="append"
           :clear="clear"

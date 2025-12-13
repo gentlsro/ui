@@ -23,7 +23,7 @@ defineEmits<{
   <Chip
     :label="getFileLabel(chip)"
     min-w="20"
-    h="7"
+    h="6.5"
     p="!y-0"
     :has-remove="!(readonly || disabled)"
     @click.stop.prevent

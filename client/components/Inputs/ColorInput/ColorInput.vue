@@ -8,6 +8,9 @@ import { useColors } from '../../../../shared/composables/useColors'
 import { useInputValidationUtils } from '../functions/useInputValidationUtils'
 import { getComponentMergedProps, getComponentProps } from '../../../functions/get-component-props'
 
+// Constants
+import { INPUT_WRAPPER_DEFAULT_PROPS } from '../../InputWrapper/constants/input-wrapper-default-props'
+
 const props = withDefaults(defineProps<IColorInputProps>(), {
   ...getComponentProps('colorInput'),
 })
@@ -84,6 +87,18 @@ const {
   props,
   maskRef: ref({ mask: /.*/ }),
   menuElRef: menuProxyEl,
+})
+
+// Styles - append
+const appendClass = computed(() => {
+  return mergedProps.value.ui?.appendClass?.({
+    defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.appendClass(),
+  })
+})
+
+// Styles - append
+const appendStyle = computed(() => {
+  return mergedProps.value.ui?.appendStyle?.()
 })
 
 // Validations
@@ -172,7 +187,10 @@ defineExpose({
       v-if="$slots.append || hasClearableBtn"
       #append
     >
-      <div :class="mergedProps.ui?.appendClass">
+      <div
+        :class="appendClass"
+        :style="appendStyle"
+      >
         <slot
           name="append"
           :clear="clear"

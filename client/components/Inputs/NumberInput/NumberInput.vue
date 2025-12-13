@@ -9,6 +9,9 @@ import { getComponentMergedProps, getComponentProps } from '../../../functions/g
 import { useInputUtils } from '../functions/useInputUtils'
 import { useInputValidationUtils } from '../functions/useInputValidationUtils'
 
+// Constants
+import { INPUT_WRAPPER_DEFAULT_PROPS } from '../../InputWrapper/constants/input-wrapper-default-props'
+
 const props = withDefaults(defineProps<INumberInputProps>(), {
   ...getComponentProps('numberInput'),
 })
@@ -81,6 +84,18 @@ const {
 } = useInputUtils({
   props,
   maskRef: mask,
+})
+
+// Styles - append
+const appendClass = computed(() => {
+  return mergedProps.value.ui?.appendClass?.({
+    defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.appendClass(),
+  })
+})
+
+// Styles - append
+const appendStyle = computed(() => {
+  return mergedProps.value.ui?.appendStyle?.()
 })
 
 // Validation
@@ -173,7 +188,8 @@ defineExpose({
     >
       <div
         v-if="step || hasClearableBtn || $slots.append"
-        class="number-input__append"
+        :class="appendClass"
+        :style="appendStyle"
         data-cy="offset-buttons"
         @click="handleFocusOrClick"
       >
@@ -200,9 +216,3 @@ defineExpose({
     </template>
   </InputWrapper>
 </template>
-
-<style lang="scss" scoped>
-.number-input__append {
-  @apply flex gap-x-2 flex-center p-x-2;
-}
-</style>

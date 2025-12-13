@@ -8,6 +8,9 @@ import { useFileInput } from './functions/useFileInput'
 import { useFieldUtils } from '../../Field/functions/useFieldUtils'
 import { getComponentMergedProps, getComponentProps } from '../../../functions/get-component-props'
 
+// Constants
+import { INPUT_WRAPPER_DEFAULT_PROPS } from '../../InputWrapper/constants/input-wrapper-default-props'
+
 const props = withDefaults(defineProps<IFileInputProps>(), {
   ...getComponentProps('fileInputSimple'),
 })
@@ -42,6 +45,18 @@ function handleOpenDialog(ev?: PointerEvent | FocusEvent) {
     openFileDialog()
   }
 }
+
+// Styles - append
+const appendClass = computed(() => {
+  return mergedProps.value.ui?.appendClass?.({
+    defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.appendClass(),
+  })
+})
+
+// Styles - append
+const appendStyle = computed(() => {
+  return mergedProps.value.ui?.appendStyle?.()
+})
 </script>
 
 <template>
@@ -68,12 +83,16 @@ function handleOpenDialog(ev?: PointerEvent | FocusEvent) {
     />
 
     <template #append>
-      <Btn
-        icon="i-material-symbols:attachment"
-        size="sm"
-        m="r-2"
-        @click.stop.prevent="openFileDialog"
-      />
+      <div
+        :class="appendClass"
+        :style="appendStyle"
+      >
+        <Btn
+          icon="i-material-symbols:attachment"
+          size="sm"
+          @click.stop.prevent="openFileDialog"
+        />
+      </div>
     </template>
   </Field>
 </template>

@@ -5,10 +5,11 @@
 import type { IYearMonthSelectorProps } from './types/year-month-selector-props.type'
 
 // Functions
-import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
 import { useFieldUtils } from '../Field/functions/useFieldUtils'
+import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
 
-// Components
+// Constants
+import { INPUT_WRAPPER_DEFAULT_PROPS } from '../InputWrapper/constants/input-wrapper-default-props'
 
 const props = withDefaults(defineProps<IYearMonthSelectorProps>(), {
   ...getComponentProps('yearMonthSelector'),
@@ -76,6 +77,18 @@ const { el, getFieldProps, handleFocusOrClick, isEditable } = useFieldUtils({
 
 const fieldProps = getFieldProps(props)
 
+// Styles - append
+const appendClass = computed(() => {
+  return mergedProps.value.ui?.appendClass?.({
+    defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.appendClass(),
+  })
+})
+
+// Styles - append
+const appendStyle = computed(() => {
+  return mergedProps.value.ui?.appendStyle?.()
+})
+
 onMounted(() => {
   nextTick(() => {
     const fieldElDom = unrefElement(fieldEl as any)
@@ -127,29 +140,34 @@ onMounted(() => {
     </MenuProxy>
 
     <template #append>
-      <Btn
-        v-if="clearable && modelValue && !readonly && !disabled"
-        icon="i-eva:close-fill h-6 w-6"
-        color="ca"
-        size="auto"
-        h="7"
-        w="7"
-        @click.stop.prevent="model = emptyValue"
-      />
-
       <div
-        i-formkit:month
-        class="picker-icon"
-        @mousedown="handlePickerIconClick"
-        @click.stop.prevent
-      />
+        :class="appendClass"
+        :style="appendStyle"
+      >
+        <Btn
+          v-if="clearable && modelValue && !readonly && !disabled"
+          icon="i-eva:close-fill h-6 w-6"
+          color="ca"
+          size="auto"
+          h="7"
+          w="7"
+          @click.stop.prevent="model = emptyValue"
+        />
+
+        <div
+          i-formkit:month
+          class="picker-icon"
+          @mousedown="handlePickerIconClick"
+          @click.stop.prevent
+        />
+      </div>
     </template>
   </Field>
 </template>
 
 <style lang="scss" scoped>
 .picker-icon {
-  @apply cursor-default color-ca m-x-2 h-5.5 w-5.5;
+  @apply cursor-default color-ca h-5.5 w-5.5;
 }
 
 .wrapper__body:not(.is-readonly):not(.is-disabled) {

@@ -223,7 +223,7 @@ export const defaultComponentsConfig = {
       noIcon: true,
       ui: {
         borderRadius: '0.5rem',
-        appendClass: () => 'flex gap-1 items-center p-x-2',
+        appendClass: ({ defaults }) => defaults['*'],
       },
     },
     merge: ['ui'],
@@ -265,6 +265,7 @@ export const defaultComponentsConfig = {
       currencyPosition: 'prepend',
       ui: {
         borderRadius: '0.5rem',
+        appendClass: ({ defaults }) => defaults['*'],
       },
     },
     merge: ['ui'],
@@ -285,6 +286,7 @@ export const defaultComponentsConfig = {
       stackLabel: true,
       ui: {
         borderRadius: '0.5rem',
+        appendClass: ({ defaults }) => defaults['*'],
       },
       utc: utilsConfig.general.useUtc,
     },
@@ -431,6 +433,9 @@ export const defaultComponentsConfig = {
       noBorder: undefined,
       size: 'md',
       stackLabel: true,
+      ui: {
+        appendClass: ({ defaults }) => defaults['*'],
+      },
     },
     merge: ['ui'],
   },
@@ -501,7 +506,7 @@ export const defaultComponentsConfig = {
       stackLabel: true,
       ui: {
         borderRadius: '0.5rem',
-        appendClass: () => 'flex gap-1 items-center p-x-2',
+        appendClass: ({ defaults }) => defaults['*'],
       },
     },
     merge: ['ui'],
@@ -834,6 +839,7 @@ export const defaultComponentsConfig = {
       step: 'auto',
       ui: {
         borderRadius: '0.5rem',
+        appendClass: ({ defaults }) => defaults['*'],
       },
     },
     merge: ['ui'],
@@ -987,7 +993,7 @@ export const defaultComponentsConfig = {
         borderRadius: '0.5rem',
         inputClass: ({ defaults }) => defaults['*'],
         chipClass: ({ defaults }) => defaults['*'],
-        appendClass: ({ defaults }) => `${defaults['*']} m-x-1`,
+        appendClass: ({ defaults }) => defaults['*'],
         innerClass: ({ defaults }) => defaults['*'],
         labelClass: ({ defaults }) => defaults['*'],
         contentClass: ({ defaults }) => defaults['*'],
@@ -1150,7 +1156,7 @@ export const defaultComponentsConfig = {
       stackLabel: true,
       ui: {
         borderRadius: '0.5rem',
-        appendClass: () => 'flex gap-1 items-center p-x-2 h-full',
+        appendClass: ({ defaults }) => defaults['*'],
       },
     },
     merge: ['ui'],
@@ -1171,7 +1177,7 @@ export const defaultComponentsConfig = {
       stackLabel: true,
       ui: {
         borderRadius: '0.5rem',
-        appendClass: () => 'flex gap-1 items-center p-x-2',
+        appendClass: ({ defaults }) => defaults['*'],
       },
     },
     merge: ['ui'],
@@ -1195,6 +1201,7 @@ export const defaultComponentsConfig = {
       stackLabel: true,
       ui: {
         borderRadius: '0.5rem',
+        appendClass: ({ defaults }) => defaults['*'],
       },
     },
     merge: ['ui'],
@@ -1413,6 +1420,7 @@ export const defaultComponentsConfig = {
       stackLabel: true,
       ui: {
         borderRadius: '0.5rem',
+        appendClass: ({ defaults }) => defaults['*'],
       },
     },
     merge: ['ui'],
