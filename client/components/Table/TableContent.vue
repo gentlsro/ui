@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // Types
 import type { ITableProps } from './types/table-props.type'
+import type { TableColumn } from './models/table-column.model'
 import type { IVirtualScrollEvent } from '../VirtualScroller/types/virtual-scroll-event.type'
 
 // Store
@@ -10,6 +11,13 @@ import { tableEditMoveCell } from './functions/table-edit-move-cell'
 type IProps = Pick<ITableProps, 'editable' | 'ui' | 'to' | 'scrollerConfig' | 'showCopyBtn' | 'toLinkProps'>
 
 defineProps<IProps>()
+
+type SlotProps = {
+  row: any
+  index: number
+  columns: TableColumn[]
+  style: any
+}
 
 // Constants
 const FETCH_MORE_THRESHOLD = 10
@@ -178,35 +186,35 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
     :style="ui?.contentStyle"
     @virtual-scroll="handleVirtualScroll"
   >
-    <template #default="{ row, index, columns, style }">
+    <template #default="slotProps: SlotProps">
       <slot
         name="row"
-        :row
-        :index
-        :columns
+        :row="slotProps.row"
+        :index="slotProps.index"
+        :columns="slotProps.columns"
       >
         <TableRow
-          :row
+          :row="slotProps.row"
           :ui
-          :index
+          :index="slotProps.index"
           :editable
           :to
           :show-copy-btn
           :to-link-props
           :is-visible-by-column-field
-          :visible-columns="columns"
-          :style
+          :visible-columns="slotProps.columns"
+          :style="slotProps.style"
         >
           <!-- Field slots -->
           <template
-            v-for="col in columns"
+            v-for="col in slotProps.columns"
             :key="col.name"
             #[col.name]="{ row, column, value }"
           >
             <slot
               :name="col.name"
               :row
-              :index
+              :index="slotProps.index"
               :column
               :value
             />
@@ -217,7 +225,7 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
             <slot
               name="row-inside"
               v-bind="rowInsideProps"
-              :index
+              :index="slotProps.index"
             />
           </template>
         </TableRow>
