@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import type { TransitionProps } from 'vue'
+import type { AllowedComponentProps, TransitionProps } from 'vue'
+
+// Types
+import type { IBtnProps } from '../Button/types/btn-props.type'
 
 // Store
 import { useFormStore } from '../Form/stores/form.store'
@@ -7,6 +10,7 @@ import { useFormStore } from '../Form/stores/form.store'
 type IProps = {
   disabled?: boolean
   editing?: boolean
+  btnProps?: IBtnProps & AllowedComponentProps
 }
 
 const props = defineProps<IProps>()
@@ -43,6 +47,7 @@ syncRef(isEditing, isEditingStore)
         :label="$t('general.edit')"
         icon="i-material-symbols:edit-rounded !w-4 !h-4 m-r-2"
         data-cy="crud-edit-button"
+        v-bind="btnProps"
         @click="isEditing = true"
       >
         <slot />

@@ -116,7 +116,7 @@ defineExpose({
         v-if="tooltip?.label || $slots.tooltip"
         name="tooltip"
       >
-        {{ tooltip.label }}
+        {{ tooltip?.label }}
       </slot>
     </Tooltip>
 
@@ -257,7 +257,7 @@ defineExpose({
   }
 
   &--xm {
-    @apply min-h-7 min-w-7 flex-gap-x-2 p-x-2;
+    @apply min-h-7 min-w-7 gap-x-2 p-x-2;
 
     .icon {
       @apply h-4 w-4;
@@ -273,7 +273,7 @@ defineExpose({
   }
 
   &--sm {
-    @apply min-h-8 min-w-8 flex-gap-x-1.5 flex-gap-y-1 p-x-2.5;
+    @apply min-h-8 min-w-8 gap-x-1.5 gap-y-1 p-x-2.5;
 
     .icon {
       @apply h-4.5 w-4.5;
@@ -289,7 +289,7 @@ defineExpose({
   }
 
   &--md {
-    @apply min-h-10 min-w-10 flex-gap-x-2 flex-gap-y-1 p-x-3;
+    @apply min-h-10 min-w-10 gap-x-2 gap-y-1 p-x-3;
 
     .icon {
       @apply h-5.5 w-5.5;
@@ -305,7 +305,7 @@ defineExpose({
   }
 
   &--lg {
-    @apply min-h-12 min-w-12 flex-gap-x-2.5 flex-gap-y-1.5 p-x-3.5;
+    @apply min-h-12 min-w-12 gap-x-2.5 gap-y-1.5 p-x-3.5;
 
     .icon {
       @apply h-6.5 w-6.5;

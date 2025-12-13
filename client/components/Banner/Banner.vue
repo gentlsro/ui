@@ -112,7 +112,7 @@ watch(counter, bounce)
 
 <style lang="scss" scoped>
 .banner {
-  @apply flex flex-gap-x-2 items-center rounded-custom p-x-2 relative color-true-gray;
+  @apply flex gap-x-2 items-center rounded-custom p-x-2 relative color-true-gray;
 
   &-icon {
     @apply flex shrink-0;

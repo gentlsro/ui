@@ -5,19 +5,19 @@ import type { IListProps } from './types/list-props.type'
 // Store
 import { useListStore } from './stores/list.store'
 
-type IProps = Pick<IListProps, 'searchInputProps' | 'ui' | 'search'>
+type IProps = Pick<IListProps, 'searchInputProps' | 'ui' | 'search' | 'dense'>
 
 defineProps<IProps>()
 
 defineSlots<{
-  default: (props: { search?: string, isLoading: boolean, items: IItem[] }) => any
+  default: (props: { search?: string, isLoading?: boolean, items: IItem[] }) => any
   left: () => any
   right: () => any
   below: () => (props: { search?: string, isLoading: boolean, items: IItem[] }) => any
 }>()
 
 // Store
-const { searchEl, isLoading, items, $zAddItem } = storeToRefs(useListStore())
+const { searchEl, isLoading, items, $zAddItem } = useListStore()
 
 // Layout
 const search = defineModel<string>('search')
@@ -26,7 +26,7 @@ const search = defineModel<string>('search')
 <template>
   <div
     class="list-search__container"
-    :class="ui?.searchClass"
+    :class="[ui?.searchClass, { 'is-dense': dense }]"
     :style="ui?.searchStyle"
   >
     <slot
@@ -74,14 +74,8 @@ const search = defineModel<string>('search')
 .list-search {
   @apply flex items-center;
 
-  &__container {
-    @apply flex flex-col;
-  }
-}
-
-.list.is-dense {
-  .list-search {
-    @apply p-1;
+  &.is-dense {
+    @apply p-0;
   }
 }
 

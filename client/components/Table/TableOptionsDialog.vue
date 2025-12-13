@@ -26,7 +26,7 @@ function setFitColumns(mode: NonNullable<IUIState['table']>['fit'], unset?: bool
     w="200"
     manual
     :title="$t('table.options')"
-    :ui="{ contentClass: 'p-3' }"
+    :ui="{ contentClass: 'flex flex-col p-3' }"
   >
     <!-- Auto-save table layout -->
     <Toggle

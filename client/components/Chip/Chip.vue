@@ -118,7 +118,7 @@ const classes = computed(() => {
     leading-tight items-center self-center font-rem-14;
 
   &-label {
-    @apply flex flex-gap-x-2 flex-1 truncate;
+    @apply flex gap-x-2 flex-1 truncate;
   }
 
   .remove-btn {

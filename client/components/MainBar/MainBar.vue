@@ -119,7 +119,7 @@ defineExpose({
   transition: padding 250ms cubic-bezier(0, 0, 0.2, 1);
 
   &-content {
-    @apply flex flex-gap-x-4 grow items-center rounded-custom;
+    @apply flex gap-x-4 grow items-center rounded-custom;
   }
 
   &-title {

@@ -2,7 +2,7 @@
 // Store
 import { useListStore } from './stores/list.store'
 
-const { isFirstFetch, items, isLoading } = storeToRefs(useListStore())
+const { isFirstFetch, items, isLoading } = useListStore()
 </script>
 
 <template>

@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'vue'
+import type { AllowedComponentProps, CSSProperties } from 'vue'
 
 // Types
 import type { IBtnProps } from '../../Button/types/btn-props.type'
@@ -132,12 +132,17 @@ export type IFormProps = {
   /**
    * Props for the submit button
    */
-  submitBtnProps?: IBtnProps & IItem
+  submitBtnProps?: IBtnProps & AllowedComponentProps
 
   /**
    * Props for the cancel button
    */
-  cancelBtnProps?: IBtnProps & IItem
+  cancelBtnProps?: IBtnProps & AllowedComponentProps
+
+  /**
+   * Props for the edit button
+   */
+  editBtnProps?: IBtnProps & AllowedComponentProps
 
   /**
    * Props for the errors section

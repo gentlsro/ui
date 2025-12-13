@@ -27,7 +27,7 @@ export function useListDragAndDrop(payload?: {
     dragMeta,
     itemKey,
     emits,
-  } = storeToRefs(useListStore())
+  } = useListStore()
 
   // Utils
   let lastY = 0

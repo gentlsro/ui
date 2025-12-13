@@ -75,7 +75,7 @@ function handleTransition(
 
 <style scoped lang="scss">
 .drawer {
-  @apply fixed flex flex-col flex-gap-1 top-0 opacity-0
+  @apply fixed flex flex-col gap-1 top-0 opacity-0
     bg-light-200 dark:bg-dark-800 z-$zDrawer max-w-full overflow-auto;
 
   transition:

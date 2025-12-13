@@ -54,14 +54,14 @@ export async function buildListItems(payload: {
     itemsSearched = searchConfig.fnc
       ? await searchConfig.fnc(search, items, _extra)
       : await searchData({
-        useWorker,
-        fuseOptions,
-        searchRef: search,
-        rowsRef: items,
-        normalizeFnc: searchConfig.normalizeFnc,
-        fuseSearchToken: searchConfig.fuseSearchToken,
-        _extra,
-      })
+          useWorker,
+          fuseOptions,
+          searchRef: search,
+          rowsRef: items,
+          normalizeFnc: searchConfig.normalizeFnc,
+          fuseSearchToken: searchConfig.fuseSearchToken,
+          _extra,
+        })
   }
 
   let _items: Array<IListItem | IGroupRow> = []

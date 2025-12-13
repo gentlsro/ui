@@ -9,6 +9,7 @@ export function useMenuUtils() {
     return reactivePick(props, [
       'beforeHideFnc',
       'cover',
+      'dense',
       'fallbackPlacements',
       'fit',
       'manual',

@@ -138,7 +138,6 @@ function handleRemove(idx: number) {
 
     <Dialog
       w="screen-md"
-      dense
       min-h="1/2"
       max-h="6/10"
       h="auto"

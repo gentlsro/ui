@@ -3,14 +3,14 @@ import { listHandleAddSearch } from '../functions/list-handle-add-search'
 import { useListStore } from '../stores/list.store'
 
 export function useListItemAdding() {
-  const listStore = useListStore()
   const {
+    itemLabel,
     addConfig,
     preAddedItem,
     hasExactMatch,
     search,
     $zAddItem,
-  } = storeToRefs(listStore)
+  } = useListStore()
 
   function handleSearch() {
     listHandleAddSearch({
@@ -18,7 +18,7 @@ export function useListItemAdding() {
       preAddedItem,
       hasExactMatch: hasExactMatch.value,
       addConfig: addConfig.value,
-      itemLabel: listStore.itemLabel,
+      itemLabel: itemLabel.value,
       $z: $zAddItem,
     })
   }

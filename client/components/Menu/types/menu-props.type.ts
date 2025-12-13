@@ -23,6 +23,11 @@ export type IMenuProps = {
   cover?: boolean
 
   /**
+   * When true, the `Menu` content will not have any padding (unless forced via `ui.contentClass` and using `important`)
+   */
+  dense?: boolean
+
+  /**
    * The FloatingUI fallback placements
    */
   fallbackPlacements?: Placement[]

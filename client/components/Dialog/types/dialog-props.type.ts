@@ -10,6 +10,11 @@ export type IDialogProps = {
   beforeHideFnc?: () => boolean | Promise<boolean>
 
   /**
+   * When true, the `Dialog` content will not have any padding (unless forced via `ui.contentClass` and using `important`)
+   */
+  dense?: boolean
+
+  /**
    * Selectors of the elements that should not trigger the hide event
    */
   ignoreClickOutside?: string[]
@@ -100,6 +105,16 @@ export type IDialogProps = {
      * Style to apply to the `content`
      */
     contentStyle?: CSSProperties
+
+    /**
+     * Class to apply to the `dialog` itself
+     */
+    dialogClass?: ClassType
+
+    /**
+     * Style to apply to the `dialog` itself
+     */
+    dialogStyle?: CSSProperties
 
     /**
      * Class to apply to the `header`

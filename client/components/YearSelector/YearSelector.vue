@@ -203,7 +203,7 @@ function addEventListener() {
 
 <style lang="scss" scoped>
 .year-selector {
-  @apply flex flex-gap-x-1 items-center;
+  @apply flex gap-x-1 items-center;
 
   &__previous,
   &__next {

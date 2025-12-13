@@ -172,7 +172,7 @@ const $z = useZod(
     h="auto"
     manual
     :title="$t('table.layoutSave')"
-    :ui="{ contentClass: 'p-x-3 p-t-3 p-b-1' }"
+    :ui="{ contentClass: 'flex flex-col p-x-3 p-t-3 p-b-1' }"
     @before-show="loadLayout"
     @hide="handleHide"
   >

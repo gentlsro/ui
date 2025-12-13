@@ -10,6 +10,7 @@ export function useDialogUtils() {
   function getMenuProps(props: IDialogProps) {
     return reactivePick(props, [
       'beforeHideFnc',
+      'dense',
       'manual',
       'maxHeight',
       'modelValue',

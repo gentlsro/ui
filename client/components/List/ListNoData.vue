@@ -9,7 +9,7 @@ const emits = defineEmits<{
 }>()
 
 // Store
-const { isLoading, listItems } = storeToRefs(useListStore())
+const { isLoading, listItems } = useListStore()
 
 // Layout
 const bannerEl = useTemplateRef('bannerEl') as any

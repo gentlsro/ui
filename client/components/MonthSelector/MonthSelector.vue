@@ -127,7 +127,7 @@ function handleMonthSelect(month: Pick<Month, 'idx'>, callback?: () => void) {
 
 <style lang="scss" scoped>
 .month-selector {
-  @apply flex flex-gap-x-1 items-center;
+  @apply flex gap-x-1 items-center;
 
   &__previous,
   &__next {

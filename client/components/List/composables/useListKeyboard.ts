@@ -11,20 +11,20 @@ export function useListKeyboard(config?: { registerKeyStroke?: boolean }) {
   const formSubmit = inject(formSubmitKey, () => {})
 
   // Store
-  const listStore = useListStore()
   const {
     listEl,
     containerEl,
     listItems,
     itemFocused,
     itemFocusedIdx,
-  } = storeToRefs(listStore)
+    handleSelect,
+  } = useListStore()
 
   // Layout
   const itemFocusedEl = ref<HTMLDivElement>()
   const { focused } = useFocusWithin(containerEl)
 
-  function handleMouseOver(item: IItem, index: number) {
+  function handleMouseOver(item: any, index: number) {
     if (!('isGroup' in item) && !preventNextHoverEvent.value) {
       itemFocusedIdx.value = index
     }
@@ -124,7 +124,7 @@ export function useListKeyboard(config?: { registerKeyStroke?: boolean }) {
           break
         }
 
-        listStore.handleSelect(itemFocused.value)
+        handleSelect(itemFocused.value)
 
         return
     }

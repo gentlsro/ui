@@ -179,6 +179,7 @@ onUnmounted(() => {
       :has-confirmation
       :cancel-btn-props="mergedProps.cancelBtnProps"
       :submit-btn-props="mergedProps.submitBtnProps"
+      :edit-btn-props="mergedProps.editBtnProps"
     >
       <div
         id="form-controls"
@@ -195,6 +196,7 @@ onUnmounted(() => {
           :has-keyboard-shortcuts
           :cancel-btn-props="mergedProps.cancelBtnProps"
           :submit-btn-props="mergedProps.submitBtnProps"
+          :edit-btn-props="mergedProps.editBtnProps"
         >
           <template #prepend>
             <slot name="submit-prepend" />

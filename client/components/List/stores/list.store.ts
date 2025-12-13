@@ -18,66 +18,98 @@ import { listFetchData } from '../functions/list-fetch-data'
 import { buildListItems } from '../functions/build-list-items'
 import { listItemSelect } from '../functions/list-item-select'
 import { listHandleAddSearch } from '../functions/list-handle-add-search'
-import { getComponentProps } from '../../../functions/get-component-props'
 import { isListItemSelected } from '../functions/helpers/is-list-item-selected'
 import { getListDefaultSortBy } from '../functions/helpers/get-list-default-sort-by'
 
 // Components
 import type SearchInput from '../../Inputs/TextInput/SearchInput.vue'
 
-export const listIdKey = Symbol('__listId')
+export const LIST_ID_KEY = Symbol('__listId')
 
-export function useListStore(listId?: string, listProps?: IListProps) {
-  const _listId = injectLocal(listIdKey, listId ?? useId())
+type IConfig = {
+  listProps?: IListProps
+  injectionKey?: string
+}
 
-  return defineStore(`list.${_listId}`, () => {
+function createStore(injectionKey?: string) {
+  const injectionState = createInjectionState((payload?: IConfig) => {
+    const { listProps } = payload ?? {}
+    const instance = getCurrentInstance()
+
     // Store
     const { lastPointerDownType } = storeToRefs(useUIStore())
 
     // Configs
-    const modifiers = ref<IListProps['modifiers']>(listProps?.modifiers)
-    const loadData = ref<IListProps['loadData']>(
-      listProps?.loadData ?? getComponentProps('list').loadData(),
-    )
+    const ui = ref(listProps?.ui) as Ref<IListProps['ui']>
+    const modifiers = ref(listProps?.modifiers) as Ref<IListProps['modifiers']>
+    const loadData = ref(listProps?.loadData) as Ref<IListProps['loadData']>
+    const sortingConfig = ref(listProps?.sortingConfig) as Ref<IListProps['sortingConfig']>
+    const selectionConfig = ref(listProps?.selectionConfig) as Ref<IListProps['selectionConfig']>
+    const searchConfig = ref(listProps?.searchConfig) as Ref<IListProps['searchConfig']>
+    const groupBySource = ref(listProps?.groupBy ?? []) as Ref<NonNullable<IListProps['groupBy']>>
+    const addConfig = ref(listProps?.addConfig) as Ref<IListProps['addConfig']>
 
     // Utils
-    const refreshTrigger = ref(0)
-    const isLoadingSource = ref(listProps?.loading ?? false)
     const { isLoading: isRequestLoading, handleRequest, abortController } = useRequest()
-    const itemKey = toRef(listProps ?? {}, 'itemKey', 'id')
-    const itemLabel = toRef(listProps ?? {}, 'itemLabel', 'label')
+    const refreshTrigger = ref(0)
+
+    const isLoadingSource = initRef({
+      propName: 'loading',
+      instance,
+      props: listProps,
+      defaultValue: false,
+    })
+
+    const itemKey = initRef({
+      propName: 'itemKey',
+      instance,
+      props: listProps,
+      defaultValue: 'id',
+    }) as Ref<string>
+
+    const itemLabel = initRef({
+      propName: 'itemLabel',
+      instance,
+      props: listProps,
+      defaultValue: 'label',
+    }) as Ref<string>
 
     const isLoading = computed(() => {
       return isRequestLoading.value || isLoadingSource.value
     })
 
     // Layout
-    const isMounted = ref(false)
-    const isClearable = ref(listProps?.clearable)
-    const containerEl = ref<HTMLDivElement>()
     const listEl = ref<any>() // Instance of VirtualScroller (~ type is broken somehow...)
-    const noFilter = ref(listProps?.noFilter)
-    const itemFocusedIdx = ref(-1)
-    const rowComponent = ref(listProps?.rowComponent ?? 'div')
+    const isMounted = ref(false)
+    const containerEl = ref<HTMLDivElement>()
+    const rowComponent = shallowRef(listProps?.rowComponent ?? 'div')
 
-    const itemFocused = computed(() => {
-      if (itemFocusedIdx.value > -1) {
-        return listItems.value[itemFocusedIdx.value] as IListItem
-      }
+    const isClearable = initRef({
+      propName: 'clearable',
+      instance,
+      props: listProps,
+      defaultValue: false,
+    }) as Ref<boolean>
 
-      return undefined
-    })
+    const noFilter = initRef({
+      propName: 'noFilter',
+      instance,
+      props: listProps,
+      defaultValue: false,
+    }) as Ref<boolean>
 
     // Search
     const hasExactMatch = ref(false)
     const searchEl = ref<InstanceType<typeof SearchInput>>()
-    const search = ref (listProps?.search)
 
-    const searchConfig = ref<IListProps['searchConfig']>(
-      listProps?.searchConfig ?? getComponentProps('list').searchConfig(),
-    )
+    const search = initRef({
+      propName: 'search',
+      instance,
+      props: listProps,
+      defaultValue: undefined,
+    }) as Ref<string | undefined>
 
-    const fuseOptions = ref<Required<FuseOptions<IItem>, 'keys'>>({
+    const fuseOptions = ref<Required<FuseOptions<any>, 'keys'>>({
       minMatchCharLength: 1,
       threshold: 0.4,
       isCaseSensitive: false,
@@ -90,9 +122,7 @@ export function useListStore(listId?: string, listProps?: IListProps) {
     })
 
     // Grouping
-    const groupBySource = ref(listProps?.groupBy ?? []) as Ref<NonNullable<IListProps['groupBy']>>
-
-    const groupBy = computed<GroupItem[]>(() => {
+    const groupBy = computed<GroupItem<any>[]>(() => {
       return groupBySource.value.map(g => ({
         ...g,
         format: ({ ref }) => g.format?.(ref) || get(ref, g.field),
@@ -100,17 +130,13 @@ export function useListStore(listId?: string, listProps?: IListProps) {
     })
 
     // Sorting
-    const sortingConfig = ref<IListProps['sortingConfig']>(
-      listProps?.sortingConfig ?? getComponentProps('list').sortingConfig?.(),
-    )
-
-    // We make sure to have at least one sortBy item
+    // Make sure to have at least one sortBy item
     if (sortingConfig.value && !sortingConfig.value.sortBy?.length) {
       const defaultSortBy = getListDefaultSortBy(itemLabel.value)
       sortingConfig.value.sortBy = defaultSortBy
     }
 
-    const sortBy = computed<SortItem[]>(() => {
+    const sortBy = computed<SortItem<any>[]>(() => {
       return (sortingConfig.value?.sortBy ?? []).map(s => ({
         ...s,
         format: ({ ref }) => s.format?.(ref) || get(ref, s.field),
@@ -118,11 +144,14 @@ export function useListStore(listId?: string, listProps?: IListProps) {
     })
 
     // Adding
-    const preAddedItem = ref<IListItemToAdd>()
-    const addedItems = ref<IListItemToAdd[]>([])
-    const addConfig = ref<IListProps['addConfig']>(
-      listProps?.addConfig ?? getComponentProps('list').addConfig(),
-    )
+    const preAddedItem = ref() as Ref<IListItemToAdd>
+
+    const addedItems = initRef({
+      propName: 'addedItems',
+      instance,
+      props: listProps,
+      defaultValue: [],
+    }) as Ref<IListItemToAdd[]>
 
     const addedItemById = computed(() => {
       return addedItems.value.reduce((agg, item) => {
@@ -152,10 +181,16 @@ export function useListStore(listId?: string, listProps?: IListProps) {
     )
 
     // Items
-    const items = ref<IItem[]>(listProps?.items ?? [])
-    const itemsGrouped = ref<Array<IListItem | IGroupRow>>()
-    const hiddenItems = ref<IListProps['hiddenItems']>(listProps?.hiddenItems)
+    const items = ref(listProps?.items ?? []) as Ref<any[]>
+    const itemsGrouped = ref() as Ref<Array<IListItem | IGroupRow>>
     const useWorker = computed(() => listProps?.useWorker ?? items.value.length > 5e3)
+
+    const hiddenItems = initRef({
+      propName: 'hiddenItems',
+      instance,
+      props: listProps,
+      defaultValue: undefined,
+    }) as Ref<IListProps['hiddenItems']>
 
     const itemByKey = computed(() => {
       const allItems = [...items.value, ...addedItems.value.map(item => item.ref)]
@@ -165,7 +200,7 @@ export function useListStore(listId?: string, listProps?: IListProps) {
         agg[_itemKey] = item
 
         return agg
-      }, {} as Record<string, IItem>)
+      }, {} as Record<string, any>)
     })
 
     const isHiddenByItemKey = computed(() => {
@@ -175,6 +210,13 @@ export function useListStore(listId?: string, listProps?: IListProps) {
 
         return agg
       }, {} as Record<string, boolean>) ?? {}
+    })
+
+    const listItems = computed(() => {
+      return [
+        ...(preAddedItem.value ? [preAddedItem.value] : []),
+        ...itemsGrouped.value ?? [],
+      ]
     })
 
     watch(search, searchVal => {
@@ -248,19 +290,13 @@ export function useListStore(listId?: string, listProps?: IListProps) {
       { debounce: () => isMounted.value ? 10 : 0 }, // To prevent double-trigger when adding items
     )
 
-    const listItems = computed(() => {
-      return [
-        ...(preAddedItem.value ? [preAddedItem.value] : []),
-        ...itemsGrouped.value ?? [],
-      ]
-    })
-
     // Selection
-    const selection = ref(listProps?.selection)
-
-    const selectionConfig = ref<IListProps['selectionConfig']>(
-      listProps?.selectionConfig ?? getComponentProps('list').selectionConfig(),
-    )
+    const selection = initRef({
+      propName: 'selection',
+      instance,
+      props: listProps,
+      defaultValue: undefined,
+    }) as Ref<IListProps['selection']>
 
     function handleSelect(item?: IListItem | IListItemToAdd) {
       if (!item || !selectionConfig.value?.enabled) {
@@ -318,7 +354,7 @@ export function useListStore(listId?: string, listProps?: IListProps) {
         search: search.value,
         handleRequest,
         loadData: loadData.value,
-        lastVisibleRow: listItems.value.at(-1) as IListItem,
+        lastVisibleRow: listItems.value.at(-1) as any,
         hasMore: hasMore.value,
         listItems: listItems.value,
         items: items.value,
@@ -350,6 +386,17 @@ export function useListStore(listId?: string, listProps?: IListProps) {
       typeof loadData.value?.onSearch === 'number' ? loadData.value?.onSearch : 0,
     )
 
+    // Focusing
+    const itemFocusedIdx = ref(-1)
+
+    const itemFocused = computed(() => {
+      if (itemFocusedIdx.value > -1) {
+        return listItems.value[itemFocusedIdx.value] as IListItem
+      }
+
+      return undefined
+    })
+
     // D'n'D
     const draggedItem = ref<IListItem>()
     const dragMeta = ref<IListDragMeta>({
@@ -373,35 +420,38 @@ export function useListStore(listId?: string, listProps?: IListProps) {
       itemMoved: (_item, _items) => {},
     })
 
-    return {
+    const returnedData = {
+      // Configs
+      modifiers,
+      loadData,
+      sortingConfig,
+      selectionConfig,
+      addConfig,
+      searchConfig,
+      ui,
+
       // Utils
       refreshTrigger,
-
-      // Configs
-      loadData,
-      modifiers,
-
-      // Layout
+      isLoadingSource,
       itemKey,
       itemLabel,
+      isLoading,
+      abortController,
+      isRequestLoading,
+      handleRequest,
+
+      // Layout
       containerEl,
       listEl,
       rowComponent,
-      isLoadingSource,
-      isLoading,
-      noFilter,
       isMounted,
       isClearable,
-
-      // Focus
-      itemFocusedIdx,
-      itemFocused,
+      noFilter,
 
       // Search
       search,
-      hasExactMatch,
       searchEl,
-      searchConfig,
+      hasExactMatch,
       fuseOptions,
 
       // Items
@@ -410,23 +460,22 @@ export function useListStore(listId?: string, listProps?: IListProps) {
       itemByKey,
       listItems,
 
+      // Grouping
+      groupBy,
+
       // Selection
       selection,
-      selectionConfig,
       handleSelect,
-
-      // Sorting
-      sortingConfig: skipHydrate(sortingConfig),
 
       // Adding
       preAddedItem,
       addedItems,
-      addConfig,
       addedItemById,
       $zAddItem,
 
-      // Grouping
-      groupBy,
+      // Focus
+      itemFocused,
+      itemFocusedIdx,
 
       // Data fetching
       isFirstFetch,
@@ -443,5 +492,23 @@ export function useListStore(listId?: string, listProps?: IListProps) {
       // Emits
       emits,
     }
-  })()
+
+    return returnedData
+  }, { injectionKey })
+
+  return injectionState
+}
+
+export function useListStore(payload?: IConfig) {
+  let injectionKey = payload?.injectionKey ?? injectLocal(LIST_ID_KEY)
+
+  if (!injectionKey) {
+    const uuid = generateUUID()
+    provideLocal(LIST_ID_KEY, uuid)
+    injectionKey = uuid
+  }
+
+  const [useProvideListStore, useConsumeListStore] = createStore(injectionKey)!
+
+  return useConsumeListStore() ?? useProvideListStore(payload)
 }

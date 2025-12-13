@@ -222,8 +222,14 @@ function bounce() {
         <div
           ref="floatingEl"
           class="dialog"
-          :style="{ '--transitionDuration': `${transitionDuration}ms` }"
-          :class="{ 'has-transition': !noTransition }"
+          :style="{
+            ...mergedProps.ui?.dialogStyle,
+            '--transitionDuration': `${transitionDuration}ms`,
+          }"
+          :class="[
+            mergedProps.ui?.dialogClass,
+            { 'has-transition': !noTransition },
+          ]"
           h="120"
           w="100"
           max-h="[min(95%,var(--dialogMaxHeight))]"
@@ -273,7 +279,7 @@ function bounce() {
           <div
             ref="contentEl"
             class="dialog__content"
-            :class="mergedProps.ui?.contentClass ?? 'p-1'"
+            :class="mergedProps.ui?.contentClass"
             :style="mergedProps.ui?.contentStyle"
           >
             <slot :hide="hide" />
@@ -286,23 +292,8 @@ function bounce() {
 
 <style lang="scss" scoped>
 .dialog {
-  @apply flex flex-col max-w-95vw max-h-95% rounded-custom z-1 border-1
-    border-ca pointer-events-auto bg-white dark:bg-darker;
-
   &__wrapper {
     @apply flex fixed inset-0 pointer-events-none z-$zIndex;
-  }
-
-  &__header {
-    @apply flex items-center gap-2 p-l-3 p-r-1 p-y-2 rounded-t-custom;
-
-    &-title {
-      @apply grow;
-    }
-  }
-
-  &__content {
-    @apply relative flex flex-col grow gap-1 overflow-auto rounded-custom;
   }
 }
 

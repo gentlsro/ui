@@ -15,8 +15,7 @@ type IProps = {
 const props = defineProps<IProps>()
 
 // Store
-const listStore = useListStore()
-const { emits, itemFocusedIdx } = storeToRefs(listStore)
+const { emits, itemFocusedIdx } = useListStore()
 
 // Layout
 const item = toRef(props, 'item')

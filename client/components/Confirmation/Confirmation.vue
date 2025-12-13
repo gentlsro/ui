@@ -85,6 +85,6 @@ function handleClose() {
 }
 
 .actions {
-  @apply flex items-center p-x-3 p-y-1 shrink-0 justify-end flex-gap-x-3;
+  @apply flex items-center p-x-3 p-y-1 shrink-0 justify-end gap-x-3;
 }
 </style>

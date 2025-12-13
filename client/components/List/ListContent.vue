@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { IGroupRow } from '$utils'
+
 // Types
 import type { IListItem } from './types/list-item.type'
 import type { IListProps } from './types/list-props.type'
@@ -8,18 +10,17 @@ import type { IVirtualScrollEvent } from '../VirtualScroller/types/virtual-scrol
 import { useListStore } from './stores/list.store'
 import { useListKeyboard } from './composables/useListKeyboard'
 
-type IProps = Pick<IListProps, 'ui' | 'noHover' | 'reorderable' | 'disabledFnc' | 'scrollerConfig' | 'moveHandleTarget'>
+type IProps = Pick<IListProps, 'ui' | 'noHover' | 'reorderable' | 'disabledFnc' | 'scrollerConfig' | 'moveHandleTarget' | 'dense'>
 
 const props = defineProps<IProps>()
 defineEmits<{
-  (e: 'change:contentSize', payload: { height: number, width: number }): void
+  (e: 'change:contentSize', payload: { height: number }): void
 }>()
 
 // Constants
 const FETCH_MORE_THRESHOLD = 3 // How many items from the bottom to trigger the fetch
 
 // Layout
-const listStore = useListStore()
 const {
   listEl,
   listItems,
@@ -27,7 +28,8 @@ const {
   isFetchMore,
   searchConfig,
   dragMeta,
-} = storeToRefs(listStore)
+  fetchAndSetData,
+} = useListStore()
 
 const { handleMouseOver } = useListKeyboard()
 
@@ -43,7 +45,7 @@ function handleVirtualScroll(ev: IVirtualScrollEvent) {
   if (isFetchMore) {
     const lastVisibleItem = _listItems[visibleEndItem.index] as IListItem
 
-    listStore.fetchAndSetData({ isFetchMore, lastVisibleItem })
+    fetchAndSetData({ isFetchMore, lastVisibleItem })
   }
 }
 
@@ -64,7 +66,7 @@ const contentStyle = computed(() => {
     :rows="listItems"
     class="list-content"
     :fetch-more="isFetchMore"
-    :class="contentClass"
+    :class="[contentClass, { 'is-dense': dense }]"
     :style="contentStyle"
     @virtual-scroll="handleVirtualScroll"
     @change:content-size="$emit('change:contentSize', $event)"
@@ -132,9 +134,7 @@ const contentStyle = computed(() => {
   @apply grow;
 }
 
-.list.is-dense {
-  .list-content {
-    @apply p-1 p-t-0;
-  }
+.list-content.is-dense {
+  @apply p-0;
 }
 </style>

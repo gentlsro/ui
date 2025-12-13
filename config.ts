@@ -312,7 +312,18 @@ export const defaultComponentsConfig = {
       title: undefined,
       transitionDuration: 250,
       ui: {
-        headerClass: 'font-semibold',
+        dialogClass: [
+          'flex flex-col max-w-95vw max-h-95% rounded-custom z-1 pointer-events-auto',
+
+          // Border
+          'border-1 border-ca',
+
+          // Background
+          'dark:bg-dark-900 bg-white',
+        ],
+        headerClass: 'flex items-center gap-2 p-l-3 p-r-1 p-y-2 rounded-t-custom font-semibold',
+        titleClass: 'grow',
+        contentClass: 'relative flex flex-col grow overflow-auto rounded-custom p-1',
       },
     },
     merge: ['ui'],
@@ -461,7 +472,7 @@ export const defaultComponentsConfig = {
       },
     },
     confirmationInit: { enabled: true, required: false, editable: true },
-    merge: ['ui', 'errorsSectionProps', 'cancelBtnProps', 'submitBtnProps'],
+    merge: ['ui', 'errorsSectionProps', 'cancelBtnProps', 'submitBtnProps', 'editBtnProps'],
   },
 
   // Heading
@@ -560,12 +571,32 @@ export const defaultComponentsConfig = {
       itemLabel: 'label',
       clearable: true,
       ui: {
-        moveHandleClass: 'p-t-1.5 color-ca',
+        containerClass: 'flex flex-col overflow-auto rounded-custom',
+        searchClass: 'flex flex-col gap-1 p-2',
         contentClass: hasSearch => hasSearch ? 'p-x-2 p-t-0' : 'p-2',
-        searchClass: 'gap-1 p-2',
-        rowClass: () => 'p-r-2 m-y-1px p-y-1 rounded-custom',
+        rowClass: ({ isSelected, isFocused, isMulti }) => {
+          const classes = ['flex gap-1 p-r-2 items-start rounded-custom overflow-auto w-full']
+
+          if (isSelected) {
+            classes.push('bg-slate-100 color-primary dark:(bg-slate-800 color-blue-400)')
+          }
+
+          if (isFocused) {
+            classes.push('outline-1 outline-solid outline-primary outline-offset--1')
+          }
+
+          if (isMulti) {
+            classes.push('bg-slate-100 color-primary dark:(bg-slate-800 color-blue-400)')
+          }
+
+          return classes
+        },
         rowStyle: ({ groupsCount }) => ({ paddingLeft: `${(groupsCount || 1) * 8}px` }),
         rowGroupStyle: ({ level }) => ({ paddingLeft: `${level * 8}px` }),
+        rowContentClass: () => [
+          'overflow-auto flex flex-col gap-1 grow p-y-1.5 leading-20px',
+        ],
+        moveHandleClass: 'p-t-1.5 color-ca',
       },
       search: '',
       searchConfig: {
@@ -647,7 +678,7 @@ export const defaultComponentsConfig = {
       transitionDuration: 180,
       ui: {
         menuClass: [
-          'flex flex-col z-$zIndex bg-white grow rounded-custom overflow-auto',
+          'flex flex-col z-$zIndex bg-white grow rounded-custom',
 
           // Background
           'dark:bg-dark-950/90 bg-white/90 backdrop-blur-2px',
@@ -662,7 +693,7 @@ export const defaultComponentsConfig = {
           'shadow-consistent-xs shadow-darker/20 shadow-light/8',
         ],
         contentClass: [
-          'relative flex flex-col grow gap-1 overflow-auto rounded-custom p-1',
+          'relative flex flex-col grow gap-1 overflow-auto rounded-custom p-1 max-h-inherit',
         ],
         headerClass: 'font-semibold',
         overlayClass: 'fixed inset-0 transition-background-color z-$zIndex duration-$transitionDuration ease bg-transparent bg-darker-70',
@@ -706,9 +737,8 @@ export const defaultComponentsConfig = {
       transitionDuration: 250,
       trigger: 'click',
       ui: {
-        contentClass: 'p-1 gap-y-3',
+        contentClass: 'flex flex-col p-1 gap-y-3 rounded-custom',
       },
-
     },
     merge: ['ui'],
   },
@@ -987,12 +1017,12 @@ export const defaultComponentsConfig = {
       menuProps: {
         position: 'top',
         fit: false,
+        dense: true,
         manual: true,
         noUplift: true,
         matchWidth: true,
         noArrow: true,
         offset: 0,
-        ui: { contentClass: 'p-0' },
       },
     },
     merge: ['ui', 'loadData', 'listProps', 'menuProps'],
@@ -1330,7 +1360,7 @@ export const defaultComponentsConfig = {
 
           return classes
         },
-        nodeContentClass: () => 'overflow-auto flex flex-col grow leading-20px p-y-1.5',
+        nodeContentClass: () => 'overflow-hidden flex flex-col grow leading-20px p-y-1.5',
       },
       scrollerConfig: { rowHeight: 32 },
       actionsConfig: {
@@ -1367,7 +1397,7 @@ export const defaultComponentsConfig = {
       noScrollEmit: undefined,
       overscan: undefined,
       rows: undefined,
-      rowHeight: 40,
+      rowHeight: 32,
       rowKey: 'id' as any,
       threshold: 80,
       watchWidth: undefined,
@@ -1378,7 +1408,7 @@ export const defaultComponentsConfig = {
   virtualScrollerVertical: {
     props: {
       rows: undefined,
-      rowHeight: 40,
+      rowHeight: 32,
       rowKey: 'id' as any,
       virtualizerOptions: {
         overscan: 5,

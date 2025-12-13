@@ -19,7 +19,6 @@ type IProps = Pick<IListProps, 'ui' | 'noHover' | 'reorderable' | 'disabledFnc' 
 const props = defineProps<IProps>()
 
 // Store
-const listStore = useListStore()
 const {
   listEl,
   addedItemById,
@@ -31,7 +30,8 @@ const {
   groupBy,
   itemKey,
   emits,
-} = storeToRefs(listStore)
+  handleSelect,
+} = useListStore()
 
 // Utils
 const { getElement } = useFloatingUIUtils()
@@ -72,6 +72,8 @@ const rowProps = computed(() => {
         groupsCount: groupBy.value.length,
         row: item.value.ref,
         isLast: props.isLast,
+        isMulti: selectionConfig.value?.multi,
+        usesCheckbox: !!selectionConfig.value?.useCheckbox,
       }),
       {
         'is-reorderable': isReorderable,
@@ -92,8 +94,34 @@ const rowProps = computed(() => {
       groupsCount: groupBy.value.length,
       row: item.value.ref,
       isLast: props.isLast,
+      isMulti: selectionConfig.value?.multi,
+      usesCheckbox: !!selectionConfig.value?.useCheckbox,
     }),
   }
+})
+
+const rowContentClass = computed(() => {
+  return props.ui?.rowContentClass?.({
+    isSelected: isSelected.value,
+    isFocused: itemFocused.value?.id === item.value?.id,
+    row: item.value.ref,
+    groupsCount: groupBy.value.length,
+    isLast: props.isLast,
+    isMulti: selectionConfig.value?.multi,
+    usesCheckbox: !!selectionConfig.value?.useCheckbox,
+  })
+})
+
+const rowContentStyle = computed(() => {
+  return props.ui?.rowContentStyle?.({
+    isSelected: isSelected.value,
+    isFocused: itemFocused.value?.id === item.value?.id,
+    row: item.value.ref,
+    groupsCount: groupBy.value.length,
+    isLast: props.isLast,
+    isMulti: selectionConfig.value?.multi,
+    usesCheckbox: !!selectionConfig.value?.useCheckbox,
+  })
 })
 
 function handleClick() {
@@ -101,7 +129,7 @@ function handleClick() {
     return
   }
 
-  listStore.handleSelect(item.value)
+  handleSelect(item.value)
   emits.value.itemClick(item.value)
 }
 
@@ -167,7 +195,11 @@ onMounted(() => {
       :is-disabled
       :is-selected
     >
-      <div class="list-row-item__content">
+      <div
+        class="list-row-item__content"
+        :class="rowContentClass"
+        :style="rowContentStyle"
+      >
         <span
           break-words
           v-html="item._highlighted"
@@ -188,33 +220,28 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .list-row-item {
-  @apply relative flex gap-x-2 cursor-default select-none items-center w-full;
-  @apply min-h-$defaultRowHeight;
-
   &__content {
-    @apply flex flex-col grow overflow-hidden;
-
     &-new {
       @apply hidden text-caption font-rem-12;
     }
   }
 
-  &__selection-checkbox {
-    @apply self-start shrink-0 pointer-events-none;
-  }
+  //   &__selection-checkbox {
+  //     @apply self-start shrink-0 pointer-events-none;
+  //   }
 
-  &.is-dragging {
-    @apply outline-2 outline-primary outline-dashed outline-offset--2 bg-primary/30;
+  //   &.is-dragging {
+  //     @apply outline-2 outline-primary outline-dashed outline-offset--2 bg-primary/30;
 
-    &::after {
-      @apply content-empty absolute inset-0 bg-primary rounded-inherit;
-    }
-  }
+  //     &::after {
+  //       @apply content-empty absolute inset-0 bg-primary rounded-inherit;
+  //     }
+  //   }
 
   &.is-added,
   &.is-new {
     .list-row-item__content-new {
-      @apply flex gap-1 items-center;
+      @apply flex gap-1 items-center font-rem-12 text-caption;
     }
   }
 
@@ -234,14 +261,14 @@ onMounted(() => {
     @apply cursor-pointer;
   }
 
-  &.is-selected:not(.uses-checkbox) {
-    @apply dark:bg-primary/50 bg-primary/20 light:color-primary;
-  }
+  //   &.is-selected:not(.uses-checkbox) {
+  //     @apply dark:bg-primary/50 bg-primary/20 light:color-primary;
+  //   }
 
-  &.is-focused:not(.no-hover),
-  &.is-selectable:not(.no-hover):hover {
-    @apply bg-primary/25;
-  }
+  //   &.is-focused:not(.no-hover),
+  //   &.is-selectable:not(.no-hover):hover {
+  //     @apply bg-primary/25;
+  //   }
 
   &:not(.is-reorderable) {
     .list-move-handle {
@@ -249,10 +276,10 @@ onMounted(() => {
     }
   }
 
-  &:not(.is-selectable) {
-    .list-row-item__selection-checkbox {
-      @apply hidden;
-    }
-  }
+  //   &:not(.is-selectable) {
+  //     .list-row-item__selection-checkbox {
+  //       @apply hidden;
+  //     }
+  //   }
 }
 </style>

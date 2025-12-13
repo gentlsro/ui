@@ -226,7 +226,10 @@ defineExpose(menuGetExposed({
         <div
           ref="contentEl"
           class="menu__content"
-          :class="mergedProps.ui?.contentClass ?? 'p-1'"
+          :class="[
+            mergedProps.ui?.contentClass,
+            { 'is-dense': dense },
+          ]"
           :style="mergedProps.ui?.contentStyle"
           bg="inherit"
         >
@@ -244,6 +247,10 @@ defineExpose(menuGetExposed({
 </template>
 
 <style lang="scss" scoped>
+.is-dense {
+  @apply p-0;
+}
+
 // Transition
 .menu[placement='top'] {
   @apply transform-origin-bottom;

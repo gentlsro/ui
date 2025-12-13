@@ -32,7 +32,7 @@ export function useTreeNode<T extends IItem = IItem>(payload: ITreeNodeProps<T>)
   })
 
   const hasMultiSelect = computed(() => {
-    return !!selectionConfig.value?.enabled && selectionConfig.value?.multi
+    return !!(selectionConfig.value?.enabled && selectionConfig.value?.multi)
   })
 
   const isSelected = computed(() => {

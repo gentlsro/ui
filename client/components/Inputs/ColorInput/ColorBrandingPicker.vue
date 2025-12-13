@@ -49,8 +49,8 @@ const themeColors = computed(() => {
           },
         }]
       : []),
-    ...(hasWhite ? [{ tw: 'white', hex: '#FFFFFF', style: { border: '1px solid #000' } }] : []),
-    ...(hasBlack ? [{ tw: 'black', hex: '#000000' }] : []),
+    ...(hasWhite ? [{ tw: 'white', hex: '#FFFFFF', rgba: 'rgb(255, 255, 255, 1)', style: { border: '1px solid #000' } }] : []),
+    ...(hasBlack ? [{ tw: 'black', hex: '#000000', rgba: 'rgb(0, 0, 0, 1)' }] : []),
     ...THEME_COLORS.map(color => ({
       tw: color,
       hex: getColor(color, undefined, true),
@@ -134,7 +134,7 @@ watch(sRGBHex, value => {
 
 // Methods
 function setColor(color: { tw: string, hex: string, rgba: string }) {
-  const { tw } = color
+  const { tw, hex, rgba } = color
 
   // Handle transparent color
   if (tw === 'transparent') {
@@ -147,7 +147,7 @@ function setColor(color: { tw: string, hex: string, rgba: string }) {
 
   // RGBA
   if (props.rgba) {
-    model.value = color.rgba
+    model.value = rgba
     emits('update:color', model.value)
     $hide()
 
@@ -156,7 +156,7 @@ function setColor(color: { tw: string, hex: string, rgba: string }) {
 
   // TW
   if (props.tw) {
-    model.value = color.tw
+    model.value = tw
     emits('update:color', model.value)
     $hide()
 
@@ -164,7 +164,7 @@ function setColor(color: { tw: string, hex: string, rgba: string }) {
   }
 
   // Hex
-  model.value = color.hex
+  model.value = hex
   emits('update:color', model.value)
   $hide()
 }

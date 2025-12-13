@@ -104,6 +104,7 @@ defineExpose({
       color="white"
       data-cy="confirm-delete"
       :class="mergedProps.ui?.confirmBtnClass"
+      v-bind="confirmBtnProps"
       @click="handleConfirm"
     />
   </MenuProxy>

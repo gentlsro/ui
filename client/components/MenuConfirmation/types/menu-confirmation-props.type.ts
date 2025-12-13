@@ -1,4 +1,7 @@
+import type { AllowedComponentProps } from 'vue'
+
 // Types
+import type { IBtnProps } from '../../Button/types/btn-props.type'
 import type { IMenuProps } from '../../Menu/types/menu-props.type'
 
 export type IMenuConfirmationProps = IMenuProps & {
@@ -28,6 +31,14 @@ export type IMenuConfirmationProps = IMenuProps & {
    */
   noConfirmBtn?: boolean
 
+  /**
+   * Props for the confirm button
+   */
+  confirmBtnProps?: IBtnProps & AllowedComponentProps
+
+  /**
+   * UI configuration
+   */
   ui?: IMenuProps['ui'] & {
     /**
      * Class to apply to the 'confirm' button

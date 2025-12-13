@@ -26,7 +26,7 @@ export function extendNestedComponentProps<
 
   // Merge using provided merge function or fallback to default merging
   const mergedProps = options?.mergeFnc
-    ? options.mergeFnc(defaultPropValue, {})
+    ? options.mergeFnc(defaultPropValue, overrides)
     : { ...defaultPropValue, ...overrides }
 
   return mergedProps

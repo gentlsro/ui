@@ -5,7 +5,7 @@ import { getListItem } from './get-list-item'
 export function getListItemLabel(
   item: any,
   itemLabel: IListProps['itemLabel'],
-  itemByKey: IItem = {},
+  itemByKey: Record<string, any> = {},
 ) {
   if (typeof itemLabel === 'function') {
     const _item = getListItem(item, itemByKey)

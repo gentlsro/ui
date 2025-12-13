@@ -5,14 +5,14 @@ import { useListKeyboard } from '../composables/useListKeyboard'
 import { useListStore } from '../stores/list.store'
 
 export function listGetExposed() {
-  const listStore = useListStore()
-  const { listItems, refreshTrigger } = storeToRefs(listStore)
+  const store = useListStore()
+  const { listItems, refreshTrigger } = store
   const { handleKey } = useListKeyboard({ registerKeyStroke: false })
 
   return {
     handleKey,
     refresh: () => refreshTrigger.value++,
     getListItems: () => listItems.value,
-    store: () => listStore,
+    store: () => store,
   }
 }

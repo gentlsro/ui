@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { getActivePinia } from 'pinia'
 import type { IGroupRow } from '#layers/utilities/shared/composables/useGrouping'
 
 // Types
@@ -16,7 +15,7 @@ import { getListItemKey } from './functions/helpers/get-list-item-key'
 import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
 
 // Store
-import { listIdKey, useListStore } from './stores/list.store'
+import { useListStore } from './stores/list.store'
 
 const props = withDefaults(defineProps<IListProps>(), {
   ...getComponentProps('list'),
@@ -27,38 +26,31 @@ const emits = defineEmits<IListEmits>()
 defineSlots<IListSlots>()
 
 // Utils
-const uuid = props.listId ?? injectLocal(listIdKey, useId()) as string
-
 const mergedProps = computed(() => {
   return getComponentMergedProps('list', props)
 })
 
-provideLocal(listIdKey, uuid)
-
 // Store
-const listStore = useListStore(uuid, props)
+const listStore = useListStore({ listProps: props })
 const {
+  // Configs
+  addConfig,
+  sortingConfig,
+  searchConfig,
+  loadData,
+
+  // Layout
+  listEl,
+  search,
+  selection,
   isFirstFetch,
   containerEl,
   items: storeItems,
   listItems,
-  searchConfig: storeSearchConfig,
-  sortingConfig: storeSortingConfig,
   itemFocusedIdx,
-  loadData: storeLoadData,
-  noFilter: storeNoFilter,
-  addedItems: storeAddedItems,
-  addConfig: storeAddConfig,
   emits: storeEmits,
-  selection: storeSelection,
-  isLoadingSource,
-  search: storeSearch,
-  isMounted: isMountedStore,
-  isClearable: storeIsClearable,
-  hiddenItems: storeHiddenItems,
   modifiers,
-  listEl,
-} = storeToRefs(listStore)
+} = listStore
 
 // Set emits
 storeEmits.value = {
@@ -72,12 +64,6 @@ storeEmits.value = {
 }
 
 // Layout
-const search = defineModel<string>('search')
-const isMounted = ref(false)
-const addedItems = defineModel<IListItemToAdd[]>('addedItems', {
-  default: () => [],
-})
-const selection = defineModel<IListProps['selection']>('selection')
 const items = defineModel<IItem[]>('items') as Ref<IItem[]>
 
 const isSearchInputVisible = computed(() => {
@@ -89,20 +75,13 @@ const isSearchInputVisible = computed(() => {
 })
 
 // Sync with store
-syncRef(addedItems, storeAddedItems, { direction: 'both' })
-syncRef(toRef(props, 'noFilter'), storeNoFilter, { direction: 'ltr' })
-syncRef(toRef(mergedProps.value, 'addConfig'), storeAddConfig, { direction: 'ltr' })
-syncRef(toRef(mergedProps.value, 'loadData'), storeLoadData, { direction: 'ltr' })
-syncRef(toRef(mergedProps.value, 'searchConfig'), storeSearchConfig, { direction: 'ltr' })
-syncRef(toRef(mergedProps.value, 'sortingConfig'), storeSortingConfig, { direction: 'ltr' })
-syncRef(selection, storeSelection, { direction: 'both', immediate: false })
 syncRef(items, storeItems, { direction: 'both', immediate: false })
-syncRef(toRef(props, 'loading'), isLoadingSource, { direction: 'ltr' })
-syncRef(toRef(props, 'clearable'), storeIsClearable, { direction: 'ltr' })
-syncRef(search, storeSearch, { direction: 'both' })
-syncRef(isMounted, isMountedStore, { direction: 'ltr' })
-syncRef(toRef(props, 'hiddenItems'), storeHiddenItems, { direction: 'ltr' })
-syncRef(toRef(props, 'modifiers'), modifiers, { direction: 'ltr' })
+
+syncRef(toRef(mergedProps.value, 'addConfig'), addConfig, { direction: 'ltr' })
+syncRef(toRef(mergedProps.value, 'loadData'), loadData, { direction: 'ltr' })
+syncRef(toRef(mergedProps.value, 'searchConfig'), searchConfig, { direction: 'ltr' })
+syncRef(toRef(mergedProps.value, 'sortingConfig'), sortingConfig, { direction: 'ltr' })
+syncRef(toRef(mergedProps.value, 'modifiers'), modifiers, { direction: 'ltr' })
 
 // Adding
 useListItemAdding()
@@ -140,13 +119,6 @@ onMounted(() => {
   }
 })
 
-// Dispose of store on unmount
-onUnmounted(() => {
-  listStore.$dispose()
-  const pinia = getActivePinia()
-  delete pinia?.state.value[listStore.$id]
-})
-
 defineExpose(listGetExposed())
 </script>
 
@@ -154,8 +126,8 @@ defineExpose(listGetExposed())
   <div
     ref="containerEl"
     class="list"
-    :class="[ui?.containerClass, { 'is-dense': dense }]"
-    :style="ui?.containerStyle"
+    :class="[mergedProps.ui?.containerClass, { 'is-dense': dense }]"
+    :style="mergedProps.ui?.containerStyle"
     @mouseleave="itemFocusedIdx = -1"
   >
     <!-- Search -->
@@ -168,6 +140,7 @@ defineExpose(listGetExposed())
         v-model:search="search"
         :search-input-props="mergedProps.searchInputProps"
         :ui="mergedProps.ui"
+        :dense
       />
     </slot>
 
@@ -232,9 +205,3 @@ defineExpose(listGetExposed())
     />
   </div>
 </template>
-
-<style lang="scss" scoped>
-.list {
-  @apply flex flex-col overflow-auto rounded-custom;
-}
-</style>

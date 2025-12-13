@@ -7,8 +7,9 @@ import type { IGroupRow } from '#layers/utilities/shared/composables/useGrouping
 // Types
 import type { IListItem } from './list-item.type'
 import type { IListFetchFnc } from './list-fetch.type'
-import type { ISelection } from '../../../types/selection.type'
 import type { IListItemToAdd } from './list-item-to-add.type'
+import type { ISelection } from '../../../types/selection.type'
+import type { ITextInputProps } from '../../Inputs/TextInput/types/text-input-props.type'
 import type { IVirtualScrollerProps } from '../../VirtualScroller/types/virtual-scroller-props.type'
 
 export type IListProps = {
@@ -103,7 +104,7 @@ export type IListProps = {
   /**
    * The props that should be passed to the SearchInput
    */
-  searchInputProps?: IItem
+  searchInputProps?: ITextInputProps
 
   /**
    * Load data configuration
@@ -374,12 +375,12 @@ export type IListProps = {
     /**
      * Class to apply to the container
      */
-    containerClass?: ClassType
+    containerClass?: () => ClassType
 
     /**
      * Style to apply to the container
      */
-    containerStyle?: CSSProperties
+    containerStyle?: () => CSSProperties
 
     /**
      * Class to apply to the content area
@@ -394,22 +395,22 @@ export type IListProps = {
     /**
      * Class to apply to the move handle
      */
-    moveHandleClass?: ClassType
+    moveHandleClass?: () => ClassType
 
     /**
      * Style to apply to the move handle
      */
-    moveHandleStyle?: CSSProperties
+    moveHandleStyle?: () => CSSProperties
 
     /**
      * Class to apply to the `Banner` when there are no items
      */
-    noDataClass?: ClassType
+    noDataClass?: () => ClassType
 
     /**
      * Style to apply to the `Banner` when there are no items
      */
-    noDataStyle?: CSSProperties
+    noDataStyle?: () => CSSProperties
 
     /**
      * Class to apply to the list row
@@ -421,6 +422,8 @@ export type IListProps = {
         row: IItem
         groupsCount: number
         isLast: boolean
+        isMulti?: boolean
+        usesCheckbox?: boolean
       },
     ) => ClassType
 
@@ -433,7 +436,39 @@ export type IListProps = {
       row: IItem
       groupsCount: number
       isLast: boolean
+      isMulti?: boolean
+      usesCheckbox?: boolean
     }) => CSSProperties
+
+    /**
+     * Class to apply to the list row content
+     */
+    rowContentClass?: (
+      payload: {
+        isSelected: boolean
+        isFocused?: boolean
+        row: any
+        groupsCount: number
+        isLast: boolean
+        isMulti?: boolean
+        usesCheckbox?: boolean
+      },
+    ) => ClassType
+
+    /**
+     * Style to apply to the list row content
+     */
+    rowContentStyle?: (
+      payload: {
+        isSelected: boolean
+        isFocused?: boolean
+        row: any
+        groupsCount: number
+        isLast: boolean
+        isMulti?: boolean
+        usesCheckbox?: boolean
+      },
+    ) => CSSProperties
 
     /**
      * Class to apply to the list row group
@@ -448,12 +483,12 @@ export type IListProps = {
     /**
      * Class to apply to the search area
      */
-    searchClass?: ClassType
+    searchClass?: () => ClassType
 
     /**
      * Style to apply to the search area
      */
-    searchStyle?: CSSProperties
+    searchStyle?: () => CSSProperties
   }
 
   /**

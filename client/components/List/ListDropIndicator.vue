@@ -2,7 +2,7 @@
 // Store
 import { useListStore } from './stores/list.store'
 
-const { dragMeta } = storeToRefs(useListStore())
+const { dragMeta } = useListStore()
 </script>
 
 <template>

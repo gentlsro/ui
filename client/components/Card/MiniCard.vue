@@ -190,7 +190,7 @@ const isModified = computed(() => {
 
 <style scoped lang="scss">
 .value-container-card {
-  @apply flex rounded-custom p-x-2 p-y-1 flex-gap-2;
+  @apply flex rounded-custom p-x-2 p-y-1 gap-2;
 
   &__icon {
     @apply shrink-0 m-t-.5;

@@ -8,7 +8,7 @@ type IProps = {}
   & Pick<
     IFormProps,
     | 'label' | 'ui' | 'noSubmit' | 'submitBtnProps' | 'noEditControls' | 'cancelBtnProps'
-    | 'submitConfirmationText' | 'icon' | 'editControls' | 'labelForcedVisibility'
+    | 'submitConfirmationText' | 'icon' | 'editControls' | 'labelForcedVisibility' | 'editBtnProps'
   >
   & { hasKeyboardShortcuts: boolean, hasConfirmation: boolean, submit?: Function }
 
@@ -99,6 +99,7 @@ const editControls = computed(() => {
     <CrudEditBtn
       v-if="editControls?.edit"
       v-model:is-editing="isEditing"
+      :btn-props="editBtnProps"
     >
       <KeyboardShortcut
         v-if="hasKeyboardShortcuts"
