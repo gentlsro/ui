@@ -19,7 +19,7 @@ type IProps = Pick<
 const props = defineProps<IProps>()
 
 // Store
-const { model, optionByKey } = storeToRefs(useSelectorStore())
+const { model, optionByKey } = useSelectorStore()
 
 // Layout
 const isMulti = toRef(props, 'multi')

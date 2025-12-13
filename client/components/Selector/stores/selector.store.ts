@@ -1,33 +1,77 @@
+import type { NonUndefined } from 'utility-types'
 import type MenuProxy from '../../MenuProxy/MenuProxy.vue'
 import type { ISelectorProps } from '../types/selector-props.type'
 
-export const selectorIdKey = Symbol('__selectorId')
+export const SELECTOR_ID_KEY = Symbol('__selectorId')
 
-export function useSelectorStore(payload?: {
-  id?: string
-  props?: ISelectorProps
-}) {
-  const { id, props } = payload ?? {}
-  const _selectorId = injectLocal(selectorIdKey, id ?? useId())
+type IConfig = {
+  selectorProps?: ISelectorProps
+  injectionKey?: string
+}
 
-  return defineStore(`selector.${_selectorId}`, () => {
+function createStore(injectionKey?: string) {
+  const injectionState = createInjectionState((payload?: IConfig) => {
+    const { selectorProps } = payload ?? {}
+
+    // Utils
+    const instance = getCurrentInstance()
+
+    const initialMap = initRef({
+      propName: 'initialMap',
+      instance,
+      props: selectorProps,
+      defaultValue: {},
+    }) as Ref<NonUndefined<ISelectorProps['initialMap']>>
+
+    const optionKey = initRef({
+      propName: 'optionKey',
+      instance,
+      props: selectorProps,
+      defaultValue: 'id',
+    }) as Ref<string>
+
     // Layout
     const menuEl = ref<InstanceType<typeof MenuProxy>>()
 
-    // Utils
-    const initialMap: Record<string, any> = ref(props?.initialMap ?? {})
-    const optionKey = props?.optionKey ?? 'id'
-
     // State
-    const model = ref(props?.modelValue)
-    const search = ref(props?.search)
-    const addedItems = ref(props?.addedItems)
-    const options = ref(props?.options ?? [])
-    const isLoading = ref(false)
+    const model = initRef({
+      propName: 'modelValue',
+      instance,
+      props: selectorProps,
+      defaultValue: undefined,
+    }) as Ref<ISelectorProps['modelValue']>
+
+    const search = initRef({
+      propName: 'search',
+      instance,
+      props: selectorProps,
+      defaultValue: undefined,
+    }) as Ref<ISelectorProps['search']>
+
+    const addedItems = initRef({
+      propName: 'addedItems',
+      instance,
+      props: selectorProps,
+      defaultValue: [],
+    }) as Ref<NonUndefined<ISelectorProps['addedItems']>>
+
+    const options = initRef({
+      propName: 'options',
+      instance,
+      props: selectorProps,
+      defaultValue: [],
+    }) as Ref<NonUndefined<ISelectorProps['options']>>
+
+    const isLoading = initRef({
+      propName: 'loading',
+      instance,
+      props: selectorProps,
+      defaultValue: false,
+    }) as Ref<boolean>
 
     const optionByKey = computed(() => {
       return options.value.reduce((agg, option) => {
-        const key = get(option, optionKey)
+        const key = get(option, optionKey.value)
         agg[key] = option
 
         return agg
@@ -37,21 +81,42 @@ export function useSelectorStore(payload?: {
     // Picker
     const isPickerActive = ref(false)
 
-    return {
+    const returnedData = {
+      // Utils
+      initialMap,
+      optionKey,
+
       // Layout
       menuEl,
-      initialMap,
 
       // State
       model,
       search,
       addedItems,
       options,
-      optionByKey,
       isLoading,
+      optionByKey,
 
       // Picker
       isPickerActive,
     }
-  })()
+
+    return returnedData
+  }, { injectionKey })
+
+  return injectionState
+}
+
+export function useSelectorStore(payload?: IConfig) {
+  let injectionKey = payload?.injectionKey ?? injectLocal(SELECTOR_ID_KEY)
+
+  if (!injectionKey) {
+    const uuid = generateUUID()
+    provideLocal(SELECTOR_ID_KEY, uuid)
+    injectionKey = uuid
+  }
+
+  const [useProvideSelectorStore, useConsumeSelectorStore] = createStore(injectionKey)!
+
+  return useConsumeSelectorStore() ?? useProvideSelectorStore(payload)
 }

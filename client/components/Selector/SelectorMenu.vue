@@ -29,7 +29,7 @@ const {
   search,
   options,
   isLoading,
-} = storeToRefs(useSelectorStore())
+} = useSelectorStore()
 
 // Layout
 const contentHeight = ref()

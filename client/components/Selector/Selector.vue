@@ -1,6 +1,5 @@
 <script setup lang="ts">
 // Types
-import type { IListProps } from '../List/types/list-props.type'
 import type { ISelectorProps } from './types/selector-props.type'
 import type { ISelectorEmits } from './types/selector-emits.type'
 
@@ -12,10 +11,12 @@ import { useInputValidationUtils } from '../Inputs/functions/useInputValidationU
 import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
 
 // Store
-import { selectorIdKey, useSelectorStore } from './stores/selector.store'
+import { useSelectorStore } from './stores/selector.store'
 import { selectorTransformOptions } from './functions/selector-transform-options'
 import { getListItemEmitValue, getListItemKey } from '../List/functions/helpers'
-import { getActivePinia } from 'pinia'
+
+// Constants
+import { INPUT_WRAPPER_DEFAULT_PROPS } from '../InputWrapper/constants/input-wrapper-default-props'
 
 const props = withDefaults(defineProps<ISelectorProps>(), {
   ...getComponentProps('selector'),
@@ -51,7 +52,6 @@ const { path } = useInputValidationUtils(props)
 // Utils
 const { handleRequest } = useRequest()
 const self = getCurrentInstance()
-const uuid = injectLocal(selectorIdKey, useId()) as string
 
 const onFocus = props.eventHandlers?.onFocus
 const onBeforeFocus = props.eventHandlers?.onBeforeFocus
@@ -60,18 +60,14 @@ const mergedProps = computed(() => {
   return getComponentMergedProps('selector', props)
 })
 
-provideLocal(selectorIdKey, uuid)
-
 // Store
-const selectorStore = useSelectorStore({ props })
 const {
-  model: modelStore,
-  search: searchStore,
+  model,
+  search,
   isPickerActive,
-  addedItems: addedItemsStore,
-  options: optionsStore,
-  initialMap,
-} = storeToRefs(selectorStore)
+  addedItems,
+  options,
+} = useSelectorStore({ selectorProps: props })
 
 // Field
 const {
@@ -108,14 +104,8 @@ const {
 
 const fieldEl = useTemplateRef('fieldEl')
 const referenceEl = ref<HTMLDivElement>()
-const search = defineModel<string>('search')
-const model = defineModel<any>()
 const size = toRef(props, 'size')
 const readonly = toRef(props, 'readonly')
-const addedItems = defineModel<IListProps['addedItems']>(
-  'addedItems',
-  { default: () => [] },
-)
 
 const wrapperClass = computed(() => {
   return [
@@ -134,7 +124,6 @@ function handleClear() {
 }
 
 // Options
-const options = defineModel<NonNullable<ISelectorProps['options']>>('options', { default: () => [] })
 options.value = selectorTransformOptions(options.value, props)
 
 const hasClearButton = computed(() => {
@@ -162,13 +151,6 @@ const menuProps = computed(() => {
   return _menuProps
 })
 
-// Sync with store
-syncRef(model, modelStore, { direction: 'both', immediate: false })
-syncRef(search, searchStore, { direction: 'both' })
-syncRef(addedItems, addedItemsStore, { direction: 'both' })
-syncRef(options, optionsStore, { direction: 'both' })
-syncRef(toRef(props, 'initialMap', {}), initialMap, { direction: 'ltr' })
-
 // Preselect first
 if (props.preselectFirst) {
   const firstOption = options.value[0]
@@ -181,6 +163,18 @@ if (props.preselectFirst) {
     })
   }
 }
+
+// Styles - append
+const appendClass = computed(() => {
+  return mergedProps.value.ui?.appendClass?.({
+    defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.appendClass(),
+  })
+})
+
+// Styles - append
+const appendStyle = computed(() => {
+  return mergedProps.value.ui?.appendStyle?.()
+})
 
 // Lifcecycle
 onMounted(() => {
@@ -207,13 +201,6 @@ if (props.immediateFetch && mergedProps.value.loadData?.fnc) {
     modifiers: mergedProps.value.listProps?.modifiers,
   }).then(({ items }) => options.value = items)
 }
-
-// Dispose of store on unmount
-onUnmounted(() => {
-  selectorStore.$dispose()
-  const pinia = getActivePinia()
-  delete pinia?.state.value[selectorStore.$id]
-})
 </script>
 
 <template>
@@ -276,7 +263,8 @@ onUnmounted(() => {
     <template #append>
       <div
         class="selector-append"
-        :class="mergedProps.ui?.appendClass"
+        :class="appendClass"
+        :style="appendStyle"
       >
         <InputClearBtn
           v-if="hasClearButton"

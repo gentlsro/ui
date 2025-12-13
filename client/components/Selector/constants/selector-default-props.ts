@@ -26,15 +26,6 @@ export const SELECTOR_DEFAULT_PROPS = {
   },
 
   ui: {
-    appendClass() {
-      const base = ''
-
-      return {
-        base,
-        '*': `${base}`,
-      } as const
-    },
-
     chipClass() {
       const base = ''
 

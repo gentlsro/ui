@@ -6,7 +6,7 @@ import type { IInputWrapperProps } from '../types/input-wrapper-props.type'
 export const INPUT_WRAPPER_DEFAULT_PROPS = {
   ui: {
     appendClass() {
-      const base = 'flex gap-1 items-center p-x-2'
+      const base = 'flex gap-1 flex-center p-x-2 shrink-0'
 
       return {
         base,

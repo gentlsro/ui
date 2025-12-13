@@ -987,7 +987,7 @@ export const defaultComponentsConfig = {
         borderRadius: '0.5rem',
         inputClass: ({ defaults }) => defaults['*'],
         chipClass: ({ defaults }) => defaults['*'],
-        appendClass: ({ defaults }) => defaults['*'],
+        appendClass: ({ defaults }) => `${defaults['*']} m-x-1`,
         innerClass: ({ defaults }) => defaults['*'],
         labelClass: ({ defaults }) => defaults['*'],
         contentClass: ({ defaults }) => defaults['*'],

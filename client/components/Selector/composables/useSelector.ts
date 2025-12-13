@@ -17,7 +17,7 @@ export function useSelector(payload: {
   const { el, props, emits } = payload
 
   // Store
-  const { model, search, isPickerActive } = storeToRefs(useSelectorStore())
+  const { model, search, isPickerActive } = useSelectorStore()
 
   // Layout
   const optionKey = toRef(props, 'optionKey', 'id')
