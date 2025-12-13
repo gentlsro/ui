@@ -22,10 +22,10 @@ export const LIST_DEFAULT_PROPS = {
     },
 
     rowClass() {
-      const base = 'w-full flex gap-1 p-r-2 items-start rounded-custom overflow-auto'
+      const base = 'w-full flex gap-1 p-r-2 items-center rounded-custom overflow-auto font-rem-14'
 
       // Focus
-      const focus = '[&.is-focused]:(bg-slate-100 dark:bg-dark-950)'
+      const focus = '[&.is-focused]:(bg-slate-100 dark:bg-dark-900)'
 
       // Selection - single
       const selectionNoCheckbox = '[&.is-selected:not(.uses-checkbox)]:(bg-slate-200 color-primary dark:(bg-slate-800 color-blue-400))'
@@ -56,11 +56,13 @@ export const LIST_DEFAULT_PROPS = {
     },
 
     rowGroupClass() {
-      const base = 'overflow-auto flex flex-col gap-1 grow p-y-1.5 leading-20px'
+      const base = 'relative flex gap-x-2 cursor-default select-none items-center p-r-1 min-h-8 w-full'
+      const text = 'capitalize color-true-gray text-sm items-end p-b-0.5'
 
       return {
         base,
-        '*': `${base}`,
+        text,
+        '*': `${base} ${text}`,
       } as const
     },
 

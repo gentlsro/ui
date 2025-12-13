@@ -56,10 +56,3 @@ function handleClick() {
     </slot>
   </div>
 </template>
-
-<style lang="scss" scoped>
-.list-row-group {
-  @apply relative flex gap-x-2 cursor-default select-none items-center p-r-1 min-h-8 w-full;
-  @apply capitalize color-true-gray text-sm items-end p-b-0.5;
-}
-</style>

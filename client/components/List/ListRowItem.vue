@@ -221,9 +221,9 @@ onMounted(() => {
     }
   }
 
-  //   &__selection-checkbox {
-  //     @apply self-start shrink-0 pointer-events-none;
-  //   }
+  &__selection-checkbox {
+    @apply self-start shrink-0 pointer-events-none;
+  }
 
   //   &.is-dragging {
   //     @apply outline-2 outline-primary outline-dashed outline-offset--2 bg-primary/30;
