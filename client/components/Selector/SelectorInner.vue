@@ -7,6 +7,9 @@ import type { ISelectorEmits } from './types/selector-emits.type'
 import { useSelectorStore } from './stores/selector.store'
 import { getListItem, getListItemLabel } from '../List/functions/helpers'
 
+// Constants
+import { SELECTOR_DEFAULT_PROPS } from './constants/selector-default-props'
+
 type IProps = Pick<
   ISelectorProps,
   | 'useScroller' | 'ui' | 'maxChipsRows' | 'readonly' | 'disabled'
@@ -57,6 +60,29 @@ function handleRemove(idx: number) {
     model.value = props.emptyValue
   }
 }
+
+// Styles - inner
+const innerClass = computed(() => {
+  return props.ui?.innerClass?.({
+    defaults: SELECTOR_DEFAULT_PROPS.ui.innerClass(),
+  })
+})
+
+const innerStyle = computed(() => {
+  return props.ui?.innerStyle?.()
+})
+
+// Styles - chip
+function getChipClass(item: any) {
+  return props.ui?.chipClass?.({
+    item,
+    defaults: SELECTOR_DEFAULT_PROPS.ui.chipClass(),
+  })
+}
+
+function getChipStyle(item: any) {
+  return props.ui?.chipStyle?.({ item })
+}
 </script>
 
 <template>
@@ -78,8 +104,8 @@ function handleRemove(idx: number) {
 
   <HorizontalScroller
     v-else-if="useScroller"
-    :class="ui?.innerClass"
-    :style="ui?.innerStyle"
+    :class="innerClass"
+    :style="innerStyle"
   >
     <template
       v-for="(item, idx) in modelArray"
@@ -92,8 +118,8 @@ function handleRemove(idx: number) {
       >
         <SelectorChip
           :chip="item"
-          :class="ui?.chipClass"
-          :style="ui?.chipStyle"
+          :class="getChipClass(item)"
+          :style="getChipStyle(item)"
           :option-label
           :option-by-key
           :readonly
@@ -109,8 +135,8 @@ function handleRemove(idx: number) {
   <ScrollArea
     v-else
     class="selector__inner"
-    :class="[ui?.innerClass, { 'is-editable': isEditable }]"
-    :style="{ ...ui?.innerStyle, maxHeight }"
+    :class="[innerClass, { 'is-editable': isEditable }]"
+    :style="{ ...innerStyle, maxHeight }"
   >
     <template
       v-for="(item, idx) in modelArray"
@@ -123,8 +149,8 @@ function handleRemove(idx: number) {
       >
         <SelectorChip
           :chip="item"
-          :class="ui?.chipClass"
-          :style="ui?.chipStyle"
+          :class="getChipClass(item)"
+          :style="getChipStyle(item)"
           :option-label
           :option-by-key
           :readonly

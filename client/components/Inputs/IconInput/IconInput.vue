@@ -113,47 +113,49 @@ defineExpose({
       </div>
     </template>
 
-    <input
-      :id="inputId"
-      ref="el"
-      :value="masked"
-      flex="1"
-      :placeholder
-      :readonly
-      :disabled
-      autocomplete="off"
-      autocorrect="off"
-      autocapitalize="off"
-      spellcheck="false"
-      :label="label || placeholder"
-      :name="name || path || label || placeholder"
-      class="control"
-      role="presentation"
-      :class="[ui?.inputClass]"
-      :style="ui?.inputStyle"
-      v-bind="inputProps"
-      @focus="handleFocusOrClick"
-      @blur="handleBlur"
-    >
+    <template #default="{ inputClass, inputStyle }">
+      <input
+        :id="inputId"
+        ref="el"
+        :value="masked"
+        flex="1"
+        :placeholder
+        :readonly
+        :disabled
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        :label="label || placeholder"
+        :name="name || path || label || placeholder"
+        class="control"
+        role="presentation"
+        :class="inputClass"
+        :style="inputStyle"
+        v-bind="inputProps"
+        @focus="handleFocusOrClick"
+        @blur="handleBlur"
+      >
 
-    <MenuProxy
-      ref="menuProxyEl"
-      v-model="isPickerActive"
-      manual
-      tabindex="-1"
-      :reference-target="referenceEl"
-      no-uplift
-      placement="bottom-start"
-    >
-      <IconPicker
-        v-model="model"
-        v-model:search="model"
-        no-search
-        w="auto"
-        :ui="mergedProps.ui"
-        @update:model-value="$hide()"
-      />
-    </MenuProxy>
+      <MenuProxy
+        ref="menuProxyEl"
+        v-model="isPickerActive"
+        manual
+        tabindex="-1"
+        :reference-target="referenceEl"
+        no-uplift
+        placement="bottom-start"
+      >
+        <IconPicker
+          v-model="model"
+          v-model:search="model"
+          no-search
+          w="auto"
+          :ui="mergedProps.ui"
+          @update:model-value="$hide()"
+        />
+      </MenuProxy>
+    </template>
 
     <template #append>
       <InputClearBtn

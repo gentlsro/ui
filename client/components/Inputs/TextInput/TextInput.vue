@@ -99,31 +99,50 @@ defineExpose({
       />
     </template>
 
-    <input
-      :id="inputId"
-      ref="el"
-      :value="masked"
-      flex="1"
-      :type
-      :inputmode
-      :placeholder
-      :readonly
-      :disabled
-      autocomplete="off"
-      autocorrect="off"
-      autocapitalize="off"
-      spellcheck="false"
-      :label="label || placeholder"
-      :name="name || path || label || placeholder"
-      class="control"
-      role="presentation"
-      :class="[ui?.inputClass, { 'custom-enter': !!customEnter }]"
-      :style="ui?.inputStyle"
-      v-bind="inputProps"
-      @focus="handleFocusOrClick"
-      @blur="handleBlur"
-      @keypress.enter="$emit('enter', $event)"
-    >
+    <template #default="{ inputClass, inputStyle }">
+      <input
+        :id="inputId"
+        ref="el"
+        :value="masked"
+        flex="1"
+        :type
+        :inputmode
+        :placeholder
+        :readonly
+        :disabled
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        :label="label || placeholder"
+        :name="name || path || label || placeholder"
+        class="control"
+        role="presentation"
+        :class="[inputClass, { 'custom-enter': !!customEnter }]"
+        :style="inputStyle"
+        v-bind="inputProps"
+        @focus="handleFocusOrClick"
+        @blur="handleBlur"
+        @keypress.enter="$emit('enter', $event)"
+      >
+
+      <!-- Tooltip -->
+      <Menu
+        v-if="tooltip || !!$slots.tooltip"
+        :model-value="!isBlurred"
+        manual
+        placement="right"
+        :fallback-placements="['bottom']"
+        :reference-target="el"
+        :no-arrow="false"
+        no-uplift
+        v-bind="tooltipProps"
+      >
+        <slot name="tooltip">
+          {{ tooltip }}
+        </slot>
+      </Menu>
+    </template>
 
     <!-- Hint -->
     <template #hint>
@@ -156,22 +175,5 @@ defineExpose({
         />
       </div>
     </template>
-
-    <!-- Tooltip -->
-    <Menu
-      v-if="tooltip || !!$slots.tooltip"
-      :model-value="!isBlurred"
-      manual
-      placement="right"
-      :fallback-placements="['bottom']"
-      :reference-target="el"
-      :no-arrow="false"
-      no-uplift
-      v-bind="tooltipProps"
-    >
-      <slot name="tooltip">
-        {{ tooltip }}
-      </slot>
-    </Menu>
   </InputWrapper>
 </template>

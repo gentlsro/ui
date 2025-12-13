@@ -7,6 +7,9 @@ import type { IListProps } from './types/list-props.type'
 // Store
 import { useListStore } from './stores/list.store'
 
+// Constants
+import { LIST_DEFAULT_PROPS } from './constants/list-default-props.constant'
+
 type IProps = {
   item: IGroupRow
   ui?: IListProps['ui']
@@ -20,11 +23,16 @@ const { emits, itemFocusedIdx } = useListStore()
 // Layout
 const item = toRef(props, 'item')
 
-const groupProps = computed(() => {
-  return {
-    style: props.ui?.rowGroupStyle?.({ group: item.value, level: item.value.groupIdx }),
-    class: props.ui?.rowGroupClass?.({ group: item.value, level: item.value.groupIdx }),
-  }
+const rowGroupClass = computed(() => {
+  return props.ui?.rowGroupClass?.({
+    group: item.value,
+    level: item.value.groupIdx,
+    defaults: LIST_DEFAULT_PROPS.ui.rowGroupClass(),
+  })
+})
+
+const rowGroupStyle = computed(() => {
+  return props.ui?.rowGroupStyle?.({ group: item.value, level: item.value.groupIdx })
 })
 
 function handleClick() {
@@ -35,8 +43,8 @@ function handleClick() {
 <template>
   <div
     class="list-row-group"
-    :class="groupProps.class"
-    :style="groupProps.style"
+    :class="rowGroupClass"
+    :style="rowGroupStyle"
     :data-id="item.id"
     @mouseenter="itemFocusedIdx = -1"
     @click="handleClick"

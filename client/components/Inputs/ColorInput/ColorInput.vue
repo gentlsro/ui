@@ -123,47 +123,49 @@ defineExpose({
       />
     </template>
 
-    <input
-      :id="inputId"
-      ref="el"
-      :value="masked"
-      flex="1"
-      :placeholder
-      :readonly
-      :disabled
-      autocomplete="off"
-      autocorrect="off"
-      autocapitalize="off"
-      spellcheck="false"
-      :label="label || placeholder"
-      :name="name || path || label || placeholder"
-      class="control"
-      role="presentation"
-      :class="[ui?.inputClass]"
-      :style="ui?.inputStyle"
-      v-bind="inputProps"
-      @focus="handleFocusOrClick"
-      @blur="handleBlur"
-    >
+    <template #default="{ inputClass, inputStyle }">
+      <input
+        :id="inputId"
+        ref="el"
+        :value="masked"
+        flex="1"
+        :placeholder
+        :readonly
+        :disabled
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        :label="label || placeholder"
+        :name="name || path || label || placeholder"
+        class="control"
+        role="presentation"
+        :class="inputClass"
+        :style="inputStyle"
+        v-bind="inputProps"
+        @focus="handleFocusOrClick"
+        @blur="handleBlur"
+      >
 
-    <MenuProxy
-      ref="menuProxyEl"
-      v-model="isPickerActive"
-      manual
-      tabindex="-1"
-      :fit="false"
-      placement="bottom-start"
-      :reference-target="referenceEl"
-      no-uplift
-    >
-      <ColorBrandingPicker
-        v-model="model"
-        :rgba
-        :tw
-        :disallowed-colors
-        @update:model-value="handlePickColor"
-      />
-    </MenuProxy>
+      <MenuProxy
+        ref="menuProxyEl"
+        v-model="isPickerActive"
+        manual
+        tabindex="-1"
+        :fit="false"
+        placement="bottom-start"
+        :reference-target="referenceEl"
+        no-uplift
+      >
+        <ColorBrandingPicker
+          v-model="model"
+          :rgba
+          :tw
+          :disallowed-colors
+          @update:model-value="handlePickColor"
+        />
+      </MenuProxy>
+    </template>
 
     <!-- Append -->
     <template

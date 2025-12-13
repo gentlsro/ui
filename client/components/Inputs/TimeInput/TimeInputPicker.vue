@@ -176,7 +176,7 @@ defineExpose({
           :mask="maskHours"
           :label="$t('general.hour', 1)"
           inputmode="decimal"
-          :ui="{ inputClass: 'text-center w-full' }"
+          :ui="{ inputClass: () => 'text-center w-full' }"
           @update:model-value="setValue($event, 'h', true)"
         />
         <TextInput
@@ -186,7 +186,7 @@ defineExpose({
           :mask="maskMinutes"
           :label="$t('general.minute', 1)"
           inputmode="decimal"
-          :ui="{ inputClass: 'text-center w-full' }"
+          :ui="{ inputClass: () => 'text-center w-full' }"
           @update:model-value="setValue($event, 'm', true)"
         />
       </div>

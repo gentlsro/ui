@@ -137,27 +137,29 @@ defineExpose({
       />
     </template>
 
-    <input
-      :id="inputId"
-      ref="el"
-      flex="1"
-      :value="masked"
-      inputmode="numeric"
-      :placeholder="placeholder"
-      :readonly="readonly"
-      :disabled="disabled"
-      :label="label || placeholder"
-      :name="name || path || label || placeholder"
-      class="control"
-      role="presentation"
-      :class="ui?.inputClass"
-      :style="ui?.inputStyle"
-      v-bind="inputProps"
-      @focus="handleFocusOrClick"
-      @blur="handleBlur"
-      @paste.stop.prevent="handlePaste"
-      @keypress.enter="$emit('enter', $event)"
-    >
+    <template #default="{ inputClass, inputStyle }">
+      <input
+        :id="inputId"
+        ref="el"
+        flex="1"
+        :value="masked"
+        inputmode="numeric"
+        :placeholder="placeholder"
+        :readonly="readonly"
+        :disabled="disabled"
+        :label="label || placeholder"
+        :name="name || path || label || placeholder"
+        class="control"
+        role="presentation"
+        :class="inputClass"
+        :style="inputStyle"
+        v-bind="inputProps"
+        @focus="handleFocusOrClick"
+        @blur="handleBlur"
+        @paste.stop.prevent="handlePaste"
+        @keypress.enter="$emit('enter', $event)"
+      >
+    </template>
 
     <!-- Hint -->
     <template #hint>

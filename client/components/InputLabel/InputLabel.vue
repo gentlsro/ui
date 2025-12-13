@@ -5,6 +5,9 @@ import type { IInputLabelProps } from './types/input-label-props.type'
 // Functions
 import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
 
+// Constants
+import { INPUT_LABEL_DEFAULT_PROPS } from './constants/input-label-default-props'
+
 const props = withDefaults(defineProps<IInputLabelProps>(), {
   ...getComponentProps('inputLabel'),
 })
@@ -29,13 +32,13 @@ const label = computed(() => {
   return props.label
 })
 
-const labelClass = computed(() => {
+// Styles - Label
+const labelClassLocal = computed(() => {
   const isInline = props.layout === 'inline'
   const isInside = props.layout === 'label-inside'
   const isRegular = props.layout === 'regular'
 
   return [
-    mergedProps.value.ui?.labelClass,
     `label--${props.size}`,
     {
       'is-inline': isInline,
@@ -46,6 +49,12 @@ const labelClass = computed(() => {
       'is-mounted': isMounted.value,
     },
   ]
+})
+
+const labelClass = computed(() => {
+  return mergedProps.value.ui?.labelClass?.({
+    defaults: INPUT_LABEL_DEFAULT_PROPS.ui.labelClass(),
+  })
 })
 
 const labelStyle = computed(() => {
@@ -73,7 +82,7 @@ onMounted(() => {
   <label
     :for="id"
     class="label"
-    :class="labelClass"
+    :class="[labelClassLocal, labelClass]"
     :style="labelStyle"
   >
     {{ label }}

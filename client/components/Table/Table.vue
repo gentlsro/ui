@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { getActivePinia } from 'pinia'
-
 // Types
 import type { ITableProps } from './types/table-props.type'
 import type { ITableEmits } from './types/table-emits.type'

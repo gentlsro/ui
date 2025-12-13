@@ -1,11 +1,14 @@
-import type { AllowedComponentProps, CSSProperties } from 'vue'
 import type { RouteLocationRaw } from '#vue-router'
+import type { AllowedComponentProps, CSSProperties } from 'vue'
 
 // Types
 import type { IListProps } from '../../List/types/list-props.type'
 import type { IMenuProps } from '../../Menu/types/menu-props.type'
 import type { IFieldProps } from '../../Field/types/field-props.type'
 import type { IDialogProps } from '../../Dialog/types/dialog-props.type'
+
+// Constants
+import type { SELECTOR_DEFAULT_PROPS } from '../constants/selector-default-props'
 
 export type ISelectorProps = IFieldProps & {
   /**
@@ -176,28 +179,30 @@ export type ISelectorProps = IFieldProps & {
    */
   ui?: {
     /**
-     * Class applied to the `append` slot
-     */
-    appendClass?: ClassType
-
-    /**
      * The class applied to the `Chip` when using `multi` mode
      */
-    chipClass?: ClassType | ((item: any) => ClassType)
+    chipClass?: (payload: {
+      item: any
+      defaults: ReturnType<typeof SELECTOR_DEFAULT_PROPS['ui']['chipClass']>
+    }) => ClassType
 
     /**
      * The style applied to the `Chip` when using `multi` mode
      */
-    chipStyle?: CSSProperties | ((item: any) => CSSProperties)
+    chipStyle?: (payload: {
+      item: any
+    }) => CSSProperties
 
     /**
      * Class to apply to the actual content inside the wrapper
      */
-    innerClass?: ClassType
+    innerClass?: (payload: {
+      defaults: ReturnType<typeof SELECTOR_DEFAULT_PROPS['ui']['innerClass']>
+    }) => ClassType
 
     /**
      * Style to apply to the actual content inside the wrapper
      */
-    innerStyle?: CSSProperties
+    innerStyle?: () => CSSProperties
   }
 }

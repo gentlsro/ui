@@ -223,7 +223,7 @@ export const defaultComponentsConfig = {
       noIcon: true,
       ui: {
         borderRadius: '0.5rem',
-        appendClass: 'flex gap-1 items-center p-x-2',
+        appendClass: () => 'flex gap-1 items-center p-x-2',
       },
     },
     merge: ['ui'],
@@ -409,8 +409,8 @@ export const defaultComponentsConfig = {
       activeLabelColor: 'unset',
       ui: {
         borderRadius: '0.5rem',
-        inputContainerClass: '!bg-transparent',
-        inputClass: '!p-0',
+        inputContainerClass: () => '!bg-transparent',
+        inputClass: () => '!p-0',
       },
     },
     merge: ['ui'],
@@ -501,7 +501,7 @@ export const defaultComponentsConfig = {
       stackLabel: true,
       ui: {
         borderRadius: '0.5rem',
-        appendClass: 'flex gap-1 items-center p-x-2',
+        appendClass: () => 'flex gap-1 items-center p-x-2',
       },
     },
     merge: ['ui'],
@@ -513,10 +513,7 @@ export const defaultComponentsConfig = {
       required: undefined,
       activeLabelColor: 'var(--color-primary)',
       ui: {
-        labelClass: [
-          'color-truegray-600 active:color-blue-500',
-          'dark:color-truegray-300 dark:active:color-blue-500',
-        ],
+        labelClass: ({ defaults }) => defaults['*'],
         labelInlineWidth: '200px',
       },
     },
@@ -541,13 +538,13 @@ export const defaultComponentsConfig = {
       readonly: undefined,
       tooltip: undefined,
       ui: {
-        appendClass: 'flex gap-1 items-center p-x-2',
         borderRadius: '0.5rem',
-        inputContainerClass: 'bg-white dark:bg-black',
         borderColor: {
           base: '#737373',
           focus: 'var(--color-primary)',
         },
+        appendClass: ({ defaults }) => defaults['*'],
+        inputContainerClass: ({ defaults }) => defaults['*'],
       },
     },
     merge: ['ui'],
@@ -571,32 +568,18 @@ export const defaultComponentsConfig = {
       itemLabel: 'label',
       clearable: true,
       ui: {
-        containerClass: 'flex flex-col overflow-auto rounded-custom',
-        searchClass: 'flex flex-col gap-1 p-2',
-        contentClass: hasSearch => hasSearch ? 'p-x-2 p-t-0' : 'p-2',
-        rowClass: ({ isSelected, isFocused, isMulti }) => {
-          const classes = ['flex gap-1 p-r-2 items-start rounded-custom overflow-auto w-full']
-
-          if (isSelected) {
-            classes.push('bg-slate-100 color-primary dark:(bg-slate-800 color-blue-400)')
-          }
-
-          if (isFocused) {
-            classes.push('outline-1 outline-solid outline-primary outline-offset--1')
-          }
-
-          if (isMulti) {
-            classes.push('bg-slate-100 color-primary dark:(bg-slate-800 color-blue-400)')
-          }
-
-          return classes
-        },
         rowStyle: ({ groupsCount }) => ({ paddingLeft: `${(groupsCount || 1) * 8}px` }),
         rowGroupStyle: ({ level }) => ({ paddingLeft: `${level * 8}px` }),
-        rowContentClass: () => [
-          'overflow-auto flex flex-col gap-1 grow p-y-1.5 leading-20px',
-        ],
-        moveHandleClass: 'p-t-1.5 color-ca',
+        containerClass: ({ defaults }) => defaults['*'],
+        searchClass: ({ defaults }) => defaults['*'],
+        moveHandleClass: ({ defaults }) => defaults['*'],
+        contentClass: ({ defaults }) => defaults['*'],
+        rowClass: ({ defaults }) => defaults['*'],
+        rowContentClass: ({ defaults }) => defaults['*'],
+        noDataClass: ({ defaults }) => defaults['*'],
+        loadingClass: ({ defaults }) => defaults['*'],
+        rowGroupClass: ({ defaults }) => defaults['*'],
+        moveHandleIconClass: ({ defaults }) => defaults['*'],
       },
       search: '',
       searchConfig: {
@@ -1002,13 +985,20 @@ export const defaultComponentsConfig = {
       hasContent: undefined,
       ui: {
         borderRadius: '0.5rem',
-        inputClass: 'flex items-center',
+        inputClass: ({ defaults }) => defaults['*'],
+        chipClass: ({ defaults }) => defaults['*'],
+        appendClass: ({ defaults }) => defaults['*'],
+        innerClass: ({ defaults }) => defaults['*'],
+        labelClass: ({ defaults }) => defaults['*'],
+        contentClass: ({ defaults }) => defaults['*'],
+        inputContainerClass: ({ defaults }) => defaults['*'],
+        inputInnerContainerClass: ({ defaults }) => defaults['*'],
       },
       listProps: {
         clearable: false,
         ui: {
-          contentClass: hasSearch => hasSearch ? 'p-x-2' : 'p-2',
-          searchClass: 'gap-1 p-2',
+          contentClass: ({ defaults }) => defaults['*'],
+          searchClass: ({ defaults }) => defaults['*'],
         },
       },
       loadData: {
@@ -1160,7 +1150,7 @@ export const defaultComponentsConfig = {
       stackLabel: true,
       ui: {
         borderRadius: '0.5rem',
-        appendClass: 'flex gap-1 items-center p-x-2 h-full',
+        appendClass: () => 'flex gap-1 items-center p-x-2 h-full',
       },
     },
     merge: ['ui'],
@@ -1181,7 +1171,7 @@ export const defaultComponentsConfig = {
       stackLabel: true,
       ui: {
         borderRadius: '0.5rem',
-        appendClass: 'flex gap-1 items-center p-x-2',
+        appendClass: () => 'flex gap-1 items-center p-x-2',
       },
     },
     merge: ['ui'],

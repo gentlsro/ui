@@ -17,6 +17,9 @@ import { getComponentMergedProps, getComponentProps } from '../../functions/get-
 // Store
 import { useListStore } from './stores/list.store'
 
+// Constants
+import { LIST_DEFAULT_PROPS } from './constants/list-default-props.constant'
+
 const props = withDefaults(defineProps<IListProps>(), {
   ...getComponentProps('list'),
   listId: () => useId(),
@@ -74,6 +77,16 @@ const isSearchInputVisible = computed(() => {
   return mergedProps.value.searchConfig?.enabled && !mergedProps.value.searchConfig?.hidden
 })
 
+const containerClass = computed(() => {
+  return mergedProps.value.ui?.containerClass?.({
+    defaults: LIST_DEFAULT_PROPS.ui.containerClass(),
+  })
+})
+
+const containerStyle = computed(() => {
+  return mergedProps.value.ui?.containerStyle?.()
+})
+
 // Sync with store
 syncRef(items, storeItems, { direction: 'both', immediate: false })
 
@@ -126,8 +139,8 @@ defineExpose(listGetExposed())
   <div
     ref="containerEl"
     class="list"
-    :class="[mergedProps.ui?.containerClass, { 'is-dense': dense }]"
-    :style="mergedProps.ui?.containerStyle"
+    :class="[containerClass, { 'is-dense': dense }]"
+    :style="containerStyle"
     @mouseleave="itemFocusedIdx = -1"
   >
     <!-- Search -->
@@ -189,13 +202,14 @@ defineExpose(listGetExposed())
     <!-- No data -->
     <slot name="noData">
       <ListNoData
+        :ui="mergedProps.ui"
         @change:content-size="$emit('change:contentSize', $event)"
       />
     </slot>
 
     <!-- Loading -->
     <slot name="loading">
-      <ListLoading />
+      <ListLoading :ui="mergedProps.ui" />
     </slot>
 
     <slot

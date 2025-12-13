@@ -5,6 +5,9 @@ import type { IZodValidationOptions } from '#layers/utilities/client/types/zod'
 // Types
 import type { IInputLabelProps } from '../../InputLabel/types/input-label-props.type'
 
+// Constants
+import type { INPUT_WRAPPER_DEFAULT_PROPS } from '../constants/input-wrapper-default-props'
+
 export type IInputWrapperProps = {
   /**
    * The cursor that will be shown when hovering over the input
@@ -102,7 +105,9 @@ export type IInputWrapperProps = {
     /**
      * Class applied to the `append` slot
      */
-    appendClass?: ClassType
+    appendClass?: (payload: {
+      defaults: ReturnType<typeof INPUT_WRAPPER_DEFAULT_PROPS['ui']['appendClass']>
+    }) => ClassType
 
     /**
      * The border color of the input
@@ -134,43 +139,61 @@ export type IInputWrapperProps = {
     }
 
     /**
-     * The border radius of the input
+     * The border radius of the input (use actual CSS syntax)
      */
     borderRadius?: string
 
     /**
      * The class of the input wrapper (including label, ...)
      */
-    contentClass?: ClassType
+    contentClass?: (payload: {
+      defaults: ReturnType<typeof INPUT_WRAPPER_DEFAULT_PROPS['ui']['contentClass']>
+    }) => ClassType
 
     /**
      * The style of the input container
      */
-    contentStyle?: CSSProperties
+    contentStyle?: () => CSSProperties
 
     /**
      * Class of the input container (excluding label, hint, error container, ...)
      *
      * Note: Primarily used for background color
      */
-    inputContainerClass?: ClassType
+    inputContainerClass?: (payload: {
+      defaults: ReturnType<typeof INPUT_WRAPPER_DEFAULT_PROPS['ui']['inputContainerClass']>
+    }) => ClassType
 
     /**
      * Style of the input container
      *
      * Note: Primarily used for background color
      */
-    inputContainerStyle?: CSSProperties
+    inputContainerStyle?: () => CSSProperties
 
     /**
      * Class of the inner container around the actual input tag
      */
-    inputInnerContainerClass?: ClassType
+    inputInnerContainerClass?: (payload: {
+      defaults: ReturnType<typeof INPUT_WRAPPER_DEFAULT_PROPS['ui']['inputInnerContainerClass']>
+    }) => ClassType
 
     /**
      * Style of the inner container around the actual input tag
      */
-    inputInnerContainerStyle?: CSSProperties
+    inputInnerContainerStyle?: () => CSSProperties
+
+    /**
+     * The class of the input tag
+     */
+    inputClass?: (payload: {
+      defaults: ReturnType<typeof INPUT_WRAPPER_DEFAULT_PROPS['ui']['inputClass']>
+    }) => ClassType
+
+    /**
+     * The style of the input tag
+     */
+    inputStyle?: () => CSSProperties
   }
 
   /**

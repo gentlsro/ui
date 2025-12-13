@@ -212,28 +212,30 @@ defineExpose({
       />
     </template>
 
-    <input
-      :id="inputId"
-      ref="el"
-      flex="1"
-      type="text"
-      :value="masked"
-      :placeholder="placeholder"
-      :readonly
-      :disabled
-      autocomplete="off"
-      :label="label || placeholder"
-      :name="name || path || label || placeholder"
-      class="control"
-      :class="mergedProps.ui?.inputClass"
-      :style="{
-        ...mergedProps.ui?.inputStyle,
-        ...(hasNoValue && { color: 'var(--placeholder-color)' }),
-      }"
-      v-bind="inputProps"
-      @focus="handleFocusOrClick"
-      @blur="handleBlur"
-    >
+    <template #default="{ inputClass, inputStyle }">
+      <input
+        :id="inputId"
+        ref="el"
+        flex="1"
+        type="text"
+        :value="masked"
+        :placeholder="placeholder"
+        :readonly
+        :disabled
+        autocomplete="off"
+        :label="label || placeholder"
+        :name="name || path || label || placeholder"
+        class="control"
+        :class="inputClass"
+        :style="{
+          ...inputStyle,
+          ...(hasNoValue && { color: 'var(--placeholder-color)' }),
+        }"
+        v-bind="inputProps"
+        @focus="handleFocusOrClick"
+        @blur="handleBlur"
+      >
+    </template>
 
     <!-- Append -->
     <template #append>

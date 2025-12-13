@@ -98,26 +98,47 @@ defineExpose({
       />
     </template>
 
-    <textarea
-      :id="inputId"
-      ref="el"
-      flex="grow"
-      :value="masked"
-      :placeholder="placeholder"
-      :readonly="readonly"
-      :disabled="disabled"
-      autocomplete="off"
-      :label="label || placeholder"
-      :name="name || path || label || placeholder"
-      class="control"
-      role="presentation"
-      :rows="rows"
-      :class="[ui?.inputClass, resizeClass]"
-      :style="ui?.inputStyle"
-      v-bind="inputProps"
-      @focus="handleFocusOrClick"
-      @blur="handleBlur"
-    />
+    <template #default="{ inputClass, inputStyle }">
+      <textarea
+        :id="inputId"
+        ref="el"
+        flex="grow"
+        :value="masked"
+        :placeholder="placeholder"
+        :readonly="readonly"
+        :disabled="disabled"
+        autocomplete="off"
+        :label="label || placeholder"
+        :name="name || path || label || placeholder"
+        class="control"
+        role="presentation"
+        :rows="rows"
+        :class="[inputClass, resizeClass]"
+        :style="inputStyle"
+        v-bind="inputProps"
+        @focus="handleFocusOrClick"
+        @blur="handleBlur"
+      />
+
+      <slot name="inner" />
+
+      <!-- Tooltip -->
+      <Menu
+        v-if="tooltip || !!$slots.tooltip"
+        :model-value="!isBlurred"
+        manual
+        placement="right"
+        :fallback-placements="['bottom']"
+        :reference-target="el"
+        :no-arrow="false"
+        no-uplift
+        v-bind="tooltipProps"
+      >
+        <slot name="tooltip">
+          {{ tooltip }}
+        </slot>
+      </Menu>
+    </template>
 
     <template
       v-if="$slots.append || hasClearableBtn"
@@ -140,31 +161,12 @@ defineExpose({
       </div>
     </template>
 
-    <slot name="inner" />
-
     <template
       v-if="$slots.hint"
       #hint
     >
       <slot name="hint" />
     </template>
-
-    <!-- Tooltip -->
-    <Menu
-      v-if="tooltip || !!$slots.tooltip"
-      :model-value="!isBlurred"
-      manual
-      placement="right"
-      :fallback-placements="['bottom']"
-      :reference-target="el"
-      :no-arrow="false"
-      no-uplift
-      v-bind="tooltipProps"
-    >
-      <slot name="tooltip">
-        {{ tooltip }}
-      </slot>
-    </Menu>
   </InputWrapper>
 </template>
 

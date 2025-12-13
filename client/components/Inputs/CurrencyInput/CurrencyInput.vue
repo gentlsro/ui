@@ -285,26 +285,28 @@ defineExpose({
       />
     </template>
 
-    <input
-      :id="inputId"
-      ref="el"
-      flex="1"
-      :value="masked"
-      inputmode="numeric"
-      :placeholder
-      :readonly
-      :disabled
-      :label="label || placeholder"
-      :name="name || path || label || placeholder"
-      class="control"
-      role="presentation"
-      :class="mergedProps.ui?.inputClass"
-      :style="mergedProps.ui?.inputStyle"
-      v-bind="inputProps"
-      @focus="handleFocusOrClick"
-      @blur="handleBlur"
-      @beforeinput="handleBeforeInput"
-    >
+    <template #default="{ inputClass, inputStyle }">
+      <input
+        :id="inputId"
+        ref="el"
+        flex="1"
+        :value="masked"
+        inputmode="numeric"
+        :placeholder
+        :readonly
+        :disabled
+        :label="label || placeholder"
+        :name="name || path || label || placeholder"
+        class="control"
+        role="presentation"
+        :class="inputClass"
+        :style="inputStyle"
+        v-bind="inputProps"
+        @focus="handleFocusOrClick"
+        @blur="handleBlur"
+        @beforeinput="handleBeforeInput"
+      >
+    </template>
 
     <!-- Append -->
     <template

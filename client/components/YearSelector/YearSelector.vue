@@ -132,8 +132,8 @@ function addEventListener() {
       grow
       no-border
       :ui="{
-        inputClass: 'text-center !focus:(bg-white dark:bg-dark-950) !p-x-0',
-        inputContainerClass: 'bg-transparent focus-within:bg-transparent',
+        inputClass: () => 'text-center !focus:(bg-white dark:bg-dark-950) !p-x-0',
+        inputContainerClass: () => 'bg-transparent focus-within:bg-transparent',
       }"
       @update:model-value="handleManualYearInputChange"
     />

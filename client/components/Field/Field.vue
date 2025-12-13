@@ -70,24 +70,26 @@ defineExpose({
       <slot name="prepend" />
     </template>
 
-    <span
-      :id="inputId"
-      ref="el"
-      class="control w-full"
-      :class="[
-        mergedProps.ui?.inputClass,
-        { 'is-placeholder': !hasContent && placeholder },
-      ]"
-      :style="mergedProps.ui?.inputStyle"
-      tabindex="0"
-      :readonly
-      :disabled
-      :data-placeholder="placeholder"
-      :name="name || path || label || placeholder"
-      @focus="$emit('focus', $event)"
-    >
-      <slot />
-    </span>
+    <template #default="{ inputClass, inputStyle }">
+      <span
+        :id="inputId"
+        ref="el"
+        class="control w-full"
+        :class="[
+          inputClass,
+          { 'is-placeholder': !hasContent && placeholder },
+        ]"
+        :style="inputStyle"
+        tabindex="0"
+        :readonly
+        :disabled
+        :data-placeholder="placeholder"
+        :name="name || path || label || placeholder"
+        @focus="$emit('focus', $event)"
+      >
+        <slot />
+      </span>
+    </template>
 
     <!-- Append -->
     <template

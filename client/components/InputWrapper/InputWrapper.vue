@@ -12,6 +12,9 @@ import InputWrapperInline from './InputWrapperInline.vue'
 import InputWrapperInside from './InputWrapperInside.vue'
 import InputWrapperRegular from './InputWrapperRegular.vue'
 
+// Constants
+import { INPUT_WRAPPER_DEFAULT_PROPS } from './constants/input-wrapper-default-props'
+
 const props = withDefaults(defineProps<IInputWrapperProps>(), {
   ...getComponentProps('inputWrapper'),
 })
@@ -68,7 +71,8 @@ const wrapperClass = computed(() => {
   ]
 })
 
-const contentClass = computed(() => {
+// Styles - Content
+const contentClassLocal = computed(() => {
   return {
     'is-readonly': props.readonly,
     'is-disabled': props.disabled,
@@ -76,6 +80,27 @@ const contentClass = computed(() => {
     'has-label': !!props.label,
     'is-modified': isModified.value,
   }
+})
+
+const contentClass = computed(() => {
+  return mergedProps.value.ui?.contentClass?.({
+    defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.contentClass(),
+  })
+})
+
+const contentStyle = computed(() => {
+  return mergedProps.value.ui?.contentStyle?.()
+})
+
+// Styles - Input
+const inputClass = computed(() => {
+  return mergedProps.value.ui?.inputClass?.({
+    defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.inputClass(),
+  })
+})
+
+const inputStyle = computed(() => {
+  return mergedProps.value.ui?.inputStyle?.()
 })
 
 const wrapperStyleVariables = computed(() => {
@@ -130,8 +155,8 @@ const wrapperProps = computed(() => {
       :is="WrapperComponent"
       v-bind="wrapperProps"
       class="wrapper__body"
-      :class="[contentClass, mergedProps.ui?.contentClass]"
-      :style="mergedProps.ui?.contentStyle"
+      :class="[contentClassLocal, contentClass]"
+      :style="contentStyle"
     >
       <!-- Label -->
       <template
@@ -161,7 +186,10 @@ const wrapperProps = computed(() => {
 
       <!-- Input -->
       <template #input>
-        <slot />
+        <slot
+          :input-class
+          :input-style
+        />
       </template>
 
       <!-- Loading -->

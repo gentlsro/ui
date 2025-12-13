@@ -2,6 +2,9 @@
 // Types
 import type { IInputWrapperProps } from './types/input-wrapper-props.type'
 
+// Constants
+import { INPUT_WRAPPER_DEFAULT_PROPS } from './constants/input-wrapper-default-props'
+
 const props = defineProps<
   Pick<
     IInputWrapperProps,
@@ -22,19 +25,41 @@ const classes = computed(() => {
     'is-disabled': props.disabled,
   }
 })
+
+// Styles - Input Container
+const inputContainerClass = computed(() => {
+  return props.ui?.inputContainerClass?.({
+    defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.inputContainerClass(),
+  })
+})
+
+const inputContainerStyle = computed(() => {
+  return props.ui?.inputContainerStyle?.()
+})
+
+// Styles - Input Inner Container
+const inputInnerContainerClass = computed(() => {
+  return props.ui?.inputInnerContainerClass?.({
+    defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.inputInnerContainerClass(),
+  })
+})
+
+const inputInnerContainerStyle = computed(() => {
+  return props.ui?.inputInnerContainerStyle?.()
+})
 </script>
 
 <template>
   <div
     class="input-wrapper__inside"
-    :class="[classes, ui?.inputContainerClass]"
-    :style="ui?.inputContainerStyle"
+    :class="[classes, inputContainerClass]"
+    :style="inputContainerStyle"
   >
     <!-- Input -->
     <div
       class="input-wrapper__input input-wrapper__inside-input input-wrapper__focusable"
-      :class="ui?.inputInnerContainerClass"
-      :style="ui?.inputInnerContainerStyle"
+      :class="inputInnerContainerClass"
+      :style="inputInnerContainerStyle"
     >
       <slot name="input" />
     </div>

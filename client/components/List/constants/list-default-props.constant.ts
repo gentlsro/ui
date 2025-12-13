@@ -1,48 +1,114 @@
+// @unocss-include
 import type { IListProps } from '$ui'
 
 export const LIST_DEFAULT_PROPS = {
   ui: {
     containerClass() {
+      const base = 'flex flex-col overflow-auto rounded-custom'
+
       return {
-        'base': function () {
-          return 'flex flex-col overflow-auto rounded-custom' as const
-        },
-        '*': function () {
-          return `${this.base()}` as const
-        },
+        base,
+        '*': `${base}`,
       } as const
     },
 
-    // searchClass() {
-    //   return {
-    //     'base': () => 'flex flex-col gap-1 p-2' as const,
-    //     '*': function () {
-    //       return `${this.base()}` as const
-    //     },
-    //   } as const
-    // },
+    searchClass() {
+      const base = 'flex flex-col gap-1 p-2'
 
-    // contentClass(hasSearch) {
-    //   return {
-    //     'base': () => hasSearch ? 'p-x-2 p-t-0' : 'p-2' as const,
-    //     '*': function () {
-    //       return `${this.base()}` as const
-    //     },
-    //   }
-    // },
+      return {
+        base,
+        '*': `${base}`,
+      } as const
+    },
 
-    // rowClass({ isSelected, isFocused, isMulti }) {
-    //   return {
-    //     'base': () => 'w-full flex gap-1 p-r-2 items-start rounded-custom overflow-auto' as const,
-    //     'selected': () => 'bg-slate-100 color-primary dark:(bg-slate-800 color-blue-400)' as const,
-    //     'focused': () => 'outline-1 outline-solid outline-primary outline-offset--1' as const,
-    //     'multi': () => 'bg-slate-100 color-primary dark:(bg-slate-800 color-blue-400)' as const,
-    //     '*': function () {
-    //       return `${this.base()}` as const
-    //     },
-    //   }
-    // },
+    rowClass() {
+      const base = 'w-full flex gap-1 p-r-2 items-start rounded-custom overflow-auto'
+
+      // Focus
+      const focus = '[&.is-focused]:(bg-slate-100 dark:bg-dark-950)'
+
+      // Selection - single
+      const selectionNoCheckbox = '[&.is-selected:not(.uses-checkbox)]:(bg-slate-200 color-primary dark:(bg-slate-800 color-blue-400))'
+
+      // Selection - multi (with checkbox)
+      const selectionMultiCheckbox = '[&.is-selected.is-multi.uses-checkbox]:(color-primary dark:(color-blue-400))'
+
+      // Focus while selected
+      const focusSelected = '[&.is-focused.is-selected]:(outline-1 outline-dashed outline-offset--1 outline-primary dark:(outline-blue-400))'
+
+      return {
+        base,
+        selectionNoCheckbox,
+        selectionMultiCheckbox,
+        focus,
+        focusSelected,
+        '*': `${base} ${focus} ${selectionNoCheckbox} ${selectionMultiCheckbox} ${focusSelected}`,
+      } as const
+    },
+
+    rowContentClass() {
+      const base = 'overflow-auto flex flex-col gap-1 grow p-y-1.5 leading-20px'
+
+      return {
+        base,
+        '*': `${base}`,
+      } as const
+    },
+
+    rowGroupClass() {
+      const base = 'overflow-auto flex flex-col gap-1 grow p-y-1.5 leading-20px'
+
+      return {
+        base,
+        '*': `${base}`,
+      } as const
+    },
+
+    moveHandleClass() {
+      const base = 'flex flex-center shrink-0 touch-none cursor-grab self-start p-t-2 p-r-1 color-ca'
+
+      return {
+        base,
+        '*': `${base}`,
+      } as const
+    },
+
+    moveHandleIconClass() {
+      const base = 'i-akar-icons:drag-vertical color-ca w-4 h-4 cursor-move'
+
+      return {
+        base,
+        '*': `${base}`,
+      } as const
+    },
+
+    loadingClass() {
+      const base = 'flex flex-center p-y-3'
+
+      return {
+        base,
+        '*': `${base}`,
+      } as const
+    },
+
+    contentClass(payload: { hasSearch?: boolean }) {
+      const { hasSearch } = payload
+      const base = hasSearch ? 'p-x-2' : 'p-2'
+
+      return {
+        base,
+        '*': `${base}`,
+      } as const
+    },
+
+    noDataClass() {
+      const base = 'p-b-2'
+
+      return {
+        base,
+        '*': `${base}`,
+      } as const
+    },
+
   },
 } satisfies IListProps
-
-const x = LIST_DEFAULT_PROPS.ui.containerClass()['*']()

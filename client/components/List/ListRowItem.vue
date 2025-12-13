@@ -11,6 +11,9 @@ import { useListStore } from './stores/list.store'
 import { useListDragAndDrop } from './composables/useListDragAndDrop'
 import { useFloatingUIUtils } from '../FloatingUI/functions/useFloatingUIUtils'
 
+// Constants
+import { LIST_DEFAULT_PROPS } from './constants/list-default-props.constant'
+
 type IProps = Pick<IListProps, 'ui' | 'noHover' | 'reorderable' | 'disabledFnc' | 'moveHandleTarget'> & {
   item: IListItem
   isLast: boolean
@@ -57,73 +60,6 @@ const isSelected = computed(() => {
 
 const isDisabled = computed(() => props.disabledFnc?.(item.value))
 
-const rowProps = computed(() => {
-  const sourceElId = dragMeta.value.sourceEl?.dataset.id
-
-  const isReorderable = typeof props.reorderable === 'function'
-    ? props.reorderable(item.value.ref)
-    : props.reorderable
-
-  return {
-    class: [
-      props.ui?.rowClass?.({
-        isSelected: isSelected.value,
-        isFocused: itemFocused.value?.id === item.value?.id,
-        groupsCount: groupBy.value.length,
-        row: item.value.ref,
-        isLast: props.isLast,
-        isMulti: selectionConfig.value?.multi,
-        usesCheckbox: !!selectionConfig.value?.useCheckbox,
-      }),
-      {
-        'is-reorderable': isReorderable,
-        'is-selected': isSelected.value,
-        'is-focused': itemFocused.value?.id === item.value?.id,
-        'is-selectable': selectionConfig.value?.enabled,
-        'is-added': !!addedItemById.value[item.value.id],
-        'is-new': isNew.value,
-        'is-dragging': sourceElId === String(item.value?.id),
-        'no-hover': props.noHover,
-        'uses-checkbox': selectionConfig.value?.useCheckbox,
-        'is-disabled disabled': isDisabled.value,
-      },
-    ],
-    style: props.ui?.rowStyle?.({
-      isSelected: isSelected.value,
-      isFocused: itemFocused.value?.id === item.value?.id,
-      groupsCount: groupBy.value.length,
-      row: item.value.ref,
-      isLast: props.isLast,
-      isMulti: selectionConfig.value?.multi,
-      usesCheckbox: !!selectionConfig.value?.useCheckbox,
-    }),
-  }
-})
-
-const rowContentClass = computed(() => {
-  return props.ui?.rowContentClass?.({
-    isSelected: isSelected.value,
-    isFocused: itemFocused.value?.id === item.value?.id,
-    row: item.value.ref,
-    groupsCount: groupBy.value.length,
-    isLast: props.isLast,
-    isMulti: selectionConfig.value?.multi,
-    usesCheckbox: !!selectionConfig.value?.useCheckbox,
-  })
-})
-
-const rowContentStyle = computed(() => {
-  return props.ui?.rowContentStyle?.({
-    isSelected: isSelected.value,
-    isFocused: itemFocused.value?.id === item.value?.id,
-    row: item.value.ref,
-    groupsCount: groupBy.value.length,
-    isLast: props.isLast,
-    isMulti: selectionConfig.value?.multi,
-    usesCheckbox: !!selectionConfig.value?.useCheckbox,
-  })
-})
-
 function handleClick() {
   if (isDisabled.value || isDragging.value) {
     return
@@ -132,6 +68,64 @@ function handleClick() {
   handleSelect(item.value)
   emits.value.itemClick(item.value)
 }
+
+// Styles - Row
+const rowClass = computed(() => {
+  return props.ui?.rowClass?.({
+    groupsCount: groupBy.value.length,
+    row: item.value.ref,
+    isLast: props.isLast,
+    defaults: LIST_DEFAULT_PROPS.ui.rowClass(),
+  })
+})
+
+const rowClassLocal = computed(() => {
+  const sourceElId = dragMeta.value.sourceEl?.dataset.id
+
+  const isReorderable = typeof props.reorderable === 'function'
+    ? props.reorderable(item.value.ref)
+    : props.reorderable
+
+  return {
+    'is-reorderable': isReorderable,
+    'is-selected': isSelected.value,
+    'is-focused': itemFocused.value?.id === item.value?.id,
+    'is-selectable': selectionConfig.value?.enabled,
+    'is-added': !!addedItemById.value[item.value.id],
+    'is-new': isNew.value,
+    'is-dragging': sourceElId === String(item.value?.id),
+    'no-hover': props.noHover,
+    'uses-checkbox': selectionConfig.value?.useCheckbox,
+    'is-disabled disabled': isDisabled.value,
+    'is-multi': !!selectionConfig.value?.multi,
+  }
+})
+
+const rowStyle = computed(() => {
+  return props.ui?.rowStyle?.({
+    groupsCount: groupBy.value.length,
+    row: item.value.ref,
+    isLast: props.isLast,
+  })
+})
+
+// Styles - Row Content
+const rowContentClass = computed(() => {
+  return props.ui?.rowContentClass?.({
+    row: item.value.ref,
+    groupsCount: groupBy.value.length,
+    isLast: props.isLast,
+    defaults: LIST_DEFAULT_PROPS.ui.rowContentClass(),
+  })
+})
+
+const rowContentStyle = computed(() => {
+  return props.ui?.rowContentStyle?.({
+    row: item.value.ref,
+    groupsCount: groupBy.value.length,
+    isLast: props.isLast,
+  })
+})
 
 // D'n'D
 onMounted(() => {
@@ -160,18 +154,19 @@ onMounted(() => {
     :is="rowComponent"
     ref="el"
     :data-id="item.id"
+    :data-selected="isSelected"
+
     data-cy="item-selectable"
     class="list-row-item"
-    :class="rowProps.class"
-    :style="rowProps.style"
+    :class="[rowClass, rowClassLocal]"
+    :style="rowStyle"
     @click="handleClick"
   >
     <ListMoveHandle
       v-if="!isNew && !moveHandleTarget"
       ref="moveHandleEl"
       class="list-move-handle"
-      :class="ui?.moveHandleClass"
-      :style="ui?.moveHandleStyle"
+      :ui
       @mousedown="isDragging = true"
     >
       <slot name="move-handle" />

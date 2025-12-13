@@ -296,7 +296,7 @@ function handleRemove(idx: number) {
             :ui="{
               rowClass: () => 'font-rem-14 rounded-custom',
               contentClass: () => '!p-x-0 p-t-1 p-b-2',
-              moveHandleClass: 'p-t-2.5 color-ca',
+              moveHandleClass: () => 'p-t-2.5 color-ca',
             }"
           >
             <template #content="contentProps">

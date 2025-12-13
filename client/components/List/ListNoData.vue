@@ -1,8 +1,18 @@
 <script setup lang="ts">
 import { getElementSize } from '$utils'
 
+// Types
+import type { IListProps } from './types/list-props.type'
+
 // Store
 import { useListStore } from './stores/list.store'
+
+// Constants
+import { LIST_DEFAULT_PROPS } from './constants/list-default-props.constant'
+
+type IProps = Pick<IListProps, 'ui'>
+
+const props = defineProps<IProps>()
 
 const emits = defineEmits<{
   (e: 'change:contentSize', payload: { height: number, width: number }): void
@@ -14,6 +24,16 @@ const { isLoading, listItems } = useListStore()
 // Layout
 const bannerEl = useTemplateRef('bannerEl') as any
 const { height } = useElementSize(bannerEl)
+
+const noDataClass = computed(() => {
+  return props.ui?.noDataClass?.({
+    defaults: LIST_DEFAULT_PROPS.ui.noDataClass(),
+  })
+})
+
+const noDataStyle = computed(() => {
+  return props.ui?.noDataStyle?.()
+})
 
 watch(height, () => {
   const el = unrefElement(bannerEl) as HTMLElement
@@ -36,16 +56,11 @@ watch(height, () => {
     v-if="!isLoading && !listItems?.length"
     ref="bannerEl"
     no-transition
-    class="list-content list-content--empty"
+    :class="noDataClass"
+    :style="noDataStyle"
   >
     <span text-caption>
       {{ $t('general.noData') }}
     </span>
   </Banner>
 </template>
-
-<style scoped lang="scss">
-.list-content {
-  @apply p-b-2;
-}
-</style>

@@ -5,9 +5,12 @@ import type { IListProps } from './types/list-props.type'
 // Store
 import { useListStore } from './stores/list.store'
 
+// Constants
+import { LIST_DEFAULT_PROPS } from './constants/list-default-props.constant'
+
 type IProps = Pick<IListProps, 'searchInputProps' | 'ui' | 'search' | 'dense'>
 
-defineProps<IProps>()
+const props = defineProps<IProps>()
 
 defineSlots<{
   default: (props: { search?: string, isLoading?: boolean, items: IItem[] }) => any
@@ -21,13 +24,23 @@ const { searchEl, isLoading, items, $zAddItem } = useListStore()
 
 // Layout
 const search = defineModel<string>('search')
+
+const searchClass = computed(() => {
+  return props.ui?.searchClass?.({
+    defaults: LIST_DEFAULT_PROPS.ui.searchClass(),
+  })
+})
+
+const searchStyle = computed(() => {
+  return props.ui?.searchStyle?.()
+})
 </script>
 
 <template>
   <div
     class="list-search__container"
-    :class="[ui?.searchClass, { 'is-dense': dense }]"
-    :style="ui?.searchStyle"
+    :class="[searchClass, { 'is-dense': dense }]"
+    :style="searchStyle"
   >
     <slot
       :search

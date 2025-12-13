@@ -12,6 +12,9 @@ import type { ISelection } from '../../../types/selection.type'
 import type { ITextInputProps } from '../../Inputs/TextInput/types/text-input-props.type'
 import type { IVirtualScrollerProps } from '../../VirtualScroller/types/virtual-scroller-props.type'
 
+// Constants
+import type { LIST_DEFAULT_PROPS } from '../constants/list-default-props.constant'
+
 export type IListProps = {
   /**
    * When `allowAdd` is used, we can also supply items that are about to be added
@@ -375,7 +378,9 @@ export type IListProps = {
     /**
      * Class to apply to the container
      */
-    containerClass?: () => ClassType
+    containerClass?: (payload: {
+      defaults: ReturnType<typeof LIST_DEFAULT_PROPS['ui']['containerClass']>
+    }) => ClassType
 
     /**
      * Style to apply to the container
@@ -385,17 +390,24 @@ export type IListProps = {
     /**
      * Class to apply to the content area
      */
-    contentClass?: (hasSearch?: boolean) => ClassType
+    contentClass?: (payload: {
+      hasSearch?: boolean
+      defaults: ReturnType<typeof LIST_DEFAULT_PROPS['ui']['contentClass']>
+    }) => ClassType
 
     /**
      * Style to apply to the content area
      */
-    contentStyle?: (hasSearch?: boolean) => CSSProperties
+    contentStyle?: (payload: {
+      hasSearch?: boolean
+    }) => CSSProperties
 
     /**
      * Class to apply to the move handle
      */
-    moveHandleClass?: () => ClassType
+    moveHandleClass?: (payload: {
+      defaults: ReturnType<typeof LIST_DEFAULT_PROPS['ui']['moveHandleClass']>
+    }) => ClassType
 
     /**
      * Style to apply to the move handle
@@ -403,9 +415,35 @@ export type IListProps = {
     moveHandleStyle?: () => CSSProperties
 
     /**
+     * Class to apply to the move handle icon
+     */
+    moveHandleIconClass?: (payload: {
+      defaults: ReturnType<typeof LIST_DEFAULT_PROPS['ui']['moveHandleIconClass']>
+    }) => ClassType
+
+    /**
+     * Style to apply to the move handle icon
+     */
+    moveHandleIconStyle?: () => CSSProperties
+
+    /**
+     * Class to apply to the loading area
+     */
+    loadingClass?: (payload: {
+      defaults: ReturnType<typeof LIST_DEFAULT_PROPS['ui']['loadingClass']>
+    }) => ClassType
+
+    /**
+     * Style to apply to the loading area
+     */
+    loadingStyle?: () => CSSProperties
+
+    /**
      * Class to apply to the `Banner` when there are no items
      */
-    noDataClass?: () => ClassType
+    noDataClass?: (payload: {
+      defaults: ReturnType<typeof LIST_DEFAULT_PROPS['ui']['noDataClass']>
+    }) => ClassType
 
     /**
      * Style to apply to the `Banner` when there are no items
@@ -415,75 +453,69 @@ export type IListProps = {
     /**
      * Class to apply to the list row
      */
-    rowClass?: (
-      payload: {
-        isSelected: boolean
-        isFocused?: boolean
-        row: IItem
-        groupsCount: number
-        isLast: boolean
-        isMulti?: boolean
-        usesCheckbox?: boolean
-      },
+    rowClass?: (payload: {
+      row: IItem
+      groupsCount: number
+      isLast: boolean
+      defaults: ReturnType<typeof LIST_DEFAULT_PROPS['ui']['rowClass']>
+    },
     ) => ClassType
 
     /**
      * Style to apply to the list row
      */
     rowStyle?: (payload: {
-      isSelected: boolean
-      isFocused?: boolean
       row: IItem
       groupsCount: number
       isLast: boolean
-      isMulti?: boolean
-      usesCheckbox?: boolean
     }) => CSSProperties
 
     /**
-     * Class to apply to the list row content
+     * Class to apply to the list row content (excluding the `checkbox` and `moveHandle`)
      */
     rowContentClass?: (
       payload: {
-        isSelected: boolean
-        isFocused?: boolean
         row: any
         groupsCount: number
         isLast: boolean
-        isMulti?: boolean
-        usesCheckbox?: boolean
+        defaults: ReturnType<typeof LIST_DEFAULT_PROPS['ui']['rowContentClass']>
       },
     ) => ClassType
 
     /**
-     * Style to apply to the list row content
+     * Style to apply to the list row content (excluding the `checkbox` and `moveHandle`)
      */
     rowContentStyle?: (
       payload: {
-        isSelected: boolean
-        isFocused?: boolean
         row: any
         groupsCount: number
         isLast: boolean
-        isMulti?: boolean
-        usesCheckbox?: boolean
       },
     ) => CSSProperties
 
     /**
      * Class to apply to the list row group
      */
-    rowGroupClass?: (payload: { group: IGroupRow, level: number }) => ClassType
+    rowGroupClass?: (payload: {
+      group: IGroupRow
+      level: number
+      defaults: ReturnType<typeof LIST_DEFAULT_PROPS['ui']['rowGroupClass']>
+    }) => ClassType
 
     /**
      * Style to apply to the list row group
      */
-    rowGroupStyle?: (payload: { group: IGroupRow, level: number }) => CSSProperties
+    rowGroupStyle?: (payload: {
+      group: IGroupRow
+      level: number
+    }) => CSSProperties
 
     /**
      * Class to apply to the search area
      */
-    searchClass?: () => ClassType
+    searchClass?: (payload: {
+      defaults: ReturnType<typeof LIST_DEFAULT_PROPS['ui']['searchClass']>
+    }) => ClassType
 
     /**
      * Style to apply to the search area

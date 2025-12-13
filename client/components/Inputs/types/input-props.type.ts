@@ -77,19 +77,4 @@ export type IInputProps = {
    * The props that should be passed to the input tag (<input>)
    */
   inputProps?: IItem
-
-  /**
-   * Visual configuration
-   */
-  ui?: {
-    /**
-     * The class of the input tag
-     */
-    inputClass?: ClassType
-
-    /**
-     * The style of the input tag
-     */
-    inputStyle?: CSSProperties
-  }
 } & IInputWrapperProps

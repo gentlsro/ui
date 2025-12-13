@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'vue'
 
-// Types
+// Constants
+import type { INPUT_LABEL_DEFAULT_PROPS } from '../constants/input-label-default-props'
 
 export type IInputLabelProps = {
   /**
@@ -59,15 +60,17 @@ export type IInputLabelProps = {
     /**
      * Class applied to the label
      */
-    labelClass?: ClassType
+    labelClass?: (payload: {
+      defaults: ReturnType<typeof INPUT_LABEL_DEFAULT_PROPS['ui']['labelClass']>
+    }) => ClassType
 
     /**
      * Style applied to the label
      */
-    labelStyle?: CSSProperties
+    labelStyle?: () => CSSProperties
 
     /**
-     * The width of the label when it's in inline mode
+     * The width of the label when it's in inline mode (use actual CSS syntax)
      */
     labelInlineWidth?: string
   }

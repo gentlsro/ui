@@ -10,6 +10,9 @@ import type { IVirtualScrollEvent } from '../VirtualScroller/types/virtual-scrol
 import { useListStore } from './stores/list.store'
 import { useListKeyboard } from './composables/useListKeyboard'
 
+// Constants
+import { LIST_DEFAULT_PROPS } from './constants/list-default-props.constant'
+
 type IProps = Pick<IListProps, 'ui' | 'noHover' | 'reorderable' | 'disabledFnc' | 'scrollerConfig' | 'moveHandleTarget' | 'dense'>
 
 const props = defineProps<IProps>()
@@ -50,11 +53,16 @@ function handleVirtualScroll(ev: IVirtualScrollEvent) {
 }
 
 const contentClass = computed(() => {
-  return props.ui?.contentClass?.(searchConfig.value?.enabled)
+  return props.ui?.contentClass?.({
+    hasSearch: searchConfig.value?.enabled,
+    defaults: LIST_DEFAULT_PROPS.ui.contentClass({ hasSearch: searchConfig.value?.enabled }),
+  })
 })
 
 const contentStyle = computed(() => {
-  return props.ui?.contentStyle?.(searchConfig.value?.enabled)
+  return props.ui?.contentStyle?.({
+    hasSearch: searchConfig.value?.enabled,
+  })
 })
 </script>
 
