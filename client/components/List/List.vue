@@ -15,7 +15,7 @@ import { getListItemKey } from './functions/helpers/get-list-item-key'
 import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
 
 // Store
-import { useListStore } from './stores/list.store'
+import { LIST_ID_KEY, useListStore } from './stores/list.store'
 
 // Constants
 import { LIST_DEFAULT_PROPS } from './constants/list-default-props.constant'
@@ -27,6 +27,10 @@ const props = withDefaults(defineProps<IListProps>(), {
 
 const emits = defineEmits<IListEmits>()
 defineSlots<IListSlots>()
+
+// Init
+const uuid = generateUUID()
+provideLocal(LIST_ID_KEY, uuid)
 
 // Utils
 const mergedProps = computed(() => {
@@ -177,6 +181,7 @@ defineExpose(listGetExposed())
         :ui="mergedProps.ui"
         :scroller-config="mergedProps.scrollerConfig"
         :move-handle-target
+        :dense
         @change:content-size="$emit('change:contentSize', $event)"
       >
         <template #item="itemData">

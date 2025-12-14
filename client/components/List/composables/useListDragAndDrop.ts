@@ -2,7 +2,7 @@
 
 import { autoScrollPlugin, Draggable, PointerSensor } from 'dragdoll'
 import type { PointerSensorMoveEvent } from 'dragdoll'
-import { moveItem } from '$utils'
+import { getElementSize, moveItem } from '$utils'
 
 // Types
 import type { IListItem } from '../types/list-item.type'
@@ -10,6 +10,7 @@ import type { IListItem } from '../types/list-item.type'
 // Store
 import { useListStore } from '../stores/list.store'
 import { getListItemKey } from '../functions/helpers'
+import { getRect } from 'mezr'
 
 const LIST_ITEM_CLASSES = ['list-row-item', 'list-row-group']
 
@@ -34,6 +35,10 @@ export function useListDragAndDrop(payload?: {
   const { x, y } = useSharedMouse()
 
   function handleDragStart(payload: { item: IListItem, el: HTMLElement }) {
+    // Turn off selection while dragging
+    getSelection()?.removeAllRanges()
+    document.documentElement.classList.add('select-none')
+
     // Get the list padding top to calculate the correct position of drop indicator
     const listElDom = unrefElement(listEl as any) as HTMLElement
 
@@ -46,7 +51,7 @@ export function useListDragAndDrop(payload?: {
     draggedItem.value = payload.item
     dragMeta.value = {
       ...dragMeta.value,
-      sourceRect: payload.el.getBoundingClientRect(),
+      sourceRect: getElementSize(payload.el).total,
       sourceEl: payload.el as HTMLElement,
     }
 
@@ -181,6 +186,10 @@ export function useListDragAndDrop(payload?: {
 
   function handleDragEnd(drag?: Draggable['drag']) {
     const dragItem = drag?.items[0]
+
+    // Turn on selection
+    getSelection()?.removeAllRanges()
+    document.documentElement.classList.remove('select-none')
 
     // Remove the ghost element.
     dragItem?.element.remove()

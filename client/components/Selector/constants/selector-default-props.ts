@@ -43,50 +43,5 @@ export const SELECTOR_DEFAULT_PROPS = {
         '*': `${base}`,
       } as const
     },
-
-    inputClass() {
-      const base = 'flex items-center'
-
-      return {
-        base,
-        '*': `${base}`,
-      } as const
-    },
-
-    labelClass() {
-      const base = ''
-
-      return {
-        base,
-        '*': `${base}`,
-      } as const
-    },
-
-    contentClass() {
-      const base = ''
-
-      return {
-        base,
-        '*': `${base}`,
-      } as const
-    },
-
-    inputContainerClass() {
-      const base = ''
-
-      return {
-        base,
-        '*': `${base}`,
-      } as const
-    },
-
-    inputInnerContainerClass() {
-      const base = ''
-
-      return {
-        base,
-        '*': `${base}`,
-      } as const
-    },
   },
 } satisfies ISelectorProps

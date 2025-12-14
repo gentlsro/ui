@@ -1,5 +1,5 @@
 // @unocss-include
-import type { IListProps } from '$ui'
+import type { IListProps } from '../types/list-props.type'
 
 export const LIST_DEFAULT_PROPS = {
   ui: {
@@ -25,16 +25,16 @@ export const LIST_DEFAULT_PROPS = {
       const base = 'w-full flex gap-1 p-r-2 items-center rounded-custom overflow-auto font-rem-14'
 
       // Focus
-      const focus = '[&.is-focused]:(bg-slate-100 dark:bg-dark-900)'
+      const focus = '[&.is-focused]:(bg-slate-100 dark:bg-slate-800)'
 
       // Selection - single
       const selectionNoCheckbox = '[&.is-selected:not(.uses-checkbox)]:(bg-slate-200 color-primary dark:(bg-slate-800 color-blue-400))'
 
       // Selection - multi (with checkbox)
-      const selectionMultiCheckbox = '[&.is-selected.is-multi.uses-checkbox]:(color-primary dark:(color-blue-400))'
+      const selectionMultiCheckbox = '[&.is-selected.is-multi.uses-checkbox]:())'
 
       // Focus while selected
-      const focusSelected = '[&.is-focused.is-selected]:(outline-1 outline-dashed outline-offset--1 outline-primary dark:(outline-blue-400))'
+      const focusSelected = '[&.is-focused.is-selected:not(.uses-checkbox)]:(outline-1 outline-dashed outline-offset--1 outline-primary dark:(outline-blue-400))'
 
       return {
         base,
@@ -67,7 +67,7 @@ export const LIST_DEFAULT_PROPS = {
     },
 
     moveHandleClass() {
-      const base = 'flex flex-center shrink-0 touch-none cursor-grab self-start p-t-2 p-r-1 color-ca'
+      const base = 'flex flex-center shrink-0 touch-none cursor-grab self-start p-t-2 p-r-1 m-t-2px color-ca'
 
       return {
         base,

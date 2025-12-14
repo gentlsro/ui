@@ -194,7 +194,6 @@ function handleRemove(idx: number) {
             item-key="field"
             item-label="_label"
             :selection-config="{ enabled: true, multi: true, useCheckbox: true }"
-            :ui="{ rowClass: () => 'p-r-2 m-y-1px rounded-custom' }"
           >
             <template #above="{ listItems, items }">
               <div
@@ -293,11 +292,6 @@ function handleRemove(idx: number) {
             item-label="_label"
             :search-config="{ enabled: false }"
             :sorting-config="{ enabled: false }"
-            :ui="{
-              rowClass: () => 'font-rem-14 rounded-custom',
-              contentClass: () => '!p-x-0 p-t-1 p-b-2',
-              moveHandleClass: () => 'p-t-2.5 color-ca',
-            }"
           >
             <template #content="contentProps">
               <ListContent

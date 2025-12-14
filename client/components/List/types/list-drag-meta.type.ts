@@ -13,7 +13,7 @@ export type IListDragMeta = {
   /**
    * The source item rect
    */
-  sourceRect?: DOMRect
+  sourceRect?: Pick<DOMRect, 'height' | 'width'>
 
   /**
    * The taget item element

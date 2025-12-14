@@ -17,12 +17,12 @@ export function useListKeyboard(config?: { registerKeyStroke?: boolean }) {
     listItems,
     itemFocused,
     itemFocusedIdx,
+    isFocusedWithin,
     handleSelect,
   } = useListStore()
 
   // Layout
   const itemFocusedEl = ref<HTMLDivElement>()
-  const { focused } = useFocusWithin(containerEl)
 
   function handleMouseOver(item: any, index: number) {
     if (!('isGroup' in item) && !preventNextHoverEvent.value) {
@@ -68,7 +68,7 @@ export function useListKeyboard(config?: { registerKeyStroke?: boolean }) {
     // for example when PageDown is pressed while there are only few items in the list
     const { force = false, repeated } = options ?? {}
 
-    const isUnfocused = !focused.value && !force
+    const isUnfocused = !isFocusedWithin.value && !force
     if (!listItems.value || isUnfocused) {
       return
     }
@@ -190,7 +190,7 @@ export function useListKeyboard(config?: { registerKeyStroke?: boolean }) {
     )
 
     whenever(
-      () => !focused.value,
+      () => !isFocusedWithin.value,
       () => itemFocusedIdx.value = -1,
     )
   }

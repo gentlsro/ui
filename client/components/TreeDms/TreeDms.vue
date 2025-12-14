@@ -10,7 +10,7 @@ import type { ITreeProps } from '#layers/ui/client/components/TreeNew/types/tree
 import { getDirectParent } from '#layers/ui/client/components/TreeNew/functions/get-direct-parent'
 
 // Store
-import { useTreeDmsStore } from './stores/tree-dms.store'
+import { TREE_DMS_INJECTION_KEY, useTreeDmsStore } from './stores/tree-dms.store'
 
 const props = defineProps<ITreeDmsProps<T>>()
 
@@ -22,6 +22,10 @@ const {
   isContextMenuOpen,
   folderKey,
 } = useTreeDmsStore({ props })
+
+// Init
+const uuid = generateUUID()
+provideLocal(TREE_DMS_INJECTION_KEY, uuid)
 
 // Layout
 const model = defineModel<T[]>()

@@ -9,6 +9,9 @@ import type { IVirtualScrollerProps } from './types/virtual-scroller-props.type'
 // Functions
 import { getComponentProps } from '../../functions/get-component-props'
 
+// Constants
+import { VIRTUAL_SCROLLER_DEFAULT_PROPS } from './constants/virtual-scroller-default-props'
+
 type IRow = {
   ref: T
   id: string | number
@@ -104,6 +107,14 @@ const visibleItemsIdx = ref({ first: 0, last: 0 })
 
 const isVirtual = computed(() => {
   return (props.rows ?? []).length > VIRTUAL_SCROLL_THRESHOLD || false
+})
+
+const rowClass = computed(() => {
+  return props.ui?.rowClass?.({ defaults: VIRTUAL_SCROLLER_DEFAULT_PROPS.ui.rowClass() })
+})
+
+const rowStyle = computed(() => {
+  return props.ui?.rowStyle?.()
 })
 
 const containerRect = useElementSize(containerEl)
@@ -604,6 +615,7 @@ function renderOnlyVisible(
         :data-key="row.id"
         :style="row.style"
         class="virtual-scroll__row content-row"
+        :class="rowClass"
         @vue:mounted="handleMountedRow($event)"
       >
         <slot

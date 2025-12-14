@@ -84,6 +84,8 @@ function createStore(injectionKey?: string) {
     const containerEl = ref<HTMLDivElement>()
     const rowComponent = shallowRef(listProps?.rowComponent ?? 'div')
 
+    const { focused: isFocusedWithin } = useFocusWithin(containerEl)
+
     const isClearable = initRef({
       propName: 'clearable',
       instance,
@@ -282,7 +284,7 @@ function createStore(injectionKey?: string) {
         const isOutOfBounds = itemFocusedIdx.value > listItems.value.length - 1
         const isGroupFocused = 'isGroup' in (listItems.value[itemFocusedIdx.value] ?? {})
 
-        if (isNothingFocused || isOutOfBounds || isGroupFocused) {
+        if (isFocusedWithin.value && (isNothingFocused || isOutOfBounds || isGroupFocused)) {
           const firstNonGroupItemIndex = listItems.value.findIndex(item => !('isGroup' in item))
           itemFocusedIdx.value = firstNonGroupItemIndex
         }
@@ -443,6 +445,7 @@ function createStore(injectionKey?: string) {
       // Layout
       containerEl,
       listEl,
+      isFocusedWithin,
       rowComponent,
       isMounted,
       isClearable,

@@ -11,7 +11,7 @@ import { useInputValidationUtils } from '../Inputs/functions/useInputValidationU
 import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
 
 // Store
-import { useSelectorStore } from './stores/selector.store'
+import { SELECTOR_ID_KEY, useSelectorStore } from './stores/selector.store'
 import { selectorTransformOptions } from './functions/selector-transform-options'
 import { getListItemEmitValue, getListItemKey } from '../List/functions/helpers'
 
@@ -45,6 +45,10 @@ defineExpose({
     search.value = ''
   },
 })
+
+// Init
+const uuid = generateUUID()
+provideLocal(SELECTOR_ID_KEY, uuid)
 
 // Validations
 const { path } = useInputValidationUtils(props)

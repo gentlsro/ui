@@ -595,7 +595,7 @@ export const defaultComponentsConfig = {
         enabled: true,
         sortBy: undefined,
       },
-      scrollerConfig: { rowHeight: 32 },
+      scrollerConfig: { rowHeight: 36 },
       selection: undefined,
       selectionConfig: {
         enabled: false,
@@ -991,7 +991,7 @@ export const defaultComponentsConfig = {
       hasContent: undefined,
       ui: {
         borderRadius: '0.5rem',
-        inputClass: ({ defaults }) => defaults['*'],
+        inputClass: ({ defaults }) => `${defaults['*']} flex items-center`,
         chipClass: ({ defaults }) => defaults['*'],
         appendClass: ({ defaults }) => defaults['*'],
         innerClass: ({ defaults }) => defaults['*'],
@@ -1310,7 +1310,7 @@ export const defaultComponentsConfig = {
         expandedLevelOnInit: 0,
         showCollapsedWhenSearched: true,
         btnTakesSpace: true,
-        btnProps: { size: 'xs', noHoverEffect: true, class: 'self-start m-t-1 color-ca' },
+        btnProps: { size: 'xs', noHoverEffect: true, class: 'self-start m-t-1.5 color-ca' },
       },
       connectors: true,
       loadChildrenConfig: undefined,
@@ -1328,7 +1328,7 @@ export const defaultComponentsConfig = {
       selectionConfig: {
         multi: false,
         emitKey: false,
-        checkboxProps: { size: 'sm', noHoverEffect: true, class: 'm-l--2' },
+        checkboxProps: { size: 'sm', noHoverEffect: true, class: 'm-t-2px m-l--2' },
       },
       dndConfig: { enabled: false, dropMode: 'parent' },
       ui: {
@@ -1341,7 +1341,7 @@ export const defaultComponentsConfig = {
         nodeClass: ({ isSelected, isFocused, isMulti }) => {
           const classes = [
             // Base
-            'flex gap-1 p-x-1 items-start rounded-custom w-full overflow-auto',
+            'flex gap-1 p-x-1 items-center rounded-custom w-full overflow-auto',
 
             // Hover
             'hover:bg-slate-100 dark:hover:bg-slate-800',
@@ -1359,7 +1359,7 @@ export const defaultComponentsConfig = {
         },
         nodeContentClass: () => 'overflow-hidden flex flex-col grow leading-20px p-y-1.5',
       },
-      scrollerConfig: { rowHeight: 32 },
+      scrollerConfig: { rowHeight: 36 },
       actionsConfig: {
         enabled: true,
         btnProps: { size: 'sm' },
@@ -1394,18 +1394,22 @@ export const defaultComponentsConfig = {
       noScrollEmit: undefined,
       overscan: undefined,
       rows: undefined,
-      rowHeight: 32,
+      rowHeight: 36,
       rowKey: 'id' as any,
       threshold: 80,
       watchWidth: undefined,
+      ui: {
+        rowClass: ({ defaults }) => defaults['*'],
+      },
     },
+    merge: ['ui'],
   },
 
   // VirtualScrollerVertical
   virtualScrollerVertical: {
     props: {
       rows: undefined,
-      rowHeight: 32,
+      rowHeight: 36,
       rowKey: 'id' as any,
       virtualizerOptions: {
         overscan: 5,

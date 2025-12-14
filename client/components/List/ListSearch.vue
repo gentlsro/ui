@@ -54,9 +54,9 @@ const searchStyle = computed(() => {
           ref="searchEl"
           v-model="search"
           grow
-          v-bind="searchInputProps"
           :loading="isLoading"
           autofocus
+          v-bind="searchInputProps"
           :validation="$zAddItem.$errors"
           data-cy="list-search"
         />

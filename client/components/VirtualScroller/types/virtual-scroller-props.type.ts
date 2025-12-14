@@ -1,3 +1,8 @@
+import type { CSSProperties } from 'vue'
+
+// Constants
+import type { VIRTUAL_SCROLLER_DEFAULT_PROPS } from '../constants/virtual-scroller-default-props'
+
 export type IVirtualScrollerProps<T> = {
   /**
    * The number of rows to render initially
@@ -47,4 +52,21 @@ export type IVirtualScrollerProps<T> = {
    * Watch for width changes
    */
   watchWidth?: boolean
+
+  /**
+   * Visual configuration
+   */
+  ui?: {
+    /**
+     * Class applied to the row
+     */
+    rowClass?: (payload: {
+      defaults: ReturnType<typeof VIRTUAL_SCROLLER_DEFAULT_PROPS['ui']['rowClass']>
+    }) => ClassType
+
+    /**
+     * Style applied to the row
+     */
+    rowStyle?: () => CSSProperties
+  }
 }

@@ -225,13 +225,13 @@ onMounted(() => {
     @apply self-start shrink-0 pointer-events-none;
   }
 
-  //   &.is-dragging {
-  //     @apply outline-2 outline-primary outline-dashed outline-offset--2 bg-primary/30;
+  &.is-dragging {
+    @apply outline-2 outline-primary outline-dashed outline-offset--2 bg-primary/30;
 
-  //     &::after {
-  //       @apply content-empty absolute inset-0 bg-primary rounded-inherit;
-  //     }
-  //   }
+    &::after {
+      @apply content-empty absolute inset-0 bg-primary rounded-inherit;
+    }
+  }
 
   &.is-added,
   &.is-new {
@@ -256,25 +256,10 @@ onMounted(() => {
     @apply cursor-pointer;
   }
 
-  //   &.is-selected:not(.uses-checkbox) {
-  //     @apply dark:bg-primary/50 bg-primary/20 light:color-primary;
-  //   }
-
-  //   &.is-focused:not(.no-hover),
-  //   &.is-selectable:not(.no-hover):hover {
-  //     @apply bg-primary/25;
-  //   }
-
   &:not(.is-reorderable) {
     .list-move-handle {
       @apply hidden;
     }
   }
-
-  //   &:not(.is-selectable) {
-  //     .list-row-item__selection-checkbox {
-  //       @apply hidden;
-  //     }
-  //   }
 }
 </style>

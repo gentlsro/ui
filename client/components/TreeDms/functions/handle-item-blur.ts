@@ -17,7 +17,6 @@ export async function handleItemBlur<T extends IItem>(payload: {
   getTreeStore: () => ReturnType<typeof useTreeStore>
   getTreeDmsStore: () => ReturnType<typeof useTreeDmsStore>
 }) {
-  console.log('🚀 ~ handleItemBlur ~ payload:', payload)
   const { inputEl, node, select, getTreeStore, getTreeDmsStore } = payload
   const { isLoadingByNodeId, modifiers, nodeEditing, isCurrentlyAddingItem } = getTreeDmsStore()
 
