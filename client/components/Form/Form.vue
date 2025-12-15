@@ -194,7 +194,6 @@ onUnmounted(() => {
           :ui="mergedProps.ui"
           :has-confirmation
           :has-keyboard-shortcuts
-          :edit-disabled
           :cancel-btn-props="mergedProps.cancelBtnProps"
           :submit-btn-props="mergedProps.submitBtnProps"
           :edit-btn-props="mergedProps.editBtnProps"
