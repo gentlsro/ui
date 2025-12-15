@@ -114,7 +114,7 @@ export function useCornerAdjustment(payload: {
     }
 
     const pos = getMouseFromEvent(event)
-    const { corner, startMouse, originalValue } = cornerStart.value
+    const { corner, startMouse, originalValue = 0 } = cornerStart.value
 
     const dx = pos.x - startMouse.x
     const dy = pos.y - startMouse.y

@@ -4,10 +4,10 @@
 import type { Corner } from './types/corner.type'
 import type { ICornerResizeProps } from './types/corner-resize-props.type'
 
+// Composables
+import { useCornerAdjustment } from './composables/useCornerAdjustment'
+
 const props = defineProps<ICornerResizeProps>()
-const emits = defineEmits<{
-  (e: 'update:modelValue', value: ICornerResizeProps['modelValue']): void
-}>()
 
 // Template
 const corners = defineModel<ICornerResizeProps['modelValue']>({
@@ -24,8 +24,6 @@ const corners = defineModel<ICornerResizeProps['modelValue']>({
 })
 
 const resizeHandlesEl = ref<HTMLElement>()
-
-const { useCornerAdjustment } = await import('./composables/useCornerAdjustment')
 
 const { onCornerMouseDown } = useCornerAdjustment({
   corners,
