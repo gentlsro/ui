@@ -426,6 +426,7 @@ export const defaultComponentsConfig = {
   form: {
     props: {
       editControls: false,
+      editDisabled: false,
       labelForcedVisibility: true,
       hasControls: undefined,
       submitConfirmation: undefined,
