@@ -63,6 +63,7 @@ const { emptyValue } = useTableStore()
             :data-type="column.dataType"
             :empty-value
             :format="column.format"
+            :comparator="filter.comparator"
             :empty-value-string="$t('general.empty')"
             text="sm"
           />

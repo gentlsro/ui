@@ -7,7 +7,7 @@ import type { IFormProps } from './types/form-props.type'
 type IProps = {}
   & Pick<
     IFormProps,
-    | 'label' | 'ui' | 'noSubmit' | 'submitBtnProps' | 'noEditControls' | 'cancelBtnProps'
+    | 'label' | 'ui' | 'noSubmit' | 'submitBtnProps' | 'noEditControls' | 'cancelBtnProps' | 'editDisabled'
     | 'submitConfirmationText' | 'icon' | 'editControls' | 'labelForcedVisibility' | 'editBtnProps'
   >
   & { hasKeyboardShortcuts: boolean, hasConfirmation: boolean, submit?: Function }
@@ -100,6 +100,7 @@ const editControls = computed(() => {
       v-if="editControls?.edit"
       v-model:is-editing="isEditing"
       :btn-props="editBtnProps"
+      :disabled="editDisabled"
     >
       <KeyboardShortcut
         v-if="hasKeyboardShortcuts"
