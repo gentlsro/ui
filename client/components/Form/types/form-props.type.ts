@@ -28,6 +28,11 @@ export type IFormProps = {
     | boolean
 
   /**
+   * If true, the edit button will be visible (if `editControls` is true) but disabled
+   */
+  editDisabled?: boolean
+
+  /**
    * Errors to display in the form.
    */
   errors?: string[]
