@@ -32,7 +32,7 @@ defineExpose({
 })
 
 // Store
-const { allowComparatorsOfSameType } = useTableStore()
+const { allowComparatorsOfSameType, modifiers } = useTableStore()
 
 // Layout
 const comparatorInputEl = useTemplateRef('comparatorInputEl')
@@ -71,6 +71,10 @@ const usedComparators = computed(() => {
 })
 
 function handleComparatorChange(comparator: ComparatorEnum) {
+  const { onFilterItemChange } = modifiers.value ?? {}
+
+  onFilterItemChange?.({ filterItem: item.value })
+
   // If the comparator was a selector comparator and now it's not, reset the value
   // If the comparator was not a selector comparator and now it is, reset the value
   const wasSelectComparator = checkIsSelectorComparator(item.value.comparator)
