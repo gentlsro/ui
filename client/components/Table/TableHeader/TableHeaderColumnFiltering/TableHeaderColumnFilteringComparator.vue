@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ComparatorEnum } from '$comparatorEnum'
+import type { ComparatorEnum } from '$comparatorEnum'
 
 // Types
 import type { ITableFilterItem } from '../../types/table-filter-item.type'
@@ -81,19 +81,19 @@ function handleComparatorChange(comparator: ComparatorEnum) {
   const _isEmptyComparator = checkIsNonValueComparator(comparator)
 
   // Same for [AGO, NOT_AGO, UNTIL, NOT_UNTIL] comparator
-  const wasTimeAgoComparator = [
-    ComparatorEnum.AGO,
-    ComparatorEnum.NOT_AGO,
-    ComparatorEnum.UNTIL,
-    ComparatorEnum.NOT_UNTIL,
-  ].includes(item.value.comparator)
+  // const wasTimeAgoComparator = [
+  //   ComparatorEnum.AGO,
+  //   ComparatorEnum.NOT_AGO,
+  //   ComparatorEnum.UNTIL,
+  //   ComparatorEnum.NOT_UNTIL,
+  // ].includes(item.value.comparator)
 
-  const isTimeAgoComparator = [
-    ComparatorEnum.AGO,
-    ComparatorEnum.NOT_AGO,
-    ComparatorEnum.UNTIL,
-    ComparatorEnum.NOT_UNTIL,
-  ].includes(comparator)
+  // const isTimeAgoComparator = [
+  //   ComparatorEnum.AGO,
+  //   ComparatorEnum.NOT_AGO,
+  //   ComparatorEnum.UNTIL,
+  //   ComparatorEnum.NOT_UNTIL,
+  // ].includes(comparator)
 
   if (wasTimeAgoComparator && !isTimeAgoComparator) {
     item.value.value = undefined
