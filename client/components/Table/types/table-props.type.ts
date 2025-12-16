@@ -411,6 +411,17 @@ export type ITableProps<
      * columns, filters, sorting, etc.
      */
     getLayoutMeta?: typeof tableGetLayoutMeta
+
+    /**
+     * A function that gets called when a filter item is changed
+     *
+     * Use-case: We might need to reset the `value` of the filter when comparator
+     * gets changed
+     */
+    onFilterItemChange?: (payload: {
+      item: ITableFilterItem
+      change: Partial<ITableFilterItem>
+    }) => void
   }
 
   /**
