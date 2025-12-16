@@ -95,8 +95,6 @@ const editControls = computed(() => {
 
     <slot name="append" />
 
-    {{ !!editDisabled }}
-
     <!-- Edit button (absolutely positioned) -->
     <CrudEditBtn
       v-if="editControls?.edit"
