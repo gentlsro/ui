@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ComparatorEnum } from '$comparatorEnum'
+import { ComparatorEnum } from '$comparatorEnum'
 
 // Types
 import type { ITableFilterItem } from '../../types/table-filter-item.type'
