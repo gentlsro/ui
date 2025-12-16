@@ -74,8 +74,8 @@ function handleComparatorChange(comparator: ComparatorEnum) {
   const { onFilterItemChange } = modifiers.value ?? {}
 
   onFilterItemChange?.({
-    oldFilterItem: item.value,
-    newFilterItem: { ...item.value, comparator },
+    item: item.value,
+    change: { comparator },
   })
 
   // If the comparator was a selector comparator and now it's not, reset the value

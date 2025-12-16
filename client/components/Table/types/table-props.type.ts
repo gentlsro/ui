@@ -419,8 +419,8 @@ export type ITableProps<
      * gets changed
      */
     onFilterItemChange?: (payload: {
-      oldFilterItem: ITableFilterItem
-      newFilterItem: ITableFilterItem
+      item: ITableFilterItem
+      change: Partial<ITableFilterItem>
     }) => void
   }
 
