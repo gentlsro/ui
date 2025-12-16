@@ -80,6 +80,29 @@ function handleComparatorChange(comparator: ComparatorEnum) {
   const wasEmptyComparator = checkIsNonValueComparator(item.value.comparator)
   const _isEmptyComparator = checkIsNonValueComparator(comparator)
 
+  // Same for [AGO, NOT_AGO, UNTIL, NOT_UNTIL] comparator
+  const wasTimeAgoComparator = [
+    ComparatorEnum.AGO,
+    ComparatorEnum.NOT_AGO,
+    ComparatorEnum.UNTIL,
+    ComparatorEnum.NOT_UNTIL,
+  ].includes(item.value.comparator)
+
+  const isTimeAgoComparator = [
+    ComparatorEnum.AGO,
+    ComparatorEnum.NOT_AGO,
+    ComparatorEnum.UNTIL,
+    ComparatorEnum.NOT_UNTIL,
+  ].includes(comparator)
+
+  if (wasTimeAgoComparator && !isTimeAgoComparator) {
+    item.value.value = undefined
+  }
+
+  if (!wasTimeAgoComparator && isTimeAgoComparator) {
+    item.value.value = undefined
+  }
+
   if (wasSelectComparator && !isSelectComparator) {
     item.value.value = undefined
   }
