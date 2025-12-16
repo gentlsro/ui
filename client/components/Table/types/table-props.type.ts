@@ -419,7 +419,8 @@ export type ITableProps<
      * gets changed
      */
     onFilterItemChange?: (payload: {
-      filterItem: ITableFilterItem
+      oldFilterItem: ITableFilterItem
+      newFilterItem: ITableFilterItem
     }) => void
   }
 
