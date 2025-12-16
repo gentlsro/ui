@@ -95,13 +95,13 @@ function handleComparatorChange(comparator: ComparatorEnum) {
   //   ComparatorEnum.NOT_UNTIL,
   // ].includes(comparator)
 
-  if (wasTimeAgoComparator && !isTimeAgoComparator) {
-    item.value.value = undefined
-  }
+  // if (wasTimeAgoComparator && !isTimeAgoComparator) {
+  //   item.value.value = undefined
+  // }
 
-  if (!wasTimeAgoComparator && isTimeAgoComparator) {
-    item.value.value = undefined
-  }
+  // if (!wasTimeAgoComparator && isTimeAgoComparator) {
+  //   item.value.value = undefined
+  // }
 
   if (wasSelectComparator && !isSelectComparator) {
     item.value.value = undefined
