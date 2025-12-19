@@ -5,8 +5,8 @@
   position: relative;
   overflow: hidden !important;
   overflow-anchor: none;
-  padding-inline-start: 0 !important;
-  -webkit-padding-start: 0 !important;
+  padding-inline-start: 0;
+  -webkit-padding-start: 0;
   -ms-overflow-style: none;
   touch-action: auto;
   -ms-touch-action: auto;
