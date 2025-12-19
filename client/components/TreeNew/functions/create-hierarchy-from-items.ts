@@ -45,7 +45,8 @@ export function createHierarchyFromItems<T extends IItem = IItem>(payload: {
   const itemsById = new Map<string | number, T>()
   items.forEach(item => {
     const id = get(item, idKey)
-    if (id !== undefined && id !== null) {
+
+    if (!isNil(id)) {
       itemsById.set(id, item)
     }
   })
