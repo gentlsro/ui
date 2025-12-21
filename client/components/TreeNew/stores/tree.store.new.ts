@@ -96,6 +96,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     }) as Ref<ITreeProps<T>['selection']>
 
     // Focusing
+    const nodeHovered = ref<ITreeNode<T> | undefined>()
     const nodeFocused = ref<ITreeNode<T> | undefined>()
 
     watch(nodeFocused, (node, oldNode) => {
@@ -103,6 +104,12 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
         emits.value.nodeFocus({ node, focusEvent: 'focus' })
       } else {
         emits.value.nodeBlur({ node: oldNode, focusEvent: 'blur' })
+      }
+    })
+
+    watch(nodeHovered, node => {
+      if (node) {
+        emits.value.nodeHover({ node })
       }
     })
 
@@ -163,12 +170,12 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       async ([search, nodesFlattened]) => {
         let searchedNodes: ITreeNode<T>[] = []
 
-        if (!search) {
+        if (!search && !searchConfig.value?.fnc) {
           searchedNodes = nodesFlattened
         } else {
           searchedNodes = await searchNodes<T>({
             nodesFlattened,
-            search,
+            search: search ?? '',
             idKey: idKey.value,
             labelKey: labelKey.value,
             searchConfig: searchConfig.value,
@@ -210,6 +217,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       nodeBlur: () => {},
       nodeSelect: () => {},
       nodeUnselect: () => {},
+      nodeHover: () => {},
     })
 
     /**
@@ -314,6 +322,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
 
       // Focusing
       nodeFocused,
+      nodeHovered,
 
       // D'n'D
       draggedNode,

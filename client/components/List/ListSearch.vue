@@ -8,7 +8,7 @@ import { useListStore } from './stores/list.store'
 // Constants
 import { LIST_DEFAULT_PROPS } from './constants/list-default-props.constant'
 
-type IProps = Pick<IListProps, 'searchInputProps' | 'ui' | 'search' | 'dense'>
+type IProps = Pick<IListProps, 'ui' | 'search' | 'dense' | 'searchConfig'>
 
 const props = defineProps<IProps>()
 
@@ -56,7 +56,7 @@ const searchStyle = computed(() => {
           grow
           :loading="isLoading"
           autofocus
-          v-bind="searchInputProps"
+          v-bind="searchConfig?.inputProps"
           :validation="$zAddItem.$errors"
           data-cy="list-search"
         />

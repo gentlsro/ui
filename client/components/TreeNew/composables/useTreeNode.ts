@@ -16,6 +16,7 @@ export function useTreeNode<T extends IItem = IItem>(payload: ITreeNodeProps<T>)
     nodeMetaById,
     selection,
     nodeFocused,
+    nodeHovered,
     selectionConfig,
     childrenKey,
     nodeById,
@@ -47,6 +48,10 @@ export function useTreeNode<T extends IItem = IItem>(payload: ITreeNodeProps<T>)
     return nodeFocused.value?.id === node.id
   })
 
+  const isHovered = computed(() => {
+    return nodeHovered.value?.id === node.id
+  })
+
   const isCollapsed = computed(() => {
     return nodeMeta.value?.isCollapsed
   })
@@ -74,64 +79,26 @@ export function useTreeNode<T extends IItem = IItem>(payload: ITreeNodeProps<T>)
   })
 
   const treeNodeClass = computed(() => {
-    return {
-      'is-collapsed': nodeMeta.value?.isCollapsed,
-      'is-searched': isSearched.value,
-      'is-selected': isSelected.value,
-      'is-multi': selectionConfig.value?.multi,
-      'is-selectable': selectionConfig.value?.enabled && !selectionConfig.value?.multi,
-      'is-focused': isFocused.value,
-      'is-open': !nodeMeta.value?.isCollapsed,
-    }
-  })
+    const { isChildrenLoaded, level } = nodeMeta.value ?? {}
+    const { ref } = payload.node
+    const isCollapsible = !isChildrenLoaded || get(ref, childrenKey.value)?.length
 
-  const nodeClass = computed(() => {
-    return typeof ui?.nodeClass === 'function'
-      ? ui?.nodeClass({
-          node: node.ref,
-          isSelected: isSelected.value,
-          index,
-          isFocused: isFocused.value,
-          isMulti: hasMultiSelect.value,
-        })
-      : ui?.nodeClass
-  })
-
-  const nodeStyle = computed(() => {
-    return typeof ui?.nodeStyle === 'function'
-      ? ui?.nodeStyle({
-          node: node.ref,
-          isSelected: isSelected.value,
-          index,
-          isFocused: isFocused.value,
-          isMulti: hasMultiSelect.value,
-        })
-      : ui?.nodeStyle
-  })
-
-  // Node content
-  const nodeContentClass = computed(() => {
-    return typeof ui?.nodeContentClass === 'function'
-      ? ui?.nodeContentClass({
-          node: node.ref,
-          isSelected: isSelected.value,
-          index,
-          isFocused: isFocused.value,
-          isMulti: hasMultiSelect.value,
-        })
-      : ui?.nodeContentClass
-  })
-
-  const nodeContentStyle = computed(() => {
-    return typeof ui?.nodeContentStyle === 'function'
-      ? ui?.nodeContentStyle({
-          node: node.ref,
-          isSelected: isSelected.value,
-          index,
-          isFocused: isFocused.value,
-          isMulti: hasMultiSelect.value,
-        })
-      : ui?.nodeContentStyle
+    return [
+      `level-${level}`,
+      {
+        'is-root': level === 0,
+        'is-padded': level !== 0 && !isCollapsible,
+        'is-collapsed': nodeMeta.value?.isCollapsed,
+        'is-searched': isSearched.value,
+        'is-selected': isSelected.value,
+        'is-multi': selectionConfig.value?.multi,
+        'is-selectable': selectionConfig.value?.enabled && !selectionConfig.value?.multi,
+        'is-focused': isFocused.value,
+        'is-hovered': isHovered.value,
+        'is-open': !nodeMeta.value?.isCollapsed,
+        'is-collapsible': isCollapsible,
+      },
+    ]
   })
 
   return {
@@ -142,13 +109,10 @@ export function useTreeNode<T extends IItem = IItem>(payload: ITreeNodeProps<T>)
     isSelected,
     hasMultiSelect,
     nodeMeta,
+    nodeHovered,
     treeNodeStyle,
     treeNodeClass,
-    nodeClass,
-    nodeStyle,
     nodePath,
-    nodeContentClass,
-    nodeContentStyle,
     getStore: () => store,
   }
 }

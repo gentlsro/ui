@@ -34,7 +34,7 @@ const {
   fetchAndSetData,
 } = useListStore()
 
-const { handleMouseOver } = useListKeyboard()
+const { handleMouseEnter, handleMouseLeave } = useListKeyboard()
 
 function handleVirtualScroll(ev: IVirtualScrollEvent) {
   if (isDragging.value) {
@@ -111,7 +111,8 @@ const contentStyle = computed(() => {
           :is-last="index === listItems.length - 1"
           :disabled-fnc
           :move-handle-target
-          @mouseover="handleMouseOver(row, index)"
+          @mouseenter="handleMouseEnter(row, index)"
+          @mouseleave="handleMouseLeave(row, index)"
         >
           <template #default="{ isDisabled, isSelected }">
             <slot

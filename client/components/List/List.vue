@@ -151,11 +151,12 @@ defineExpose(listGetExposed())
     <slot
       name="search"
       :ui="mergedProps.ui"
+      :search-config="mergedProps.searchConfig"
     >
       <ListSearch
         v-if="isSearchInputVisible"
         v-model:search="search"
-        :search-input-props="mergedProps.searchInputProps"
+        :search-config="mergedProps.searchConfig"
         :ui="mergedProps.ui"
         :dense
       />

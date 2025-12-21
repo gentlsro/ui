@@ -154,7 +154,7 @@ whenever(isPickerActive, () => {
           v-if="!noSearch"
           v-model:search="search"
           :ui="listProps.ui"
-          :search-input-props="listProps.searchInputProps"
+          :search-config="listProps.searchConfig"
         />
       </template>
 

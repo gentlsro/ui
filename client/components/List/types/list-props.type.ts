@@ -1,5 +1,5 @@
 import type { z } from 'zod/v4'
-import type { ConcreteComponent, CSSProperties } from 'vue'
+import type { AllowedComponentProps, ConcreteComponent, CSSProperties } from 'vue'
 import type { FuseOptions } from '@vueuse/integrations/useFuse'
 import type { GroupItem, SortItem } from '$utils'
 import type { IGroupRow } from '#layers/utilities/shared/composables/useGrouping'
@@ -103,11 +103,6 @@ export type IListProps = {
    * Unique identifier to initialize the list store with
    */
   listId?: string
-
-  /**
-   * The props that should be passed to the SearchInput
-   */
-  searchInputProps?: ITextInputProps
 
   /**
    * Load data configuration
@@ -283,6 +278,11 @@ export type IListProps = {
      * NOTE: Currently broken
      */
     highlight?: boolean
+
+    /**
+     * The props that should be passed to the SearchInput
+     */
+    inputProps?: ITextInputProps & AllowedComponentProps
 
     /**
      * When searching, we might need to normalize the values

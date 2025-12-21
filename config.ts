@@ -591,6 +591,9 @@ export const defaultComponentsConfig = {
       searchConfig: {
         enabled: true,
         fuseSearchToken: "'",
+        inputProps: {
+          autofocus: true,
+        },
       },
       sortingConfig: {
         enabled: true,
@@ -612,19 +615,15 @@ export const defaultComponentsConfig = {
         noLocalAdd: false,
         transformAddedItem: undefined,
       },
-      searchInputProps: {
-        autofocus: true,
-      },
       modifiers: {},
     },
     merge: [
-      'searchConfig',
       'ui',
       'sortingConfig',
       'selectionConfig',
       'loadData',
       'addConfig',
-      'searchInputProps',
+      'searchConfig',
       'modifiers',
       'scrollerConfig',
     ],
@@ -1333,32 +1332,14 @@ export const defaultComponentsConfig = {
       },
       dndConfig: { enabled: false, dropMode: 'parent' },
       ui: {
-        treeSearchClass: 'flex gap-1 items-center',
-        treeActionsClass: 'flex gap-1 items-center',
-        noDataClass: 'p-x-4 p-b-2 color-ca font-rem-14',
-        treeContentClass: 'p-y-2.5',
-        treeClass: 'p-1',
+        containerClass: ({ defaults }) => defaults['*'],
+        contentClass: ({ defaults }) => defaults['*'],
+        nodeClass: ({ defaults }) => defaults['*'],
+        nodeContentClass: ({ defaults }) => defaults.base,
+        noDataClass: ({ defaults }) => defaults['*'],
+        actionsClass: ({ defaults }) => defaults['*'],
+        searchClass: ({ defaults }) => defaults['*'],
         nodePadding: '1rem',
-        nodeClass: ({ isSelected, isFocused, isMulti }) => {
-          const classes = [
-            // Base
-            'flex gap-1 p-x-1 items-center rounded-custom w-full overflow-auto',
-
-            // Hover
-            'hover:bg-slate-100 dark:hover:bg-slate-800',
-          ]
-
-          if (isSelected && !isMulti) {
-            classes.push('bg-slate-100 color-primary dark:(bg-slate-800 color-blue-400)')
-          }
-
-          if (isFocused) {
-            classes.push('outline-1 outline-solid outline-primary outline-offset--1')
-          }
-
-          return classes
-        },
-        nodeContentClass: () => 'overflow-hidden flex flex-col grow leading-20px p-y-1.5',
       },
       scrollerConfig: { rowHeight: 36 },
       actionsConfig: {

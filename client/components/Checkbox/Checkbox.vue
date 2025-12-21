@@ -224,7 +224,7 @@ function handleKey(ev: KeyboardEvent) {
   }
 
   &.is-xs {
-    @apply min-h-6 p-x-5px;
+    @apply min-h-6 p-x-1;
 
     .checkbox {
       @apply h-4 w-4 rounded-1 m-t-4px;

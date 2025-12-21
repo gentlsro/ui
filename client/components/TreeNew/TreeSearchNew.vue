@@ -5,15 +5,29 @@ import type { ITreeProps } from './types/tree-props.new.type'
 // Store
 import { useTreeStore } from './stores/tree.store.new'
 
+// Constants
+import { TREE_NEW_DEFAULT_PROPS } from './constants/tree-new-default-props.constant'
+
 type IProps = Pick<ITreeProps<T>, 'search' | 'searchConfig' | 'ui' | 'actionsConfig'>
 
-defineProps<IProps>()
+const props = defineProps<IProps>()
 
 // Store
 const { searchEl } = useTreeStore()
 
 // Layout
 const search = defineModel<string>('search')
+
+// Styles - Search
+const searchClass = computed(() => {
+  return props.ui?.searchClass?.({
+    defaults: TREE_NEW_DEFAULT_PROPS.ui.searchClass(),
+  })
+})
+
+const searchStyle = computed(() => {
+  return props.ui?.searchStyle?.()
+})
 
 defineExpose({
   focus: () => searchEl.value?.focus(),
@@ -23,8 +37,8 @@ defineExpose({
 <template>
   <div
     class="tree-search"
-    :class="ui?.treeSearchClass"
-    :style="ui?.treeSearchStyle"
+    :class="searchClass"
+    :style="searchStyle"
   >
     <SearchInput
       ref="searchEl"
@@ -32,7 +46,7 @@ defineExpose({
       autofocus
       grow
       data-tree-search
-      v-bind="searchConfig?.props"
+      v-bind="searchConfig?.inputProps"
     />
 
     <slot name="actions">

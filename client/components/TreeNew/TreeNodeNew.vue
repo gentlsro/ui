@@ -10,8 +10,11 @@ import { useTreeDragAndDrop } from './composables/useTreeDragAndDrop.new'
 // Functions
 import { selectNode } from './functions/select-node'
 
-const props = defineProps<ITreeNodeProps<T>>()
+// Constants
+import { TREE_NEW_DEFAULT_PROPS } from './constants/tree-new-default-props.constant'
 
+defineOptions({ inheritAttrs: false })
+const props = defineProps<ITreeNodeProps<T>>()
 // Utils
 const { createDraggable } = useTreeDragAndDrop()
 
@@ -21,13 +24,10 @@ const {
   isSearched,
   treeNodeStyle,
   treeNodeClass,
-  nodeClass,
-  nodeStyle,
-  nodeContentClass,
-  nodeContentStyle,
   nodePath,
   hasMultiSelect,
   nodeMeta,
+  nodeHovered,
   getStore,
 } = useTreeNode(props)
 
@@ -52,6 +52,46 @@ function handleClick(ev: MouseEvent) {
   selectNode({ node: node.value, ev, getStore })
 }
 
+function handleMouseEnter() {
+  nodeHovered.value = node.value
+}
+
+function handleMouseLeave() {
+  nodeHovered.value = undefined
+}
+
+// Styles - Node
+const nodeClass = computed(() => {
+  return props.ui?.nodeClass?.({
+    defaults: TREE_NEW_DEFAULT_PROPS.ui.nodeClass(),
+    node: node.value as any,
+    index: props.index,
+  })
+})
+
+const nodeStyle = computed(() => {
+  return props.ui?.nodeStyle?.({
+    node: node.value as any,
+    index: props.index,
+  })
+})
+
+// Styles - Node Content
+const nodeContentClass = computed(() => {
+  return props.ui?.nodeContentClass?.({
+    defaults: TREE_NEW_DEFAULT_PROPS.ui.nodeContentClass(),
+    node: node.value as any,
+    index: props.index,
+  })
+})
+
+const nodeContentStyle = computed(() => {
+  return props.ui?.nodeContentStyle?.({
+    node: node.value as any,
+    index: props.index,
+  })
+})
+
 // D'n'D
 onMounted(() => {
   if (!isDndEnabled.value) {
@@ -59,8 +99,7 @@ onMounted(() => {
   }
 
   nextTick(() => {
-    // @ts-expect-error
-    const _el = unrefElement(treeNodeEl) as HTMLElement
+    const _el = unrefElement(treeNodeEl as any) as HTMLElement
 
     createDraggable({
       el: _el,
@@ -79,13 +118,16 @@ onMounted(() => {
   <Component
     :is="nodeEl ?? 'div'"
     ref="treeNodeEl"
-    class="tree-node"
+    class="tree-node group/node"
+    v-bind="$attrs"
     :data-id="node.id"
     :data-path="nodeMeta?.path"
     :class="[treeNodeClass, nodeClass]"
     :style="[treeNodeStyle, nodeStyle]"
     @click="handleClick"
     @contextmenu="handleClick"
+    @mouseenter="handleMouseEnter"
+    @mouseleave="handleMouseLeave"
   >
     <!-- Collapse -->
     <TreeCollapseBtn
@@ -119,18 +161,18 @@ onMounted(() => {
         </span>
       </slot>
     </div>
-
-    <!-- Connectors -->
-    <template v-if="!isSearched && connectors">
-      <div
-        v-for="idx in Math.max(0, nodeMeta?.level ?? 0)"
-        :key="idx"
-        class="tree-node__connector"
-        :class="{ 'horizontal-connector': !!treeCollapseBtnEl }"
-        :style="{ '--level': (nodeMeta?.level ?? 0) - idx }"
-      />
-    </template>
   </Component>
+
+  <!-- Connectors -->
+  <template v-if="!isSearched && connectors">
+    <div
+      v-for="idx in Math.max(0, nodeMeta?.level ?? 0)"
+      :key="idx"
+      class="tree-node__connector"
+      :class="{ 'horizontal-connector': !!treeCollapseBtnEl }"
+      :style="{ '--level': idx, '--treePadding': ui?.nodePadding }"
+    />
+  </template>
 </template>
 
 <style scoped lang="scss">
@@ -152,23 +194,24 @@ onMounted(() => {
       @apply text-caption leading-tight font-rem-12;
     }
   }
+}
 
-  &__connector {
-    @apply absolute inset-0 pointer-events-none;
+.tree-node__connector {
+  @apply absolute z--1 top-0 bottom-0 border-l-1 border-ca border-dashed pointer-events-none;
+  left: calc(calc(var(--level) * var(--treePadding)));
 
-    &::before {
-      @apply content-empty absolute top-0 h-full border-l-1 border-ca border-dashed;
+  // &::before {
+  //   @apply content-empty absolute top-0 h-full border-l-1 border-ca border-dashed;
 
-      left: calc(calc(-1 * var(--level) * var(--treePadding)));
-    }
+  //   left: calc(calc(var(--level) * var(--treePadding)));
+  // }
 
-    &.horizontal-connector::after {
-      @apply content-empty absolute border-t-1 border-ca border-dashed;
-      top: min(24px, 50%);
-      left: 4px;
+  // &.horizontal-connector::after {
+  //   @apply content-empty absolute border-t-1 border-ca border-dashed;
+  //   top: min(24px, 50%);
+  //   left: 4px;
 
-      width: calc(var(--treePadding) - 12px);
-    }
-  }
+  //   width: calc(var(--treePadding) - 12px);
+  // }
 }
 </style>

@@ -7,4 +7,5 @@ export type ITreeEmits<T extends IItem = IItem> = {
   (e: 'blur:node', payload: { node?: ITreeNode<T> }): void
   (e: 'select:node', payload: { node: ITreeNode<T>, ev?: MouseEvent | KeyboardEvent }): void
   (e: 'unselect:node', payload: { node: ITreeNode<T>, ev?: MouseEvent | KeyboardEvent }): void
+  (e: 'hover:node', payload: { node: ITreeNode<T> }): void
 }

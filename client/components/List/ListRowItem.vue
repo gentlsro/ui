@@ -155,7 +155,6 @@ onMounted(() => {
     ref="el"
     :data-id="item.id"
     :data-selected="isSelected"
-
     data-cy="item-selectable"
     class="list-row-item"
     :class="[rowClass, rowClassLocal]"

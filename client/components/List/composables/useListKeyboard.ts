@@ -24,10 +24,14 @@ export function useListKeyboard(config?: { registerKeyStroke?: boolean }) {
   // Layout
   const itemFocusedEl = ref<HTMLDivElement>()
 
-  function handleMouseOver(item: any, index: number) {
+  function handleMouseEnter(item: any, index: number) {
     if (!('isGroup' in item) && !preventNextHoverEvent.value) {
       itemFocusedIdx.value = index
     }
+  }
+
+  function handleMouseLeave(item: any, index: number) {
+    itemFocusedIdx.value = -1
   }
 
   // Utils
@@ -198,7 +202,8 @@ export function useListKeyboard(config?: { registerKeyStroke?: boolean }) {
   return {
     listEl,
     containerEl,
-    handleMouseOver,
+    handleMouseEnter,
+    handleMouseLeave,
     handleKey,
   }
 }

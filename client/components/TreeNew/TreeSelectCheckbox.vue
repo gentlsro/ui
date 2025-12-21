@@ -36,8 +36,6 @@ function handleSelect() {
 <template>
   <Checkbox
     v-bind="selectionConfig?.checkboxProps"
-    :class="ui?.selectCheckboxClass"
-    :style="ui?.selectCheckboxStyle"
     :model-value="isSelected"
     @update:model-value="handleSelect"
   />

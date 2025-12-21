@@ -7,4 +7,5 @@ export type ITreeEmitFncs<T extends IItem = IItem> = {
   nodeBlur: (payload: { node?: ITreeNode<T>, focusEvent: 'focus' | 'blur' }) => void
   nodeSelect: (payload: { node: ITreeNode<T>, ev?: MouseEvent | KeyboardEvent }) => void
   nodeUnselect: (payload: { node: ITreeNode<T>, ev?: MouseEvent | KeyboardEvent }) => void
+  nodeHover: (payload: { node: ITreeNode<T> }) => void
 }

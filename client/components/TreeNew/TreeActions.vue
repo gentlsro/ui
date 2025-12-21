@@ -9,19 +9,33 @@ import { treeExpandAll } from './functions/tree-expand-all'
 // Store
 import { useTreeStore } from './stores/tree.store.new'
 
+// Constants
+import { TREE_NEW_DEFAULT_PROPS } from './constants/tree-new-default-props.constant'
+
 type IProps = Pick<ITreeProps<T>, 'ui' | 'actionsConfig'>
 
-defineProps<IProps>()
+const props = defineProps<IProps>()
 
 // Store
 const store = useTreeStore()
+
+// Styles - Actions
+const actionsClass = computed(() => {
+  return props.ui?.actionsClass?.({
+    defaults: TREE_NEW_DEFAULT_PROPS.ui.actionsClass(),
+  })
+})
+
+const actionsStyle = computed(() => {
+  return props.ui?.actionsStyle?.()
+})
 </script>
 
 <template>
   <div
     class="tree__actions"
-    :class="ui?.treeActionsClass"
-    :style="ui?.treeActionsStyle"
+    :class="actionsClass"
+    :style="actionsStyle"
   >
     <slot name="prepend" />
 

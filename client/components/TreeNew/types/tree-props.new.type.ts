@@ -11,6 +11,9 @@ import type { ICheckboxProps } from '../../Checkbox/types/checkbox-props.type'
 import type { ITextInputProps } from '../../Inputs/TextInput/types/text-input-props.type'
 import type { IVirtualScrollerVerticalProps } from '../../VirtualScroller/types/virtual-scroller-vertical-props.type'
 
+// Constants
+import type { TREE_NEW_DEFAULT_PROPS } from '../constants/tree-new-default-props.constant'
+
 export type ITreeProps<T extends IItem = IItem> = {
   /**
    * Whether to show connectors between nodes
@@ -32,6 +35,16 @@ export type ITreeProps<T extends IItem = IItem> = {
    * @default 'children'
    */
   childrenKey?: string
+
+  /**
+   * The node that is focused
+   */
+  nodeFocused?: ITreeNode<T>
+
+  /**
+   * The node that is hovered
+   */
+  nodeHovered?: ITreeNode<T>
 
   /**
    * The key to use for the parent node
@@ -123,7 +136,7 @@ export type ITreeProps<T extends IItem = IItem> = {
     /**
      * Props to pass to the search input
      */
-    props?: ITextInputProps & AllowedComponentProps
+    inputProps?: ITextInputProps & AllowedComponentProps
   } | undefined
 
   /**
@@ -338,54 +351,36 @@ export type ITreeProps<T extends IItem = IItem> = {
    */
   ui?: {
     /**
-     * Class to apply to the tree (wrapper)
+     * Class to apply to the tree container
      */
-    treeClass?: ClassType
+    containerClass?: (payload: {
+      defaults: ReturnType<typeof TREE_NEW_DEFAULT_PROPS['ui']['containerClass']>
+    }) => ClassType
 
     /**
-     * Style to apply to the tree (wrapper)
+     * Style to apply to the tree container (wrapper)
      */
-    treeStyle?: CSSProperties
+    containerStyle?: () => CSSProperties
 
     /**
-     * Class to apply to the content
+     * Class to apply to the tree content (the section containing the nodes)
      */
-    contentClass?: ClassType
+    contentClass?: (payload: {
+      defaults: ReturnType<typeof TREE_NEW_DEFAULT_PROPS['ui']['contentClass']>
+    }) => ClassType
 
     /**
      * Style to apply to the content
      */
-    contentStyle?: CSSProperties
-
-    /**
-     * Class to apply to the collapse button
-     */
-    collapseBtnClass?: ClassType
-
-    /**
-     * Style to apply to the collapse button
-     */
-    collapseBtnStyle?: CSSProperties
-
-    /**
-     * Class to apply to the select checkbox
-     */
-    selectCheckboxClass?: ClassType
-
-    /**
-     * Style to apply to the select checkbox
-     */
-    selectCheckboxStyle?: CSSProperties
+    contentStyle?: () => CSSProperties
 
     /**
      * Class to apply to the nodes
      */
     nodeClass?: ((payload: {
       node: T
-      isSelected: boolean
       index: number
-      isFocused: boolean
-      isMulti: boolean
+      defaults: ReturnType<typeof TREE_NEW_DEFAULT_PROPS['ui']['nodeClass']>
     }) => ClassType)
 
     /**
@@ -393,10 +388,7 @@ export type ITreeProps<T extends IItem = IItem> = {
      */
     nodeStyle?: ((payload: {
       node: T
-      isSelected: boolean
       index: number
-      isFocused: boolean
-      isMulti: boolean
     }) => CSSProperties)
 
     /**
@@ -404,10 +396,8 @@ export type ITreeProps<T extends IItem = IItem> = {
      */
     nodeContentClass?: ((payload: {
       node: T
-      isSelected: boolean
       index: number
-      isFocused: boolean
-      isMulti: boolean
+      defaults: ReturnType<typeof TREE_NEW_DEFAULT_PROPS['ui']['nodeContentClass']>
     }) => ClassType)
 
     /**
@@ -415,51 +405,44 @@ export type ITreeProps<T extends IItem = IItem> = {
      */
     nodeContentStyle?: ((payload: {
       node: T
-      isSelected: boolean
       index: number
-      isFocused: boolean
-      isMulti: boolean
     }) => CSSProperties)
 
     /**
      * Class to apply to the no data component
      */
-    noDataClass?: ClassType
+    noDataClass?: (payload: {
+      defaults: ReturnType<typeof TREE_NEW_DEFAULT_PROPS['ui']['noDataClass']>
+    }) => ClassType
 
     /**
      * Style to apply to the no data component
      */
-    noDataStyle?: CSSProperties
-
-    /**
-     * Class to apply to the tree content
-     */
-    treeContentClass?: ClassType
-
-    /**
-     * Style to apply to the tree content
-     */
-    treeContentStyle?: CSSProperties
+    noDataStyle?: () => CSSProperties
 
     /**
      * Class to apply to the tree actions (wrapper)
      */
-    treeActionsClass?: ClassType
+    actionsClass?: (payload: {
+      defaults: ReturnType<typeof TREE_NEW_DEFAULT_PROPS['ui']['actionsClass']>
+    }) => ClassType
 
     /**
      * Style to apply to the tree actions (wrapper)
      */
-    treeActionsStyle?: CSSProperties
+    actionsStyle?: () => CSSProperties
 
     /**
      * Class to apply to the tree search
      */
-    treeSearchClass?: ClassType
+    searchClass?: (payload: {
+      defaults: ReturnType<typeof TREE_NEW_DEFAULT_PROPS['ui']['searchClass']>
+    }) => ClassType
 
     /**
      * Class to apply to the tree search
      */
-    treeSearchStyle?: CSSProperties
+    searchStyle?: () => CSSProperties
 
     /**
      * Margin (left) for the tree nodes. Uses regular CSS `margin-left` syntax

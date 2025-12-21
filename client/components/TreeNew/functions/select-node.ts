@@ -23,16 +23,16 @@ export async function selectNode<T extends IItem = IItem>(payload: {
     nodeMetaById,
   } = getStore()
 
-  if (!selectionConfig.value?.enabled) {
-    return
-  }
-
   if (selectionConfig.value?.beforeSelect) {
     const shouldContinue = await selectionConfig.value?.beforeSelect({ node })
 
     if (shouldContinue === false) {
       return
     }
+  }
+
+  if (!selectionConfig.value?.enabled) {
+    return
   }
 
   const isEmitKey = !!selectionConfig.value?.emitKey

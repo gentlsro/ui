@@ -1,5 +1,6 @@
 <script setup lang="ts" generic="T extends IItem = IItem">
 // Types
+import type { ITreeNode } from './types/tree-node.new.type'
 import type { ITreeEmits } from './types/tree-emits.new.type'
 import type { ITreeProps } from './types/tree-props.new.type'
 
@@ -15,7 +16,7 @@ import { useTreeStore } from './stores/tree.store.new'
 
 // Constants
 import { TREE_INJECTION_KEY } from './constants/tree-injection-key.constant'
-import type { ITreeNode } from './types/tree-node.new.type'
+import { TREE_NEW_DEFAULT_PROPS } from './constants/tree-new-default-props.constant'
 
 const props = withDefaults(defineProps<ITreeProps<T>>(), {
   ...getComponentProps('treeNew'),
@@ -34,6 +35,8 @@ const mergedProps = computed(() => {
 // Store
 const {
   init,
+  nodeFocused: storeNodeFocused,
+  nodeHovered: storeNodeHovered,
   emits: storeEmits,
   treeEl,
   scrollerEl,
@@ -49,7 +52,12 @@ const {
   ui,
 } = useTreeStore({ treeProps: props })
 
+const nodeFocused = defineModel<ITreeNode<T> | undefined>('nodeFocused')
+const nodeHovered = defineModel<ITreeNode<T> | undefined>('nodeHovered')
+
 // Syncing merged props with store
+syncRef(nodeFocused, storeNodeFocused, { direction: 'both' })
+syncRef(nodeHovered, storeNodeHovered, { direction: 'both' })
 syncRef(toRef(mergedProps.value, 'ui'), ui, { direction: 'ltr' })
 syncRef(toRef(mergedProps.value, 'searchConfig'), searchConfig, { direction: 'ltr' })
 syncRef(toRef(mergedProps.value, 'actionsConfig'), actionsConfig, { direction: 'ltr' })
@@ -70,20 +78,43 @@ storeEmits.value = {
   nodeBlur: payload => emits('blur:node', payload),
   nodeSelect: payload => emits('select:node', payload),
   nodeUnselect: payload => emits('unselect:node', payload),
+  nodeHover: payload => emits('hover:node', payload),
 }
 
 defineExpose(treeGetExposed())
 
 // Init
 await init()
+
+// Styles - Container
+const containerClass = computed(() => {
+  return mergedProps.value.ui?.containerClass?.({
+    defaults: TREE_NEW_DEFAULT_PROPS.ui.containerClass(),
+  })
+})
+
+const containerStyle = computed(() => {
+  return mergedProps.value.ui?.containerStyle?.()
+})
+
+// Styles - Content
+const contentClass = computed(() => {
+  return mergedProps.value.ui?.contentClass?.({
+    defaults: TREE_NEW_DEFAULT_PROPS.ui.contentClass(),
+  })
+})
+
+const contentStyle = computed(() => {
+  return mergedProps.value.ui?.contentStyle?.()
+})
 </script>
 
 <template>
   <div
     ref="treeEl"
     class="tree"
-    :class="mergedProps.ui?.treeClass"
-    :style="mergedProps.ui?.treeStyle"
+    :class="containerClass"
+    :style="containerStyle"
   >
     <slot
       v-if="searchConfig?.enabled"
@@ -109,8 +140,8 @@ await init()
       ref="scrollerEl"
       class="tree__content"
       :rows="(nodesVisible as T[])"
-      :class="mergedProps.ui?.treeContentClass"
-      :style="mergedProps.ui?.treeContentStyle"
+      :class="contentClass"
+      :style="contentStyle"
       v-bind="mergedProps.scrollerConfig"
       :row-height="mergedProps.scrollerConfig?.rowHeight"
     >
