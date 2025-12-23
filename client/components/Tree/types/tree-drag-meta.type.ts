@@ -32,7 +32,7 @@ export type ITreeDragMeta<T extends IItem = IItem> = {
   /**
    * Placement of the indicator - above or below the target item
    */
-  placement?: 'above' | 'below' | 'left' | 'right'
+  placement?: 'above' | 'below'
 
   /**
    * The CSS properties to apply to the drop indicator

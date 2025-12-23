@@ -269,6 +269,7 @@ export type ITreeProps<T extends IItem = IItem> = {
       targetParent?: ITreeNode<T> | null
       nodeById: Record<string, ITreeNode<T>>
       nodeMetaById?: Record<string, ITreeNodeMeta>
+      placement?: 'above' | 'below'
     }) => void | Promise<void>
   }
 

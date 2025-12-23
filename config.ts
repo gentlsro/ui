@@ -1341,7 +1341,10 @@ export const defaultComponentsConfig = {
         searchClass: ({ defaults }) => defaults['*'],
         nodePadding: '1rem',
       },
-      scrollerConfig: { rowHeight: 36 },
+      scrollerConfig: {
+        rowHeight: 36,
+        ui: { rowClass: ({ defaults }) => defaults['*'] },
+      },
       actionsConfig: {
         enabled: true,
         btnProps: { size: 'sm' },
@@ -1396,8 +1399,11 @@ export const defaultComponentsConfig = {
       virtualizerOptions: {
         overscan: 5,
       },
+      ui: {
+        rowClass: ({ defaults }) => defaults['*'],
+      },
     },
-    merge: ['virtualizerOptions'],
+    merge: ['virtualizerOptions', 'ui'],
   },
 
   // YearMonthSelector

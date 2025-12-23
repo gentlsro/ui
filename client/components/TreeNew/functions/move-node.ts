@@ -119,6 +119,7 @@ export async function moveNode<T extends IItem = IItem>(payload: {
   await dndConfig.value?.onMoved?.({
     node: nodeToMove,
     target,
+    placement,
     targetParent: targetParent?.id === '__ROOT__' ? null : targetParent as ITreeNode<T>,
     nodeById: nodeById.value,
     nodeMetaById: nodeMetaById.value,

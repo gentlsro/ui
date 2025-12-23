@@ -55,9 +55,9 @@ export function useTreeDragAndDrop() {
     const elements = document.elementsFromPoint(x, y)
     shouldMove = true
 
-    const draggedOverItem = elements.find(el => {
-      return TREE_NODE_CLASSES.some(cls => el.classList.contains(cls))
-    }) as HTMLElement
+    const draggedOverItem = elements
+      .find(el => el.classList.contains('content-row'))
+      ?.children[0] as HTMLElement
 
     const draggedOverItemId = draggedOverItem?.dataset.id
     const draggedOverItemPath = draggedOverItem?.dataset.path

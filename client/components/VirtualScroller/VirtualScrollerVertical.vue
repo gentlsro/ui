@@ -7,7 +7,10 @@ import type { IVirtualScrollEvent } from './types/virtual-scroll-event.type'
 import type { IVirtualScrollerVerticalProps } from './types/virtual-scroller-vertical-props.type'
 
 // Functions
-import { getComponentProps } from '../../functions/get-component-props'
+import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
+
+// Constants
+import { VIRTUAL_SCROLLER_VERTICAL_DEFAULT_PROPS } from './constants/virtual-scroller-vertical-default-props'
 
 const props = withDefaults(
   defineProps<IVirtualScrollerVerticalProps<T>>(),
@@ -17,6 +20,11 @@ const emits = defineEmits<{
   (e: 'virtualScroll', payload: IVirtualScrollEvent): void
   (e: 'change:contentSize', payload: { height: number }): void
 }>()
+
+// Utils
+const mergedProps = computed(() => {
+  return getComponentMergedProps('virtualScrollerVertical', props)
+})
 
 // Layout
 const rows = toRef(props, 'rows') as Ref<T[]>
@@ -104,6 +112,17 @@ watchThrottled(
   { immediate: true, throttle: 5, leading: false, trailing: true },
 )
 
+// Styles - Row
+const rowClass = computed(() => {
+  return mergedProps.value.ui?.rowClass?.({
+    defaults: VIRTUAL_SCROLLER_VERTICAL_DEFAULT_PROPS.ui.rowClass(),
+  })
+})
+
+const rowStyle = computed(() => {
+  return mergedProps.value.ui?.rowStyle?.()
+})
+
 defineExpose({
   scrollToTop: () => rowVirtualizer.value.scrollToOffset(0),
   scrollToBottom: () => rowVirtualizer.value.scrollToOffset(rowVirtualizer.value.getTotalSize()),
@@ -142,7 +161,9 @@ defineExpose({
           :data-idx="virtualRow.index"
           :data-key="virtualRow.key"
           class="virtual-scroll__row content-row"
+          :class="rowClass"
           :style="{
+            ...rowStyle,
             'position': 'absolute',
             'top': 0,
             'left': 0,

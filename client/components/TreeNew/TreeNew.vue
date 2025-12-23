@@ -18,9 +18,10 @@ import { useTreeStore } from './stores/tree.store.new'
 import { TREE_INJECTION_KEY } from './constants/tree-injection-key.constant'
 import { TREE_NEW_DEFAULT_PROPS } from './constants/tree-new-default-props.constant'
 
-const props = withDefaults(defineProps<ITreeProps<T>>(), {
-  ...getComponentProps('treeNew'),
-})
+const props = withDefaults(
+  defineProps<ITreeProps<T>>(),
+  { ...getComponentProps('treeNew') },
+)
 
 const emits = defineEmits<ITreeEmits<T>>()
 
@@ -71,6 +72,7 @@ syncRef(toRef(mergedProps.value, 'sortingConfig'), sortingConfig, { direction: '
 if (!props.noKeyboard) {
   useTreeKeyboard()
 }
+
 // Emits
 storeEmits.value = {
   nodeClick: payload => emits('click:node', payload),
