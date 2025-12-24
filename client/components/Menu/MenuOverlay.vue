@@ -32,3 +32,9 @@ const menuOverlayStyle = computed(() => {
     :class="ui?.overlayClass"
   />
 </template>
+
+<style lang="scss" scoped>
+.menu-overlay {
+  @apply z-$zIndex;
+}
+</style>

@@ -181,8 +181,10 @@ defineExpose({
         </div>
       </template>
 
-      <slot name="inner" />
+      <slot name="inner-content" />
     </div>
+
+    <slot name="inner" />
   </div>
 </template>
 

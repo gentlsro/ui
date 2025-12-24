@@ -666,7 +666,7 @@ export const defaultComponentsConfig = {
       transitionDuration: 180,
       ui: {
         menuClass: [
-          'flex flex-col z-$zIndex bg-white grow rounded-custom',
+          'flex flex-col bg-white grow rounded-custom',
 
           // Background
           'dark:bg-dark-950/90 bg-white/90 backdrop-blur-2px',
@@ -684,7 +684,7 @@ export const defaultComponentsConfig = {
           'relative flex flex-col grow gap-1 overflow-auto rounded-custom p-1 max-h-inherit',
         ],
         headerClass: 'font-semibold',
-        overlayClass: 'fixed inset-0 transition-background-color z-$zIndex duration-$transitionDuration ease bg-transparent bg-darker-70',
+        overlayClass: 'fixed inset-0 transition-background-color duration-$transitionDuration ease bg-transparent bg-darker-70',
       },
     },
     merge: ['ui'],

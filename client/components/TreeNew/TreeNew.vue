@@ -166,11 +166,12 @@ const contentStyle = computed(() => {
       </template>
 
       <!-- Drop indicator -->
-      <template
-        v-if="dndConfig?.enabled"
-        #inner
-      >
-        <TreeDropIndicatorNew />
+      <template #inner-content>
+        <TreeDropIndicatorNew v-if="dndConfig?.enabled" />
+      </template>
+
+      <template #inner>
+        <slot name="content-inner" />
       </template>
     </VirtualScrollerVertical>
 

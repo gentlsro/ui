@@ -15,7 +15,7 @@ export const TREE_NEW_DEFAULT_PROPS = {
     },
 
     contentClass() {
-      const base = 'p-y-2.5'
+      const base = 'grow p-y-2.5'
 
       return {
         base,

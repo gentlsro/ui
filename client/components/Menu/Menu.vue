@@ -251,6 +251,10 @@ defineExpose(menuGetExposed({
   @apply p-0;
 }
 
+.menu {
+  @apply z-$zIndex;
+}
+
 // Transition
 .menu[placement='top'] {
   @apply transform-origin-bottom;
