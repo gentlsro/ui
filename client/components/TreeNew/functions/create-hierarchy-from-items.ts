@@ -4,7 +4,7 @@ function recursivelyBuildHierarchy<T extends IItem = IItem>(payload: {
   idKey?: string
   childrenKey?: string
   parentKey?: string
-  modifyItemFnc?: (item: T) => T
+  modifyItemFnc?: (item: T) => void
 }): T {
   const {
     item,
@@ -28,7 +28,6 @@ function recursivelyBuildHierarchy<T extends IItem = IItem>(payload: {
       childrenKey,
       parentKey,
       idKey,
-      modifyItemFnc,
     }),
   )
 
@@ -36,7 +35,7 @@ function recursivelyBuildHierarchy<T extends IItem = IItem>(payload: {
   set(item, childrenKey, childrenHierarchy)
 
   if (modifyItemFnc) {
-    return modifyItemFnc(item)
+    modifyItemFnc(item)
   }
 
   return item
@@ -48,7 +47,7 @@ export function createHierarchyFromItems<T extends IItem = IItem>(payload: {
   parentKey?: string
   idKey?: string
 
-  modifyItemFnc?: (item: T) => T
+  modifyItemFnc?: (item: T) => void
 }) {
   const { items, childrenKey = 'children', parentKey = 'parentId', idKey = 'id', modifyItemFnc } = payload
 
