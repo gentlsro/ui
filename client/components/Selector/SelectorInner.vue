@@ -13,7 +13,7 @@ import { SELECTOR_DEFAULT_PROPS } from './constants/selector-default-props'
 type IProps = Pick<
   ISelectorProps,
   | 'useScroller' | 'ui' | 'maxChipsRows' | 'readonly' | 'disabled'
-  | 'emptyValue' | 'multi' | 'optionLabel' | 'to' | 'name'
+  | 'emptyValue' | 'multi' | 'optionLabel' | 'to' | 'name' | 'chipProps'
 > & { emits: ISelectorEmits }
 
 const props = defineProps<IProps>()
@@ -71,18 +71,6 @@ const innerClass = computed(() => {
 const innerStyle = computed(() => {
   return props.ui?.innerStyle?.()
 })
-
-// Styles - chip
-function getChipClass(item: any) {
-  return props.ui?.chipClass?.({
-    item,
-    defaults: SELECTOR_DEFAULT_PROPS.ui.chipClass(),
-  })
-}
-
-function getChipStyle(item: any) {
-  return props.ui?.chipStyle?.({ item })
-}
 </script>
 
 <template>
@@ -118,13 +106,12 @@ function getChipStyle(item: any) {
       >
         <SelectorChip
           :chip="item"
-          :class="getChipClass(item)"
-          :style="getChipStyle(item)"
           :option-label
           :option-by-key
           :readonly
           :disabled
           :navigate-to-options="{ target: '_blank' }"
+          :chip-props
           :to="resolveTo(item)"
           @remove="handleRemove(idx)"
         />
@@ -149,13 +136,12 @@ function getChipStyle(item: any) {
       >
         <SelectorChip
           :chip="item"
-          :class="getChipClass(item)"
-          :style="getChipStyle(item)"
           :option-label
           :option-by-key
           :readonly
           :disabled
           :navigate-to-options="{ target: '_blank' }"
+          :chip-props
           :to="resolveTo(item)"
           @remove="handleRemove(idx)"
         />

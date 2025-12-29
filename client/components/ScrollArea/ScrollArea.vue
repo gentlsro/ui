@@ -88,6 +88,6 @@ defineExpose({
 
 <style lang="scss" scoped>
 .scroll-area {
-  @apply overflow-hidden;
+  @apply overflow-hidden ps-0;
 }
 </style>

@@ -251,6 +251,7 @@ if (props.immediateFetch && mergedProps.value.loadData?.fnc) {
         :to
         :emits
         :name="name || path || placeholder"
+        :chip-props="mergedProps.chipProps"
       >
         <template #default="{ item, index, optionByKey }">
           <slot

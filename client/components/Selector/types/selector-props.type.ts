@@ -2,6 +2,7 @@ import type { RouteLocationRaw } from '#vue-router'
 import type { AllowedComponentProps, CSSProperties } from 'vue'
 
 // Types
+import type { IChipProps } from '../../Chip/types/chip-props.type'
 import type { IListProps } from '../../List/types/list-props.type'
 import type { IMenuProps } from '../../Menu/types/menu-props.type'
 import type { IFieldProps } from '../../Field/types/field-props.type'
@@ -15,6 +16,11 @@ export type ISelectorProps = IFieldProps & {
    * Whether the Selector can be cleared -> will emit `emptyValue`
    */
   clearable?: boolean
+
+  /**
+   * Props to be passed to the Chip
+   */
+  chipProps?: IChipProps & AllowedComponentProps
 
   /**
    * When true, the `append` slot will not be shown
@@ -178,21 +184,6 @@ export type ISelectorProps = IFieldProps & {
    * Visual configuration
    */
   ui?: {
-    /**
-     * The class applied to the `Chip` when using `multi` mode
-     */
-    chipClass?: (payload: {
-      item: any
-      defaults: ReturnType<typeof SELECTOR_DEFAULT_PROPS['ui']['chipClass']>
-    }) => ClassType
-
-    /**
-     * The style applied to the `Chip` when using `multi` mode
-     */
-    chipStyle?: (payload: {
-      item: any
-    }) => CSSProperties
-
     /**
      * Class to apply to the actual content inside the wrapper
      */

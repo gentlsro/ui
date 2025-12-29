@@ -8,6 +8,9 @@ import { vRipple } from '#layers/utilities/client/directives/ripple.directive'
 // Functions
 import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
 
+// Constants
+import { CHIP_DEFAULT_PROPS } from './constants/chip-default-props.constant'
+
 const props = withDefaults(defineProps<IChipProps>(), {
   ...getComponentProps('chip'),
 })
@@ -36,8 +39,31 @@ const classes = computed(() => {
     {
       'cursor-pointer': !!props.to || !!props.ripple,
       '!overflow-visible': props.hasCopy,
+      'justify-center': props.center,
     },
   ]
+})
+
+// Styles - container
+const containerClass = computed(() => {
+  return mergedProps.value?.ui?.containerClass?.({
+    defaults: CHIP_DEFAULT_PROPS.ui.containerClass(),
+  })
+})
+
+const containerStyle = computed(() => {
+  return mergedProps.value?.ui?.containerStyle?.()
+})
+
+// Styles - label
+const labelClass = computed(() => {
+  return mergedProps.value?.ui?.labelClass?.({
+    defaults: CHIP_DEFAULT_PROPS.ui.labelClass(),
+  })
+})
+
+const labelStyle = computed(() => {
+  return mergedProps.value?.ui?.labelStyle?.()
 })
 </script>
 
@@ -45,9 +71,8 @@ const classes = computed(() => {
   <div
     v-ripple="!to && ripple"
     class="chip"
-    border="ca"
-    h="5"
-    :class="classes"
+    :class="[classes, containerClass]"
+    :style="containerStyle"
   >
     <div
       v-if="icon"
@@ -65,32 +90,35 @@ const classes = computed(() => {
       position="bottom"
     />
 
-    <div
+    <!-- <div
       v-if="!isNil(label) || $slots.default"
       class="chip-label"
       :class="[labelClass, { 'justify-center': center }]"
-    >
-      <slot>
-        <NuxtLink
-          v-if="to"
-          v-bind="navigateToOptions"
-          :to
-          class="link"
-          truncate
-          data-onboarding="chip-label"
-        >
-          {{ label }}
-        </NuxtLink>
+      :style="labelStyle"
+    > -->
+    <slot>
+      <NuxtLink
+        v-if="to"
+        v-bind="navigateToOptions"
+        :to
+        class="link"
+        :class="labelClass"
+        :style="labelStyle"
+        data-onboarding="chip-label"
+      >
+        {{ label }}
+      </NuxtLink>
 
-        <span
-          v-else
-          truncate
-          data-onboarding="chip-label"
-        >
-          {{ label }}
-        </span>
-      </slot>
-    </div>
+      <span
+        v-else
+        :class="labelClass"
+        :style="labelStyle"
+        data-onboarding="chip-label"
+      >
+        {{ label }}
+      </span>
+    </slot>
+    <!-- </div> -->
 
     <!-- Tooltip -->
     <Tooltip
@@ -103,8 +131,7 @@ const classes = computed(() => {
     <!-- Remove btn -->
     <Btn
       v-if="hasRemove"
-      icon="i-eva:close-fill !w-4 !h-4"
-      size="auto"
+      v-bind="mergedProps.removeBtn"
       tabindex="-1"
       @click.stop.prevent="$emit('remove')"
       @mousedown.stop.prevent
@@ -114,15 +141,8 @@ const classes = computed(() => {
 
 <style lang="scss" scoped>
 .chip {
-  @apply flex gap-2 p-y-3px p-l-2 border-px rounded-custom truncate relative
-    leading-tight items-center self-center font-rem-14;
-
   &-label {
     @apply flex gap-x-2 flex-1 truncate;
-  }
-
-  .remove-btn {
-    @apply color-ca h-4 w-4 self-center shrink-0;
   }
 }
 </style>

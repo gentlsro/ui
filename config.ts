@@ -189,11 +189,18 @@ export const defaultComponentsConfig = {
       hasRemove: undefined,
       icon: undefined,
       label: undefined,
-      labelClass: undefined,
       ripple: undefined,
       tooltip: undefined,
+      removeBtn: {
+        size: 'auto',
+        icon: 'i-eva:close-fill !w-4 !h-4',
+      },
+      ui: {
+        containerClass: ({ defaults }) => defaults['*'],
+        labelClass: ({ defaults }) => defaults['*'],
+      },
     },
-    merge: ['tooltip'],
+    merge: ['tooltip', 'removeBtn', 'ui'],
   },
 
   // Collapse
@@ -989,10 +996,14 @@ export const defaultComponentsConfig = {
       errorTakesSpace: true,
       required: undefined,
       hasContent: undefined,
+      chipProps: {
+        ui: {
+          containerClass: ({ defaults }) => `${defaults['*']} min-w-20`,
+        },
+      },
       ui: {
         borderRadius: '0.5rem',
         inputClass: ({ defaults }) => `${defaults['*']} flex items-center`,
-        chipClass: ({ defaults }) => defaults['*'],
         appendClass: ({ defaults }) => defaults['*'],
         innerClass: ({ defaults }) => defaults['*'],
         labelClass: ({ defaults }) => defaults['*'],
@@ -1021,7 +1032,7 @@ export const defaultComponentsConfig = {
         offset: 0,
       },
     },
-    merge: ['ui', 'loadData', 'listProps', 'menuProps'],
+    merge: ['ui', 'loadData', 'listProps', 'menuProps', 'chipProps'],
   },
 
   // Separator

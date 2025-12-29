@@ -1,3 +1,5 @@
+// @unocss-include
+
 // Types
 import type { ISelectorProps } from '../types/selector-props.type'
 
@@ -26,15 +28,6 @@ export const SELECTOR_DEFAULT_PROPS = {
   },
 
   ui: {
-    chipClass() {
-      const base = ''
-
-      return {
-        base,
-        '*': `${base}`,
-      } as const
-    },
-
     innerClass() {
       const base = ''
 

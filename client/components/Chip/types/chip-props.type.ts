@@ -1,8 +1,11 @@
-import type { AllowedComponentProps } from 'vue'
+import type { AllowedComponentProps, CSSProperties } from 'vue'
 
 // Types
-import type { INavigation } from '../../Button/types/btn-props.type'
+import type { IBtnProps, INavigation } from '../../Button/types/btn-props.type'
 import type { ITooltipProps } from '../../Tooltip/types/tooltip-props.type'
+
+// Constants
+import type { CHIP_DEFAULT_PROPS } from '../constants/chip-default-props.constant'
 
 export type IChipProps = INavigation & {
   /**
@@ -26,9 +29,9 @@ export type IChipProps = INavigation & {
   label?: string | number | (() => string | number)
 
   /**
-   * The chip's label class
+   * Partial props for the remove button
    */
-  labelClass?: ClassType
+  removeBtn?: Partial<IBtnProps> & AllowedComponentProps
 
   /**
    * Whether the chip has the ripple effect
@@ -46,5 +49,34 @@ export type IChipProps = INavigation & {
   tooltip?: {
     label?: string
     props?: Partial<ITooltipProps> & AllowedComponentProps
+  }
+
+  /**
+   * Visual configuration
+   */
+  ui?: {
+    /**
+     * The chip's container class
+     */
+    containerClass?: (payload: {
+      defaults: ReturnType<typeof CHIP_DEFAULT_PROPS['ui']['containerClass']>
+    }) => ClassType
+
+    /**
+     * The chip's container style
+     */
+    containerStyle?: () => CSSProperties
+
+    /**
+     * The chip's label class
+     */
+    labelClass?: (payload: {
+      defaults: ReturnType<typeof CHIP_DEFAULT_PROPS['ui']['labelClass']>
+    }) => ClassType
+
+    /**
+     * The chip's label style
+     */
+    labelStyle?: () => CSSProperties
   }
 }

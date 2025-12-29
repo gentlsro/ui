@@ -5,7 +5,7 @@ import type { ISelectorProps } from './types/selector-props.type'
 // Functions
 import { getListItemLabel } from '../List/functions/helpers'
 
-type IProps = Pick<ISelectorProps, 'disabled' | 'readonly' | 'optionLabel'> & {
+type IProps = Pick<ISelectorProps, 'disabled' | 'readonly' | 'optionLabel' | 'chipProps'> & {
   chip: any
   optionByKey: Record<string, any>
 }
@@ -24,9 +24,8 @@ const label = computed(() => {
 <template>
   <Chip
     :label
-    min-w="20"
-    p="!y-1px"
     :has-remove="!(readonly || disabled)"
+    v-bind="chipProps"
     @remove="$emit('remove')"
   />
 </template>
