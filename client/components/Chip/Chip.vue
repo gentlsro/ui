@@ -90,13 +90,7 @@ const labelStyle = computed(() => {
       position="bottom"
     />
 
-    <!-- <div
-      v-if="!isNil(label) || $slots.default"
-      class="chip-label"
-      :class="[labelClass, { 'justify-center': center }]"
-      :style="labelStyle"
-    > -->
-    <slot>
+    <slot v-if="!isNil(label) || $slots.default">
       <NuxtLink
         v-if="to"
         v-bind="navigateToOptions"
@@ -118,7 +112,6 @@ const labelStyle = computed(() => {
         {{ label }}
       </span>
     </slot>
-    <!-- </div> -->
 
     <!-- Tooltip -->
     <Tooltip
