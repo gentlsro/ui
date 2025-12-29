@@ -5,6 +5,9 @@ import type { ICollapseProps } from './types/collapse-props.type'
 // Functions
 import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
 
+// Constants
+import { COLLAPSE_DEFAULT_PROPS } from './constants/collapse-default-props.constant'
+
 const props = withDefaults(defineProps<ICollapseProps>(), {
   ...getComponentProps('collapse'),
 })
@@ -44,6 +47,20 @@ async function handleToggle() {
     isOpen.value = true
   }
 }
+
+// Styles - Container
+const containerClass = computed(() => {
+  return mergedProps.value.ui?.containerClass?.({
+    isOpen: isOpen.value,
+    defaults: COLLAPSE_DEFAULT_PROPS.ui.containerClass({ isOpen: isOpen.value }),
+  })
+})
+
+const containerStyle = computed(() => {
+  return mergedProps.value.ui?.containerStyle?.({
+    isOpen: isOpen.value,
+  })
+})
 </script>
 
 <template>
@@ -52,9 +69,11 @@ async function handleToggle() {
     :data-state="isOpen ? 'open' : 'closed'"
     :aria-expanded="isOpen"
     :style="{
+      ...containerStyle,
       '--transitionTimingFunction': 'cubic-bezier(0.4, 0, 0.2, 1)',
       '--transitionDuration': '200ms',
     }"
+    :class="containerClass"
   >
     <!-- Header -->
     <slot
@@ -66,10 +85,8 @@ async function handleToggle() {
       <CollapseHeader
         v-if="title"
         :is-open
-        :expand-icon
         :icon
         :loading
-        :no-separator
         :subtitle
         :title
         :ui="mergedProps.ui"
@@ -101,9 +118,3 @@ async function handleToggle() {
     </slot>
   </div>
 </template>
-
-<style lang="scss" scoped>
-.collapse {
-  @apply relative flex flex-col;
-}
-</style>

@@ -206,16 +206,19 @@ export const defaultComponentsConfig = {
   // Collapse
   collapse: {
     props: {
-      expandIcon: () => 'color-primary',
       icon: undefined,
       loading: undefined,
       modelValue: undefined,
-      noSeparator: true,
       title: undefined,
       ui: {
-        headerClass: isOpen => isOpen
-          ? 'p-y-1 bg-white dark:bg-dark-700'
-          : 'p-y-1 bg-white dark:bg-dark-700',
+        containerClass: ({ defaults }) => defaults['*'],
+        headerClass: ({ defaults }) => defaults['*'],
+        headerRightClass: ({ defaults }) => defaults['*'],
+        titleClass: ({ defaults }) => defaults['*'],
+        subtitleClass: ({ defaults }) => defaults['*'],
+        expandIconClass: ({ defaults }) => defaults['*'],
+        textClass: ({ defaults }) => defaults['*'],
+        contentClass: ({ defaults }) => defaults['*'],
       },
     },
     merge: ['ui'],

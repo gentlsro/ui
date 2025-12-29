@@ -2,6 +2,9 @@
 // Types
 import type { ICollapseProps } from './types/collapse-props.type'
 
+// Constants
+import { COLLAPSE_DEFAULT_PROPS } from './constants/collapse-default-props.constant'
+
 type IProps = Pick<ICollapseProps, 'ui' | 'floating' | 'noTransition' | 'noHeightCalculation' | 'contentHeight' | 'maxContentHeight' | 'autoAdjustHeight'>
   & { isOpen: boolean }
 
@@ -58,14 +61,6 @@ watch(
   },
 )
 
-const contentClass = computed(() => {
-  return props.ui?.contentClass?.(props.isOpen)
-})
-
-const contentStyle = computed(() => {
-  return props.ui?.contentStyle?.(props.isOpen)
-})
-
 function getContentHeight(actualContentHeight: number) {
   const maxContentHeight = props.maxContentHeight ?? Number.MAX_SAFE_INTEGER
   const contentHeight = props.contentHeight ?? actualContentHeight
@@ -90,6 +85,19 @@ function onTransitionEnd() {
 if (props.autoAdjustHeight) {
   // TODO: Implement this
 }
+
+const contentClass = computed(() => {
+  return props.ui?.contentClass?.({
+    isOpen: props.isOpen,
+    defaults: COLLAPSE_DEFAULT_PROPS.ui.contentClass({ isOpen: props.isOpen }),
+  })
+})
+
+const contentStyle = computed(() => {
+  return props.ui?.contentStyle?.({
+    isOpen: props.isOpen,
+  })
+})
 </script>
 
 <template>
@@ -116,12 +124,6 @@ if (props.autoAdjustHeight) {
 
 <style lang="scss" scoped>
 .collapse__content {
-  @apply flex flex-col overflow-auto rounded-b-custom; // We need to be above input labels
-
-  &.is-floating {
-    @apply absolute left-0 right-0 bottom-0 translate-y-full;
-  }
-
   &.in-transition {
     @apply overflow-hidden;
   }

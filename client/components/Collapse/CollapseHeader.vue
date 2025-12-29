@@ -2,7 +2,10 @@
 // Types
 import type { ICollapseProps } from './types/collapse-props.type'
 
-type IProps = Pick<ICollapseProps, 'title' | 'subtitle' | 'icon' | 'loading' | 'ui' | 'expandIcon' | 'noSeparator' | 'noExpandIcon'>
+// Constants
+import { COLLAPSE_DEFAULT_PROPS } from './constants/collapse-default-props.constant'
+
+type IProps = Pick<ICollapseProps, 'title' | 'subtitle' | 'icon' | 'loading' | 'ui' | 'noExpandIcon'>
   & { isOpen: boolean }
 
 const props = defineProps<IProps>()
@@ -18,20 +21,74 @@ defineSlots<{
 }>()
 
 // Layout
-const headerClass = computed(() => props.ui?.headerClass?.(props.isOpen))
-const titleClass = computed(() => props.ui?.titleClass?.(props.isOpen))
-const subtitleClass = computed(() => props.ui?.subtitleClass?.(props.isOpen))
-const expandIconClass = computed(() => props.expandIcon?.(props.isOpen))
+const title = computed(() => typeof props.title === 'function' ? props.title() : props.title)
+const subtitle = computed(() => typeof props.subtitle === 'function' ? props.subtitle() : props.subtitle)
 
-const headerStyle = computed(() => props.ui?.headerStyle?.(props.isOpen))
-const titleStyle = computed(() => props.ui?.titleStyle?.(props.isOpen))
-const subtitleStyle = computed(() => props.ui?.subtitleStyle?.(props.isOpen))
+// Styles - Header
+const headerClass = computed(() => props.ui?.headerClass?.({
+  isOpen: props.isOpen,
+  defaults: COLLAPSE_DEFAULT_PROPS.ui.headerClass({ isOpen: props.isOpen }),
+}))
+
+const headerStyle = computed(() => props.ui?.headerStyle?.({
+  isOpen: props.isOpen,
+}))
+
+// Styles - Title
+const titleClass = computed(() => props.ui?.titleClass?.({
+  isOpen: props.isOpen,
+  defaults: COLLAPSE_DEFAULT_PROPS.ui.titleClass({ isOpen: props.isOpen }),
+}))
+
+const titleStyle = computed(() => props.ui?.titleStyle?.({
+  isOpen: props.isOpen,
+}))
+
+// Styles - Subtitle
+const subtitleClass = computed(() => props.ui?.subtitleClass?.({
+  isOpen: props.isOpen,
+  defaults: COLLAPSE_DEFAULT_PROPS.ui.subtitleClass({ isOpen: props.isOpen }),
+}))
+
+const subtitleStyle = computed(() => props.ui?.subtitleStyle?.({
+  isOpen: props.isOpen,
+}))
+
+// Styles - Expand icon
+const expandIconClass = computed(() => props.ui?.expandIconClass?.({
+  isOpen: props.isOpen,
+  defaults: COLLAPSE_DEFAULT_PROPS.ui.expandIconClass({ isOpen: props.isOpen }),
+}))
+
+const expandIconStyle = computed(() => props.ui?.expandIconStyle?.({
+  isOpen: props.isOpen,
+}))
+
+// Styles - Header right
+const headerRightClass = computed(() => props.ui?.headerRightClass?.({
+  isOpen: props.isOpen,
+  defaults: COLLAPSE_DEFAULT_PROPS.ui.headerRightClass({ isOpen: props.isOpen }),
+}))
+
+const headerRightStyle = computed(() => props.ui?.headerRightStyle?.({
+  isOpen: props.isOpen,
+}))
+
+// Styles - Text
+const textClass = computed(() => props.ui?.textClass?.({
+  isOpen: props.isOpen,
+  defaults: COLLAPSE_DEFAULT_PROPS.ui.textClass({ isOpen: props.isOpen }),
+}))
+
+const textStyle = computed(() => props.ui?.textStyle?.({
+  isOpen: props.isOpen,
+}))
 </script>
 
 <template>
-  <Item
+  <div
     class="collapse__header"
-    :class="[headerClass, { 'no-separator': noSeparator }]"
+    :class="headerClass"
     :style="headerStyle"
     :data-state="isOpen ? 'open' : 'closed'"
   >
@@ -48,7 +105,11 @@ const subtitleStyle = computed(() => props.ui?.subtitleStyle?.(props.isOpen))
     </slot>
 
     <!-- Header title & subtitle -->
-    <div class="collapse__header-text">
+    <div
+      class="collapse__header-text"
+      :class="textClass"
+      :style="textStyle"
+    >
       <!-- Header title -->
       <slot name="title">
         <span
@@ -80,7 +141,11 @@ const subtitleStyle = computed(() => props.ui?.subtitleStyle?.(props.isOpen))
       name="right"
       :loading
     >
-      <div class="collapse__header-right">
+      <div
+        class="collapse__header-right"
+        :class="headerRightClass"
+        :style="headerRightStyle"
+      >
         <!-- Loader -->
         <LoaderBlock
           v-if="loading"
@@ -91,19 +156,18 @@ const subtitleStyle = computed(() => props.ui?.subtitleStyle?.(props.isOpen))
         <slot name="expandIcon">
           <div
             v-if="!noExpandIcon"
-            class="expand-icon i-majesticons:chevron-right"
-            :class="[expandIconClass, { 'rotate-90deg': isOpen }]"
+            class="expand-icon"
+            :class="expandIconClass"
+            :style="expandIconStyle"
           />
         </slot>
       </div>
     </slot>
-  </Item>
+  </div>
 </template>
 
 <style lang="scss" scoped>
 .collapse__header {
-  @apply flex items-center gap-2 p-x-2 min-h-10;
-
   transition-duration: var(--transitionDuration);
   transition-timing-function: var(--transitionTimingFunction);
   transition-property: border-radius;
@@ -112,32 +176,8 @@ const subtitleStyle = computed(() => props.ui?.subtitleStyle?.(props.isOpen))
     @apply shrink-0;
   }
 
-  &-right {
-    @apply flex gap-1 self-start items-center shrink-0 min-h-inherit;
-
-    .expand-icon {
-      @apply transition-transform;
-    }
-  }
-
-  &-text {
-    @apply flex flex-col grow;
-  }
-
-  &-title {
-    @apply overflow-auto font-rem-14 font-semibold;
-  }
-
-  &-subtitle {
-    @apply text-caption leading-tight font-rem-12;
-  }
-
-  &[data-state='open'] {
-    @apply rounded-b-0;
-
-    &:not(.no-separator)::before {
-      @apply content-empty absolute left-0 right-0 bottom-0 border-t-1 border-ca;
-    }
+  .expand-icon {
+    @apply transition-transform;
   }
 }
 </style>

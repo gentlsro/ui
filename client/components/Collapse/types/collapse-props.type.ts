@@ -1,18 +1,14 @@
 import type { CSSProperties } from 'vue'
 
+// Constants
+import type { COLLAPSE_DEFAULT_PROPS } from '../constants/collapse-default-props.constant'
+
 export type ICollapseProps = {
   /**
    * When true, the content's height will be watched and every change will trigger
    * a transition
    */
   autoAdjustHeight?: boolean
-
-  /**
-   * The icon for `Collapse` expansion
-   *
-   * Note: Will get rotated 90 degrees when `isOpen` is `true`
-   */
-  expandIcon?: (isOpen: boolean) => ClassType
 
   /**
    * The height of the content
@@ -58,12 +54,6 @@ export type ICollapseProps = {
   noHeightCalculation?: boolean
 
   /**
-   * By default, when `Collapse` is open, we show a separator between the header
-   * and the content. This prop can be used to disable that.
-   */
-  noSeparator?: boolean
-
-  /**
    * When true, the `Collapse` will not use the expand/collapse transition
    */
   noTransition?: boolean
@@ -71,63 +61,143 @@ export type ICollapseProps = {
   /**
    * The subtitle of the `Collapse`
    */
-  subtitle?: string
+  subtitle?: string | (() => string)
 
   /**
    * The title of the `Collapse`
    */
-  title?: string
+  title?: string | (() => string)
 
   /**
    * Visual configuration of the `Collapse`
    */
   ui?: {
     /**
+     * Class for the container of the `Collapse`
+     */
+    containerClass?: (payload: {
+      isOpen: boolean
+      defaults: ReturnType<typeof COLLAPSE_DEFAULT_PROPS['ui']['containerClass']>
+    }) => ClassType
+
+    /**
+     * Style for the container of the `Collapse`
+     */
+    containerStyle?: (payload: {
+      isOpen: boolean
+    }) => CSSProperties
+
+    /**
      * Class for the content of the `Collapse`
      */
-    contentClass?: (isOpen: boolean) => ClassType
+    contentClass?: (payload: {
+      isOpen: boolean
+      defaults: ReturnType<typeof COLLAPSE_DEFAULT_PROPS['ui']['contentClass']>
+    }) => ClassType
 
     /**
      * Style for the content of the `Collapse`
      */
-    contentStyle?: (isOpen: boolean) => CSSProperties
+    contentStyle?: (payload: {
+      isOpen: boolean
+    }) => CSSProperties
 
     /**
      * Class for the header of the `Collapse`
      */
-    headerClass?: (isOpen: boolean) => ClassType
+    headerClass?: (payload: {
+      isOpen: boolean
+      defaults: ReturnType<typeof COLLAPSE_DEFAULT_PROPS['ui']['headerClass']>
+    }) => ClassType
 
     /**
      * Style for the header of the `Collapse`
      */
-    headerStyle?: (isOpen: boolean) => CSSProperties
+    headerStyle?: (payload: {
+      isOpen: boolean
+    }) => CSSProperties
 
     /**
      * Class that will be applied to the title
      */
-    titleClass?: (isOpen: boolean) => ClassType
+    titleClass?: (payload: {
+      isOpen: boolean
+      defaults: ReturnType<typeof COLLAPSE_DEFAULT_PROPS['ui']['titleClass']>
+    }) => ClassType
 
     /**
      * Style that will be applied to the title
      */
-    titleStyle?: (isOpen: boolean) => CSSProperties
+    titleStyle?: (payload: {
+      isOpen: boolean
+    }) => CSSProperties
+
+    /**
+     * Class that will be applied to the right side of the header (where `loader` and `expand icon` are placed)
+     */
+    headerRightClass?: (payload: {
+      isOpen: boolean
+      defaults: ReturnType<typeof COLLAPSE_DEFAULT_PROPS['ui']['headerRightClass']>
+    }) => ClassType
+
+    /**
+     * Style that will be applied to the right side of the header (where `loader` and `expand icon` are placed)
+     */
+    headerRightStyle?: (payload: {
+      isOpen: boolean
+    }) => CSSProperties
 
     /**
      * Class that will be applied to the subtitle
      */
-    subtitleClass?: (isOpen: boolean) => ClassType
+    subtitleClass?: (payload: {
+      isOpen: boolean
+      defaults: ReturnType<typeof COLLAPSE_DEFAULT_PROPS['ui']['subtitleClass']>
+    }) => ClassType
 
     /**
      * Style that will be applied to the subtitle
      */
-    subtitleStyle?: (isOpen: boolean) => CSSProperties
+    subtitleStyle?: (payload: {
+      isOpen: boolean
+    }) => CSSProperties
+
+    /**
+     * Class that will be applied to the expand icon
+     */
+    expandIconClass?: (payload: {
+      isOpen: boolean
+      defaults: ReturnType<typeof COLLAPSE_DEFAULT_PROPS['ui']['expandIconClass']>
+    }) => ClassType
+
+    /**
+     * Style that will be applied to the expand icon
+     */
+    expandIconStyle?: (payload: {
+      isOpen: boolean
+    }) => CSSProperties
+
+    /**
+     * Class that will be applied to the text part of the header (where `title` and `subtitle` are placed)
+     */
+    textClass?: (payload: {
+      isOpen: boolean
+      defaults: ReturnType<typeof COLLAPSE_DEFAULT_PROPS['ui']['textClass']>
+    }) => ClassType
+
+    /**
+     * Style that will be applied to the text part of the header (where `title` and `subtitle` are placed)
+     */
+    textStyle?: (payload: {
+      isOpen: boolean
+    }) => CSSProperties
   }
 
   /**
-   * Functions that gets called before teh collapse is shown
+   * Functions that gets called before the collapse is shown
    *
    * Usage: Fetching data to show in the collapse
    * If the function returns a `false` the collapse will not be shown at all
    */
-  beforeShowFnc?: () => Promise<void> | void
+  beforeShowFnc?: () => Promise<void | false> | void | false
 }
