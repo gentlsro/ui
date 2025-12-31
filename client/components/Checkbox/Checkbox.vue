@@ -137,7 +137,7 @@ function handleKey(ev: KeyboardEvent) {
   <label
     ref="labelEl"
     tabindex="0"
-    class="label"
+    class="label checkbox__container"
     :class="[
       `is-${size}`,
       {

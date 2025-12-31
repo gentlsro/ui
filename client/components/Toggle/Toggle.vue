@@ -160,7 +160,7 @@ function handleKeyDown(e: KeyboardEvent) {
       </div>
     </div>
 
-    <slot v-if="label">
+    <slot v-if="label ?? $slots.default">
       <div
         class="toggle-label"
         p="r-3"

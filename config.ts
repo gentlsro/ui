@@ -1020,6 +1020,11 @@ export const defaultComponentsConfig = {
           contentClass: ({ defaults }) => defaults['*'],
           searchClass: ({ defaults }) => defaults['*'],
         },
+        scrollerConfig: {
+          ui: {
+            rowClass: ({ defaults }) => `${defaults['*']} p-b-px`,
+          },
+        },
       },
       loadData: {
         onSearch: 300,

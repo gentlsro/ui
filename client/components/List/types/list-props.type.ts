@@ -231,7 +231,7 @@ export type IListProps = {
   /**
    * Scroller configuration
    */
-  scrollerConfig?: Pick<IVirtualScrollerProps<any>, 'rowHeight' | 'overscan' | 'threshold' | 'watchWidth'>
+  scrollerConfig?: Pick<IVirtualScrollerProps<any>, 'rowHeight' | 'overscan' | 'threshold' | 'watchWidth' | 'ui'>
 
   /**
    * The search value
