@@ -40,7 +40,7 @@ onMounted(() => {
   if (scrollArea.value) {
     const parentFloatingUI = (self?.vnode.el as HTMLElement)?.closest('.menu, .dialog') as HTMLElement
 
-    if (parentFloatingUI?.classList.contains('has-transition')) {
+    if (parentFloatingUI?.classList.contains('has-transition') && !props.immediate) {
       const transitionDurationString = parentFloatingUI.style.getPropertyValue('--transitionDuration')
       const transitionDuration = Number(stringToFloat(transitionDurationString))
 

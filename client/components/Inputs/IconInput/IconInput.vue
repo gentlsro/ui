@@ -158,7 +158,6 @@ defineExpose({
         tabindex="-1"
         :reference-target="referenceEl"
         no-uplift
-        no-transition
         placement="bottom-start"
       >
         <IconPicker

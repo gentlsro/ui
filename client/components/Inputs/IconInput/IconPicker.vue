@@ -85,6 +85,7 @@ watchThrottled(search, fetchAndSetIcons, {
         class="icon-picker__content"
         :class="ui?.contentClass"
         :style="ui?.contentStyle"
+        immediate
       >
         <div
           v-for="icon in icons"
