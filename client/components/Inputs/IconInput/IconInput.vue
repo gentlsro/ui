@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Icon } from '@iconify/vue'
 import type { NonUndefined } from 'utility-types'
 
 // Functions
@@ -63,10 +62,10 @@ const isPickerActive = ref(false)
 
 // Icon
 const iconClassBySize = {
-  sm: { width: 18, height: 18 },
-  md: { width: 22, height: 22 },
-  lg: { width: 26, height: 26 },
-} as Record<NonUndefined<IIconInputProps['size']>, { width: number, height: number }>
+  sm: { size: 18 },
+  md: { size: 22 },
+  lg: { size: 26 },
+} as Record<NonUndefined<IIconInputProps['size']>, { size: number }>
 
 const iconSize = computed(() => {
   return iconClassBySize[props.size ?? 'md']
@@ -117,8 +116,8 @@ defineExpose({
       <div class="flex flex-center w-6 h-6 m-l-2">
         <Icon
           v-if="model"
-          :icon="model"
-          v-bind="iconSize"
+          :name="model"
+          :size="iconSize.size"
         />
 
         <div

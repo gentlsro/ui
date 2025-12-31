@@ -11,7 +11,6 @@
     "update": "npx npm-check-updates -t latest --interactive"
   },
   "dependencies": {
-    "@iconify/vue": "5.0.0",
     "@nuxt/scripts": "0.13.2",
     "@regle/nuxt": "1.9.8",
     "arktype": "2.1.23",
@@ -39,6 +38,7 @@
     "@iconify/json": "2.2.399",
     "@iconify/utils": "3.0.2",
     "@nuxt/fonts": "0.11.4",
+    "@nuxt/icon": "1.15.0",
     "@nuxtjs/device": "3.2.4",
     "@pinia/nuxt": "0.11.2",
     "@types/jsonwebtoken": "9.0.10",

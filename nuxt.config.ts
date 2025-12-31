@@ -26,6 +26,7 @@ export default defineNuxtConfig({
     '@nuxtjs/i18n',
     '@nuxtjs/device',
     '@nuxt/scripts',
+    '@nuxt/icon',
   ],
 
   // Layer meta
@@ -165,6 +166,10 @@ export default defineNuxtConfig({
         icon: 'i-emojione:flag-for-czechia',
       },
     ],
+  },
+
+  icon: {
+    size: '1em',
   },
 
   pinia: {

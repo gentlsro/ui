@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Icon } from '@iconify/vue'
 import type { CSSProperties } from 'vue'
 
 type IProps = {
@@ -95,9 +94,8 @@ watchThrottled(search, fetchAndSetIcons, {
           @click="model = icon"
         >
           <Icon
-            :icon
-            height="28"
-            width="28"
+            :name="icon"
+            :size="28"
           />
         </div>
       </ScrollArea>
