@@ -25,6 +25,7 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@nuxtjs/i18n',
     '@nuxtjs/device',
+    '@nuxt/scripts',
   ],
 
   // Layer meta

@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@iconify/vue": "5.0.0",
+    "@nuxt/scripts": "0.13.2",
     "@regle/nuxt": "1.9.8",
     "arktype": "2.1.23",
     "change-case": "5.4.4",
