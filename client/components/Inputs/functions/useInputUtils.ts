@@ -115,7 +115,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
     return !props.readonly
       && !props.disabled
       && props.clearable
-      && hasContent.value
+      && (props.hasContent || !isEmpty.value)
   })
 
   // Input methods
