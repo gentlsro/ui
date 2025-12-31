@@ -159,12 +159,14 @@ defineExpose({
         tabindex="-1"
         :reference-target="referenceEl"
         no-uplift
+        no-transition
         placement="bottom-start"
       >
         <IconPicker
           v-model="model"
           v-model:search="model"
           no-search
+          :min-search-length
           w="auto"
           :ui="mergedProps.ui"
           @update:model-value="$hide()"

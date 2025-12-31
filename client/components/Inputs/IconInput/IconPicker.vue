@@ -7,6 +7,7 @@ type IProps = {
   readonly?: boolean
   search?: string
   noSearch?: boolean
+  minSearchLength?: number
   ui?: {
     searchClass?: ClassType
     searchStyle?: CSSProperties
@@ -15,7 +16,9 @@ type IProps = {
   }
 }
 
-defineProps<IProps>()
+const props = withDefaults(defineProps<IProps>(), {
+  minSearchLength: 1,
+})
 
 // Utils
 const { isLoading, handleRequest } = useRequest()
@@ -43,7 +46,7 @@ function getIcons() {
 }
 
 async function fetchAndSetIcons() {
-  if (!search.value || search.value.length < 3) {
+  if (!search.value || search.value.length < props.minSearchLength) {
     return
   }
 
@@ -78,7 +81,7 @@ watchThrottled(search, fetchAndSetIcons, {
     </slot>
 
     <slot name="content">
-      <div
+      <ScrollArea
         v-if="icons.length"
         class="icon-picker__content"
         :class="ui?.contentClass"
@@ -97,12 +100,12 @@ watchThrottled(search, fetchAndSetIcons, {
             width="28"
           />
         </div>
-      </div>
+      </ScrollArea>
 
       <!-- Search not long -->
       <Banner
-        v-else-if="!search || search.length < 3"
-        :label="$t('general.atLeastCharactersToSearch', { count: 3 })"
+        v-else-if="!search || search.length < minSearchLength"
+        :label="$t('general.atLeastCharactersToSearch', { count: minSearchLength })"
         border="!none"
         m="t-3 b-2"
         icon-center

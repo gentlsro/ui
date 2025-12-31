@@ -515,6 +515,7 @@ export const defaultComponentsConfig = {
       required: undefined,
       size: 'md',
       stackLabel: true,
+      minSearchLength: 1,
       ui: {
         borderRadius: '0.5rem',
         appendClass: ({ defaults }) => defaults['*'],
