@@ -7,7 +7,7 @@ export const VIRTUAL_SCROLLER_DEFAULT_PROPS = {
 
       return {
         base,
-        '*': `${base}`,
+        'all': `${base}`,
       } as const
     },
   },

@@ -10,7 +10,7 @@ export const INPUT_WRAPPER_DEFAULT_PROPS = {
 
       return {
         base,
-        '*': `${base}`,
+        'all': `${base}`,
       } as const
     },
 
@@ -19,7 +19,7 @@ export const INPUT_WRAPPER_DEFAULT_PROPS = {
 
       return {
         base,
-        '*': `${base}`,
+        'all': `${base}`,
       } as const
     },
 
@@ -28,7 +28,7 @@ export const INPUT_WRAPPER_DEFAULT_PROPS = {
 
       return {
         base,
-        '*': `${base}`,
+        'all': `${base}`,
       } as const
     },
 
@@ -37,7 +37,7 @@ export const INPUT_WRAPPER_DEFAULT_PROPS = {
 
       return {
         base,
-        '*': `${base}`,
+        'all': `${base}`,
       } as const
     },
 
@@ -46,7 +46,7 @@ export const INPUT_WRAPPER_DEFAULT_PROPS = {
 
       return {
         base,
-        '*': `${base}`,
+        'all': `${base}`,
       } as const
     },
   },

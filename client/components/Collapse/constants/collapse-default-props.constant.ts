@@ -10,7 +10,7 @@ export const COLLAPSE_DEFAULT_PROPS = {
 
       return {
         base,
-        '*': `${base}`,
+        'all': `${base}`,
       } as const
     },
 
@@ -23,7 +23,7 @@ export const COLLAPSE_DEFAULT_PROPS = {
       return {
         base,
         bg,
-        '*': `${base} ${bg}`,
+        'all': `${base} ${bg}`,
       } as const
     },
 
@@ -32,7 +32,7 @@ export const COLLAPSE_DEFAULT_PROPS = {
 
       return {
         base,
-        '*': `${base}`,
+        'all': `${base}`,
       } as const
     },
 
@@ -43,7 +43,7 @@ export const COLLAPSE_DEFAULT_PROPS = {
       return {
         base,
         color,
-        '*': `${base} ${color}`,
+        'all': `${base} ${color}`,
       } as const
     },
 
@@ -52,7 +52,7 @@ export const COLLAPSE_DEFAULT_PROPS = {
 
       return {
         base,
-        '*': `${base}`,
+        'all': `${base}`,
       } as const
     },
 
@@ -63,7 +63,7 @@ export const COLLAPSE_DEFAULT_PROPS = {
       return {
         base,
         rotation,
-        '*': `${base} ${rotation}`,
+        'all': `${base} ${rotation}`,
       } as const
     },
 
@@ -72,7 +72,7 @@ export const COLLAPSE_DEFAULT_PROPS = {
 
       return {
         base,
-        '*': `${base}`,
+        'all': `${base}`,
       } as const
     },
 
@@ -87,7 +87,7 @@ export const COLLAPSE_DEFAULT_PROPS = {
         bg,
         floating,
         border,
-        '*': `${base} ${bg} ${floating} ${border}`,
+        'all': `${base} ${bg} ${floating} ${border}`,
       } as const
     },
   },

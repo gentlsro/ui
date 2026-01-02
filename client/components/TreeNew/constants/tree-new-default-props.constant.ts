@@ -10,7 +10,7 @@ export const TREE_NEW_DEFAULT_PROPS = {
 
       return {
         base,
-        '*': `${base}`,
+        'all': `${base}`,
       } as const
     },
 
@@ -19,7 +19,7 @@ export const TREE_NEW_DEFAULT_PROPS = {
 
       return {
         base,
-        '*': `${base}`,
+        'all': `${base}`,
       } as const
     },
 
@@ -52,7 +52,7 @@ export const TREE_NEW_DEFAULT_PROPS = {
         selectionMultiCheckbox,
         focus,
         focusSelected,
-        '*': `${base} ${hover} ${focus} ${hovered} ${selectionNoCheckbox} ${selectionMultiCheckbox} ${focusSelected}`,
+        'all': `${base} ${hover} ${focus} ${hovered} ${selectionNoCheckbox} ${selectionMultiCheckbox} ${focusSelected}`,
       } as const
     },
 
@@ -78,7 +78,7 @@ export const TREE_NEW_DEFAULT_PROPS = {
         base,
         hover,
         collapsible,
-        '*': `${base} ${hover} ${collapsible}`,
+        'all': `${base} ${hover} ${collapsible}`,
       } as const
     },
 
@@ -87,7 +87,7 @@ export const TREE_NEW_DEFAULT_PROPS = {
 
       return {
         base,
-        '*': `${base}`,
+        'all': `${base}`,
       } as const
     },
 
@@ -96,7 +96,7 @@ export const TREE_NEW_DEFAULT_PROPS = {
 
       return {
         base,
-        '*': `${base}`,
+        'all': `${base}`,
       } as const
     },
 
@@ -105,7 +105,7 @@ export const TREE_NEW_DEFAULT_PROPS = {
 
       return {
         base,
-        '*': `${base}`,
+        'all': `${base}`,
       } as const
     },
   },

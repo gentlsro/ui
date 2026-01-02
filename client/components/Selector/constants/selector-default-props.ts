@@ -21,7 +21,7 @@ export const SELECTOR_DEFAULT_PROPS = {
 
         return {
           base,
-          '*': `${base}`,
+          'all': `${base}`,
         } as const
       },
     },
@@ -33,7 +33,7 @@ export const SELECTOR_DEFAULT_PROPS = {
 
       return {
         base,
-        '*': `${base}`,
+        'all': `${base}`,
       } as const
     },
   },

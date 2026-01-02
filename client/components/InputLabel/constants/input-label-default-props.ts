@@ -10,7 +10,7 @@ export const INPUT_LABEL_DEFAULT_PROPS = {
 
       return {
         base,
-        '*': `${base}`,
+        'all': `${base}`,
       } as const
     },
   },

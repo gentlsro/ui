@@ -8,7 +8,7 @@ export const LIST_DEFAULT_PROPS = {
 
       return {
         base,
-        '*': `${base}`,
+        all: `${base}`,
       } as const
     },
 
@@ -17,7 +17,7 @@ export const LIST_DEFAULT_PROPS = {
 
       return {
         base,
-        '*': `${base}`,
+        all: `${base}`,
       } as const
     },
 
@@ -42,7 +42,7 @@ export const LIST_DEFAULT_PROPS = {
         selectionMultiCheckbox,
         focus,
         focusSelected,
-        '*': `${base} ${focus} ${selectionNoCheckbox} ${selectionMultiCheckbox} ${focusSelected}`,
+        all: `${base} ${focus} ${selectionNoCheckbox} ${selectionMultiCheckbox} ${focusSelected}`,
       } as const
     },
 
@@ -51,7 +51,7 @@ export const LIST_DEFAULT_PROPS = {
 
       return {
         base,
-        '*': `${base}`,
+        all: `${base}`,
       } as const
     },
 
@@ -62,7 +62,7 @@ export const LIST_DEFAULT_PROPS = {
       return {
         base,
         text,
-        '*': `${base} ${text}`,
+        all: `${base} ${text}`,
       } as const
     },
 
@@ -71,7 +71,7 @@ export const LIST_DEFAULT_PROPS = {
 
       return {
         base,
-        '*': `${base}`,
+        all: `${base}`,
       } as const
     },
 
@@ -80,7 +80,7 @@ export const LIST_DEFAULT_PROPS = {
 
       return {
         base,
-        '*': `${base}`,
+        all: `${base}`,
       } as const
     },
 
@@ -89,7 +89,7 @@ export const LIST_DEFAULT_PROPS = {
 
       return {
         base,
-        '*': `${base}`,
+        all: `${base}`,
       } as const
     },
 
@@ -99,7 +99,7 @@ export const LIST_DEFAULT_PROPS = {
 
       return {
         base,
-        '*': `${base}`,
+        all: `${base}`,
       } as const
     },
 
@@ -108,7 +108,7 @@ export const LIST_DEFAULT_PROPS = {
 
       return {
         base,
-        '*': `${base}`,
+        all: `${base}`,
       } as const
     },
 
