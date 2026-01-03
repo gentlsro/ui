@@ -9,7 +9,7 @@ export function useForm(props: IFormProps) {
   const uiStore = useUIStore()
   const { activeElement, uiState } = storeToRefs(uiStore)
   const formStore = useFormStore()
-  const { isEditing, confirmationEl } = storeToRefs(formStore)
+  const { isEditing, confirmationEl, isSubmitPrevented } = storeToRefs(formStore)
 
   // Layout
   const preventSubmitOnEnter = toRef(props, 'preventSubmitOnEnter')
@@ -24,7 +24,7 @@ export function useForm(props: IFormProps) {
     const isInputWithCustomEnterHandler = isInput && hasCustomEnterHandler
 
     if (noEnter.value) {
-      // ev.preventDefault()
+      isSubmitPrevented.value = true
 
       return
     }

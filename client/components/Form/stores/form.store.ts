@@ -24,6 +24,7 @@ export function useFormStore(payload?: {
     const { uiState } = storeToRefs(useUIStore())
 
     // Helpers
+    const isSubmitPrevented = refAutoReset(false, 50)
     const emitSubmit = ref<(payload: any) => void>(() => {})
     const emitCancel = ref<() => void>(() => {})
     const emitConfirmation = ref<() => void>(() => {})
@@ -68,7 +69,7 @@ export function useFormStore(payload?: {
         }
       }
 
-      if (!isLoading.value && !isSubmitDisabled.value) {
+      if (!isLoading.value && !isSubmitDisabled.value && !isSubmitPrevented.value) {
         emitSubmit.value(payload)
       }
     }
@@ -78,6 +79,7 @@ export function useFormStore(payload?: {
     return {
       isEditing,
       isSubmitDisabled,
+      isSubmitPrevented,
       isSubmitConfirmation,
       errors,
       formEl,
