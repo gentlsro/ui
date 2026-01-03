@@ -12,7 +12,7 @@ export const CHIP_DEFAULT_PROPS = {
         base,
         border,
         size,
-        'all': `${base} ${border} ${size}`,
+        all: `${base} ${border} ${size}`,
       } as const
     },
 
@@ -23,7 +23,7 @@ export const CHIP_DEFAULT_PROPS = {
       return {
         base,
         size,
-        'all': `${base} ${size}`,
+        all: `${base} ${size}`,
       } as const
     },
   },
