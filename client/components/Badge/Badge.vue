@@ -3,31 +3,40 @@
 import type { IBadgeProps } from './types/badge-props.type'
 
 // Functions
-import { getComponentProps } from '../../functions/get-component-props'
+import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
 
-withDefaults(defineProps<IBadgeProps>(), {
+// Constants
+import { BADGE_DEFAULT_PROPS } from './constants/badge-default-props.constant'
+
+const props = withDefaults(defineProps<IBadgeProps>(), {
   ...getComponentProps('badge'),
+})
+
+// Utils
+const mergedProps = computed(() => {
+  return getComponentMergedProps('badge', props)
+})
+
+// Styles - container
+const containerClass = computed(() => {
+  return mergedProps.value?.ui?.containerClass?.({
+    defaults: BADGE_DEFAULT_PROPS.ui.containerClass(),
+  })
+})
+
+const containerStyle = computed(() => {
+  return mergedProps.value?.ui?.containerStyle?.()
 })
 </script>
 
 <template>
   <div
     class="badge"
-    right="1"
-    top="-1"
-    bg="inherit"
-    color="white"
-    border="white"
+    :class="containerClass"
+    :style="containerStyle"
   >
     <slot>
       {{ counter }}
     </slot>
   </div>
 </template>
-
-<style lang="scss" scoped>
-.badge {
-  @apply absolute rounded-2 p-x-1 min-w-7 font-normal border-2 text-center
-    font-rem-12;
-}
-</style>

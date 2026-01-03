@@ -78,7 +78,11 @@ export const defaultComponentsConfig = {
   badge: {
     props: {
       counter: undefined,
+      ui: {
+        containerClass: ({ defaults }) => defaults.all,
+      },
     },
+    merge: ['ui'],
   },
 
   // Banner
