@@ -8,6 +8,10 @@ import type { IVirtualScrollEvent } from '../VirtualScroller/types/virtual-scrol
 import { useTableStore } from './stores/table.store'
 import { tableEditMoveCell } from './functions/table-edit-move-cell'
 
+// Components
+import VirtualScrollerGrid from '../VirtualScroller/VirtualScrollerGrid.vue'
+import VirtualScrollerVertical from '../VirtualScroller/VirtualScrollerVertical.vue'
+
 type IProps = Pick<ITableProps, 'editable' | 'ui' | 'to' | 'scrollerConfig' | 'showCopyBtn' | 'toLinkProps'>
 
 defineProps<IProps>()
@@ -38,58 +42,16 @@ const {
   paginationConfig,
   isDataLoading,
   loadData,
-  tableWidth,
-  headerX,
 } = tableStore
 
 // Layout
 const isVisibleByColumnField = ref<Record<string, boolean>>({})
 
-const colWidths = computed(() => {
-  return visibleColumns.value.map(col => ({ field: col.field, width: col._width }))
+const virtualScrollComponent = computed(() => {
+  return isCardView.value
+    ? VirtualScrollerVertical
+    : VirtualScrollerGrid
 })
-
-// watchDebounced([colWidths, headerX], ([widths]) => {
-//   let width = 0
-
-//   const widthsCumulated = widths.map(w => {
-//     width += w.width
-
-//     return width
-//   })
-
-//   isVisibleByColumnField.value = widths.reduce((agg, width, idx) => {
-//     const isVisible = isColumnVisible({
-//       columnIdx: idx,
-//       widthsCumulated,
-//     }) ?? false
-
-//     agg[width.field] = isVisible
-
-//     return agg
-//   }, {} as Record<string, boolean>) ?? {}
-// }, { immediate: true, debounce: 25 })
-
-// function isColumnVisible(payload: {
-//   columnIdx: number
-//   widthsCumulated: number[]
-// }) {
-//   const { columnIdx, widthsCumulated } = payload
-
-//   // Get the start position of the column (previous cumulative width, or 0 for first column)
-//   const columnStart = columnIdx === 0 ? 0 : widthsCumulated[columnIdx - 1] ?? 0
-
-//   // Get the end position of the column (current cumulative width)
-//   const columnEnd = widthsCumulated[columnIdx] ?? 0
-
-//   // Calculate the visible area boundaries
-//   const visibleStart = headerX.value
-//   const visibleEnd = headerX.value + tableWidth.value
-
-//   // Column is visible if it overlaps with the visible area
-//   // Overlap occurs when: columnStart < visibleEnd AND columnEnd > visibleStart
-//   return columnStart < visibleEnd && columnEnd > visibleStart
-// }
 
 function handleVirtualScroll(ev: IVirtualScrollEvent) {
   const { visibleEndItem } = ev
@@ -174,7 +136,8 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
 </script>
 
 <template>
-  <VirtualScrollerGrid
+  <Component
+    :is="virtualScrollComponent"
     ref="virtualScrollEl"
     v-bind="scrollerConfig"
     :rows="rowsSplit"
@@ -191,7 +154,7 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
         name="row"
         :row="slotProps.row"
         :index="slotProps.index"
-        :columns="slotProps.columns"
+        :columns="slotProps.columns ?? visibleColumns"
       >
         <TableRow
           :row="slotProps.row"
@@ -202,12 +165,12 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
           :show-copy-btn
           :to-link-props
           :is-visible-by-column-field
-          :visible-columns="slotProps.columns"
+          :visible-columns="slotProps.columns ?? visibleColumns"
           :style="slotProps.style"
         >
           <!-- Field slots -->
           <template
-            v-for="col in slotProps.columns"
+            v-for="col in slotProps.columns ?? visibleColumns"
             :key="col.name"
             #[col.name]="{ row, column, value }"
           >
@@ -231,5 +194,5 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
         </TableRow>
       </slot>
     </template>
-  </VirtualScrollerGrid>
+  </Component>
 </template>
