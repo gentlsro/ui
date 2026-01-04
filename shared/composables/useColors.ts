@@ -112,6 +112,13 @@ export function useColors() {
     }
   }
 
+  /**
+   * Gets color from colors.json or falls back to they provided color
+   */
+  function resolveColor(color: string) {
+    return get(colors, color) ?? color
+  }
+
   return {
     invertColor,
     hexToRgb,
@@ -120,5 +127,6 @@ export function useColors() {
     resolveStyle,
     isHex,
     isRgba,
+    resolveColor,
   }
 }
