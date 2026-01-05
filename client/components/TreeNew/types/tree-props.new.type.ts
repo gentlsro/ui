@@ -291,7 +291,7 @@ export type ITreeProps<T extends IItem = IItem> = {
   /**
    * The selected nodes
    */
-  selection?: T | string | number | Array<T> | Array<string | number>
+  selection?: T | string | number | any[]
 
   /**
    * The selection configuration
