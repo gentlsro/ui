@@ -13,7 +13,7 @@ import { BUTTON_PRESET } from './constants/button-preset.constant'
 import BtnOrNuxtLinkResolver from './BtnOrNuxtLinkResolver.vue'
 
 // Directives
-import { vRipple } from '#layers/utilities/client/directives/ripple.directive'
+import { vRipple } from '../../directives/ripple.directive'
 
 const props = withDefaults(defineProps<IBtnProps>(), {
   ...getComponentProps('button'),
@@ -115,7 +115,7 @@ defineExpose({
         v-if="tooltip?.label || $slots.tooltip"
         name="tooltip"
       >
-        {{ tooltip.label }}
+        {{ tooltip?.label }}
       </slot>
     </Tooltip>
 
