@@ -1,4 +1,4 @@
-import { addTemplate, createResolver, defineNuxtModule } from 'nuxt/kit'
+import { addTemplate, createResolver, defineNuxtModule } from '@nuxt/kit'
 import { existsSync } from 'node:fs'
 
 const { resolve } = createResolver(import.meta.url)
@@ -18,7 +18,7 @@ export default defineNuxtModule({
       })
       .filter(({ path }) => existsSync(`${path}.ts`))
 
-    const code = `import { customDefu } from '#layers/utilities/shared/functions/custom-defu'
+    const code = `import { customDefu } from '#layers/utilities/shared/utils/custom-defu'
 ${configPaths.map(({ path }, idx) => `import config${idx} from '${path}'`).join('\n')}
 
 const uiConfigMerged = customDefu(${configPaths.map((_, idx) => `config${idx}`).join(', ')})
@@ -99,7 +99,7 @@ export default uiConfig
     addTemplate({
       filename: `${nuxt.options.rootDir}/generated/ui.ts`,
       write: true,
-      getContents: () => `export * from '${base?.cwd}/index'
+      getContents: () => `export * from '${base?.cwd}/exposed'
 `,
     })
 

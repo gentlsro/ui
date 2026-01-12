@@ -1,0 +1,217 @@
+<script setup lang="ts">
+import { MaskedNumber } from 'imask'
+
+// Types
+import type { INumberInputProps } from './types/number-input-props.type'
+
+// Functions
+import { useInputUtils } from '../functions/useInputUtils'
+import { useInputValidationUtils } from '../functions/useInputValidationUtils'
+
+// Constants
+import { INPUT_WRAPPER_DEFAULT_PROPS } from '../../InputWrapper/constants/input-wrapper-default-props'
+
+const props = withDefaults(defineProps<INumberInputProps>(), {
+  ...getComponentProps('numberInput'),
+})
+
+defineEmits<{
+  (e: 'update:modelValue', val?: number | undefined | null): void
+  (e: 'blur'): void
+  (e: 'focus'): void
+  (e: 'clear'): void
+  (e: 'enter', event: KeyboardEvent): void
+}>()
+
+// Utils
+const { separators, parseNumber } = useNumber()
+
+// Utils
+const mergedProps = computed(() => {
+  return getComponentMergedProps('numberInput', props)
+})
+
+// Mask
+const mask = computed<MaskedNumber>(() => {
+  let mask = new MaskedNumber({
+    thousandsSeparator: props.noGrouping
+      ? ''
+      : separators.value.thousandSeparator,
+    radix: separators.value.decimalSeparator,
+    mapToRadix: ['.', ','],
+    scale: props.fractionDigits,
+    mask: Number,
+    min: props.min,
+    max: props.max,
+    format: (value: any) => {
+      if (isNil(value)) {
+        return ''
+      }
+
+      return value.toString()
+    },
+  })
+
+  if (props.mask) {
+    mask = props.mask as MaskedNumber
+  }
+
+  return props.formatMask?.({
+    mask,
+    props: { ...props, ...mergedProps.value },
+  }) ?? mask
+})
+
+const {
+  el,
+  inputId,
+  model,
+  masked,
+  wrapperProps,
+  hasNoValue,
+  hasClearableBtn,
+  label,
+  isTouched,
+  focus,
+  select,
+  blur,
+  clear,
+  getInputElement,
+  handleClickWrapper,
+  handleFocusOrClick,
+  handleBlur,
+} = useInputUtils({
+  props,
+  maskRef: mask,
+})
+
+// Styles - append
+const appendClass = computed(() => {
+  return mergedProps.value.ui?.appendClass?.({
+    defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.appendClass(),
+  })
+})
+
+// Styles - append
+const appendStyle = computed(() => {
+  return mergedProps.value.ui?.appendStyle?.()
+})
+
+// Validation
+const { path } = useInputValidationUtils(props)
+
+// Layout
+const readonly = toRef(props, 'readonly')
+
+function handlePaste(ev: ClipboardEvent) {
+  const pastedText = ev.clipboardData?.getData('text')
+  const parsedValue = parseNumber(pastedText)
+
+  if (!isNil(parsedValue)) {
+    model.value = parsedValue
+  }
+}
+
+defineExpose({
+  isTouched: () => isTouched.value,
+  focus,
+  select,
+  blur,
+  clear,
+  getInputElement,
+})
+</script>
+
+<template>
+  <InputWrapper
+    v-bind="wrapperProps"
+    :id="inputId"
+    :has-content="!hasNoValue"
+    :ui="mergedProps.ui"
+    .focus="focus"
+    @click="handleClickWrapper"
+  >
+    <!-- Label -->
+    <template #label="labelProps">
+      <slot
+        name="label"
+        v-bind="labelProps"
+      />
+    </template>
+
+    <!-- Prepend -->
+    <template
+      v-if="$slots.prepend"
+      #prepend
+    >
+      <slot
+        name="prepend"
+        :clear="clear"
+        :focus="focus"
+      />
+    </template>
+
+    <template #default="{ inputClass, inputStyle }">
+      <input
+        :id="inputId"
+        ref="el"
+        flex="1"
+        :value="masked"
+        inputmode="numeric"
+        :placeholder="placeholder"
+        :readonly="readonly"
+        :disabled="disabled"
+        :label="label || placeholder"
+        :name="name || path || label || placeholder"
+        class="control"
+        role="presentation"
+        :class="inputClass"
+        :style="inputStyle"
+        v-bind="inputProps"
+        @focus="handleFocusOrClick"
+        @blur="handleBlur"
+        @paste.stop.prevent="handlePaste"
+        @keypress.enter="$emit('enter', $event)"
+      >
+    </template>
+
+    <!-- Hint -->
+    <template #hint>
+      <slot name="hint" />
+    </template>
+
+    <!-- Append -->
+    <template
+      v-if="$slots.append || hasClearableBtn || (!readonly && !disabled)"
+      #append
+    >
+      <div
+        v-if="step || hasClearableBtn || $slots.append"
+        :class="appendClass"
+        :style="appendStyle"
+        data-cy="offset-buttons"
+        @click="handleFocusOrClick"
+      >
+        <slot
+          name="append"
+          :clear="clear"
+          :focus="focus"
+        />
+
+        <InputClearBtn
+          v-if="hasClearableBtn"
+          :clear-confirmation
+          :size
+          @click.stop.prevent="!clearConfirmation && clear()"
+        />
+
+        <!-- Step -->
+        <NumberInputStep
+          v-if="step && !readonly && !disabled"
+          v-bind="props"
+          v-model="model"
+        />
+      </div>
+    </template>
+  </InputWrapper>
+</template>

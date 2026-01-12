@@ -1,6 +1,7 @@
-const theme = import.meta.env.NUXT_PUBLIC_THEME
-
 export default defineNitroPlugin(nitroApp => {
+  const rC = useRuntimeConfig()
+  const theme = rC.public.theme
+
   // Set theme & lang
   nitroApp.hooks.hook('render:html', html => {
     html.head.push(`

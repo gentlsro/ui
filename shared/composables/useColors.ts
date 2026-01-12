@@ -1,12 +1,14 @@
 import type { Color } from 'invert-color'
 import invert from 'invert-color'
+
+// Constants
 import colors from '../constants/colors.json'
 
 export function useColors() {
   function invertColor(color: Color) {
     try {
       return invert(color, { black: '#000000', white: '#ffffff', threshold: 0.5 })
-    } catch (error) {
+    } catch {
       return color
     }
   }

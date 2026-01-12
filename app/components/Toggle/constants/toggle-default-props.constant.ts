@@ -1,0 +1,232 @@
+// @unocss-include
+
+export const TOGGLE_DEFAULT_PROPS = {
+  ui: {
+    containerClass() {
+      const base = 'relative flex items-center cursor-pointer select-none rounded-custom'
+
+      // States (via CSS selectors)
+      const readonly = '[&.is-readonly]:(cursor-default)'
+      const disabled = '[&.is-disabled]:(cursor-not-allowed op-50)'
+
+      return {
+        base,
+        readonly,
+        disabled,
+        all: `${base} ${readonly} ${disabled}`,
+      } as const
+    },
+
+    toggleClass(payload: {
+      size: 'xs' | 'sm' | 'md' | 'lg' | 'auto'
+      contained: boolean
+    }) {
+      const { size, contained } = payload
+
+      const base = 'flex items-center relative shrink-0 self-start'
+      const tapHighlight = '-webkit-tap-highlight-color-transparent'
+
+      // Visual base
+      const visual = 'rounded-full border-1 border-ca hover:border-true-gray-400'
+
+      // Size
+      let sizeClass = ''
+
+      const sizes = {
+        xs: 'w-8 h-4.5 m-y-0.75 m-l-1 m-r-1.5',
+        xsContained: 'w-8 h-4.5 m-y-0.75 m-x-1.5',
+        sm: 'w-9.5 h-5.5 m-y-0.5 m-l-1 m-r-1.5',
+        smContained: 'w-9.5 h-5.5 m-y-0.5 m-x-1.5',
+        md: 'w-11 h-6 m-y-1 m-l-3.5 m-r-2',
+        mdContained: 'w-11 h-6 m-y-1 m-l-2.5 m-r-2',
+        lg: 'w-12 h-7 m-y-1.5 m-l-3.5 m-r-2',
+        lgContained: 'w-12 h-7 m-y-1.5 m-l-2.5 m-r-2',
+        auto: '',
+        autoContained: '',
+      } as const
+
+      sizeClass = contained && size !== 'auto' ? sizes[`${size}Contained`] : sizes[size]
+
+      // States (via CSS group selectors - container has the state classes)
+      const checked = 'group-[.is-checked]/toggle:(bg-positive/15 border-positive)'
+      const unchecked = 'group-[.is-unchecked]/toggle:(bg-negative/15 border-negative)'
+      const indeterminate = 'group-[.is-indeterminate]/toggle:(bg-neutral/15 border-neutral)'
+
+      // Readonly
+      const readonly = 'group-[.is-readonly]/toggle:(border-dotted)'
+
+      return {
+        base,
+        tapHighlight,
+        visual,
+        sizes,
+        checked,
+        unchecked,
+        indeterminate,
+        readonly,
+        all: `${base} ${tapHighlight} ${visual} ${sizeClass} ${checked} ${unchecked} ${indeterminate} ${readonly}`,
+      } as const
+    },
+
+    bulletClass(payload: {
+      size: 'xs' | 'sm' | 'md' | 'lg' | 'auto'
+      contained: boolean
+    }) {
+      const { size, contained } = payload
+
+      const base = 'relative ease-linear flex flex-center rounded-full'
+
+      // Size
+      let sizeClass = ''
+
+      const sizes = {
+        xs: 'h-5 w-5',
+        xsContained: 'h-3.5 w-3.5',
+        sm: 'h-6 w-6',
+        smContained: 'h-4.5 w-4.5',
+        md: 'h-7 w-7',
+        mdContained: 'h-5 w-5',
+        lg: 'h-8 w-8',
+        lgContained: 'h-5.5 w-5.5',
+        auto: '',
+        autoContained: '',
+      } as const
+
+      sizeClass = contained && size !== 'auto' ? sizes[`${size}Contained`] : sizes[size]
+
+      // Hover effect
+      const hoverable = 'group-[.is-hoverable]/toggle:group-hover/toggle:(shadow-consistent-xs-fill shadow-ca)'
+
+      // State colors (via CSS group selectors)
+      const checked = 'group-[.is-checked]/toggle:(bg-positive)'
+      const unchecked = 'group-[.is-unchecked]/toggle:(bg-negative)'
+      const indeterminate = 'group-[.is-indeterminate]/toggle:(bg-neutral)'
+
+      // Readonly states (via CSS group selectors)
+      const readonlyChecked = 'group-[.is-readonly.is-checked]/toggle:(bg-positive/50 border-2 border-dotted border-positive)'
+      const readonlyUnchecked = 'group-[.is-readonly.is-unchecked]/toggle:(bg-negative/50 border-2 border-dotted border-negative)'
+
+      // Position - unchecked
+      let uncheckedPosition = ''
+
+      const uncheckedPositions = {
+        xs: 'group-[.is-unchecked]/toggle:(translate-x--8px)',
+        xsContained: 'group-[.is-unchecked]/toggle:(translate-x-2px)',
+        sm: 'group-[.is-unchecked]/toggle:(translate-x--8px)',
+        smContained: 'group-[.is-unchecked]/toggle:(translate-x-2px)',
+        md: 'group-[.is-unchecked]/toggle:(translate-x--8px)',
+        mdContained: 'group-[.is-unchecked]/toggle:(translate-x-2px)',
+        lg: 'group-[.is-unchecked]/toggle:(translate-x--8px)',
+        lgContained: 'group-[.is-unchecked]/toggle:(translate-x-2px)',
+        auto: '',
+        autoContained: '',
+      } as const
+
+      uncheckedPosition = contained && size !== 'auto'
+        ? uncheckedPositions[`${size}Contained`]
+        : uncheckedPositions[size]
+
+      // Position - checked
+      let checkedPosition = ''
+
+      const checkedPositions = {
+        xs: 'group-[.is-checked]/toggle:(translate-x-14px)',
+        xsContained: 'group-[.is-checked]/toggle:(translate-x-14px)',
+        sm: 'group-[.is-checked]/toggle:(translate-x-16px)',
+        smContained: 'group-[.is-checked]/toggle:(translate-x-16px)',
+        md: 'group-[.is-checked]/toggle:(translate-x-20px)',
+        mdContained: 'group-[.is-checked]/toggle:(translate-x-20px)',
+        lg: 'group-[.is-checked]/toggle:(translate-x-22px)',
+        lgContained: 'group-[.is-checked]/toggle:(translate-x-22px)',
+        auto: '',
+        autoContained: '',
+      } as const
+
+      checkedPosition = contained && size !== 'auto'
+        ? checkedPositions[`${size}Contained`]
+        : checkedPositions[size]
+
+      // Position - indeterminate
+      let indeterminatePosition = ''
+
+      const indeterminatePositions = {
+        xs: 'group-[.is-indeterminate]/toggle:(translate-x-5px)',
+        xsContained: 'group-[.is-indeterminate]/toggle:(translate-x-8px)',
+        sm: 'group-[.is-indeterminate]/toggle:(translate-x-6px)',
+        smContained: 'group-[.is-indeterminate]/toggle:(translate-x-9px)',
+        md: 'group-[.is-indeterminate]/toggle:(translate-x-7px)',
+        mdContained: 'group-[.is-indeterminate]/toggle:(translate-x-11px)',
+        lg: 'group-[.is-indeterminate]/toggle:(translate-x-7px)',
+        lgContained: 'group-[.is-indeterminate]/toggle:(translate-x-12px)',
+        auto: '',
+        autoContained: '',
+      } as const
+
+      indeterminatePosition = contained && size !== 'auto'
+        ? indeterminatePositions[`${size}Contained`]
+        : indeterminatePositions[size]
+
+      return {
+        base,
+        sizes,
+        hoverable,
+        checked,
+        unchecked,
+        indeterminate,
+        readonlyChecked,
+        readonlyUnchecked,
+        uncheckedPositions,
+        checkedPositions,
+        indeterminatePositions,
+        all: `${base} ${sizeClass} ${hoverable} ${checked} ${unchecked} ${indeterminate} ${readonlyChecked} ${readonlyUnchecked} ${uncheckedPosition} ${checkedPosition} ${indeterminatePosition}`,
+      } as const
+    },
+
+    labelClass(payload: {
+      size: 'xs' | 'sm' | 'md' | 'lg' | 'auto'
+    }) {
+      const { size } = payload
+
+      const base = 'p-r-3'
+
+      // Size variants
+      let sizeClass = ''
+
+      const sizes = {
+        xs: 'text-xs',
+        sm: 'text-sm',
+        md: '',
+        lg: '',
+        auto: '',
+      } as const
+
+      sizeClass = sizes[size]
+
+      return {
+        base,
+        sizes,
+        all: `${base} ${sizeClass}`,
+      } as const
+    },
+
+    iconClass() {
+      const base = ''
+
+      return {
+        base,
+        all: base,
+      } as const
+    },
+
+    focusHelperClass() {
+      const base = 'absolute fit z-3 cursor-pointer rounded-inherit inset-0 pointer-events-none'
+      const hover = 'group-hover/toggle:bg-current group-hover/toggle:opacity-10'
+
+      return {
+        base,
+        hover,
+        all: `${base} ${hover}`,
+      } as const
+    },
+  },
+}

@@ -1,77 +1,79 @@
 // @unocss-include
 
-import utilsConfig from '$utilsConfig'
+import { utilsConfig } from '$utilsConfig'
 
 // Types
-import type { IUIState } from './client/types/ui-state.type'
+import type { IUIState } from './app/types/ui-state.type'
 
 // Component types
-import type { IBadgeProps } from './client/components/Badge/types/badge-props.type'
-import type { IBannerProps } from './client/components/Banner/types/banner-props.type'
-import type { IBtnProps } from './client/components/Button/types/btn-props.type'
-import type { IButtonGroupProps } from './client/components/ButtonGroup/types/button-group-props.type'
-import type { ICheckboxProps } from './client/components/Checkbox/types/checkbox-props.type'
-import type { IChipProps } from './client/components/Chip/types/chip-props.type'
-import type { ICollapseProps } from './client/components/Collapse/types/collapse-props.type'
-import type { IConfirmationProps } from './client/components/Confirmation/types/confirmation-props.type'
-import type { ICrudBtnProps } from './client/components/Crud/types/crud-btn-props.type'
-import type { IDateInputProps } from './client/components/Inputs/DateInput/types/date-input-props.type'
-import type { IDatePickerProps } from './client/components/DatePicker/types/datepicker-props.type'
-import type { IDialogProps } from './client/components/Dialog/types/dialog-props.type'
-import type { IDrawerProps } from './client/components/Drawer/types/drawer-props.type'
-import type { IFieldProps } from './client/components/Field/types/field-props.type'
-import type { IHeadingProps } from './client/components/Typography/types/heading-props.type'
-import type { IIconInputProps } from './client/components/Inputs/IconInput/types/icon-input-props.type'
-import type { IInputLabelProps } from './client/components/InputLabel/types/input-label-props.type'
-import type { IInputWrapperProps } from './client/components/InputWrapper/types/input-wrapper-props.type'
-import type { IItemProps } from './client/components/Item/types/item-props.type'
-import type { IListProps } from './client/components/List/types/list-props.type'
-import type { ILoaderProps } from './client/components/Loader/types/loader-props.type'
-import type { IMenuConfirmationProps } from './client/components/MenuConfirmation/types/menu-confirmation-props.type'
-import type { IMenuProps } from './client/components/Menu/types/menu-props.type'
-import type { IMenuProxyProps } from './client/components/MenuProxy/types/menu-proxy-props.type'
-import type { IMonthSelectorProps } from './client/components/MonthSelector/types/month-selector-props.type'
-import type { INavigationProps } from './client/components/Navigation/types/navigation-props.type'
-import type { INotificationRowProps } from './client/components/Notification/types/notification-row-props.type'
-import type { INotificationsProps } from './client/components/Notification/types/notifications-props.type'
-import type { INumberInputProps } from './client/components/Inputs/NumberInput/types/number-input-props.type'
-import type { IProgressBarProps } from './client/components/ProgressBar/types/progress-bar-props.type'
-import type { IRadioProps } from './client/components/Radio/types/radio-props.type'
-import type { IScrollAreaProps } from './client/components/ScrollArea/types/scroll-area-props.type'
-import type { IScrollerProps } from './client/components/Scroller/types/scroller-props.type'
-import type { ISectionProps } from './client/components/Section/types/section-props.type'
-import type { ISeparatorProps } from './client/components/Separator/types/separator-props.type'
-import type { ISkeletonProps } from './client/components/Skeleton/types/skeleton-props.type'
-import type { ITabProps } from './client/components/Tabs/types/tab-props.type'
-import type { ITabsProps } from './client/components/Tabs/types/tabs-props.type'
-import type { ITextAreaInputProps } from './client/components/Inputs/TextArea/types/text-area-props.type'
-import type { ITextInputProps } from './client/components/Inputs/TextInput/types/text-input-props.type'
-import type { ITextSplitterProps } from './client/components/TextSplitter/types/text-splitter-props.type'
-import type { IToggleProps } from './client/components/Toggle/types/toggle-props.type'
-import type { ITooltipProps } from './client/components/Tooltip/types/tooltip-props.type'
-import type { ITreeProps } from './client/components/Tree/types/tree-props.type'
-import type { ITreeProps as ITreePropsNew } from './client/components/TreeNew/types/tree-props.new.type'
-import type { IVirtualScrollerProps } from './client/components/VirtualScroller/types/virtual-scroller-props.type'
-import type { IYearMonthSelectorProps } from './client/components/YearMonthSelector/types/year-month-selector-props.type'
-import type { IYearSelectorProps } from './client/components/YearSelector/types/year-selector-props.type'
-import type { IPageTitleProps } from './client/components/Page/types/page-title-props.type'
-import type { IPageDrawerProps } from './client/components/Page/types/page-drawer-props.type'
-import type { IPageWrapperProps } from './client/components/Page/types/page-wrapper-props.type'
-import type { IBreadcrumbsProps } from './client/components/Breadcrumbs/types/breadcrumbs-props.type'
-import type { IFileInputProps } from './client/components/Inputs/FileInput/types/file-input-props.type'
-import type { IFieldWithFormatterProps } from './client/components/Field/types/field-with-formatter.type'
-import type { IValueFormatterProps } from './client/components/ValueFormatter/types/value-formatter-props.type'
-import type { IColorInputProps } from './client/components/Inputs/ColorInput/types/color-props.type'
-import type { ITimeInputProps } from './client/components/Inputs/TimeInput/types/time-input-props.type'
-import type { ICurrencyInputProps } from './client/components/Inputs/CurrencyInput/types/currency-input-props.type'
-import type { IDurationInputProps } from './client/components/Inputs/DurationInput/types/duration-input-props.type'
-import type { IMiniCardProps } from './client/components/Card/types/mini-card-props.type'
-import type { IFormProps } from './client/components/Form/types/form-props.type'
-import type { ISelectorProps } from './client/components/Selector/types/selector-props.type'
-import type { ITableProps } from './client/components/Table/types/table-props.type'
-import type { IQueryBuilderProps } from './client/components/QueryBuilder/types/query-builder-props.type'
-import type { IElementMovementProps } from './client/components/ElementMovement/types/element-movement-props.type'
-import type { IVirtualScrollerVerticalProps } from './client/components/VirtualScroller/types/virtual-scroller-vertical-props.type'
+import type { IBadgeProps } from './app/components/Badge/types/badge-props.type'
+import type { IBannerProps } from './app/components/Banner/types/banner-props.type'
+import type { IBreadcrumbsProps } from './app/components/Breadcrumbs/types/breadcrumbs-props.type'
+import type { IBtnProps } from './app/components/Button/types/btn-props.type'
+import type { IButtonGroupProps } from './app/components/ButtonGroup/types/button-group-props.type'
+import type { ICheckboxProps } from './app/components/Checkbox/types/checkbox-props.type'
+import type { IChipProps } from './app/components/Chip/types/chip-props.type'
+import type { ICircleProgressProps } from './app/components/CircleProgress/types/circle-progress-props.type'
+import type { ICollapseProps } from './app/components/Collapse/types/collapse-props.type'
+import type { IColorInputProps } from './app/components/Inputs/ColorInput/types/color-props.type'
+import type { IConfirmationProps } from './app/components/Confirmation/types/confirmation-props.type'
+import type { ICrudBtnsProps, ICrudEditBtnProps } from './app/components/Crud/types/crud-btn-props.type'
+import type { ICurrencyInputProps } from './app/components/Inputs/CurrencyInput/types/currency-input-props.type'
+import type { IDateInputProps } from './app/components/Inputs/DateInput/types/date-input-props.type'
+import type { IDatePickerProps } from './app/components/DatePicker/types/datepicker-props.type'
+import type { IDialogProps } from './app/components/Dialog/types/dialog-props.type'
+import type { IDrawerProps } from './app/components/Drawer/types/drawer-props.type'
+import type { IDurationInputProps } from './app/components/Inputs/DurationInput/types/duration-input-props.type'
+import type { IElementMovementProps } from './app/components/ElementMovement/types/element-movement-props.type'
+import type { IFieldProps } from './app/components/Field/types/field-props.type'
+import type { IFieldWithFormatterProps } from './app/components/Field/types/field-with-formatter.type'
+import type { IFileInputProps } from './app/components/Inputs/FileInput/types/file-input-props.type'
+import type { IFormProps } from './app/components/Form/types/form-props.type'
+import type { IHeadingProps } from './app/components/Typography/types/heading-props.type'
+import type { IHorizontalScrollerProps, IVerticalScrollerProps } from './app/components/Scroller/types/scroller-props.type'
+import type { IIconInputProps } from './app/components/Inputs/IconInput/types/icon-input-props.type'
+import type { IInputLabelProps } from './app/components/InputLabel/types/input-label-props.type'
+import type { IInputWrapperProps } from './app/components/InputWrapper/types/input-wrapper-props.type'
+import type { IItemProps } from './app/components/Item/types/item-props.type'
+import type { IKeyboardShortcutProps } from './app/components/KeyboardShortcut/types/keyboard-shortcut-props.type'
+import type { IListProps } from './app/components/List/types/list-props.type'
+import type { ILoaderProps } from './app/components/Loader/types/loader-props.type'
+import type { IMainBarProps } from './app/components/MainBar/types/main-bar-props.type'
+import type { IMenuConfirmationProps } from './app/components/MenuConfirmation/types/menu-confirmation-props.type'
+import type { IMenuProps } from './app/components/Menu/types/menu-props.type'
+import type { IMenuProxyProps } from './app/components/MenuProxy/types/menu-proxy-props.type'
+import type { IMiniCardProps } from './app/components/Card/types/mini-card-props.type'
+import type { IMonthSelectorGridProps } from './app/components/MonthSelector/types/month-selector-grid-props.type'
+import type { IMonthSelectorProps } from './app/components/MonthSelector/types/month-selector-props.type'
+import type { INavigationProps } from './app/components/Navigation/types/navigation-props.type'
+import type { INotificationRowProps } from './app/components/Notification/types/notification-row-props.type'
+import type { INotificationsProps } from './app/components/Notification/types/notifications-props.type'
+import type { INumberInputProps } from './app/components/Inputs/NumberInput/types/number-input-props.type'
+import type { IPageDrawerProps } from './app/components/Page/types/page-drawer-props.type'
+import type { IPageTitleProps } from './app/components/Page/types/page-title-props.type'
+import type { IPageWrapperProps } from './app/components/Page/types/page-wrapper-props.type'
+import type { IProgressBarProps } from './app/components/ProgressBar/types/progress-bar-props.type'
+import type { IQueryBuilderProps } from './app/components/QueryBuilder/types/query-builder-props.type'
+import type { IRadioProps } from './app/components/Radio/types/radio-props.type'
+import type { IScrollAreaProps } from './app/components/ScrollArea/types/scroll-area-props.type'
+import type { ISectionProps } from './app/components/Section/types/section-props.type'
+import type { ISelectorProps } from './app/components/Selector/types/selector-props.type'
+import type { ISeparatorProps } from './app/components/Separator/types/separator-props.type'
+import type { ISkeletonProps } from './app/components/Skeleton/types/skeleton-props.type'
+import type { ITableProps } from './app/components/Table/types/table-props.type'
+import type { ITabProps } from './app/components/Tabs/types/tab-props.type'
+import type { ITabsProps } from './app/components/Tabs/types/tabs-props.type'
+import type { ITextAreaInputProps } from './app/components/Inputs/TextArea/types/text-area-props.type'
+import type { ITextInputProps } from './app/components/Inputs/TextInput/types/text-input-props.type'
+import type { ITimeInputProps } from './app/components/Inputs/TimeInput/types/time-input-props.type'
+import type { IToggleProps } from './app/components/Toggle/types/toggle-props.type'
+import type { ITooltipProps } from './app/components/Tooltip/types/tooltip-props.type'
+import type { ITreeProps } from './app/components/Tree/types/tree-props.type'
+import type { IValueFormatterProps } from './app/components/ValueFormatter/types/value-formatter-props.type'
+import type { IVirtualScrollerProps } from './app/components/VirtualScroller/types/virtual-scroller-props.type'
+import type { IVirtualScrollerVerticalProps } from './app/components/VirtualScroller/types/virtual-scroller-vertical-props.type'
+import type { IYearMonthSelectorProps } from './app/components/YearMonthSelector/types/year-month-selector-props.type'
+import type { IYearSelectorProps } from './app/components/YearSelector/types/year-selector-props.type'
 
 export const defaultComponentsConfig = {
   // Badge
@@ -96,7 +98,31 @@ export const defaultComponentsConfig = {
       noTransition: undefined,
       outlined: undefined,
       variant: undefined,
+      ui: {
+        containerClass: ({ defaults }) => defaults.all,
+        iconClass: ({ defaults }) => defaults.all,
+        labelClass: ({ defaults }) => defaults.all,
+        badgeClass: ({ defaults }) => defaults.all,
+      },
     },
+    merge: ['ui'],
+  },
+
+  // Breadcrumbs
+  breadcrumbs: {
+    props: {
+      ui: {
+        containerClass: ({ defaults }) => defaults.all,
+        breadcrumbsClass: ({ defaults }) => defaults.all,
+      },
+    },
+    home: {
+      icon: 'i-lucide:home',
+      path: '/' as string | (() => string),
+      label: undefined as undefined | (() => string | undefined),
+      component: undefined as any,
+    },
+    misc: { useLastBreadcrumbAsTitle: true },
     merge: ['ui'],
   },
 
@@ -129,26 +155,15 @@ export const defaultComponentsConfig = {
       to: undefined,
       tooltip: undefined,
       type: 'button',
-      ui: {},
-    },
-    merge: ['ui'],
-  },
-
-  // Breadcrumbs
-  breadcrumbs: {
-    props: {
       ui: {
-        wrapperClass: 'p-x-1 lg:p-x-3',
-        breadcrumbsClass: 'rounded-custom',
+        containerClass: ({ defaults }) => defaults.all,
+        iconClass: ({ defaults }) => defaults.all,
+        labelClass: ({ defaults }) => defaults.all,
+        focusHelperClass: ({ defaults }) => defaults.all,
+        loadingClass: ({ defaults }) => defaults.all,
+        loaderClass: ({ defaults }) => defaults.all,
       },
     },
-    home: {
-      icon: 'i-lucide:home',
-      path: '/' as string | (() => string),
-      label: undefined as undefined | (() => string | undefined),
-      component: undefined as any,
-    },
-    misc: { useLastBreadcrumbAsTitle: true },
     merge: ['ui'],
   },
 
@@ -156,9 +171,11 @@ export const defaultComponentsConfig = {
   buttonGroup: {
     props: {
       buttons: undefined,
+      disabled: undefined,
       modelValue: undefined,
       ui: {
-        activeClass: 'bg-primary color-white',
+        containerClass: ({ defaults }) => defaults.all,
+        activeClass: ({ defaults }) => defaults.all,
       },
     },
     merge: ['ui'],
@@ -169,8 +186,8 @@ export const defaultComponentsConfig = {
     props: {
       checkValue: true,
       color: 'primary',
+      readonly: undefined,
       comparatorFn: undefined,
-      editable: true,
       indeterminate: undefined,
       indeterminateValue: null,
       label: undefined,
@@ -180,7 +197,30 @@ export const defaultComponentsConfig = {
       name: undefined,
       size: 'sm',
       uncheckValue: false,
-      ui: {},
+      ui: {
+        containerClass: ({ defaults }) => defaults.all,
+        checkboxClass: ({ defaults }) => defaults.all,
+        labelClass: ({ defaults }) => defaults.all,
+        focusHelperClass: ({ defaults }) => defaults.all,
+      },
+    },
+    merge: ['ui'],
+  },
+
+  // CircleProgress
+  circleProgress: {
+    props: {
+      color: undefined,
+      noProgressText: undefined,
+      progress: undefined,
+      size: undefined,
+      ui: {
+        containerClass: ({ defaults }) => defaults.all,
+        svgClass: ({ defaults }) => defaults.all,
+        circleBgClass: ({ defaults }) => defaults.all,
+        circleClass: ({ defaults }) => defaults.all,
+        textClass: ({ defaults }) => defaults.all,
+      },
     },
     merge: ['ui'],
   },
@@ -188,17 +228,6 @@ export const defaultComponentsConfig = {
   // Chip
   chip: {
     props: {
-      center: undefined,
-      hasCopy: undefined,
-      hasRemove: undefined,
-      icon: undefined,
-      label: undefined,
-      ripple: undefined,
-      tooltip: undefined,
-      removeBtn: {
-        size: 'auto',
-        icon: 'i-eva:close-fill !w-4 !h-4',
-      },
       ui: {
         containerClass: ({ defaults }) => defaults.all,
         labelClass: ({ defaults }) => defaults.all,
@@ -246,32 +275,53 @@ export const defaultComponentsConfig = {
   // Confirmation
   confirmation: {
     props: {
-      checkmarkClass: undefined,
       confirmationText: undefined,
       delay: 500,
       noActions: undefined,
       visible: undefined,
+      ui: {
+        containerClass: ({ defaults }) => defaults.all,
+        checkmarkClass: ({ defaults }) => defaults.all,
+        textClass: ({ defaults }) => defaults.all,
+        actionsClass: ({ defaults }) => defaults.all,
+      },
     },
+    merge: ['ui'],
   },
 
   // Crud buttons
   crudBtns: {
     props: {
-      btnProps: {
-        noDim: true,
-        noUppercase: true,
-      },
-      label: undefined,
+      actions: undefined,
+      labels: undefined,
       loading: undefined,
-      disabled: undefined,
+      btnConfirmationPosition: 'bottom',
+      ui: {
+        containerClass: ({ defaults }) => defaults.all,
+      },
     },
-    merge: ['btnProps'],
+    merge: ['ui', 'btnProps'],
+  },
+
+  // Crud edit button
+  crudEditBtn: {
+    props: {
+      disabled: undefined,
+      editing: undefined,
+      btnProps: {},
+      ui: {
+        wrapperClass: ({ defaults }) => defaults.all,
+        btnClass: ({ defaults }) => defaults.all,
+      },
+    },
+    merge: ['ui', 'btnProps'],
   },
 
   // CurrencyInput
   currencyInput: {
     props: {
       disabled: undefined,
+      readonly: undefined,
       errorTakesSpace: true,
       errorVisible: true,
       size: 'md',
@@ -291,6 +341,7 @@ export const defaultComponentsConfig = {
       autoClose: true,
       debounce: 0,
       disabled: undefined,
+      readonly: undefined,
       emptyValue: undefined,
       errorTakesSpace: true,
       errorVisible: true,
@@ -313,14 +364,22 @@ export const defaultComponentsConfig = {
       excludedDays: [],
       modelValue: undefined,
       utc: utilsConfig.general.useUtc,
+      ui: {
+        containerClass: ({ defaults }) => defaults.all,
+        daysGridClass: ({ defaults }) => defaults.all,
+        controlsClass: ({ defaults }) => defaults.all,
+      },
     },
+    merge: ['ui'],
   },
 
   // Dialog
   dialog: {
     props: {
+      dense: undefined,
       ignoreClickOutside: undefined,
       maxHeight: '95%',
+      noClose: undefined,
       noOverlay: undefined,
       noTransition: undefined,
       position: 'center',
@@ -328,18 +387,12 @@ export const defaultComponentsConfig = {
       title: undefined,
       transitionDuration: 250,
       ui: {
-        dialogClass: [
-          'flex flex-col max-w-95vw max-h-95% rounded-custom z-1 pointer-events-auto',
-
-          // Border
-          'border-1 border-ca',
-
-          // Background
-          'dark:bg-dark-900 bg-white',
-        ],
-        headerClass: 'flex items-center gap-2 p-l-3 p-r-1 p-y-2 rounded-t-custom font-semibold',
-        titleClass: 'grow',
-        contentClass: 'relative flex flex-col grow overflow-auto rounded-custom p-1',
+        backdropClass: ({ defaults }) => defaults.all,
+        wrapperClass: ({ defaults }) => defaults.all,
+        dialogClass: ({ defaults }) => defaults.all,
+        headerClass: ({ defaults }) => defaults.all,
+        titleClass: ({ defaults }) => defaults.all,
+        contentClass: ({ defaults }) => defaults.all,
       },
     },
     merge: ['ui'],
@@ -357,7 +410,8 @@ export const defaultComponentsConfig = {
       title: undefined,
       width: 480,
       ui: {
-        titleClass: 'p-x-2',
+        containerClass: ({ defaults }) => defaults.all,
+        titleClass: ({ defaults }) => defaults.all,
       },
     },
     merge: ['ui'],
@@ -370,6 +424,7 @@ export const defaultComponentsConfig = {
       initialDurationUnit: 'hour',
       errorTakesSpace: true,
       errorVisible: true,
+      readonly: undefined,
       size: 'md',
       ui: {
         borderRadius: '0.5rem',
@@ -378,7 +433,7 @@ export const defaultComponentsConfig = {
     merge: ['ui'],
   },
 
-  // ElementMovement
+  // // ElementMovement
   elementMovement: {
     props: {},
     merge: [],
@@ -393,6 +448,7 @@ export const defaultComponentsConfig = {
       noContent: undefined,
       hasContent: undefined,
       stackLabel: true,
+      readonly: undefined,
       ui: {
         borderRadius: '0.5rem',
       },
@@ -416,6 +472,7 @@ export const defaultComponentsConfig = {
       accept: undefined,
       downloadUrl: undefined,
       errorTakesSpace: true,
+      readonly: undefined,
       multi: undefined,
       useScroller: undefined,
       maxChipsRows: undefined,
@@ -440,6 +497,7 @@ export const defaultComponentsConfig = {
       downloadUrl: undefined,
       errorTakesSpace: true,
       multi: undefined,
+      readonly: undefined,
       useScroller: undefined,
       maxChipsRows: 3,
       noDownloadButton: undefined,
@@ -457,38 +515,42 @@ export const defaultComponentsConfig = {
   // Form
   form: {
     props: {
+      bordered: undefined,
       editControls: false,
       editDisabled: false,
-      labelForcedVisibility: true,
-      hasControls: undefined,
-      submitConfirmation: undefined,
-      focusFirstInput: true,
-      noShortcuts: undefined,
+      errors: undefined,
+      label: undefined,
       icon: 'i-iconamoon:send-bold',
+      loading: undefined,
+      focusFirstInput: true,
+      isEditing: undefined,
+      controlsOnTop: undefined,
+      errorsOnTop: undefined,
+      hasControls: undefined,
+      labelForcedVisibility: true,
+      noControls: undefined,
+      noEditControls: undefined,
+      noShortcuts: undefined,
+      noSubmit: undefined,
+      noEnter: undefined,
+      preventSubmitOnEnter: true,
+      reset: undefined,
+      submitConfirmation: undefined,
+      submitConfirmationText: undefined,
       submitBtnProps: {},
       cancelBtnProps: {},
-      preventSubmitOnEnter: true,
+      editBtnProps: {},
       errorsSectionProps: {
         ui: { sectionClass: 'flex flex-col gap-y-2 order-first' },
       },
+      submitDisabled: undefined,
       ui: {
-        submitWrapperClass: 'm-l-auto',
-        contentClass: 'relative flex flex-col grow p-2 gap-2 overflow-auto',
-        controlsClass: [
-          'sticky flex items-center shrink-0 gap-2 bottom-0 z-1',
-
-          // Border
-          'border-t-1 border-ca',
-
-          // Background
-          'bg-white dark:bg-dark-950',
-
-          // Padding
-          'p-y-1 p-x-2',
-        ],
-        containerClass: 'flex flex-col gap-2 grow overflow-auto',
-        submitClass: 'bg-primary color-white w-40',
-        cancelClass: 'w-40',
+        containerClass: ({ defaults }) => defaults.all,
+        contentClass: ({ defaults }) => defaults.all,
+        controlsClass: ({ defaults }) => defaults.all,
+        submitWrapperClass: ({ defaults }) => defaults.all,
+        submitClass: ({ defaults }) => defaults.all,
+        cancelClass: ({ defaults }) => defaults.all,
       },
     },
     confirmationInit: { enabled: true, required: false, editable: true },
@@ -501,7 +563,7 @@ export const defaultComponentsConfig = {
       filled: undefined,
       highlighted: false,
       ui: {
-        contentClass: 'min-h-10',
+        containerClass: ({ defaults }) => defaults.all,
       },
     },
     merge: ['ui'],
@@ -512,6 +574,7 @@ export const defaultComponentsConfig = {
     props: {
       debounce: 0,
       disabled: undefined,
+      readonly: undefined,
       emptyValue: undefined,
       errorTakesSpace: true,
       errorVisible: true,
@@ -546,6 +609,7 @@ export const defaultComponentsConfig = {
     props: {
       cursor: 'cursor-text',
       disabled: undefined,
+      readonly: undefined,
       errors: undefined,
       errorVisible: undefined,
       hint: undefined,
@@ -556,7 +620,6 @@ export const defaultComponentsConfig = {
       noHideFloating: undefined,
       originalValue: undefined,
       preferMargin: undefined,
-      readonly: undefined,
       tooltip: undefined,
       ui: {
         borderRadius: '0.5rem',
@@ -578,7 +641,12 @@ export const defaultComponentsConfig = {
       noHoverEffect: undefined,
       readonly: undefined,
       tag: 'div',
+      ui: {
+        containerClass: ({ defaults }) => defaults.all,
+        focusHelperClass: ({ defaults }) => defaults.all,
+      },
     },
+    merge: ['ui'],
   },
 
   // List
@@ -680,26 +748,11 @@ export const defaultComponentsConfig = {
       title: undefined,
       transitionDuration: 180,
       ui: {
-        menuClass: [
-          'flex flex-col bg-white grow rounded-custom',
-
-          // Background
-          'dark:bg-dark-950/90 bg-white/90 backdrop-blur-2px',
-
-          // Border
-          'rounded-custom border-1 border-ca',
-
-          // Limits
-          'max-w-95vw max-h-95%',
-
-          // Shadow
-          'shadow-consistent-xs shadow-darker/20 shadow-light/8',
-        ],
-        contentClass: [
-          'relative flex flex-col grow gap-1 overflow-auto rounded-custom p-1 max-h-inherit',
-        ],
-        headerClass: 'font-semibold',
-        overlayClass: 'fixed inset-0 transition-background-color duration-$transitionDuration ease bg-transparent bg-darker-70',
+        menuClass: ({ defaults }) => defaults.all,
+        contentClass: ({ defaults }) => defaults.all,
+        headerClass: ({ defaults }) => defaults.all,
+        titleClass: ({ defaults }) => defaults.all,
+        overlayClass: ({ defaults }) => defaults.all,
       },
     },
     merge: ['ui'],
@@ -740,7 +793,7 @@ export const defaultComponentsConfig = {
       transitionDuration: 250,
       trigger: 'click',
       ui: {
-        contentClass: 'flex flex-col p-1 gap-y-3 rounded-custom',
+        confirmBtnClass: ({ defaults }) => defaults.all,
       },
     },
     merge: ['ui'],
@@ -757,7 +810,6 @@ export const defaultComponentsConfig = {
       persistent: undefined,
       title: undefined,
       transitionDuration: 250,
-      ui: {},
 
       // Menu props
       beforeHideFnc: undefined,
@@ -791,10 +843,13 @@ export const defaultComponentsConfig = {
       previousValue: undefined,
       emptyValueString: '-',
       ui: {
-        iconClass: 'color-blue-500 dark:color-blue-700 h-6 w-6',
-        labelClass: 'color-slate-600 dark:color-slate-300 font-rem-14 p-b-1',
-        valueClass: 'font-rem-16',
-        previousValueClass: 'color-purple-500 dark:color-purple-600',
+        containerClass: ({ defaults }) => defaults.all,
+        iconContainerClass: ({ defaults }) => defaults.all,
+        iconClass: ({ defaults }) => defaults.all,
+        contentClass: ({ defaults }) => defaults.all,
+        labelClass: ({ defaults }) => defaults.all,
+        valueClass: ({ defaults }) => defaults.all,
+        previousValueClass: ({ defaults }) => defaults.all,
       },
     },
     merge: ['ui'],
@@ -805,7 +860,30 @@ export const defaultComponentsConfig = {
     props: {
       modelValue: undefined,
       referenceTarget: undefined,
+      utc: undefined,
+      ui: {
+        containerClass: ({ defaults }) => defaults.all,
+        previousBtnClass: ({ defaults }) => defaults.all,
+        currentBtnClass: ({ defaults }) => defaults.all,
+        nextBtnClass: ({ defaults }) => defaults.all,
+        gridContainerClass: ({ defaults }) => defaults.all,
+        monthBtnClass: ({ defaults }) => defaults.all,
+      },
     },
+    merge: ['ui'],
+  },
+
+  // MonthSelectorGrid
+  monthSelectorGrid: {
+    props: {
+      modelValue: undefined,
+      utc: undefined,
+      ui: {
+        containerClass: ({ defaults }) => defaults.all,
+        monthBtnClass: ({ defaults }) => defaults.all,
+      },
+    },
+    merge: ['ui'],
   },
 
   // Navigation
@@ -816,7 +894,8 @@ export const defaultComponentsConfig = {
       noHide: undefined,
       sticky: undefined,
       ui: {
-        navigationClass: 'bg-primary',
+        headerClass: ({ defaults }) => defaults.all,
+        navigationClass: ({ defaults }) => defaults.all,
       },
     },
     defaultNavigationHeight: 48,
@@ -828,14 +907,29 @@ export const defaultComponentsConfig = {
     props: {
       notification: undefined,
       noClose: undefined,
+      ui: {
+        containerClass: ({ defaults }) => defaults.all,
+        titleRowClass: ({ defaults }) => defaults.all,
+        iconClass: ({ defaults }) => defaults.all,
+        titleClass: ({ defaults }) => defaults.all,
+        titleTextClass: ({ defaults }) => defaults.all,
+        subtitleClass: ({ defaults }) => defaults.all,
+        subtitleItemClass: ({ defaults }) => defaults.all,
+        counterClass: ({ defaults }) => defaults.all,
+      },
     },
+    merge: ['ui'],
   },
 
   // Notifications
   notifications: {
     props: {
       placement: 'top-right',
+      ui: {
+        containerClass: ({ defaults }) => defaults.all,
+      },
     },
+    merge: ['ui'],
   },
 
   // NumberInput
@@ -843,6 +937,7 @@ export const defaultComponentsConfig = {
     props: {
       debounce: 0,
       disabled: undefined,
+      readonly: undefined,
       errorTakesSpace: true,
       errorVisible: true,
       fractionDigits: 2,
@@ -873,9 +968,10 @@ export const defaultComponentsConfig = {
       side: 'left',
       width: 280,
       ui: {
-        contentClass: () => 'bg-primary color-white',
-        bottomClass: () => 'bg-primary color-white p-1',
-        fillerClass: () => 'border-b-1',
+        containerClass: ({ defaults }) => defaults.all,
+        contentClass: ({ defaults }) => defaults.all,
+        bottomClass: ({ defaults }) => defaults.all,
+        fillerClass: ({ defaults }) => defaults.all,
       },
     },
     merge: ['ui'],
@@ -886,8 +982,9 @@ export const defaultComponentsConfig = {
     props: {
       title: undefined,
       ui: {
-        titleClass: 'font-700',
-        containerClass: 'max-w-screen-lg p-y-4 m-b-2 m-l-2',
+        containerClass: ({ defaults }) => defaults.all,
+        pageTitleClass: ({ defaults }) => defaults.all,
+        titleClass: ({ defaults }) => defaults.all,
       },
     },
     merge: ['ui'],
@@ -900,8 +997,8 @@ export const defaultComponentsConfig = {
       moveContent: false,
       pad: true,
       ui: {
-        containerClass: undefined,
-        contentClass: undefined,
+        containerClass: ({ defaults }) => defaults.all,
+        contentClass: ({ defaults }) => defaults.all,
       },
     },
     merge: ['ui'],
@@ -912,7 +1009,16 @@ export const defaultComponentsConfig = {
     props: {
       label: undefined,
       progress: undefined,
+      ui: {
+        containerClass: ({ defaults }) => defaults.all,
+        innerClass: ({ defaults }) => defaults.all,
+        colorClass: ({ defaults }) => defaults.all,
+        whiteBgClass: ({ defaults }) => defaults.all,
+        blackBgClass: ({ defaults }) => defaults.all,
+        textClass: ({ defaults }) => defaults.all,
+      },
     },
+    merge: ['ui'],
   },
 
   // Query builder
@@ -936,17 +1042,37 @@ export const defaultComponentsConfig = {
       name: undefined,
       size: 'sm',
       val: undefined,
-      ui: {},
+      ui: {
+        containerClass: ({ defaults }) => defaults.all,
+        radioClass: ({ defaults }) => defaults.all,
+        labelClass: ({ defaults }) => defaults.all,
+        focusHelperClass: ({ defaults }) => defaults.all,
+      },
     },
     merge: ['ui'],
   },
 
-  // Scroller
-  scroller: {
+  // HorizontalScroller
+  horizontalScroller: {
     props: {
       arrows: 'inside',
       ui: {
-        contentClass: 'gap-1',
+        containerClass: ({ defaults }) => defaults.all,
+        contentClass: ({ defaults }) => defaults.all,
+        arrowClass: ({ defaults }) => defaults.all,
+      },
+    },
+    merge: ['ui'],
+  },
+
+  // VerticalScroller
+  verticalScroller: {
+    props: {
+      arrows: 'inside',
+      ui: {
+        containerClass: ({ defaults }) => defaults.all,
+        contentClass: ({ defaults }) => defaults.all,
+        arrowClass: ({ defaults }) => defaults.all,
       },
     },
     merge: ['ui'],
@@ -956,7 +1082,11 @@ export const defaultComponentsConfig = {
   scrollArea: {
     props: {
       options: undefined,
+      ui: {
+        containerClass: ({ defaults }) => defaults.all,
+      },
     },
+    merge: ['ui'],
   },
 
   // SearchInput
@@ -964,6 +1094,7 @@ export const defaultComponentsConfig = {
     props: {
       clearable: true,
       debounce: 0,
+      readonly: undefined,
       disabled: undefined,
       required: undefined,
       errorVisible: true,
@@ -982,9 +1113,12 @@ export const defaultComponentsConfig = {
       title: undefined,
       subtitle: undefined,
       titleElement: undefined,
+      headingProps: undefined,
       ui: {
-        sectionClass: 'max-w-screen-xl p-2',
-        contentClass: 'flex flex-col gap-2',
+        containerClass: ({ defaults }) => defaults.all,
+        titleClass: ({ defaults }) => defaults.all,
+        subtitleClass: ({ defaults }) => defaults.all,
+        contentClass: ({ defaults }) => defaults.all,
       },
     },
     merge: ['ui'],
@@ -1054,7 +1188,11 @@ export const defaultComponentsConfig = {
       inset: undefined,
       spaced: undefined,
       vertical: undefined,
+      ui: {
+        containerClass: ({ defaults }) => defaults.all,
+      },
     },
+    merge: ['ui'],
   },
 
   // Skeleton
@@ -1062,10 +1200,55 @@ export const defaultComponentsConfig = {
     props: {
       animationSpeed: 1500,
       variant: 'wave',
+      ui: {
+        containerClass: ({ defaults }) => defaults.all,
+      },
     },
+    merge: ['ui'],
   },
 
-  // Tab
+  // MainBar
+  mainBar: {
+    props: {
+      actions: undefined,
+      loading: undefined,
+      noBreadcrumbs: undefined,
+      subtitle: undefined,
+      title: undefined,
+      titleTruncate: undefined,
+      headingProps: undefined,
+      ui: {
+        containerClass: ({ defaults }) => defaults.all,
+        contentClass: ({ defaults }) => defaults.all,
+        titleWrapperClass: ({ defaults }) => defaults.all,
+        titleClass: ({ defaults }) => defaults.all,
+        subtitleClass: ({ defaults }) => defaults.all,
+        actionsClass: ({ defaults }) => defaults.all,
+      },
+    },
+    merge: ['ui', 'headingProps'],
+  },
+
+  // KeyboardShortcut
+  keyboardShortcut: {
+    props: {
+      char: undefined,
+      forceVisibility: undefined,
+      icon: undefined,
+      noPlus: undefined,
+      withAlt: undefined,
+      withCtrl: undefined,
+      withShift: undefined,
+      ui: {
+        containerClass: ({ defaults }) => defaults.all,
+        wrapperClass: ({ defaults }) => defaults.all,
+        iconClass: ({ defaults }) => defaults.all,
+      },
+    },
+    merge: ['ui'],
+  },
+
+  // // Tab
   tab: {
     props: {
       name: undefined,
@@ -1158,9 +1341,11 @@ export const defaultComponentsConfig = {
     props: {
       noNav: undefined,
       ui: {
-        tabClass: 'fit',
-        navigationContentClass: 'flex gap-1',
-        tabNavBtnClass: isActive => isActive ? 'bg-primary color-white' : 'color-ca',
+        containerClass: ({ defaults }) => defaults.all,
+        navigationClass: ({ defaults }) => defaults.all,
+        navigationContentClass: ({ defaults }) => defaults.all,
+        tabClass: ({ defaults }) => defaults.all,
+        tabNavBtnClass: ({ defaults }) => defaults.all,
       },
     },
     merge: ['ui'],
@@ -1172,6 +1357,7 @@ export const defaultComponentsConfig = {
       autogrow: false,
       debounce: 0,
       disabled: undefined,
+      readonly: undefined,
       errorTakesSpace: true,
       errorVisible: true,
       mask: { mask: /.*/ },
@@ -1192,6 +1378,7 @@ export const defaultComponentsConfig = {
       allowIncompleteMaskValue: false,
       debounce: 0,
       disabled: undefined,
+      readonly: undefined,
       emptyValue: undefined,
       errorTakesSpace: true,
       errorVisible: true,
@@ -1207,14 +1394,6 @@ export const defaultComponentsConfig = {
     merge: ['ui'],
   },
 
-  // TextSplitter
-  textSplitter: {
-    props: {
-      modelValue: undefined,
-      char: '&#x2022;',
-    },
-  },
-
   // TimeInput
   timeInput: {
     props: {
@@ -1222,6 +1401,7 @@ export const defaultComponentsConfig = {
       errorTakesSpace: true,
       errorVisible: true,
       size: 'md',
+      readonly: undefined,
       stackLabel: true,
       ui: {
         borderRadius: '0.5rem',
@@ -1238,39 +1418,21 @@ export const defaultComponentsConfig = {
       checkValue: true,
       contained: true,
       disabled: undefined,
-      hoverable: false,
+      noHoverEffect: undefined,
+      allowIndeterminate: undefined,
       indeterminateValue: null,
       label: undefined,
-      itemProps: undefined,
       modelValue: undefined,
       readonly: undefined,
       size: 'sm',
       uncheckValue: false,
       ui: {
-        toggleClass: state => {
-          const defaultClass = 'rounded-full border-1 border-ca hover:border-true-gray-400'
-
-          switch (state) {
-            case 'checked':
-              return [defaultClass, 'bg-positive/15 border-positive']
-            case 'unchecked':
-              return [defaultClass, 'bg-negative/15 border-negative']
-            case 'indeterminate':
-              return [defaultClass, 'bg-neutral/15 border-neutral']
-          }
-        },
-        bulletClass: state => {
-          const defaultClass = 'rounded-full'
-
-          switch (state) {
-            case 'checked':
-              return [defaultClass, 'bg-positive']
-            case 'unchecked':
-              return [defaultClass, 'bg-negative']
-            case 'indeterminate':
-              return [defaultClass, 'bg-neutral']
-          }
-        },
+        containerClass: ({ defaults }) => defaults.all,
+        toggleClass: ({ defaults }) => defaults.all,
+        bulletClass: ({ defaults }) => defaults.all,
+        labelClass: ({ defaults }) => defaults.all,
+        iconClass: ({ defaults }) => defaults.all,
+        focusHelperClass: ({ defaults }) => defaults.all,
       },
     },
     merge: ['ui'],
@@ -1286,9 +1448,11 @@ export const defaultComponentsConfig = {
       placement: undefined,
       referenceTarget: undefined,
       ui: {
-        contentClass: 'flex flex-col w-80',
-        titleClass: 'font-semibold font-rem-14',
-        descriptionClass: 'text-caption font-rem-12',
+        containerClass: ({ defaults }) => defaults.all,
+        contentClass: ({ defaults }) => defaults.all,
+        titleClass: ({ defaults }) => defaults.all,
+        descriptionClass: ({ defaults }) => defaults.all,
+        arrowClass: ({ defaults }) => defaults.all,
       },
     },
     merge: ['ui'],
@@ -1296,39 +1460,6 @@ export const defaultComponentsConfig = {
 
   // Tree
   tree: {
-    props: {
-      collapsingConfig: { showCollapsedWhenSearched: true, collapseBtnTakesSpace: true },
-      connectors: true,
-      loadChildren: undefined,
-      maxLevel: Number.MAX_SAFE_INTEGER,
-      meta: undefined,
-      modelValue: [],
-      search: '',
-      childrenKey: 'children',
-      parentIdKey: 'parentId',
-      searchConfig: { enabled: true, fnc: undefined },
-      selection: undefined,
-      selectionConfig: { multi: false, emitKey: false },
-      dndConfig: { enabled: false, dropMode: 'parent' },
-      ui: {
-        nodePadding: '1rem',
-        nodeClass: () => 'flex gap-1 items-start',
-      },
-      scrollerConfig: {},
-    },
-    merge: [
-      'collapsingConfig',
-      'searchConfig',
-      'selectionConfig',
-      'dndConfig',
-      'ui',
-      'collapseBtnProps',
-      'scrollerConfig',
-    ],
-  },
-
-  // TreeNew
-  treeNew: {
     props: {
       collapseConfig: {
         expandedLevelOnInit: 0,
@@ -1392,7 +1523,11 @@ export const defaultComponentsConfig = {
   valueFormatter: {
     props: {
       emptyValueString: '-',
+      ui: {
+        containerClass: ({ defaults }) => defaults.all,
+      },
     },
+    merge: ['ui'],
   },
 
   // VirtualScroller
@@ -1435,8 +1570,8 @@ export const defaultComponentsConfig = {
     props: {
       stackLabel: true,
       ui: {
-        borderRadius: '0.5rem',
         appendClass: ({ defaults }) => defaults.all,
+        pickerIconClass: ({ defaults }) => defaults.all,
       },
     },
     merge: ['ui'],
@@ -1447,7 +1582,15 @@ export const defaultComponentsConfig = {
     props: {
       modelValue: undefined,
       referenceTarget: undefined,
+      ui: {
+        containerClass: ({ defaults }) => defaults.all,
+        previousBtnClass: ({ defaults }) => defaults.all,
+        nextBtnClass: ({ defaults }) => defaults.all,
+        menuContainerClass: ({ defaults }) => defaults.all,
+        yearBtnClass: ({ defaults }) => defaults.all,
+      },
     },
+    merge: ['ui'],
   },
 
   // Misc
@@ -1472,6 +1615,12 @@ type IConfigItem<T> = {
 export type IUIConfig = {
   badge: IConfigItem<IBadgeProps>
   banner: IConfigItem<IBannerProps>
+  button: IConfigItem<IBtnProps>
+  dialog: IConfigItem<IDialogProps>
+  form: IConfigItem<IFormProps> & {
+    confirmationInit?: { enabled?: boolean, required?: boolean, editable?: boolean }
+  }
+  menu: IConfigItem<IMenuProps>
   breadcrumbs: IConfigItem<IBreadcrumbsProps> & {
     misc?: { useLastBreadcrumbAsTitle?: boolean }
     home: {
@@ -1481,27 +1630,24 @@ export type IUIConfig = {
       component?: string
     }
   }
-  button: IConfigItem<IBtnProps>
   buttonGroup: IConfigItem<IButtonGroupProps>
   checkbox: IConfigItem<ICheckboxProps>
+  circleProgress: IConfigItem<ICircleProgressProps>
   chip: IConfigItem<IChipProps>
   collapse: IConfigItem<ICollapseProps>
   colorInput: IConfigItem<IColorInputProps>
   confirmation: IConfigItem<IConfirmationProps>
-  crudBtns: IConfigItem<ICrudBtnProps>
+  crudBtns: IConfigItem<ICrudBtnsProps>
+  crudEditBtn: IConfigItem<ICrudEditBtnProps>
   currencyInput: IConfigItem<ICurrencyInputProps>
   dateInput: IConfigItem<IDateInputProps>
   datePicker: IConfigItem<IDatePickerProps>
-  dialog: IConfigItem<IDialogProps>
   drawer: IConfigItem<IDrawerProps>
   durationInput: IConfigItem<IDurationInputProps>
   field: IConfigItem<IFieldProps>
   fieldWithFormatter: IConfigItem<IFieldWithFormatterProps>
   fileInput: IConfigItem<IFileInputProps>
   fileInputSimple: IConfigItem<IFileInputProps>
-  form: IConfigItem<IFormProps> & {
-    confirmationInit?: { enabled?: boolean, required?: boolean, editable?: boolean }
-  }
   heading: IConfigItem<IHeadingProps>
   iconInput: IConfigItem<IIconInputProps>
   inputLabel: IConfigItem<IInputLabelProps>
@@ -1509,11 +1655,11 @@ export type IUIConfig = {
   item: IConfigItem<IItemProps>
   list: IConfigItem<IListProps>
   loader: IConfigItem<ILoaderProps>
-  menu: IConfigItem<IMenuProps>
   menuConfirmation: IConfigItem<IMenuConfirmationProps>
   menuProxy: IConfigItem<IMenuProxyProps>
   miniCard: IConfigItem<IMiniCardProps>
   monthSelector: IConfigItem<IMonthSelectorProps>
+  monthSelectorGrid: IConfigItem<IMonthSelectorGridProps>
   navigation: IConfigItem<INavigationProps> & { defaultNavigationHeight: number }
   notificationRow: IConfigItem<INotificationRowProps>
   notifications: IConfigItem<INotificationsProps>
@@ -1525,24 +1671,25 @@ export type IUIConfig = {
   queryBuilder: IConfigItem<IQueryBuilderProps>
   radio: IConfigItem<IRadioProps>
   elementMovement: IConfigItem<IElementMovementProps>
-  scroller: IConfigItem<IScrollerProps>
+  horizontalScroller: IConfigItem<IHorizontalScrollerProps>
+  verticalScroller: IConfigItem<IVerticalScrollerProps>
   scrollArea: IConfigItem<IScrollAreaProps>
   searchInput: IConfigItem<ITextInputProps>
   section: IConfigItem<ISectionProps>
   selector: IConfigItem<ISelectorProps>
   separator: IConfigItem<ISeparatorProps>
   skeleton: IConfigItem<ISkeletonProps>
+  mainBar: IConfigItem<IMainBarProps>
+  keyboardShortcut: IConfigItem<IKeyboardShortcutProps>
   table: IConfigItem<ITableProps>
   tabs: IConfigItem<ITabsProps>
   tab: IConfigItem<ITabProps>
   textArea: IConfigItem<ITextAreaInputProps>
   textInput: IConfigItem<ITextInputProps>
-  textSplitter: IConfigItem<ITextSplitterProps>
   timeInput: IConfigItem<ITimeInputProps>
   toggle: IConfigItem<IToggleProps>
   tooltip: IConfigItem<ITooltipProps>
   tree: IConfigItem<ITreeProps>
-  treeNew: IConfigItem<ITreePropsNew>
   valueFormatter: IConfigItem<IValueFormatterProps>
   virtualScroller: IConfigItem<IVirtualScrollerProps<any>>
   virtualScrollerVertical: IConfigItem<IVirtualScrollerVerticalProps<any>>

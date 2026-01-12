@@ -14,51 +14,13 @@ import { FileSystemIconLoader } from '@iconify/utils/lib/loader/node-loaders'
 
 // Breakpoints
 import { BREAKPOINTS_PX } from './shared/constants/breakpoints'
-import { gentlUIPreset } from './client/functions/unocss-preset'
+import { gentlUIPreset } from './app/constants/unocss-preset'
 
 const fontSize = 16
 const rounding = 2
 const borderWidth = 1
 
 export default defineConfig({
-  theme: {
-    colors: {
-      primary: '#075985',
-      secondary: '#B6006B',
-      tertiary: '#6BB600',
-      darker: '#121212',
-      positive: '#95CD41',
-      negative: '#FC4F4F',
-      warning: '#FB923C',
-      info: '#60A5FA',
-    },
-    boxShadow: {
-      consistent: '0px 0px 12px 8px rgba(0, 0, 0, 0.05)',
-    },
-    breakpoints: BREAKPOINTS_PX,
-    font: {
-      size: {
-        '2xs': '0.625rem',
-        'xs': '0.75rem',
-        'sm': '0.875rem',
-        'md': '1rem',
-        'lg': '1.125rem',
-        'xl': '1.25rem',
-        '2xl': '1.5rem',
-      },
-      weight: {
-        thin: '100',
-        extralight: '200',
-        light: '300',
-        normal: '400',
-        medium: '500',
-        semibold: '600',
-        bold: '700',
-        extrabold: '800',
-        black: '900',
-      },
-    },
-  },
   rules: [
     [/^font-rem-(\d+)$/, ([, d]) => ({ 'font-size': `${+d! / fontSize}rem` })],
     ['flex-grow-max', { flex: '10000 1 0%' }],
@@ -168,9 +130,20 @@ export default defineConfig({
     presetAttributify({ ignoreAttributes: ['size'] }),
     presetTypography(),
     gentlUIPreset(),
+    {
+      name: 'local',
+      theme: {
+        breakpoints: BREAKPOINTS_PX,
+      },
+    },
   ],
   transformers: [
     transformerDirectives({ applyVariable: ['--apply', '@apply'] }),
     transformerVariantGroup(),
+  ],
+  safelist: [
+    'color-contrast',
+    'i-emojione:flag-for-united-kingdom',
+    'i-emojione:flag-for-czechia',
   ],
 })
