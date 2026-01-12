@@ -1,3 +1,5 @@
+import { isDayjs } from 'dayjs/esm'
+
 // Types
 import type { ITableFilterItem } from '../types/table-filter-item.type'
 import type { IQueryBuilderRow } from '../../QueryBuilder/types/query-builder-row-props.type'
