@@ -1,5 +1,4 @@
 import type { CSSProperties } from 'vue'
-import type { Dayjs } from 'dayjs'
 
 // Types
 import type { DayEvent } from './DayEvent.type'

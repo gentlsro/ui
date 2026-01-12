@@ -1,5 +1,3 @@
-import { isDayjs } from 'dayjs'
-
 // Types
 import type { ITableFilterItem } from '../types/table-filter-item.type'
 import type { IQueryBuilderRow } from '../../QueryBuilder/types/query-builder-row-props.type'
