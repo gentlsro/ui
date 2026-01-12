@@ -10,6 +10,5 @@ Inputs
 QueryBuilder
 ScrollPicker
 Table
-TreeDms
 VirtualScroller
 ```

@@ -3,7 +3,7 @@
 export const NOTIFICATION_ROW_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'relative flex flex-col rounded-custom w-80 md:w-100 p-x-4 p-y-2 shadow-consistent-sm shadow-ca bg-white dark:bg-darker'
+      const base = 'relative flex flex-col rounded-custom w-80 md:w-100 p-x-4 p-y-2 bg-slate-100/80 dark:bg-dark-950/80 backdrop-blur-2px'
 
       // Left progress bar (before pseudo-element)
       const leftBar = 'before:(content-empty absolute left-0 top-0 h-full w-1 rounded-l-custom bg-current)'
@@ -43,7 +43,7 @@ export const NOTIFICATION_ROW_DEFAULT_PROPS = {
     },
 
     iconClass() {
-      const base = 'shrink-0 self-start h-7 w-7 m-t-1'
+      const base = 'shrink-0 self-start h-6 w-6 m-t-1.5'
 
       return {
         base,
