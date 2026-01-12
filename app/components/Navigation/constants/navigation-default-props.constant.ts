@@ -23,7 +23,7 @@ export const NAVIGATION_DEFAULT_PROPS = {
     },
 
     navigationClass() {
-      const base = 'bg-primary'
+      const base = 'flex items-center bg-white dark:bg-black w-full'
 
       return {
         base,

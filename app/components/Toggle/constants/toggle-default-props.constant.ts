@@ -48,12 +48,12 @@ export const TOGGLE_DEFAULT_PROPS = {
       sizeClass = contained && size !== 'auto' ? sizes[`${size}Contained`] : sizes[size]
 
       // States (via CSS group selectors - container has the state classes)
-      const checked = 'group-[.is-checked]/toggle:(bg-positive/15 border-positive)'
-      const unchecked = 'group-[.is-unchecked]/toggle:(bg-negative/15 border-negative)'
-      const indeterminate = 'group-[.is-indeterminate]/toggle:(bg-neutral/15 border-neutral)'
+      const checked = 'group-[.is-checked]:(bg-positive/15 border-positive)'
+      const unchecked = 'group-[.is-unchecked]:(bg-negative/15 border-negative)'
+      const indeterminate = 'group-[.is-indeterminate]:(bg-neutral/15 border-neutral)'
 
       // Readonly
-      const readonly = 'group-[.is-readonly]/toggle:(border-dotted)'
+      const readonly = 'group-[.is-readonly]:(border-dotted)'
 
       return {
         base,
@@ -64,6 +64,7 @@ export const TOGGLE_DEFAULT_PROPS = {
         unchecked,
         indeterminate,
         readonly,
+        size: sizeClass,
         all: `${base} ${tapHighlight} ${visual} ${sizeClass} ${checked} ${unchecked} ${indeterminate} ${readonly}`,
       } as const
     },
@@ -95,29 +96,29 @@ export const TOGGLE_DEFAULT_PROPS = {
       sizeClass = contained && size !== 'auto' ? sizes[`${size}Contained`] : sizes[size]
 
       // Hover effect
-      const hoverable = 'group-[.is-hoverable]/toggle:group-hover/toggle:(shadow-consistent-xs-fill shadow-ca)'
+      const hoverable = 'group-[.is-hoverable]:group-hover:(shadow-consistent-xs-fill shadow-ca)'
 
       // State colors (via CSS group selectors)
-      const checked = 'group-[.is-checked]/toggle:(bg-positive)'
-      const unchecked = 'group-[.is-unchecked]/toggle:(bg-negative)'
-      const indeterminate = 'group-[.is-indeterminate]/toggle:(bg-neutral)'
+      const checked = 'group-[.is-checked]:(bg-positive)'
+      const unchecked = 'group-[.is-unchecked]:(bg-negative)'
+      const indeterminate = 'group-[.is-indeterminate]:(bg-neutral)'
 
       // Readonly states (via CSS group selectors)
-      const readonlyChecked = 'group-[.is-readonly.is-checked]/toggle:(bg-positive/50 border-2 border-dotted border-positive)'
-      const readonlyUnchecked = 'group-[.is-readonly.is-unchecked]/toggle:(bg-negative/50 border-2 border-dotted border-negative)'
+      const readonlyChecked = 'group-[.is-readonly.is-checked]:(bg-positive/50 border-2 border-dotted border-positive)'
+      const readonlyUnchecked = 'group-[.is-readonly.is-unchecked]:(bg-negative/50 border-2 border-dotted border-negative)'
 
       // Position - unchecked
       let uncheckedPosition = ''
 
       const uncheckedPositions = {
-        xs: 'group-[.is-unchecked]/toggle:(translate-x--8px)',
-        xsContained: 'group-[.is-unchecked]/toggle:(translate-x-2px)',
-        sm: 'group-[.is-unchecked]/toggle:(translate-x--8px)',
-        smContained: 'group-[.is-unchecked]/toggle:(translate-x-2px)',
-        md: 'group-[.is-unchecked]/toggle:(translate-x--8px)',
-        mdContained: 'group-[.is-unchecked]/toggle:(translate-x-2px)',
-        lg: 'group-[.is-unchecked]/toggle:(translate-x--8px)',
-        lgContained: 'group-[.is-unchecked]/toggle:(translate-x-2px)',
+        xs: 'group-[.is-unchecked]:(translate-x--8px)',
+        xsContained: 'group-[.is-unchecked]:(translate-x-2px)',
+        sm: 'group-[.is-unchecked]:(translate-x--8px)',
+        smContained: 'group-[.is-unchecked]:(translate-x-2px)',
+        md: 'group-[.is-unchecked]:(translate-x--8px)',
+        mdContained: 'group-[.is-unchecked]:(translate-x-2px)',
+        lg: 'group-[.is-unchecked]:(translate-x--8px)',
+        lgContained: 'group-[.is-unchecked]:(translate-x-2px)',
         auto: '',
         autoContained: '',
       } as const
@@ -130,14 +131,14 @@ export const TOGGLE_DEFAULT_PROPS = {
       let checkedPosition = ''
 
       const checkedPositions = {
-        xs: 'group-[.is-checked]/toggle:(translate-x-14px)',
-        xsContained: 'group-[.is-checked]/toggle:(translate-x-14px)',
-        sm: 'group-[.is-checked]/toggle:(translate-x-16px)',
-        smContained: 'group-[.is-checked]/toggle:(translate-x-16px)',
-        md: 'group-[.is-checked]/toggle:(translate-x-20px)',
-        mdContained: 'group-[.is-checked]/toggle:(translate-x-20px)',
-        lg: 'group-[.is-checked]/toggle:(translate-x-22px)',
-        lgContained: 'group-[.is-checked]/toggle:(translate-x-22px)',
+        xs: 'group-[.is-checked]:(translate-x-14px)',
+        xsContained: 'group-[.is-checked]:(translate-x-14px)',
+        sm: 'group-[.is-checked]:(translate-x-16px)',
+        smContained: 'group-[.is-checked]:(translate-x-16px)',
+        md: 'group-[.is-checked]:(translate-x-20px)',
+        mdContained: 'group-[.is-checked]:(translate-x-20px)',
+        lg: 'group-[.is-checked]:(translate-x-22px)',
+        lgContained: 'group-[.is-checked]:(translate-x-22px)',
         auto: '',
         autoContained: '',
       } as const
@@ -150,14 +151,14 @@ export const TOGGLE_DEFAULT_PROPS = {
       let indeterminatePosition = ''
 
       const indeterminatePositions = {
-        xs: 'group-[.is-indeterminate]/toggle:(translate-x-5px)',
-        xsContained: 'group-[.is-indeterminate]/toggle:(translate-x-8px)',
-        sm: 'group-[.is-indeterminate]/toggle:(translate-x-6px)',
-        smContained: 'group-[.is-indeterminate]/toggle:(translate-x-9px)',
-        md: 'group-[.is-indeterminate]/toggle:(translate-x-7px)',
-        mdContained: 'group-[.is-indeterminate]/toggle:(translate-x-11px)',
-        lg: 'group-[.is-indeterminate]/toggle:(translate-x-7px)',
-        lgContained: 'group-[.is-indeterminate]/toggle:(translate-x-12px)',
+        xs: 'group-[.is-indeterminate]:(translate-x-5px)',
+        xsContained: 'group-[.is-indeterminate]:(translate-x-8px)',
+        sm: 'group-[.is-indeterminate]:(translate-x-6px)',
+        smContained: 'group-[.is-indeterminate]:(translate-x-9px)',
+        md: 'group-[.is-indeterminate]:(translate-x-7px)',
+        mdContained: 'group-[.is-indeterminate]:(translate-x-11px)',
+        lg: 'group-[.is-indeterminate]:(translate-x-7px)',
+        lgContained: 'group-[.is-indeterminate]:(translate-x-12px)',
         auto: '',
         autoContained: '',
       } as const
@@ -166,8 +167,11 @@ export const TOGGLE_DEFAULT_PROPS = {
         ? indeterminatePositions[`${size}Contained`]
         : indeterminatePositions[size]
 
+      const positions = `${uncheckedPosition} ${checkedPosition} ${indeterminatePosition}` as const
+
       return {
         base,
+        size: sizeClass,
         sizes,
         hoverable,
         checked,
@@ -175,10 +179,8 @@ export const TOGGLE_DEFAULT_PROPS = {
         indeterminate,
         readonlyChecked,
         readonlyUnchecked,
-        uncheckedPositions,
-        checkedPositions,
-        indeterminatePositions,
-        all: `${base} ${sizeClass} ${hoverable} ${checked} ${unchecked} ${indeterminate} ${readonlyChecked} ${readonlyUnchecked} ${uncheckedPosition} ${checkedPosition} ${indeterminatePosition}`,
+        positions,
+        all: `${base} ${sizeClass} ${hoverable} ${checked} ${unchecked} ${indeterminate} ${readonlyChecked} ${readonlyUnchecked} ${positions}`,
       } as const
     },
 
@@ -204,6 +206,7 @@ export const TOGGLE_DEFAULT_PROPS = {
 
       return {
         base,
+        size: sizeClass,
         sizes,
         all: `${base} ${sizeClass}`,
       } as const
@@ -220,10 +223,11 @@ export const TOGGLE_DEFAULT_PROPS = {
 
     focusHelperClass() {
       const base = 'absolute fit z-3 cursor-pointer rounded-inherit inset-0 pointer-events-none'
-      const hover = 'group-hover/toggle:bg-current group-hover/toggle:opacity-10'
+      const hover = 'group-hover:(bg-current opacity-10)'
 
       return {
         base,
+        size,
         hover,
         all: `${base} ${hover}`,
       } as const

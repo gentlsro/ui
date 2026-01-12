@@ -28,4 +28,3 @@ export const PAGE_WRAPPER_DEFAULT_PROPS = {
     },
   },
 } satisfies IPageWrapperProps
-

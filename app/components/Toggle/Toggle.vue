@@ -181,7 +181,7 @@ const focusHelperStyle = computed(() => {
   <label
     ref="containerEl"
     tabindex="0"
-    class="toggle__container group/toggle"
+    class="toggle__container group"
     :class="[
       `is-${model}`,
       { 'is-hoverable': !noHoverEffect, 'is-readonly': readonly, 'is-disabled': disabled },

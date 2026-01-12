@@ -139,7 +139,7 @@ export default defineConfig({
   ],
   transformers: [
     transformerDirectives({ applyVariable: ['--apply', '@apply'] }),
-    transformerVariantGroup(),
+    transformerVariantGroup({ separators: [':'] }),
   ],
   safelist: [
     'color-contrast',
