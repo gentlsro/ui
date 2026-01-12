@@ -125,7 +125,7 @@ const previousValueStyle = computed(() => {
 
 <template>
   <div
-    class="value-container-card group/value-container-card"
+    class="value-container-card group"
     :class="containerClass"
     :style="containerStyle"
   >

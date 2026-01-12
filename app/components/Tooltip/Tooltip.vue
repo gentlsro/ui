@@ -183,7 +183,7 @@ const arrowStyle = computed(() => {
     <div
       v-if="model"
       ref="tooltipEl"
-      class="tooltip group/tooltip"
+      class="tooltip group"
       :class="[classes, containerClass]"
       :style="{ ...floatingStyles, ...containerStyle, '--zIndex': zIndex }"
       :placement

@@ -15,7 +15,7 @@ export const COLLAPSE_DEFAULT_PROPS = {
       const base = 'flex items-center gap-2 p-2 rounded-custom cursor-pointer'
       const bg = 'bg-slate-100 dark:bg-dark-950'
       // State styling via CSS selectors - when parent container is open, remove bottom radius
-      const open = 'group-[.is-open]/collapse:(rounded-b-0)'
+      const open = 'group-[.is-open]:(rounded-b-0)'
 
       return {
         base,
@@ -57,7 +57,7 @@ export const COLLAPSE_DEFAULT_PROPS = {
     expandIconClass() {
       const base = 'i-majesticons:chevron-right transition-transform'
       // State styling via CSS selectors - rotate when parent is open
-      const open = 'group-[.is-open]/collapse:(rotate-90deg)'
+      const open = 'group-[.is-open]:(rotate-90deg)'
 
       return {
         base,

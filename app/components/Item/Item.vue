@@ -37,7 +37,7 @@ const focusHelperStyle = computed(() => {
 <template>
   <Component
     :is="tag"
-    class="item group/item"
+    class="item group"
     :class="[
       { 'is-readonly': readonly, 'is-disabled': disabled },
       containerClass,

@@ -67,7 +67,7 @@ const labelStyle = computed(() => {
 <template>
   <div
     v-ripple="!to && ripple"
-    class="chip group/chip"
+    class="chip group"
     :class="[classes, containerClass]"
     :style="containerStyle"
   >

@@ -71,7 +71,7 @@ const breadcrumbsItems = computed(() => {
 
 <template>
   <div
-    class="breadcrumbs-wrapper group/breadcrumbs"
+    class="breadcrumbs-wrapper group"
     :class="containerClass"
     :style="containerStyle"
   >

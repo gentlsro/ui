@@ -90,7 +90,7 @@ const focusHelperStyle = computed(() => {
 <template>
   <label
     tabindex="0"
-    class="radio__container group/radio"
+    class="radio__container group"
     :class="[
       { 'is-checked': isChecked, 'is-disabled': disabled },
       containerClass,

@@ -117,7 +117,7 @@ export const BANNER_DEFAULT_PROPS = {
 
       icon = icons[variantProp]
 
-      const centered = 'group-[.is-icon-center]/banner:(self-center m-t-0)'
+      const centered = 'group-[.is-icon-center]:(self-center m-t-0)'
 
       return {
         base,

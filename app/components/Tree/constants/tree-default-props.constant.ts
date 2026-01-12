@@ -60,10 +60,10 @@ export const TREE_DEFAULT_PROPS = {
       const base = 'overflow-hidden flex flex-col grow leading-20px p-y-1.5'
 
       // Hover
-      const hover = 'group-hover/node:bg-slate-100 dark:(group-hover/node:bg-slate-800)'
+      const hover = 'group-hover:bg-slate-100 dark:(group-hover:bg-slate-800)'
 
       // Collapsible
-      const collapsible = 'group-[.is-padded]/node:m-l-28px'
+      const collapsible = 'group-[.is-padded]:m-l-28px'
 
       // // Selection - single
       // const selectionNoCheckbox = '[&.is-selected:not(.uses-checkbox)]:(bg-slate-200 color-primary dark:(bg-slate-800 color-blue-400))'

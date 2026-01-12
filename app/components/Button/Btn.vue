@@ -151,7 +151,7 @@ const loaderStyle = computed(() => {
     v-bind="btnProps"
     :name="name ?? (label || icon)"
     :aria-label="label ?? (name || icon)"
-    class="btn group/btn"
+    class="btn group"
     :class="[classes, containerClass]"
     :style="containerStyle"
   >

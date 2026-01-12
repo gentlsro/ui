@@ -46,7 +46,7 @@ export const CHECKBOX_DEFAULT_PROPS = {
       const { size: sizeProp, color: colorProp } = payload
 
       const base = 'flex flex-center border-2 shrink-0 self-start'
-      const unchecked = 'group-[:not(.is-checked):not(.is-indeterminate)]/checkbox:bg-transparent'
+      const unchecked = 'group-[:not(.is-checked):not(.is-indeterminate)]:bg-transparent'
 
       // Focus
       const focus = 'focus:(ring-2 ring-primary/50 ring-offset-2) focus-visible:(ring-2 ring-primary/50 ring-offset-2)'
@@ -96,10 +96,10 @@ export const CHECKBOX_DEFAULT_PROPS = {
       size = sizes[sizeProp]
 
       // Readonly state - dotted border, slightly faded colors
-      const readonly = 'group-[.is-readonly]/checkbox:(border-dotted opacity-70)'
+      const readonly = 'group-[.is-readonly]:(border-dotted opacity-70)'
 
       // Disabled state - grayed out
-      const disabled = 'group-[.is-disabled]/checkbox:(bg-true-gray border-true-gray)'
+      const disabled = 'group-[.is-disabled]:(bg-true-gray border-true-gray)'
 
       return {
         base,

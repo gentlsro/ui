@@ -208,7 +208,7 @@ const contentStyle = computed(() => {
       <div
         v-if="model"
         ref="floatingEl"
-        class="floating-element menu group/menu"
+        class="floating-element menu group"
         :data-open="model"
         :class="[menuClassComputed, menuClass]"
         :style="{ ...menuStyleComputed, ...menuStyle, ...floatingStyles }"

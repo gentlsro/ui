@@ -166,7 +166,7 @@ const focusHelperStyle = computed(() => {
   <label
     ref="labelEl"
     tabindex="0"
-    class="checkbox__container group/checkbox"
+    class="checkbox__container group"
     :class="[classes, containerClass]"
     :style="containerStyle"
     @keydown="handleKey"
