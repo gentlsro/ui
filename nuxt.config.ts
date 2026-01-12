@@ -168,9 +168,6 @@ export default defineNuxtConfig({
   },
 
   unocss: {
-    preflight: false,
-    // presets: [],
-    // // presets: [presetWind3, gentlUIPreset],
     nuxtLayers: true,
   },
 })
