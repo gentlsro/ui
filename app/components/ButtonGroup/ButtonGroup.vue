@@ -39,7 +39,7 @@ const activeStyle = computed(() => {
 
 <template>
   <div
-    class="btn-group group"
+    class="btn-group group/btn-group"
     :class="containerClass"
     :style="containerStyle"
   >

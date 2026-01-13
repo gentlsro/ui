@@ -34,7 +34,7 @@ const containerStyle = computed(() => {
 
 <template>
   <h6
-    class="heading group"
+    class="heading group/heading"
     :class="[classes, containerClass]"
     :style="containerStyle"
   >

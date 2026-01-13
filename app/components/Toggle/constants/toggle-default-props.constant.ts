@@ -33,14 +33,14 @@ export const TOGGLE_DEFAULT_PROPS = {
       let sizeClass = ''
 
       const sizes = {
-        xs: 'w-8 h-4.5 m-y-0.75 m-l-1 m-r-1.5',
-        xsContained: 'w-8 h-4.5 m-y-0.75 m-x-1.5',
-        sm: 'w-9.5 h-5.5 m-y-0.5 m-l-1 m-r-1.5',
-        smContained: 'w-9.5 h-5.5 m-y-0.5 m-x-1.5',
-        md: 'w-11 h-6 m-y-1 m-l-3.5 m-r-2',
-        mdContained: 'w-11 h-6 m-y-1 m-l-2.5 m-r-2',
-        lg: 'w-12 h-7 m-y-1.5 m-l-3.5 m-r-2',
-        lgContained: 'w-12 h-7 m-y-1.5 m-l-2.5 m-r-2',
+        xs: 'w-8 h-4.5 m-t-1 m-l-2 m-r-1.5',
+        xsContained: 'w-8 h-4.5 m-t-1 m-x-1.5',
+        sm: 'w-9.5 h-5.5 m-t-1.25 m-l-3 m-r-1.5',
+        smContained: 'w-9.5 h-5.5 m-t-1.25 m-x-1.5',
+        md: 'w-11 h-6 m-t-5px m-l-4 m-r-2',
+        mdContained: 'w-11 h-6 m-t-5px m-l-2.5 m-r-2',
+        lg: 'w-12 h-7 m-t-6px m-l-4.5 m-r-2',
+        lgContained: 'w-12 h-7 m-t-6px m-l-2.5 m-r-2',
         auto: '',
         autoContained: '',
       } as const
@@ -88,7 +88,7 @@ export const TOGGLE_DEFAULT_PROPS = {
         md: 'h-7 w-7',
         mdContained: 'h-5 w-5',
         lg: 'h-8 w-8',
-        lgContained: 'h-5.5 w-5.5',
+        lgContained: 'h-6 w-6',
         auto: '',
         autoContained: '',
       } as const
@@ -111,14 +111,14 @@ export const TOGGLE_DEFAULT_PROPS = {
       let uncheckedPosition = ''
 
       const uncheckedPositions = {
-        xs: 'group-[.is-unchecked]:(translate-x--8px)',
-        xsContained: 'group-[.is-unchecked]:(translate-x-2px)',
-        sm: 'group-[.is-unchecked]:(translate-x--8px)',
-        smContained: 'group-[.is-unchecked]:(translate-x-2px)',
-        md: 'group-[.is-unchecked]:(translate-x--8px)',
-        mdContained: 'group-[.is-unchecked]:(translate-x-2px)',
-        lg: 'group-[.is-unchecked]:(translate-x--8px)',
-        lgContained: 'group-[.is-unchecked]:(translate-x-2px)',
+        xs: 'group-[.is-unchecked]:(translate-x--4px translate-y--0.5px)',
+        xsContained: 'group-[.is-unchecked]:(translate-x-1.5px)',
+        sm: 'group-[.is-unchecked]:(translate-x--4px)',
+        smContained: 'group-[.is-unchecked]:(translate-x-1.5px)',
+        md: 'group-[.is-unchecked]:(translate-x--6px)',
+        mdContained: 'group-[.is-unchecked]:(translate-x-1.5px)',
+        lg: 'group-[.is-unchecked]:(translate-x--6px)',
+        lgContained: 'group-[.is-unchecked]:(translate-x-1.5px)',
         auto: '',
         autoContained: '',
       } as const
@@ -132,13 +132,13 @@ export const TOGGLE_DEFAULT_PROPS = {
 
       const checkedPositions = {
         xs: 'group-[.is-checked]:(translate-x-14px)',
-        xsContained: 'group-[.is-checked]:(translate-x-14px)',
+        xsContained: 'group-[.is-checked]:(translate-x-15px)',
         sm: 'group-[.is-checked]:(translate-x-16px)',
-        smContained: 'group-[.is-checked]:(translate-x-16px)',
+        smContained: 'group-[.is-checked]:(translate-x-17px)',
         md: 'group-[.is-checked]:(translate-x-20px)',
-        mdContained: 'group-[.is-checked]:(translate-x-20px)',
-        lg: 'group-[.is-checked]:(translate-x-22px)',
-        lgContained: 'group-[.is-checked]:(translate-x-22px)',
+        mdContained: 'group-[.is-checked]:(translate-x-21px)',
+        lg: 'group-[.is-checked]:(translate-x-20px)',
+        lgContained: 'group-[.is-checked]:(translate-x-21px)',
         auto: '',
         autoContained: '',
       } as const
@@ -195,10 +195,10 @@ export const TOGGLE_DEFAULT_PROPS = {
       let sizeClass = ''
 
       const sizes = {
-        xs: 'text-xs',
-        sm: 'text-sm',
-        md: '',
-        lg: '',
+        xs: 'font-rem-13 p-y-0.5 m-b-px',
+        sm: 'font-rem-14 p-y-1 m-b-2px',
+        md: 'p-y-1 m-b-3px',
+        lg: 'font-rem-18 p-y-1 m-b-3px',
         auto: '',
       } as const
 

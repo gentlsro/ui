@@ -26,7 +26,7 @@ const containerStyle = computed(() => {
 
 <template>
   <span
-    class="separator group"
+    class="separator group/separator"
     :class="[
       props.vertical ? 'is-vertical' : 'is-horizontal',
       {

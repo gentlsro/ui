@@ -79,7 +79,7 @@ const contentStyle = computed(() => {
 
 <template>
   <section
-    class="section group"
+    class="section group/section"
     :class="[classes, containerClass]"
     :style="containerStyle"
   >

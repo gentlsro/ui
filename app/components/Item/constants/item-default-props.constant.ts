@@ -20,8 +20,8 @@ export const ITEM_DEFAULT_PROPS = {
     focusHelperClass() {
       const base = 'absolute fit z-3 rounded-inherit inset-0 pointer-events-none'
 
-      // Hover effect (via CSS group selector - container must have group class)
-      const hover = 'group-hover:bg-current group-hover:opacity-10'
+      // Hover effect (via CSS group selector - container must have item class)
+      const hover = '[.item:hover_&]:(bg-current opacity-10)'
 
       return {
         base,

@@ -120,9 +120,9 @@ export const BTN_DEFAULT_PROPS = {
       const base = 'tracking-wider max-w-full'
 
       // Alignment variants via parent
-      const alignLeft = 'group-[.is-left]:text-left'
-      const alignCenter = 'group-[.is-center]:text-center'
-      const alignRight = 'group-[.is-right]:text-right'
+      const alignLeft = '[.btn.is-left_&]:text-left'
+      const alignCenter = '[.btn.is-center_&]:text-center'
+      const alignRight = '[.btn.is-right_&]:text-right'
 
       // Size variants
       let size = ''

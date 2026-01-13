@@ -118,7 +118,7 @@ const badgeStyle = computed(() => {
   >
     <div
       v-if="model"
-      class="banner group"
+      class="banner group/banner"
       :class="[classes, containerClass]"
       :style="containerStyle"
       @click="dismiss"
@@ -142,6 +142,7 @@ const badgeStyle = computed(() => {
 
       <!-- Counter -->
       <Badge
+        v-if="counter"
         ref="counterEl"
         :counter
         :ui="{ containerClass: ({ defaults }) => '' }"

@@ -113,7 +113,7 @@ onMounted(() => {
   <Field
     ref="fieldEl"
     v-bind="fieldProps"
-    class="year-month-selector group"
+    class="year-month-selector group/year-month-selector"
     :class="{ 'is-readonly': readonly, 'is-disabled': disabled }"
     :ui="mergedProps.ui"
     :has-content="!!model"

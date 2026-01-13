@@ -285,7 +285,7 @@ const contentClasses = computed(() => {
       <div
         v-if="model"
         ref="dialogWrapperEl"
-        class="dialog__wrapper floating-element group"
+        class="dialog__wrapper floating-element group/dialog"
         :class="wrapperClass"
         :data-open="model"
         :position

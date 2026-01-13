@@ -59,7 +59,7 @@ const containerStyle = computed(() => {
 
 <template>
   <div
-    class="collapse group"
+    class="collapse group/collapse"
     :class="[
       isOpen ? 'is-open' : 'is-closed',
       containerClass,

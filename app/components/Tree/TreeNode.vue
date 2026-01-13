@@ -118,7 +118,7 @@ onMounted(() => {
   <Component
     :is="nodeEl ?? 'div'"
     ref="treeNodeEl"
-    class="tree-node group"
+    class="tree-node group/node"
     v-bind="$attrs"
     :data-id="node.id"
     :data-path="nodeMeta?.path"

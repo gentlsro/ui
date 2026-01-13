@@ -7,7 +7,7 @@ export const YEAR_MONTH_SELECTOR_DEFAULT_PROPS = {
 
       // State-based styling via CSS selectors
       // When parent is editable (not readonly and not disabled), make cursor pointer
-      const editable = 'group-[:not(.is-readonly):not(.is-disabled)]:(cursor-pointer)'
+      const editable = '[.year-month-selector:not(.is-readonly):not(.is-disabled)_&]:(cursor-pointer)'
 
       return {
         base,

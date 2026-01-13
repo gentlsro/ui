@@ -132,7 +132,7 @@ const navigationStyle = computed(() => {
   <header
     ref="headerEl"
     z="$zNavigation"
-    class="navigation-wrapper group"
+    class="navigation-wrapper group/navigation"
     :class="[classes, headerClass]"
     :style="{ ...headerStyle, minHeight: `${minHeight}px` }"
   >
