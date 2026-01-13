@@ -29,7 +29,7 @@ const toPathString = computed(() => {
 })
 
 const currentPath = computed(() => {
-  return localePath(route.path, nuxtApp.$i18n.locale.value)
+  return localePath(route.path as any, nuxtApp.$i18n.locale.value)
 })
 </script>
 
