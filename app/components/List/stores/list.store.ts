@@ -1,4 +1,4 @@
-import { ZodType } from 'zod/v4'
+import { ZodType } from 'zod'
 import type { Required } from 'utility-types'
 import type { GroupItem, SortItem } from '$utils'
 
