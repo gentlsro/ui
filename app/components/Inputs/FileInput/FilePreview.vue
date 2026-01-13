@@ -85,13 +85,20 @@ const imageUrl = computed(() => {
       />
     </div>
 
-    <div
-      v-if="!noDownloadButton"
-      class="file-preview__download rounded-b-2 overflow-hidden"
-    >
+    <div class="file-preview__download rounded-b-2 overflow-hidden">
+      <!-- Download button - simple File instance -->
+      <Btn
+        v-if="!(file instanceof FileModel)"
+        w-full
+        size="sm"
+        class="!rounded-t-0"
+        :label="fileDownloadTitle ?? $t('file.download')"
+        @click.stop.prevent="handleDownloadFile(file, { url: downloadUrl })"
+      />
+
       <!-- Download file -->
       <Btn
-        v-if="'path' in file || !(file instanceof FileModel)"
+        v-else-if="!noDownloadButton && file.isUploaded"
         w-full
         size="sm"
         class="!rounded-t-0"
