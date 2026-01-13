@@ -1,3 +1,5 @@
+import { join } from 'pathe'
+
 export function getLocalImageUrl(image?: string | null, options: { folder?: string } = {}) {
   const rC = useRuntimeConfig()
   const filesHost = rC.public.filesHost
@@ -7,7 +9,6 @@ export function getLocalImageUrl(image?: string | null, options: { folder?: stri
   }
 
   const { folder = '' } = options
-  const folderPath = folder ? `${folder}/` : ''
 
-  return `${filesHost}${folderPath}${image}`
+  return join(`${filesHost}/${folder}/${image}`)
 }
