@@ -158,10 +158,6 @@ export default defineNuxtConfig({
     ],
   },
 
-  future: {
-    compatibilityVersion: 4,
-  },
-
   // @ts-expect-error
   icon: {
     size: '1em',

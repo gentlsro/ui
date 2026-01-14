@@ -1,0 +1,20 @@
+{
+  "extends": "../../.nuxt/tsconfig.server.json",
+  "compilerOptions": {
+    "incremental": true,
+    "tsBuildInfoFile": "./.tsbuildinfo.server",
+    "noEmit": true
+  },
+  "include": [
+    "../../.nuxt/types/nitro-nuxt.d.ts",
+    "../../.nuxt/types/nitro.d.ts",
+    "./server/**/*",
+    "./shared/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    ".nuxt",
+    "./app/**/*",
+    "./modules/**/*"
+  ]
+}
