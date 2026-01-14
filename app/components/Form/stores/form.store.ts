@@ -1,5 +1,3 @@
-import { skipHydrate } from 'pinia'
-
 // Types
 import type { IFormProps } from '../types/form-props.type'
 
