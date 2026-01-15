@@ -18,14 +18,14 @@ export function useInputValidationUtils(props: IInputWrapperProps) {
     return ''
   })
 
-  const { $ark } = props.validation
-    ? { $ark: undefined } as any
+  const { $v } = props.validation
+    ? { $v: undefined } as any
     : useArk({
         scope: typeof props.ark === 'string' ? undefined : props.ark?.scope,
       })
 
   const arkResult = computed(() => {
-    return props.validation ?? $ark.getMeta(path.value)
+    return props.validation ?? $v.getMeta(path.value)
   })
 
   const isRequired = computed(() => {

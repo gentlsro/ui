@@ -132,7 +132,7 @@ export function useArk<Validation extends Type = any>(payload?: IPayload<Validat
     }
   }
 
-  const $ark = {
+  const $v = {
     validate: () => {
       isValidationVisibleByScope.value[scope] = true
       const errors = errorsStructure.value.byScope[scope] ?? []
@@ -158,7 +158,7 @@ export function useArk<Validation extends Type = any>(payload?: IPayload<Validat
 
   return {
     errorsStructure,
-    $ark,
+    $v,
     validate,
     reset,
   }

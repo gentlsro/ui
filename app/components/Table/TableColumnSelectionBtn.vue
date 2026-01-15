@@ -192,7 +192,7 @@ function handleRemove(idx: number) {
             :items="interactiveNonHelperColumns"
             item-key="field"
             item-label="_label"
-            :selection-config="{ enabled: true, multi: true, useCheckbox: true }"
+            :selection-config="{ enabled: true, multi: true, useCheckbox: true, checkboxProps: { class: 'm-t-1.5' } }"
           >
             <template #above="{ listItems, items }">
               <div
@@ -243,11 +243,11 @@ function handleRemove(idx: number) {
                       <Checkbox
                         v-if="isDisabled"
                         :model-value="isVisible(row)"
-                        :editable="!isDisabled"
+                        :disabled="isDisabled"
                       />
                     </template>
 
-                    <template #default="{ isDisabled }">
+                    <!-- <template #default="{ isDisabled }">
                       <div
                         flex="~ col grow"
                         p="y-1"
@@ -265,7 +265,7 @@ function handleRemove(idx: number) {
                           {{ $t('table.nonInteractiveColumn') }}
                         </span>
                       </div>
-                    </template>
+                    </template> -->
                   </ListRowItem>
                 </template>
               </ListContent>

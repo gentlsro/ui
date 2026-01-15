@@ -1,4 +1,4 @@
-import { isDayjs } from 'dayjs/esm'
+import { isDayjs } from 'dayjs'
 
 // Types
 import type { ITableFilterItem } from '../types/table-filter-item.type'

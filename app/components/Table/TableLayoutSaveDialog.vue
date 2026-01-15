@@ -116,12 +116,12 @@ function loadLayout() {
 }
 
 function handleHide() {
-  $ark.reset()
+  $v.reset()
   emits('hide')
 }
 
 async function handleSave() {
-  const { isValid } = $ark.validate()
+  const { isValid } = $v.validate()
 
   if (!isValid) {
     return
@@ -159,7 +159,7 @@ async function handleDelete() {
 }
 
 // Validation
-const { $ark } = useArk({
+const { $v } = useArk({
   state: layout,
   schema: type({ name: 'string > 0' }),
   scope: '_layoutSaveDialog',

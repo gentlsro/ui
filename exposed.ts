@@ -47,7 +47,7 @@
 
 // // Table
 // export { useTableStore } from './client/components/Table/stores/table.store'
-// export { TableColumn } from './client/components/Table/models/table-column.model'
+export { TableColumn } from './app/components/Table/models/table-column.model'
 // export type { ITableSortItem } from './client/components/Table/types/table-sort-item.type'
 // export type { ITableTotal } from './client/components/Table/types/table-total.type'
 // export type { ITableFetchPayload } from './client/components/Table/types/table-fetch-payload.type'

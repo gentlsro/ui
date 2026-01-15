@@ -34,6 +34,7 @@ const {
   emits,
   handleSelect,
 } = useListStore()
+console.log('Log ~ selectionConfig:', selectionConfig.value)
 
 // Utils
 const { getElement } = useFloatingUIUtils()
@@ -178,9 +179,10 @@ onMounted(() => {
       <Checkbox
         v-if="selectionConfig?.useCheckbox"
         :model-value="isSelected"
-        :editable="!isDisabled"
+        :disabled="isDisabled"
         class="list-row-item__selection-checkbox"
         size="sm"
+        v-bind="selectionConfig?.checkboxProps"
       />
     </slot>
 

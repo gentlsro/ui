@@ -20,3 +20,7 @@ body,
 html.dark {
   @apply bg-darker color-white;
 }
+
+.router-link-active {
+  @apply color-primary;
+}

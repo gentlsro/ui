@@ -76,14 +76,13 @@ const breadcrumbsItems = computed(() => {
     :style="containerStyle"
   >
     <div
+      v-if="breadcrumbsItems.length > 1"
       class="breadcrumbs"
       :class="breadcrumbsClass"
       :style="breadcrumbsStyle"
     >
       <HorizontalScroller
-        :ui="{
-          contentClass: ({ defaults }) => `${defaults.all} gap-1 items-center`,
-        }"
+        :ui="{ contentClass: ({ defaults }) => `${defaults.all} gap-1 items-center` }"
       >
         <template
           v-for="(breadcrumb, idx) in breadcrumbsItems"

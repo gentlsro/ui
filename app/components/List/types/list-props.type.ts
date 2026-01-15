@@ -7,6 +7,7 @@ import type { IListItem } from './list-item.type'
 import type { IListFetchFnc } from './list-fetch.type'
 import type { IListItemToAdd } from './list-item-to-add.type'
 import type { ISelection } from '../../../types/selection.type'
+import type { ICheckboxProps } from '../../Checkbox/types/checkbox-props.type'
 import type { ITextInputProps } from '../../Inputs/TextInput/types/text-input-props.type'
 import type { IVirtualScrollerProps } from '../../VirtualScroller/types/virtual-scroller-props.type'
 
@@ -338,6 +339,11 @@ export type IListProps = {
      * Whether to use checkboxes for the selection instead of the default highlighted row
      */
     useCheckbox?: boolean
+
+    /**
+     * The props to pass to the select checkbox
+     */
+    checkboxProps?: ICheckboxProps & AllowedComponentProps
   }
 
   /**

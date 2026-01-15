@@ -42,6 +42,7 @@ const {
   sortingConfig,
   searchConfig,
   loadData,
+  selectionConfig,
 
   // Layout
   listEl,
@@ -96,6 +97,7 @@ syncRef(toRef(mergedProps.value, 'loadData'), loadData, { direction: 'ltr' })
 syncRef(toRef(mergedProps.value, 'searchConfig'), searchConfig, { direction: 'ltr' })
 syncRef(toRef(mergedProps.value, 'sortingConfig'), sortingConfig, { direction: 'ltr' })
 syncRef(toRef(mergedProps.value, 'modifiers'), modifiers, { direction: 'ltr' })
+syncRef(toRef(mergedProps.value, 'selectionConfig'), selectionConfig, { direction: 'ltr' })
 
 // Adding
 useListItemAdding()

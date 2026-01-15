@@ -91,7 +91,7 @@ const linkProps = computed(() => {
             :model-value="cellValue"
             size="sm"
             :label="val"
-            :editable="false"
+            readonly
             tabindex="-1"
             :visuals="{ checked: { checkbox: '!bg-primary !border-primary' } }"
           />

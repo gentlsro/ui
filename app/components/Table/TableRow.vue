@@ -279,7 +279,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
       v-if="column.id === '_selectable'"
       :model-value="isSelected(row)"
       size="sm"
-      :editable="isSelectable"
+      :readonly="!isSelectable"
       @update:model-value="handleSelectToggle(row)"
     />
 
@@ -289,7 +289,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
       :model-value="column.value"
       size="sm"
       :label="column.valueFormatted"
-      :editable="false"
+      readonly
       tabindex="-1"
       :visuals="{ checked: { checkbox: '!bg-primary !border-primary' } }"
     />

@@ -59,7 +59,7 @@ function handleRemoveFilter() {
 }
 
 async function handleSubmit() {
-  const { isValid } = $ark.validate()
+  const { isValid } = $v.validate()
 
   if (isValid) {
     menuEl.value?.hide(true)
@@ -92,7 +92,7 @@ function handleMenuBeforeHide() {
   })
 }
 
-const { $ark } = useArk({
+const { $v } = useArk({
   state: filterLocal,
   schema: type({
     'field': 'string',

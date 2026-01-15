@@ -687,6 +687,7 @@ export const defaultComponentsConfig = {
       selectionConfig: {
         enabled: false,
         multi: false,
+        checkboxProps: { class: 'm-t-1.5' },
       },
       loadData: {
         fnc: undefined,
