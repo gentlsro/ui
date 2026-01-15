@@ -28,7 +28,7 @@ export function useInputWrapperUtils() {
       'stackLabel',
       'noBorder',
       'validation',
-      'ark',
+      '$v',
       'preferMargin',
     )
   }

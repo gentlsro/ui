@@ -205,12 +205,12 @@ export type IInputWrapperProps = {
   validation?: Pick<IArkResult, 'path' | 'isRequired' | 'messages'>
 
   /**
-   * The ark validation reference
+   * The $v validation reference
    *
    * It can be a string (path) to the validation node
    * or an object with the `path` and `scope`
    */
-  ark?:
+  $v?:
     | string
     | {
       path: string

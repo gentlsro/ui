@@ -3,12 +3,12 @@ import type { IInputWrapperProps } from '../../InputWrapper/types/input-wrapper-
 
 export function useInputValidationUtils(props: IInputWrapperProps) {
   const path = computed(() => {
-    if (props.ark) {
-      if (typeof props.ark === 'string') {
-        return props.ark
+    if (props.$v) {
+      if (typeof props.$v === 'string') {
+        return props.$v
       }
 
-      return props.ark?.path
+      return props.$v?.path
     }
 
     if (props.validation) {
@@ -21,7 +21,7 @@ export function useInputValidationUtils(props: IInputWrapperProps) {
   const { $v } = props.validation
     ? { $v: undefined } as any
     : useArk({
-        scope: typeof props.ark === 'string' ? undefined : props.ark?.scope,
+        scope: typeof props.$v === 'string' ? undefined : props.$v?.scope,
       })
 
   const arkResult = computed(() => {
