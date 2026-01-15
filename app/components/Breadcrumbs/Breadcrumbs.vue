@@ -82,7 +82,7 @@ const breadcrumbsItems = computed(() => {
     >
       <HorizontalScroller
         :ui="{
-          contentClass: ({ defaults }) => `${defaults.all} gap-1`,
+          contentClass: ({ defaults }) => `${defaults.all} gap-1 items-center`,
         }"
       >
         <template

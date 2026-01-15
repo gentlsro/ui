@@ -17,4 +17,3 @@ export const YEAR_MONTH_SELECTOR_DEFAULT_PROPS = {
     },
   },
 }
-

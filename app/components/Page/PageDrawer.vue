@@ -102,7 +102,7 @@ const fillerStyle = computed(() => {
 
 <template>
   <aside
-    class="page-drawer"
+    class="page-drawer group"
     :class="[classes, containerClass]"
     :style="[styles.container, containerStyle]"
   >

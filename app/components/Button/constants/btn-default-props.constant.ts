@@ -39,9 +39,9 @@ export const BTN_DEFAULT_PROPS = {
 
       const xs = 'min-h-6 min-w-6 gap-x-2 p-x-2 [&.is-rounded]:rounded-1.5'
       const xm = 'min-h-7 min-w-7 gap-x-2 p-x-2'
-      const sm = 'min-h-8 min-w-8 gap-x-1.5 gap-y-1 p-x-2.5'
-      const md = 'min-h-10 min-w-10 gap-x-2 gap-y-1 p-x-3'
-      const lg = 'min-h-12 min-w-12 gap-x-2.5 gap-y-1.5 p-x-3.5'
+      const sm = 'min-h-8 min-w-8 gap-x-2 gap-y-1 p-x-2.5'
+      const md = 'min-h-10 min-w-10 gap-x-2.5 gap-y-1 p-x-3'
+      const lg = 'min-h-12 min-w-12 gap-x-3 gap-y-1.5 p-x-3.5'
       const auto = ''
 
       const sizes = {
