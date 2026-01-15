@@ -52,7 +52,7 @@ export class TableColumn<T = IItem> {
   /**
    * The field to use for the column
    */
-  field: ObjectKey<T>
+  field: ObjectKey<T, true>
 
   /**
    * When true, the column label will not be shown in the header

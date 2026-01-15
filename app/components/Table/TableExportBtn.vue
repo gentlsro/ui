@@ -37,6 +37,7 @@ async function handleExportData(format?: 'xlsx' | 'csv' | 'json') {
     icon="i-material-symbols:download"
     color="ca"
     no-uppercase
+    bg="!white !dark:black"
     size="sm"
     :label="$t('table.export', 1)"
     outlined

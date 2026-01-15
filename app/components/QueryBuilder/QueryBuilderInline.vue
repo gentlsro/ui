@@ -165,6 +165,7 @@ defineExpose({
       m="l-2"
       color="dark:white"
       border="2 primary"
+      bg="!white !dark:black"
       :label="$t('queryBuilder.addFirstCondition')"
       @click="handleAddFirstCondition"
     />

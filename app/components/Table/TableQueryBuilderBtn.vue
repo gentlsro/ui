@@ -77,6 +77,8 @@ const { $v } = useArk({ scope: '_qb' })
     size="sm"
     no-uppercase
     outlined
+    bg="!white !dark:black"
+    no-dim
     :class="queryBuilderHasChildren ? 'color-primary' : 'color-ca'"
     icon="i-basil:filter-solid"
   >
@@ -93,6 +95,8 @@ const { $v } = useArk({ scope: '_qb' })
       max-h="90%"
       min-h="100"
       h="auto"
+      position="top"
+      dense
       @before-show="syncFromParent"
       @hide="syncFromParent"
     >
@@ -101,7 +105,7 @@ const { $v } = useArk({ scope: '_qb' })
         :submit-confirmation="false"
         :focus-first-input="false"
         no-edit-controls
-        :ui="{ controlsClass: ({ defaults }) => `${defaults.all} !p-x-0 !p-b-0 !p-t-1` }"
+        :ui="{ controlsClass: ({ defaults }) => `${defaults.all} !p-t-1` }"
         :submit-btn-props="{ size: 'sm' }"
         @submit="handleSubmit"
       >

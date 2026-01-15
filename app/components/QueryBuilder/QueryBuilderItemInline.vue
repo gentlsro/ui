@@ -235,7 +235,7 @@ const { $v } = useArk({ scope: '_qb' })
 <style scoped lang="scss">
 .qb-item {
   @apply relative flex gap-1 border-1 border-dashed border-ca
-    rounded-custom p-l-1.5 items-center cursor-pointer;
+    rounded-custom p-l-1.5 items-center cursor-pointer bg-white dark:bg-black;
 
   @apply min-h-26px; // Arbitrary number that looks good...
 

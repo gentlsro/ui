@@ -39,6 +39,10 @@ function handleClearFilters(filterType: 'queryBuilder' | 'columns' | 'all' = 'al
   $hide()
 }
 
+const hasAnyFilters = computed(() => {
+  return queryBuilder.value.length > 1 || internalColumns.value.some(col => col.filters.length > 0)
+})
+
 // Keyboard shortcuts
 onKeyStroke(['d', 'D'], (ev: KeyboardEvent) => {
   const isCtrlKey = ev.ctrlKey || ev.metaKey
@@ -61,6 +65,7 @@ onKeyStroke(['d', 'D'], (ev: KeyboardEvent) => {
     no-truncate
     stacked
     class="remove-filters"
+    :class="hasAnyFilters ? 'color-negative' : 'color-ca'"
     data-cy="remove-filters"
   >
     <Menu
@@ -109,8 +114,8 @@ onKeyStroke(['d', 'D'], (ev: KeyboardEvent) => {
 
 <style scoped lang="scss">
 .remove-filters {
-  @apply shrink-0 w-20 min-h-10 dark:bg-darker bg-white color-ca border-2
-    border-transparent;
+  @apply shrink-0 w-20 min-h-9 dark:bg-black bg-white border-2
+    border-transparent m-t-1;
 
   padding-block: 0 !important;
 

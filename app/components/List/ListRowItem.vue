@@ -34,7 +34,6 @@ const {
   emits,
   handleSelect,
 } = useListStore()
-console.log('Log ~ selectionConfig:', selectionConfig.value)
 
 // Utils
 const { getElement } = useFloatingUIUtils()

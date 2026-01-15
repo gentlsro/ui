@@ -6,10 +6,7 @@ import type { ITableLayout } from './types/table-layout.type'
 import { useTableAutoFit } from './composables/useTableAutoFit'
 import { tableApplyLayout } from './functions/table-apply-layout'
 import { tableDeleteLayout } from './functions/table-delete-layout'
-import { tableOnLayoutApply } from './functions/table-on-layout-apply'
 import { tableGetLayoutMeta } from './functions/table-get-layout-meta'
-import { tableTransformColumns } from './functions/table-transform-columns'
-import { queryBuilderInitializeItems } from '../QueryBuilder/functions/query-builder-initialize-items'
 
 // Store
 import { useTableStore } from './stores/table.store'
@@ -21,10 +18,8 @@ const { fitColumns } = useTableAutoFit()
 // Store
 const store = useTableStore()
 const {
-  internalColumns,
   state,
   modifiers,
-  queryBuilder: queryBuilderStore,
   onDataFetchQueue,
   customData,
 } = store
@@ -95,7 +90,7 @@ function handleLayoutApply(layout?: ITableLayout) {
         :items="state.layouts"
         item-label="name"
         data-cy="scheme-search"
-        :ui="{ rowClass: () => 'flex-col p-r-2 m-y-1px rounded-custom !cursor-pointer p-y-1' }"
+        :ui="{ rowClass: () => 'w-full flex-col p-r-2 m-y-1px rounded-custom !cursor-pointer p-y-1 bg-white dark:bg-black' }"
         p="y-1"
         @click:item="handleLayoutApply($event.ref as any)"
       >

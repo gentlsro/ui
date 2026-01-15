@@ -140,6 +140,8 @@ function handleRemove(idx: number) {
       min-h="1/2"
       max-h="6/10"
       h="auto"
+      position="top"
+      dense
       @before-show="initVisibleColumns"
     >
       <template #title>
@@ -165,7 +167,7 @@ function handleRemove(idx: number) {
         no-edit-controls
         :ui="{
           contentClass: ({ defaults }) => 'grow grid grid-cols-2 gap-2 overflow-auto',
-          controlsClass: ({ defaults }) => `${defaults.all} !p-b-0 !p-x-0`,
+          controlsClass: ({ defaults }) => `${defaults.all} !p-t-1`,
           submitClass: ({ defaults }) => `${defaults.base} !w-auto`,
         }"
         :submit-btn-props="{ size: 'sm', noUppercase: true }"

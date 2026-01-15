@@ -196,7 +196,7 @@ const { $v } = useArk({
         <template #option="{ item }">
           <QueryBuilderItemDataTypeShortcut
             :data-type="item.ref.dataType"
-            class="relative top-1"
+            class="relative top-2"
             self-start
             shrink-0
           />

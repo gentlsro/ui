@@ -73,8 +73,8 @@
     "autoFitColumnsWithHeaderExplain": "Similar to the \"Auto-fit\" option, but the header's width is also considered"
   },
   "queryBuilder": {
-    "and": "and",
-    "or": "or",
+    "and": "And",
+    "or": "Or",
     "not_and": "not and",
     "not_or": "not or",
     "addCondition": "Add Condition",

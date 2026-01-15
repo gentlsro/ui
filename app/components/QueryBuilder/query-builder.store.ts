@@ -82,7 +82,7 @@ function createStore(injectionKey?: string) {
       propName: 'maxLevel',
       instance,
       props: queryBuilderProps,
-      defaultValue: 0,
+      defaultValue: 3,
     }) as Ref<number>
 
     const breakpoint = initRef({

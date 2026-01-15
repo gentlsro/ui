@@ -22,7 +22,7 @@ export const LIST_DEFAULT_PROPS = {
     },
 
     rowClass() {
-      const base = 'w-full flex gap-1 p-r-2 items-center rounded-custom overflow-auto font-rem-14'
+      const base = 'w-full flex gap-1 p-r-2 items-center rounded-custom truncate font-rem-14'
 
       // Focus
       const focus = '[&.is-focused]:(bg-slate-100 dark:bg-slate-800)'
