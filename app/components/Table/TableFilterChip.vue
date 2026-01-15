@@ -1,12 +1,14 @@
 <script setup lang="ts">
 // Models
 import { FilterItem } from '$utils'
+import type { ComparatorEnum } from '$comparatorEnum'
 
 // Functions
 import { useTableStore } from './stores/table.store'
 
 // Constants
 import { NON_VALUE_COMPARATORS } from '#layers/utilities/shared/constants/comparators-by-category.const'
+import { type } from 'arktype'
 
 type IProps = {
   filter: FilterItem
@@ -57,7 +59,7 @@ function handleRemoveFilter() {
 }
 
 async function handleSubmit() {
-  const isValid = await $z.value.$validate()
+  const { isValid } = $ark.validate()
 
   if (isValid) {
     menuEl.value?.hide(true)
@@ -90,25 +92,25 @@ function handleMenuBeforeHide() {
   })
 }
 
-const $z = useZod(
-  {
-    item: z.object({
-      field: z.string(),
-      comparator: z.string(),
-      value: z.unknown().optional().refine(val => {
-        const isNonValueComparator = NON_VALUE_COMPARATORS.includes(filterLocal.value.comparator)
+const { $ark } = useArk({
+  state: filterLocal,
+  schema: type({
+    'field': 'string',
+    'comparator': 'string',
+    'value?': 'unknown.any',
+  }).narrow(data => {
+    const comparator = data.comparator
+    const value = data.value
+    const isNonValueComparator = NON_VALUE_COMPARATORS.includes(comparator as ComparatorEnum)
 
-        if (isNonValueComparator) {
-          return isNil(val)
-        }
+    if (isNonValueComparator) {
+      return isNil(value)
+    }
 
-        return !isNil(val)
-      }),
-    }),
-  },
-  { item: filterLocal },
-  { scope: 'qb' },
-)
+    return !isNil(value)
+  }),
+  scope: '_qb',
+})
 </script>
 
 <template>

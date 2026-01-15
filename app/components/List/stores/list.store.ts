@@ -21,6 +21,8 @@ import { getListDefaultSortBy } from '../functions/helpers/get-list-default-sort
 
 // Components
 import type SearchInput from '../../Inputs/TextInput/SearchInput.vue'
+import type { Type } from 'arktype'
+import { type } from 'arktype'
 
 export const LIST_ID_KEY = Symbol('__listId')
 
@@ -162,23 +164,15 @@ function createStore(injectionKey?: string) {
     })
 
     // Add validation
-    const validation = addConfig.value?.validation as NonNullable<IListProps['addConfig']>['validation']
-    let validationSchemaKey = 'search'
-    let validationSchema: ZodType | undefined
+    const schema = addConfig.value?.validationSchema as NonNullable<IListProps['addConfig']>['validationSchema'] as Type<any>
 
-    if (validation instanceof ZodType) {
-      validationSchema = validation
-    } else if (validation) {
-      validationSchemaKey = validation.key
-      // @ts-expect-error
-      validationSchema = validation.schema.shape[validation.key] as ZodType
-    }
-
-    const $zAddItem = useZod(
-      { [validationSchemaKey]: validationSchema ?? z.any() },
-      { [validationSchemaKey]: search },
-      { scope: '_list-add-item' },
-    )
+    const { $ark } = useArk({
+      state: () => ({ search: search.value }),
+      schema: type({
+        search: schema ?? 'unknown.any',
+      }),
+      scope: '_listAdd',
+    })
 
     // Items
     const items = ref(listProps?.items ?? []) as Ref<any[]>
@@ -272,7 +266,7 @@ function createStore(injectionKey?: string) {
           hasExactMatch: hasExactMatch.value,
           search: search.value,
           itemLabel: itemLabel.value,
-          $z: $zAddItem,
+          validation: $ark,
         })
 
         itemsGrouped.value = res.items
@@ -321,7 +315,7 @@ function createStore(injectionKey?: string) {
         isAddedItem: !!addedItemById.value[item.id],
         clearable: isClearable.value,
         shouldFocusSearch: lastPointerDownType.value === 'mouse',
-        $z: $zAddItem,
+        validation: $ark,
       })
     }
 
@@ -472,7 +466,7 @@ function createStore(injectionKey?: string) {
       preAddedItem,
       addedItems,
       addedItemById,
-      $zAddItem,
+      addItemArk: $ark,
 
       // Focus
       itemFocused,

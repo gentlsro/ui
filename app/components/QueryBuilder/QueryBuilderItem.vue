@@ -12,6 +12,7 @@ import { useQueryBuilderStore } from './query-builder.store'
 
 // Constants
 import { useQueryBuilderItemUtils } from './functions/useQueryBuilderItemUtils'
+import { type } from 'arktype'
 
 const props = defineProps<IQueryBuilderItemProps>()
 const emits = defineEmits<{
@@ -134,23 +135,23 @@ function handleComparatorChange() {
 }
 
 // Validation
-const $z = useZod(
-  {
-    item: z.object({
-      field: z.string(),
-      comparator: z.string(),
-      value: z.unknown().optional().refine(val => {
-        if (isNonValueComparator.value) {
-          return isNil(val)
-        }
+const { $ark } = useArk({
+  state: item,
+  schema: type({
+    'field': 'string',
+    'comparator': 'string',
+    'value?': 'unknown.any',
+  }).narrow(data => {
+    const value = data.value
 
-        return !isNil(val)
-      }),
-    }),
-  },
-  { item },
-  { scope: 'qb' },
-)
+    if (isNonValueComparator.value) {
+      return isNil(value)
+    }
+
+    return !isNil(value)
+  }),
+  scope: '_qb',
+})
 </script>
 
 <template>
@@ -188,7 +189,7 @@ const $z = useZod(
         option-label="_label"
         :readonly="!editable"
         class="qb-item__content-field"
-        :validation="$z.item.field"
+        :validation="$ark.getMeta('field')"
         data-cy="qb-item__content-field"
         @update:model-value="handleFieldChange"
       >
@@ -226,7 +227,7 @@ const $z = useZod(
           :editable
           class="qb-item__content-comparator"
           :extra-comparators="customFilterComponent?.comparators"
-          :validation="$z.item.comparator"
+          :validation="$ark.getMeta('comparator')"
           @update:comparator="handleComparatorChange"
         />
 
@@ -239,7 +240,7 @@ const $z = useZod(
             :column="colSelected"
             :item
             :editable
-            :validation="$z.item.value"
+            :validation="$ark.getMeta('value')"
             class="qb-item__content-value"
           />
         </div>

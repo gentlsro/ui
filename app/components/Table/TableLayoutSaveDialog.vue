@@ -11,6 +11,7 @@ import { tableSerializeFilters } from './functions/table-serialize-filters'
 import { tableSerializeSorting } from './functions/table-serialize-sorting'
 import { tableSerializeSelect } from './functions/table-serialize-select'
 import { tableExtractDataFromUrl } from './functions/table-extract-data-from-url'
+import { type } from 'arktype'
 
 type IProps = {
   layout?: ITableLayout
@@ -115,12 +116,12 @@ function loadLayout() {
 }
 
 function handleHide() {
-  $z.value.$reset()
+  $ark.reset()
   emits('hide')
 }
 
 async function handleSave() {
-  const isValid = await $z.value.$validate()
+  const { isValid } = $ark.validate()
 
   if (!isValid) {
     return
@@ -158,11 +159,11 @@ async function handleDelete() {
 }
 
 // Validation
-const $z = useZod(
-  { layout: z.object({ name: z.string() }) },
-  { layout },
-  { scope: '_layoutSaveDialog' },
-)
+const { $ark } = useArk({
+  state: layout,
+  schema: type({ name: 'string > 0' }),
+  scope: '_layoutSaveDialog',
+})
 </script>
 
 <template>

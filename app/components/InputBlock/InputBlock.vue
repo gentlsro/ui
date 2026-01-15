@@ -29,9 +29,7 @@ const miniCardProps = getMiniCardProps(props)
 const validation = toRef(props, 'validation')
 
 const path = computed(() => {
-  return Array.isArray(validation.value)
-    ? validation.value.map(item => item?.$path).join('.')
-    : validation.value?.$path
+  return validation.value?.path
 })
 </script>
 

@@ -8,7 +8,7 @@ export async function listHandleAddSearch(payload: {
   preAddedItem: Ref<IListItemToAdd | undefined>
   search?: string
   addConfig: IListProps['addConfig']
-  $z: ReturnType<typeof useZod>
+  validation: IValidation
 }) {
   const {
     search,
@@ -16,7 +16,7 @@ export async function listHandleAddSearch(payload: {
     hasExactMatch,
     preAddedItem,
     itemLabel = 'label',
-    $z,
+    validation,
   } = payload
 
   if (!addConfig?.enabled) {
@@ -24,7 +24,7 @@ export async function listHandleAddSearch(payload: {
   }
 
   if (!search) {
-    $z.value.$reset()
+    validation.reset()
   }
 
   if (hasExactMatch || !search) {

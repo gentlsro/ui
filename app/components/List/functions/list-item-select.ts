@@ -24,7 +24,7 @@ export async function listItemSelect(payload: {
   isAddedItem?: boolean
   clearable?: boolean
   shouldFocusSearch?: boolean
-  $z: ReturnType<typeof useZod>
+  validation: IValidation
 }) {
   const {
     selection,
@@ -40,7 +40,7 @@ export async function listItemSelect(payload: {
     isAddedItem,
     clearable,
     shouldFocusSearch,
-    $z,
+    validation,
   } = payload
 
   // This is a helper to determine whether the `listHandleAdd` function has been called
@@ -77,7 +77,7 @@ export async function listItemSelect(payload: {
   // Select
   else {
     if ('_isNew' in item) {
-      const isValid = await $z.value.$validate()
+      const { isValid } = validation.validate()
 
       if (!isValid) {
         return
@@ -123,7 +123,7 @@ export async function listItemSelect(payload: {
     }
   }
 
-  $z.value.$reset()
+  validation.reset()
 
   if (!isAddCalled && ('_isNew' in item || isAddedItem)) {
     listHandleAdd({

@@ -88,7 +88,7 @@ function handleRemoveCondition() {
 }
 
 async function handleSubmit() {
-  const isValid = await $z.value.$validate()
+  const { isValid } = $ark.validate()
 
   if (isValid) {
     menuEl.value?.hide(true)
@@ -123,7 +123,7 @@ async function handleMenuBeforeHide() {
   }
 }
 
-const $z = useZod({ scope: 'qb' })
+const { $ark } = useArk({ scope: '_qb' })
 </script>
 
 <template>

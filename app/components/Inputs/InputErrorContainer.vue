@@ -19,6 +19,9 @@ const errorMessages = computed(() => {
     :model-value="!!errors?.length"
     :floating="!errorTakesSpace"
     z="$zMenu"
+    :ui="{
+      contentClass: ({ defaults }) => `${defaults.base} ${defaults.floating} !p-x-1 !p-y-0`,
+    }"
   >
     <div
       inline-block

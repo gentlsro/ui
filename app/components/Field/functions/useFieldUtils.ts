@@ -113,7 +113,7 @@ export function useFieldUtils(options?: {
       'size',
       'stackLabel',
       'validation',
-      'zod',
+      'ark',
     ])
   }
 

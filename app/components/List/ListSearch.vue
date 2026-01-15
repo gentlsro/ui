@@ -20,7 +20,7 @@ defineSlots<{
 }>()
 
 // Store
-const { searchEl, isLoading, items, $zAddItem } = useListStore()
+const { searchEl, isLoading, items, addItemArk } = useListStore()
 
 // Layout
 const search = defineModel<string>('search')
@@ -57,7 +57,7 @@ const searchStyle = computed(() => {
           :loading="isLoading"
           autofocus
           v-bind="searchConfig?.inputProps"
-          :validation="$zAddItem.$errors"
+          :validation="addItemArk.getMeta('search')"
           data-cy="list-search"
         />
 
@@ -74,6 +74,7 @@ const searchStyle = computed(() => {
       </div>
     </slot>
 
+    {{ addItemArk.getMeta('search')?.message }}
     <slot
       name="below"
       :search

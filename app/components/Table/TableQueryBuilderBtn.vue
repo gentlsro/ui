@@ -40,7 +40,7 @@ const queryBuilderHasChildren = computed(() => {
 })
 
 async function handleSubmit() {
-  const isValid = await $z.value.$validate()
+  const { isValid } = $ark.validate()
 
   if (!isValid) {
     return
@@ -69,7 +69,7 @@ onMounted(() => {
   nextTick(syncFromParent)
 })
 
-const $z = useZod({ scope: 'qb' })
+const { $ark } = useArk({ scope: '_qb' })
 </script>
 
 <template>

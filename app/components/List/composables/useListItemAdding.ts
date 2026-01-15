@@ -9,7 +9,7 @@ export function useListItemAdding() {
     preAddedItem,
     hasExactMatch,
     search,
-    $zAddItem,
+    addItemArk,
   } = useListStore()
 
   function handleSearch() {
@@ -19,7 +19,7 @@ export function useListItemAdding() {
       hasExactMatch: hasExactMatch.value,
       addConfig: addConfig.value,
       itemLabel: itemLabel.value,
-      $z: $zAddItem,
+      validation: addItemArk,
     })
   }
 

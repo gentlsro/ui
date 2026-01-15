@@ -1,4 +1,3 @@
-import type { z } from 'zod'
 import type { AllowedComponentProps, ConcreteComponent, CSSProperties } from 'vue'
 import type { FuseOptions } from '@vueuse/integrations/useFuse'
 import type { GroupItem, SortItem } from '$utils'
@@ -13,6 +12,7 @@ import type { IVirtualScrollerProps } from '../../VirtualScroller/types/virtual-
 
 // Constants
 import type { LIST_DEFAULT_PROPS } from '../constants/list-default-props.constant'
+import type { Type } from 'arktype'
 
 export type IListProps = {
   /**
@@ -54,22 +54,9 @@ export type IListProps = {
     /**
      * Validation schema for search input if creating of new item is allowed (allowAdd is set to true)
      * @example
-     * z.string().min(3).max(5)
-     *
-     * @example
-     * {
-     *   schema: z.object({
-     *     name: z.string().min(3).max(5)
-     *   }),
-     *   key: 'name'
-     * }
+     * type('number > 0 & number < 100')
      */
-    validation?:
-      z.ZodType<any, any>
-      | {
-        schema: z.ZodType<any, any>
-        key: string
-      }
+    validationSchema?: Type
   }
 
   /**

@@ -1,5 +1,4 @@
 import type { CSSProperties } from 'vue'
-import type { IZodValidationItem, IZodValidationOptions } from '#layers/utilities/app/types/zod'
 
 // Types
 import type { IInputLabelProps } from '../../InputLabel/types/input-label-props.type'
@@ -203,17 +202,18 @@ export type IInputWrapperProps = {
   /**
    * Validation object
    */
-  validation?: IZodValidationItem | Array<IZodValidationItem | undefined>
+  validation?: Pick<IArkResult, 'path' | 'isRequired' | 'messages'>
 
   /**
-   * Validation key
+   * The ark validation reference
    *
-   * When provided, the validation
+   * It can be a string (path) to the validation node
+   * or an object with the `path` and `scope`
    */
-  zod?:
+  ark?:
     | string
     | {
-      key: string
-      options?: IZodValidationOptions
+      path: string
+      scope?: string
     }
 } & IInputLabelProps
