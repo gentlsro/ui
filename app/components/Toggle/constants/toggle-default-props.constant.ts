@@ -33,14 +33,14 @@ export const TOGGLE_DEFAULT_PROPS = {
       let sizeClass = ''
 
       const sizes = {
-        xs: 'w-8 h-4.5 m-t-1 m-l-2 m-r-1.5',
-        xsContained: 'w-8 h-4.5 m-t-1 m-x-1.5',
-        sm: 'w-9.5 h-5.5 m-t-1.25 m-l-3 m-r-1.5',
-        smContained: 'w-9.5 h-5.5 m-t-1.25 m-x-1.5',
-        md: 'w-11 h-6 m-t-5px m-l-4 m-r-2',
-        mdContained: 'w-11 h-6 m-t-5px m-l-2.5 m-r-2',
-        lg: 'w-12 h-7 m-t-6px m-l-4.5 m-r-2',
-        lgContained: 'w-12 h-7 m-t-6px m-l-2.5 m-r-2',
+        xs: 'w-8 h-4.5 m-y-1 m-l-2 m-r-1.5',
+        xsContained: 'w-8 h-4.5 m-y-1 m-x-1.5',
+        sm: 'w-9.5 h-5.5 m-y-1.25 m-l-3 m-r-1.5',
+        smContained: 'w-9.5 h-5.5 m-y-1.25 m-x-1.5',
+        md: 'w-11 h-6 m-y-5px m-l-4 m-r-2',
+        mdContained: 'w-11 h-6 m-y-5px m-l-2.5 m-r-2',
+        lg: 'w-12 h-7 m-y-6px m-l-4.5 m-r-2',
+        lgContained: 'w-12 h-7 m-y-6px m-l-2.5 m-r-2',
         auto: '',
         autoContained: '',
       } as const

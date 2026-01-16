@@ -81,10 +81,10 @@ export const CHECKBOX_DEFAULT_PROPS = {
       // Size variants (via parent group)
       let size = ''
 
-      const xs = 'h-4 rounded-1 w-4 m-t-1'
-      const sm = 'h-4.5 rounded-1 w-4.5 m-t-1.25'
-      const md = 'h-5.5 rounded-1.5 w-5.5 m-t-5px'
-      const lg = 'h-6 rounded-1.5 w-6 m-t-6px'
+      const xs = 'h-4 rounded-1 w-4 m-y-1'
+      const sm = 'h-4.5 rounded-1 w-4.5 m-y-1.25'
+      const md = 'h-5.5 rounded-1.5 w-5.5 m-y-5px'
+      const lg = 'h-6 rounded-1.5 w-6 m-y-6px'
 
       const sizes = {
         xs,
