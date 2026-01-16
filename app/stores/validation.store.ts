@@ -68,8 +68,6 @@ export const useValidationStore = defineStore('__validation', () => {
   const errorsStructure = computed(() => {
     const byScope = errorsByScope.value
 
-    console.log(byScope)
-
     const byScopeByPath = Object.entries(errorsByScope.value)
       .reduce((agg, [scope, errors]) => {
         if (agg[scope] === undefined) {
