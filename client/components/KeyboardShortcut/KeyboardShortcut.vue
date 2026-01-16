@@ -38,7 +38,7 @@ const hasAnyModifier = computed(() => {
 })
 
 const isVisible = computed(() => {
-  const { keyboardShortcuts } = uiState.value.general ?? {}
+  const { keyboardShortcuts } = uiState?.value?.general ?? {}
   const isVisible = keyboardShortcuts || props.forceVisibility
 
   return lastPointerDownType.value === 'mouse' && isVisible
