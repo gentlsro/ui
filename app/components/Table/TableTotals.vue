@@ -10,7 +10,9 @@ type IProps = Pick<ITableProps, 'totals' | 'ui'>
 const props = defineProps<IProps>()
 
 // Utils
-const { handleRequest } = useRequest()
+const { fn } = useFn({
+  source: { type: 'component', name: 'TableTotals' },
+})
 
 // Store
 const tableStore = useTableStore()
@@ -39,13 +41,13 @@ async function getTotals() {
     const tablePayload = tableStore.getFetchPayload()
     const totalsFnc = props.totals
 
-    const res = await handleRequest(() => {
+    const res = await fn(() => {
       return totalsFnc({
         tablePayload,
         rows: rows.value,
         getStore: () => tableStore,
       })
-    }, { payloadKey: null })
+    })
 
     totals.value = res
   }

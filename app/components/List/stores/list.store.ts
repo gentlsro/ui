@@ -50,7 +50,9 @@ function createStore(injectionKey?: string) {
     const addConfig = ref(listProps?.addConfig) as Ref<IListProps['addConfig']>
 
     // Utils
-    const { isLoading: isRequestLoading, handleRequest, abortController } = useRequest()
+    const { isLoading: isRequestLoading, fn, abortController } = useFn({
+      source: { type: 'store', name: 'list' },
+    })
     const refreshTrigger = ref(0)
 
     const isLoadingSource = initRef({
@@ -346,7 +348,7 @@ function createStore(injectionKey?: string) {
 
       return listFetchData({
         search: search.value,
-        handleRequest,
+        fn,
         loadData: loadData.value,
         lastVisibleRow: listItems.value.at(-1) as any,
         hasMore: hasMore.value,
@@ -432,7 +434,7 @@ function createStore(injectionKey?: string) {
       isLoading,
       abortController,
       isRequestLoading,
-      handleRequest,
+      handleRequestFn: fn,
 
       // Layout
       containerEl,

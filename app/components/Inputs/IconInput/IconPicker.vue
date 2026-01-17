@@ -20,7 +20,9 @@ const props = withDefaults(defineProps<IProps>(), {
 })
 
 // Utils
-const { isLoading, handleRequest } = useRequest()
+const { isLoading, fn } = useFn({
+  source: { type: 'component', name: 'icon' },
+})
 
 // Layout
 const model = defineModel<string>('modelValue')
@@ -49,7 +51,7 @@ async function fetchAndSetIcons() {
     return
   }
 
-  const res = await handleRequest<any>(getIcons)
+  const res = await fn<any>(getIcons)
   icons.value = res.icons
 }
 

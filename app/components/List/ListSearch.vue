@@ -74,7 +74,6 @@ const searchStyle = computed(() => {
       </div>
     </slot>
 
-    {{ addItemArk.getMeta('search')?.message }}
     <slot
       name="below"
       :search

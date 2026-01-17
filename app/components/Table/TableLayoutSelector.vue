@@ -12,7 +12,9 @@ import { tableGetLayoutMeta } from './functions/table-get-layout-meta'
 import { useTableStore } from './stores/table.store'
 
 // Utils
-const { isLoading, handleRequest } = useRequest()
+const { isLoading, fn } = useFn({
+  source: { type: 'component', name: 'TableLayoutSelector' },
+})
 const { fitColumns } = useTableAutoFit()
 
 // Store
@@ -46,7 +48,7 @@ async function handleDelete(layout: any) {
   await deleteLayout({
     layout,
     layouts: state.value.layouts,
-    handleRequest,
+    fn,
     customData: customData.value,
   })
 

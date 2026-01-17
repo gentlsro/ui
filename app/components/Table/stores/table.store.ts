@@ -163,7 +163,9 @@ const [
    * to "silently" set the filters without refetching the data.
    */
   const isSilentChange = refAutoReset(false, 200)
-  const { handleRequest } = useRequest()
+  const { fn } = useFn({
+    source: { type: 'store', name: 'table' },
+  })
 
   /**
    * Navigates to a URL corresponding to the current state of the table
@@ -680,10 +682,9 @@ const [
 
     const fetchPayload = getFetchPayload()
     isMetaLoading.value = true
-    const res = await handleRequest(
+    const res = await fn(
       () => loadMetaData.value?.fnc?.({ tablePayload: fetchPayload, getStore }),
       {
-        payloadKey: null,
         onComplete: () => isMetaLoading.value = false,
         onError: ({ error, response }) => {
           isMetaLoading.value = false
@@ -730,10 +731,9 @@ const [
     const fetchPayload = getFetchPayload()
 
     isDataLoading.value = true
-    const res = await handleRequest(
+    const res = await fn(
       () => loadData.value?.fnc?.(fetchPayload),
       {
-        payloadKey: null,
         onComplete: () => isDataLoading.value = false,
         onError: ({ error, response }) => {
           isDataLoading.value = false

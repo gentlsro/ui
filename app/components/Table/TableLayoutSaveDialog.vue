@@ -24,7 +24,9 @@ const emits = defineEmits<{ (e: 'hide'): void }>()
 
 // Utils
 const route = useRoute()
-const { isLoading, handleRequest } = useRequest()
+const { isLoading, fn } = useFn({
+  source: { type: 'component', name: 'TableLayoutSaveDialog' },
+})
 
 // Store
 const tableStore = useTableStore()
@@ -141,7 +143,7 @@ async function handleSave() {
     isPublic: toSave.value.isPublic,
     isDefault: toSave.value.isDefault,
     rowKey: rowKey.value,
-    handleRequest,
+    fn,
   })
 
   $hide()
@@ -152,7 +154,7 @@ async function handleDelete() {
     layout: layout.value,
     layouts: state.value.layouts,
     customData: customData.value,
-    handleRequest,
+    fn,
   })
 
   $hide()

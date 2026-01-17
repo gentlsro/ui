@@ -51,7 +51,7 @@ export async function tableSaveLayout(payload: {
   /**
    * Handle request function
    */
-  handleRequest: ReturnType<typeof useRequest>['handleRequest']
+  fn: (fnc: AsyncFunction<any>) => Promise<any>
 
   /**
    * Currently available layouts

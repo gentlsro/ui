@@ -1,13 +1,14 @@
 // Types
 import type { IListItem } from '../types/list-item.type'
 import type { IListProps } from '../types/list-props.type'
+import type { UseFnPayload } from '#layers/utilities/app/types/use-fn-payload.type'
 
 // Store
 import type { useListStore } from '../stores/list.store'
 
 export async function listFetchData(payload: {
   search?: string
-  handleRequest: ReturnType<typeof useRequest>['handleRequest']
+  fn: (fnc: AsyncFunction<any>) => Promise<any>
   loadData: IListProps['loadData']
   lastVisibleRow?: IListItem
   isFetchMore?: boolean
@@ -22,7 +23,7 @@ export async function listFetchData(payload: {
     loadData,
     items,
     listItems = [],
-    handleRequest,
+    fn,
     isFetchMore,
     hasMore,
     modifiers,
@@ -52,8 +53,8 @@ export async function listFetchData(payload: {
 
     return !isNew
   })
-  const res = await handleRequest(async abortController => {
-    return fnc!({
+  const res = await fn(async abortController => {
+    return fnc({
       abortController: abortController(),
       search,
       options: {
@@ -64,7 +65,7 @@ export async function listFetchData(payload: {
         fetchMore: isFetchMore,
       },
     })
-  }, { payloadKey: null })
+  })
 
   let _items = (payloadKey ? get(res, payloadKey) : res) as any[]
   const _count = countKey

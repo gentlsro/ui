@@ -53,7 +53,9 @@ provideLocal(SELECTOR_ID_KEY, uuid)
 const { path } = useInputValidationUtils(props)
 
 // Utils
-const { handleRequest } = useRequest()
+const { fn } = useFn({
+  source: { type: 'component', name: 'Selector' },
+})
 const self = getCurrentInstance()
 
 const onFocus = props.eventHandlers?.onFocus
@@ -197,7 +199,7 @@ watch(
 if (props.immediateFetch && mergedProps.value.loadData?.fnc) {
   listFetchData({
     search: search.value,
-    handleRequest,
+    fn,
     loadData: mergedProps.value.loadData,
     items: [],
     modifiers: mergedProps.value.listProps?.modifiers,
