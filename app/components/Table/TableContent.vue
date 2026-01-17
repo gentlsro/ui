@@ -142,7 +142,7 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
     v-bind="scrollerConfig"
     :rows="rowsSplit"
     :columns="visibleColumns"
-    class="table-content"
+    class="table-content grow"
     :row-key
     :fetch-more="isFetchMore"
     :class="ui?.contentClass"
