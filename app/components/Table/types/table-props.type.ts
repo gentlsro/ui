@@ -38,6 +38,7 @@ import type { tableExtractPaginationFromUrl } from '../functions/table-extract-p
 import type { tableSerializePagination } from '../functions/table-serialize-pagination'
 import type { tableGetLayoutMeta } from '../functions/table-get-layout-meta'
 import type { ITableFilterItem } from './table-filter-item.type'
+import type { ITableExport } from './table-export.type'
 
 export type ITableProps<
   K extends typeof tableBuildFetchPayload = typeof tableBuildFetchPayload,
@@ -74,6 +75,11 @@ export type ITableProps<
    * A value that is used for comparators like `ComparatorEnum.IS_EMPTY`
    */
   emptyValue?: any
+
+  /**
+   * A list of export definitions
+   */
+  exportData?: ITableExport[]
 
   /**
    * A list of features that should be enabled within the table
@@ -351,11 +357,6 @@ export type ITableProps<
      * Function that serializes the pagination from the internal structure to the URL
      */
     serializePagination?: typeof tableSerializePagination
-
-    /**
-     * Function that exports the table data to a file
-     */
-    exportData?: typeof tableExportData
 
     /**
      * Function that gets called when the table layout is about to be applied

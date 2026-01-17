@@ -1,6 +1,6 @@
 <script setup lang="ts">
-// Functions
-import { ICON_BY_FILE_EXTENSION } from '../Inputs/FileInput/constants/icon-by-file-extension'
+// Types
+import type { ITableExport } from './types/table-export.type'
 
 // Store
 import { useTableStore } from './stores/table.store'
@@ -13,19 +13,16 @@ const {
   rows,
   visibleColumns,
   isExporting,
-  modifiers,
+  exportData,
 } = useTableStore()
 
-// Utils
-const { exportData = tableExportData } = modifiers.value ?? {}
-
-async function handleExportData(format?: 'xlsx' | 'csv' | 'json') {
+async function handleExportData(exportDefinition: ITableExport) {
   isExporting.value = true
 
-  await exportData({
+  await tableExportData({
     rows: rows.value,
     columns: visibleColumns.value.filter(col => !col.isHelperCol),
-    format,
+    exportDefinition,
   })
 
   isExporting.value = false
@@ -46,34 +43,15 @@ async function handleExportData(format?: 'xlsx' | 'csv' | 'json') {
     <div class="i-flowbite:chevron-right-outline rotate-90" />
 
     <Menu>
-      <!-- XLSX -->
       <Btn
-        :label="$t('mimetype.excel')"
-        :icon="ICON_BY_FILE_EXTENSION.xlsx"
+        v-for="exportDefinition in exportData"
+        :key="exportDefinition.id"
+        :label="exportDefinition.label"
+        :icon="exportDefinition.icon"
         :loading="isExporting"
         align="left"
         no-uppercase
-        @click="handleExportData('xlsx')"
-      />
-
-      <!-- CSV -->
-      <Btn
-        :label="$t('mimetype.csv')"
-        :icon="ICON_BY_FILE_EXTENSION.csv"
-        :loading="isExporting"
-        align="left"
-        no-uppercase
-        @click="handleExportData('csv')"
-      />
-
-      <!-- JSON -->
-      <Btn
-        :label="$t('mimetype.json')"
-        :icon="ICON_BY_FILE_EXTENSION.json"
-        :loading="isExporting"
-        align="left"
-        no-uppercase
-        @click="handleExportData('json')"
+        @click="handleExportData(exportDefinition)"
       />
     </Menu>
   </Btn>

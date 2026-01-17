@@ -15,6 +15,7 @@ import type { TableColumn } from '../models/table-column.model'
 // Functions
 import { tableNavigate } from '../functions/table-navigate'
 import { getListItemKey } from '../../List/functions/helpers'
+import type { ITableExport } from '../types/table-export.type'
 import { extendColumns } from '../functions/table-extend-columns'
 import { tableMergeColumns } from '../functions/table-merge-columns'
 import { getStateColumnData } from '../functions/get-state-column-data'
@@ -26,6 +27,9 @@ import { tableSerializeSorting } from '../functions/table-serialize-sorting'
 import { tableBuildFetchPayload } from '../functions/table-build-fetch-payload'
 import { tableSerializePagination } from '../functions/table-serialize-pagination'
 import { queryBuilderInitializeItems } from '../../QueryBuilder/functions/query-builder-initialize-items'
+
+// Constants
+import { TABLE_EXPORTS_DEFAULT } from '../constants/table-exports-default.constant'
 
 // Components
 import type HorizontalScroller from '../../Scroller/HorizontalScroller.vue'
@@ -52,6 +56,7 @@ const [
       isDataLoading,
       isSilentChange,
       isExporting,
+      exportData,
       navigate,
 
       // State,
@@ -155,7 +160,11 @@ const [
   // Utils
   const isMetaLoading = ref(!!tableProps?.loadMetaData?.fnc)
   const isDataLoading = ref(false)
+
+  // Exporting
   const isExporting = ref(false)
+  const exportData = ref<ITableExport[]>(tableProps?.exportData ?? TABLE_EXPORTS_DEFAULT)
+  console.log('Log ~ tableProps:', tableProps)
 
   /**
    * By default, reacts to changes in the filter, query builder, search, etc.
@@ -767,6 +776,7 @@ const [
     isDataLoading,
     isSilentChange,
     isExporting,
+    exportData,
     navigate,
 
     // State,
