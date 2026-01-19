@@ -280,6 +280,8 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
       :model-value="isSelected(row)"
       size="sm"
       :readonly="!isSelectable"
+      no-hover-effect
+      :ui="{ labelClass: ({ defaults }) => `${defaults.all} font-rem-13` }"
       @update:model-value="handleSelectToggle(row)"
     />
 
@@ -291,7 +293,11 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
       :label="column.valueFormatted"
       readonly
       tabindex="-1"
-      :visuals="{ checked: { checkbox: '!bg-primary !border-primary' } }"
+      no-hover-effect
+      :ui="{
+        labelClass: ({ defaults }) => `${defaults.all} font-rem-13`,
+        checkboxClass: ({ defaults }) => `${defaults.all} !bg-primary !border-primary`,
+      }"
     />
 
     <!-- Link -->
