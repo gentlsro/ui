@@ -281,7 +281,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
       size="sm"
       :readonly="!isSelectable"
       no-hover-effect
-      :ui="{ labelClass: () => 'font-rem-13' }"
+      :ui="{ labelClass: () => 'font-rem-13 font-500' }"
       @update:model-value="handleSelectToggle(row)"
     />
 
@@ -294,7 +294,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
       readonly
       tabindex="-1"
       no-hover-effect
-      :ui="{ labelClass: () => 'font-rem-13' }"
+      :ui="{ labelClass: () => 'font-rem-13 font-500' }"
       :visuals="{ checked: { checkbox: '!bg-primary !border-primary' } }"
     />
 
