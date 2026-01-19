@@ -294,8 +294,10 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
       readonly
       tabindex="-1"
       no-hover-effect
-      :ui="{ labelClass: () => 'font-rem-13 font-500' }"
-      :visuals="{ checked: { checkbox: '!bg-primary !border-primary' } }"
+      :ui="{
+        labelClass: () => 'font-rem-13 font-500',
+        checkboxClass: () => '!bg-primary !border-primary',
+      }"
     />
 
     <!-- Link -->
