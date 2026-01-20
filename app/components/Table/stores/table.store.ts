@@ -164,7 +164,6 @@ const [
   // Exporting
   const isExporting = ref(false)
   const exportData = ref<ITableExport[]>(tableProps?.exportData ?? TABLE_EXPORTS_DEFAULT)
-  console.log('Log ~ tableProps:', tableProps)
 
   /**
    * By default, reacts to changes in the filter, query builder, search, etc.
