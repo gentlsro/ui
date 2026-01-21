@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { VNode } from 'vue'
 import { ComparatorEnum } from '$comparatorEnum'
-import { FilterItem } from '$utils'
 
 // Types
 import type { ITableFilterItem } from '../../types/table-filter-item.type'

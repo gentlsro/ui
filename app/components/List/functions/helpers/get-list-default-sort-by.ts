@@ -1,5 +1,3 @@
-import { SortItem } from '$utils'
-
 // Types
 import type { IListProps } from '../../types/list-props.type'
 

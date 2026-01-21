@@ -1,9 +1,6 @@
 // Types
 import type { IFileInputProps } from '../types/file-input-props.type'
 
-// Models
-import { FileModel } from '$utils'
-
 // Components
 import type Field from '../../../Field/Field.vue'
 

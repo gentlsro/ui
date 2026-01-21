@@ -1,5 +1,4 @@
 import type { Required } from 'utility-types'
-import type { GroupItem, SortItem } from '$utils'
 import type { FuseOptions } from '@vueuse/integrations/useFuse.mjs'
 
 // Types

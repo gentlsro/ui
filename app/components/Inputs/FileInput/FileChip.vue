@@ -2,9 +2,6 @@
 // Types
 import type { IFileInputProps } from './types/file-input-props.type'
 
-// Models
-import type { FileModel } from '$utils'
-
 // Functions
 import { getFileLabel } from './functions/get-file-label'
 

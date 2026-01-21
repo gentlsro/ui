@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { klona } from 'klona/full'
-import { FilterItem } from '$utils'
 
 // Types
 import type { ITableFilterItem } from '../types/table-filter-item.type'

@@ -1,5 +1,4 @@
 // @unocss-include
-import type { GroupItem } from '$utils'
 
 // Types
 import type { ITableProps } from '../types/table-props.type'

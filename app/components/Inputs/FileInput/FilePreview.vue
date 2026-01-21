@@ -1,7 +1,4 @@
 <script setup lang="ts">
-// Models
-import { FileModel } from '$utils'
-
 // Constants
 import { IMAGE_TYPES } from './constants/image-types'
 import { ICON_BY_FILE_TYPE } from './constants/icon-by-file-type'

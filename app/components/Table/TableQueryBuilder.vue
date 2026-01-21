@@ -4,9 +4,6 @@ import type { ITableProps } from './types/table-props.type'
 import type { IQueryBuilderRow } from '../QueryBuilder/types/query-builder-row-props.type'
 import type { IQueryBuilderItem } from '../QueryBuilder/types/query-builder-item-props.type'
 
-// Models
-import { FilterItem } from '$utils'
-
 // Store
 import { useTableStore } from './stores/table.store'
 

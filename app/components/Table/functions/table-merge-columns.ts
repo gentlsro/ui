@@ -1,5 +1,3 @@
-import { FilterItem } from '$utils'
-
 // Types
 import type { ITableStateColumn } from '../types/table-state-column.type'
 

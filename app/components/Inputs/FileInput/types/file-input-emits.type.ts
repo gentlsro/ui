@@ -1,5 +1,3 @@
-import type { FileModel } from '$utils'
-
 export type ITableEmits = {
   (e: 'focus'): void
   (e: 'blur'): void

@@ -1,4 +1,3 @@
-import type { SortItem } from '$utils'
 import type { AllowedComponentProps, CSSProperties } from 'vue'
 import type { FuseOptions } from '@vueuse/integrations/useFuse.mjs'
 

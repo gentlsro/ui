@@ -1,6 +1,4 @@
 <script setup lang="ts">
-// Models
-import { FilterItem } from '$utils'
 import type { ComparatorEnum } from '$comparatorEnum'
 
 // Functions

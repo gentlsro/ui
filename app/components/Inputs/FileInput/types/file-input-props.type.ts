@@ -3,9 +3,6 @@ import type { CSSProperties } from 'vue'
 // Types
 import type { IInputProps } from '../../types/input-props.type'
 
-// Models
-import type { FileModel } from '$utils'
-
 export type IFileInputProps = {
   /**
    * The file types that are allowed to be selected

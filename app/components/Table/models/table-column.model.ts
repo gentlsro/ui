@@ -1,4 +1,3 @@
-import { FilterItem } from '$utils'
 import type { Required } from 'utility-types'
 import type { CSSProperties } from 'vue'
 import type { ExtendedDataType } from '$dataType'

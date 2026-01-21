@@ -1,6 +1,5 @@
 import type { AllowedComponentProps, ConcreteComponent, CSSProperties } from 'vue'
 import type { FuseOptions } from '@vueuse/integrations/useFuse'
-import type { GroupItem, SortItem } from '$utils'
 
 // Types
 import type { IListItem } from './list-item.type'

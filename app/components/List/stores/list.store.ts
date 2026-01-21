@@ -1,6 +1,5 @@
 import { ZodType } from 'zod'
 import type { Required } from 'utility-types'
-import type { GroupItem, SortItem } from '$utils'
 
 // Types
 import type { IListItem } from '../types/list-item.type'

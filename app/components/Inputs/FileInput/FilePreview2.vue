@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import type { Required } from 'utility-types'
 
-// Models
-import { FileModel } from '$utils'
-
 // Constants
 import { IMAGE_TYPES } from './constants/image-types'
 import { VIDEO_TYPES } from './constants/video-types'
