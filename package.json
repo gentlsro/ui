@@ -26,8 +26,7 @@
     "tikki": "3.0.2",
     "uuid": "13.0.0",
     "vue-imask": "7.6.1",
-    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz",
-    "zod": "4.3.5"
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "devDependencies": {
     "@antfu/eslint-config": "6.7.3",
