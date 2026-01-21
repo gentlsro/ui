@@ -15,7 +15,6 @@ import { NON_VALUE_COMPARATORS } from '#layers/utilities/shared/constants/compar
 import { getDefaultComparatorByDataType } from '#layers/utilities/shared/constants/default-comparator-by-data-type.const'
 
 // Functions
-import { stringToFloat } from '#layers/utilities/shared/regex/string-to-float.regex'
 import { getDateSimpleValue } from '#layers/utilities/shared/composables/useDateUtils'
 import { useRenderTemporaryTableCell } from '../composables/useRenderTemporaryTableCell'
 

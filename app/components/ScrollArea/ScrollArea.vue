@@ -6,7 +6,6 @@ import type { MaybeElement } from '@vueuse/core'
 import type { IScrollAreaProps } from './types/scroll-area-props.type'
 
 // Constants
-import { stringToFloat } from '#layers/utilities/shared/regex/string-to-float.regex'
 import { SCROLL_AREA_DEFAULT_PROPS } from './constants/scroll-area-default-props.constant'
 
 const props = withDefaults(defineProps<IScrollAreaProps>(), {

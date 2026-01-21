@@ -6,9 +6,6 @@ import type { IActiveTableSplitter, ITableSplitter } from '../types/table-splitt
 // Provide / Inject
 import { tableSlotsKey } from '../provide/table.provide'
 
-// Functions
-import { stringToFloat } from '#layers/utilities/shared/regex/string-to-float.regex'
-
 // Store
 import { useTableStore } from '../stores/table.store'
 
