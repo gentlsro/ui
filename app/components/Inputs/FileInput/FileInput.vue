@@ -1,8 +1,4 @@
 <script setup lang="ts">
-// Types
-import type { ITableEmits } from './types/file-input-emits.type'
-import type { IFileInputProps } from './types/file-input-props.type'
-
 // Functions
 import { useFileInput } from './functions/useFileInput'
 import { useFieldUtils } from '../../Field/functions/useFieldUtils'
@@ -11,7 +7,7 @@ const props = withDefaults(defineProps<IFileInputProps>(), {
   ...getComponentProps('fileInput'),
 })
 
-defineEmits<ITableEmits>()
+defineEmits<IFileInputEmits>()
 
 // Utils
 const { getFieldProps } = useFieldUtils()

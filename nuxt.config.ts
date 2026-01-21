@@ -44,6 +44,15 @@ export default defineNuxtConfig({
 
       { name: 'extendUIConfig', from: resolve('./config.ts') },
     ],
+
+    dirs: [
+      resolve('./shared/composables'),
+      resolve('./shared/constants'),
+      resolve('./shared/models'),
+      resolve('./app/types'),
+      resolve('./app/components/**/*.type.ts'),
+      resolve('./app/components/**/*.model.ts'),
+    ],
   },
 
   app: {
@@ -84,6 +93,12 @@ export default defineNuxtConfig({
     imports: {
       imports: [
         //
+      ],
+
+      dirs: [
+        resolve('./shared/composables'),
+        resolve('./shared/constants'),
+        resolve('./shared/models'),
       ],
     },
   },

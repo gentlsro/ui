@@ -1,10 +1,4 @@
 <script setup lang="ts">
-// Types
-import type { ITableProps } from './types/table-props.type'
-import type { ITableEmits } from './types/table-emits.type'
-import type { TableFeature } from './types/table-feature.type'
-import type { IQueryBuilderRow } from '../QueryBuilder/types/query-builder-row-props.type'
-
 // Provide / Inject
 import { tableSlotsKey } from './provide/table.provide'
 

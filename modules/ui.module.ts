@@ -6,7 +6,7 @@ const currentDir = resolve('..')
 
 export default defineNuxtModule({
   setup: async (_, nuxt) => {
-    console.log('✔ Creating ui virtual file...')
+    console.log('✔ Process UI...')
     const componentPaths: string[] = []
 
     const configPaths = nuxt.options._layers
@@ -94,15 +94,6 @@ export default uiConfig
       getContents: () => code,
     })
 
-    const base = configPaths.find(({ isBase }) => isBase)
-
-    addTemplate({
-      filename: `${nuxt.options.rootDir}/generated/ui.ts`,
-      write: true,
-      getContents: () => `export * from '${base?.cwd}/exposed'
-`,
-    })
-
     nuxt.hook('vite:extendConfig', config => {
       if (config.resolve) {
         if (!config.resolve.alias) {
@@ -111,7 +102,6 @@ export default uiConfig
 
         config.resolve.alias = {
           ...config.resolve.alias,
-          $ui: `${nuxt.options.rootDir}/generated/ui.ts`,
           $uiConfig: `${nuxt.options.rootDir}/generated/uiConfig.ts`,
         }
       }
