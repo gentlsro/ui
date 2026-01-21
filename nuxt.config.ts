@@ -80,7 +80,6 @@ export default defineNuxtConfig({
   },
 
   alias: {
-    $ui: join(process.cwd(), 'generated', 'ui.ts'),
     $uiConfig: join(process.cwd(), 'generated', 'uiConfig.ts'),
   },
 
@@ -109,7 +108,6 @@ export default defineNuxtConfig({
     tsConfig: {
       compilerOptions: {
         paths: {
-          $ui: [join(process.cwd(), 'generated', 'ui.ts')],
           $uiConfig: [join(process.cwd(), 'generated', 'uiConfig.ts')],
         },
       },
