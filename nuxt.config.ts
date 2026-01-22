@@ -50,7 +50,6 @@ export default defineNuxtConfig({
       resolve('./shared/constants'),
       resolve('./shared/models'),
       resolve('./app/types'),
-      resolve('./app/components/**/*.type.ts'),
       resolve('./app/components/**/*.model.ts'),
     ],
   },
@@ -81,6 +80,7 @@ export default defineNuxtConfig({
 
   alias: {
     $uiConfig: join(process.cwd(), 'generated', 'uiConfig.ts'),
+    $uiProps: resolve('./app/types/component-props.type.ts'),
   },
 
   build: {
@@ -109,6 +109,7 @@ export default defineNuxtConfig({
       compilerOptions: {
         paths: {
           $uiConfig: [join(process.cwd(), 'generated', 'uiConfig.ts')],
+          $uiProps: [resolve('./app/types/component-props.type.ts')],
         },
       },
     },
