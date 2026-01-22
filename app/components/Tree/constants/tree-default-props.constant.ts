@@ -15,7 +15,7 @@ export const TREE_DEFAULT_PROPS = {
     },
 
     contentClass() {
-      const base = 'p-y-2.5'
+      const base = 'p-y-2.5 grow'
 
       return {
         base,
@@ -83,7 +83,7 @@ export const TREE_DEFAULT_PROPS = {
     },
 
     noDataClass() {
-      const base = 'p-x-4 p-b-2 color-ca font-rem-14'
+      const base = 'absolute left-0 top-0 p-x-4 p-y-2 color-ca font-rem-14'
 
       return {
         base,

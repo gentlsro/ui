@@ -42,6 +42,7 @@ const actionsStyle = computed(() => {
     <!-- Collapse all -->
     <Btn
       icon="i-codicon:collapse-all"
+      size="xs"
       :tooltip="{ label: $t('general.collapseAll') }"
       v-bind="actionsConfig?.btnProps"
       @click="treeCollapseAll({ getStore: () => store })"
@@ -50,6 +51,7 @@ const actionsStyle = computed(() => {
     <!-- Expand all -->
     <Btn
       icon="i-codicon:expand-all"
+      size="xs"
       :tooltip="{ label: $t('general.expandAll') }"
       v-bind="actionsConfig?.btnProps"
       @click="treeExpandAll({ getStore: () => store })"

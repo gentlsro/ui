@@ -21,16 +21,18 @@ export const TOOLTIP_DEFAULT_PROPS = {
     },
 
     contentClass() {
-      const base = ''
+      const base = 'flex flex-col gap-1'
+      const maxWidth = 'max-w-60'
 
       return {
         base,
-        all: `${base}`,
+        maxWidth,
+        all: `${base} ${maxWidth}`,
       } as const
     },
 
     titleClass() {
-      const base = ''
+      const base = 'font-rem-14 font-semibold'
 
       return {
         base,
@@ -39,7 +41,7 @@ export const TOOLTIP_DEFAULT_PROPS = {
     },
 
     descriptionClass() {
-      const base = ''
+      const base = 'font-rem-12 text-caption'
 
       return {
         base,

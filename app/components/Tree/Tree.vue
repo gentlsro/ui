@@ -170,16 +170,15 @@ const contentStyle = computed(() => {
       </template>
 
       <template #inner>
+        <slot name="no-data">
+          <TreeNoData
+            v-if="nodesVisible.length === 0 && !loading"
+            :ui="mergedProps.ui"
+          />
+        </slot>
         <slot name="content-inner" />
       </template>
     </VirtualScrollerVertical>
-
-    <slot name="no-data">
-      <TreeNoData
-        v-if="nodesVisible.length === 0 && !loading"
-        :ui="mergedProps.ui"
-      />
-    </slot>
 
     <slot name="loading">
       <TreeLoading v-if="loading" />

@@ -21,7 +21,7 @@ const mergedProps = computed(() => {
 })
 
 // Store
-const { navigationHeight, drawerWidth } = storeToRefs(useLayoutStore())
+const { navigationHeight, drawerWidth, isDrawerMini } = storeToRefs(useLayoutStore())
 
 // Layout
 const isMounted = ref(false)
@@ -33,6 +33,8 @@ const pageWrapperStyle = computed(() => {
     '--drawerRightWidth': `${drawerWidth.value.right}px`,
     '--drawerLeftMiniWidth': `${drawerWidth.value.leftMini}px`,
     '--drawerRightMiniWidth': `${drawerWidth.value.rightMini}px`,
+    '--activeLeftDrawerWidth': `${isDrawerMini.value.left ? drawerWidth.value.leftMini : drawerWidth.value.left}px`,
+    '--activeRightDrawerWidth': `${isDrawerMini.value.right ? drawerWidth.value.rightMini : drawerWidth.value.right}px`,
   }
 })
 

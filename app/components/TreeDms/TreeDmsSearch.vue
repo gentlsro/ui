@@ -48,7 +48,7 @@ async function handleCreateItem(type: string) {
 </script>
 
 <template>
-  <TreeSearchNew
+  <TreeSearch
     v-model:search="search"
     :ui
     :search-config
@@ -69,6 +69,7 @@ async function handleCreateItem(type: string) {
             <!-- Add file -->
             <Btn
               v-bind="actionsConfig?.btnProps"
+              size="xs"
               icon="i-hugeicons:file-add"
               :tooltip="{ label: $t('misc.createFile') }"
               @click="handleCreateItem(fileKey)"
@@ -77,6 +78,7 @@ async function handleCreateItem(type: string) {
             <!-- Add folder -->
             <Btn
               v-bind="actionsConfig?.btnProps"
+              size="xs"
               icon="i-hugeicons:folder-add"
               :tooltip="{ label: $t('misc.createFolder') }"
               @click="handleCreateItem(folderKey)"
@@ -85,7 +87,7 @@ async function handleCreateItem(type: string) {
         </TreeActions>
       </div>
     </template>
-  </TreeSearchNew>
+  </TreeSearch>
 </template>
 
 <style scoped lang="scss">
