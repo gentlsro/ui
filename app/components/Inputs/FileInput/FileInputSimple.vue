@@ -1,4 +1,8 @@
 <script setup lang="ts">
+// Types
+import type { IFileInputProps } from './types/file-input-props.type'
+import type { IFileInputEmits } from './types/file-input-emits.type'
+
 // Functions
 import { useFileInput } from './functions/useFileInput'
 import { useFieldUtils } from '../../Field/functions/useFieldUtils'

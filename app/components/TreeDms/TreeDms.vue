@@ -97,7 +97,7 @@ const getParentNode: NonUndefined<ITreeProps<T>['dndConfig']>['getParentNode'] =
 </script>
 
 <template>
-  <TreeNew
+  <Tree
     ref="treeEl"
     v-bind="treeProps"
     v-model="model"
@@ -134,5 +134,5 @@ const getParentNode: NonUndefined<ITreeProps<T>['dndConfig']>['getParentNode'] =
     <template #inner>
       <TreeDmsContextMenu />
     </template>
-  </TreeNew>
+  </Tree>
 </template>

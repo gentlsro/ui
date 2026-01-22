@@ -1,4 +1,8 @@
 <script setup lang="ts">
+// Types
+import type { ITableProps } from './types/table-props.type'
+import type { ITableEmits } from './types/table-emits.type'
+
 // Provide / Inject
 import { tableSlotsKey } from './provide/table.provide'
 
