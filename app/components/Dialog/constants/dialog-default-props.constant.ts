@@ -91,13 +91,15 @@ export const DIALOG_DEFAULT_PROPS = {
     },
 
     contentClass() {
-      const base = 'flex flex-col flex-grow overflow-auto p-4'
+      const base = 'flex flex-col flex-grow overflow-auto'
+      const padding = 'p-4'
       const dense = '[&.is-dense]:(p-0)'
 
       return {
         base,
         dense,
-        all: `${base} ${dense}`,
+        padding,
+        all: `${base} ${dense} ${padding}`,
       } as const
     },
   },

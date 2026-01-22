@@ -23,13 +23,17 @@ export const MENU_DEFAULT_PROPS = {
     },
 
     contentClass() {
-      const base = 'relative flex flex-col grow gap-1 overflow-auto rounded-custom p-1 max-h-inherit'
+      const base = 'relative flex flex-col grow overflow-auto rounded-custom max-h-inherit'
       const dense = '[&.is-dense]:p-0'
+      const padding = 'p-1'
+      const gap = 'gap-1'
 
       return {
         base,
         dense,
-        all: `${base} ${dense}`,
+        padding,
+        gap,
+        all: `${base} ${dense} ${padding} ${gap}`,
       } as const
     },
 

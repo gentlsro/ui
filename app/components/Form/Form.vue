@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { getActivePinia } from 'pinia'
-
 // Types
 import type { IFormProps } from './types/form-props.type'
 
@@ -180,7 +178,7 @@ const controlsStyle = computed(() => {
       <div
         id="form-controls"
         class="form__controls"
-        :class="controlsClass"
+        :class="[controlsClass, { 'is-controls-on-top': controlsOnTop }]"
         :style="controlsStyle"
       >
         <slot name="controls-start" />
