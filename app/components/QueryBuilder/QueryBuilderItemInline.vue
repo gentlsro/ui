@@ -88,7 +88,7 @@ function handleRemoveCondition() {
 }
 
 async function handleSubmit() {
-  const { isValid } = $v.validate()
+  const { isValid } = validation.validate()
 
   if (isValid) {
     menuEl.value?.hide(true)
@@ -123,7 +123,7 @@ async function handleMenuBeforeHide() {
   }
 }
 
-const { $v } = useArk({ scope: '_qb' })
+const { validation } = useArk({ scope: '_qb' })
 </script>
 
 <template>

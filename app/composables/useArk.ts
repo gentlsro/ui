@@ -62,7 +62,6 @@ export function useArk<Validation extends Type = any>(payload?: IPayload<Validat
   // Init - handle `immediate`
   if (immediate) {
     isValidationVisibleByScope.value[scope] = true
-    console.log('FUCK:', scope, isValidationVisibleByScope.value[scope])
   }
 
   // Init - add the schema to the scope
@@ -132,7 +131,7 @@ export function useArk<Validation extends Type = any>(payload?: IPayload<Validat
     }
   }
 
-  const $v = {
+  const validation = {
     validate: () => {
       isValidationVisibleByScope.value[scope] = true
       const errors = errorsStructure.value.byScope[scope] ?? []
@@ -158,7 +157,7 @@ export function useArk<Validation extends Type = any>(payload?: IPayload<Validat
 
   return {
     errorsStructure,
-    $v,
+    validation,
     validate,
     reset,
   }

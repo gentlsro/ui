@@ -5,7 +5,7 @@ import type { CSSProperties } from 'vue'
 import type { INumberInputProps } from '../NumberInput/types/number-input-props.type'
 import type { IInputWrapperProps } from '../../InputWrapper/types/input-wrapper-props.type'
 
-export type IInputProps = {
+export type IInputProps = IInputWrapperProps & {
   /**
    * Whether the input should be autofocused
    */
@@ -77,4 +77,4 @@ export type IInputProps = {
    * The props that should be passed to the input tag (<input>)
    */
   inputProps?: IItem
-} & IInputWrapperProps
+}

@@ -41,7 +41,7 @@ export const DIALOG_DEFAULT_PROPS = {
     }) {
       const { position: positionProp } = payload
 
-      const base = 'h-120 w-100 max-h-[min(95%,var(--dialogMaxHeight))] max-w-95vw pointer-events-auto flex flex-col dark:bg-dark-950/90 bg-white backdrop-blur-2px rounded-custom overflow-auto'
+      const base = 'h-120 w-100 max-h-[min(95%,var(--dialogMaxHeight))] max-w-95vw pointer-events-auto flex flex-col dark:bg-dark-950/95 bg-white backdrop-blur-2px rounded-custom overflow-auto'
 
       // Position
       let position = ''

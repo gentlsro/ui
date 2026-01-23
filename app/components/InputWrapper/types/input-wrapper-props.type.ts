@@ -6,7 +6,7 @@ import type { IInputLabelProps } from '../../InputLabel/types/input-label-props.
 // Constants
 import type { INPUT_WRAPPER_DEFAULT_PROPS } from '../constants/input-wrapper-default-props'
 
-export type IInputWrapperProps = {
+export type IInputWrapperProps = IInputLabelProps & {
   /**
    * The cursor that will be shown when hovering over the input
    */
@@ -205,15 +205,15 @@ export type IInputWrapperProps = {
   validation?: Pick<IArkResult, 'path' | 'isRequired' | 'messages'>
 
   /**
-   * The $v validation reference
+   * The validation validation path
    *
    * It can be a string (path) to the validation node
    * or an object with the `path` and `scope`
    */
-  $v?:
+  validationPath?:
     | string
     | {
       path: string
       scope?: string
     }
-} & IInputLabelProps
+}

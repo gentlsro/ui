@@ -167,7 +167,7 @@ function createStore(injectionKey?: string) {
     // Add validation
     const schema = addConfig.value?.validationSchema as NonNullable<IListProps['addConfig']>['validationSchema'] as Type<any>
 
-    const { $v } = useArk({
+    const { validation } = useArk({
       state: () => ({ search: search.value }),
       schema: type({
         search: schema ?? 'unknown.any',
@@ -267,7 +267,7 @@ function createStore(injectionKey?: string) {
           hasExactMatch: hasExactMatch.value,
           search: search.value,
           itemLabel: itemLabel.value,
-          validation: $v,
+          validation: validation,
         })
 
         itemsGrouped.value = res.items
@@ -316,7 +316,7 @@ function createStore(injectionKey?: string) {
         isAddedItem: !!addedItemById.value[item.id],
         clearable: isClearable.value,
         shouldFocusSearch: lastPointerDownType.value === 'mouse',
-        validation: $v,
+        validation: validation,
       })
     }
 
@@ -467,7 +467,7 @@ function createStore(injectionKey?: string) {
       preAddedItem,
       addedItems,
       addedItemById,
-      addItemArk: $v,
+      addItemArk: validation,
 
       // Focus
       itemFocused,

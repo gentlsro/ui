@@ -3,12 +3,12 @@ import type { IInputWrapperProps } from '../../InputWrapper/types/input-wrapper-
 
 export function useInputValidationUtils(props: IInputWrapperProps) {
   const path = computed(() => {
-    if (props.$v) {
-      if (typeof props.$v === 'string') {
-        return props.$v
+    if (props.validationPath) {
+      if (typeof props.validationPath === 'string') {
+        return props.validationPath
       }
 
-      return props.$v?.path
+      return props.validationPath?.path
     }
 
     if (props.validation) {
@@ -18,22 +18,26 @@ export function useInputValidationUtils(props: IInputWrapperProps) {
     return ''
   })
 
-  const { $v } = props.validation
-    ? { $v: undefined } as any
+  const { validation } = props.validation
+    ? { validation: undefined } as any
     : useArk({
-        scope: typeof props.$v === 'string' ? undefined : props.$v?.scope,
+        scope: typeof props.validationPath === 'string' ? undefined : props.validationPath?.scope,
       })
 
   const arkResult = computed(() => {
-    return props.validation ?? $v.getMeta(path.value)
+    if (!path.value) {
+      return undefined
+    }
+
+    return props.validation ?? validation.getMeta(path.value)
   })
 
   const isRequired = computed(() => {
-    return arkResult.value.isRequired
+    return arkResult.value?.isRequired
   })
 
   const issues = computed(() => {
-    if (arkResult.value.isValidationVisible) {
+    if (arkResult.value?.isValidationVisible) {
       return arkResult.value.messages
     }
 

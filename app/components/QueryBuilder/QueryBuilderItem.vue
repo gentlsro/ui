@@ -135,7 +135,7 @@ function handleComparatorChange() {
 }
 
 // Validation
-const { $v } = useArk({
+const { validation } = useArk({
   state: item,
   schema: type({
     'field': 'string',
@@ -189,7 +189,7 @@ const { $v } = useArk({
         option-label="_label"
         :readonly="!editable"
         class="qb-item__content-field"
-        :validation="$v.getMeta('field')"
+        :validation="validation.getMeta('field')"
         data-cy="qb-item__content-field"
         @update:model-value="handleFieldChange"
       >
@@ -227,7 +227,7 @@ const { $v } = useArk({
           :editable
           class="qb-item__content-comparator"
           :extra-comparators="customFilterComponent?.comparators"
-          :validation="$v.getMeta('comparator')"
+          :validation="validation.getMeta('comparator')"
           @update:comparator="handleComparatorChange"
         />
 
@@ -240,7 +240,7 @@ const { $v } = useArk({
             :column="colSelected"
             :item
             :editable
-            :validation="$v.getMeta('value')"
+            :validation="validation.getMeta('value')"
             class="qb-item__content-value"
           />
         </div>
