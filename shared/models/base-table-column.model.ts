@@ -1,3 +1,4 @@
+import { get } from 'lodash-es'
 import type { Required } from 'utility-types'
 import type { ExtendedDataType } from '$dataType'
 
@@ -22,6 +23,14 @@ export class BaseTableColumn<T = IItem> {
    * Function to format the value of the column
    */
   format?: (row: T, value?: any) => any
+
+  /**
+   * Function that defines how do we access a value for this column
+   * for a specific row
+   */
+  valueGetter(row: T) {
+    return get(row, this.field) as any
+  }
 
   /**
    * The data type of the column
