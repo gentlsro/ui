@@ -42,6 +42,11 @@ export class BaseTableColumn<T = IItem> {
    */
   label?: string | (() => string)
 
+  /**
+   * Marks the column as searchable
+   */
+  searchable?: boolean
+
   constructor(obj: Required<Partial<BaseTableColumn<T>>, 'field'>) {
     this.field = obj.field
     this.filterField = obj.filterField
@@ -49,5 +54,6 @@ export class BaseTableColumn<T = IItem> {
     this.label = obj.label
     this.needsFields = obj.needsFields
     this.format = obj.format
+    this.searchable = obj.searchable ?? false
   }
 }
