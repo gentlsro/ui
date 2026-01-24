@@ -115,8 +115,15 @@ export function useArk<Validation extends Type = any>(payload?: IPayload<Validat
       errors = validPaths.flatMap(path => errorsStructure.value.byScopeByPath[scope]?.[path] ?? [])
     }
 
-    const schema = errors[0]?.$schema
-    const isRequired = schema ? isFieldRequired({ path: String(path), schema }) : false
+    // Get schema from errors first, fallback to the schema passed to useArk,
+    // or try to find it in validationPartsByScope
+    const resolvedSchema = errors[0]?.$schema
+      ?? schema
+      ?? validationPartsByScope.value[scope]?.[0]?.schema
+
+    const isRequired = resolvedSchema && path
+      ? isFieldRequired({ path: String(path), schema: resolvedSchema })
+      : false
 
     const messages = errors.map(arkError => arkError.$message)
     const message = messages.join(' • ')
