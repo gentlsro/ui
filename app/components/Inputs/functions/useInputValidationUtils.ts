@@ -21,7 +21,10 @@ export function useInputValidationUtils(props: IInputWrapperProps) {
   const { validation } = props.validation
     ? { validation: undefined } as any
     : useArk({
-        scope: typeof props.validationPath === 'string' ? undefined : props.validationPath?.scope,
+        ...(props.validationPath
+          && typeof props.validationPath === 'object'
+          && { scope: props.validationPath?.scope }
+        ),
       })
 
   const arkResult = computed(() => {

@@ -98,10 +98,15 @@ defineExpose({ focus, select })
       v-if="isLoadingByNodeId[node.id]"
       size="h-5 w-5"
     />
-    <div
+
+    <slot
       v-else
-      class="i-hugeicons:file-01 shrink-0 w-5 h-5"
-    />
+      name="icon"
+    >
+      <div
+        class="i-hugeicons:file-01 shrink-0 w-5 h-5"
+      />
+    </slot>
 
     <span
       :key="triggerKey"
@@ -119,6 +124,8 @@ defineExpose({ focus, select })
     >
       {{ get(node.ref, labelKey) }}
     </span>
+
+    <slot name="append" />
   </div>
 </template>
 

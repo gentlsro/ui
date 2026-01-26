@@ -24,3 +24,49 @@ html.dark {
 .router-link-active {
   @apply color-primary;
 }
+
+.management-page {
+  @apply overflow-auto gap-2 p-2;
+
+  display: grid !important;
+  grid-template-columns: 400px 5fr;
+
+
+  > .list {
+    @apply flex flex-col overflow-auto rounded-custom overflow-auto
+    bg-slate-100 dark:bg-dark-950;
+
+    .title {
+      @apply flex items-center order-first p-l-4 p-r-2 p-y-1 rounded-t-custom min-h-38px;
+      @apply bg-slate-700 dark:bg-black color-white;
+    }
+  }
+
+  > .empty {
+    @apply flex items-center flex-col gap-2 text-caption bg-slate-100 dark:bg-dark-950 rounded-custom p-2;
+    padding-top: 20dvh;
+  }
+
+  @screen lt-lg {
+    grid-template-columns: 320px 1fr;
+  }
+
+  @screen lt-md {
+    @apply p-1;
+    
+    grid-template-columns: 1fr;
+
+    &:not(.is-item-selected) {
+      > .detail,
+      > .empty {
+        display: none;
+      }
+    }
+
+    &.is-item-selected {
+      > .list {
+        display: none;
+      }
+    }
+  }
+}

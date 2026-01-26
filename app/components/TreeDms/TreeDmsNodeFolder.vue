@@ -121,6 +121,8 @@ defineExpose({ focus, select })
     >
       {{ get(node.ref, labelKey) }}
     </span>
+
+    <slot name="append" />
   </div>
 </template>
 

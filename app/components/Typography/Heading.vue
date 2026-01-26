@@ -58,10 +58,6 @@ const containerStyle = computed(() => {
   }
 }
 
-.section .heading {
-  @apply p-x-0;
-}
-
 .heading.is-filled {
   &::before {
     content: unset;

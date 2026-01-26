@@ -123,12 +123,33 @@ const getParentNode: NonUndefined<ITreeProps<T>['dndConfig']>['getParentNode'] =
       <TreeDmsNodeFolder
         v-if="node.ref.type === folderKey"
         :node
-      />
+      >
+        <template #append>
+          <slot
+            name="append"
+            :node
+          />
+        </template>
+      </TreeDmsNodeFolder>
 
       <TreeDmsNodeFile
         v-else
         :node
-      />
+      >
+        <template #icon>
+          <slot
+            name="icon"
+            :node
+          />
+        </template>
+
+        <template #append>
+          <slot
+            name="append"
+            :node
+          />
+        </template>
+      </TreeDmsNodeFile>
     </template>
 
     <template #inner>
