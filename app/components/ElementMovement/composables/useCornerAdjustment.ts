@@ -53,7 +53,7 @@ export function useCornerAdjustment(payload: {
   corners: Ref<ICornerResizeProps['modelValue']>
   referenceEl?: MaybeElementRef<any>
   limits?: Partial<Record<Corner, CornerLimits>>
-  step?: number
+  step?: number | null
   inverted?: boolean | Partial<Record<Corner, boolean>>
 }) {
   const {

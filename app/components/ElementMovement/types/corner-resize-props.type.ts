@@ -17,7 +17,7 @@ export type ICornerResizeProps = {
   /**
    * Step size for value changes (snaps to nearest multiple)
    */
-  step?: number
+  step?: number | null
 
   /**
    * Invert resize behavior for corners. Can be:
