@@ -16,7 +16,7 @@ export const BTN_DEFAULT_PROPS = {
       const dimmed = '[&.is-dimmed]:(opacity-80 hover:opacity-100)'
       const round = '[&.is-round]:rounded-full'
       const rounded = '[&.is-rounded]:rounded-custom'
-      const outlined = '[&.is-outlined]:(dark:bg-darker bg-white border-solid border-2 border-current)'
+      const outlined = '[&.is-outlined]:(dark:bg-darker bg-white outline-solid outline-2 outline-current)'
 
       // Alignment
       const alignLeft = '[&.is-left]:justify-start'
