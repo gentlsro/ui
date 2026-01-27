@@ -226,7 +226,7 @@ defineExpose({
   }
 
   &.is-outlined {
-    @apply dark:bg-darker bg-white border-solid border-2 border-current;
+    @apply dark:bg-darker bg-white outline-solid outline-2 outline-current;
   }
 
   &--auto {
