@@ -154,6 +154,13 @@ const getParentNode: NonUndefined<ITreeProps<T>['dndConfig']>['getParentNode'] =
 
     <template #inner>
       <TreeDmsContextMenu />
+      <TreeDmsDropZone
+        v-model="model"
+        :tree-props
+        :drop-zone-config
+        :file-key
+        :folder-key
+      />
     </template>
   </Tree>
 </template>

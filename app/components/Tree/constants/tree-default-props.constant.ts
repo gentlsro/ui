@@ -6,7 +6,7 @@ import type { ITreeProps } from '../types/tree-props.type'
 export const TREE_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'p-1'
+      const base = 'relative p-1'
 
       return {
         base,

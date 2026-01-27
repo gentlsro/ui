@@ -75,4 +75,25 @@ export type ITreeDmsProps<T extends IItem = IItem> = {
       parent?: T | null
     }) => T | Promise<T>
   }
+
+  /**
+   * Drop configuration
+   */
+  dropZoneConfig?: {
+    /**
+     * Whether the drop is allowed / enabled
+     */
+    enabled?: boolean
+
+    /**
+     * The key to use for the file items
+     */
+    fnc?: (payload: {
+      item: ProcessedItem
+      file?: File
+      parent?: T | null
+      fileKey?: string
+      folderKey?: string
+    }) => T | Promise<T>
+  }
 }
