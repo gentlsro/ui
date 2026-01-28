@@ -52,15 +52,12 @@ watch(height, () => {
 </script>
 
 <template>
-  <Banner
+  <div
     v-if="!isLoading && !listItems?.length"
-    ref="bannerEl"
-    no-transition
+    class="list-no-data"
     :class="noDataClass"
     :style="noDataStyle"
   >
-    <span text-caption>
-      {{ $t('general.noData') }}
-    </span>
-  </Banner>
+    {{ $t('general.noData') }}
+  </div>
 </template>

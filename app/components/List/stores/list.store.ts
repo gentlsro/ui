@@ -267,7 +267,7 @@ function createStore(injectionKey?: string) {
           hasExactMatch: hasExactMatch.value,
           search: search.value,
           itemLabel: itemLabel.value,
-          validation: validation,
+          validation,
         })
 
         itemsGrouped.value = res.items
@@ -316,7 +316,7 @@ function createStore(injectionKey?: string) {
         isAddedItem: !!addedItemById.value[item.id],
         clearable: isClearable.value,
         shouldFocusSearch: lastPointerDownType.value === 'mouse',
-        validation: validation,
+        validation,
       })
     }
 
@@ -355,6 +355,7 @@ function createStore(injectionKey?: string) {
         items: items.value,
         modifiers: modifiers.value,
         totalRows: totalRows.value,
+        emits: emits.value,
         ...payload,
       })
     }
@@ -413,6 +414,7 @@ function createStore(injectionKey?: string) {
       itemClick: _row => {},
       groupClick: _row => {},
       itemMoved: (_item, _items) => {},
+      fetchData: _payload => {},
     })
 
     const returnedData = {

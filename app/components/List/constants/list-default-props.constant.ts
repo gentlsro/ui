@@ -104,7 +104,7 @@ export const LIST_DEFAULT_PROPS = {
     },
 
     noDataClass() {
-      const base = 'p-b-2'
+      const base = 'p-x-3 p-t-2 p-b-4 color-ca font-rem-14'
 
       return {
         base,

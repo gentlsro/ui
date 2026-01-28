@@ -10,4 +10,11 @@ export type IListEmitFncs = {
   itemClick: (row: IListItem) => void
   groupClick: (row: IGroupRow) => void
   itemMoved: (item: any, items: any[]) => void
+  fetchData: (payload: {
+    itemsFetched: IItem[]
+    hasMore: boolean
+    isFetchMore?: boolean
+    currentItems: IItem[]
+    totalRows: number
+  }) => void
 }

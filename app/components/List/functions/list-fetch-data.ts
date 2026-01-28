@@ -17,6 +17,7 @@ export async function listFetchData(payload: {
   items: IItem[]
   modifiers?: IListProps['modifiers']
   totalRows?: number
+  emits: IListEmitFncs
 }) {
   const {
     search,
@@ -28,6 +29,7 @@ export async function listFetchData(payload: {
     hasMore,
     modifiers,
     totalRows = 0,
+    emits,
   } = payload
 
   const { fnc, countKey, payloadKey } = loadData ?? {}
@@ -71,6 +73,14 @@ export async function listFetchData(payload: {
   const _count = countKey
     ? (get(res, countKey) ?? totalRows)
     : _items.length
+
+  emits.fetchData({
+    itemsFetched: _items,
+    hasMore: _count > _items.length,
+    isFetchMore,
+    currentItems: items,
+    totalRows: _count,
+  })
 
   if (onFetchData) {
     return onFetchData({

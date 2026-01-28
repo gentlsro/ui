@@ -100,9 +100,10 @@ export function useArk<Validation extends Type = any>(payload?: IPayload<Validat
     path?: ObjectKey<Validation['infer']>,
     options?: {
       includeChildren?: boolean
+      includeAncestors?: boolean
     },
   ): IArkResult {
-    const { includeChildren = false } = options ?? {}
+    const { includeChildren = false, includeAncestors = false } = options ?? {}
 
     let errors = path
       ? (errorsStructure.value.byScopeByPath[scope]?.[path] ?? [])
@@ -111,6 +112,18 @@ export function useArk<Validation extends Type = any>(payload?: IPayload<Validat
     if (includeChildren && path) {
       const validPaths = Object.keys((errorsStructure.value.byScopeByPath[scope] ?? []))
         .filter(p => p.startsWith(path))
+
+      errors = validPaths.flatMap(path => errorsStructure.value.byScopeByPath[scope]?.[path] ?? [])
+    }
+
+    if (includeAncestors && path) {
+      const pathParts = path.split('.')
+      const validPaths: string[] = []
+      const errorPaths = Object.keys((errorsStructure.value.byScopeByPath[scope] ?? []))
+
+      pathParts.forEach(part => {
+        validPaths.push(...errorPaths.filter(p => p === part))
+      })
 
       errors = validPaths.flatMap(path => errorsStructure.value.byScopeByPath[scope]?.[path] ?? [])
     }

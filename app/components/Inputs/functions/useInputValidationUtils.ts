@@ -40,8 +40,10 @@ export function useInputValidationUtils(props: IInputWrapperProps) {
   })
 
   const issues = computed(() => {
+    const msgs = arkResult.value?.messages ?? []
+
     if (arkResult.value?.isValidationVisible) {
-      return arkResult.value.messages
+      return msgs
     }
 
     return []

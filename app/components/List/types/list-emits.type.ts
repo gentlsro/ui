@@ -12,4 +12,11 @@ export type IListEmits = {
   (e: 'click:group', row: IGroupRow): void
   (e: 'change:contentSize', payload: { height: number }): void
   (e: 'move:item', payload: { item: any, items: any[] }): void
+  (e: 'fetch:data', payload: {
+    itemsFetched: IItem[]
+    hasMore: boolean
+    isFetchMore?: boolean
+    currentItems: IItem[]
+    totalRows: number
+  }): void
 }
