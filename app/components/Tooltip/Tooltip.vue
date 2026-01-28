@@ -198,7 +198,14 @@ const arrowStyle = computed(() => {
         :style="arrowStyle"
       />
 
-      <slot>
+      <slot
+        :content-class
+        :content-style
+        :description-class
+        :description-style
+        :title-class
+        :title-style
+      >
         <div
           v-if="content"
           class="tooltip__content"

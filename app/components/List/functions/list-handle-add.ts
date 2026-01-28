@@ -33,11 +33,12 @@ export function listHandleAdd(payload: {
   }
 
   // Transform the item
-  const _item = (klona(item)) as IListItemToAdd
-  _item.ref = isSelected
-    ? _item.ref
-    : transformAddedItem?.(_item.ref, handleTransformFnc) ?? _item.ref
+  item.ref = isSelected
+    ? item.ref
+    : transformAddedItem?.(item.ref, handleTransformFnc)
 
+  // Clone the item
+  const _item = (klona(item)) as IListItemToAdd
   _item._isNew = true
 
   // Multi

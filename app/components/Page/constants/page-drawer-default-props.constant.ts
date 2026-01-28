@@ -18,8 +18,7 @@ export const PAGE_DRAWER_DEFAULT_PROPS = {
 
     contentClass() {
       const base = 'flex flex-col flex-grow overflow-auto pointer-events-auto bg-white dark:bg-dark-950'
-      const border = `dark:group-[.page-drawer--left]:(border-r-1 border-black)
-      light:group-[.page-drawer--left]:(shadow-md shadow-ca)`
+      const border = 'dark:group-[.page-drawer--left]:(border-r-1 border-black) light:group-[.page-drawer--left]:(shadow-md shadow-ca)'
 
       return {
         base,
@@ -30,8 +29,7 @@ export const PAGE_DRAWER_DEFAULT_PROPS = {
 
     bottomClass() {
       const base = 'flex shrink-0 overflow-auto pointer-events-auto bg-white dark:bg-dark-950 p-1'
-      const border = `dark:group-[.page-drawer--left]:(border-r-1 border-black)
-      light:group-[.page-drawer--left]:(shadow-md shadow-ca)`
+      const border = 'dark:group-[.page-drawer--left]:(border-r-1 border-black) light:group-[.page-drawer--left]:(shadow-md shadow-ca)'
 
       return {
         base,

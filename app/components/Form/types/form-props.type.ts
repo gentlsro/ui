@@ -16,6 +16,11 @@ export type IFormProps = {
   bordered?: boolean
 
   /**
+   * The element to use for the content
+   */
+  contentElement?: string | any
+
+  /**
    * Control elements to display in the form
    */
   editControls?:

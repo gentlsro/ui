@@ -149,13 +149,14 @@ const controlsStyle = computed(() => {
   >
     <slot name="above" />
 
-    <div
+    <Component
+      :is="contentElement ?? 'div'"
       class="form__content"
       :class="contentClass"
       :style="contentStyle"
     >
       <slot :submit="handleSubmit" />
-    </div>
+    </Component>
 
     <slot name="errors">
       <FormErrors

@@ -101,6 +101,15 @@ defineExpose({
     .focus="focus"
     @click="handleClickWrapper"
   >
+    <!-- Label -->
+    <template #label="labelProps">
+      <slot
+        name="label"
+        v-bind="labelProps"
+      />
+    </template>
+
+    <!-- Prepend -->
     <template
       v-if="$slots.prepend"
       #prepend
@@ -112,6 +121,7 @@ defineExpose({
       />
     </template>
 
+    <!-- Default -->
     <template #default="{ inputClass, inputStyle }">
       <textarea
         :id="inputId"
@@ -183,6 +193,10 @@ defineExpose({
       #hint
     >
       <slot name="hint" />
+    </template>
+
+    <template #menu>
+      <slot name="menu" />
     </template>
   </InputWrapper>
 </template>

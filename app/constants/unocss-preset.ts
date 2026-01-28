@@ -45,7 +45,11 @@ export function gentlUIPreset(): Preset {
         },
       },
     },
+    blocklist: [
+      /^ps/, // blocks all ps-* utilities
+    ],
     rules: [
+      [/^ps/, () => ({})], // matches ps-* but generates nothing
       [/^font-rem-(\d+)$/, ([, d]) => ({ 'font-size': `${+(d ?? 0) / fontSize}rem` })],
       ['flex-grow-max', { flex: '10000 1 0%' }],
       ['text-last-center', { 'text-align-last': 'center' }],

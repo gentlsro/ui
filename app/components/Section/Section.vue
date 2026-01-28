@@ -88,6 +88,8 @@ const contentStyle = computed(() => {
       v-if="$slots.title || title"
       name="title"
       :ui="mergedProps.ui"
+      :title-class
+      :title-style
     >
       <Component
         :is="Heading"
@@ -105,6 +107,8 @@ const contentStyle = computed(() => {
       v-if="$slots.subtitle || subtitle"
       name="subtitle"
       :ui="mergedProps.ui"
+      :subtitle-class
+      :subtitle-style
     >
       <p
         class="section__subtitle"

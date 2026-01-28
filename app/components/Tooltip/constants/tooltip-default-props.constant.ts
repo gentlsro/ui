@@ -6,7 +6,7 @@ import type { ITooltipProps } from '../types/tooltip-props.type'
 export const TOOLTIP_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'p-x-2 p-y-1 rounded-custom border-custom border-ca'
+      const base = 'p-x-2 p-y-0.5 rounded-custom border-custom border-ca'
       const bg = 'dark:bg-darker bg-white'
       const font = 'font-size-$Tooltip-font-size color-$Tooltip-font-color'
       const noInheritFontStyle = '[&.no-inherit-font-style]:(font-normal normal-case text-base)'

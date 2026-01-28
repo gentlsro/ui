@@ -28,4 +28,9 @@ export type IListItem<T = any> = {
    * The index of the item
    */
   index: number
+
+  /**
+   * Whether the item is new
+   */
+  _isNew?: boolean
 }

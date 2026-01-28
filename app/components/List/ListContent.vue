@@ -29,6 +29,7 @@ const {
   isFetchMore,
   searchConfig,
   dragMeta,
+  addedItemById,
   fetchAndSetData,
 } = useListStore()
 
@@ -119,6 +120,7 @@ const contentStyle = computed(() => {
               :index
               :is-disabled
               :is-selected
+              :is-added="!!addedItemById[row.id]"
             />
           </template>
 

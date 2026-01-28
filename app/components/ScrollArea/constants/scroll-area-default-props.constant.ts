@@ -3,7 +3,7 @@
 export const SCROLL_AREA_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'overflow-hidden ps-0'
+      const base = 'overflow-hidden'
 
       return {
         base,

@@ -529,6 +529,7 @@ export const defaultComponentsConfig = {
       hasControls: undefined,
       labelForcedVisibility: true,
       noControls: undefined,
+      contentElement: 'div',
       noEditControls: undefined,
       noShortcuts: undefined,
       noSubmit: undefined,
@@ -687,7 +688,7 @@ export const defaultComponentsConfig = {
       selectionConfig: {
         enabled: false,
         multi: false,
-        checkboxProps: { class: 'm-t-1.5' },
+        checkboxProps: { class: 'm-t-1' },
       },
       loadData: {
         fnc: undefined,
