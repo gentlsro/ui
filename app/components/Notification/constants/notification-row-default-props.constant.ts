@@ -75,7 +75,7 @@ export const NOTIFICATION_ROW_DEFAULT_PROPS = {
     },
 
     subtitleClass() {
-      const base = 'tracking-wide text-sm color-black dark:color-white break-words p-b-3'
+      const base = 'tracking-wide text-sm color-black dark:color-white break-words p-b-2 p-t-1.5'
 
       return {
         base,
@@ -84,7 +84,7 @@ export const NOTIFICATION_ROW_DEFAULT_PROPS = {
     },
 
     subtitleItemClass() {
-      const base = 'list-inside text-caption p-b-2'
+      const base = 'list-inside text-caption p-b-1'
 
       return {
         base,

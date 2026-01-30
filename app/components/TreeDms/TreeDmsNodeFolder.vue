@@ -61,6 +61,11 @@ function handleKeyPress(ev: KeyboardEvent) {
   }
 }
 
+function handleCancel() {
+  removeNode(node.value)
+  nodeEditing.value = undefined
+}
+
 // Focus & blur handling
 whenever(
   () => nodeEditing.value?.id === props.node.id,
@@ -122,7 +127,20 @@ defineExpose({ focus, select })
       {{ get(node.ref, labelKey) }}
     </span>
 
-    <slot name="append" />
+    <!-- Cancel create -->
+    <Btn
+      v-if="node.ref.__isNew"
+      size="xs"
+      m="l-auto r-1"
+      color="negative"
+      :label="$t('general.cancel')"
+      @mousedown.stop.prevent="handleCancel"
+    />
+
+    <slot
+      name="append"
+      :is-new="node.ref.__isNew"
+    />
   </div>
 </template>
 
