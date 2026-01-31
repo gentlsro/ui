@@ -675,6 +675,7 @@ export const defaultComponentsConfig = {
       searchConfig: {
         enabled: true,
         fuseSearchToken: "'",
+        focusFirstOnSearch: 'when-focused',
         inputProps: {
           autofocus: true,
         },

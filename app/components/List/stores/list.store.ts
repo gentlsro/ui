@@ -277,7 +277,10 @@ function createStore(injectionKey?: string) {
         const isOutOfBounds = itemFocusedIdx.value > listItems.value.length - 1
         const isGroupFocused = 'isGroup' in (listItems.value[itemFocusedIdx.value] ?? {})
 
-        if (isFocusedWithin.value && (isNothingFocused || isOutOfBounds || isGroupFocused)) {
+        const shouldFocusFirstItem = searchConfig.value?.focusFirstOnSearch === 'always'
+          || (searchConfig.value?.focusFirstOnSearch === 'when-focused' && isFocusedWithin.value)
+
+        if (shouldFocusFirstItem && (isNothingFocused || isOutOfBounds || isGroupFocused)) {
           const firstNonGroupItemIndex = listItems.value.findIndex(item => !('isGroup' in item))
           itemFocusedIdx.value = firstNonGroupItemIndex
         }

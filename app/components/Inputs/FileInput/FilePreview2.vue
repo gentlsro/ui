@@ -201,13 +201,17 @@ function handleImageClick(url: string) {
         <template v-else-if="!file.isUploading && !file.isUploaded">
           <div class="i-ion:cloud-upload color-ca h-12 w-12" />
 
-          <p text="caption">
+          <p
+            text="caption"
+            font="rem-13"
+          >
             {{ $t('file.added') }}
           </p>
 
           <span
             text="xs caption"
-            m="t--2"
+            font="rem-11"
+            m="t--4"
           >
             {{ formatBytes(file.file.size) }}
           </span>

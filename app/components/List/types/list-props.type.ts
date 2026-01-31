@@ -302,6 +302,13 @@ export type IListProps = {
      * is resolved. If no `loadData.fnc` is provided, the search will be triggered immediately
      */
     syncWithLoad?: boolean
+
+    /**
+     * When searching, the first available (selectable) item should be focused
+     * - `when-focused`: When the `List` is focused (most likely via the `SearchInput)
+     * - `always`: Whenever the search is triggered
+     */
+    focusFirstOnSearch?: 'when-focused' | 'always'
   }
 
   /**
