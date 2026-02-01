@@ -104,32 +104,20 @@ watchThrottled(search, fetchAndSetIcons, {
       </ScrollArea>
 
       <!-- Search not long -->
-      <Banner
+      <div
         v-else-if="!search || search.length < minSearchLength"
-        :label="$t('general.atLeastCharactersToSearch', { count: minSearchLength })"
-        border="!none"
-        m="t-3 b-2"
-        icon-center
-        no-transition
-        :ui="{
-          iconClass: ({ defaults }) => `${defaults.base} !m-t-0 !w-4 !h-4`,
-          labelClass: ({ defaults }) => `${defaults.base} !p-y-0 font-rem-12`,
-        }"
-      />
+        class="p-x-3 p-y-2 color-ca font-rem-14"
+      >
+        {{ $t('general.atLeastCharactersToSearch', { count: minSearchLength }) }}
+      </div>
 
       <!-- No data -->
-      <Banner
+      <div
         v-else
-        :label="$t('general.noResults')"
-        border="!none"
-        m="t-3 b-2"
-        icon-center
-        no-transition
-        :ui="{
-          iconClass: ({ defaults }) => `${defaults.base} !m-t-0 !w-4 !h-4`,
-          labelClass: ({ defaults }) => `${defaults.base} !p-y-0 font-rem-12`,
-        }"
-      />
+        class="p-x-3 p-y-2 color-ca font-rem-14"
+      >
+        {{ $t('general.noResults') }}
+      </div>
     </slot>
   </div>
 </template>
