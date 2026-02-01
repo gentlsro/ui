@@ -26,7 +26,7 @@ function handleStructureItemCreated(payload: {
 }) {
   const { item, parentItem } = payload
 
-  const parent = parentItem?.type === StructureItemType.FOLDER ? parentItem : undefined
+  const parent = parentItem?.type === 'FOLDER' ? parentItem : undefined
 
   if (parent) {
     // @ts-expect-error
