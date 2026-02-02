@@ -26,7 +26,7 @@ export const COLLAPSE_DEFAULT_PROPS = {
     },
 
     headerRightClass() {
-      const base = 'flex items-center gap-1 items-center self-start shrink-0'
+      const base = 'flex self-center items-center gap-1 items-center self-start shrink-0'
 
       return {
         base,

@@ -162,7 +162,7 @@ const imageUrl = computed(() => {
     @apply flex flex-center p-b-4 p-x-3;
 
     img {
-      @apply rounded-3 object-cover object-center h-20;
+      @apply rounded-3 object-contain object-center h-20;
     }
   }
 
