@@ -260,11 +260,11 @@ const collapseProps = computed(() => {
     border-transparent;
 
   transition:
-    background-color 0.3s ease-in-out,
-    shadow 0.3s ease-in-out;
+    background-color 0.15s ease-in-out,
+    shadow 0.15s ease-in-out;
 
   &.is-hovered {
-    @apply bg-white dark:bg-darker shadow-consistent shadow-ca;
+    @apply bg-white dark:bg-black;
 
     & > li {
       @apply border-1 border-ca border-dashed;

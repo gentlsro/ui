@@ -147,6 +147,7 @@ const { validation } = useArk({
     if (isNonValueComparator.value) {
       return isNil(value)
     }
+    console.log('isNonValueComparator', isNonValueComparator.value, isNil(value))
 
     return !isNil(value)
   }),
@@ -268,11 +269,11 @@ const { validation } = useArk({
     items-center bg-slate-100 dark:bg-dark-950 border-1 border-transparent;
 
   transition:
-    background-color 0.3s ease-in-out,
-    shadow 0.3s ease-in-out;
+    background-color 0.15s ease-in-out,
+    shadow 0.15s ease-in-out;
 
   &.is-hovered {
-    @apply bg-white dark:bg-darker z-1 shadow-consistent-xs shadow-ca;
+    @apply bg-white dark:bg-black z-1;
   }
 
   &.is-dragged {

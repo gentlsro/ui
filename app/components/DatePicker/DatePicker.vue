@@ -221,7 +221,7 @@ function getLastValue() {
     return model.value[model.value.length - 1]
   }
 
-  return model.value
+  return model.value || $date()
 }
 
 watch(

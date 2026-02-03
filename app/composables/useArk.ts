@@ -52,12 +52,11 @@ export function useArk<Validation extends Type = any>(payload?: IPayload<Validat
   const self = getCurrentInstance()
   const componentName = `${getComponentName(self)}_${generateUUID()}`
 
-  const validationStore = useValidationStore()
   const {
     isValidationVisibleByScope,
     validationPartsByScope,
     errorsStructure,
-  } = storeToRefs(validationStore)
+  } = useValidationStore()
 
   // Init - handle `immediate`
   if (immediate) {
@@ -101,13 +100,26 @@ export function useArk<Validation extends Type = any>(payload?: IPayload<Validat
     options?: {
       includeChildren?: boolean
       includeAncestors?: boolean
+
+      /**
+       * When true, the errors will be returned for the current component only
+       *
+       * @default true
+       */
+      local?: boolean
     },
   ): IArkResult {
-    const { includeChildren = false, includeAncestors = false } = options ?? {}
+    const { includeChildren = false, includeAncestors = false, local = true } = options ?? {}
 
-    let errors = path
-      ? (errorsStructure.value.byScopeByPath[scope]?.[path] ?? [])
-      : (errorsStructure.value.byScope[scope] ?? [])
+    let errors: ExtendedArkError[] = []
+
+    if (local && path) {
+      errors = errorsStructure.value.byScopeByComponentNameByPath[scope]?.[componentName]?.[path] ?? []
+    } else if (path) {
+      errors = errorsStructure.value.byScopeByPath[scope]?.[path] ?? []
+    } else {
+      errors = errorsStructure.value.byScope[scope] ?? []
+    }
 
     if (includeChildren && path) {
       const validPaths = Object.keys((errorsStructure.value.byScopeByPath[scope] ?? []))
