@@ -1,15 +1,42 @@
 import { type } from 'arktype'
-import type { ArkError, ArkErrors, Type } from 'arktype'
+import { z } from 'zod'
 
-export type ExtendedArkError = ArkError & {
-  $schema: Type
+// Utils
+import { translateZodIssue } from '#layers/utilities/app/functions/translate-zod-issue'
+import type { SchemaType } from '../functions/is-field-required'
+import { isZodSchema } from '../functions/is-field-required'
+
+/**
+ * Get translated message from a Zod issue
+ */
+function getZodIssueMessage(issue: z.ZodIssue): string {
+  // Cast needed due to Zod internal type differences between ZodIssue and $ZodIssue
+  const result = (translateZodIssue as (issue: unknown) => string | { message: string } | null | undefined)(issue)
+
+  if (!result) {
+    return issue.message
+  }
+
+  if (typeof result === 'string') {
+    return result
+  }
+
+  return result.message ?? issue.message
+}
+
+export type ExtendedError = {
+  error: unknown
+
+  $path: string
+  $schema: SchemaType
   $message: string
   $componentName?: string
 }
 
 type IValidationPart = {
+  scope?: string
   state?: MaybeRefOrGetter<any>
-  schema?: Type
+  schema?: SchemaType
   componentName?: string
 }
 
@@ -21,59 +48,80 @@ export const VALIDATION_INJECTION_KEY: InjectionKey<string> = Symbol('__validati
 
 function resolveErrorsRecursively(payload: {
   result: unknown
-  errors?: ExtendedArkError[]
-  schema: Type
+  errors?: ExtendedError[]
+  schema: SchemaType
   componentName?: string
 }) {
   const { result, errors, schema, componentName } = payload
 
+  // ArkType
   if (result instanceof type.errors) {
     const resultFlat = result.flat().flatMap(err => err.flat)
 
     resultFlat.forEach(result => {
       const $message = translateArkError(result, $t)
-      const extendedError = Object.assign(
-        {},
-        result,
-        { $message, $schema: schema, $componentName: componentName },
-      )
 
-      errors?.push(extendedError)
+      errors?.push({
+        $path: result.path.join('.'),
+        $message,
+        $schema: schema,
+        $componentName: componentName,
+        error: result,
+      })
+    })
+  }
+
+  // Zod - result is a SafeParseReturnType
+  if (
+    result
+    && typeof result === 'object'
+    && 'success' in result
+    && result.success === false
+    && 'error' in result
+    && result.error instanceof z.ZodError
+  ) {
+    result.error.issues.forEach(issue => {
+      errors?.push({
+        $path: issue.path.join('.'),
+        $message: getZodIssueMessage(issue),
+        $schema: schema,
+        $componentName: componentName,
+        error: issue,
+      })
     })
   }
 }
 
 function createStore(injectionKey?: string) {
   const injectionState = createInjectionState((_payload?: IPayload) => {
-    const validationPartsByScope = ref<Record<string, IValidationPart[]>>({
-      base: [],
-    })
+    const validationParts = ref<IValidationPart[]>([])
 
     const isValidationVisibleByScope = ref<Record<string, boolean>>({})
     const isValidationVisibleByComponentName = ref<Record<string, boolean>>({})
 
     const errorsByScope = computed(() => {
-      return Object.entries(validationPartsByScope.value)
-        .reduce((agg, [scope, validationParts]) => {
+      return validationParts.value
+        .reduce((agg, { scope = 'base', componentName, schema, state }) => {
           if (agg[scope] === undefined) {
             agg[scope]! = []
           }
 
-          validationParts.forEach(validationPart => {
-            if (validationPart.schema && validationPart.state) {
-              const result = validationPart.schema(toValue(validationPart.state))
+          if (schema && state) {
+            // Handle both ArkType and Zod schemas
+            const result = isZodSchema(schema)
+              ? schema.safeParse(toValue(state))
+              : schema(toValue(state))
 
-              resolveErrorsRecursively({
-                result,
-                schema: validationPart.schema,
-                errors: agg[scope],
-                componentName: validationPart.componentName,
-              })
-            }
-          })
+            resolveErrorsRecursively({
+              result,
+              schema,
+              errors: agg[scope],
+              componentName,
+            })
+          }
 
           return agg
-        }, {} as Record<string, ExtendedArkError[]>)
+        }, {} as Record<string, ExtendedError[]>)
     })
 
     const errorsStructure = computed(() => {
@@ -85,23 +133,23 @@ function createStore(injectionKey?: string) {
             agg[scope]! = {}
           }
 
-          const arkErrorsByComponentName = errors
-            .reduce((agg, arkError) => {
-              const componentName = arkError.$componentName ?? '__unknown__'
+          const errorsByComponentName = errors
+            .reduce((agg, error) => {
+              const componentName = error.$componentName ?? '__unknown__'
 
               if (agg[componentName] === undefined) {
                 agg[componentName] = []
               }
 
-              agg[componentName]?.push(arkError)
+              agg[componentName]?.push(error)
 
               return agg
-            }, {} as Record<string, ExtendedArkError[]>)
+            }, {} as Record<string, ExtendedError[]>)
 
-          agg[scope] = merge(agg[scope], arkErrorsByComponentName)
+          agg[scope] = merge(agg[scope], errorsByComponentName)
 
           return agg
-        }, {} as Record<string, Record<string, ExtendedArkError[]>>)
+        }, {} as Record<string, Record<string, ExtendedError[]>>)
 
       const byScopeByPath = Object.entries(errorsByScope.value)
         .reduce((agg, [scope, errors]) => {
@@ -109,76 +157,44 @@ function createStore(injectionKey?: string) {
             agg[scope]! = {}
           }
 
-          const arkErrorsByPath = errors
-            .reduce((agg, arkError) => {
-              const path = arkError.path.join('.')
+          const errorsByPath = errors
+            .reduce((agg, error) => {
+              const path = error.$path
 
               if (agg[path] === undefined) {
                 agg[path] = []
               }
 
-              agg[path]?.push(arkError)
+              agg[path]?.push(error)
 
               return agg
-            }, {} as Record<string, ExtendedArkError[]>)
+            }, {} as Record<string, ExtendedError[]>)
 
-          agg[scope] = merge(agg[scope], arkErrorsByPath)
-
-          return agg
-        }, {} as Record<string, Record<string, ExtendedArkError[]>>)
-
-      const byScopeByComponentNameByPath = Object.entries(errorsByScope.value)
-        .reduce((agg, [scope, errors]) => {
-          if (agg[scope] === undefined) {
-            agg[scope]! = {}
-          }
-
-          const arkErrorsByComponentNameByPath = errors
-            .reduce((innerAgg, arkError) => {
-              const componentName = arkError.$componentName ?? '__unknown__'
-              const path = arkError.path.join('.')
-
-              if (innerAgg[componentName] === undefined) {
-                innerAgg[componentName] = {}
-              }
-
-              if (innerAgg[componentName]![path] === undefined) {
-                innerAgg[componentName]![path] = []
-              }
-
-              innerAgg[componentName]![path]?.push(arkError)
-
-              return innerAgg
-            }, {} as Record<string, Record<string, ExtendedArkError[]>>)
-
-          agg[scope] = merge(agg[scope], arkErrorsByComponentNameByPath)
+          agg[scope] = merge(agg[scope], errorsByPath)
 
           return agg
-        }, {} as Record<string, Record<string, Record<string, ExtendedArkError[]>>>)
+        }, {} as Record<string, Record<string, ExtendedError[]>>)
 
       return {
         byScope,
         byScopeByPath,
         byScopeByComponentName,
-        byScopeByComponentNameByPath,
       }
     })
 
     function validate(scope: string) {
-      const parts = validationPartsByScope.value[scope]
+      isValidationVisibleByScope.value[scope] = true
 
-      parts?.forEach(part => {
-        if (part.componentName) {
-          isValidationVisibleByComponentName.value[part.componentName] = true
+      validationParts.value.forEach(({ scope: partScope, componentName }) => {
+        if (scope === partScope && componentName) {
+          isValidationVisibleByComponentName.value[componentName] = true
         }
       })
-
-      isValidationVisibleByScope.value[scope] = true
     }
 
     return {
       errorsByScope,
-      validationPartsByScope,
+      validationParts,
       isValidationVisibleByScope,
       isValidationVisibleByComponentName,
       errorsStructure,

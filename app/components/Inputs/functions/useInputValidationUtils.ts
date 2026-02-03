@@ -20,7 +20,7 @@ export function useInputValidationUtils(props: IInputWrapperProps) {
 
   const { validation } = props.validation
     ? { validation: undefined } as any
-    : useArk({
+    : useValidationResult({
         ...(props.validationPath
           && typeof props.validationPath === 'object'
           && { scope: props.validationPath?.scope }
@@ -32,7 +32,7 @@ export function useInputValidationUtils(props: IInputWrapperProps) {
       return undefined
     }
 
-    return props.validation ?? validation.getMeta(path.value)
+    return props.validation ?? validation.getMeta(path.value, { includeChildren: true })
   })
 
   const isRequired = computed(() => {

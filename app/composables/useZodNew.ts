@@ -1,4 +1,4 @@
-import type { Type } from 'arktype'
+import type { z } from 'zod'
 
 // Store
 import { useValidationStore } from '../stores/validation.store'
@@ -11,14 +11,14 @@ type MaybeRefsOrGetters<T> = {
   [K in keyof T]: MaybeRefOrGetter<T[K]>
 }
 
-type IPayload<Validation extends Type> = {
-  state?: MaybeRefOrGetter<Validation['infer']> | MaybeRefsOrGetters<Validation['infer']>
+type IPayload<Validation extends z.ZodType> = {
+  state?: MaybeRefOrGetter<z.infer<Validation>> | MaybeRefsOrGetters<z.infer<Validation>>
   schema?: Validation
   scope?: string
   immediate?: boolean
 }
 
-export type IArkResult = {
+export type IZodNewResult = {
   path?: string
   isRequired: boolean
   message: string
@@ -27,7 +27,7 @@ export type IArkResult = {
   isValidationVisible?: boolean
 }
 
-export function useArk<Validation extends Type = any>(payload?: IPayload<Validation>) {
+export function useZodNew<Validation extends z.ZodType = z.ZodType>(payload?: IPayload<Validation>) {
   const {
     state,
     schema,
@@ -84,7 +84,7 @@ export function useArk<Validation extends Type = any>(payload?: IPayload<Validat
   }
 
   function getMeta(
-    path?: ObjectKey<Validation['infer']>,
+    path?: ObjectKey<z.infer<Validation>>,
     options?: {
       includeChildren?: boolean
 
@@ -95,7 +95,7 @@ export function useArk<Validation extends Type = any>(payload?: IPayload<Validat
        */
       local?: boolean
     },
-  ): IArkResult {
+  ): IZodNewResult {
     const { includeChildren = false, local = true } = options ?? {}
     let errors: ExtendedError[] = []
 
@@ -124,7 +124,7 @@ export function useArk<Validation extends Type = any>(payload?: IPayload<Validat
       errors = errorsStructure.value.byScope[scope] ?? []
     }
 
-    // Get schema from errors first, fallback to the schema passed to useArk,
+    // Get schema from errors first, fallback to the schema passed to useZodNew,
     // or try to find it in validationPartsByScope
     const resolvedSchema = errors[0]?.$schema
       ?? schema

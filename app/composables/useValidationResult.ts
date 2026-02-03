@@ -7,18 +7,11 @@ import type { ExtendedError } from '../stores/validation.store'
 // Utils
 import { isFieldRequired } from '../functions/is-field-required'
 
-type MaybeRefsOrGetters<T> = {
-  [K in keyof T]: MaybeRefOrGetter<T[K]>
-}
-
-type IPayload<Validation extends Type> = {
-  state?: MaybeRefOrGetter<Validation['infer']> | MaybeRefsOrGetters<Validation['infer']>
-  schema?: Validation
+type IPayload = {
   scope?: string
-  immediate?: boolean
 }
 
-export type IArkResult = {
+type IArkResult = {
   path?: string
   isRequired: boolean
   message: string
@@ -27,47 +20,23 @@ export type IArkResult = {
   isValidationVisible?: boolean
 }
 
-export function useArk<Validation extends Type = any>(payload?: IPayload<Validation>) {
+export function useValidationResult(payload?: IPayload) {
   const {
-    state,
-    schema,
     scope = 'base',
-    immediate = false,
   } = payload ?? {}
-
-  const self = getCurrentInstance()
-  const componentName = `${getComponentName(self)}_${generateUUID()}`
 
   const {
     isValidationVisibleByScope,
-    isValidationVisibleByComponentName,
     validationParts,
     errorsStructure,
     validate: validateStore,
   } = useValidationStore()
 
-  // Init - handle `immediate`
-  if (immediate) {
-    validateStore(scope)
-  }
-
-  // Add validation part
-  validationParts.value = [
-    ...validationParts.value,
-    {
-      state,
-      schema,
-      componentName,
-      scope,
-    },
-  ]
-
   // State
   const isValidationVisible = computed(() => {
     const isVisibleScope = isValidationVisibleByScope.value[scope]
-    const isVisibleComponent = isValidationVisibleByComponentName.value[componentName]
 
-    return isVisibleScope && isVisibleComponent
+    return isVisibleScope
   })
 
   function validate() {
@@ -84,7 +53,7 @@ export function useArk<Validation extends Type = any>(payload?: IPayload<Validat
   }
 
   function getMeta(
-    path?: ObjectKey<Validation['infer']>,
+    path?: string,
     options?: {
       includeChildren?: boolean
 
@@ -107,16 +76,11 @@ export function useArk<Validation extends Type = any>(payload?: IPayload<Validat
     }
 
     if (local && path) {
-      if (schema) {
-        errors = validPaths.flatMap(path => errorsStructure.value.byScopeByPath[scope]?.[path] ?? [])
-          .filter(error => error.$schema === schema)
-      } else {
-        const lastValidationPartWithSchemaInScope = validationParts.value.findLast(part => part.scope === scope && part.schema)
+      const lastValidationPartWithSchemaInScope = validationParts.value.findLast(part => part.scope === scope && part.schema)
 
-        if (lastValidationPartWithSchemaInScope) {
-          errors = validPaths.flatMap(path => errorsStructure.value.byScopeByPath[scope]?.[path] ?? [])
-            .filter(error => error.$componentName === lastValidationPartWithSchemaInScope.componentName)
-        }
+      if (lastValidationPartWithSchemaInScope) {
+        errors = validPaths.flatMap(path => errorsStructure.value.byScopeByPath[scope]?.[path] ?? [])
+          .filter(error => error.$componentName === lastValidationPartWithSchemaInScope.componentName)
       }
     } else if (path) {
       errors = validPaths.flatMap(path => errorsStructure.value.byScopeByPath[scope]?.[path] ?? [])
@@ -127,8 +91,8 @@ export function useArk<Validation extends Type = any>(payload?: IPayload<Validat
     // Get schema from errors first, fallback to the schema passed to useArk,
     // or try to find it in validationPartsByScope
     const resolvedSchema = errors[0]?.$schema
-      ?? schema
       ?? validationParts.value.find(part => part.scope === scope && part.schema)?.schema
+    console.log('Log ~ getMeta ~ resolvedSchema:', resolvedSchema)
 
     const isRequired = resolvedSchema && path
       ? isFieldRequired({ path: String(path), schema: resolvedSchema })
@@ -161,12 +125,6 @@ export function useArk<Validation extends Type = any>(payload?: IPayload<Validat
     },
     getMeta,
   }
-
-  // Lifecycle
-  tryOnUnmounted(() => {
-    validationParts.value = validationParts.value
-      ?.filter(part => part.componentName !== componentName) ?? []
-  })
 
   return {
     errorsStructure,
