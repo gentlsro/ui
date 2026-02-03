@@ -54,13 +54,16 @@ export function useArk<Validation extends Type = any>(payload?: IPayload<Validat
 
   const {
     isValidationVisibleByScope,
+    isValidationVisibleByComponentName,
     validationPartsByScope,
     errorsStructure,
+    validate: validateStore,
   } = useValidationStore()
 
   // Init - handle `immediate`
   if (immediate) {
     isValidationVisibleByScope.value[scope] = true
+    isValidationVisibleByComponentName.value[componentName] = true
   }
 
   // Init - add the schema to the scope
@@ -82,8 +85,15 @@ export function useArk<Validation extends Type = any>(payload?: IPayload<Validat
   }
 
   // State
+  const isValidationVisible = computed(() => {
+    const isVisibleScope = isValidationVisibleByScope.value[scope]
+    const isVisibleComponent = isValidationVisibleByComponentName.value[componentName]
+
+    return isVisibleScope && isVisibleComponent
+  })
+
   function validate() {
-    isValidationVisibleByScope.value[scope] = true
+    validateStore(scope)
 
     return {
       isValid: !errorsStructure.value.byScope[scope]?.length,
@@ -110,7 +120,6 @@ export function useArk<Validation extends Type = any>(payload?: IPayload<Validat
     },
   ): IArkResult {
     const { includeChildren = false, includeAncestors = false, local = true } = options ?? {}
-
     let errors: ExtendedArkError[] = []
 
     if (local && path) {
@@ -159,13 +168,14 @@ export function useArk<Validation extends Type = any>(payload?: IPayload<Validat
       message,
       messages,
       errors,
-      isValidationVisible: isValidationVisibleByScope.value[scope],
+      isValidationVisible: isValidationVisible.value,
     }
   }
 
   const validation = {
     validate: () => {
-      isValidationVisibleByScope.value[scope] = true
+      validateStore(scope)
+
       const errors = errorsStructure.value.byScope[scope] ?? []
       const messages = errors.map(arkError => arkError.$message)
 

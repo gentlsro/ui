@@ -16,6 +16,7 @@ export function listHandleAdd(payload: {
   isSelected: boolean
   emits: IListEmitFncs
   isAddedItem?: boolean
+  itemKey?: string
 }) {
   const {
     isMulti,
@@ -25,6 +26,7 @@ export function listHandleAdd(payload: {
     emits,
     addedItems,
     isAddedItem,
+    itemKey = 'id',
   } = payload
   const { noLocalAdd, keepAddedItems, transformAddedItem } = addConfig ?? {}
 
@@ -35,11 +37,16 @@ export function listHandleAdd(payload: {
   // Transform the item
   item.ref = isSelected
     ? item.ref
-    : transformAddedItem?.(item.ref, handleTransformFnc)
+    : transformAddedItem?.(item.ref, handleTransformFnc) ?? item.ref
+
+  if (item.ref[itemKey] !== item.id) {
+    item.id = item.ref[itemKey]
+  }
 
   // Clone the item
   const _item = (klona(item)) as IListItemToAdd
-  _item._isNew = true
+  _item._isCreate = true
+  _item._isNew = false
 
   // Multi
   if (isMulti) {
@@ -59,7 +66,7 @@ export function listHandleAdd(payload: {
       emits.add(_item)
 
       if (noLocalAdd) {
-        return _item
+        return
       }
 
       addedItems.value = [...addedItems.value, _item]
@@ -84,7 +91,7 @@ export function listHandleAdd(payload: {
       emits.add(_item)
 
       if (noLocalAdd) {
-        return _item
+        return
       }
 
       addedItems.value = [_item]

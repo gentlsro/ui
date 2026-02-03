@@ -296,7 +296,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
       no-hover-effect
       :ui="{
         labelClass: ({ defaults }) => `${defaults.all} font-rem-13`,
-        checkboxClass: ({ defaults }) => `${defaults.all} !bg-primary !border-primary`,
+        checkboxClass: ({ defaults }) => `${defaults.all} !border-primary !border-solid`,
       }"
     />
 

@@ -35,12 +35,15 @@ export async function listHandleAddSearch(payload: {
 
   const labelKey = typeof itemLabel === 'function' ? 'label' : itemLabel
 
-  const id = generateUUID().split('-')[0] as string
+  const id = preAddedItem.value?.id ?? generateUUID().split('-')[0] as string
 
   if (preAddedItem.value) {
     preAddedItem.value.label = search
     preAddedItem.value._highlighted = search
-    preAddedItem.value.ref[labelKey] = search
+    preAddedItem.value.ref = {
+      [labelKey]: search,
+      id,
+    }
   } else {
     preAddedItem.value = {
       _isNew: true,

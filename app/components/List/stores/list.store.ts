@@ -257,6 +257,7 @@ function createStore(injectionKey?: string) {
           sortBy: sortBy.value,
           sortingConfig: sortingConfig.value,
           useWorker: useWorker.value,
+          addedItemById: addedItemById.value,
         })
 
         hasExactMatch.value = res.hasExactMatch

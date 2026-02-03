@@ -84,7 +84,7 @@ export async function listItemSelect(payload: {
       }
 
       isAddCalled = true
-      const itemAdded = listHandleAdd({
+      listHandleAdd({
         isMulti,
         isSelected,
         addedItems,
@@ -92,15 +92,8 @@ export async function listItemSelect(payload: {
         item,
         emits,
         isAddedItem,
+        itemKey,
       })
-
-      if (itemAdded) {
-        item.ref.id = itemAdded.ref.id
-        item.ref.label = itemAdded.ref.label
-      }
-
-      // Add the _isCreate flag
-      item.ref._isCreate = true
     }
 
     emits.select(item)
@@ -134,6 +127,7 @@ export async function listItemSelect(payload: {
       item,
       emits,
       isAddedItem,
+      itemKey,
     })
 
     nextTick(() => searchInput?.clear(true))

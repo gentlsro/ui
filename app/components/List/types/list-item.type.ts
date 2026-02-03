@@ -30,7 +30,12 @@ export type IListItem<T = any> = {
   index: number
 
   /**
-   * Whether the item is new
+   * Whether the item is new (to be added)
    */
   _isNew?: boolean
+
+  /**
+   * Whether the item is created (after being added)
+   */
+  _isCreate?: boolean
 }

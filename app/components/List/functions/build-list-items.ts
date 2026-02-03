@@ -26,6 +26,7 @@ export async function buildListItems(payload: {
   sortBy: SortItem[]
   searchConfig?: IListProps['searchConfig']
   sortingConfig?: IListProps['sortingConfig']
+  addedItemById: Record<string, IListItemToAdd>
 }) {
   const {
     itemKey = 'id',
@@ -39,6 +40,7 @@ export async function buildListItems(payload: {
     sortBy,
     searchConfig,
     sortingConfig,
+    addedItemById,
   } = payload
 
   const _extra = { hasExactMatch: false }
@@ -89,6 +91,7 @@ export async function buildListItems(payload: {
         _highlighted: item.highlighted,
         index: idx, // Just prepare for later
         path: '', // Just prepare for later
+        _isCreate: !!addedItemById[getListItemKey(item.item, itemKey)],
       }
     })
   }
@@ -106,6 +109,7 @@ export async function buildListItems(payload: {
         _highlighted: label,
         index: idx, // Just prepare for later
         path: '', // Just prepare for later
+        _isCreate: !!addedItemById[getListItemKey(item.item, itemKey)],
       }
     }) as IListItem[]
   }
@@ -127,7 +131,7 @@ export async function buildListItems(payload: {
 
   // Grouping
   if (groupBy?.length) {
-    _items = await groupData(
+    _items = groupData(
       _items,
       groupBy,
       { useWorker },

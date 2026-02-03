@@ -43,77 +43,6 @@ function resolveErrorsRecursively(payload: {
   }
 }
 
-// export const useValidationStore = defineStore('__validation', () => {
-//   const validationPartsByScope = ref<Record<string, IValidationPart[]>>({
-//     base: [],
-//   })
-
-//   const isValidationVisibleByScope = ref<Record<string, boolean>>({})
-
-//   const errorsByScope = computed(() => {
-//     return Object.entries(validationPartsByScope.value)
-//       .reduce((agg, [scope, validationParts]) => {
-//         if (agg[scope] === undefined) {
-//           agg[scope]! = []
-//         }
-
-//         validationParts.forEach(validationPart => {
-//           if (validationPart.schema && validationPart.state) {
-//             const result = validationPart.schema(toValue(validationPart.state))
-
-//             resolveErrorsRecursively({
-//               result,
-//               schema: validationPart.schema,
-//               errors: agg[scope],
-//             })
-//           }
-//         })
-
-//         return agg
-//       }, {} as Record<string, ExtendedArkError[]>)
-//   })
-
-//   const errorsStructure = computed(() => {
-//     const byScope = errorsByScope.value
-
-//     const byScopeByPath = Object.entries(errorsByScope.value)
-//       .reduce((agg, [scope, errors]) => {
-//         if (agg[scope] === undefined) {
-//           agg[scope]! = {}
-//         }
-
-//         const arkErrorsByPath = errors
-//           .reduce((agg, arkError) => {
-//             const path = arkError.path.join('.')
-
-//             if (agg[path] === undefined) {
-//               agg[path] = []
-//             }
-
-//             agg[path]?.push(arkError)
-
-//             return agg
-//           }, {} as Record<string, ExtendedArkError[]>)
-
-//         agg[scope] = merge(agg[scope], arkErrorsByPath)
-
-//         return agg
-//       }, {} as Record<string, Record<string, ExtendedArkError[]>>)
-
-//     return {
-//       byScope,
-//       byScopeByPath,
-//     }
-//   })
-
-//   return {
-//     errorsByScope,
-//     validationPartsByScope,
-//     isValidationVisibleByScope,
-//     errorsStructure,
-//   }
-// })
-
 function createStore(injectionKey?: string) {
   const injectionState = createInjectionState((_payload?: IPayload) => {
     const validationPartsByScope = ref<Record<string, IValidationPart[]>>({
@@ -121,6 +50,7 @@ function createStore(injectionKey?: string) {
     })
 
     const isValidationVisibleByScope = ref<Record<string, boolean>>({})
+    const isValidationVisibleByComponentName = ref<Record<string, boolean>>({})
 
     const errorsByScope = computed(() => {
       return Object.entries(validationPartsByScope.value)
@@ -234,11 +164,25 @@ function createStore(injectionKey?: string) {
       }
     })
 
+    function validate(scope: string) {
+      const parts = validationPartsByScope.value[scope]
+
+      parts?.forEach(part => {
+        if (part.componentName) {
+          isValidationVisibleByComponentName.value[part.componentName] = true
+        }
+      })
+
+      isValidationVisibleByScope.value[scope] = true
+    }
+
     return {
       errorsByScope,
       validationPartsByScope,
       isValidationVisibleByScope,
+      isValidationVisibleByComponentName,
       errorsStructure,
+      validate,
     }
   }, { injectionKey })
 

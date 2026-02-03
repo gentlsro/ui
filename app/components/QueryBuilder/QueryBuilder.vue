@@ -29,7 +29,7 @@ const {
   queryBuilderElRect,
   draggedItem,
   columns: storeColumns,
-  items: storeItems,
+  items,
   getFilterComponentFnc: storeGetFilterComponentFnc,
 } = useQueryBuilderStore({ queryBuilderProps: props })
 
@@ -37,7 +37,6 @@ const {
 useQueryBuilderDragAndDrop()
 
 // Layout
-const items = defineModel<IQueryBuilderProps['items']>('items', { required: true })
 const level = 0
 
 function clearFilter() {
@@ -65,7 +64,6 @@ const {
 const columns = toRef(props, 'columns')
 
 syncRef(columns, storeColumns, { direction: 'ltr' })
-syncRef(items, storeItems, { direction: 'both' })
 syncRef(toRef(props, 'getFilterComponent'), storeGetFilterComponentFnc, { direction: 'ltr' })
 
 // Lifecycle

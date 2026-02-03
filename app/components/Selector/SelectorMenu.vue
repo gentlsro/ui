@@ -54,7 +54,7 @@ const menuClass = computed(() => {
 })
 
 const menuStyle = computed(() => {
-  return { '--floatingHeight': `${contentHeight.value}px` }
+  return { '--floatingHeight': `${Math.ceil(contentHeight.value)}px` }
 })
 
 function handleItemSelection(item: any) {

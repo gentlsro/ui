@@ -140,16 +140,15 @@ const { validation } = useArk({
   schema: type({
     'field': 'string',
     'comparator': 'string',
-    'value?': 'unknown.any',
-  }).narrow(data => {
-    const value = data.value
+    'value?': type('unknown.any').narrow((value, ctx) => {
+      const isValid = isNonValueComparator.value ? isNil(value) : !isNil(value)
 
-    if (isNonValueComparator.value) {
-      return isNil(value)
-    }
-    console.log('isNonValueComparator', isNonValueComparator.value, isNil(value))
+      if (!isValid) {
+        ctx.reject(arkError({ message: $t('ark.errors.required') }))
+      }
 
-    return !isNil(value)
+      return true
+    }),
   }),
   scope: '_qb',
 })
