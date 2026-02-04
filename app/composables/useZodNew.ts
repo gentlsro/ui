@@ -87,7 +87,7 @@ export function useZodNew<Validation extends z.ZodType = z.ZodType>(payload?: IP
     path?: ObjectKey<z.infer<Validation>>,
     options?: {
       includeChildren?: boolean
-
+      includeAncestors?: boolean
       /**
        * When true, the errors will be returned for the current component only
        *
@@ -96,7 +96,7 @@ export function useZodNew<Validation extends z.ZodType = z.ZodType>(payload?: IP
       local?: boolean
     },
   ): IZodNewResult {
-    const { includeChildren = false, local = true } = options ?? {}
+    const { includeChildren = false, includeAncestors = true, local = true } = options ?? {}
     let errors: ExtendedError[] = []
 
     let validPaths: string[] = [path as string].filter(Boolean)
@@ -106,10 +106,17 @@ export function useZodNew<Validation extends z.ZodType = z.ZodType>(payload?: IP
         .filter(p => p.startsWith(path))
     }
 
+    if (path && includeAncestors) {
+      const pathParts = path.split('.')
+      const parentPath = pathParts.slice(0, -1)
+
+      validPaths.unshift(...parentPath)
+    }
+
     if (local && path) {
       if (schema) {
         errors = validPaths.flatMap(path => errorsStructure.value.byScopeByPath[scope]?.[path] ?? [])
-          .filter(error => error.$schema === schema)
+          .filter(error => error.$componentName === componentName)
       } else {
         const lastValidationPartWithSchemaInScope = validationParts.value.findLast(part => part.scope === scope && part.schema)
 

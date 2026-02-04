@@ -56,6 +56,7 @@ export function useValidationResult(payload?: IPayload) {
     path?: string,
     options?: {
       includeChildren?: boolean
+      includeAncestors?: boolean
 
       /**
        * When true, the errors will be returned for the current component only
@@ -65,7 +66,7 @@ export function useValidationResult(payload?: IPayload) {
       local?: boolean
     },
   ): IArkResult {
-    const { includeChildren = false, local = true } = options ?? {}
+    const { includeChildren = false, includeAncestors = true, local = true } = options ?? {}
     let errors: ExtendedError[] = []
 
     let validPaths: string[] = [path as string].filter(Boolean)
@@ -73,6 +74,13 @@ export function useValidationResult(payload?: IPayload) {
     if (path && includeChildren) {
       validPaths = Object.keys((errorsStructure.value.byScopeByPath[scope] ?? []))
         .filter(p => p.startsWith(path))
+    }
+
+    if (path && includeAncestors) {
+      const pathParts = path.split('.')
+      const parentPath = pathParts.slice(0, -1)
+
+      validPaths.unshift(...parentPath)
     }
 
     if (local && path) {
@@ -92,7 +100,6 @@ export function useValidationResult(payload?: IPayload) {
     // or try to find it in validationPartsByScope
     const resolvedSchema = errors[0]?.$schema
       ?? validationParts.value.find(part => part.scope === scope && part.schema)?.schema
-    console.log('Log ~ getMeta ~ resolvedSchema:', resolvedSchema)
 
     const isRequired = resolvedSchema && path
       ? isFieldRequired({ path: String(path), schema: resolvedSchema })
