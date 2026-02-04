@@ -8,8 +8,8 @@ export const TOOLTIP_DEFAULT_PROPS = {
     containerClass() {
       const base = 'p-x-2 p-y-0.5 rounded-custom border-custom border-ca'
       const bg = 'dark:bg-darker bg-white'
-      const font = 'font-size-$Tooltip-font-size color-$Tooltip-font-color'
-      const noInheritFontStyle = '[&.no-inherit-font-style]:(font-normal normal-case text-base)'
+      const font = 'font-rem-13 color-ca'
+      const noInheritFontStyle = '[&.no-inherit-font-style]:(font-normal normal-case leading-normal font-rem-13)'
 
       return {
         base,

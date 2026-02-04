@@ -27,22 +27,22 @@ export function useInputValidationUtils(props: IInputWrapperProps) {
         ),
       })
 
-  const arkResult = computed(() => {
+  const validationResult = computed(() => {
     if (!path.value) {
       return undefined
     }
 
-    return props.validation ?? validation.getMeta(path.value, { includeChildren: true })
+    return props.validation ?? validation.getMeta(path.value)
   })
 
   const isRequired = computed(() => {
-    return arkResult.value?.isRequired
+    return validationResult.value?.isRequired
   })
 
   const issues = computed(() => {
-    const msgs = arkResult.value?.messages ?? []
+    const msgs = validationResult.value?.messages ?? []
 
-    if (arkResult.value?.isValidationVisible) {
+    if (validationResult.value?.isValidationVisible) {
       return msgs
     }
 
