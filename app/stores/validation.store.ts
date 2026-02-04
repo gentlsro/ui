@@ -192,6 +192,16 @@ function createStore(injectionKey?: string) {
       })
     }
 
+    function reset(scope: string) {
+      isValidationVisibleByScope.value[scope] = false
+
+      validationParts.value.forEach(({ scope: partScope, componentName }) => {
+        if (scope === partScope && componentName) {
+          isValidationVisibleByComponentName.value[componentName] = false
+        }
+      })
+    }
+
     return {
       errorsByScope,
       validationParts,
@@ -199,6 +209,7 @@ function createStore(injectionKey?: string) {
       isValidationVisibleByComponentName,
       errorsStructure,
       validate,
+      reset,
     }
   }, { injectionKey })
 
