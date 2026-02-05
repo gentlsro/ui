@@ -29,16 +29,20 @@ const isLimitReached = computed(() => {
     <TablePagination v-if="paginationConfig?.enabled" />
 
     <!-- Loading -->
-    <div
+    <slot
       v-else
-      class="is-loading"
+      name="loading"
+      :is-data-loading
+      :is-meta-loading
     >
-      <LoaderInline
-        v-if="isDataLoading || isMetaLoading"
-        size="sm"
-        roudned-full
-      />
-    </div>
+      <div class="is-loading">
+        <LoaderInline
+          v-if="isDataLoading || isMetaLoading"
+          size="sm"
+          rounded-full
+        />
+      </div>
+    </slot>
 
     <!-- Right -->
     <div
