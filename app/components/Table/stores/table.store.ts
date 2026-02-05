@@ -351,7 +351,9 @@ const [
 
   watch(currentPage, () => {
     onDataFetchQueue.value.push(() => {
-      virtualScrollEl.value?.scrollTop?.()
+      nextTick(() => {
+        virtualScrollEl.value?.scrollToTop?.()
+      })
     })
   })
 
