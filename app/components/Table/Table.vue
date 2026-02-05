@@ -29,6 +29,8 @@ const self = getCurrentInstance()
 const storageKey = tableGetStorageKey(props.storageKey, self)
 
 const mergedProps = computed(() => {
+  console.log(props.loadData?.fnc)
+
   return getComponentMergedProps('table', props)
 })
 
@@ -94,23 +96,30 @@ storeEmits.value = {
 }
 
 // Sync refs with store
+const loadDataRef = computed(() => mergedProps.value.loadData)
+const loadMetaDataRef = computed(() => mergedProps.value.loadMetaData)
+const modifiersRef = computed(() => mergedProps.value.modifiers)
+const queryBuilderPropsRef = computed(() => mergedProps.value.queryBuilderProps)
+const selectionConfigRef = computed(() => mergedProps.value.selectionConfig)
+const autofitConfigRef = computed(() => mergedProps.value.autoFit)
+
 syncRef(toRef(props, 'rowKey'), rowKey, { direction: 'ltr' })
 syncRef(toRef(props, 'columns', []), propsColumns, { direction: 'ltr' })
 syncRef(toRef(props, 'emptyValue'), emptyValue, { direction: 'ltr' })
-syncRef(toRef(mergedProps.value, 'loadMetaData'), loadMetaData, { direction: 'ltr' })
-syncRef(toRef(mergedProps.value, 'loadData'), loadData, { direction: 'ltr' })
-syncRef(toRef(mergedProps.value, 'modifiers'), modifiers, { direction: 'ltr', immediate: false })
-syncRef(toRef(mergedProps.value, 'queryBuilderProps'), queryBuilderProps, { direction: 'ltr' })
+syncRef(loadMetaDataRef, loadMetaData, { direction: 'ltr' })
+syncRef(loadDataRef, loadData, { direction: 'ltr' })
+syncRef(modifiersRef, modifiers, { direction: 'ltr', immediate: false })
+syncRef(queryBuilderPropsRef, queryBuilderProps, { direction: 'ltr' })
 syncRef(toRef(props, 'allowComparatorsOfSameType'), allowComparatorsOfSameType, { direction: 'ltr' })
 syncRef(rows, rowsStore, { direction: 'both' })
 syncRef(toRef(props, 'minimumColumnWidth'), minimumColumnWidth, { direction: 'ltr' })
-syncRef(toRef(mergedProps.value, 'autoFit'), autofitConfig, { direction: 'ltr' })
+syncRef(autofitConfigRef, autofitConfig, { direction: 'ltr' })
 syncRef(toRef(mergedProps.value, 'paginationConfig', {}), paginationConfig, { direction: 'ltr' })
 syncRef(queryBuilder, queryBuilderStore, { direction: 'both', immediate: false })
 syncRef(search, searchStore, { direction: 'both' })
 syncRef(toRef(props, 'features'), features, { direction: 'ltr' })
 syncRef(selection, selectionStore, { direction: 'both' })
-syncRef(toRef(mergedProps.value, 'selectionConfig'), selectionConfig, { direction: 'ltr' })
+syncRef(selectionConfigRef, selectionConfig, { direction: 'ltr' })
 syncRef(toRef(props, 'splitRows', []), splitRowsConfig, { direction: 'ltr' })
 syncRef(toRef(props, 'breakpoint', 0), breakpoint, { direction: 'ltr' })
 syncRef(toRef(props, 'rowsLimit'), rowsLimit, { direction: 'ltr' })
