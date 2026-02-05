@@ -349,6 +349,12 @@ const [
     return (currentPage.value - 1) * pageSize
   })
 
+  watch(currentPage, () => {
+    onDataFetchQueue.value.push(() => {
+      virtualScrollEl.value?.scrollTop?.()
+    })
+  })
+
   watch(() => paginationConfig.value?.pageSize, (newPageSize, oldPageSize) => {
     if (!oldPageSize) {
       return
@@ -433,7 +439,13 @@ const [
       ?? (state.value.layoutDefault?.schema ?? '')
 
     // Transform columns
-    const { columns: _columns, queryBuilder: qb, pagination, isSchemaUsed, isUrlUsed } = tableTransformColumns({
+    const {
+      columns: _columns,
+      queryBuilder: qb,
+      pagination,
+      isSchemaUsed,
+      isUrlUsed,
+    } = tableTransformColumns({
       internalColumns: cols,
       modifiers: modifiers.value,
       defaultSchema,
