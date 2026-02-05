@@ -26,11 +26,9 @@ provideLocal(tableSlotsKey, slots)
 
 // Init
 const self = getCurrentInstance()
-const storageKey = tableGetStorageKey(props.storageKey, self)
+const storageKey = computed(() => tableGetStorageKey(props.storageKey, self))
 
 const mergedProps = computed(() => {
-  console.log(props.loadData?.fnc)
-
   return getComponentMergedProps('table', props)
 })
 

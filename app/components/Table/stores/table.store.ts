@@ -36,7 +36,7 @@ import type HorizontalScroller from '../../Scroller/HorizontalScroller.vue'
 
 type IConfig = {
   tableProps?: ITableProps
-  storageKey?: string | null
+  storageKey?: MaybeRefOrGetter<string | null>
 }
 
 const [
@@ -46,12 +46,13 @@ const [
   const { tableProps, storageKey } = config ?? {}
 
   // Init
-  const _storageKey = storageKey ?? useId()
+  const _storageKey = ref(toValue(storageKey) ?? useId())
 
   function getStore() {
     return {
       // Utils
-      tableName: _storageKey,
+      storageKey: _storageKey,
+      tableName: _storageKey.value,
       isMetaLoading,
       isDataLoading,
       isSilentChange,
@@ -154,6 +155,10 @@ const [
     }
   }
 
+  watch(() => toValue(storageKey), storageKey => {
+    _storageKey.value = toValue(storageKey) ?? useId()
+  })
+
   // Store
   const { uiState } = storeToRefs(useUIStore())
 
@@ -209,7 +214,7 @@ const [
     customData: {} as IItem,
   }
 
-  const state = !storageKey
+  const state = !toValue(storageKey)
     ? ref(defaultState)
     : useLocalStorage(_storageKey, defaultState)
 
@@ -784,7 +789,8 @@ const [
 
   return {
     // Utils
-    tableName: _storageKey,
+    storageKey: _storageKey,
+    tableName: _storageKey.value,
     isMetaLoading,
     isDataLoading,
     isSilentChange,
