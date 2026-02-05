@@ -340,7 +340,9 @@ const [
   })
 
   watch(currentPage, () => {
-    virtualScrollEl.value?.scrollTop?.()
+    onDataFetchQueue.value.push(() => {
+      virtualScrollEl.value?.scrollTop?.()
+    })
   })
 
   watch(() => paginationConfig.value?.pageSize, (newPageSize, oldPageSize) => {
