@@ -15,9 +15,21 @@ export class BaseTableColumn<T = IItem> {
   filterField?: string
 
   /**
+   * When true, the column will be hidden in the table
+   */
+  hidden?: boolean
+
+  /**
    * When provided, the `select` will be extended with these fields
    */
   needsFields?: string[]
+
+  /**
+   * When true, the column will always be included in the `select` query
+   *
+   * Does not mean that it needs to be visible in the table!
+   */
+  alwaysSelected?: boolean
 
   /**
    * Function to format the value of the column
@@ -52,8 +64,10 @@ export class BaseTableColumn<T = IItem> {
     this.filterField = obj.filterField
     this.dataType = obj.dataType ?? this.dataType
     this.label = obj.label
+    this.alwaysSelected = obj.alwaysSelected ?? false
     this.needsFields = obj.needsFields
     this.format = obj.format
     this.searchable = obj.searchable ?? false
+    this.hidden = obj.hidden ?? false
   }
 }

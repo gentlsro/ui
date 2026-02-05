@@ -15,6 +15,7 @@ export function tableBuildFetchPayload(payload: {
   orderBy?: ITableSortItem[]
   fetchMore?: { lastRow: IItem, hasMore: boolean }
   queryParams?: URLSearchParams
+  didFiltersChange?: boolean
   getStore: () => ReturnType<typeof useTableStore>
 
   /**
@@ -31,6 +32,7 @@ export function tableBuildFetchPayload(payload: {
     pagination,
     orderBy,
     queryParams,
+    didFiltersChange,
     getStore,
   } = payload
 
@@ -47,6 +49,7 @@ export function tableBuildFetchPayload(payload: {
     },
     queryParams,
     fetchMore,
+    didFiltersChange,
     getStore,
   }
 }

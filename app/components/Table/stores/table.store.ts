@@ -281,6 +281,9 @@ const [
   const breakpoint = ref(tableProps?.breakpoint ?? 0)
   const totals = ref<ITableTotal[]>()
 
+  // Serialized filters that are used to check if the filters have changed
+  const oldFiltersSerialized = ref<string>('')
+
   // General helper that triggers the sync of the state columns
   const columnWidths = computed(() => {
     return internalColumns.value.map(col => col.width).join(',')
@@ -630,12 +633,20 @@ const [
   ) {
     const { buildFetchPayload = tableBuildFetchPayload } = modifiers.value ?? {}
 
+    const currentFiltersSerialize = `${_storageKey.value}: ${filtersSerialized.value} ${queryBuilderSerialized.value}`
+    const didFiltersChange = currentFiltersSerialize !== oldFiltersSerialized.value
+
+    if (didFiltersChange) {
+      oldFiltersSerialized.value = currentFiltersSerialize
+    }
+
     const lastRow = rows.value[rows.value.length - 1] as IItem
     return buildFetchPayload({
       columns: internalColumns.value,
       queryBuilder: queryBuilder.value,
       search: search.value,
       queryParams: queryParams.value,
+      didFiltersChange,
       orderBy: internalColumns.value.flatMap(col => col.sortDbQuery).filter(Boolean) as ITableSortItem[],
       getStore,
       pagination: {
@@ -773,10 +784,14 @@ const [
     const { payloadKey, countKey = 'count' } = loadData.value ?? {}
 
     const rowsFetched = payloadKey ? (get(resModified, payloadKey) ?? []) : resModified
-    const countFetched = get(resModified, countKey) ?? 0
+    const countFetched = get(resModified, countKey)
+
+    if (!isNil(countFetched)) {
+      totalRows.value = countFetched
+    }
 
     rows.value = isFetchMore.value ? [...rows.value, ...rowsFetched] : rowsFetched
-    totalRows.value = isFetchMore.value ? totalRows.value : countFetched
+    // totalRows.value = isFetchMore.value ? totalRows.value : countFetched
     hasMore.value = rows.value.length < totalRows.value
 
     if (!isFetchMore.value) {

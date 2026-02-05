@@ -17,7 +17,7 @@ const mergedProps = computed(() => {
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: SKELETON_DEFAULT_PROPS.ui.containerClass(),
+    defaults: SKELETON_DEFAULT_PROPS.ui.containerClass({ variant: props.variant }),
   })
 })
 

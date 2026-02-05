@@ -66,6 +66,11 @@ const isLimitReached = computed(() => {
         emit-key
         layout="inline"
         m="l-auto"
+        :list-props="{
+          ui: {
+            rowContentClass: ({ defaults }) => `${defaults.all} flex-center`,
+          },
+        }"
         :no-menu-match-width="true"
       />
     </div>

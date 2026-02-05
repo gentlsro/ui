@@ -39,7 +39,6 @@ const path = computed(() => {
     :name="name || path"
     v-bind="{ ...miniCardProps, ...$attrs }"
     class="input-block__readonly"
-    bg="white dark:darker"
   >
     <template #default="{ val }">
       <slot

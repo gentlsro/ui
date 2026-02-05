@@ -6,7 +6,7 @@ import type { ISectionProps } from '../types/section-props.type'
 export const SECTION_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'flex flex-col'
+      const base = 'relative flex flex-col'
       const dense = '[&.is-dense]:(!p-0)'
 
       return {

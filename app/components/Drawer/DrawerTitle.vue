@@ -44,7 +44,6 @@ const isOpen = defineModel<boolean>()
     <Btn
       preset="CLOSE"
       self="start"
-      m="t-2"
       @click="isOpen = false"
     />
 

@@ -32,7 +32,7 @@ export const DRAWER_DEFAULT_PROPS = {
     },
 
     titleClass() {
-      const base = 'flex gap-2 items-center'
+      const base = 'flex gap-2 items-center p-1 m-1 rounded-custom bg-slate-100 dark:bg-dark-950'
 
       return {
         base,
