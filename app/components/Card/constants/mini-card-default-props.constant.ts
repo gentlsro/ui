@@ -51,7 +51,7 @@ export const MINI_CARD_DEFAULT_PROPS = {
     },
 
     valueClass() {
-      const base = 'font-rem-16 overflow-wrap-break-word whitespace-pre-line'
+      const base = 'font-rem-16 overflow-wrap break-words whitespace-pre-line'
       const modified = '[&.is-modified]:(p-l-1 rounded-custom)'
 
       return {

@@ -60,7 +60,7 @@ const pages = computed(() => {
     <!-- First page -->
     <Btn
       :disabled="isFirstPage"
-      size="sm"
+      size="xm"
       disable-style="flat"
       class="pagination-el"
       icon="i-line-md:chevron-small-double-right rotate-180"
@@ -70,7 +70,7 @@ const pages = computed(() => {
     <!-- Previous page -->
     <Btn
       :disabled="isFirstPage"
-      size="sm"
+      size="xm"
       disable-style="flat"
       class="pagination-el"
       icon="i-material-symbols:chevron-right-rounded rotate-180"
@@ -84,7 +84,7 @@ const pages = computed(() => {
     >
       <Btn
         v-if="page !== Infinity"
-        size="sm"
+        size="xm"
         :label="page"
         class="pagination-el"
         :class="{ 'is-active': page === currentPage }"
@@ -101,7 +101,7 @@ const pages = computed(() => {
     <!-- Next page -->
     <Btn
       :disabled="isLastPage"
-      size="sm"
+      size="xm"
       icon="i-material-symbols:chevron-right-rounded"
       class="pagination-el"
       @click="currentPage++"
@@ -110,7 +110,7 @@ const pages = computed(() => {
     <!-- Last page -->
     <Btn
       :disabled="isLastPage"
-      size="sm"
+      size="xm"
       disable-style="flat"
       class="pagination-el"
       icon="i-line-md:chevron-small-double-right"
