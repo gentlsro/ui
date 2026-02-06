@@ -164,8 +164,7 @@ function handleSelect() {
 
 <style scoped lang="scss">
 .th {
-  @apply flex items-center gap-2 shrink-0 border-ca;
-  @apply w-$colWidth;
+  @apply flex items-center gap-2 shrink-0 border-ca w-$colWidth;
 
   &__inner {
     @apply grow;
