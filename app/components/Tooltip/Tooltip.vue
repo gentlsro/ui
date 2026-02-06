@@ -71,6 +71,10 @@ function assignReferenceEl() {
 
 function assignEvents() {
   referenceEl.value?.addEventListener('mouseenter', () => {
+    if (props.manual) {
+      return
+    }
+
     referenceEl.value?.classList.add('tooltip-hovered')
 
     setTimeout(() => {
@@ -83,6 +87,10 @@ function assignEvents() {
   })
 
   referenceEl.value?.addEventListener('mouseleave', () => {
+    if (props.manual) {
+      return
+    }
+
     referenceEl.value?.classList.remove('tooltip-hovered')
 
     setTimeout(() => {
