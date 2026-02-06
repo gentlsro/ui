@@ -2,6 +2,9 @@
 // Store
 import { useTableStore } from './stores/table.store'
 
+// Utils
+const { formatNumber } = useNumber()
+
 // Store
 const {
   paginationConfig,
@@ -25,7 +28,7 @@ const pageSize = computed(() => paginationConfig.value?.pageSize ?? 1)
 
     {{ $t('general.outOf') }}
 
-    <span font="semibold">{{ totalRows }}</span>
+    <span font="semibold">{{ formatNumber(totalRows) }}</span>
 
     {{ $t('general.row', totalRows || 0) }}
   </div>
@@ -47,7 +50,7 @@ const pageSize = computed(() => paginationConfig.value?.pageSize ?? 1)
       font="semibold"
       data-cy="total-rows"
     >
-      {{ totalRows }}
+      {{ formatNumber(totalRows) }}
     </span>
 
     {{ $t('general.row', totalRows || 0) }}

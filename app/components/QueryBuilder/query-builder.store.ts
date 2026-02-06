@@ -64,12 +64,14 @@ function createStore(injectionKey?: string) {
     const draggedItem = ref<IQueryBuilderDraggedItem | undefined>()
     const collapsedById = ref<Record<string | number, boolean>>({})
 
-    const items = initRef({
-      propName: 'items',
-      instance,
-      props: queryBuilderProps,
-      defaultValue: [],
-    }) as Ref<IQueryBuilderRow[]>
+    const items = ref<IQueryBuilderRow[]>([])
+
+    // const items = initRef({
+    //   propName: 'items',
+    //   instance,
+    //   props: queryBuilderProps,
+    //   defaultValue: [],
+    // }) as Ref<IQueryBuilderRow[]>
 
     // Layout
     const queryBuilderEl = ref<HTMLElement>()

@@ -29,7 +29,7 @@ const {
   queryBuilderElRect,
   draggedItem,
   columns: storeColumns,
-  items,
+  items: storeItems,
   getFilterComponentFnc: storeGetFilterComponentFnc,
 } = useQueryBuilderStore({ queryBuilderProps: props })
 
@@ -38,9 +38,10 @@ useQueryBuilderDragAndDrop()
 
 // Layout
 const level = 0
+const items = defineModel<IQueryBuilderRow[]>('items', { required: true })
 
 function clearFilter() {
-  items.value = [
+  storeItems.value = [
     {
       id: generateUUID(),
       isGroup: true,
@@ -63,13 +64,14 @@ const {
 // Init
 const columns = toRef(props, 'columns')
 
+syncRef(items, storeItems, { direction: 'both', deep: true })
 syncRef(columns, storeColumns, { direction: 'ltr' })
 syncRef(toRef(props, 'getFilterComponent'), storeGetFilterComponentFnc, { direction: 'ltr' })
 
 // Lifecycle
 // When no items are provided, initialize the items with a group
 if (!props.items.length && !props.noInitialization) {
-  items.value = queryBuilderInitializeItems()
+  storeItems.value = queryBuilderInitializeItems()
 }
 
 useResizeObserver(queryBuilderEl, entries => {
@@ -121,7 +123,7 @@ defineExpose({
     </template>
 
     <QueryBuilderRow
-      v-for="item in items"
+      v-for="item in storeItems"
       :key="item.path"
       :item
       :level

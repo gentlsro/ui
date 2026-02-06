@@ -32,19 +32,15 @@ provideLocal(QUERY_BUILDER_ID_KEY, uuid)
 // Store
 const {
   queryBuilderEl,
-  breakpoint,
-  isSmallerScreen,
-  queryBuilderElRect,
-  draggedItem,
-  columns: storeColumns,
   items: storeItems,
+  columns: storeColumns,
   getFilterComponentFnc: storeGetFilterComponentFnc,
 } = useQueryBuilderStore({ queryBuilderProps: props })
 
 // Layout
-const items = defineModel<IQueryBuilderProps['items']>('items', { required: true })
 const level = 0
 const noItemOverlay = toRef(props, 'noItemOverlay')
+const items = defineModel<IQueryBuilderRow[]>('items', { required: true })
 
 provide('noItemOverlay', noItemOverlay)
 
@@ -105,8 +101,8 @@ const {
 // Init
 const columns = toRef(props, 'columns')
 
+syncRef(items, storeItems, { direction: 'both', deep: true })
 syncRef(columns, storeColumns, { direction: 'ltr' })
-syncRef(items, storeItems, { direction: 'both' })
 syncRef(toRef(props, 'getFilterComponent'), storeGetFilterComponentFnc, { direction: 'ltr' })
 
 // Lifecycle
@@ -142,7 +138,7 @@ defineExpose({
       />
 
       <Separator
-        v-if="storeItems.length"
+        v-if="items.length"
         vertical
         m="r-2 l-1"
         border="!dark:truegray-500 !primary !r-2px"
@@ -150,7 +146,7 @@ defineExpose({
     </template>
 
     <QueryBuilderRowInline
-      v-for="item in storeItems"
+      v-for="item in items"
       :key="item.id"
       :item
       :level
