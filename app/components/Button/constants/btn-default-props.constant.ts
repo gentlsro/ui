@@ -128,7 +128,7 @@ export const BTN_DEFAULT_PROPS = {
       let size = ''
 
       const xs = 'font-rem-10 p-y-1 leading-none'
-      const xm = 'font-rem-11 p-y-1.25'
+      const xm = 'font-rem-11 p-y-1.25 leading-none'
       const sm = 'font-rem-12 p-y-1.5'
       const md = 'font-rem-14 p-y-2'
       const lg = 'font-rem-16 p-y-2.5'
