@@ -19,11 +19,18 @@ const emits = defineEmits<{
 }>()
 
 // Store
-const { isLoading, listItems } = useListStore()
+const { search, isLoading, listItems, searchConfig } = useListStore()
 
 // Layout
 const bannerEl = useTemplateRef('bannerEl') as any
 const { height } = useElementSize(bannerEl)
+
+const shouldShowSearchMinChars = computed(() => {
+  return searchConfig?.value?.enabled
+    && (search.value?.length ?? 0) < (searchConfig.value?.minChars ?? 0)
+    && !isLoading.value
+    && !listItems.value.length
+})
 
 const noDataClass = computed(() => {
   return props.ui?.noDataClass?.({
@@ -53,7 +60,16 @@ watch(height, () => {
 
 <template>
   <div
-    v-if="!isLoading && !listItems?.length"
+    v-if="shouldShowSearchMinChars"
+    class="list-no-data"
+    :class="noDataClass"
+    :style="noDataStyle"
+  >
+    {{ $t('general.atLeastCharactersToSearch', { count: searchConfig?.minChars ?? 0 }) }}
+  </div>
+
+  <div
+    v-else-if="!isLoading && !listItems?.length"
     class="list-no-data"
     :class="noDataClass"
     :style="noDataStyle"

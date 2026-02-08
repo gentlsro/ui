@@ -429,6 +429,7 @@ function createStore(injectionKey?: string) {
       selectionConfig,
       addConfig,
       searchConfig,
+      groupBySource,
       ui,
 
       // Utils

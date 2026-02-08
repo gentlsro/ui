@@ -1,6 +1,14 @@
 // @unocss-include
 import type { IListProps } from '../types/list-props.type'
 
+function p<T>(keys: (keyof T)[], value: T) {
+  return keys.reduce((agg, key) => {
+    agg[key] = value[key]
+
+    return agg
+  }, {} as Record<keyof T, any>)
+}
+
 export const LIST_DEFAULT_PROPS = {
   ui: {
     containerClass() {
@@ -22,7 +30,9 @@ export const LIST_DEFAULT_PROPS = {
     },
 
     rowClass() {
-      const base = 'w-full flex gap-1 p-r-2 items-center rounded-custom truncate font-rem-14 m-b-px'
+      const base = 'gap-1 p-r-2 rounded-custom truncate font-rem-14 m-b-px w-full'
+      const row = 'flex w-full items-center'
+      const col = 'flex flex-col'
 
       // Focus
       const focus = '[&.is-focused]:(bg-slate-100 dark:bg-slate-800)'
@@ -36,14 +46,20 @@ export const LIST_DEFAULT_PROPS = {
       // Focus while selected
       const focusSelected = '[&.is-focused.is-selected:not(.uses-checkbox)]:(outline-1 outline-dashed outline-offset--1 outline-primary dark:(outline-blue-400))'
 
-      return {
+      const classes = {
         base,
         selectionNoCheckbox,
         selectionMultiCheckbox,
         focus,
         focusSelected,
-        all: `${base} ${focus} ${selectionNoCheckbox} ${selectionMultiCheckbox} ${focusSelected}`,
+        row,
+        col,
+        all: `${base} ${focus} ${selectionNoCheckbox} ${selectionMultiCheckbox} ${focusSelected} ${row}`,
       } as const
+
+      return Object.assign(classes, {
+        p: (...keys: (keyof typeof classes)[]) => keys.map(k => classes[k]).join(' '),
+      })
     },
 
     rowContentClass() {

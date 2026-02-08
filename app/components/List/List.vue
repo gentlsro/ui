@@ -43,6 +43,7 @@ const {
   searchConfig,
   loadData,
   selectionConfig,
+  groupBySource: groupBySourceStore,
 
   // Layout
   listEl,
@@ -70,6 +71,7 @@ storeEmits.value = {
 }
 
 // Layout
+const groupBySource = toRef(props, 'groupBy', [])
 const items = defineModel<IItem[]>('items') as Ref<IItem[]>
 
 const isSearchInputVisible = computed(() => {
@@ -93,12 +95,20 @@ const containerStyle = computed(() => {
 // Sync with store
 syncRef(items, storeItems, { direction: 'both', immediate: false })
 
-syncRef(toRef(mergedProps.value, 'addConfig'), addConfig, { direction: 'ltr' })
-syncRef(toRef(mergedProps.value, 'loadData'), loadData, { direction: 'ltr' })
-syncRef(toRef(mergedProps.value, 'searchConfig'), searchConfig, { direction: 'ltr' })
-syncRef(toRef(mergedProps.value, 'sortingConfig'), sortingConfig, { direction: 'ltr' })
-syncRef(toRef(mergedProps.value, 'modifiers'), modifiers, { direction: 'ltr' })
-syncRef(toRef(mergedProps.value, 'selectionConfig'), selectionConfig, { direction: 'ltr' })
+const addConfigRef = computed(() => mergedProps.value.addConfig)
+const searchConfigRef = computed(() => mergedProps.value.searchConfig)
+const loadDataRef = computed(() => mergedProps.value.loadData)
+const sortingConfigRef = computed(() => mergedProps.value.sortingConfig)
+const modifiersRef = computed(() => mergedProps.value.modifiers)
+const selectionConfigRef = computed(() => mergedProps.value.selectionConfig)
+
+syncRef(groupBySource, groupBySourceStore, { direction: 'ltr' })
+syncRef(addConfigRef, addConfig, { direction: 'ltr' })
+syncRef(loadDataRef, loadData, { direction: 'ltr' })
+syncRef(searchConfigRef, searchConfig, { direction: 'ltr' })
+syncRef(sortingConfigRef, sortingConfig, { direction: 'ltr' })
+syncRef(modifiersRef, modifiers, { direction: 'ltr' })
+syncRef(selectionConfigRef, selectionConfig, { direction: 'ltr' })
 
 // Adding
 useListItemAdding()

@@ -15,14 +15,16 @@ function getUsedProperties(payload: {
   forceUrlUsage?: boolean
   defaultSchemaResult: ReturnType<typeof tableExtractDataFromUrl>
   urlResult: ReturnType<typeof tableExtractDataFromUrl>
+  stateSchemaResult: ReturnType<typeof tableExtractDataFromUrl>
 }) {
   const {
     shouldUrlBeUsed,
     shouldSchemaBeUsed,
+    stateSchemaResult,
     defaultSchemaResult,
     urlResult,
-    modifiers,
     forceUrlUsage,
+    modifiers,
   } = payload
 
   const isUrlUsed = shouldUrlBeUsed
@@ -45,6 +47,15 @@ function getUsedProperties(payload: {
   // the columns from default schema
   if (!result.visibleColumns.length && defaultSchemaResult.visibleColumns.length) {
     result.visibleColumns = defaultSchemaResult.visibleColumns
+  }
+
+  // Another special case, if the `stateSchema` has some pagination, while the
+  // `defaultSchema` doesn't, we use the pagination from the `stateSchema`
+  const isStateSchemaUsed = stateSchemaResult.pagination.skip !== undefined || stateSchemaResult.pagination.take !== undefined
+  const isDefaultSchemaUsed = defaultSchemaResult.pagination.skip !== undefined || defaultSchemaResult.pagination.take !== undefined
+
+  if (isStateSchemaUsed && !isDefaultSchemaUsed) {
+    result.pagination = stateSchemaResult.pagination
   }
 
   return {
@@ -130,6 +141,13 @@ export function tableTransformColumns(payload: {
     }
   }
 
+  // State schema result
+  const stateSchemaResult = tableExtractDataFromUrl({
+    columns: _columns,
+    modifiers,
+    searchParams: stateSchema,
+  })
+
   // Default schema result
   const defaultSchemaResult = tableExtractDataFromUrl({
     columns: _columns,
@@ -148,6 +166,7 @@ export function tableTransformColumns(payload: {
     shouldUrlBeUsed,
     shouldSchemaBeUsed,
     defaultSchemaResult,
+    stateSchemaResult,
     urlResult,
     modifiers,
     forceUrlUsage: !!initialParams,
@@ -161,7 +180,11 @@ export function tableTransformColumns(payload: {
       return aSort - bSort
     })
 
-    return { columns: _columns, queryBuilder: result.queryBuilder }
+    return {
+      columns: _columns,
+      queryBuilder: result.queryBuilder,
+      pagination: result.pagination,
+    }
   }
 
   const { filters, queryBuilder, sort, visibleColumns } = result

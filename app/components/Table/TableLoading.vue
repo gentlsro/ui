@@ -10,6 +10,7 @@
 
 <style scoped lang="scss">
 .table-loading {
-  @apply grow flex flex-center;
+  @apply grow flex flex-center
+    bg-white/68 dark:bg-dark-950/87 backdrop-blur-sm;
 }
 </style>

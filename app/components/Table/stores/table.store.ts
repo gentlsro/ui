@@ -459,6 +459,7 @@ const [
       internalColumns: cols,
       modifiers: modifiers.value,
       defaultSchema,
+      stateSchema: state.value.queryParams,
       urlSchema: useRequestURL().searchParams,
       initialSchemaConfig: initialSchemaConfig.value,
 
@@ -488,8 +489,13 @@ const [
 
     // Set the pagination
     if (pagination?.take || pagination?.skip) {
-      paginationConfig.value.pageSize = pagination.take
-      currentPage.value = Math.ceil(pagination.skip / pagination.take) + 1
+      const {
+        take = paginationConfig.value.pageSize ?? 25,
+        skip = 0,
+      } = pagination ?? {}
+
+      paginationConfig.value.pageSize = take
+      currentPage.value = Math.ceil(skip / take) + 1
     }
 
     // Set the state columns once everything is set

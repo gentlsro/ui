@@ -1,9 +1,9 @@
 export function tableExtractPaginationFromUrl(params: URLSearchParams) {
-  const skip = params.get('skip') ?? '0'
-  const take = params.get('take') ?? '0'
+  const skip = params.get('skip')
+  const take = params.get('take')
 
   return {
-    skip: Number.parseInt(skip ?? 0),
-    take: Number.parseInt(take ?? 0),
+    skip: isNil(skip) ? undefined : Number.parseInt(skip ?? 0),
+    take: isNil(take) ? undefined : Number.parseInt(take ?? 0),
   }
 }

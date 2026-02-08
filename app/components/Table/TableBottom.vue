@@ -4,6 +4,7 @@ import { useTableStore } from './stores/table.store'
 
 // Store
 const {
+  isInitialLoad,
   isDataLoading,
   isMetaLoading,
   paginationConfig,
@@ -30,14 +31,13 @@ const isLimitReached = computed(() => {
 
     <!-- Loading -->
     <slot
-      v-else
+      v-if="!isInitialLoad && (isDataLoading || isMetaLoading)"
       name="loading"
       :is-data-loading
       :is-meta-loading
     >
       <div class="is-loading">
         <LoaderInline
-          v-if="isDataLoading || isMetaLoading"
           size="sm"
           rounded-full
         />
@@ -103,7 +103,8 @@ const isLimitReached = computed(() => {
   grid-template-columns: 1fr auto 1fr;
 
   .is-loading {
-    @apply absolute left-1/2 -translate-x-1/2 top-0;
+    @apply absolute flex flex-center left-1/2 -translate-x-1/2 top-0 w-80 rounded-full
+    bg-white/68 dark:bg-dark-950/87 backdrop-blur-sm;
   }
 
   .limit-reached {
