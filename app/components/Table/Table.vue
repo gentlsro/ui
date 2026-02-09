@@ -305,7 +305,7 @@ onMounted(() => {
     </slot>
 
     <!-- Loading -->
-    <TableLoading />
+    <TableLoading v-if="isInitialLoad" />
 
     <!-- Default slot to be used for custom content (most likely absolutely positioned) -->
     <slot />
