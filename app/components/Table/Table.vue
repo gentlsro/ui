@@ -277,9 +277,6 @@ onMounted(() => {
       </template>
     </TableContent>
 
-    <!-- Loading -->
-    <TableLoading v-else-if="isInitialLoad" />
-
     <!-- Empty -->
     <TableEmpty v-else />
 
@@ -307,6 +304,9 @@ onMounted(() => {
       </TableBottom>
     </slot>
 
+    <!-- Loading -->
+    <TableLoading />
+
     <!-- Default slot to be used for custom content (most likely absolutely positioned) -->
     <slot />
   </div>
@@ -314,6 +314,6 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .table {
-  @apply flex flex-col overflow-auto grow @container;
+  @apply relative flex flex-col overflow-auto grow @container;
 }
 </style>
