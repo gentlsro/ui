@@ -21,6 +21,14 @@ html.dark {
   @apply bg-darker color-white;
 }
 
+.link {
+  @apply underline cursor-pointer font-rem-12;
+
+  &:hover {
+    @apply color-secondary;
+  }
+}
+
 .router-link-active {
   @apply color-primary;
 }
@@ -77,4 +85,9 @@ html.dark {
 
 .copyright {
   @apply '!hidden';
+}
+
+
+.link {
+
 }
