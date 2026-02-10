@@ -85,7 +85,7 @@ export function useColors() {
    * Creates CSS out of the [IStyle] object
    */
   function resolveStyle(
-    style?: IItem | null,
+    style?: Style | null,
 
     // When true, in case we get a `complex` style and no `icon` property, we
     // add fallback for the `backgroundColor` -> `style.color`
@@ -108,7 +108,7 @@ export function useColors() {
     } else {
       return {
         backgroundColor: style.color,
-        color: invertColor(style.color),
+        color: style.color ? invertColor(style.color) : undefined,
         icon: style.icon,
       }
     }

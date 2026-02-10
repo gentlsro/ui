@@ -232,6 +232,11 @@ export const defaultComponentsConfig = {
         containerClass: ({ defaults }) => defaults.all,
         labelClass: ({ defaults }) => defaults.all,
       },
+      removeBtn: {
+        size: 'auto',
+        class: '!w-3 !h-3 color-negative',
+        icon: 'i-ion:close',
+      },
     },
     merge: ['tooltip', 'removeBtn', 'ui'],
   },
@@ -1143,7 +1148,7 @@ export const defaultComponentsConfig = {
       hasContent: undefined,
       chipProps: {
         ui: {
-          containerClass: ({ defaults }) => `${defaults.all} min-w-20`,
+          containerClass: ({ defaults }) => `${defaults.all} min-w-15`,
         },
       },
       ui: {

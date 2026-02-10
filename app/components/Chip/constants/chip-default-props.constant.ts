@@ -17,7 +17,7 @@ export const CHIP_DEFAULT_PROPS = {
     },
 
     labelClass() {
-      const base = 'leading-none truncate grow'
+      const base = 'leading-tight truncate grow'
       const size = 'font-rem-12'
 
       return {
