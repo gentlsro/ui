@@ -74,11 +74,9 @@ function handleHeightChange(height: number) {
     return agg + total.height
   }, 0)
 
-  requestAnimationFrame(() => {
-    contentHeight.value = height
-      + nonContentHeight
-      + 2 // Top and bottom border
-  })
+  contentHeight.value = Math.ceil(height
+    + nonContentHeight
+    + 3) // It should technically be 2 (because of border top and bottom), but somehow that creates an overflow...
 }
 
 function handleHide() {
