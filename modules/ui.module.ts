@@ -1,4 +1,4 @@
-import { addTemplate, createResolver, defineNuxtModule } from '@nuxt/kit'
+import { addTemplate, createResolver, defineNuxtModule } from 'nuxt/kit'
 import { existsSync } from 'node:fs'
 
 const { resolve } = createResolver(import.meta.url)
