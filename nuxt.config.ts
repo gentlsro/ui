@@ -172,7 +172,7 @@ export default defineNuxtConfig({
     ],
   },
 
-  // @ts-expect-error
+  // @ts-ignore
   icon: {
     size: '1em',
   },
