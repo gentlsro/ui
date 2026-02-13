@@ -71,8 +71,8 @@ const totalText = computed(() => {
 
 <style scoped lang="scss">
 .th {
-  @apply flex shrink-0;
-  @apply w-$colWidth;
+  @apply flex shrink-0
+    w-$colWidth;
 
   &__totals-inner {
     @apply flex gap-2 items-center;

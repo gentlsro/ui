@@ -108,8 +108,8 @@ const isLimitReached = computed(() => {
   }
 
   .limit-reached {
-    @apply absolute flex flex-center gap-2 bg-white dark:bg-dark-950 rounded-custom;
-    @apply left-1/2 -translate-x-1/2 p-l-1 p-r-3;
+    @apply absolute flex flex-center gap-2 bg-white dark:bg-dark-950 rounded-custom
+      left-1/2 -translate-x-1/2 p-l-1 p-r-3;
   }
 }
 </style>

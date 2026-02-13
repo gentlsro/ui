@@ -235,9 +235,8 @@ const { validation } = useArk({ scope: '_qb' })
 <style scoped lang="scss">
 .qb-item {
   @apply relative flex gap-1 border-1 border-dashed border-ca
-    rounded-custom p-l-1.5 items-center cursor-pointer bg-white dark:bg-black;
-
-  @apply min-h-26px; // Arbitrary number that looks good...
+    rounded-custom p-l-1.5 items-center cursor-pointer bg-white dark:bg-black
+    min-h-26px; // Arbitrary number that looks good...
 
   &:hover {
     @apply shadow-consistent-xs shadow-ca;
@@ -254,9 +253,8 @@ const { validation } = useArk({ scope: '_qb' })
 
 :deep(.qb-item__value) {
   @apply rounded-custom p-x-1 p-y-2px leading-tight min-w-5 text-xs text-center
-    font-semibold max-w-70 truncate self-center;
-
-  @apply bg-primary color-white;
+    font-semibold max-w-70 truncate self-center
+    bg-primary color-white;
 }
 
 .qb-item.is-first-child {

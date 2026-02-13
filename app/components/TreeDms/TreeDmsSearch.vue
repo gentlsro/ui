@@ -92,7 +92,7 @@ async function handleCreateItem(type: string) {
 
 <style scoped lang="scss">
 .tree-dms__header {
-  @apply flex items-center order-first p-l-3 p-r-2 p-y-1 rounded-t-custom m-b-1;
-  @apply bg-slate-700 dark:bg-black color-white;
+  @apply flex items-center order-first p-l-3 p-r-2 p-y-1 rounded-t-custom m-b-1
+    bg-slate-700 dark:bg-black color-white;
 }
 </style>

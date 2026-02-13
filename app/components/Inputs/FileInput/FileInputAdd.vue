@@ -19,7 +19,7 @@ defineProps<IProps>()
 
 <style lang="scss" scoped>
 .file-add {
-  @apply fit gap-4 border-2 border-dotted border-primary;
-  @apply min-h-146px; // This is the height of the file preview
+  @apply fit gap-4 border-2 border-dotted border-primary
+    min-h-146px; // This is the height of the file preview
 }
 </style>

@@ -22,8 +22,8 @@ defineProps<IProps>()
 
 <style lang="scss" scoped>
 .file-input__empty {
-  @apply absolute grid place-content-center place-items-center inset-0;
-  @apply color-true-gray-500 pointer-events-none;
+  @apply absolute grid place-content-center place-items-center inset-0
+    color-true-gray-500 pointer-events-none;
 }
 
 .file-input:hover {

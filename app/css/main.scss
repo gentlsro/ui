@@ -45,8 +45,8 @@ html.dark {
     bg-slate-100 dark:bg-dark-950;
 
     .title {
-      @apply flex items-center order-first p-l-4 p-r-2 p-y-1 rounded-t-custom min-h-38px;
-      @apply bg-slate-700 dark:bg-black color-white;
+      @apply flex items-center order-first p-l-4 p-r-2 p-y-1 rounded-t-custom min-h-38px
+        bg-slate-700 dark:bg-black color-white;
     }
   }
 

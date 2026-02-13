@@ -302,13 +302,13 @@ const collapseProps = computed(() => {
 
 .qb-group:not(.is-base) {
   &::before {
-    @apply absolute content-empty -left-3 top-0 h-full;
-    @apply border-l-1 border-dark dark:border-ca border-dashed;
+    @apply absolute content-empty -left-3 top-0 h-full
+      border-l-1 border-dark dark:border-ca border-dashed;
   }
 
   &::after {
-    @apply absolute content-empty -left-3 w-3;
-    @apply border-b-1 border-dark dark:border-ca border-dashed;
+    @apply absolute content-empty -left-3 w-3
+      border-b-1 border-dark dark:border-ca border-dashed;
 
     // This is kinda specific but it shouldn't really cause issues if we
     // don't mess with input sizes

@@ -46,9 +46,8 @@ const containerStyle = computed(() => {
 .heading.is-highlighted {
   &::before {
     @apply bottom-0 w-9/10 h-1 left-0 bg-primary content-empty absolute
-      rounded-full;
-
-    @apply bg-gradient-to-r from-primary to-true-gray-100;
+      rounded-full
+      bg-gradient-to-r from-primary to-true-gray-100;
   }
 }
 

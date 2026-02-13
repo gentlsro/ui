@@ -521,8 +521,8 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
   }
 
   .td {
-    @apply relative flex items-center border-ca;
-    @apply w-$colWidth;
+    @apply relative flex items-center border-ca
+      w-$colWidth;
 
     .link {
       @apply truncate font-rem-13;
@@ -531,8 +531,8 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
 }
 
 .tr--card {
-  @apply flex-col gap-y-2px rounded-custom p-2 m-1 dark:bg-black overflow-auto;
-  @apply light:(outline-1 outline-ca outline-solid bg-white);
+  @apply flex-col gap-y-2px rounded-custom p-2 m-1 dark:bg-black overflow-auto
+    light:(outline-1 outline-ca outline-solid bg-white);
 
   &.is-selectable {
     @apply cursor-pointer;
@@ -554,8 +554,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
     .edit-btn,
     .cancel-edit-btn {
       @apply top-1/2 right-0 -translate-y-1/2
-        bg-white dark:bg-black;
-      @apply hidden;
+        bg-white dark:bg-black hidden;
 
       position: absolute !important;
     }

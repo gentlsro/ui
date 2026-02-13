@@ -86,16 +86,16 @@ const eventsAdjusted = computed<Pick<DayEvent, 'color' | 'icon'>[]>(() => {
 
 <style lang="scss" scoped>
 .dp-day {
-  @apply relative flex flex-col cursor-pointer font-thin relative select-none;
-  @apply outline-1 outline-dashed outline-ca;
+  @apply relative flex flex-col cursor-pointer font-thin relative select-none
+    outline-1 outline-dashed outline-ca;
 
   &::after {
     @apply content-empty absolute top-0 left-0 min-h-10;
   }
 
   &:not(.is-disabled):hover {
-    @apply shadow-consistent shadow-primary dark:shadow-true-gray-700/50 shadow-true-gray-300/50 z-1;
-    @apply scale-110 transform-origin-center font-semibold;
+    @apply shadow-consistent shadow-primary dark:shadow-true-gray-700/50 shadow-true-gray-300/50 z-1
+      scale-110 transform-origin-center font-semibold;
 
     &:not(.is-selected) {
       @apply bg-white dark:bg-dark-950;

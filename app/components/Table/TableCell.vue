@@ -121,8 +121,8 @@ const linkProps = computed(() => {
 
 <style scoped lang="scss">
 .td {
-  @apply flex items-center border-ca;
-  @apply w-$colWidth;
+  @apply flex items-center border-ca
+    w-$colWidth;
 
   .link {
     @apply truncate;

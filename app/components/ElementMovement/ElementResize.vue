@@ -96,8 +96,8 @@ function handleMouseDown(payload: {
   &__top,
   &__bottom,
   &__middle {
-    @apply absolute pointer-events-none bg-transparent;
-    @apply flex justify-between left-0 right-0;
+    @apply absolute pointer-events-none bg-transparent
+      flex justify-between left-0 right-0;
   }
 
   &__top {
