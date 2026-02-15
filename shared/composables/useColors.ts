@@ -8,7 +8,8 @@ export function useColors() {
   function invertColor(color: Color) {
     try {
       return invert(color, { black: '#000000', white: '#ffffff', threshold: 0.5 })
-    } catch {
+    } catch (error) {
+      console.log(error)
       return color
     }
   }
@@ -106,9 +107,11 @@ export function useColors() {
         isComplex: true,
       }
     } else {
+      const hexColor = isRgba(style.color) ? rgbaToHex(style.color) : style.color
+
       return {
         backgroundColor: style.color,
-        color: style.color ? invertColor(style.color) : undefined,
+        color: style.color ? invertColor(hexColor) : undefined,
         icon: style.icon,
       }
     }

@@ -5,7 +5,7 @@ import type { CSSProperties } from 'vue'
 import type { ITextInputProps } from '../TextInput/types/text-input-props.type'
 
 type IProps = {
-  modelValue?: string
+  modelValue?: string | null
   readonly?: boolean
   search?: string
   noSearch?: boolean
@@ -29,7 +29,7 @@ const { isLoading, fn } = useFn({
 })
 
 // Layout
-const model = defineModel<string>('modelValue')
+const model = defineModel<IProps['modelValue']>('modelValue')
 const search = defineModel<string>('search')
 const icons = ref<string[]>([])
 

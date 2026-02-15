@@ -34,6 +34,9 @@ export const LIST_DEFAULT_PROPS = {
       const row = 'flex w-full items-center'
       const col = 'flex flex-col'
 
+      // Checkbox
+      const checkbox = '[&.uses-checkbox]:(flex items-center)'
+
       // Focus
       const focus = '[&.is-focused]:(bg-slate-100 dark:bg-slate-800)'
 
@@ -48,6 +51,7 @@ export const LIST_DEFAULT_PROPS = {
 
       const classes = {
         base,
+        checkbox,
         selectionNoCheckbox,
         selectionMultiCheckbox,
         focus,
