@@ -2,20 +2,16 @@
 import type { CSSProperties } from 'vue'
 import colors from '../../../../shared/constants/colors.json'
 
+// Types
+import type { IColorPickerProps } from './types/color-picker-props.type'
+
 // Functions
 import { useColors } from '../../../../shared/composables/useColors'
 
 // Constants
 import { GENERIC_COLORS, THEME_COLORS } from './constants/brand-colors'
 
-type IProps = {
-  disallowedColors?: string[]
-  modelValue?: string
-  rgba?: boolean
-  tw?: boolean
-}
-
-const props = defineProps<IProps>()
+const props = defineProps<IColorPickerProps>()
 const emits = defineEmits<{
   (e: 'update:opacity', value: number | undefined): void
   (e: 'update:color', value: string | undefined): void

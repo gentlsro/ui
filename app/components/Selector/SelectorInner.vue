@@ -49,6 +49,10 @@ const isEditable = computed(() => {
   return !props.readonly && !props.disabled
 })
 
+function isLast(idx: number) {
+  return idx === modelArray.value.length - 1
+}
+
 function handleRemove(idx: number) {
   if (Array.isArray(model.value)) {
     const item = model.value[idx]
@@ -85,6 +89,7 @@ const innerStyle = computed(() => {
       :item="getListItem(model, optionByKey) ?? model"
       :index="0"
       :option-by-key
+      :is-last="isLast(0)"
     >
       {{ getListItemLabel(model, optionLabel, optionByKey) }}
     </slot>
@@ -103,6 +108,7 @@ const innerStyle = computed(() => {
         :item="getListItem(item, optionByKey) ?? item"
         :index="idx"
         :option-by-key
+        :is-last="isLast(idx)"
       >
         <SelectorChip
           :chip="item"
@@ -133,6 +139,7 @@ const innerStyle = computed(() => {
         :item="getListItem(item, optionByKey) ?? item"
         :index="idx"
         :option-by-key
+        :is-last="isLast(idx)"
       >
         <SelectorChip
           :chip="item"

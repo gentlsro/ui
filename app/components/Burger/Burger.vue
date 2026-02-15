@@ -1,75 +1,88 @@
 <script setup lang="ts">
-defineProps<{ modelValue?: boolean }>()
+// Types
+import type { IBurgerProps } from './types/burger-props.type'
+
+// Constants
+import { BURGER_DEFAULT_PROPS } from './constants/burger-default-props.constant'
+
+const props = withDefaults(defineProps<IBurgerProps>(), {
+  ...getComponentProps('burger'),
+})
 
 // Layout
 const model = defineModel<boolean>({ default: false })
+
+// Utils
+const mergedProps = computed(() => {
+  return getComponentMergedProps('burger', props)
+})
+
+const size = computed(() => props.size ?? 'md')
+
+// Refs for model-driven animations
+const pathToX = ref<SVGAnimateElement>()
+const pathToBurger = ref<SVGAnimateElement>()
+
+watch(model, isOpen => {
+  nextTick(() => {
+    if (isOpen) {
+      pathToX.value?.beginElement()
+    }
+    else {
+      pathToBurger.value?.beginElement()
+    }
+  })
+})
+
+// Styles
+const containerClass = computed(() => {
+  return mergedProps.value?.ui?.containerClass?.({
+    defaults: BURGER_DEFAULT_PROPS.ui.containerClass({ size: size.value }),
+  })
+})
+
+const burgerClass = computed(() => {
+  return mergedProps.value?.ui?.burgerClass?.({
+    defaults: BURGER_DEFAULT_PROPS.ui.burgerClass({ size: size.value }),
+  })
+})
 </script>
 
 <template>
   <button
     name="menu"
     class="burger-wrapper"
-    no-box-shadow
+    :class="[containerClass, `burger-wrapper--${size}`]"
     @click="model = !model"
   >
-    <div
-      class="burger"
-      :class="{ 'is-open': model }"
+    <svg
+      :class="burgerClass"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 10 10"
+      stroke="currentColor"
+      stroke-width=".6"
+      fill="rgba(0,0,0,0)"
+      stroke-linecap="round"
+      style="cursor: pointer"
     >
-      <span />
-      <span />
-      <span />
-      <span />
-    </div>
+      <path d="M2,3L5,3L8,3M2,5L8,5M2,7L5,7L8,7">
+        <animate
+          ref="pathToX"
+          dur="0.15s"
+          attributeName="d"
+          values="M2,3L5,3L8,3M2,5L8,5M2,7L5,7L8,7;M3,3L5,5L7,3M5,5L5,5M3,7L5,5L7,7"
+          fill="freeze"
+          begin="indefinite"
+        />
+        <animate
+          ref="pathToBurger"
+          dur="0.15s"
+          attributeName="d"
+          values="M3,3L5,5L7,3M5,5L5,5M3,7L5,5L7,7;M2,3L5,3L8,3M2,5L8,5M2,7L5,7L8,7"
+          fill="freeze"
+          begin="indefinite"
+        />
+      </path>
+    </svg>
   </button>
 </template>
-
-<style lang="scss" scoped>
-.burger {
-  @apply rotate-0 transition-transform ease-in-out duration-500 cursor-pointer
-    relative w-9 h-9;
-
-  &-wrapper {
-    @apply p-0 self-center rounded-2 w-10 h-10 flex flex-center
-      hover:bg-true-gray/20;
-  }
-
-  span {
-    @apply block absolute h-4px w-7 rotate-0 rounded-full opacity-100
-      bg-current transition-all ease-in-out duration-250 left-1;
-
-    &:nth-child(1) {
-      @apply top-1.7;
-    }
-
-    &:nth-child(2),
-    &:nth-child(3) {
-      @apply top-1/2 translate-y--1/2;
-    }
-
-    &:nth-child(4) {
-      @apply bottom-1.7;
-    }
-  }
-
-  &.is-open {
-    span {
-      &:nth-child(1) {
-        @apply top-4 w-0 left-1/2;
-      }
-
-      &:nth-child(2) {
-        @apply rotate-45;
-      }
-
-      &:nth-child(3) {
-        @apply rotate--45;
-      }
-
-      &:nth-child(4) {
-        @apply bottom-1/2 translate-y-1/2 w-0 left-1/2;
-      }
-    }
-  }
-}
-</style>

@@ -97,6 +97,18 @@ export type ICollapseProps = {
     contentStyle?: () => CSSProperties
 
     /**
+     * Class for the inner content wrapper of the `Collapse` (the padded area around the slot)
+     */
+    contentInnerClass?: (payload: {
+      defaults: ReturnType<typeof COLLAPSE_DEFAULT_PROPS['ui']['contentInnerClass']>
+    }) => ClassType
+
+    /**
+     * Style for the inner content wrapper of the `Collapse`
+     */
+    contentInnerStyle?: () => CSSProperties
+
+    /**
      * Class for the header of the `Collapse`
      */
     headerClass?: (payload: {

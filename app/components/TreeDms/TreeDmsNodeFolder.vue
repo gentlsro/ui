@@ -130,10 +130,10 @@ defineExpose({ focus, select })
     <!-- Cancel create -->
     <Btn
       v-if="node.ref.__isNew"
-      size="xs"
-      m="l-auto r-1"
-      color="negative"
+      size="auto"
+      class="cancel-btn"
       :label="$t('general.cancel')"
+      :ui="{ labelClass: ({ defaults }) => `${defaults.base} !font-rem-10 p-x-1.5` }"
       @mousedown.stop.prevent="handleCancel"
     />
 
@@ -150,6 +150,13 @@ defineExpose({ focus, select })
 
   &__name {
     @apply truncate relative font-rem-14 outline-none rounded-custom p-x-1;
+  }
+
+  .cancel-btn {
+    @apply m-l-auto m-r-1
+      color-negative
+      bg-white dark:bg-black
+      p-x-1.5;
   }
 }
 </style>

@@ -5,5 +5,5 @@ export type ITreeNode<T extends IItem = IItem> = {
   /**
    * Reference to the original item
    */
-  ref: T
+  ref: T & { __isNew?: boolean }
 }

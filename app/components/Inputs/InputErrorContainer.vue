@@ -20,7 +20,8 @@ const errorMessages = computed(() => {
     :floating="!errorTakesSpace"
     z="$zMenu"
     :ui="{
-      contentClass: ({ defaults }) => `${defaults.base} ${defaults.floating} !p-x-1 !p-y-0`,
+      contentClass: ({ defaults }) => `${defaults.base} ${defaults.floating}`,
+      contentInnerClass: () => 'p-x-1',
     }"
   >
     <div

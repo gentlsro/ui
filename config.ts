@@ -9,6 +9,7 @@ import type { IUIState } from './app/types/ui-state.type'
 import type { IBadgeProps } from './app/components/Badge/types/badge-props.type'
 import type { IBannerProps } from './app/components/Banner/types/banner-props.type'
 import type { IBreadcrumbsProps } from './app/components/Breadcrumbs/types/breadcrumbs-props.type'
+import type { IBurgerProps } from './app/components/Burger/types/burger-props.type'
 import type { IBtnProps } from './app/components/Button/types/btn-props.type'
 import type { IButtonGroupProps } from './app/components/ButtonGroup/types/button-group-props.type'
 import type { ICheckboxProps } from './app/components/Checkbox/types/checkbox-props.type'
@@ -103,6 +104,19 @@ export const defaultComponentsConfig = {
         iconClass: ({ defaults }) => defaults.all,
         labelClass: ({ defaults }) => defaults.all,
         badgeClass: ({ defaults }) => defaults.all,
+      },
+    },
+    merge: ['ui'],
+  },
+
+  // Burger
+  burger: {
+    props: {
+      modelValue: undefined,
+      size: 'md',
+      ui: {
+        containerClass: ({ defaults }) => defaults.all,
+        burgerClass: ({ defaults }) => defaults.all,
       },
     },
     merge: ['ui'],
@@ -257,6 +271,7 @@ export const defaultComponentsConfig = {
         expandIconClass: ({ defaults }) => defaults.all,
         textClass: ({ defaults }) => defaults.all,
         contentClass: ({ defaults }) => defaults.all,
+        contentInnerClass: ({ defaults }) => defaults.all,
       },
     },
     merge: ['ui'],
@@ -1127,6 +1142,7 @@ export const defaultComponentsConfig = {
         titleClass: ({ defaults }) => defaults.all,
         subtitleClass: ({ defaults }) => defaults.all,
         contentClass: ({ defaults }) => defaults.all,
+        loadingClass: ({ defaults }) => defaults.all,
       },
     },
     merge: ['ui'],
@@ -1629,6 +1645,7 @@ export type IUIConfig = {
     confirmationInit?: { enabled?: boolean, required?: boolean, editable?: boolean }
   }
   menu: IConfigItem<IMenuProps>
+  burger: IConfigItem<IBurgerProps>
   breadcrumbs: IConfigItem<IBreadcrumbsProps> & {
     misc?: { useLastBreadcrumbAsTitle?: boolean }
     home: {

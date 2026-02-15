@@ -22,7 +22,7 @@ html.dark {
 }
 
 .link {
-  @apply underline cursor-pointer font-rem-12;
+  @apply underline cursor-pointer;
 
   &:hover {
     @apply color-secondary;

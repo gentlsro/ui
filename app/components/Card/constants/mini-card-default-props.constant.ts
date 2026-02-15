@@ -6,7 +6,7 @@ import type { IMiniCardProps } from '../types/mini-card-props.type'
 export const MINI_CARD_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'flex rounded-custom p-x-2 p-y-1 gap-2'
+      const base = 'flex rounded-custom p-x-2 p-y-1.5 gap-2'
 
       return {
         base,
@@ -42,7 +42,7 @@ export const MINI_CARD_DEFAULT_PROPS = {
     },
 
     labelClass() {
-      const base = 'text-caption color-slate-600 dark:color-slate-300 font-rem-14 p-b-1'
+      const base = 'text-caption color-slate-600 dark:color-slate-300 font-rem-12 p-b-1'
 
       return {
         base,
@@ -51,7 +51,7 @@ export const MINI_CARD_DEFAULT_PROPS = {
     },
 
     valueClass() {
-      const base = 'font-rem-16 overflow-wrap break-words whitespace-pre-line'
+      const base = 'font-rem-14 text-wrap break-words whitespace-pre-line'
       const modified = '[&.is-modified]:(p-l-1 rounded-custom)'
 
       return {

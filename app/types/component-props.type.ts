@@ -8,6 +8,9 @@ export * from '../components/Banner/types/banner-props.type'
 export * from '../components/Breadcrumbs/types/breadcrumb.type'
 export * from '../components/Breadcrumbs/types/breadcrumbs-props.type'
 
+// Burger
+export * from '../components/Burger/types/burger-props.type'
+
 // Button
 export * from '../components/Button/types/btn-props.type'
 

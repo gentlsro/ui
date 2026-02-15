@@ -56,9 +56,9 @@ function handleClick() {
 
 <style lang="scss" scoped>
 .file-input__inner {
-  @apply grid min-h-50 border-2 border-dashed p-2 rounded-3 relative overflow-auto gap-2 cursor-default
+  @apply grid min-h-50 p-2 rounded-3 relative overflow-auto gap-2 cursor-default
     dark:border-true-gray-600/50 border-true-gray-300/80
-    dark:bg-black bg-white;
+    dark:bg-dark-950 bg-white;
 
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
 

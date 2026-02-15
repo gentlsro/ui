@@ -144,8 +144,9 @@ const imageUrl = computed(() => {
 
 <style lang="scss" scoped>
 .file-preview {
-  @apply grid gap-2 fit items-center border-1 border-dotted rounded-3
-    border-ca color-ca h-auto;
+  @apply grid gap-2 fit items-center rounded-3
+    color-ca h-auto bg-white dark:bg-black
+    light:(border-1 border-solid border-truegray-200);
 
   grid-template-rows: auto 1fr auto;
 

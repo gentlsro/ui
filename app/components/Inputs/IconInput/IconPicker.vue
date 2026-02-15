@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
 
+// Types
+import type { ITextInputProps } from '../TextInput/types/text-input-props.type'
+
 type IProps = {
   modelValue?: string
   readonly?: boolean
   search?: string
   noSearch?: boolean
   minSearchLength?: number
+  searchInputProps?: ITextInputProps
   ui?: {
     searchClass?: ClassType
     searchStyle?: CSSProperties
@@ -77,6 +81,7 @@ watchThrottled(search, fetchAndSetIcons, {
           :debounce="500"
           :loading="isLoading"
           :placeholder="$t('general.searchIcon')"
+          v-bind="searchInputProps"
         />
       </div>
     </slot>
@@ -136,7 +141,7 @@ watchThrottled(search, fetchAndSetIcons, {
     grid-template-columns: repeat(auto-fill, minmax(28px, 1fr));
 
     &-item {
-      @apply flex flex-center cursor-pointer h-8;
+      @apply flex flex-center cursor-pointer h-8 rounded-custom;
 
       &.is-readonly {
         @apply cursor-default;
@@ -147,11 +152,11 @@ watchThrottled(search, fetchAndSetIcons, {
       }
 
       &:hover > svg {
-        @apply outline outline-ca outline-2 outline-dashed rounded-custom;
+        @apply outline outline-ca outline-1 outline-dashed;
       }
 
       &.is-selected > svg {
-        @apply outline outline-primary outline-2 outline-dashed rounded-custom;
+        @apply outline outline-primary! outline-1 outline-solid;
       }
     }
   }

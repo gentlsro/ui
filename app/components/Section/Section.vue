@@ -75,6 +75,17 @@ const contentClass = computed(() => {
 const contentStyle = computed(() => {
   return mergedProps.value?.ui?.contentStyle?.()
 })
+
+// Styles - loading
+const loadingClass = computed(() => {
+  return mergedProps.value?.ui?.loadingClass?.({
+    defaults: SECTION_DEFAULT_PROPS.ui.loadingClass(),
+  })
+})
+
+const loadingStyle = computed(() => {
+  return mergedProps.value?.ui?.loadingStyle?.()
+})
 </script>
 
 <template>
@@ -127,5 +138,14 @@ const contentStyle = computed(() => {
     >
       <slot />
     </div>
+
+    <!-- Loading -->
+    <slot name="loading">
+      <Skeleton
+        v-if="loading"
+        :class="loadingClass"
+        :style="loadingStyle"
+      />
+    </slot>
   </section>
 </template>

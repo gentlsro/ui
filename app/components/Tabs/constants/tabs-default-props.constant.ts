@@ -30,7 +30,7 @@ export const TABS_DEFAULT_PROPS = {
     },
 
     tabClass() {
-      const base = 'fit'
+      const base = 'fit rounded-b-custom'
 
       return {
         base,

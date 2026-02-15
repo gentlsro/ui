@@ -23,6 +23,11 @@ export type ISectionProps = {
   headingProps?: Partial<IHeadingProps>
 
   /**
+   * Flag to indicate if the section is loading
+   */
+  loading?: boolean
+
+  /**
    * The subtitle of the section
    */
   subtitle?: string | number | false | null
@@ -88,5 +93,17 @@ export type ISectionProps = {
      * Style for the subtitle
      */
     subtitleStyle?: () => CSSProperties
+
+    /**
+     * Class for the loading state
+     */
+    loadingClass?: (payload: {
+      defaults: ReturnType<typeof SECTION_DEFAULT_PROPS['ui']['loadingClass']>
+    }) => ClassType
+
+    /**
+     * Style for the loading state
+     */
+    loadingStyle?: () => CSSProperties
   }
 }

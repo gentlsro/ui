@@ -171,7 +171,7 @@ defineExpose({
         :reference-target="referenceEl"
         no-uplift
       >
-        <ColorBrandingPicker
+        <ColorPicker
           v-model="model"
           :rgba
           :tw

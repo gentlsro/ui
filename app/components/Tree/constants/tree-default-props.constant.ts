@@ -24,7 +24,7 @@ export const TREE_DEFAULT_PROPS = {
     },
 
     nodeClass() {
-      const base = 'flex items-center gap-1 p-x-1 rounded-custom overflow-auto w-full'
+      const base = 'flex items-center gap-1 p-x-1 rounded-custom overflow-auto w-full m-b-px'
 
       // Hover
       const hover = 'hover:bg-slate-100 dark:hover:bg-slate-800'

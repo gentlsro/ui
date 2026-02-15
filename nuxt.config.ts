@@ -175,6 +175,7 @@ export default defineNuxtConfig({
   // @ts-ignore
   icon: {
     size: '1em',
+    mode: 'svg',
   },
 
   pinia: {

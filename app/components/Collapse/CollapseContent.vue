@@ -95,6 +95,16 @@ const contentClass = computed(() => {
 const contentStyle = computed(() => {
   return props.ui?.contentStyle?.()
 })
+
+const contentInnerClass = computed(() => {
+  return props.ui?.contentInnerClass?.({
+    defaults: COLLAPSE_DEFAULT_PROPS.ui.contentInnerClass(),
+  })
+})
+
+const contentInnerStyle = computed(() => {
+  return props.ui?.contentInnerStyle?.()
+})
 </script>
 
 <template>
@@ -114,7 +124,13 @@ const contentStyle = computed(() => {
       :style="contentStyle"
       @transitionend="onTransitionEnd"
     >
-      <slot />
+      <div
+        class="collapse__content-inner"
+        :class="contentInnerClass"
+        :style="contentInnerStyle"
+      >
+        <slot />
+      </div>
     </div>
   </Transition>
 </template>

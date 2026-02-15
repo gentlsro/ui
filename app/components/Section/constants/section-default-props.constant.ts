@@ -42,5 +42,14 @@ export const SECTION_DEFAULT_PROPS = {
         all: `${base}`,
       } as const
     },
+
+    loadingClass() {
+      const base = 'absolute! inset-0 rounded-custom'
+
+      return {
+        base,
+        all: `${base}`,
+      } as const
+    },
   },
 } satisfies ISectionProps

@@ -253,12 +253,13 @@ if (props.immediateFetch && mergedProps.value.loadData?.fnc) {
         :name="name || path || placeholder"
         :chip-props="mergedProps.chipProps"
       >
-        <template #default="{ item, index, optionByKey }">
+        <template #default="{ item, index, optionByKey, isLast }">
           <slot
             name="selection-item"
             :item
             :index
             :option-by-key
+            :is-last
           />
         </template>
       </SelectorInner>

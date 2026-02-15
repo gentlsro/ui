@@ -24,7 +24,7 @@ export async function selectNode<T extends IItem = IItem>(payload: {
   } = getStore()
 
   if (selectionConfig.value?.beforeSelect) {
-    const shouldContinue = await selectionConfig.value?.beforeSelect({ node })
+    const shouldContinue = await selectionConfig.value?.beforeSelect({ node, ev })
 
     if (shouldContinue === false) {
       return
