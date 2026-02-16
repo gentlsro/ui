@@ -87,7 +87,7 @@ export async function listFetchData(payload: {
   }
 
   return {
-    hasMore: totalRows > _items.length,
+    hasMore: _count > _items.length,
     items: _items,
     totalRows: _count,
   }
