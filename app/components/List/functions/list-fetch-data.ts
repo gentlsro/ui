@@ -71,7 +71,7 @@ export async function listFetchData(payload: {
 
   let _items = (payloadKey ? get(res, payloadKey) : res) as any[]
   const _count = countKey
-    ? (get(res, countKey) ?? totalRows)
+    ? (get(res, countKey) || totalRows || _items.length)
     : _items.length
 
   emits?.fetchData({
