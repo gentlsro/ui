@@ -23,6 +23,7 @@ const {
   folderKey,
   modifiers,
   isCurrentlyAddingItem,
+  contextMenuConfig,
 } = useTreeDmsStore()
 
 // Layout
@@ -35,6 +36,8 @@ const menuItems = computed<Array<IBtnProps & { id: string }>>(() => {
   switch (nodeContextMenu.value?.ref.type) {
     case fileKey.value:
       return [
+        ...(contextMenuConfig.value?.extendOptions?.({ item: nodeContextMenu.value?.ref }) ?? []),
+
         // Rename
         {
           ...baseProps,
@@ -60,6 +63,8 @@ const menuItems = computed<Array<IBtnProps & { id: string }>>(() => {
 
     case folderKey.value:
       return [
+        ...(contextMenuConfig.value?.extendOptions?.({ item: nodeContextMenu.value?.ref }) ?? []),
+
         // New file
         {
           ...baseProps,
@@ -136,6 +141,8 @@ const menuItems = computed<Array<IBtnProps & { id: string }>>(() => {
 
     default:
       return [
+        ...(contextMenuConfig.value?.extendOptions?.({}) ?? []),
+
         // New file
         {
           ...baseProps,
@@ -266,6 +273,11 @@ async function handleDelete() {
 
     <!-- Selected -->
     <template v-else>
+      <slot
+        name="context-menu-item"
+        :node="nodeContextMenu?.ref"
+      />
+
       <Btn
         v-for="item in menuItems"
         v-bind="item"

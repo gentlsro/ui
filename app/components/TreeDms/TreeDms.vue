@@ -8,11 +8,19 @@ import type { ITreeProps } from '../Tree/types/tree-props.type'
 
 // Functions
 import { getDirectParent } from '../Tree/functions/get-direct-parent'
+import { getComponentMergedProps, getComponentProps } from '../../utils/get-component-props'
 
 // Store
 import { TREE_DMS_INJECTION_KEY, useTreeDmsStore } from './stores/tree-dms.store'
 
-const props = defineProps<ITreeDmsProps<T>>()
+const props = withDefaults(
+  defineProps<ITreeDmsProps<T>>(),
+  { ...getComponentProps('treeDms') },
+)
+
+const mergedProps = computed(() => {
+  return getComponentMergedProps('treeDms', props)
+})
 
 // Init
 const uuid = generateUUID()
@@ -21,6 +29,7 @@ provideLocal(TREE_DMS_INJECTION_KEY, uuid)
 // Store
 const {
   modifiers,
+  contextMenuConfig,
   nodeSelected,
   nodeContextMenu,
   isContextMenuOpen,
@@ -32,7 +41,8 @@ const model = defineModel<T[]>()
 const search = ref('')
 const treeEl = useTemplateRef('treeEl')
 
-syncRef(toRef(props, 'modifiers'), modifiers, { direction: 'ltr' })
+syncRef(computed(() => mergedProps.value?.modifiers), modifiers, { direction: 'ltr' })
+syncRef(computed(() => mergedProps.value?.contextMenuConfig), contextMenuConfig, { direction: 'ltr' })
 
 // Menu
 function handleNodeClick(payload: { node: ITreeNode<T>, ev?: MouseEvent }) {
@@ -99,14 +109,14 @@ const getParentNode: NonUndefined<ITreeProps<T>['dndConfig']>['getParentNode'] =
 <template>
   <Tree
     ref="treeEl"
-    v-bind="treeProps"
+    v-bind="mergedProps.treeProps"
     v-model="model"
     v-model:search="search"
     v-model:selection="nodeSelected"
     :dnd-config="{
       getParentNode,
       onBeforeMove: handleItemMove,
-      ...treeProps?.dndConfig,
+      ...mergedProps.treeProps?.dndConfig,
     }"
     @click:node="handleNodeClick"
     @contextmenu="handleContextMenuClick"
@@ -153,11 +163,19 @@ const getParentNode: NonUndefined<ITreeProps<T>['dndConfig']>['getParentNode'] =
     </template>
 
     <template #inner>
-      <TreeDmsContextMenu />
+      <TreeDmsContextMenu v-if="contextMenuConfig?.enabled">
+        <template #context-menu-item>
+          <slot
+            name="context-menu-item"
+            :node="nodeContextMenu?.ref"
+          />
+        </template>
+      </TreeDmsContextMenu>
+
       <TreeDmsDropZone
         v-model="model"
-        :tree-props
-        :drop-zone-config
+        :tree-props="mergedProps.treeProps"
+        :drop-zone-config="mergedProps.dropZoneConfig"
         :file-key
         :folder-key
       />

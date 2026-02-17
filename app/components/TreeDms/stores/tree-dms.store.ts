@@ -32,6 +32,11 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
 
     const modifiers = ref(props?.modifiers)
 
+    /**
+     * Configuration for the context menu
+     */
+    const contextMenuConfig = ref(props?.contextMenuConfig)
+
     // State
     const nodeSelected = ref<T>()
     const nodeContextMenu = ref<ITreeNode<T>>()
@@ -45,6 +50,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       fileKey,
       folderKey,
       modifiers,
+      contextMenuConfig,
 
       // State
       nodeEditing,

@@ -70,6 +70,7 @@ import type { ITimeInputProps } from './app/components/Inputs/TimeInput/types/ti
 import type { IToggleProps } from './app/components/Toggle/types/toggle-props.type'
 import type { ITooltipProps } from './app/components/Tooltip/types/tooltip-props.type'
 import type { ITreeProps } from './app/components/Tree/types/tree-props.type'
+import type { ITreeDmsProps } from './app/components/TreeDms/types/tree-dms-props.type'
 import type { IValueFormatterProps } from './app/components/ValueFormatter/types/value-formatter-props.type'
 import type { IVirtualScrollerProps } from './app/components/VirtualScroller/types/virtual-scroller-props.type'
 import type { IVirtualScrollerVerticalProps } from './app/components/VirtualScroller/types/virtual-scroller-vertical-props.type'
@@ -1543,6 +1544,69 @@ export const defaultComponentsConfig = {
     ],
   },
 
+  // TreeDms
+  treeDms: {
+    props: {
+      modelValue: undefined,
+      label: undefined,
+      fileKey: 'file',
+      folderKey: 'folder',
+      treeProps: {
+        collapseConfig: {
+          expandedLevelOnInit: 0,
+          showCollapsedWhenSearched: true,
+          btnTakesSpace: true,
+          btnProps: { size: 'xs', noHoverEffect: true, class: 'self-start m-t-1.5 color-ca' },
+        },
+        connectors: true,
+        loadChildrenConfig: undefined,
+        maxLevel: Number.MAX_SAFE_INTEGER,
+        meta: undefined,
+        modelValue: [],
+        search: '',
+        childrenKey: 'children',
+        parentKey: 'parentId',
+        searchConfig: {
+          enabled: true,
+          fnc: undefined,
+        },
+        selection: undefined,
+        selectionConfig: {
+          multi: false,
+          emitKey: false,
+          checkboxProps: { size: 'sm', noHoverEffect: true, class: 'm-t-2px m-l--2' },
+        },
+        dndConfig: { enabled: false, dropMode: 'parent' },
+        ui: {
+          containerClass: ({ defaults }) => defaults.all,
+          contentClass: ({ defaults }) => defaults.all,
+          nodeClass: ({ defaults }) => defaults.all,
+          nodeContentClass: ({ defaults }) => defaults.base,
+          noDataClass: ({ defaults }) => defaults.all,
+          actionsClass: ({ defaults }) => defaults.all,
+          searchClass: ({ defaults }) => defaults.all,
+          nodePadding: '1rem',
+        },
+        scrollerConfig: {
+          rowHeight: 36,
+          ui: { rowClass: ({ defaults }) => defaults.all },
+        },
+        actionsConfig: {
+          enabled: true,
+          btnProps: { size: 'sm' },
+          autoLoadChildrenOnExpandAll: false,
+        },
+      },
+      contextMenuConfig: { enabled: true },
+      modifiers: undefined,
+      dropZoneConfig: {
+        enabled: undefined,
+        fnc: undefined,
+      },
+    },
+    merge: ['treeProps', 'contextMenuConfig', 'modifiers', 'dropZoneConfig'],
+  },
+
   // ValueFormatter
   valueFormatter: {
     props: {
@@ -1715,6 +1779,7 @@ export type IUIConfig = {
   toggle: IConfigItem<IToggleProps>
   tooltip: IConfigItem<ITooltipProps>
   tree: IConfigItem<ITreeProps>
+  treeDms: IConfigItem<ITreeDmsProps<any>>
   valueFormatter: IConfigItem<IValueFormatterProps>
   virtualScroller: IConfigItem<IVirtualScrollerProps<any>>
   virtualScrollerVertical: IConfigItem<IVirtualScrollerVerticalProps<any>>

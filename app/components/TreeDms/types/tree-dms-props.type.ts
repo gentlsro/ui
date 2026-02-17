@@ -28,6 +28,23 @@ export type ITreeDmsProps<T extends IItem = IItem> = {
   treeProps?: ITreeProps<T>
 
   /**
+   * Configuration for the context menu
+   */
+  contextMenuConfig?: {
+    /**
+     * Whether the context menu is enabled
+     */
+    enabled?: boolean
+
+    /**
+     * A function to extend the options of the context menu for given item
+     */
+    extendOptions?: (payload: {
+      item?: T
+    }) => Array<IBtnProps & { id: string }>
+  }
+
+  /**
    * Modifiers are a set of functions that define how the component behaves
    */
   modifiers?: {
