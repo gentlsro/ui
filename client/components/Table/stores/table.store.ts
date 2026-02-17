@@ -759,12 +759,22 @@ const [
 
     const rowsFetched = payloadKey ? (get(resModified, payloadKey) ?? []) : resModified
     const countFetched = get(resModified, countKey) ?? 0
+    const hasNoRows = rows.value.length === 0
 
     rows.value = isFetchMore.value ? [...rows.value, ...rowsFetched] : rowsFetched
     totalRows.value = isFetchMore.value ? totalRows.value : countFetched
     hasMore.value = rows.value.length < totalRows.value
 
     if (!isFetchMore.value) {
+      // If there were no rows in the table before, and now there are,
+      // We need to reset the x-axis scroll position
+      if (hasNoRows && rows.value.length > 0) {
+        // headerX.value = 0
+        nextTick(() => {
+          contentX.value = headerX.value
+        })
+      }
+
       onDataFetchQueue.value.push(navigate)
     }
 
