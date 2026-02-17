@@ -768,7 +768,7 @@ const [
     if (!isFetchMore.value) {
       // If there were no rows in the table before, and now there are,
       // We need to reset the x-axis scroll position
-      if (hasNoRows && rows.value.length > 0){
+      if (hasNoRows && rows.value.length > 0) {
         // headerX.value = 0
         nextTick(() => {
           contentX.value = headerX.value
