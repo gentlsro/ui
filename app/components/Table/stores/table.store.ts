@@ -791,6 +791,7 @@ const [
 
     const rowsFetched = payloadKey ? (get(resModified, payloadKey) ?? []) : resModified
     const countFetched = get(resModified, countKey)
+    const hadNoRows = rows.value.length === 0
 
     if (!isNil(countFetched)) {
       totalRows.value = countFetched
@@ -801,6 +802,16 @@ const [
     hasMore.value = rows.value.length < totalRows.value
 
     if (!isFetchMore.value) {
+      // Sync the X-axis scroll position
+      // -> we may have changed the columns' definition (~ widths, fields, etc.)
+      // If the current state of the table had no rows (= TableContent was not rendered),
+      // while now having rows, the X-axis scroll position would be unsynced
+      if (hadNoRows && rows.value.length > 0) {
+        nextTick(() => {
+          contentX.value = headerX.value
+        })
+      }
+
       onDataFetchQueue.value.push(navigate)
     }
 
