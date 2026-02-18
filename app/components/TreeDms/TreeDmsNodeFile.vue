@@ -149,7 +149,7 @@ defineExpose({ focus, select })
 
 <style lang="scss" scoped>
 .file {
-  @apply flex items-center gap-2;
+  @apply flex items-center flex-wrap gap-x-2 gap-y-2px;
 
   &__name {
     @apply relative font-rem-14 outline-none rounded-custom p-x-1;
