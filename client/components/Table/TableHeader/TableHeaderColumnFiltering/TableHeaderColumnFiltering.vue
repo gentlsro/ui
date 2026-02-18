@@ -81,9 +81,9 @@ function handleAddFilter() {
   ]
 }
 
-function handleRemoveFilter(idx: number) {
-  props.removeFnc?.(column.value.filters[idx] as ITableFilterItem)
-  column.value.filters = column.value.filters.toSpliced(idx, 1)
+function handleRemoveFilter(filter: FilterItem) {
+  props.removeFnc?.(filter as ITableFilterItem)
+  column.value.filters = column.value.filters.filter(f => f.id !== filter.id)
 }
 
 function handleClearFilter() {
@@ -143,7 +143,7 @@ watchOnce(isMounted, () => {
         :column
         :modify-fnc
         @vue:mounted="handleMountedFilteringItem"
-        @remove:item="handleRemoveFilter(idx)"
+        @remove:item="handleRemoveFilter(item)"
       />
     </div>
 
