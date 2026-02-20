@@ -146,7 +146,7 @@ defineExpose({ focus, select })
 
 <style lang="scss" scoped>
 .folder {
-  @apply flex items-center flex-wrap gap-x-2 gap-y-2px;
+  @apply flex items-center gap-x-2 gap-y-2px;
 
   &__name {
     @apply truncate relative font-rem-14 outline-none rounded-custom p-x-1;

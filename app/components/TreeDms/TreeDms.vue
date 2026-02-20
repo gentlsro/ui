@@ -18,6 +18,19 @@ const props = withDefaults(
   { ...getComponentProps('treeDms') },
 )
 
+defineExpose({
+  getStore: () => useTreeDmsStore(),
+  getTreeStore: () => {
+    const treeStore = treeEl.value?.store()
+
+    if (!treeStore) {
+      throw new Error('Tree store not found')
+    }
+
+    return treeStore
+  },
+})
+
 const mergedProps = computed(() => {
   return getComponentMergedProps('treeDms', props)
 })
