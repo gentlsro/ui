@@ -23,6 +23,8 @@ export async function selectNode<T extends IItem = IItem>(payload: {
     nodeMetaById,
   } = getStore()
 
+  const isClearable = !!selectionConfig.value?.clearable
+
   if (selectionConfig.value?.beforeSelect) {
     const shouldContinue = await selectionConfig.value?.beforeSelect({ node, ev })
 
@@ -60,11 +62,12 @@ export async function selectNode<T extends IItem = IItem>(payload: {
 
       selection.value = model
         .filter(s => !ids.includes(typeof s === 'object' ? s.id : s)) as any
-    } else {
-      selection.value = undefined
-    }
 
-    emits.value.nodeUnselect({ node, ev })
+      emits.value.nodeUnselect({ node, ev })
+    } else if (isClearable) {
+      selection.value = undefined
+      emits.value.nodeUnselect({ node, ev })
+    }
   }
 
   // When unselected

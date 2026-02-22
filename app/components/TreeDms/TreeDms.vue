@@ -139,7 +139,11 @@ const getParentNode: NonUndefined<ITreeProps<T>['dndConfig']>['getParentNode'] =
         v-model:search="search"
         v-bind="searchProps"
         :label
-      />
+      >
+        <template #label>
+          <slot name="label" />
+        </template>
+      </TreeDmsSearch>
     </template>
 
     <template #node="{ node }">
@@ -176,7 +180,7 @@ const getParentNode: NonUndefined<ITreeProps<T>['dndConfig']>['getParentNode'] =
     </template>
 
     <template #inner>
-      <TreeDmsContextMenu v-if="contextMenuConfig?.enabled">
+      <TreeDmsContextMenu v-if="mergedProps.contextMenuConfig?.enabled">
         <template #context-menu-item>
           <slot
             name="context-menu-item"

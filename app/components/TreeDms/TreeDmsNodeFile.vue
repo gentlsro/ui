@@ -19,7 +19,7 @@ const props = defineProps<IProps>()
 const treeStore = useTreeStore()
 const treeDmsStore = useTreeDmsStore()
 const { labelKey, removeNode } = treeStore
-const { nodeEditing, isLoadingByNodeId } = treeDmsStore
+const { nodeEditing, isLoadingByNodeId, hasNodeIcon } = treeDmsStore
 
 // Layout
 const inputEl = useTemplateRef('inputEl')
@@ -99,19 +99,21 @@ defineExpose({ focus, select })
     class="file"
     :title="node.ref.name"
   >
-    <LoaderBlock
-      v-if="isLoadingByNodeId[node.id]"
-      size="h-5 w-5"
-    />
-
-    <slot
-      v-else
-      name="icon"
-    >
-      <div
-        class="i-hugeicons:file-01 shrink-0 w-5 h-5"
+    <template v-if="hasNodeIcon.file">
+      <LoaderBlock
+        v-if="isLoadingByNodeId[node.id]"
+        size="h-5 w-5"
       />
-    </slot>
+
+      <slot
+        v-else
+        name="icon"
+      >
+        <div
+          class="i-hugeicons:file-01 shrink-0 w-5 h-5"
+        />
+      </slot>
+    </template>
 
     <span
       :key="triggerKey"

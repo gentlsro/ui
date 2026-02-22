@@ -12,6 +12,7 @@ export function useTreeNode<T extends IItem = IItem>(payload: ITreeNodeProps<T>)
   const { node, ui, index } = payload
   const store = useTreeStore()
   const {
+    idKey,
     isSearched,
     nodeMetaById,
     selection,
@@ -40,7 +41,7 @@ export function useTreeNode<T extends IItem = IItem>(payload: ITreeNodeProps<T>)
     return isNodeSelected({
       node,
       selection: selection.value,
-      idKey: 'id',
+      idKey: idKey.value,
     })
   })
 

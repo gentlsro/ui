@@ -308,6 +308,11 @@ export type ITreeProps<T extends IItem = IItem> = {
     enabled?: boolean
 
     /**
+     * Whether the selection can be cleared
+     */
+    clearable?: boolean
+
+    /**
      * Whether the selection is multi-select
      */
     multi?: boolean

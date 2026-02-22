@@ -15,7 +15,7 @@ export const TREE_DEFAULT_PROPS = {
     },
 
     contentClass() {
-      const base = 'p-y-2.5 grow'
+      const base = 'p-y-2.5 grow min-h-12'
 
       return {
         base,
@@ -101,7 +101,7 @@ export const TREE_DEFAULT_PROPS = {
     },
 
     searchClass() {
-      const base = 'flex gap-1 items-center'
+      const base = 'flex flex-col'
 
       return {
         base,

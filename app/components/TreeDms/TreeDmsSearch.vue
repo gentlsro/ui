@@ -16,7 +16,7 @@ defineEmits<{
 
 // Store
 const { fileKey, folderKey, nodeEditing, isCurrentlyAddingItem } = useTreeDmsStore()
-const { insertNode, childrenKey } = useTreeStore()
+const { insertNode, idKey, childrenKey } = useTreeStore()
 
 // Layout
 const search = defineModel<string>('search')
@@ -31,7 +31,7 @@ async function handleCreateItem(type: string) {
   }
 
   const addedNode = await insertNode({
-    id: generateUUID(),
+    [idKey.value]: generateUUID().split('-')[0],
     label: '',
     type,
     [childrenKey.value]: [],
@@ -56,9 +56,11 @@ async function handleCreateItem(type: string) {
   >
     <template #actions>
       <div class="tree-dms__header">
-        <h6 v-if="label">
-          {{ label }}
-        </h6>
+        <slot name="label">
+          <h6 v-if="label">
+            {{ label }}
+          </h6>
+        </slot>
 
         <TreeActions
           :ui
@@ -71,6 +73,7 @@ async function handleCreateItem(type: string) {
               v-bind="actionsConfig?.btnProps"
               size="xs"
               icon="i-hugeicons:file-add"
+              class="add-file-btn"
               :tooltip="{ label: $t('misc.createFile') }"
               @click="handleCreateItem(fileKey)"
             />
@@ -80,6 +83,7 @@ async function handleCreateItem(type: string) {
               v-bind="actionsConfig?.btnProps"
               size="xs"
               icon="i-hugeicons:folder-add"
+              class="add-folder-btn"
               :tooltip="{ label: $t('misc.createFolder') }"
               @click="handleCreateItem(folderKey)"
             />

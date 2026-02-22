@@ -19,7 +19,7 @@ const props = defineProps<IProps>()
 const treeStore = useTreeStore()
 const treeDmsStore = useTreeDmsStore()
 const { labelKey, nodeMetaById, removeNode } = treeStore
-const { nodeEditing, isLoadingByNodeId } = treeDmsStore
+const { nodeEditing, isLoadingByNodeId, hasNodeIcon } = treeDmsStore
 
 // Layout
 const inputEl = useTemplateRef('inputEl')
@@ -101,15 +101,17 @@ defineExpose({ focus, select })
     class="folder"
     :title="node.ref.name"
   >
-    <LoaderBlock
-      v-if="isLoadingByNodeId[node.id]"
-      size="h-5 w-5"
-    />
-    <div
-      v-else
-      class="shrink-0"
-      :class="{ 'i-hugeicons:folder-01': isCollapsed, 'i-hugeicons:folder-02': !isCollapsed }"
-    />
+    <template v-if="hasNodeIcon.folder">
+      <LoaderBlock
+        v-if="isLoadingByNodeId[node.id]"
+        size="h-5 w-5"
+      />
+      <div
+        v-else
+        class="shrink-0"
+        :class="{ 'i-hugeicons:folder-01': isCollapsed, 'i-hugeicons:folder-02': !isCollapsed }"
+      />
+    </template>
 
     <span
       :key="triggerKey"

@@ -30,6 +30,13 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       defaultValue: 'folder',
     }) as Ref<string>
 
+    const noNodeIcon = initRef({
+      propName: 'noNodeIcon',
+      instance,
+      props,
+      defaultValue: false,
+    }) as Ref<boolean | { file?: boolean, folder?: boolean }>
+
     const modifiers = ref(props?.modifiers)
 
     /**
@@ -45,6 +52,20 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     const isLoadingByNodeId = ref<Record<ITreeNode<T>['id'], boolean>>({})
     const isCurrentlyAddingItem = ref(false)
 
+    const hasNodeIcon = computed(() => {
+      if (typeof noNodeIcon.value === 'boolean') {
+        return {
+          file: !noNodeIcon.value,
+          folder: !noNodeIcon.value,
+        }
+      }
+
+      return {
+        file: !noNodeIcon.value?.file,
+        folder: !noNodeIcon.value?.folder,
+      }
+    })
+
     const returnedData = {
       // Utils
       fileKey,
@@ -59,6 +80,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       isContextMenuOpen,
       isLoadingByNodeId,
       isCurrentlyAddingItem,
+      hasNodeIcon,
     }
 
     return returnedData
