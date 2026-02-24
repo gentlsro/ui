@@ -19,9 +19,20 @@ const mergedProps = computed(() => {
 
 const size = computed(() => props.size ?? 'md')
 
+// Path shapes (must match animate values)
+const PATH_X = 'M3,3L5,5L7,3M5,5L5,5M3,7L5,5L7,7'
+
 // Refs for model-driven animations
+const pathRef = ref<SVGPathElement>()
 const pathToX = ref<SVGAnimateElement>()
 const pathToBurger = ref<SVGAnimateElement>()
+
+// Initialize to correct state on mount (no animation)
+onMounted(() => {
+  if (model.value) {
+    pathRef.value?.setAttribute('d', PATH_X)
+  }
+})
 
 watch(model, isOpen => {
   nextTick(() => {
@@ -32,7 +43,7 @@ watch(model, isOpen => {
       pathToBurger.value?.beginElement()
     }
   })
-}, { immediate: true })
+})
 
 // Styles
 const containerClass = computed(() => {
@@ -65,7 +76,10 @@ const burgerClass = computed(() => {
       stroke-linecap="round"
       style="cursor: pointer"
     >
-      <path d="M2,3L5,3L8,3M2,5L8,5M2,7L5,7L8,7">
+      <path
+        ref="pathRef"
+        d="M2,3L5,3L8,3M2,5L8,5M2,7L5,7L8,7"
+      >
         <animate
           ref="pathToX"
           dur="0.15s"
