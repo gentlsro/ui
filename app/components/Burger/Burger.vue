@@ -32,7 +32,7 @@ watch(model, isOpen => {
       pathToBurger.value?.beginElement()
     }
   })
-})
+}, { immediate: true })
 
 // Styles
 const containerClass = computed(() => {
