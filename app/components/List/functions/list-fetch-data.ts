@@ -70,9 +70,14 @@ export async function listFetchData(payload: {
   })
 
   let _items = (payloadKey ? get(res, payloadKey) : res) as any[]
-  const _count = countKey
-    ? (get(res, countKey) || totalRows || _items.length)
-    : _items.length
+  let _count = _items.length
+  const hasCount = countKey && !isNil(get(res, countKey))
+
+  if (hasCount) {
+    _count = get(res, countKey)
+  } else if (totalRows) {
+    _count = totalRows
+  }
 
   emits?.fetchData({
     itemsFetched: _items,
