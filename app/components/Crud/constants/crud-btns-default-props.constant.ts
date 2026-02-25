@@ -33,7 +33,7 @@ export const CRUD_EDIT_BTN_DEFAULT_PROPS = {
     },
 
     btnClass() {
-      const base = 'md:min-w-60 w-full'
+      const base = 'md:min-w-40 w-full'
 
       // State styling via CSS selectors
       const activeState = '[&:not(.is-archived):not(.is-disabled)]:(bg-primary color-white)'
@@ -46,4 +46,3 @@ export const CRUD_EDIT_BTN_DEFAULT_PROPS = {
     },
   },
 }
-

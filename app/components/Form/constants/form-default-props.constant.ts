@@ -71,7 +71,7 @@ export const FORM_DEFAULT_PROPS = {
     },
 
     cancelClass() {
-      const base = 'w-40'
+      const base = 'w-auto'
 
       return {
         base,
