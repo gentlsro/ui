@@ -70,14 +70,13 @@ export async function listFetchData(payload: {
 
   let _items = payloadKey ? get(res, payloadKey) : res
   let _count = _items.length
+  const hasCount = countKey && !isNil(get(res, countKey))
 
-  if (countKey && get(res, countKey)) {
+  if (hasCount) {
     _count = get(res, countKey)
   } else if (totalRows) {
     _count = totalRows
   }
-
-  console.log('💀', _count)
 
   if (onFetchData) {
     return onFetchData({
@@ -90,13 +89,9 @@ export async function listFetchData(payload: {
     })
   }
 
-  console.log('💀', _count)
-
   if (isFetchMore) {
     _items = [...items, ..._items]
   }
-
-  console.log('💀', _count)
 
   return {
     hasMore: _count > _items.length,
