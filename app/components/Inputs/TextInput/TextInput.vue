@@ -58,6 +58,10 @@ const hasCopyBtn = computed(() => {
   return props.readonly && !props.disabled && !props.noCopy && hasContent.value
 })
 
+const type = computed(() => {
+  return props.inputType || props.type
+})
+
 // Styles - append
 const appendClass = computed(() => {
   return mergedProps.value.ui?.appendClass?.({

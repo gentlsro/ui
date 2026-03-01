@@ -24,6 +24,11 @@ export type ITextInputProps = IInputProps & {
   type?: 'text' | 'password' | 'email'
 
   /**
+   * Alias for the `type` prop
+   */
+  inputType?: 'text' | 'password' | 'email'
+
+  /**
    * The props that should be passed to the tooltip
    */
   tooltipProps?: IMenuProps
