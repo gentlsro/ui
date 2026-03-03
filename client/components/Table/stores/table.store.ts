@@ -410,7 +410,6 @@ const [
   })
 
   watch(columnsMerged, columnsMerged => {
-    console.log(1)
     // There is some extreme edge case where the modifiers are not set
     // This happens when you spam tables like crazy
     // I don't know if this is even possible to fix because it might be related
