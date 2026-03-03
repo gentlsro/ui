@@ -83,6 +83,7 @@ export function tableTransformColumns(payload: {
 
   // Create a copy of the columns
   let _columns = internalColumns.map(col => new TableColumn(col))
+  console.log('💀 initialSchemaConfig', decodeURIComponent(initialSchemaConfig?.schema?.toString() ?? ''))
 
   if (!shouldUrlBeUsed && !shouldSchemaBeUsed && !initialSchemaConfig?.schema) {
     _columns = _columns.toSorted((a, b) => {
@@ -94,8 +95,6 @@ export function tableTransformColumns(payload: {
 
     return { columns: _columns, queryBuilder: [] }
   }
-
-  console.log('💀 initialSchemaConfig', decodeURIComponent(initialSchemaConfig?.schema?.toString() ?? ''))
 
   // Initial schema
   let initialParams: URLSearchParams | undefined
