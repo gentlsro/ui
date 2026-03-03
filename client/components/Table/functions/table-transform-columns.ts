@@ -155,6 +155,12 @@ export function tableTransformColumns(payload: {
     forceUrlUsage: !!initialParams,
   })
   console.log('💀 result', result)
+  console.log('💀 isUrlUsed', isUrlUsed)
+  console.log('💀 isSchemaUsed', isSchemaUsed)
+  console.log('💀 initialParams', decodeURIComponent(initialParams?.toString() ?? ''))
+  console.log('💀 defaultSchema', decodeURIComponent(defaultSchema.toString() ?? ''))
+  console.log('💀 urlSchema', decodeURIComponent(urlSchema.toString() ?? ''))
+  console.log('💀 stateSchema', decodeURIComponent(stateSchema?.toString() ?? ''))
 
   if (!isSchemaUsed && !isUrlUsed) {
     _columns = _columns.toSorted((a, b) => {
