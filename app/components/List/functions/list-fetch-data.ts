@@ -69,7 +69,7 @@ export async function listFetchData(payload: {
     })
   })
 
-  let _items = (payloadKey ? get(res, payloadKey) : res) as any[]
+  let _items = payloadKey ? get(res, payloadKey) : res
   let _count = _items.length
   const hasCount = countKey && !isNil(get(res, countKey))
 
