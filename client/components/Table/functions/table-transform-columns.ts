@@ -145,7 +145,6 @@ export function tableTransformColumns(payload: {
     modifiers,
     searchParams: initialParams ?? urlSchema,
   })
-  console.log('🥝 url result', urlResult.queryBuilder)
 
   const { result, isUrlUsed, isSchemaUsed } = getUsedProperties({
     shouldUrlBeUsed,
@@ -155,8 +154,6 @@ export function tableTransformColumns(payload: {
     modifiers,
     forceUrlUsage: !!initialParams,
   })
-
-  console.log('🥝 result', result.queryBuilder)
 
   if (!isSchemaUsed && !isUrlUsed) {
     _columns = _columns.toSorted((a, b) => {
