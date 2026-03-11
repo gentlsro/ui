@@ -3,7 +3,7 @@
 import { useTableStore } from './stores/table.store'
 
 // Store
-const { nonHelperColumns } = storeToRefs(useTableStore())
+const { nonHelperColumns } = useTableStore()
 
 const columnFilters = computed(() => {
   return nonHelperColumns.value

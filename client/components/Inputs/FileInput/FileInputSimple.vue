@@ -64,6 +64,7 @@ function handleOpenDialog(ev?: PointerEvent | FocusEvent) {
       :model-value="model"
       :file-remove-fnc="handleRemoveFile"
       :open-file-dialog
+      :no-download-button
     />
 
     <template #append>

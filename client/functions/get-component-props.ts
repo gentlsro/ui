@@ -2,7 +2,7 @@
 
 import { uiConfig } from '$uiConfig'
 import type { IUIConfig } from '$uiConfig'
-import type { IUIConfig as IUIGenericConfig } from '$uiLayer/config'
+import type { IUIConfig as IUIGenericConfig } from '#layers/ui/config'
 
 // Functions
 import { extendNestedComponentProps } from './extend-nested-component-props'

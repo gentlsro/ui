@@ -7,10 +7,10 @@ import type { FileModel } from '$utils'
 
 // Functions
 import { getFileLabel } from './functions/get-file-label'
-import { handleDownloadFile } from '$utilsLayer/client/functions/download-file'
+import { handleDownloadFile } from '#layers/utilities/client/functions/download-file'
 
-type IProps = Pick<IFileInputProps, 'disabled' | 'readonly' | 'downloadUrl'> &
-  { chip: File | IFile | FileModel }
+type IProps = Pick<IFileInputProps, 'disabled' | 'readonly' | 'downloadUrl' | 'noDownloadButton'>
+  & { chip: File | IFile | FileModel }
 
 defineProps<IProps>()
 
@@ -31,7 +31,7 @@ defineEmits<{
   >
     <!-- Download btn -->
     <Btn
-      v-if="'path' in chip"
+      v-if="!noDownloadButton && 'path' in chip"
       size="auto"
       w="5"
       h="5"

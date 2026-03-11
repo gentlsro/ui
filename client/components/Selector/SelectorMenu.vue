@@ -74,11 +74,9 @@ function handleHeightChange(height: number) {
     return agg + total.height
   }, 0)
 
-  requestAnimationFrame(() => {
-    contentHeight.value = height
-      + nonContentHeight
-      + 2 // Top and bottom border
-  })
+  contentHeight.value = Math.ceil(height
+    + nonContentHeight
+    + 3) // It should technically be 2 (because of border top and bottom), but somehow that creates an overflow...
 }
 
 function handleHide() {
@@ -87,9 +85,9 @@ function handleHide() {
   }
 }
 
-watch(contentHeight, () => {
+watchThrottled(contentHeight, () => {
   menuEl.value?.recomputePosition()
-})
+}, { throttle: 25, leading: true, trailing: true })
 
 // When the search is not enabled, we need to focus the content list
 // to be able to use keyboard navigation
@@ -113,7 +111,7 @@ whenever(isPickerActive, () => {
     v-model:placement="placement"
     tabindex="-1"
     max-height="50%"
-    :reference-target="referenceEl"
+    :reference-target="menuProps?.referenceTarget ?? referenceEl"
     class="selector-menu"
     :class="menuClass"
     :style="menuStyle"
@@ -168,6 +166,14 @@ whenever(isPickerActive, () => {
           <template #item="{ row, index }">
             <slot
               name="option"
+              :item="row"
+              :index
+            />
+          </template>
+
+          <template #item-group="{ row, index }">
+            <slot
+              name="option-group"
               :item="row"
               :index
             />

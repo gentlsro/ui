@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { CSSProperties } from 'vue'
 import colors from '../../../../shared/constants/colors.json'
 
 // Functions
@@ -29,12 +30,28 @@ const { isSupported, open: openEyeDropper, sRGBHex } = useEyeDropper()
 const themeColors = computed(() => {
   const hasWhite = !props.disallowedColors?.includes('white')
   const hasBlack = !props.disallowedColors?.includes('black')
+  const hasTransparent = !props.disallowedColors?.includes('transparent')
 
   return [
-    ...(hasWhite ? ['#FFFFFF'] : []),
-    ...(hasBlack ? ['#000000'] : []),
-    ...THEME_COLORS.map(color => getColor(color, undefined, true)),
-  ] as string[]
+    ...(hasTransparent
+      ? [{
+          color: 'transparent',
+          style: {
+            backgroundImage: `
+              linear-gradient(45deg, #ccc 25%, transparent 25%),
+              linear-gradient(-45deg, #ccc 25%, transparent 25%),
+              linear-gradient(45deg, transparent 75%, #ccc 75%),
+              linear-gradient(-45deg, transparent 75%, #ccc 75%)
+            `,
+            backgroundSize: '8px 8px',
+            backgroundPosition: '0 0, 0 4px, 4px -4px, -4px 0px',
+          },
+        }]
+      : []),
+    ...(hasWhite ? [{ color: '#FFFFFF', style: { border: '1px solid #000' } }] : []),
+    ...(hasBlack ? [{ color: '#000000' }] : []),
+    ...THEME_COLORS.map(color => ({ color: getColor(color, undefined, true) })),
+  ] as { color: string, style?: CSSProperties }[]
 })
 
 const colorSelected = computed(() => {
@@ -140,11 +157,11 @@ function setColor(color: string) {
 
           <div
             v-for="themeColor in themeColors"
-            :key="themeColor"
-            :style="{ backgroundColor: themeColor }"
+            :key="themeColor.color"
+            :style="{ backgroundColor: themeColor.color, ...themeColor.style }"
             class="color-block"
-            :class="{ 'is-selected': lowerCase(colorSelected) === lowerCase(themeColor) }"
-            @click="setColor(themeColor)"
+            :class="{ 'is-selected': lowerCase(colorSelected) === lowerCase(themeColor.color) }"
+            @click="setColor(themeColor.color)"
           />
         </div>
 

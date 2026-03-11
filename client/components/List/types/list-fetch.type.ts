@@ -1,6 +1,6 @@
 // Types
 import type { IListItem } from './list-item.type'
-import type { IGroupRow } from '$utilsLayer/shared/composables/useGrouping'
+import type { IGroupRow } from '#layers/utilities/shared/composables/useGrouping'
 
 export type IListFetchItems<T = any> = {
   fetchMore?: boolean

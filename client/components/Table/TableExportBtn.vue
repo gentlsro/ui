@@ -14,7 +14,7 @@ const {
   visibleColumns,
   isExporting,
   modifiers,
-} = storeToRefs(useTableStore())
+} = useTableStore()
 
 // Utils
 const { exportData = tableExportData } = modifiers.value ?? {}

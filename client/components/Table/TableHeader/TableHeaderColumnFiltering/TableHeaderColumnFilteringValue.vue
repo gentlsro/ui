@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { IInputProps } from '$ui'
 import utilsConfig from '$utilsConfig'
 
 // Types
+import type { IInputProps } from '../../../Inputs/types/input-props.type'
 import type { ITableFilterItem } from '../../types/table-filter-item.type'
 
 // Models
@@ -27,7 +27,7 @@ defineExpose({
 })
 
 // Store
-const { getFilterComponent } = storeToRefs(useTableStore())
+const { getFilterComponent } = useTableStore()
 
 // Layout
 const valueInputEl = ref<any>()

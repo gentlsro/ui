@@ -16,11 +16,12 @@ defineProps<IProps>()
 
 // Store
 const {
+  internalColumns,
   internalColumnsByField,
   nonHelperColumns,
   queryBuilderProps,
   getFilterComponent,
-} = storeToRefs(useTableStore())
+} = useTableStore()
 
 // Layout
 const queryBuilderEl = useTemplateRef('queryBuilderEl')
@@ -32,15 +33,20 @@ const nonHelperFilterableColumns = computed(() => {
 
 function handleUpdateColumnFilter(columnFilter: IQueryBuilderItem) {
   const modifiedColumnFilters = queryBuilderEl.value
-    ?.getModifiedColumnFilter(columnFilter) as Array<{ field: string, filters: IQueryBuilderItem[] }>
+    ?.getModifiedColumnFilter(columnFilter) as Array<{ field: string, filterField?: string, filters: IQueryBuilderItem[] }>
 
   modifiedColumnFilters.forEach(col => {
-    const column = internalColumnsByField.value[col.field]
+    const column = internalColumns.value.find(c => c.field === col.field)
 
     if (column) {
       column.filters = [
         ...column.filters.filter(f => f.nonInteractive),
-        ...col.filters.map(f => new FilterItem({ ...column, ...f })),
+        ...col.filters.map(f => new FilterItem({
+          ...column,
+          ...f,
+          field: col.field,
+          filterField: col.filterField ?? col.field,
+        })),
       ]
     }
   })

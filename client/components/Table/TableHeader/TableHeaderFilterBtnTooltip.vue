@@ -12,7 +12,7 @@ type IProps = {
 defineProps<IProps>()
 
 // Store
-const { emptyValue } = storeToRefs(useTableStore())
+const { emptyValue } = useTableStore()
 </script>
 
 <template>
@@ -63,6 +63,7 @@ const { emptyValue } = storeToRefs(useTableStore())
             :data-type="column.dataType"
             :empty-value
             :format="column.format"
+            :comparator="filter.comparator"
             :empty-value-string="$t('general.empty')"
             text="sm"
           />

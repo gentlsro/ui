@@ -17,7 +17,7 @@ import { tableGetStorageKey } from './functions/table-get-storage-key'
 import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
 
 // Stores
-import { tableIdKey, tableStorageKey, useTableStore } from './stores/table.store'
+import { useTableStore } from './stores/table.store'
 
 const props = withDefaults(defineProps<ITableProps>(), {
   ...getComponentProps('table'),
@@ -31,14 +31,7 @@ provideLocal(tableSlotsKey, slots)
 
 // Init
 const self = getCurrentInstance()
-const uuid = injectLocal(tableIdKey, useId())
-const storageKey = injectLocal(
-  tableStorageKey,
-  tableGetStorageKey(props.storageKey, self) ?? useId(),
-)
-
-provideLocal(tableIdKey, uuid)
-provideLocal(tableStorageKey, storageKey)
+const storageKey = tableGetStorageKey(props.storageKey, self)
 
 const mergedProps = computed(() => {
   return getComponentMergedProps('table', props)
@@ -60,7 +53,10 @@ const tableClass = computed(() => {
 })
 
 // Stores
-const store = useTableStore({ tableProps: { ...props, ...mergedProps.value } })
+const store = useTableStore({
+  tableProps: { ...props, ...mergedProps.value },
+  storageKey,
+})
 
 const {
   headerEl,
@@ -95,7 +91,7 @@ const {
   rowClickable,
   initialSchemaConfig,
   uiConfig,
-} = storeToRefs(store)
+} = store
 
 // Set emits
 storeEmits.value = {
@@ -173,13 +169,6 @@ onMounted(() => {
   nextTick(() => {
     visibleColumns.value.forEach(col => col._width = col.getWidth())
   })
-})
-
-// We need to reset the store when the component is unmounted
-onUnmounted(() => {
-  store.$dispose()
-  const pinia = getActivePinia()
-  delete pinia?.state.value[store.$id]
 })
 </script>
 
@@ -304,7 +293,15 @@ onUnmounted(() => {
     </slot>
 
     <!-- Bottom -->
-    <TableBottom />
+    <TableBottom>
+      <template #loading="{ isDataLoading, isMetaLoading }">
+        <slot
+          name="loading"
+          :is-data-loading
+          :is-meta-loading
+        />
+      </template>
+    </TableBottom>
 
     <!-- Default slot to be used for custom content (most likely absolutely positioned) -->
     <slot />

@@ -1,3 +1,6 @@
+// FIXME: Those `nodes.trigger()` should not call the `flattenTreeNodes()`
+// There should be a separate mechanism to trigger the nodes change
+
 import { klona } from 'klona/full'
 import { useSearching } from '$utils'
 
@@ -50,6 +53,7 @@ export function useTreeStore<T extends IItem = IItem>(config?: {
 
     // Layout
     const treeEl = ref<any>()
+    const searchEl = ref<any>()
     const childrenKey = ref(treeProps?.childrenKey ?? 'children') as Ref<string>
     const parentIdKey = ref(treeProps?.parentIdKey ?? 'parentId') as Ref<string>
     const maxLevel = ref(treeProps?.maxLevel)
@@ -69,6 +73,7 @@ export function useTreeStore<T extends IItem = IItem>(config?: {
     const nodeMetaById = reactive<Record<ITreeNode['id'], ITreeNodeMeta<T>>>(
       treeProps?.meta ?? {},
     )
+    const collapseBtnProps = ref(treeProps?.collapseBtnProps)
 
     const nodes = computedWithControl(
       () => nodesSource.value,
@@ -197,7 +202,6 @@ export function useTreeStore<T extends IItem = IItem>(config?: {
         loadingByNodeId.value[node.id] = true
 
         const res = await handleRequest(
-          // @ts-expect-error Some weird type
           () => loadChildren.value?.fnc(node) ?? [],
           {
             onComplete: () => loadingByNodeId.value[node.id] = false,
@@ -291,12 +295,20 @@ export function useTreeStore<T extends IItem = IItem>(config?: {
       return idsSelected.includes(node.id)
     }
 
-    function handleSelect(payload: { node: ITreeNode<T>, ev?: MouseEvent }) {
+    async function handleSelect(payload: { node: ITreeNode<T>, ev?: MouseEvent | KeyboardEvent }) {
       const { node, ev } = payload
       emits.value.nodeClick({ node, ev })
 
       if (!selectionConfig.value?.enabled) {
         return
+      }
+
+      if (selectionConfig.value?.beforeSelect) {
+        const shouldContinue = await selectionConfig.value?.beforeSelect({ node, ev })
+
+        if (shouldContinue === false) {
+          return
+        }
       }
 
       const isEmitKey = !!selectionConfig.value?.emitKey
@@ -359,7 +371,17 @@ export function useTreeStore<T extends IItem = IItem>(config?: {
       to?: ITreeNode<T> | null
     }) {
       const snapshot = klona(nodesSource.value)
-      const { node, to } = payload
+      let { node, to } = payload
+
+      if (dndConfig.value?.beforeMoved) {
+        node = await dndConfig.value?.beforeMoved?.({
+          node: payload.node,
+          to: payload.to?.id === '__ROOT__' ? null : payload.to,
+          nodeById: nodeById.value,
+          nodeMetaById,
+          revert,
+        })
+      }
 
       removeNodes([node])
 
@@ -385,11 +407,13 @@ export function useTreeStore<T extends IItem = IItem>(config?: {
     return {
       // Layout
       treeEl,
+      searchEl,
       childrenKey,
       parentIdKey,
       isSearched,
       maxLevel,
       loadingByNodeId,
+      collapseBtnProps,
 
       // Search
       search,

@@ -12,7 +12,7 @@ type IProps = {
 const props = defineProps<IProps>()
 
 // Store
-const { internalColumns } = storeToRefs(useTableStore())
+const { internalColumns } = useTableStore()
 
 // Utils
 const { currentLocaleCode } = useLocale()

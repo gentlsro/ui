@@ -54,7 +54,7 @@ function handleMonthSelect(month: number) {
       no-uppercase
       capitalize
       :class="{
-        'bg-primary color-white': dateObj.month() === m.idx,
+        'bg-primary color-white': model && dateObj.month() === m.idx,
         'current': nowMonth === m.month && dateObj.month() !== m.idx,
       }"
       @click="handleMonthSelect(m.idx)"

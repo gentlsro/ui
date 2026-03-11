@@ -2,7 +2,7 @@ import type { AllowedComponentProps, CSSProperties } from 'vue'
 
 // Types
 import type { ITooltipProps } from '../../Tooltip/types/tooltip-props.type'
-import type { NavigateToOptions } from '$utilsLayer/client/types/navigate-to.type'
+import type { NavigateToOptions } from '#layers/utilities/client/types/navigate-to.type'
 
 // Constants
 import type { BUTTON_PRESET } from '../constants/button-preset.constant'

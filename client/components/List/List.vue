@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getActivePinia } from 'pinia'
-import type { IGroupRow } from '$utilsLayer/shared/composables/useGrouping'
+import type { IGroupRow } from '#layers/utilities/shared/composables/useGrouping'
 
 // Types
 import type { IListItem } from './types/list-item.type'
@@ -45,7 +45,6 @@ const {
   searchConfig: storeSearchConfig,
   sortingConfig: storeSortingConfig,
   itemFocusedIdx,
-  isLoading,
   loadData: storeLoadData,
   noFilter: storeNoFilter,
   addedItems: storeAddedItems,
@@ -201,6 +200,13 @@ defineExpose(listGetExposed())
           />
         </template>
 
+        <template #item-group="itemData">
+          <slot
+            name="item-group"
+            v-bind="itemData"
+          />
+        </template>
+
         <template #move-handle>
           <slot name="move-handle" />
         </template>
@@ -215,10 +221,7 @@ defineExpose(listGetExposed())
     </slot>
 
     <!-- Loading -->
-    <slot
-      v-if="isLoading && !items?.length"
-      name="loading"
-    >
+    <slot name="loading">
       <ListLoading />
     </slot>
 
