@@ -227,6 +227,13 @@ defineExpose({
 
   &.is-outlined {
     @apply dark:bg-darker bg-white border-solid border-2 border-current;
+
+    .focus-helper {
+      top: -2px;
+      left: -2px;
+      width: calc(100% + 4px);
+      height: calc(100% + 4px);
+    }
   }
 
   &--auto {
