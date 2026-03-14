@@ -70,6 +70,48 @@ export function gentlUIPreset(): Preset {
         },
       ],
       [
+        /^(reset-autofill)$/,
+        (_, { rawSelector }) => {
+          const selector = toEscapedSelector(rawSelector)
+          return `
+          ${selector} input:-webkit-autofill,
+          ${selector} input:-webkit-autofill:hover,
+          ${selector} input:-webkit-autofill:focus,
+          ${selector} input:-webkit-autofill:active,
+          ${selector}.control:-webkit-autofill,
+          ${selector}.control:-webkit-autofill:hover,
+          ${selector}.control:-webkit-autofill:focus,
+          ${selector}.control:-webkit-autofill:active {
+            -webkit-text-fill-color: #111827 !important;
+            color: #111827 !important;
+            caret-color: #111827 !important;
+            font-family: inherit !important;
+            font-size: var(--fontSize) !important;
+            line-height: var(--lineHeight) !important;
+            padding: var(--padding) !important;
+            margin: var(--margin) !important;
+            -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+            box-shadow: 0 0 0 1000px transparent inset !important;
+            transition: background-color 9999s ease-out 0s, color 9999s ease-out 0s;
+            opacity: 1 !important;
+          }
+
+          .dark ${selector} input:-webkit-autofill,
+          .dark ${selector} input:-webkit-autofill:hover,
+          .dark ${selector} input:-webkit-autofill:focus,
+          .dark ${selector} input:-webkit-autofill:active,
+          .dark ${selector}.control:-webkit-autofill,
+          .dark ${selector}.control:-webkit-autofill:hover,
+          .dark ${selector}.control:-webkit-autofill:focus,
+          .dark ${selector}.control:-webkit-autofill:active {
+            -webkit-text-fill-color: #f5f5f5 !important;
+            color: #f5f5f5 !important;
+            caret-color: #f5f5f5 !important;
+          }
+        `
+        },
+      ],
+      [
         /^shadow-consistent(?:-|$)(x{2}s|xs|sm|md|lg|xl|$)(?:-(fil{2})|$)(?:-(inset))?$/,
         ([_, size, fill, inset]) => {
           let shadow = fill ? '0px 0px 0px 12px' : '0px 0px 12px 8px'
