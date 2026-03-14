@@ -217,7 +217,7 @@ function createStore(injectionKey?: string) {
 }
 
 export function useValidationStore(payload?: IPayload) {
-  let injectionKey = payload?.injectionKey ?? injectLocal(VALIDATION_INJECTION_KEY)
+  let injectionKey = payload?.injectionKey ?? injectLocal(VALIDATION_INJECTION_KEY, undefined)
 
   if (!injectionKey) {
     const uuid = generateUUID()

@@ -11,7 +11,7 @@ import { VIRTUAL_SCROLLER_VERTICAL_DEFAULT_PROPS } from './constants/virtual-scr
 
 const props = withDefaults(
   defineProps<IVirtualScrollerVerticalProps<T>>(),
-  { ...getComponentProps('virtualScroller') },
+  { ...getComponentProps('virtualScrollerVertical') },
 )
 const emits = defineEmits<{
   (e: 'virtualScroll', payload: IVirtualScrollEvent): void
