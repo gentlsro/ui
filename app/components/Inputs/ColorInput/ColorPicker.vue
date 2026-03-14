@@ -1,0 +1,276 @@
+<script setup lang="ts">
+import type { CSSProperties } from 'vue'
+import colors from '../../../../shared/constants/colors.json'
+
+// Types
+import type { IColorPickerProps } from './types/color-picker-props.type'
+
+// Functions
+import { useColors } from '../../../../shared/composables/useColors'
+
+// Constants
+import { GENERIC_COLORS, THEME_COLORS } from './constants/brand-colors'
+
+const props = defineProps<IColorPickerProps>()
+const emits = defineEmits<{
+  (e: 'update:opacity', value: number | undefined): void
+  (e: 'update:color', value: string | undefined): void
+}>()
+
+// Utils
+const { getColor, hexToRgb, rgbaToHex, isRgba, isHex } = useColors()
+
+// Layout
+const model = defineModel<string>()
+const { isSupported, open: openEyeDropper, sRGBHex } = useEyeDropper()
+
+const themeColors = computed(() => {
+  const hasWhite = !props.disallowedColors?.includes('white')
+  const hasBlack = !props.disallowedColors?.includes('black')
+  const hasTransparent = !props.disallowedColors?.includes('transparent')
+
+  return [
+    ...(hasTransparent
+      ? [{
+          tw: 'transparent',
+          style: {
+            backgroundImage: `
+              linear-gradient(45deg, #ccc 25%, transparent 25%),
+              linear-gradient(-45deg, #ccc 25%, transparent 25%),
+              linear-gradient(45deg, transparent 75%, #ccc 75%),
+              linear-gradient(-45deg, transparent 75%, #ccc 75%)
+            `,
+            backgroundSize: '8px 8px',
+            backgroundPosition: '0 0, 0 4px, 4px -4px, -4px 0px',
+          },
+        }]
+      : []),
+    ...(hasWhite ? [{ tw: 'white', hex: '#FFFFFF', rgba: 'rgb(255, 255, 255, 1)', style: { border: '1px solid #000' } }] : []),
+    ...(hasBlack ? [{ tw: 'black', hex: '#000000', rgba: 'rgb(0, 0, 0, 1)' }] : []),
+    ...THEME_COLORS.map(color => ({
+      tw: color,
+      hex: getColor(color, undefined, true),
+      rgba: hexToRgb(getColor(color, undefined, true)),
+    })),
+  ] as { style?: CSSProperties, tw: string, hex: string, rgba: string }[]
+})
+
+const colorSelected = computed(() => {
+  if (!model.value) {
+    return undefined
+  }
+
+  const _isHex = isHex(model.value)
+
+  if (_isHex) {
+    return model.value
+  }
+
+  const _isRgba = isRgba(model.value)
+
+  if (_isRgba) {
+    return rgbaToHex(model.value)
+  }
+
+  return getColor(model.value.replace(/-/g, '.'), undefined, true)
+})
+
+const standardColorsByColumn = computed(() => {
+  const _colors = pick(colors, GENERIC_COLORS)
+  const _disallowedColors = props.disallowedColors?.map(color => color.toLocaleLowerCase()) ?? []
+
+  return Object.entries(_colors).reduce((agg, [key, value]) => {
+    const colors = Object.entries(value)
+      .map(([shade, color]) => {
+        const tw = `${key.toLowerCase()}-${shade}`
+        const hex = color
+        const rgba = hexToRgb(hex)
+
+        return { tw, hex, rgba }
+      })
+      .slice(9, -1)
+      .filter((_, i) => i % 2 === 1)
+
+    agg[key] = colors
+
+    return agg
+  }, {} as Record<string, Array<{ tw: string, hex: string, rgba: string }>>)
+})
+
+const opacity = computed({
+  get() {
+    if (model.value?.startsWith('rgba')) {
+      return Number(model.value?.split(', ')?.[3]?.replace(')', '')) * 100
+    }
+
+    return undefined
+  },
+  set(val) {
+    if (model.value?.startsWith('rgba')) {
+      // Remove `rgba(` and `)`
+      const _model = model.value.replace(/^rgba\(|\)$/g, '')
+      const [r, g, b, _] = _model.split(',').map(trim)
+
+      model.value = `rgba(${r}, ${g}, ${b}, ${(val ?? 0) / 100})`
+
+      emits('update:opacity', val)
+    }
+  },
+})
+
+watch(sRGBHex, value => {
+  if (value && props.rgba) {
+    model.value = hexToRgb(value)
+  } else {
+    model.value = value
+  }
+
+  emits('update:color', model.value)
+})
+
+// Methods
+function setColor(color: { tw: string, hex: string, rgba: string }) {
+  const { tw, hex, rgba } = color
+
+  // Handle transparent color
+  if (tw === 'transparent') {
+    model.value = 'transparent'
+    emits('update:color', model.value)
+    $hide()
+
+    return
+  }
+
+  // RGBA
+  if (props.rgba) {
+    model.value = rgba
+    emits('update:color', model.value)
+    $hide()
+
+    return
+  }
+
+  // TW
+  if (props.tw) {
+    model.value = tw
+    emits('update:color', model.value)
+    $hide()
+
+    return
+  }
+
+  // Hex
+  model.value = hex
+  emits('update:color', model.value)
+  $hide()
+}
+</script>
+
+<template>
+  <div flex="~ col gap-y-3">
+    <!-- Theme colors -->
+    <div flex="~ col gap-y-px wrap">
+      <div text="caption">
+        {{ $t('color.theme') }}
+      </div>
+
+      <div flex="~ justify-between">
+        <div grid="~ flow-col gap-x-px">
+          <div
+            class="color-block"
+            p="x-2"
+            w="!fit"
+            border="1 ca"
+            text="center"
+            leading="none"
+            flex="~ center"
+            @click="model = undefined"
+          >
+            {{ $t('color.auto') }}
+          </div>
+
+          <div
+            v-for="themeColor in themeColors"
+            :key="themeColor.tw"
+            :style="{ backgroundColor: themeColor.hex, ...themeColor.style }"
+            class="color-block"
+            :class="{ 'is-selected': lowerCase(colorSelected) === lowerCase(themeColor.hex) }"
+            @click="setColor(themeColor)"
+          />
+        </div>
+
+        <div grid="~ flow-col gap-x-px">
+          <button
+            v-if="isSupported"
+            class="color-block"
+            flex="~ center"
+            @click="openEyeDropper()"
+          >
+            <div class="i-mdi:eyedropper" />
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Standard colors -->
+    <div flex="~ col">
+      <div
+        w="full"
+        text="caption"
+      >
+        {{ $t('color.standard') }}
+      </div>
+
+      <div grid="~ gap-x-px flow-col">
+        <div
+          v-for="(columnColors, colorKey) in standardColorsByColumn"
+          :key="colorKey"
+          grid="~ gap-y-px"
+        >
+          <div
+            v-for="columnColor in columnColors"
+            :key="columnColor.tw"
+            :style="{ backgroundColor: columnColor.hex }"
+            :class="{ 'is-selected': colorSelected === columnColor.hex }"
+            class="color-block"
+            @click="setColor(columnColor)"
+          />
+        </div>
+      </div>
+
+      <!-- Opacity -->
+      <div
+        v-if="typeof opacity === 'number' && rgba"
+        flex="~ gap-2 items-center"
+      >
+        <div class="i-ic:sharp-opacity self-center color-ca m-l-1" />
+
+        <RangeInput
+          v-model.number="opacity"
+          :step="5"
+          h="10"
+          grow
+        />
+
+        <NumberInput
+          v-model="opacity"
+          size="sm"
+          :min="0"
+          :max="100"
+          :step="5"
+          w="!20"
+        />
+      </div>
+    </div>
+  </div>
+</template>
+
+<style lang="scss" scoped>
+.color-block {
+  @apply h-6 w-6 hover:shadow-consistent shadow-ca hover:z-1 cursor-pointer;
+
+  &.is-selected {
+    @apply outline outline-1 outlined-solid outline-offset-1 z-1;
+  }
+}
+</style>

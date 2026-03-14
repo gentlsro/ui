@@ -1,0 +1,115 @@
+<script setup lang="ts">
+// Store
+import { useTableStore } from './stores/table.store'
+
+// Store
+const {
+  isInitialLoad,
+  isDataLoading,
+  isMetaLoading,
+  paginationConfig,
+  rowsLimit,
+  rows,
+} = useTableStore()
+
+const isLimitReached = computed(() => {
+  if (!rowsLimit.value) {
+    return false
+  }
+
+  return rows.value.length >= rowsLimit.value
+})
+</script>
+
+<template>
+  <div class="table-bottom">
+    <!-- Left -->
+    <TableTotalRows />
+
+    <!-- Center -->
+    <TablePagination v-if="paginationConfig?.enabled" />
+
+    <!-- Loading -->
+    <slot
+      v-if="!isInitialLoad && (isDataLoading || isMetaLoading)"
+      name="loading"
+      :is-data-loading
+      :is-meta-loading
+    >
+      <div class="is-loading">
+        <LoaderInline
+          size="sm"
+          rounded-full
+        />
+      </div>
+    </slot>
+
+    <!-- Right -->
+    <div
+      v-if="paginationConfig?.enabled"
+      flex="~ items-center"
+      m="l-auto"
+    >
+      <span
+        text="caption"
+        class="hidden @lg:block"
+      >
+        {{ $t('table.rowsPerPage') }}
+      </span>
+
+      <Selector
+        v-model="paginationConfig.pageSize"
+        :options="paginationConfig.options"
+        no-search
+        no-sort
+        size="sm"
+        emit-key
+        layout="inline"
+        m="l-auto"
+        :list-props="{
+          ui: {
+            rowContentClass: ({ defaults }) => `${defaults.all} flex-center`,
+          },
+        }"
+        :no-menu-match-width="true"
+      />
+    </div>
+
+    <!-- Limit reached -->
+    <div
+      v-if="isLimitReached"
+      class="limit-reached"
+    >
+      <div class="color-warning i-bi:info-lg" />
+      <span font="rem-14 semibold">{{ $t('table.limitRowsReached') }}</span>
+
+      <Tooltip
+        placement="top"
+        w="120"
+        :offset="8"
+        text="center caption"
+        font="!rem-14"
+      >
+        {{ $t('table.limitRowsReachedTooltip') }}
+      </Tooltip>
+    </div>
+  </div>
+</template>
+
+<style scoped lang="scss">
+.table-bottom {
+  @apply relative grid p-x-2 items-center min-h-10;
+
+  grid-template-columns: 1fr auto 1fr;
+
+  .is-loading {
+    @apply absolute flex flex-center left-1/2 -translate-x-1/2 top-0 w-80 rounded-full
+    bg-white/68 dark:bg-dark-950/87 backdrop-blur-sm;
+  }
+
+  .limit-reached {
+    @apply absolute flex flex-center gap-2 bg-white dark:bg-dark-950 rounded-custom
+      left-1/2 -translate-x-1/2 p-l-1 p-r-3;
+  }
+}
+</style>

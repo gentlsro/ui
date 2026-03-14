@@ -1,4 +1,7 @@
 export default defineNitroPlugin(nitroApp => {
+  const rC = useRuntimeConfig()
+  const theme = rC.public.theme
+
   // Set theme & lang
   nitroApp.hooks.hook('render:html', html => {
     html.head.push(`
@@ -18,8 +21,9 @@ export default defineNitroPlugin(nitroApp => {
               return agg
             }, {})
 
+          const manualTheme = ${!theme || theme === 'auto'} ? '' : '${theme}'
           const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-          const setting = cookieByName.theme || (prefersDark ? 'dark' : 'light')
+          const setting = manualTheme || cookieByName.theme || (prefersDark ? 'dark' : 'light')
           cookieByName.theme = setting
 
           document.documentElement.setAttribute('class', setting)

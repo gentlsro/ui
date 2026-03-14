@@ -1,0 +1,248 @@
+import type { AllowedComponentProps, CSSProperties } from 'vue'
+
+// Constants
+import type { FORM_DEFAULT_PROPS } from '../constants/form-default-props.constant'
+
+// Types - placeholder until components are migrated
+// TODO: Section type somehow fucks the types
+import type { IBtnProps } from '../../Button/types/btn-props.type'
+
+type IErrorsSectionProps = Record<string, any>
+
+export type IFormProps = {
+  /**
+   * If true, the form will have a border.
+   */
+  bordered?: boolean
+
+  /**
+   * The element to use for the content
+   */
+  contentElement?: string | any
+
+  /**
+   * Control elements to display in the form
+   */
+  editControls?:
+    | {
+      edit?: boolean
+      cancel?: boolean
+    }
+    | boolean
+
+  /**
+   * If true, the edit button will be visible (if `editControls` is true) but disabled
+   */
+  editDisabled?: boolean
+
+  /**
+   * Errors to display in the form.
+   */
+  errors?: string[]
+
+  /**
+   * Label of the submit button
+   */
+  label?: string | (() => string)
+
+  /**
+   * Icon of the submit button (technically the same as `submitBtnProps.icon`)
+   */
+  icon?: string | false
+
+  /**
+   * If true, the form's submit button will have loading state.
+   */
+  loading?: boolean
+
+  /**
+   * If true, the first editable input in the form will be focused.
+   */
+  focusFirstInput?: boolean
+
+  /**
+   * If true, the form will be in editing mode.
+   */
+  isEditing?: boolean
+
+  /**
+   * By default, the form will display the controls on the bottom of the form. (Submit button, etc.)
+   * If this is true, the controls will be displayed on the top of the form.
+   */
+  controlsOnTop?: boolean
+
+  /**
+   * By default, the form will display the errors on the bottom of the form.
+   * If this is true, the errors will be displayed on the top of the form.
+   */
+  errorsOnTop?: boolean
+
+  /**
+   * When explicitly set to `false`, we do not show the controls.
+   * This is the opposite of `noControls` below usable in specific cases
+   *
+   * For example, when checking some claim, the claim-checking function would always
+   * return true if the user is a super-admin. If we used something like `!$hasClaim(ClaimEnum.SUPER_ADMIN)`
+   * the claim-checking function would return false for super-admins, which is not what we want.
+   */
+  hasControls?: boolean
+
+  /**
+   * By default, on smaller screens, the buttons in the form will use their icons
+   * to save the screen space. If this is true, the buttons will always display
+   * the labels as well.
+   */
+  labelForcedVisibility?: boolean
+
+  /**
+   * Whether the form should include the bottom controls
+   */
+  noControls?: boolean
+
+  /**
+   * Whether the form should include the edit controls. This is the opposite of the
+   * `editControls` prop above, usable in specific cases.
+   *
+   * Note: has priority over `editControls`
+   */
+  noEditControls?: boolean
+
+  /**
+   * If true, the form will not show the shortcuts.
+   */
+  noShortcuts?: boolean
+
+  /**
+   * If true, the form will include the submit button.
+   */
+  noSubmit?: boolean
+
+  /**
+   * If true, the form will not be submitted on `enter`, nor on `ctrl+enter`
+   */
+  noEnter?: boolean
+
+  /**
+   * If true, the form will not submit on enter.
+   *
+   * Note: Will be sumitted on ctrl+enter.
+   */
+  preventSubmitOnEnter?: boolean
+
+  /**
+   * A function that resets the model on form editing cancel
+   */
+  reset?: () => void
+
+  /**
+   * If true, the form submit will need to be confirmed in a confirmation menu.
+   */
+  submitConfirmation?: boolean
+
+  /**
+   * The text to display in the submit confirmation menu.
+   */
+  submitConfirmationText?: string
+
+  /**
+   * Props for the submit button
+   */
+  submitBtnProps?: IBtnProps & AllowedComponentProps
+
+  /**
+   * Props for the cancel button
+   */
+  cancelBtnProps?: IBtnProps & AllowedComponentProps
+
+  /**
+   * Props for the edit button
+   */
+  editBtnProps?: IBtnProps & AllowedComponentProps
+
+  /**
+   * Props for the errors section
+   */
+  errorsSectionProps?: IErrorsSectionProps
+
+  /**
+   * If true, the submit button will be disabled.
+   */
+  submitDisabled?: boolean
+
+  /**
+   * Visual configuration
+   */
+  ui?: {
+    /**
+     * Class to apply to the cancel button
+     */
+    cancelClass?: (payload: {
+      defaults: ReturnType<typeof FORM_DEFAULT_PROPS['ui']['cancelClass']>
+    }) => ClassType
+
+    /**
+     * Style to apply to the cancel button
+     */
+    cancelStyle?: () => CSSProperties
+
+    /**
+     * Class to apply to the form itself
+     */
+    containerClass?: (payload: {
+      defaults: ReturnType<typeof FORM_DEFAULT_PROPS['ui']['containerClass']>
+    }) => ClassType
+
+    /**
+     * Style to apply to the form itself
+     */
+    containerStyle?: () => CSSProperties
+
+    /**
+     * Class to apply to the content
+     */
+    contentClass?: (payload: {
+      defaults: ReturnType<typeof FORM_DEFAULT_PROPS['ui']['contentClass']>
+    }) => ClassType
+
+    /**
+     * Style to apply to the content
+     */
+    contentStyle?: () => CSSProperties
+
+    /**
+     * Class to apply to the submit button
+     */
+    submitClass?: (payload: {
+      defaults: ReturnType<typeof FORM_DEFAULT_PROPS['ui']['submitClass']>
+    }) => ClassType
+
+    /**
+     * Style to apply to the submit button
+     */
+    submitStyle?: () => CSSProperties
+
+    /**
+     * Class to apply to the controls container
+     */
+    controlsClass?: (payload: {
+      defaults: ReturnType<typeof FORM_DEFAULT_PROPS['ui']['controlsClass']>
+    }) => ClassType
+
+    /**
+     * Style to apply to the controls container
+     */
+    controlsStyle?: () => CSSProperties
+
+    /**
+     *  Class to apply to the submit button wrapper (which might have the Cancel button and slots)
+     */
+    submitWrapperClass?: (payload: {
+      defaults: ReturnType<typeof FORM_DEFAULT_PROPS['ui']['submitWrapperClass']>
+    }) => ClassType
+
+    /**
+     * Style to apply to the submit button wrapper (which might have the Cancel button and slots)
+     */
+    submitWrapperStyle?: () => CSSProperties
+  }
+}

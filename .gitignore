@@ -18,8 +18,6 @@ logs
 .fleet
 .idea
 generated
-
-# Local env files
-.env
-.env.*
-!.env.example
+errors
+.nuxtrc
+shared/constants/colors.json

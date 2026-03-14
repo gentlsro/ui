@@ -1,69 +1,57 @@
 // @unocss-include
-import { writeFile } from 'node:fs/promises'
-import { join } from 'node:path'
-
-import {
-  presetAttributify,
-  presetIcons,
-  presetTypography,
-  presetUno,
-  transformerDirectives,
-  transformerVariantGroup,
-} from 'unocss'
-
+import { join } from 'pathe'
+import { presetWind3 } from 'unocss'
 import { createResolver } from 'nuxt/kit'
+import { writeFile } from 'node:fs/promises'
 
-// Preset
-import { gentlUIPreset } from './client/functions/unocss-preset'
+// Constants
+import { gentlUIPreset } from './app/constants/unocss-preset'
+
+const isMonorepo = import.meta.env.VITE_MONOREPO === 'true'
+const isInstallLayerDeps = true
 
 const { resolve } = createResolver(import.meta.url)
-const isMonorepo = import.meta.env.VITE_MONOREPO === 'true'
 
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   extends: isMonorepo
     ? [['../Utilities']]
-    : [['github:gentlsro/Utilities#master']],
+    : [['github:gentlsro/Utilities#v2.1', { install: isInstallLayerDeps }]],
 
-  // Modules https://nuxt.com/docs/api/configuration/nuxt-config#modules
   modules: [
-    resolve('./modules/ui.module'),
-    '@vueuse/nuxt',
+    '@nuxtjs/i18n',
     '@unocss/nuxt',
     '@pinia/nuxt',
-    'pinia-plugin-persistedstate/nuxt',
-    '@nuxtjs/i18n',
     '@nuxtjs/device',
+    '@nuxt/icon',
+    '@nuxt/fonts',
   ],
 
-  // SSR https://nuxt.com/docs/api/configuration/nuxt-config#ssr
-  ssr: false,
+  $meta: {
+    name: 'ui',
+  },
 
-  // Components https://nuxt.com/docs/api/configuration/nuxt-config#components
   components: {
     dirs: [
       { path: './components', pathPrefix: false },
     ],
   },
 
-  // Imports https://nuxt.com/docs/api/configuration/nuxt-config#imports
   imports: {
     imports: [
-      // Client
-      { name: '$hide', from: resolve('./client/functions/hide.ts') },
-      { name: 'useUIStore', from: resolve('./client/stores/ui.store.ts') },
-      { name: 'useLayoutStore', from: resolve('./client/stores/layout.store.ts') },
-      { name: 'notify', from: resolve('./client/components/Notification/functions/useNotifications') },
-      { name: 'useBreadcrumbs', from: resolve('./client/components/Breadcrumbs/functions/useBreadcrumbs') },
+      { name: 'useUIStore', from: resolve('./app/stores/ui.store.ts') },
+      { name: 'useBreadcrumbs', from: resolve('./app/components/Breadcrumbs/functions/useBreadcrumbs') },
+      { name: 'notify', from: resolve('./app/components/Notification/functions/useNotifications') },
 
-      // Shared
       { name: 'extendUIConfig', from: resolve('./config.ts') },
-
     ],
-  },
 
-  devtools: {
-    enabled: isMonorepo,
+    dirs: [
+      resolve('./shared/composables'),
+      resolve('./shared/constants'),
+      resolve('./shared/models'),
+      resolve('./app/types'),
+      resolve('./app/components/**/*.model.ts'),
+    ],
   },
 
   app: {
@@ -72,26 +60,27 @@ export default defineNuxtConfig({
     },
   },
 
-  // CSS https://nuxt.com/docs/api/nuxt-config#css
   css: [
-    resolve('./client/css/reset.scss'),
-    resolve('./client/css/typography.scss'),
-    resolve('./client/css/perfect-scrollbar.css'),
-    resolve('./client/css/main.scss'),
-    resolve('./client/css/breakpoints.scss'),
-    resolve('./client/css/zindex.scss'),
-    resolve('./client/css/ripple.scss'),
-    resolve('./client/css/colors.scss'),
-    resolve('./client/css/hover-on-desktop-mixin.scss'),
+    resolve('./app/css/reset.scss'),
+    resolve('./app/css/typography.scss'),
+    resolve('./app/css/perfect-scrollbar.css'),
+    resolve('./app/css/main.scss'),
+    resolve('./app/css/breakpoints.scss'),
+    resolve('./app/css/zindex.scss'),
+    resolve('./app/css/ripple.scss'),
+    resolve('./app/css/colors.scss'),
+    resolve('./app/css/hover-on-desktop-mixin.scss'),
   ],
 
-  srcDir: 'client/',
+  runtimeConfig: {
+    public: {
+      theme: '',
+    },
+  },
 
-  // Alias
   alias: {
-    $ui: join(process.cwd(), 'generated', 'ui.ts'),
     $uiConfig: join(process.cwd(), 'generated', 'uiConfig.ts'),
-    $uiLayer: resolve('.'),
+    $uiProps: resolve('./app/types/component-props.type.ts'),
   },
 
   build: {
@@ -99,50 +88,62 @@ export default defineNuxtConfig({
     transpile: ['imask', 'vue-imask'],
   },
 
-  // Future
-  future: {
-    compatibilityVersion: 4,
-  },
-
-  // Compatibility date https://nuxt.com/docs/api/configuration/nuxt-config#compatibilitydate
-  compatibilityDate: '2024-12-13',
-
   nitro: {
-    alias: {
-      $ui: join(process.cwd(), 'generated', 'ui.ts'),
-      $uiConfig: join(process.cwd(), 'generated', 'uiConfig.ts'),
+    imports: {
+      imports: [
+        //
+      ],
+
+      dirs: [
+        resolve('./shared/composables'),
+        resolve('./shared/constants'),
+        resolve('./shared/models'),
+      ],
     },
   },
 
-  // Typescript https://nuxt.com/docs/api/configuration/nuxt-config#typescript
   typescript: {
+    includeWorkspace: true,
+
     tsConfig: {
       compilerOptions: {
         paths: {
-          $ui: [join(process.cwd(), '.nuxt', 'generated', 'ui.ts')],
-          $uiConfig: join(process.cwd(), '.nuxt', 'generated', 'uiConfig.ts'),
+          $uiConfig: [join(process.cwd(), 'generated', 'uiConfig.ts')],
+          $uiProps: [resolve('./app/types/component-props.type.ts')],
         },
       },
     },
   },
 
   hooks: {
-    ready: async nuxt => {
+    'unocss:config': async config => {
       console.log('✔ Creating colors.json file...')
-      const colors = nuxt.options.unocss?.presets
-        ?.reduce((agg, preset: any) => {
-          if (preset.theme?.colors) {
-            return { ...agg, ...preset.theme.colors }
+      const colors: Record<string, string> = {}
+      const presets = config?.presets ?? []
+
+      for await (const preset of presets) {
+        const presetAwaited = typeof preset === 'function'
+          ? await preset()
+          : preset
+
+        if (Array.isArray(presetAwaited)) {
+          for await (const preset of presetAwaited) {
+            const presetAwaited = typeof preset === 'function'
+              ? await preset()
+              : preset
+
+            // @ts-expect-error
+            Object.assign(colors, presetAwaited?.theme?.colors)
           }
-
-          return agg
-        }, {} as Record<string, string>)
-
+        } else {
+          // @ts-expect-error
+          Object.assign(colors, presetAwaited?.theme?.colors)
+        }
+      }
       await writeFile(resolve('./shared/constants/colors.json'), JSON.stringify(colors, null, 2), 'utf8')
     },
   },
 
-  // i18n
   i18n: {
     strategy: 'prefix_and_default',
     detectBrowserLanguage: {
@@ -171,25 +172,17 @@ export default defineNuxtConfig({
     ],
   },
 
+  // @ts-ignore
+  icon: {
+    size: '1em',
+    mode: 'svg',
+  },
+
   pinia: {
     storesDirs: [],
   },
 
-  // UnoCSS
   unocss: {
-    preflight: false,
-    presets: [
-      presetUno(),
-      presetIcons(),
-      presetAttributify({ ignoreAttributes: ['size'] }),
-      presetTypography(),
-      gentlUIPreset(),
-    ],
-    transformers: [
-      transformerDirectives(),
-      transformerVariantGroup(),
-    ],
-    safelist: ['color-contrast', 'i-emojione:flag-for-united-kingdom', 'i-emojione:flag-for-czechia'],
     nuxtLayers: true,
   },
 })

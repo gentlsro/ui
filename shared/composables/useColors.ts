@@ -1,5 +1,7 @@
 import type { Color } from 'invert-color'
 import invert from 'invert-color'
+
+// Constants
 import colors from '../constants/colors.json'
 
 export function useColors() {
@@ -7,6 +9,7 @@ export function useColors() {
     try {
       return invert(color, { black: '#000000', white: '#ffffff', threshold: 0.5 })
     } catch (error) {
+      console.log(error)
       return color
     }
   }
@@ -104,12 +107,21 @@ export function useColors() {
         isComplex: true,
       }
     } else {
+      const hexColor = isRgba(style.color) ? rgbaToHex(style.color) : style.color
+
       return {
         backgroundColor: style.color,
-        color: invertColor(style.color),
+        color: style.color ? invertColor(hexColor) : undefined,
         icon: style.icon,
       }
     }
+  }
+
+  /**
+   * Gets color from colors.json or falls back to they provided color
+   */
+  function resolveColor(color: string) {
+    return get(colors, color) ?? color
   }
 
   return {
@@ -120,5 +132,6 @@ export function useColors() {
     resolveStyle,
     isHex,
     isRgba,
+    resolveColor,
   }
 }

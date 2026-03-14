@@ -6,7 +6,7 @@ const currentDir = resolve('..')
 
 export default defineNuxtModule({
   setup: async (_, nuxt) => {
-    console.log('✔ Creating ui virtual file...')
+    console.log('✔ Process UI...')
     const componentPaths: string[] = []
 
     const configPaths = nuxt.options._layers
@@ -18,7 +18,7 @@ export default defineNuxtModule({
       })
       .filter(({ path }) => existsSync(`${path}.ts`))
 
-    const code = `import { customDefu } from '$utilsLayer/shared/functions/custom-defu'
+    const code = `import { customDefu } from '#layers/utilities/shared/utils/custom-defu'
 ${configPaths.map(({ path }, idx) => `import config${idx} from '${path}'`).join('\n')}
 
 const uiConfigMerged = customDefu(${configPaths.map((_, idx) => `config${idx}`).join(', ')})
@@ -94,28 +94,16 @@ export default uiConfig
       getContents: () => code,
     })
 
-    const base = configPaths.find(({ isBase }) => isBase)
-
-    addTemplate({
-      filename: `${nuxt.options.rootDir}/generated/ui.ts`,
-      write: true,
-      getContents: () => `export * from '${base?.cwd}/index'
-`,
-    })
-
     nuxt.hook('vite:extendConfig', config => {
-      if (!config.resolve) {
-        config.resolve = {}
-      }
+      if (config.resolve) {
+        if (!config.resolve.alias) {
+          config.resolve.alias = {}
+        }
 
-      if (!config.resolve.alias) {
-        config.resolve.alias = {}
-      }
-
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        $ui: `${nuxt.options.rootDir}/generated/ui.ts`,
-        $uiConfig: `${nuxt.options.rootDir}/generated/uiConfig.ts`,
+        config.resolve.alias = {
+          ...config.resolve.alias,
+          $uiConfig: `${nuxt.options.rootDir}/generated/uiConfig.ts`,
+        }
       }
     })
   },

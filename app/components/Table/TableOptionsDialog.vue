@@ -1,0 +1,103 @@
+<script setup lang="ts">
+// Types
+import type { IUIState } from '../../types/ui-state.type'
+
+type IProps = {
+  modelValue?: boolean
+}
+
+defineProps<IProps>()
+
+// Layout
+const model = defineModel<boolean>({ default: false })
+
+// Store
+const { uiState } = storeToRefs(useUIStore())
+
+function setFitColumns(mode: NonNullable<IUIState['table']>['fit'], unset?: boolean) {
+  set(uiState.value, 'table.fit', unset ? null : mode)
+}
+</script>
+
+<template>
+  <Dialog
+    v-model="model"
+    h="!auto"
+    w="200"
+    manual
+    :title="$t('table.options')"
+    :ui="{ contentClass: ({ defaults }) => `${defaults.all} gap-1` }"
+  >
+    <!-- Auto-save table layout -->
+    <Toggle
+      v-model="uiState.table.autoSaveSchema"
+      :label="$t('table.autoSaveLayout')"
+    />
+
+    <span class="hint">
+      {{ $t('table.autoSaveLayoutExplain') }}
+    </span>
+
+    <Separator m="y-2" />
+
+    <!-- Auto-fit columns -->
+    <Checkbox
+      :model-value="uiState.table?.fit === 'fit'"
+      :label="$t('table.autoFitColumns')"
+      @update:model-value="setFitColumns('fit', uiState.table?.fit === 'fit')"
+    />
+
+    <span class="hint">
+      {{ $t('table.autoFitColumnsExplain') }}
+    </span>
+
+    <Separator m="y-2" />
+
+    <!-- Auto-fit columns with header -->
+    <Checkbox
+      :model-value="uiState.table?.fit === 'fit-with-header'"
+      :label="$t('table.autoFitColumnsWithHeader')"
+      @update:model-value="setFitColumns('fit-with-header', uiState.table?.fit === 'fit-with-header')"
+    />
+
+    <span class="hint">
+      {{ $t('table.autoFitColumnsWithHeaderExplain') }}
+    </span>
+
+    <Separator m="y-2" />
+
+    <!-- Auto-justify columns -->
+    <Checkbox
+      :model-value="uiState.table?.fit === 'justify'"
+      :label="$t('table.autoJustifyColumns')"
+      @update:model-value="setFitColumns('justify', uiState.table?.fit === 'justify')"
+    />
+
+    <span class="hint">
+      {{ $t('table.autoJustifyColumnsExplain') }}
+    </span>
+
+    <span class="hint">
+      {{ $t('table.autoJustifyColumnsExplain2') }}
+    </span>
+
+    <Separator m="y-2" />
+
+    <!-- Auto-stretch columns -->
+    <Checkbox
+      :model-value="uiState.table?.fit === 'stretch'"
+      :label="$t('table.autoStretchColumns')"
+      @update:model-value="setFitColumns('stretch', uiState.table?.fit === 'stretch')"
+    />
+
+    <span class="hint">
+      {{ $t('table.autoStretchColumnsExplain') }}
+    </span>
+  </Dialog>
+</template>
+
+<style scoped lang="scss">
+.hint {
+  @apply text-caption font-rem-12 rounded-custom p-2 bg-slate-50 dark:bg-dark-900;
+}
+</style>
