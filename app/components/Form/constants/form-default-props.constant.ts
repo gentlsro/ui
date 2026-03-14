@@ -30,8 +30,8 @@ export const FORM_DEFAULT_PROPS = {
     },
 
     controlsClass() {
-      const base = 'sticky flex items-center shrink-0 gap-2 bottom-0 z-1'
-      const border = 'border-t-1 border-ca [&.is-controls-on-top]:(order-first border-t-0 border-b-1)'
+      const base = 'sticky flex items-center shrink-0 gap-2 bottom-0 z-1 rounded-b-custom'
+      const border = 'border-t-1 border-ca [&.is-controls-on-top]:(order-first border-t-0 border-b-1 rounded-b-0 rounded-t-0)'
       const background = 'bg-white dark:bg-dark-950'
       const padding = 'p-y-1 p-x-2'
 

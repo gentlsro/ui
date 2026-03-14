@@ -60,6 +60,10 @@ export async function buildListItems(payload: {
           fuseSearchToken: searchConfig.fuseSearchToken,
           _extra,
         })
+  } else {
+    _extra.hasExactMatch = items.some(item => {
+      return getListItemLabel(item, itemLabel) === search
+    })
   }
 
   let _items: Array<IListItem | IGroupRow> = []
