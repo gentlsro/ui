@@ -115,7 +115,7 @@ export type IBtnProps = IBtnNavigationProps & {
   noTruncate?: boolean
 
   /**
-   * When true, the button will be outlined
+   * When true, the button will be outlined (= will have a border)
    */
   outlined?: boolean
 
