@@ -70,9 +70,14 @@ function createStore(injectionKey?: string) {
     }) as Ref<boolean>
 
     const optionByKey = computed(() => {
-      return options.value.reduce((agg, option) => {
-        const key = get(option, optionKey.value)
-        agg[key] = option
+      return [...addedItems.value, ...options.value].reduce((agg, option) => {
+        if ('_isCreate' in option) {
+          const key = get(option.ref, optionKey.value)
+          agg[key] = option.ref
+        } else {
+          const key = get(option, optionKey.value)
+          agg[key] = option
+        }
 
         return agg
       }, initialMap.value)
