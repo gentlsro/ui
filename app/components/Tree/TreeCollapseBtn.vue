@@ -65,6 +65,7 @@ function handleToggleCollapse() {
     class="tree-collapse-btn"
     :class="collapseBtnClass"
     :loading="nodeMeta?.isLoading"
+    @mousedown.stop.prevent
     @click.stop.prevent="handleToggleCollapse"
   />
 </template>

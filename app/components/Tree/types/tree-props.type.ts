@@ -112,6 +112,11 @@ export type ITreeProps<T extends IItem = IItem> = {
     enabled?: boolean
 
     /**
+     * When true, the parents of the nodes will be kept in the search results
+     */
+    keepParents?: boolean
+
+    /**
      * Function that is used for the search
      */
     fnc?: (
