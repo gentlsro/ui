@@ -14,6 +14,7 @@ export function useTreeNode<T extends IItem = IItem>(payload: ITreeNodeProps<T>)
   const {
     idKey,
     isSearched,
+    searchConfig,
     nodeMetaById,
     selection,
     nodeFocused,
@@ -71,11 +72,15 @@ export function useTreeNode<T extends IItem = IItem>(payload: ITreeNodeProps<T>)
     return parents.map(p => p.label).join(' > ')
   })
 
+  const usesFlatSearchView = computed(() => {
+    return isSearched.value && !searchConfig.value?.keepParents
+  })
+
   // Styles
   const treeNodeStyle = computed(() => {
     return {
       '--level': nodeMeta.value?.level,
-      '--treePadding': isSearched.value ? '0' : ui?.nodePadding,
+      '--treePadding': usesFlatSearchView.value ? '0' : ui?.nodePadding,
     }
   })
 
@@ -107,6 +112,7 @@ export function useTreeNode<T extends IItem = IItem>(payload: ITreeNodeProps<T>)
     emits,
     isDndEnabled,
     isSearched,
+    usesFlatSearchView,
     isCollapsed,
     isSelected,
     hasMultiSelect,

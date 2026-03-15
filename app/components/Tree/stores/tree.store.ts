@@ -119,6 +119,9 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
 
     // Nodes
     const nodesFlattened = shallowRef<ITreeNode<T>[]>([])
+    const ancestorIdsByNodeId = shallowRef<Record<ITreeNode['id'], ITreeNode['id'][]>>({})
+    const parentIdByNodeId = shallowRef<Record<ITreeNode['id'], ITreeNode['id'] | undefined>>({})
+    const childrenIdsByNodeId = shallowRef<Record<ITreeNode['id'], ITreeNode['id'][]>>({})
 
     const nodeMetaById = initRef({
       propName: 'meta',
@@ -163,6 +166,51 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
         collapseConfig: collapseConfig.value,
         sortingConfig: sortingConfig.value,
       })
+
+      const idByString = nodesFlattened.value.reduce((agg, node) => {
+        agg[String(node.id)] = node.id
+
+        return agg
+      }, {} as Record<string, ITreeNode['id']>)
+
+      const _parentIdByNodeId = nodesFlattened.value.reduce((agg, node) => {
+        agg[node.id] = undefined
+
+        return agg
+      }, {} as Record<ITreeNode['id'], ITreeNode['id'] | undefined>)
+
+      const _childrenIdsByNodeId = nodesFlattened.value.reduce((agg, node) => {
+        agg[node.id] = []
+
+        return agg
+      }, {} as Record<ITreeNode['id'], ITreeNode['id'][]>)
+
+      ancestorIdsByNodeId.value = nodesFlattened.value.reduce((agg, node) => {
+        const { path } = nodeMetaById.value[node.id] ?? {}
+
+        if (!path) {
+          agg[node.id] = []
+          return agg
+        }
+
+        agg[node.id] = path
+          .split('.')
+          .filter(part => part !== childrenKey.value)
+          .slice(0, -1)
+          .map(id => idByString[id] ?? id)
+
+        const parentId = agg[node.id]?.at(-1)
+        _parentIdByNodeId[node.id] = parentId
+
+        if (parentId && (parentId in _childrenIdsByNodeId)) {
+          _childrenIdsByNodeId[parentId]?.push(node.id)
+        }
+
+        return agg
+      }, {} as Record<ITreeNode['id'], ITreeNode['id'][]>)
+
+      parentIdByNodeId.value = _parentIdByNodeId
+      childrenIdsByNodeId.value = _childrenIdsByNodeId
     })
 
     const { trigger: searchTrigger } = watchTriggerable(
@@ -178,6 +226,10 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
             search: search ?? '',
             idKey: idKey.value,
             labelKey: labelKey.value,
+            nodeById: nodeById.value,
+            ancestorIdsByNodeId: ancestorIdsByNodeId.value,
+            parentIdByNodeId: parentIdByNodeId.value,
+            childrenIdsByNodeId: childrenIdsByNodeId.value,
             searchConfig: searchConfig.value,
             collapseConfig: collapseConfig.value,
           })
@@ -192,8 +244,9 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       nodesVisible.value = nodes
         .filter(node => {
           const { path } = nodeMetaById.value[node.id] ?? {}
+          const usesFlatSearchView = isSearched.value && !searchConfig.value?.keepParents
 
-          if (!path || isSearched.value) {
+          if (!path || usesFlatSearchView) {
             return true
           }
 

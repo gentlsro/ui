@@ -113,8 +113,25 @@ export type ITreeProps<T extends IItem = IItem> = {
 
     /**
      * When true, the parents of the nodes will be kept in the search results
+     *
+     * @default false
      */
     keepParents?: boolean
+
+    /**
+     * Defines whether an item should be considered for searching.
+     *
+     * - `false`: search only leaf items
+     * - `true`: search all items (including parents)
+     * - `fnc`: custom predicate per item
+     *
+     * @default false
+     */
+    includeInSearch?: boolean | ((payload: {
+      item: T
+      children: T[]
+      parent?: T
+    }) => boolean)
 
     /**
      * Function that is used for the search

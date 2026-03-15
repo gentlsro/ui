@@ -1502,6 +1502,8 @@ export const defaultComponentsConfig = {
       parentKey: 'parentId',
       searchConfig: {
         enabled: true,
+        keepParents: true,
+        includeInSearch: true,
         fnc: undefined,
       },
       selection: undefined,
@@ -1568,6 +1570,8 @@ export const defaultComponentsConfig = {
         parentKey: 'parentId',
         searchConfig: {
           enabled: true,
+          keepParents: true,
+          includeInSearch: false,
           fnc: undefined,
         },
         selection: undefined,

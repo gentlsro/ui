@@ -21,7 +21,7 @@ const { createDraggable } = useTreeDragAndDrop()
 const {
   emits,
   isDndEnabled,
-  isSearched,
+  usesFlatSearchView,
   treeNodeStyle,
   treeNodeClass,
   nodePath,
@@ -131,7 +131,7 @@ onMounted(() => {
   >
     <!-- Collapse -->
     <TreeCollapseBtn
-      v-if="!isSearched"
+      v-if="!usesFlatSearchView"
       ref="treeCollapseBtnEl"
       :node
     />
@@ -154,7 +154,7 @@ onMounted(() => {
         </span>
 
         <span
-          v-if="nodePath && isSearched"
+          v-if="nodePath && usesFlatSearchView"
           class="tree-node__content-path"
         >
           {{ nodePath }}
@@ -164,7 +164,7 @@ onMounted(() => {
   </Component>
 
   <!-- Connectors -->
-  <template v-if="!isSearched && connectors">
+  <template v-if="!usesFlatSearchView && connectors">
     <div
       v-for="idx in Math.max(0, nodeMeta?.level ?? 0)"
       :key="idx"
