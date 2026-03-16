@@ -3,7 +3,7 @@
 export const CONFIRMATION_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'flex flex-col inset-0 absolute bg-white dark:bg-darker rounded-custom z-$zMax'
+      const base = 'flex flex-col inset-0 absolute bg-white dark:bg-dark-950 rounded-custom z-$zMax'
 
       return {
         base,
@@ -39,4 +39,3 @@ export const CONFIRMATION_DEFAULT_PROPS = {
     },
   },
 }
-
