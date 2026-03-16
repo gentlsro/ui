@@ -93,7 +93,7 @@ const isEditableRow = computed(() => {
 const rowDataArray = computed(() => {
   const rowArray = Array.isArray(props.row)
     ? props.row
-    : [props.row].filter(Boolean)
+    : [props.row]
 
   return rowArray.map((row: any) => {
     return {
@@ -171,7 +171,7 @@ const rowDataArray = computed(() => {
 const rowClassArray = computed(() => {
   const rowArray = Array.isArray(props.row)
     ? props.row
-    : [props.row].filter(Boolean)
+    : [props.row]
 
   return rowArray.map((row, idx) => {
     const rowData = rowDataArray.value[idx]
@@ -195,17 +195,13 @@ const rowClassArray = computed(() => {
 const rowStyleArray = computed(() => {
   const rowArray = Array.isArray(props.row)
     ? props.row
-    : [props.row].filter(Boolean)
+    : [props.row]
 
   return rowArray.map(row => [
     typeof props.ui?.rowStyle === 'function'
       ? props.ui?.rowStyle(row)
       : props.ui?.rowStyle,
   ])
-})
-
-watchEffect(() => {
-  console.log('💀', rowDataArray.value)
 })
 
 function handleSaveCellEditValue() {

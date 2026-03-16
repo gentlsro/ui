@@ -199,6 +199,7 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
             :key="col.name"
             #[col.name]="{ row, column, value }"
           >
+            {{ $log(row) }}
             <slot
               :name="col.name"
               :row
