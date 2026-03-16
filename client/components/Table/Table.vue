@@ -276,13 +276,13 @@ onMounted(() => {
     </TableContent>
 
     <!-- Loading -->
-    <!-- <TableLoading v-else-if="isInitialLoad" /> -->
+    <TableLoading v-else-if="isInitialLoad" />
 
     <!-- Empty -->
-    <!-- <TableEmpty v-else /> -->
+    <TableEmpty v-else />
 
     <!-- Totals -->
-    <!-- <slot
+    <slot
       name="totals"
       :ui="mergedProps.ui"
     >
@@ -290,10 +290,10 @@ onMounted(() => {
         :totals
         :ui="mergedProps.ui"
       />
-    </slot> -->
+    </slot>
 
     <!-- Bottom -->
-    <!-- <TableBottom>
+    <TableBottom>
       <template #loading="{ isDataLoading, isMetaLoading }">
         <slot
           name="loading"
@@ -301,10 +301,10 @@ onMounted(() => {
           :is-meta-loading
         />
       </template>
-    </TableBottom> -->
+    </TableBottom>
 
     <!-- Default slot to be used for custom content (most likely absolutely positioned) -->
-    <slot />
+    <!-- <slot /> -->
   </div>
 </template>
 
