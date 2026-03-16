@@ -200,8 +200,9 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
             #[col.name]="{ row, column, value }"
           >
             <div>
-              {{ $log(row) }}
+              {{ $log(!!row) }}
               <slot
+                v-if="row"
                 :name="col.name"
                 :row
                 :index
