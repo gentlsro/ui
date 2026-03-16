@@ -178,23 +178,7 @@ onMounted(() => {
     class="table"
     :class="tableClass"
   >
-    <!-- Top -->
-    <slot
-      name="top"
-      :ui="mergedProps.ui"
-      :query-builder-props="mergedProps.queryBuilderProps"
-      :features
-      :custom-data
-    >
-      <TableTop
-        v-if="hasTop"
-        v-model:search="search"
-        v-model:query-builder="queryBuilderStore"
-        :query-builder-props="mergedProps.queryBuilderProps"
-        :features
-        :ui="mergedProps.ui"
-      />
-    </slot>
+    ...
   </div>
 </template>
 
