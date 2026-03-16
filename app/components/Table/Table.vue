@@ -243,7 +243,6 @@ onMounted(() => {
       :show-copy-btn
       :scroller-config="mergedProps.scrollerConfig"
     >
-      {{ $log(rows) }}
       <!-- Cell slots -->
       <template
         v-for="col in visibleColumns"
@@ -251,6 +250,7 @@ onMounted(() => {
         #[col.name]="{ row, column, index, value }"
       >
         <slot
+          v-if="row"
           :name="col.name"
           :row
           :index
