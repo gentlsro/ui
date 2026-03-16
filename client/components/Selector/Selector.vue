@@ -246,6 +246,7 @@ onUnmounted(() => {
     </template>
 
     <!-- Content -->
+    {{ hasContent }}
     <slot>
       <SelectorInner
         ref="el"
