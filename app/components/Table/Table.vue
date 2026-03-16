@@ -249,6 +249,7 @@ onMounted(() => {
         :key="col.name"
         #[col.name]="{ row, column, index, value }"
       >
+        {{ $log(row) }}
         <slot
           :name="col.name"
           :row
