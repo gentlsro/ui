@@ -199,17 +199,13 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
             :key="col.name"
             #[col.name]="{ row, column, value }"
           >
-            <div>
-              {{ $log(!!row) }}
-              <slot
-                v-if="row"
-                :name="col.name"
-                :row
-                :index
-                :column
-                :value
-              />
-            </div>
+            <slot
+              :name="col.name"
+              :row
+              :index
+              :column
+              :value
+            />
           </template>
 
           <!-- Row inside slot -->
