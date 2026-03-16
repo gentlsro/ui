@@ -93,7 +93,7 @@ const isEditableRow = computed(() => {
 const rowDataArray = computed(() => {
   const rowArray = Array.isArray(props.row)
     ? props.row
-    : [props.row]
+    : [props.row].filter(Boolean)
 
   return rowArray.map((row: any) => {
     return {
