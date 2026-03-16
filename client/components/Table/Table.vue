@@ -240,22 +240,20 @@ onMounted(() => {
       :scroller-config="mergedProps.scrollerConfig"
     >
       <!-- Cell slots -->
-      <template
+      <!-- <template
         v-for="col in visibleColumns"
         :key="col.name"
         #[col.name]="{ row, column, index, value }"
       >
-        Row. {{ $log(row) }}
-        <!-- <slot
-          v-if="row"
+        <slot
           :name="col.name"
           :row
           :index
           :custom-data
           :column
           :value
-        /> -->
-      </template>
+        />
+      </template> -->
 
       <!-- Row slot -->
       <template #row="{ row, index }">
