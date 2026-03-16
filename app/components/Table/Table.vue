@@ -250,7 +250,6 @@ onMounted(() => {
         #[col.name]="{ row, column, index, value }"
       >
         <div>
-          {{ $log(row) }}
           <slot
             :name="col.name"
             :row
@@ -259,6 +258,7 @@ onMounted(() => {
             :column
             :value
           />
+          {{ $log(row) }}
         </div>
       </template>
 
