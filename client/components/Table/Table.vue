@@ -245,7 +245,7 @@ onMounted(() => {
         :key="col.name"
         #[col.name]="{ row, column, index, value }"
       >
-        {{ $log(row) }}
+        Row. {{ $log(row) }}
         <!-- <slot
           v-if="row"
           :name="col.name"
