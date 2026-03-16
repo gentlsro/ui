@@ -249,15 +249,17 @@ onMounted(() => {
         :key="col.name"
         #[col.name]="{ row, column, index, value }"
       >
-        <slot
-          v-if="row"
-          :name="col.name"
-          :row
-          :index
-          :custom-data
-          :column
-          :value
-        />
+        <div>
+          {{ $log(row) }}
+          <slot
+            :name="col.name"
+            :row
+            :index
+            :custom-data
+            :column
+            :value
+          />
+        </div>
       </template>
 
       <!-- Row slot -->
