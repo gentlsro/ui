@@ -245,8 +245,8 @@ onMounted(() => {
         :key="col.name"
         #[col.name]="{ row, column, index, value }"
       >
-        {{ $log(!!row) }}
-        <slot
+        {{ $log(row) }}
+        <!-- <slot
           v-if="row"
           :name="col.name"
           :row
@@ -254,7 +254,7 @@ onMounted(() => {
           :custom-data
           :column
           :value
-        />
+        /> -->
       </template>
 
       <!-- Row slot -->
