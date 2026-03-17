@@ -3,7 +3,7 @@
 export const TOGGLE_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'relative flex items-center cursor-pointer select-none rounded-custom'
+      const base = 'relative flex items-center cursor-pointer select-none rounded-custom gap-1'
 
       // States (via CSS selectors)
       const readonly = '[&.is-readonly]:(cursor-default)'
