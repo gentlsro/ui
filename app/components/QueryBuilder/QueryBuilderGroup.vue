@@ -22,9 +22,6 @@ const {
   collapsedById,
 } = useQueryBuilderStore()
 
-// Utils
-const { t } = useI18n()
-
 // Layout
 const group = toRef(props, 'item')
 
@@ -104,11 +101,11 @@ function handleRemoveGroup() {
 const collapseProps = computed(() => {
   return collapsedById.value[props.item.id]
     ? {
-        label: t('queryBuilder.expand'),
+        label: $t('queryBuilder.expand'),
         icon: 'i-flowbite:chevron-right-outline !w-6 !h-6',
       }
     : {
-        label: t('queryBuilder.collapse'),
+        label: $t('queryBuilder.collapse'),
         icon: 'i-flowbite:chevron-right-outline rotate-90 !w-6 !h-6',
       }
 })
