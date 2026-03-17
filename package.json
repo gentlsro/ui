@@ -6,7 +6,6 @@
   "main": "./nuxt.config.ts",
   "scripts": {
     "dev": "nuxt dev --host",
-    "postinstall": "nuxt prepare",
     "typecheck": "vue-tsc --noEmit",
     "build": "nuxt build"
   },
