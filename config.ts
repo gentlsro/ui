@@ -423,6 +423,7 @@ export const defaultComponentsConfig = {
   drawer: {
     props: {
       absolute: undefined,
+      closeOnClickOutside: false,
       breakpoint: 'md',
       fullHeight: undefined,
       modelValue: undefined,
@@ -983,6 +984,7 @@ export const defaultComponentsConfig = {
   pageDrawer: {
     props: {
       absoluteBreakpoint: 'md',
+      closeOnClickOutside: false,
       absoluteFullWidthBreakpoint: 'md',
       fullHeight: undefined,
       mini: undefined,

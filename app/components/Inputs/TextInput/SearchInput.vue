@@ -66,5 +66,12 @@ defineExpose({
         :clear
       />
     </template>
+
+    <template
+      v-if="$slots.tooltip"
+      #tooltip
+    >
+      <slot name="tooltip" />
+    </template>
   </TextInput>
 </template>

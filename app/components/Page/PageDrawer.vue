@@ -98,10 +98,34 @@ const fillerClass = computed(() => {
 const fillerStyle = computed(() => {
   return mergedProps.value?.ui?.fillerStyle?.({ isMini: isMini.value })
 })
+
+// Click outside
+const drawerEl = ref<HTMLElement | null>(null)
+
+function handleClickOutside(ev: Event) {
+  if (!model.value || !props.closeOnClickOutside) {
+    return
+  }
+
+  const targetEl = ev.target as HTMLElement
+  const isPartOfFloatingElement = !!targetEl.closest('.floating-element')
+  const isNotifications = !!targetEl.closest('.notifications')
+
+  if (isPartOfFloatingElement || isNotifications) {
+    return
+  }
+
+  model.value = false
+}
+
+onClickOutside(drawerEl, handleClickOutside, {
+  ignore: props.ignoreClickOutside,
+})
 </script>
 
 <template>
   <aside
+    ref="drawerEl"
     class="page-drawer group"
     :class="[classes, containerClass]"
     :style="[styles.container, containerStyle]"

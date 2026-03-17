@@ -13,6 +13,16 @@ export type IPageDrawerProps = {
   absoluteBreakpoint?: keyof typeof BREAKPOINTS
 
   /**
+   * When true, clicking outside the drawer will close it
+   */
+  closeOnClickOutside?: boolean
+
+  /**
+   * Selectors of the elements that should not trigger the close event when clicking outside
+   */
+  ignoreClickOutside?: string[]
+
+  /**
    * At which breakpoint the drawer becomes absolutely positioned and full width
    * Note: Use `xs` to never get into the absolute full width mode
    */

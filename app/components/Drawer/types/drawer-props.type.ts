@@ -13,6 +13,16 @@ export type IDrawerProps = {
   absolute?: boolean
 
   /**
+   * When true, clicking outside the drawer will close it
+   */
+  closeOnClickOutside?: boolean
+
+  /**
+   * Selectors of the elements that should not trigger the close event when clicking outside
+   */
+  ignoreClickOutside?: string[]
+
+  /**
    * The breakpoint at which the drawer will be full screen
    */
   breakpoint?: keyof typeof BREAKPOINTS

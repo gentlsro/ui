@@ -27,7 +27,12 @@ const mergedProps = computed(() => {
 })
 
 // Layout
+const wrapperEl = ref<HTMLDivElement>()
 const readonly = toRef(props, 'readonly')
+
+const wrapperElDom = computed(() => {
+  return unrefElement(wrapperEl.value)
+})
 
 const {
   el,
@@ -92,6 +97,7 @@ defineExpose({
   <InputWrapper
     v-bind="wrapperProps"
     :id="inputId"
+    ref="wrapperEl"
     :ui="mergedProps.ui"
     :has-content
     .focus="focus"
@@ -151,7 +157,7 @@ defineExpose({
         manual
         placement="right"
         :fallback-placements="['bottom']"
-        :reference-target="el"
+        :reference-target="wrapperElDom"
         :no-arrow="false"
         no-uplift
         v-bind="tooltipProps"

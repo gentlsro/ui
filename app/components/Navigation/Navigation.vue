@@ -30,7 +30,6 @@ const mergedProps = computed(() => {
 })
 
 // Layout
-const isInitialized = ref(false)
 const minHeight = uiConfig.navigation.defaultNavigationHeight
 const headerEl = useTemplateRef('headerEl')
 const navigationEl = useTemplateRef('navigationEl')
@@ -89,17 +88,12 @@ const isNavigationHidden = computed(() => {
   )
 })
 
-onMounted(() => {
-  nextTick(() => (isInitialized.value = true))
-})
-
 // Classes
 const classes = computed(() => {
   return [
     {
       'has-shadow': isScrolled.value && !props.noShadow,
       'is-hidden': isNavigationHidden.value && !isDrawerOpen.value.left && !isDrawerOpen.value.right,
-      'is-initialized': isInitialized.value,
       'is-sticky': props.sticky,
     },
   ]
