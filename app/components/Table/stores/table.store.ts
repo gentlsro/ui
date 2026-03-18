@@ -692,7 +692,7 @@ const [
   })
 
   // React to the query params changes
-  watch(queryParams, queryParams => {
+  watch(() => queryParams.value.toString(), queryParams => {
     console.log('Query params change', decodeURIComponent(queryParams.toString()))
 
     // We should only sync the state once we're sure every relevant part is loaded

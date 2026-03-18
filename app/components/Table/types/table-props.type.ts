@@ -576,7 +576,7 @@ export type ITableProps<
   /**
    * Link to the detail from page
    */
-  to?: (row: any, options?: { rowKey?: string }) => RouteLocationRaw
+  to?: (row: any, options?: { rowKey?: string }) => RouteLocationRaw | undefined
 
   /**
    * Props to pass to the NuxtLink component
