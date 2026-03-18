@@ -57,6 +57,13 @@ export default defineNuxtConfig({
   app: {
     head: {
       title: 'Gentl UI',
+      script: [
+        {
+          key: 'page-size-init',
+          innerHTML: '(function(){var d=document.documentElement;d.style.setProperty(\'--page-width\',d.clientWidth+\'px\');d.style.setProperty(\'--page-height\',d.clientHeight+\'px\');})();',
+          tagPosition: 'head',
+        },
+      ],
     },
   },
 
