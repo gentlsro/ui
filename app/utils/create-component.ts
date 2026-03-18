@@ -1,5 +1,6 @@
 // Types
 import type { ComponentProps } from '#layers/utilities/shared/types/component-map.type'
+import { resolveRegisteredComponent } from './resolve-registered-component'
 
 /**
  * Returns an object with raw component and props.
@@ -17,8 +18,13 @@ export function createComponent<T extends Component>(payload?: {
   const { component: componentSrc, props, icon } = payload
   let component = componentSrc as T
 
+  // Case: component is provided by name and resolved through Vite's glob registry.
+  if (typeof componentSrc === 'string') {
+    component = resolveRegisteredComponent(componentSrc) as T
+  }
+
   // Case: we provide an actual component imported via `import` statement
-  if (typeof componentSrc === 'object') {
+  else if (typeof componentSrc === 'object') {
     component = markRaw(componentSrc)
   }
 
