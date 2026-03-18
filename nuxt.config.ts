@@ -1,8 +1,8 @@
 // @unocss-include
 import { join } from 'pathe'
-import { presetWind3 } from 'unocss'
 import { createResolver } from 'nuxt/kit'
 import { writeFile } from 'node:fs/promises'
+import { cwd } from 'node:process'
 
 // Constants
 import { gentlUIPreset } from './app/constants/unocss-preset'
@@ -86,7 +86,7 @@ export default defineNuxtConfig({
   },
 
   alias: {
-    $uiConfig: join(process.cwd(), 'generated', 'uiConfig.ts'),
+    $uiConfig: join(cwd(), 'generated', 'uiConfig.ts'),
     $uiProps: resolve('./app/types/component-props.type.ts'),
   },
 
@@ -115,7 +115,7 @@ export default defineNuxtConfig({
     tsConfig: {
       compilerOptions: {
         paths: {
-          $uiConfig: [join(process.cwd(), 'generated', 'uiConfig.ts')],
+          $uiConfig: [join(cwd(), 'generated', 'uiConfig.ts')],
           $uiProps: [resolve('./app/types/component-props.type.ts')],
         },
       },
