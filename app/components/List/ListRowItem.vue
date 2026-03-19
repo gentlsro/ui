@@ -213,16 +213,15 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-.list-row-item {
-  &__content {
-    &-new {
-      @apply hidden text-caption font-rem-12;
-    }
-  }
+.list-row-item__content-new {
+  @apply hidden text-caption font-rem-12;
+}
 
-  &__selection-checkbox {
-    @apply self-start shrink-0 pointer-events-none;
-  }
+.list-row-item__selection-checkbox {
+  @apply self-start shrink-0 pointer-events-none;
+}
+
+.list-row-item {
 
   &.is-dragging {
     @apply outline-2 outline-primary outline-dashed outline-offset--2 bg-primary/30;

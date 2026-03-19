@@ -162,10 +162,10 @@ defineExpose({
 
 .drop-indicator {
   @apply absolute h-2px bg-primary w-full rounded-full pointer-events-none z-$zMax;
+}
 
-  &__icon {
-    @apply w-5 h-5 relative -left-5 rounded-custom
-    color-primary bg-white dark:bg-darker;
-  }
+.drop-indicator__icon {
+  @apply w-5 h-5 relative -left-5 rounded-custom
+  color-primary bg-white dark:bg-darker;
 }
 </style>

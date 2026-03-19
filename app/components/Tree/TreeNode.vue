@@ -185,15 +185,14 @@ onMounted(() => {
     @apply cursor-pointer;
   }
 
-  &__content {
-    &-label {
-      @apply font-rem-14;
-    }
+}
 
-    &-path {
-      @apply text-caption leading-tight font-rem-12;
-    }
-  }
+.tree-node__content-label {
+  @apply font-rem-14;
+}
+
+.tree-node__content-path {
+  @apply text-caption leading-tight font-rem-12;
 }
 
 .tree-node__connector {

@@ -639,22 +639,22 @@ function renderOnlyVisible(
 <style lang="scss" scoped>
 .virtual-scroll {
   @apply relative overflow-auto outline-none;
+}
 
-  &__content {
-    @apply relative;
-  }
+.virtual-scroll__content {
+  @apply relative;
+}
 
-  &__container {
-    @apply relative rounded-custom;
-  }
+.virtual-scroll__container {
+  @apply relative rounded-custom;
+}
 
-  &__row {
-    @apply flex w-full;
+.virtual-scroll__row {
+  @apply flex w-full;
 
-    transform: translate3d(var(--translate3D, 0, 0, 0));
-    min-height: var(--defaultRowHeight);
-    will-change: transform;
-  }
+  transform: translate3d(var(--translate3D, 0, 0, 0));
+  min-height: var(--defaultRowHeight);
+  will-change: transform;
 }
 
 .virtual-scroll.is-virtual {

@@ -189,14 +189,15 @@ defineExpose({
 .virtual-scroll {
   @apply relative overflow-auto outline-none;
 
-  &__content {
-    @apply relative;
-  }
+}
 
-  &__row {
-    @apply w-full;
+.virtual-scroll__content {
+  @apply relative;
+}
 
-    transform: translateY(calc(var(--translateY) * 1px));
-  }
+.virtual-scroll__content .virtual-scroll__row {
+  @apply w-full;
+
+  transform: translateY(calc(var(--translateY) * 1px));
 }
 </style>

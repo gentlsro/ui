@@ -98,11 +98,11 @@ const parentDropIndicatorCss = computed(() => {
 
   transform: translateY(calc(var(--translateY) * 1px));
   left: var(--left, 12px);
+}
 
-  &__icon {
-    @apply w-4 h-4 relative left--3 rounded-custom
-    color-primary bg-white dark:bg-darker;
-  }
+.tree-drop-indicator__icon {
+  @apply w-4 h-4 relative left--3 rounded-custom
+  color-primary bg-white dark:bg-darker;
 }
 
 .tree-drop-indicator__parent {

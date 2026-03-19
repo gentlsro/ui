@@ -29,10 +29,10 @@ const { dragMeta } = useListStore()
 
   transform: translateY(calc(var(--translateY) * 1px));
   left: 12px;
+}
 
-  &__icon {
-    @apply w-4 h-4 relative left--3 rounded-custom
-    color-primary bg-white dark:bg-darker;
-  }
+.list-drop-indicator__icon {
+  @apply w-4 h-4 relative left--3 rounded-custom
+  color-primary bg-white dark:bg-darker;
 }
 </style>

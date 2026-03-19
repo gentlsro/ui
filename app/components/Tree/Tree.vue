@@ -191,9 +191,9 @@ const contentStyle = computed(() => {
 <style scoped>
 .tree {
   @apply flex flex-col overflow-auto;
+}
 
-  &__content {
-    @apply flex flex-col grow overflow-auto;
-  }
+.tree__content {
+  @apply flex flex-col grow overflow-auto;
 }
 </style>

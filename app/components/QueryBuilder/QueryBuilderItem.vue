@@ -283,34 +283,30 @@ const { validation } = useArk({
     @apply flex-col;
   }
 
-  &:not(.is-smaller-screen) .qb-item__content {
-    &-field {
-      @apply w-60 shrink-0;
-    }
-
-    &-comparator {
-      @apply w-55 shrink-0;
-    }
-
-    &-value {
-      @apply min-w-60;
-    }
+  &:not(.is-smaller-screen) .qb-item__content-field {
+    @apply w-60 shrink-0;
   }
 
-  &__content {
-    @apply flex gap-1 grow p-y-1;
-
-    &-field,
-    &-comparator {
-      @apply max-w-80;
-    }
+  &:not(.is-smaller-screen) .qb-item__content-comparator {
+    @apply w-55 shrink-0;
   }
 
-  &.is-smaller-screen {
-    .qb-item__content-value {
-      @apply min-w-80;
-    }
+  &:not(.is-smaller-screen) .qb-item__content-value {
+    @apply min-w-60;
   }
+}
+
+.qb-item__content {
+  @apply flex gap-1 grow p-y-1;
+}
+
+.qb-item__content-field,
+.qb-item__content-comparator {
+  @apply max-w-80;
+}
+
+.qb-item.is-smaller-screen .qb-item__content-value {
+  @apply min-w-80;
 }
 
 .qb-item:not(.no-drag) {

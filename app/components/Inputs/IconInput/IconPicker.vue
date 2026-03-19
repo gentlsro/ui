@@ -130,35 +130,35 @@ watchThrottled(search, fetchAndSetIcons, {
 <style lang="scss" scoped>
 .icon-picker {
   @apply flex flex-col bg-white dark:bg-dark-950 rounded-custom overflow-auto;
+}
 
-  &__search {
-    @apply p-t-1 p-x-1;
+.icon-picker__search {
+  @apply p-t-1 p-x-1;
+}
+
+.icon-picker__content {
+  @apply grid gap-1 rounded-custom p-1 grow overflow-auto max-h-70;
+
+  grid-template-columns: repeat(auto-fill, minmax(28px, 1fr));
+}
+
+.icon-picker__content-item {
+  @apply flex flex-center cursor-pointer h-8 rounded-custom;
+
+  &.is-readonly {
+    @apply cursor-default;
   }
 
-  &__content {
-    @apply grid gap-1 rounded-custom p-1 grow overflow-auto max-h-70;
+  > svg {
+    @apply p-1;
+  }
 
-    grid-template-columns: repeat(auto-fill, minmax(28px, 1fr));
+  &:hover > svg {
+    @apply outline outline-ca outline-1 outline-dashed;
+  }
 
-    &-item {
-      @apply flex flex-center cursor-pointer h-8 rounded-custom;
-
-      &.is-readonly {
-        @apply cursor-default;
-      }
-
-      > svg {
-        @apply p-1;
-      }
-
-      &:hover > svg {
-        @apply outline outline-ca outline-1 outline-dashed;
-      }
-
-      &.is-selected > svg {
-        @apply outline outline-primary! outline-1 outline-solid;
-      }
-    }
+  &.is-selected > svg {
+    @apply outline outline-primary! outline-1 outline-solid;
   }
 }
 </style>
