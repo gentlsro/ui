@@ -23,6 +23,24 @@ export const INPUT_WRAPPER_DEFAULT_PROPS = {
       } as const
     },
 
+    errorClass() {
+      const base = 'inline-block p-b-1 transition-height duration-150 color-negative font-rem-12'
+
+      return {
+        base,
+        all: `${base}`,
+      } as const
+    },
+
+    hintClass() {
+      const base = 'color-ca font-rem-12 leading-tight p-y-2px p-x-2'
+
+      return {
+        base,
+        all: `${base}`,
+      } as const
+    },
+
     inputContainerClass() {
       const base = 'bg-white dark:bg-black'
 

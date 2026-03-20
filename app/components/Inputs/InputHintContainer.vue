@@ -13,9 +13,3 @@ defineProps<IProps>()
     </slot>
   </span>
 </template>
-
-<style lang="scss" scoped>
-.input-hint-container {
-  @apply text-caption color-ca font-rem-12;
-}
-</style>

@@ -114,6 +114,28 @@ const isInputRequired = computed(() => {
   return isRequired.value
 })
 
+// Styles - Hint
+const hintClass = computed(() => {
+  return mergedProps.value.ui?.hintClass?.({
+    defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.hintClass(),
+  })
+})
+
+const hintStyle = computed(() => {
+  return mergedProps.value.ui?.hintStyle?.()
+})
+
+// Styles - Error
+const errorClass = computed(() => {
+  return mergedProps.value.ui?.errorClass?.({
+    defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.errorClass(),
+  })
+})
+
+const errorStyle = computed(() => {
+  return mergedProps.value.ui?.errorStyle?.()
+})
+
 // Wrapper
 const WrapperComponent = computed(() => {
   switch (props.layout) {
@@ -218,7 +240,8 @@ const wrapperProps = computed(() => {
         <InputErrorContainer
           :error-takes-space
           :errors="issues"
-          class="wrapper-error"
+          :class="errorClass"
+          :style="errorStyle"
         />
       </template>
 
@@ -231,6 +254,8 @@ const wrapperProps = computed(() => {
           <InputHintContainer
             v-if="hint"
             :hint
+            :class="hintClass"
+            :style="hintStyle"
           />
         </slot>
       </template>

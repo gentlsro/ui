@@ -159,6 +159,30 @@ export type IInputWrapperProps = IInputLabelProps & {
     contentStyle?: () => CSSProperties
 
     /**
+     * The class of the error container
+     */
+    errorClass?: (payload: {
+      defaults: ReturnType<typeof INPUT_WRAPPER_DEFAULT_PROPS['ui']['errorClass']>
+    }) => ClassType
+
+    /**
+     * The style of the error container
+     */
+    errorStyle?: () => CSSProperties
+
+    /**
+     * The class of the hint
+     */
+    hintClass?: (payload: {
+      defaults: ReturnType<typeof INPUT_WRAPPER_DEFAULT_PROPS['ui']['hintClass']>
+    }) => ClassType
+
+    /**
+     * The style of the hint
+     */
+    hintStyle?: () => CSSProperties
+
+    /**
      * Class of the input container (excluding label, hint, error container, ...)
      *
      * Note: Primarily used for background color

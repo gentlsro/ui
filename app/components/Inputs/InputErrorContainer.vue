@@ -4,6 +4,10 @@ type IProps = {
   errors?: string[]
 }
 
+defineOptions({
+  inheritAttrs: false,
+})
+
 const props = withDefaults(defineProps<IProps>(), {
   errorTakesSpace: true,
 })
@@ -24,20 +28,12 @@ const errorMessages = computed(() => {
       contentInnerClass: () => 'p-x-1',
     }"
   >
-    <div
-      inline-block
-      p="b-1"
-      transition="height duration-150"
-      color="negative"
-    >
+    <div v-bind="$attrs">
       <div
-        m="r-2"
-        i-ci:error
-        class="inline-block align-middle"
+        class="inline-block m-r-2 align-middle i-ci:error font-rem-16"
       />
       <span
         class="align-middle"
-        font="rem-12"
         v-html="errorMessages"
       />
     </div>

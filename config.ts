@@ -652,6 +652,8 @@ export const defaultComponentsConfig = {
         },
         appendClass: ({ defaults }) => defaults.all,
         inputContainerClass: ({ defaults }) => defaults.all,
+        hintClass: ({ defaults }) => defaults.all,
+        errorClass: ({ defaults }) => defaults.all,
       },
     },
     merge: ['ui'],
