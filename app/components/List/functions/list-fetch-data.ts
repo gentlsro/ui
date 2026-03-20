@@ -75,7 +75,8 @@ export async function listFetchData(payload: {
 
   if (hasCount) {
     _count = get(res, countKey)
-  } else if (totalRows) {
+  }
+  else if (totalRows && isFetchMore) {
     _count = totalRows
   }
 

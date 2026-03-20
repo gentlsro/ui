@@ -27,6 +27,7 @@ const {
   listItems,
   isDragging,
   isFetchMore,
+  hasMore,
   searchConfig,
   dragMeta,
   addedItemById,
@@ -42,12 +43,12 @@ function handleVirtualScroll(ev: IVirtualScrollEvent) {
 
   const { visibleEndItem } = ev
   const _listItems = listItems.value ?? []
-  const isFetchMore = _listItems.length - visibleEndItem.index - 1 < FETCH_MORE_THRESHOLD
+  const nearEnd = _listItems.length - visibleEndItem.index - 1 < FETCH_MORE_THRESHOLD
 
-  if (isFetchMore) {
+  if (nearEnd && hasMore.value) {
     const lastVisibleItem = _listItems[visibleEndItem.index] as IListItem
 
-    fetchAndSetData({ isFetchMore, lastVisibleItem })
+    fetchAndSetData({ isFetchMore: true, lastVisibleItem })
   }
 }
 
