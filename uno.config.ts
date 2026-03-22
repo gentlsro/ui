@@ -121,6 +121,7 @@ export default defineConfig({
     presetWind3(),
     presetIcons({
       scale: 1.2,
+      unit: 'rem',
       collections: {
         custom: FileSystemIconLoader('./client/assets/icons', svg => {
           return svg.replace(/[\r\n]/g, '')
