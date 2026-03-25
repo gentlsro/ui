@@ -96,7 +96,7 @@ export const BANNER_DEFAULT_PROPS = {
     }) {
       const { variant: variantProp } = payload
 
-      const base = '!h-6 !w-6 shrink-0 self-start m-t-1'
+      const base = 'h-6 w-6 shrink-0 self-start m-t-1'
 
       // Icon
       let icon = ''

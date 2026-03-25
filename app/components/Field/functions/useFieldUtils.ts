@@ -114,6 +114,7 @@ export function useFieldUtils(options?: {
       'stackLabel',
       'validation',
       'validationPath',
+      'ui',
     ])
   }
 

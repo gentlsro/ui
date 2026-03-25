@@ -91,7 +91,7 @@ function handleMouseDown(payload: {
 
 <style scoped lang="scss">
 .resize-handles {
-  @apply absolute pointer-events-none bg-transparent inset-0;
+  @apply absolute pointer-events-none bg-transparent inset-0 z-1;
 
   &__top,
   &__bottom,

@@ -111,7 +111,7 @@ const inputInnerContainerStyle = computed(() => {
   grid-template-areas:
     'prepend input loading append'
     'prepend input loading append'
-    'nothing error nothing2 nothing3';
+    'nothing error error error';
 
   grid-template-columns: auto 1fr auto auto;
   grid-template-rows: 18px 1fr auto;

@@ -111,7 +111,7 @@ const inputInnerContainerStyle = computed(() => {
   // Without label
   grid-template-areas:
     'prepend  input loading append'
-    'nothing4 error nothing5 nothing6';
+    'nothing4 error error error';
 
   grid-template-columns: auto 1fr auto auto;
   grid-template-rows: 1fr auto;
@@ -120,7 +120,7 @@ const inputInnerContainerStyle = computed(() => {
     grid-template-areas:
       'nothing  label nothing2 nothing3'
       'prepend  input loading append'
-      'nothing4 error nothing5 nothing6';
+      'nothing4 error error error';
 
     grid-template-columns: auto 1fr auto auto;
     grid-template-rows: 16px auto 1fr;
