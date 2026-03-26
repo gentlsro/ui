@@ -11,6 +11,12 @@ import type { ExtendedDataType } from '$dataType'
 // Models
 import type { ComparatorEnum } from '$comparatorEnum'
 
+type ISource = {
+  type: 'component' | 'composable' | 'store'
+  name: string
+  id?: string
+}
+
 export type IValueFormatterProps = {
   value: any
   previousValue?: any
@@ -52,6 +58,11 @@ export type IValueFormatterProps = {
    * comparators EXCEPT for `AGO` and `UNTIL` when it's actually a simple string
    */
   comparator?: ComparatorEnum
+
+  /**
+   * The source from where the value is coming from
+   */
+  source?: ISource
 
   /**
    * Visual configuration

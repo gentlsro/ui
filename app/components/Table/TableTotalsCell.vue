@@ -36,6 +36,7 @@ const totalText = computed(() => {
   const valueFormatted = formatValue(props.total?.value, undefined, {
     dataType: props.total?.dataType,
     localeIso: currentLocale.value.code,
+    source: { type: 'component', name: 'TableTotalsCell' },
   })
 
   const label = typeof props.total?.label === 'function'

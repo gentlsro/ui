@@ -116,6 +116,7 @@ const rowDataArray = computed(() => {
             dataType: col.dataType,
             comparator: col.comparator,
             localeIso: currentLocaleCode.value,
+            source: { type: 'component', name: 'TableRow' },
           })
 
           // Visuals - Styles

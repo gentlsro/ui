@@ -161,6 +161,7 @@ const { validation } = useArk({ scope: '_qb' })
       :data-type="colSelected?.dataType"
       :format="colSelected?.format"
       :comparator="item.comparator"
+      :source="{ type: 'component', name: 'QueryBuilderItemInline' }"
       class="qb-item__value"
     />
 

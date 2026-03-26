@@ -28,6 +28,7 @@ const formattedValue = computed(() => {
     predictDataType: props.predictDataType,
     comparator: props.comparator,
     localeIso: currentLocale.value.code,
+    source: props.source,
   })
 })
 
@@ -39,6 +40,7 @@ const formattedOriginalValue = computed(() => {
     predictDataType: props.predictDataType,
     comparator: props.comparator,
     localeIso: currentLocale.value.code,
+    source: props.source,
   })
 })
 

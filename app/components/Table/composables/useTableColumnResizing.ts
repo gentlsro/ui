@@ -22,6 +22,7 @@ export function useTableColumnResizing() {
     internalColumns,
     visibleColumns,
     uiConfig,
+    emits,
   } = useTableStore()
 
   // Splitters (for resizing columns)
@@ -184,6 +185,7 @@ export function useTableColumnResizing() {
     col.width = `${activeSplitter.value!.adjustedWidth}px`
 
     // Reset the active splitter
+    const width = activeSplitter.value!.adjustedWidth
     activeSplitter.value = undefined
 
     document.documentElement.removeEventListener(
@@ -203,6 +205,11 @@ export function useTableColumnResizing() {
       internalColumns.value = [...internalColumns.value]
 
       virtualScrollEl.value?.rerender()
+      emits.value.columnResize({
+        column: col,
+        columns: visibleColumns.value,
+        width,
+      })
     })
   }
 

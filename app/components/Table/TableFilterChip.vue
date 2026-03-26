@@ -40,7 +40,12 @@ const formattedValue = computed(() => {
   return formatValue(
     props.filter.value,
     undefined,
-    { dataType: props.filter.dataType, format, localeIso: currentLocaleCode.value },
+    {
+      dataType: props.filter.dataType,
+      format,
+      localeIso: currentLocaleCode.value,
+      source: { type: 'component', name: 'TableFilterChip' },
+    },
   )
 })
 

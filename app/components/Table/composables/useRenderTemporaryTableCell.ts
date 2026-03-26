@@ -56,7 +56,10 @@ export function useRenderTemporaryTableCell() {
     let cleanup: () => void = () => {}
 
     const value = col.valueGetter(row)
-    const formattedValue = formatValue(value, row, { format: col.format, dataType: col.dataType })
+    const formattedValue = formatValue(value, row, {
+      format: col.format,
+      dataType: col.dataType,
+    })
 
     // @ts-expect-error
     const { cellInnerClass, cellInnerStyle, cellClass, cellStyle } = ui ?? getComponentProps('table').ui?.() ?? {}

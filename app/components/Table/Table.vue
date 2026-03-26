@@ -91,6 +91,7 @@ const {
 // Set emits
 storeEmits.value = {
   rowClick: (payload: { ev?: MouseEvent, row: any }) => emits('click:row', payload),
+  columnResize: (payload: { column: TableColumn<any>, columns: TableColumn<any>[], width: number }) => emits('resize:column', payload),
 }
 
 // Sync refs with store

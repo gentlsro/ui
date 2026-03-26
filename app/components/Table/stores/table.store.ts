@@ -249,6 +249,7 @@ const [
   // SECTION Emits
   const emits = ref<ITableEmitFncs>({
     rowClick: (_payload: { row: any, ev?: MouseEvent }) => {},
+    columnResize: (_payload: { column: TableColumn<any>, columns: TableColumn<any>[], width: number }) => {},
   })
   // !SECTION
 
