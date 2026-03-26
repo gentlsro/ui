@@ -9,12 +9,14 @@ import { useTableStore } from './stores/table.store'
 import { tableEditMoveCell } from './functions/table-edit-move-cell'
 
 // Components
+import VirtualScroller from '../VirtualScroller/VirtualScroller.vue'
 import VirtualScrollerGrid from '../VirtualScroller/VirtualScrollerGrid.vue'
 import VirtualScrollerVertical from '../VirtualScroller/VirtualScrollerVertical.vue'
 
 type IProps = Pick<ITableProps, 'editable' | 'ui' | 'to' | 'scrollerConfig' | 'showCopyBtn' | 'toLinkProps'>
 
-defineProps<IProps>()
+const props = defineProps<IProps>()
+const scrollerConfig = toRef(props, 'scrollerConfig')
 
 type SlotProps = {
   row: any
@@ -47,10 +49,36 @@ const {
 // Layout
 const isVisibleByColumnField = ref<Record<string, boolean>>({})
 
+const SCROLLER_COMPONENTS = {
+  VirtualScroller,
+  VirtualScrollerGrid,
+  VirtualScrollerVertical,
+} as const
+
 const virtualScrollComponent = computed(() => {
-  return isCardView.value
-    ? VirtualScrollerVertical
-    : VirtualScrollerGrid
+  const component = scrollerConfig.value?.scrollerComponent
+
+  if (!component) {
+    return VirtualScroller
+  }
+
+  if (typeof component === 'string') {
+    return SCROLLER_COMPONENTS[component as keyof typeof SCROLLER_COMPONENTS] ?? component
+  }
+
+  return component
+})
+
+const scrollerProps = computed(() => {
+  const config = scrollerConfig.value
+
+  if (!config) {
+    return undefined
+  }
+
+  const { scrollerComponent: _, ...rest } = config
+
+  return rest
 })
 
 function handleVirtualScroll(ev: IVirtualScrollEvent) {
@@ -139,7 +167,7 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
   <Component
     :is="virtualScrollComponent"
     ref="virtualScrollEl"
-    v-bind="scrollerConfig"
+    v-bind="scrollerProps"
     :rows="rowsSplit"
     :columns="visibleColumns"
     class="table-content grow"

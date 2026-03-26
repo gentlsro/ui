@@ -24,18 +24,28 @@ type IVisibleRows = {
   lastRow: IRow | null
 }
 
-const props = withDefaults(defineProps<IVirtualScrollerProps<T>>(), {
+type IProps<T> = IVirtualScrollerProps<T> & {
+  columns?: TableColumn<T>[]
+}
+
+const props = withDefaults(defineProps<IProps<T>>(), {
   ...getComponentProps('virtualScroller'),
 })
 
 const emits = defineEmits<{
   (e: 'change:contentSize', payload: { height: number, width: number }): void
-  (e: 'virtual-scroll', payload: IVirtualScrollEvent): void
+  (e: 'virtualScroll', payload: IVirtualScrollEvent): void
 }>()
 
 defineSlots<{
-  inner?: () => any
-  default: (props: { row: T, index: number }) => any
+  'inner'?: () => any
+  'inner-content'?: () => any
+  'default': (props: {
+    row: T
+    index: number
+    columns?: TableColumn<T>[]
+    style: CSSProperties
+  }) => any
 }>()
 
 defineExpose({
@@ -97,6 +107,7 @@ const INITIAL_ROWS_RENDER_COUNT = props.initialRowsRenderCount
 
 // Layout
 const rows = toRef(props, 'rows')
+const columns = toRef(props, 'columns')
 const containerEl = useTemplateRef('containerEl')
 const virtualScrollEl = useTemplateRef('virtualScrollEl')
 const isMounted = ref(false)
@@ -259,7 +270,7 @@ function handleScrollEvent(
   visibleItemsIdx.value.last = lastVisibleIdx
 
   if (!_noEmit) {
-    emits('virtual-scroll', {
+    emits('virtualScroll', {
       visibleStartItem: {
         index: firstVisibleIdx,
         key: getRowKey(firstVisibleItem),
@@ -612,7 +623,7 @@ function renderOnlyVisible(
         :key="row.id"
         :data-idx="row.idx"
         :data-key="row.id"
-        :style="row.style"
+        :style="{ ...rowStyle, ...row.style }"
         class="virtual-scroll__row content-row"
         :class="rowClass"
         @vue:mounted="handleMountedRow($event)"
@@ -620,6 +631,8 @@ function renderOnlyVisible(
         <slot
           :row="row.ref"
           :index="row.idx"
+          :columns
+          :style="{ minHeight: `${rowHeight}px` }"
         >
           <div
             flex="~ center"
@@ -631,6 +644,7 @@ function renderOnlyVisible(
         </slot>
       </div>
 
+      <slot name="inner-content" />
       <slot name="inner" />
     </div>
   </div>

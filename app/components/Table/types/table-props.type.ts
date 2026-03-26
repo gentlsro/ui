@@ -475,7 +475,17 @@ export type ITableProps<
   /**
    * Scroller configuration
    */
-  scrollerConfig?: Pick<IVirtualScrollerProps<any>, 'rowHeight' | 'overscan' | 'threshold' | 'watchWidth'>
+  scrollerConfig?: Pick<IVirtualScrollerProps<any>, 'rowHeight' | 'overscan' | 'threshold' | 'watchWidth'> & {
+    /**
+     * Optional custom scroller component used by `TableContent`
+     */
+    scrollerComponent?: any
+
+    /**
+     * Extra props forwarded to the selected scroller component
+     */
+    [key: string]: unknown
+  }
 
   /**
    * The search query
