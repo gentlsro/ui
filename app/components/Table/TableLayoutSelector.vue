@@ -35,7 +35,6 @@ const {
 const isOptionsDialogOpen = ref(false)
 const isLayoutSaveDialogOpen = ref(false)
 const layoutSelected = ref<ITableLayout>()
-const isActionsVisibleLayoutId = ref<string | number>()
 const search = ref('')
 
 function handleLayoutEdit(layout: any) {
@@ -93,7 +92,7 @@ function handleLayoutApply(layout?: ITableLayout) {
         item-label="name"
         data-cy="scheme-search"
         :search-config="{ inputProps: { size: 'sm' } }"
-        :ui="{ rowClass: () => 'w-full flex-col p-r-2 m-y-1px rounded-custom !cursor-pointer p-y-1 bg-white dark:bg-black' }"
+        :ui="{ rowClass: ({ defaults }) => `${defaults.all} flex-col cursor-pointer items-start! p-y-1.5 light:(border-1 border-ca) dark:bg-black` }"
         p="y-1"
         @click:item="handleLayoutApply($event.ref as any)"
       >
@@ -135,33 +134,40 @@ function handleLayoutApply(layout?: ITableLayout) {
         </template>
 
         <template #item="{ row }">
-          <div
-            flex="~ gap-2"
-            w="full"
-          >
-            <span grow>
-              {{ row.label }}
-            </span>
+          <span grow>
+            {{ row.label }}
+          </span>
 
-            <div
-              class="layout-actions"
-              :class="{ 'is-active': isActionsVisibleLayoutId === row.id }"
+          <!-- Actions -->
+          <div class="layout-item-actions">
+            <Btn
+              size="xs"
+              preset="EDIT"
+              :loading="isLoading"
+              @click.stop.prevent="handleLayoutEdit(row.ref)"
+            />
+
+            <CrudBtnDelete
+              size="xs"
+              :loading="isLoading"
+              :menu-props="{ title: '' }"
+              @click.stop.prevent
+              @delete="handleDelete(row.ref)"
             >
-              <Btn
-                size="xs"
-                preset="EDIT"
-                :loading="isLoading"
-                @click.stop.prevent="handleLayoutEdit(row.ref)"
-              />
-              <CrudBtnDelete
-                size="xs"
-                :loading="isLoading"
-                @click.stop.prevent
-                @before-show="isActionsVisibleLayoutId = row.id"
-                @hide="isActionsVisibleLayoutId = undefined"
-                @delete="handleDelete(row.ref)"
-              />
-            </div>
+              <template #confirmation>
+                <div flex="~ center">
+                  <div class="i-clarity:warning-solid w-8 h-8 color-negative" />
+                </div>
+
+                <span
+                  text="caption center"
+                  font="rem-12"
+                  p="x-3 y-1"
+                >
+                  {{ $t('general.deleteItemConfirmation') }}
+                </span>
+              </template>
+            </CrudBtnDelete>
           </div>
 
           <TableLayoutMeta v-bind="getLayoutMeta(row.ref as ITableLayout)" />
@@ -184,21 +190,10 @@ function handleLayoutApply(layout?: ITableLayout) {
 
 <style scoped lang="scss">
 .actions {
-  @apply flex gap-1 items-center justify-between p-x-2 m-b-1;
+  @apply flex items-center gap-1 justify-between p-x-2 m-b-1 m-t--2;
 }
 
-.layout-actions {
-  @apply items-center bg-white dark:bg-black rounded-custom hidden;
-}
-
-.list-row-item:hover .layout-actions,
-.layout-actions.is-active {
-  @apply flex;
-}
-
-@media (hover: none) and (pointer: coarse) {
-  .layout-actions {
-    @apply flex;
-  }
+.layout-item-actions {
+  @apply absolute top-1 right-1 items-center gap-px flex;
 }
 </style>

@@ -258,6 +258,14 @@ export class TableColumn<T = IItem> {
   }
 
   /**
+   * The component to use for displaying the value in the table
+   */
+  displayComponent?: {
+    component: any
+    props?: Record<string, any> | ((payload: { row: T, column: TableColumn }) => Record<string, any>)
+  }
+
+  /**
    * The default component used for editing
    */
   get _editComponent() {
@@ -643,6 +651,7 @@ export class TableColumn<T = IItem> {
     this.local = col.local ?? false
     this.alwaysVisible = col.alwaysVisible ?? false
     this.noCopyBtn = col.noCopyBtn ?? false
+    this.displayComponent = col.displayComponent
 
     // Editing
     this.noEdit = col.noEdit

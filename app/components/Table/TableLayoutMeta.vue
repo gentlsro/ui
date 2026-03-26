@@ -15,19 +15,19 @@ defineProps<IProps>()
     <!-- Select -->
     <div
       v-if="hasSelect"
-      class="i-tabler:columns-2"
+      class="i-tabler:columns-2 w-3 h-3"
     />
 
     <!-- Filters -->
     <div
       v-if="hasFilters"
-      class="i-ic:round-filter-alt"
+      class="i-ic:round-filter-alt w-3 h-3"
     />
 
     <!-- Sorting -->
     <div
       v-if="hasSorting"
-      class="i-basil:sort-outline m-l--2px"
+      class="i-basil:sort-outline m-l--2px w-3 h-3"
     />
 
     <Separator
@@ -39,13 +39,13 @@ defineProps<IProps>()
     <!-- Is public -->
     <div
       v-if="isPublic"
-      class="i-ic:round-public"
+      class="i-ic:round-public w-3 h-3"
     />
 
     <!-- Is default -->
     <div
       v-if="isDefault"
-      class="i-fluent:book-default-28-filled"
+      class="i-fluent:book-default-28-filled w-3 h-3"
     />
   </div>
 </template>

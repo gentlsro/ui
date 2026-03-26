@@ -119,6 +119,16 @@ const rowDataArray = computed(() => {
             source: { type: 'component', name: 'TableRow' },
           })
 
+          let displayComponent: any
+          if (col.displayComponent) {
+            displayComponent = {
+              component: markRaw(col.displayComponent.component),
+              props: typeof col.displayComponent.props === 'function'
+                ? col.displayComponent.props({ row, column: col })
+                : col.displayComponent.props,
+            }
+          }
+
           // Visuals - Styles
           // Cell
           const columnCellStyle = typeof col.cellStyle === 'function'
@@ -152,6 +162,7 @@ const rowDataArray = computed(() => {
           return {
             id: col.field,
             value: cellValue,
+            displayComponent,
             valueFormatted: cellFormattedValue,
             column: col,
             isEditable,
@@ -276,8 +287,14 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
 
 <template>
   <DefineValueTemplate v-slot="{ column, row, isSelectable }">
+    <Component
+      :is="column.displayComponent?.component"
+      v-if="column.displayComponent"
+      v-bind="column.displayComponent?.props"
+    />
+
     <Checkbox
-      v-if="column.id === '_selectable'"
+      v-else-if="column.id === '_selectable'"
       :model-value="isSelected(row)"
       size="sm"
       :readonly="!isSelectable"
@@ -288,7 +305,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
 
     <!-- Boolean -->
     <Checkbox
-      v-if="column.column.dataType === 'boolean'"
+      v-else-if="column.column.dataType === 'boolean'"
       :model-value="column.value"
       size="sm"
       :label="column.valueFormatted"

@@ -13,7 +13,7 @@ const columnFilters = computed(() => {
 </script>
 
 <template>
-  <HorizontalScroller>
+  <HorizontalScroller :ui="{ contentClass: ({ defaults }) => `${defaults.all} gap-1` }">
     <TableFilterChip
       v-for="filter in columnFilters"
       :key="filter.id"

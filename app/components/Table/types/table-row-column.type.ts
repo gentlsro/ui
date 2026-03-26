@@ -7,6 +7,7 @@ export type IRowColumn = {
   id: string | number
   value: any
   valueFormatted: any
+  displayComponent: any
   isEditable: boolean
   column: TableColumn
   cellStyle: CSSProperties
