@@ -92,6 +92,7 @@ function handleLayoutApply(layout?: ITableLayout) {
         :items="state.layouts"
         item-label="name"
         data-cy="scheme-search"
+        :search-config="{ inputProps: { size: 'sm' } }"
         :ui="{ rowClass: () => 'w-full flex-col p-r-2 m-y-1px rounded-custom !cursor-pointer p-y-1 bg-white dark:bg-black' }"
         p="y-1"
         @click:item="handleLayoutApply($event.ref as any)"
