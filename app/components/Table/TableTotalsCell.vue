@@ -6,6 +6,9 @@ import type { ITableTotal } from './types/table-total.type'
 // Models
 import type { TableColumn } from './models/table-column.model'
 
+// Constants
+import { TABLE_DEFAULT_PROPS } from './constants/table-default-props.constant'
+
 type IProps = Pick<ITableProps, 'ui'> & {
   column: TableColumn
   total?: ITableTotal
@@ -17,12 +20,20 @@ const props = defineProps<IProps>()
 const { currentLocale } = useLocale()
 
 const totalsCellClass = computed(() => {
-  return [props.ui?.totalsCellClass, props.column.totalsCellClass]
+  return [
+    props.ui?.totalsCellClass?.({
+      column: props.column,
+      defaults: TABLE_DEFAULT_PROPS.ui.totalsCellClass(),
+    }),
+    props.column.totalsCellClass,
+  ]
 })
 
 const totalsCellStyle = computed(() => {
   return {
-    ...props.ui?.totalsCellStyle,
+    ...props.ui?.totalsCellStyle?.({
+      column: props.column,
+    }),
     ...props.column.totalsCellStyle,
     '--colWidth': props.column.width,
   }

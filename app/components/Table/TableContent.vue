@@ -8,6 +8,9 @@ import type { IVirtualScrollEvent } from '../VirtualScroller/types/virtual-scrol
 import { useTableStore } from './stores/table.store'
 import { tableEditMoveCell } from './functions/table-edit-move-cell'
 
+// Constants
+import { TABLE_DEFAULT_PROPS } from './constants/table-default-props.constant'
+
 // Components
 import VirtualScroller from '../VirtualScroller/VirtualScroller.vue'
 import VirtualScrollerGrid from '../VirtualScroller/VirtualScrollerGrid.vue'
@@ -79,6 +82,16 @@ const scrollerProps = computed(() => {
   const { scrollerComponent: _, ...rest } = config
 
   return rest
+})
+
+const contentClass = computed(() => {
+  return props.ui?.contentClass?.({
+    defaults: TABLE_DEFAULT_PROPS.ui.contentClass(),
+  })
+})
+
+const contentStyle = computed(() => {
+  return props.ui?.contentStyle?.()
 })
 
 function handleVirtualScroll(ev: IVirtualScrollEvent) {
@@ -173,8 +186,8 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
     class="table-content grow"
     :row-key
     :fetch-more="isFetchMore"
-    :class="ui?.contentClass"
-    :style="ui?.contentStyle"
+    :class="contentClass"
+    :style="contentStyle"
     @virtual-scroll="handleVirtualScroll"
   >
     <template #default="slotProps: SlotProps">

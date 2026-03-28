@@ -6,6 +6,9 @@ import type { TableFeature } from './types/table-feature.type'
 // Store
 import { useTableStore } from './stores/table.store'
 
+// Constants
+import { TABLE_DEFAULT_PROPS } from './constants/table-default-props.constant'
+
 type IProps = Pick<ITableProps, 'features' | 'ui'>
 
 const props = defineProps<IProps>()
@@ -31,6 +34,16 @@ const selectionCount = computed(() => {
   return Array.isArray(selection.value)
     ? selection.value.length
     : (selection.value ? 1 : 0)
+})
+
+const toolbarClass = computed(() => {
+  return props.ui?.toolbarClass?.({
+    defaults: TABLE_DEFAULT_PROPS.ui.toolbarClass(),
+  })
+})
+
+const toolbarStyle = computed(() => {
+  return props.ui?.toolbarStyle?.()
 })
 
 // Sorting
@@ -65,8 +78,8 @@ function handleClearSorting() {
 <template>
   <div
     class="table-toolbar"
-    :class="ui?.toolbarClass"
-    :style="ui?.toolbarStyle"
+    :class="toolbarClass"
+    :style="toolbarStyle"
   >
     <slot name="prepend" />
 

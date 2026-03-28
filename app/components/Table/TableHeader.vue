@@ -7,9 +7,12 @@ import type { ITableSplitter } from './types/table-splitter.type'
 import { useTableStore } from './stores/table.store'
 import { useTableColumnResizing } from './composables/useTableColumnResizing'
 
+// Constants
+import { TABLE_DEFAULT_PROPS } from './constants/table-default-props.constant'
+
 type IProps = Pick<ITableProps, 'ui'>
 
-defineProps<IProps>()
+const props = defineProps<IProps>()
 
 // Store
 const {
@@ -28,6 +31,16 @@ const contentClass = computed(() => {
   return isCardView.value ? 'relative gap-1 m-l-1' : 'relative'
 })
 
+const headerClass = computed(() => {
+  return props.ui?.headerClass?.({
+    defaults: TABLE_DEFAULT_PROPS.ui.headerClass(),
+  })
+})
+
+const headerStyle = computed(() => {
+  return props.ui?.headerStyle?.()
+})
+
 function getSplitterLeft(splitter: ITableSplitter) {
   const { column } = splitter
 
@@ -43,8 +56,8 @@ function getSplitterLeft(splitter: ITableSplitter) {
     ref="headerEl"
     v-model:scroll-position="headerX"
     class="table-header"
-    :class="ui?.headerClass"
-    :style="ui?.headerStyle"
+    :class="headerClass"
+    :style="headerStyle"
     :ui="{ contentClass: ({ defaults }) => `${defaults.all} ${contentClass}` }"
   >
     <!-- Column cells -->
@@ -98,10 +111,6 @@ function getSplitterLeft(splitter: ITableSplitter) {
 </template>
 
 <style scoped lang="scss">
-.table-header {
-  @apply relative shrink-0;
-}
-
 .splitter {
   @apply absolute top-0 bottom-0 w-7px z-5;
 

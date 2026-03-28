@@ -4,6 +4,9 @@ import type { ITableProps } from './types/table-props.type'
 import type { TableFeature } from './types/table-feature.type'
 import type { IQueryBuilderRow } from '../QueryBuilder/types/query-builder-row-props.type'
 
+// Constants
+import { TABLE_DEFAULT_PROPS } from './constants/table-default-props.constant'
+
 type IProps = Pick<ITableProps, 'queryBuilder' | 'queryBuilderProps' | 'search' | 'features' | 'ui'>
   & { forceVisibility?: boolean }
 
@@ -28,14 +31,24 @@ const isTableTopVisible = computed(() => {
     || featuresEnabledByName.value.filterChips
     || featuresEnabledByName.value.search
 })
+
+const topClass = computed(() => {
+  return props.ui?.topClass?.({
+    defaults: TABLE_DEFAULT_PROPS.ui.topClass(),
+  })
+})
+
+const topStyle = computed(() => {
+  return props.ui?.topStyle?.()
+})
 </script>
 
 <template>
   <div
     v-if="isTableTopVisible"
     class="table-top"
-    :class="ui?.topClass"
-    :style="ui?.topStyle"
+    :class="topClass"
+    :style="topStyle"
   >
     <!-- Left -->
     <div class="table-top__left">
@@ -93,8 +106,6 @@ const isTableTopVisible = computed(() => {
 
 <style scoped lang="scss">
 .table-top {
-  @apply flex items-start p-x-2 p-y-1 gap-1;
-
   &__left {
     @apply flex flex-col shrink-0 order-10;
   }

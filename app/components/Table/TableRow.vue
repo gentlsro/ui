@@ -15,6 +15,9 @@ import type { TableColumn } from './models/table-column.model'
 // Functions
 import { tableSelectRow } from './functions/table-select-row'
 
+// Constants
+import { TABLE_DEFAULT_PROPS } from './constants/table-default-props.constant'
+
 // Store
 import { useTableStore } from './stores/table.store'
 
@@ -135,14 +138,16 @@ const rowDataArray = computed(() => {
             ? col.cellStyle(row)
             : col.cellStyle
 
-          const uiCellStyle = typeof props.ui?.cellStyle === 'function'
-            ? props.ui?.cellStyle(row, col)
-            : props.ui?.cellStyle
+          const uiCellStyle = props.ui?.cellStyle?.({
+            row,
+            column: col,
+          })
 
           // Cell inner
-          const uiCellInnerStyle = typeof props.ui?.cellInnerStyle === 'function'
-            ? props.ui?.cellInnerStyle(row, col)
-            : props.ui?.cellInnerStyle
+          const uiCellInnerStyle = props.ui?.cellInnerStyle?.({
+            row,
+            column: col,
+          })
 
           // Visuals - Classes
           // Cell
@@ -150,14 +155,18 @@ const rowDataArray = computed(() => {
             ? col.cellClass(row)
             : col.cellClass
 
-          const uiCellClass = typeof props.ui?.cellClass === 'function'
-            ? props.ui?.cellClass(row, col)
-            : props.ui?.cellClass
+          const uiCellClass = props.ui?.cellClass?.({
+            row,
+            column: col,
+            defaults: TABLE_DEFAULT_PROPS.ui.cellClass(),
+          })
 
           // Cell inner
-          const uiCellInnerClass = typeof props.ui?.cellInnerClass === 'function'
-            ? props.ui?.cellInnerClass(row, col)
-            : props.ui?.cellInnerClass
+          const uiCellInnerClass = props.ui?.cellInnerClass?.({
+            row,
+            column: col,
+            defaults: TABLE_DEFAULT_PROPS.ui.cellInnerClass(),
+          })
 
           return {
             id: col.field,
@@ -186,20 +195,27 @@ const rowClassArray = computed(() => {
     ? props.row
     : [props.row]
 
+  const alternateRowClass = props.ui?.alternateRowClass?.({
+    defaults: TABLE_DEFAULT_PROPS.ui.alternateRowClass(),
+  })
+
   return rowArray.map((row, idx) => {
     const rowData = rowDataArray.value[idx]
     const isEven = props.index % 2
 
     return [
       typeof props.ui?.rowClass === 'function'
-        ? props.ui?.rowClass(row)
-        : props.ui?.rowClass,
+        ? props.ui?.rowClass({
+            row,
+            defaults: TABLE_DEFAULT_PROPS.ui.rowClass(),
+          })
+        : undefined,
       {
         'is-card': isCardView.value,
         'is-even': isEven,
         'is-editable': isEditableRow.value,
         'is-selectable': rowData?.isSelectable,
-        [`${props.ui?.alternateRowClass}`]: isEven && !isCardView.value,
+        [alternateRowClass ?? '']: !!alternateRowClass && isEven && !isCardView.value,
       },
     ]
   })
@@ -211,9 +227,7 @@ const rowStyleArray = computed(() => {
     : [props.row]
 
   return rowArray.map(row => [
-    typeof props.ui?.rowStyle === 'function'
-      ? props.ui?.rowStyle(row)
-      : props.ui?.rowStyle,
+    props.ui?.rowStyle?.({ row }),
   ])
 })
 
@@ -286,7 +300,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
 </script>
 
 <template>
-  <DefineValueTemplate v-slot="{ column, row, isSelectable }">
+  <DefineValueTemplate v-slot="{ column, row: slotRow, isSelectable }">
     <Component
       :is="column.displayComponent?.component"
       v-if="column.displayComponent"
@@ -295,12 +309,12 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
 
     <Checkbox
       v-else-if="column.id === '_selectable'"
-      :model-value="isSelected(row)"
+      :model-value="isSelected(slotRow)"
       size="sm"
       :readonly="!isSelectable"
       no-hover-effect
       :ui="{ labelClass: ({ defaults }) => `${defaults.all} font-rem-13` }"
-      @update:model-value="handleSelectToggle(row)"
+      @update:model-value="handleSelectToggle(slotRow)"
     />
 
     <!-- Boolean -->
@@ -351,7 +365,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
       v-for="(rowData, idx) in rowDataArray"
       :key="idx"
       v-bind="{ ...$attrs, ...toLinkProps }"
-      class="tr tr--card"
+      class="tr"
       :class="[rowClassArray[idx], { 'is-selected': isSelected(rowData.row), 'is-clickable': rowClickable }]"
       :style="rowStyleArray[idx]"
       :to="to?.(rowData.row, { rowKey })"
@@ -450,7 +464,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
     :is="RowComponent"
     v-else-if="rowDataArray[0]"
     v-bind="{ ...$attrs, ...toLinkProps }"
-    class="tr tr--row"
+    class="tr is-row"
     :class="[
       rowClassArray[0],
       { 'is-selected': isSelected(rowDataArray[0].row), 'is-clickable': rowClickable },
@@ -524,116 +538,10 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
 
 <style scoped lang="scss">
 .tr {
-  @apply flex relative;
-
-  &.is-clickable {
-    &:hover {
-      @apply cursor-pointer;
-    }
-  }
-
   &-split {
     @apply grid w-full;
 
     grid-template-columns: repeat(var(--cols), 1fr);
   }
-
-  .td {
-    @apply relative flex items-center border-ca
-      w-$colWidth;
-
-    .link {
-      @apply truncate font-rem-13;
-    }
-  }
-}
-
-.tr--card {
-  @apply flex-col gap-y-2px rounded-custom p-2 m-1 dark:bg-black overflow-auto
-    light:(outline-1 outline-ca outline-solid bg-white);
-
-  &.is-selectable {
-    @apply cursor-pointer;
-  }
-
-  &.is-selected {
-    @apply outline-1 outline-primary outline-solid bg-primary/15;
-  }
-
-  &.is-editable {
-    .td.is-editable:hover {
-      @apply shadow-ca shadow-consistent-xs;
-
-      .edit-btn {
-        @apply flex;
-      }
-    }
-
-    .edit-btn,
-    .cancel-edit-btn {
-      @apply top-1/2 right-0 -translate-y-1/2
-        bg-white dark:bg-black hidden;
-
-      position: absolute !important;
-    }
-  }
-
-  .is-editing {
-    .cancel-edit-btn {
-      @apply flex;
-    }
-  }
-
-  .td {
-    @apply grid w-full items-start rounded-custom min-h-6;
-
-    grid-template-columns: 1fr 3fr;
-
-    &__label {
-      @apply relative text-caption text-xs min-h-6 p-t-1 line-clamp-2 h-full;
-    }
-
-    &__value {
-      @apply flex items-center gap-1 leading-tight self-center overflow-auto p-x-2;
-    }
-  }
-
-  .is-card-editing.is-editable .td__label {
-    @apply color-black dark:color-white;
-  }
-}
-
-.separator--vertical,
-.separator--cell {
-  .tr--row .td {
-    @apply border-r-1;
-  }
-}
-
-.separator--horizontal,
-.separator--cell {
-  .tr--row .td {
-    @apply border-b-1;
-  }
-}
-
-.table.is-bordered {
-  .tr--row .td:first-child {
-    @apply border-l-1;
-  }
-
-  .tr--row .td:last-child {
-    @apply border-r-1;
-  }
-}
-
-.td:hover {
-  .copy-btn {
-    @apply flex;
-  }
-}
-
-.copy-btn {
-  @apply absolute right-2 top-2 hidden;
 }
 </style>

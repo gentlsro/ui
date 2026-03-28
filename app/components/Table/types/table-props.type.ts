@@ -40,6 +40,9 @@ import type { tableGetLayoutMeta } from '../functions/table-get-layout-meta'
 import type { ITableFilterItem } from './table-filter-item.type'
 import type { ITableExport } from './table-export.type'
 
+// Constants
+import type { TABLE_DEFAULT_PROPS } from '../constants/table-default-props.constant'
+
 export type ITableProps<
   K extends typeof tableBuildFetchPayload = typeof tableBuildFetchPayload,
 > = {
@@ -614,116 +617,174 @@ export type ITableProps<
     /**
      * Class applied to the alternate row
      */
-    alternateRowClass?: string
+    alternateRowClass?: (payload: {
+      defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['alternateRowClass']>
+    }) => ClassType
 
     /**
      * Class applied to the header cell
      */
-    headerCellClass?: ClassType
+    headerCellClass?: (payload: {
+      column: TableColumn
+      defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['headerCellClass']>
+    }) => ClassType
 
     /**
      * Style applied to the header cell
      */
-    headerCellStyle?: CSSProperties
+    headerCellStyle?: (payload: {
+      column: TableColumn
+    }) => CSSProperties
 
     /**
      * Class applied to the header cell inner container (the `span` element)
      */
-    headerCellInnerClass?: ClassType
+    headerCellInnerClass?: (payload: {
+      column: TableColumn
+      defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['headerCellInnerClass']>
+    }) => ClassType
 
     /**
      * Style applied to the header cell inner container (the `span` element)
      */
-    headerCellInnerStyle?: CSSProperties
+    headerCellInnerStyle?: (payload: {
+      column: TableColumn
+    }) => CSSProperties
 
     /**
      * Class applied to the cell
      */
-    rowClass?: ClassType | ((row: IItem) => ClassType)
+    rowClass?: (payload: {
+      row: IItem
+      defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['rowClass']>
+    }) => ClassType
 
     /**
      * Style applied to the cell
      */
-    rowStyle?: CSSProperties | ((row: IItem) => CSSProperties)
+    rowStyle?: (payload: {
+      row: IItem
+    }) => CSSProperties
 
     /**
      * Class applied to the cell
      */
-    cellClass?: ClassType | ((row: IItem, column: TableColumn) => ClassType)
+    cellClass?: (payload: {
+      row: IItem
+      column: TableColumn
+      defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['cellClass']>
+    }) => ClassType
 
     /**
      * Style applied to the cell
      */
-    cellStyle?: CSSProperties | ((row: IItem, column: TableColumn) => CSSProperties)
+    cellStyle?: (payload: {
+      row: IItem
+      column: TableColumn
+    }) => CSSProperties
 
     /**
      * Class applied to the inner cell element (most likely the `span` element)
      */
-    cellInnerClass?: ClassType | ((row: IItem, column: TableColumn) => ClassType)
+    cellInnerClass?: (payload: {
+      row: IItem
+      column: TableColumn
+      defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['cellInnerClass']>
+    }) => ClassType
 
     /**
      * Style applied to the inner cell element (most likely the `span` element)
      */
-    cellInnerStyle?: CSSProperties | ((row: IItem, column: TableColumn) => CSSProperties)
+    cellInnerStyle?: (payload: {
+      row: IItem
+      column: TableColumn
+    }) => CSSProperties
 
     /**
      * Class applied to the table content
      */
-    contentClass?: ClassType
+    contentClass?: (payload: {
+      defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['contentClass']>
+    }) => ClassType
 
     /**
      * Style applied to the table content
      */
-    contentStyle?: CSSProperties
+    contentStyle?: () => CSSProperties
 
     /**
      * Class applied to the header
      */
-    headerClass?: ClassType
+    headerClass?: (payload: {
+      defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['headerClass']>
+    }) => ClassType
 
     /**
      * Style applied to the header
      */
-    headerStyle?: CSSProperties
+    headerStyle?: () => CSSProperties
 
     /**
      * Class applied to the TableToolbar
      */
-    toolbarClass?: ClassType
+    toolbarClass?: (payload: {
+      defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['toolbarClass']>
+    }) => ClassType
 
     /**
      * Style applied to the TableToolbar
      */
-    toolbarStyle?: CSSProperties
+    toolbarStyle?: () => CSSProperties
 
     /**
      * Class applied to the TableTop
      */
-    topClass?: ClassType
+    topClass?: (payload: {
+      defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['topClass']>
+    }) => ClassType
 
     /**
      * Style applied to the TableTop
      */
-    topStyle?: CSSProperties
+    topStyle?: () => CSSProperties
+
+    /**
+     * Class applied to the TableBottom
+     */
+    bottomClass?: (payload: {
+      defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['bottomClass']>
+    }) => ClassType
+
+    /**
+     * Style applied to the TableBottom
+     */
+    bottomStyle?: () => CSSProperties
 
     /**
      * Class applied to the table itself
      */
-    containerClass?: ClassType
+    containerClass?: (payload: {
+      defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['containerClass']>
+    }) => ClassType
 
     /**
      * Style applied to the table itself
      */
-    containerStyle?: CSSProperties
+    containerStyle?: () => CSSProperties
 
     /**
      * Class applied to the cell
      */
-    totalsCellClass?: ClassType
+    totalsCellClass?: (payload: {
+      column: TableColumn
+      defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['totalsCellClass']>
+    }) => ClassType
 
     /**
      * Style applied to the cell
      */
-    totalsCellStyle?: CSSProperties
+    totalsCellStyle?: (payload: {
+      column: TableColumn
+    }) => CSSProperties
   }
 }

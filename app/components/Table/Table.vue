@@ -11,6 +11,9 @@ import { tableInitialize } from './functions/table-initialize'
 import { tableGetExposed } from './functions/table-get-exposed'
 import { tableGetStorageKey } from './functions/table-get-storage-key'
 
+// Constants
+import { TABLE_DEFAULT_PROPS } from './constants/table-default-props.constant'
+
 // Stores
 import { useTableStore } from './stores/table.store'
 
@@ -41,7 +44,9 @@ const isLoading = defineModel<boolean>('isLoading', { default: false })
 
 const tableClass = computed(() => {
   return [
-    mergedProps.value?.ui?.containerClass,
+    mergedProps.value?.ui?.containerClass?.({
+      defaults: TABLE_DEFAULT_PROPS.ui.containerClass(),
+    }),
     `separator--${props.separator}`,
     { 'is-bordered': props.bordered },
   ]
@@ -178,7 +183,6 @@ onMounted(() => {
 <template>
   <div
     ref="tableEl"
-    class="table"
     :class="tableClass"
   >
     <!-- Top -->
@@ -211,10 +215,10 @@ onMounted(() => {
         :features
         :ui="mergedProps.ui"
       >
-        <template #selection-menu="{ selection }">
+        <template #selection-menu="{ selection: selectionValue }">
           <slot
             name="selection-menu"
-            :selection
+            :selection="selectionValue"
           />
         </template>
       </TableToolbar>
@@ -294,7 +298,7 @@ onMounted(() => {
 
     <!-- Bottom -->
     <slot name="bottom">
-      <TableBottom>
+      <TableBottom :ui="mergedProps.ui">
         <template #loading>
           <slot
             name="bottom-loading"
@@ -312,9 +316,3 @@ onMounted(() => {
     <slot />
   </div>
 </template>
-
-<style scoped lang="scss">
-.table {
-  @apply relative flex flex-col overflow-auto grow @container;
-}
-</style>

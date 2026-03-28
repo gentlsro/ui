@@ -3,6 +3,9 @@
 import type { ITableProps } from './types/table-props.type'
 import type { TableColumn } from './models/table-column.model'
 
+// Constants
+import { TABLE_DEFAULT_PROPS } from './constants/table-default-props.constant'
+
 type IProps = Pick<ITableProps, 'ui'> & {
   column: TableColumn
   row: IItem
@@ -21,14 +24,18 @@ const classes = computed(() => {
     ? props.column.cellClass(props.row)
     : props.column.cellClass
 
-  const rowCellClass = typeof props.ui?.cellClass === 'function'
-    ? props.ui?.cellClass(props.row, props.column)
-    : props.ui?.cellClass
+  const rowCellClass = props.ui?.cellClass?.({
+    row: props.row,
+    column: props.column,
+    defaults: TABLE_DEFAULT_PROPS.ui.cellClass(),
+  })
 
   // Cell inner
-  const rowCellInnerClass = typeof props.ui?.cellInnerClass === 'function'
-    ? props.ui?.cellInnerClass(props.row, props.column)
-    : props.ui?.cellInnerClass
+  const rowCellInnerClass = props.ui?.cellInnerClass?.({
+    row: props.row,
+    column: props.column,
+    defaults: TABLE_DEFAULT_PROPS.ui.cellInnerClass(),
+  })
 
   return {
     cell: [columnCellClass, rowCellClass],
@@ -42,14 +49,16 @@ const styles = computed(() => {
     ? props.column.cellStyle(props.row)
     : props.column.cellStyle
 
-  const rowCellStyle = typeof props.ui?.cellStyle === 'function'
-    ? props.ui?.cellStyle(props.row, props.column)
-    : props.ui?.cellStyle
+  const rowCellStyle = props.ui?.cellStyle?.({
+    row: props.row,
+    column: props.column,
+  })
 
   // Cell inner
-  const rowCellInnerStyle = typeof props.ui?.cellInnerStyle === 'function'
-    ? props.ui?.cellInnerStyle(props.row, props.column)
-    : props.ui?.cellInnerStyle
+  const rowCellInnerStyle = props.ui?.cellInnerStyle?.({
+    row: props.row,
+    column: props.column,
+  })
 
   return {
     cell: Object.assign({}, columnCellStyle, rowCellStyle, { '--colWidth': props.column.width }),

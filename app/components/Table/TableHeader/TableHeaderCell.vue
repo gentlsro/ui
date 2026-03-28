@@ -9,6 +9,9 @@ import type { TableColumn } from '../models/table-column.model'
 import { useTableStore } from '../stores/table.store'
 import { getListItemKey } from '../../List/functions/helpers'
 
+// Constants
+import { TABLE_DEFAULT_PROPS } from '../constants/table-default-props.constant'
+
 type IProps = Pick<ITableProps, 'ui'> & {
   column: TableColumn
 }
@@ -52,7 +55,10 @@ const freezeBtnClass = computed(() => {
 // Visuals
 const headerClass = computed(() => {
   return [
-    props.ui?.headerCellClass,
+    props.ui?.headerCellClass?.({
+      column: props.column,
+      defaults: TABLE_DEFAULT_PROPS.ui.headerCellClass(),
+    }),
     props.column.headerClass,
     { 'is-helper-col': props.column.isHelperCol },
   ]
@@ -60,7 +66,9 @@ const headerClass = computed(() => {
 
 const headerStyle = computed(() => {
   return {
-    ...props.ui?.headerCellStyle,
+    ...props.ui?.headerCellStyle?.({
+      column: props.column,
+    }),
     ...props.column.headerStyle,
     '--colWidth': isCardView.value ? 'auto' : props.column.width,
   }
@@ -68,9 +76,18 @@ const headerStyle = computed(() => {
 
 const headerInnerCellClass = computed(() => {
   return [
-    props.ui?.headerCellInnerClass,
+    props.ui?.headerCellInnerClass?.({
+      column: props.column,
+      defaults: TABLE_DEFAULT_PROPS.ui.headerCellInnerClass(),
+    }),
     { 'p-x-2': isCardView.value },
   ]
+})
+
+const headerCellInnerStyle = computed(() => {
+  return props.ui?.headerCellInnerStyle?.({
+    column: props.column,
+  })
 })
 
 // Selection
@@ -126,7 +143,7 @@ function handleSelect() {
   >
     <slot
       :column="column"
-      :ui="{ headerInnerCellClass, headerCellInnerStyle: ui?.headerCellInnerStyle }"
+      :ui="{ headerInnerCellClass, headerCellInnerStyle }"
     >
       <Checkbox
         v-if="column.field === '_selectable'"
@@ -138,7 +155,7 @@ function handleSelect() {
         v-else
         class="th__inner"
         :class="headerInnerCellClass"
-        :style="ui?.headerCellInnerStyle"
+        :style="headerCellInnerStyle"
       >
         {{ column._label }}
       </span>

@@ -1,6 +1,16 @@
 <script setup lang="ts">
+// Types
+import type { ITableProps } from './types/table-props.type'
+
 // Store
 import { useTableStore } from './stores/table.store'
+
+// Constants
+import { TABLE_DEFAULT_PROPS } from './constants/table-default-props.constant'
+
+type IProps = Pick<ITableProps, 'ui'>
+
+const props = defineProps<IProps>()
 
 // Store
 const {
@@ -19,10 +29,24 @@ const isLimitReached = computed(() => {
 
   return rows.value.length >= rowsLimit.value
 })
+
+const bottomClass = computed(() => {
+  return props.ui?.bottomClass?.({
+    defaults: TABLE_DEFAULT_PROPS.ui.bottomClass(),
+  })
+})
+
+const bottomStyle = computed(() => {
+  return props.ui?.bottomStyle?.()
+})
 </script>
 
 <template>
-  <div class="table-bottom">
+  <div
+    class="table-bottom"
+    :class="bottomClass"
+    :style="bottomStyle"
+  >
     <!-- Left -->
     <TableTotalRows />
 
@@ -95,21 +119,3 @@ const isLimitReached = computed(() => {
     </div>
   </div>
 </template>
-
-<style scoped lang="scss">
-.table-bottom {
-  @apply relative grid p-x-2 items-center min-h-10;
-
-  grid-template-columns: 1fr auto 1fr;
-
-  .is-loading {
-    @apply absolute flex flex-center left-1/2 -translate-x-1/2 top-0 w-80 rounded-full
-    bg-white/68 dark:bg-dark-950/87 backdrop-blur-sm;
-  }
-
-  .limit-reached {
-    @apply absolute flex flex-center gap-2 bg-white dark:bg-dark-950 rounded-custom
-      left-1/2 -translate-x-1/2 p-l-1 p-r-3;
-  }
-}
-</style>
