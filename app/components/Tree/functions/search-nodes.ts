@@ -61,7 +61,9 @@ export async function searchNodes<T extends IItem = IItem>(payload: {
     return !hasChildren
   }
 
-  if (!search) {
+  const useCustomSearch = typeof searchConfig?.fnc === 'function'
+
+  if (!search && !useCustomSearch) {
     return nodesFlattened
   }
 

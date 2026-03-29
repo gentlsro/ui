@@ -29,6 +29,7 @@ defineExpose({
 
     return treeStore
   },
+  triggerSearch: () => treeEl.value?.store()?.searchTrigger?.(),
 })
 
 const mergedProps = computed(() => {
@@ -135,15 +136,19 @@ const getParentNode: NonUndefined<ITreeProps<T>['dndConfig']>['getParentNode'] =
     @contextmenu="handleContextMenuClick"
   >
     <template #search="searchProps">
-      <TreeDmsSearch
-        v-model:search="search"
-        v-bind="searchProps"
-        :label
-      >
-        <template #label>
-          <slot name="label" />
-        </template>
-      </TreeDmsSearch>
+      <div flex="~ col">
+        <TreeDmsSearch
+          v-model:search="search"
+          v-bind="searchProps"
+          :label
+        >
+          <template #label>
+            <slot name="label" />
+          </template>
+        </TreeDmsSearch>
+
+        <slot name="search-below" />
+      </div>
     </template>
 
     <template #node="{ node }">
