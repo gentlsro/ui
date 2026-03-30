@@ -9,7 +9,7 @@ type GetValue<T> = T extends (...args: any[]) => any ? ReturnType<T> : T
 export function extendNestedComponentProps<
   T extends ConfigWithPropsKeys<typeof uiConfig>,
   U extends typeof uiConfig[T]['props'],
-  // @ts-expect-error Fuck this
+  // @ts-ignore
   K extends GetValue<typeof uiConfig[T]['props'][keyof U]>,
 >(
   componentName: T,
