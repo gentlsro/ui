@@ -48,13 +48,14 @@ export async function listFetchData(payload: {
       return false
     }
 
-    const isNew = '_isNew' in item
-      || '_isCreate' in item
-      || '_isNew' in item.ref
-      || '_isCreate' in item.ref
+    const isNew = ('_isNew' in item && item._isNew)
+      || ('_isCreate' in item && item._isCreate)
+      || ('_isNew' in item.ref && item.ref._isNew)
+      || ('_isCreate' in item.ref && item.ref._isCreate)
 
     return !isNew
   })
+
   const res = await fn(async abortController => {
     return fnc({
       abortController: abortController(),
@@ -76,6 +77,7 @@ export async function listFetchData(payload: {
   if (hasCount) {
     _count = get(res, countKey)
   }
+
   else if (totalRows && isFetchMore) {
     _count = totalRows
   }
