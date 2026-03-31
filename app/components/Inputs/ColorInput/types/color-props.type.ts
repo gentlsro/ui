@@ -40,4 +40,9 @@ export type IColorInputProps = IFieldProps & {
    * When true, the color picker will use TW colors
    */
   tw?: boolean
+
+  /**
+   * When true, converts TW-like values (for example `blue-600`) to HEX on blur
+   */
+  transformTw?: boolean
 } & IFieldProps

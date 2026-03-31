@@ -21,7 +21,7 @@ defineEmits<{
 }>()
 
 // Utils
-const { getColor, hexToRgb, rgbaToHex, isRgba, isHex } = useColors()
+const { getColor, rgbaToHex, isRgba, isHex, getTwNameFromHex } = useColors()
 
 const mergedProps = computed(() => {
   return getComponentMergedProps('colorInput', props)
@@ -54,6 +54,41 @@ const colorSelected = computed(() => {
 
   return getColor(model.value.replace(/-/g, '.'), undefined, true)
 })
+
+const colorSelectedTw = computed(() => {
+  if (!model.value) {
+    return undefined
+  }
+
+  return getTwNameFromHex(model.value)
+})
+
+/** `palette-scale` as in Tailwind / Uno (e.g. `blue-600`, `rose-DEFAULT`) */
+const TW_LIKE_COLOR_TOKEN = /^[a-z][a-z0-9]*-(?:\d{1,3}|DEFAULT)$/i
+
+function handleInputBlur(ev: FocusEvent) {
+  if (!props.transformTw || typeof model.value !== 'string') {
+    handleBlur(ev)
+
+    return
+  }
+
+  const raw = model.value.trim()
+
+  if (!raw || isHex(raw) || isRgba(raw) || !TW_LIKE_COLOR_TOKEN.test(raw)) {
+    handleBlur(ev)
+
+    return
+  }
+
+  const transformedColor = getColor(raw.replace(/-/g, '.'), undefined, true)
+
+  if (transformedColor) {
+    model.value = transformedColor
+  }
+
+  nextTick(() => handleBlur(ev))
+}
 
 function handlePickColor(color?: string) {
   model.value = color
@@ -158,7 +193,7 @@ defineExpose({
         :style="inputStyle"
         v-bind="inputProps"
         @focus="handleFocusOrClick"
-        @blur="handleBlur"
+        @blur="handleInputBlur"
       >
 
       <MenuProxy
@@ -186,6 +221,13 @@ defineExpose({
       v-if="$slots.append || hasClearableBtn"
       #append
     >
+      <span
+        v-if="colorSelectedTw"
+        class="font-rem-11 text-caption"
+      >
+        {{ colorSelectedTw }}
+      </span>
+
       <div
         :class="appendClass"
         :style="appendStyle"

@@ -4,12 +4,25 @@ import invert from 'invert-color'
 // Constants
 import colors from '../constants/colors.json'
 
+function addColorsToMap(obj: Record<string, unknown>, path: string[], map: Map<string, string>) {
+  for (const [k, v] of Object.entries(obj)) {
+    if (v && typeof v === 'object' && !Array.isArray(v)) {
+      addColorsToMap(v as Record<string, unknown>, [...path, k], map)
+    } else if (typeof v === 'string' && !map.has(v)) {
+      map.set(v, [...path, k].join('-'))
+    }
+  }
+}
+
+export const paletteHexToTwName = new Map<string, string>()
+
+addColorsToMap(colors as Record<string, unknown>, [], paletteHexToTwName)
+
 export function useColors() {
   function invertColor(color: Color) {
     try {
       return invert(color, { black: '#000000', white: '#ffffff', threshold: 0.5 })
     } catch (error) {
-      console.log(error)
       return color
     }
   }
@@ -124,6 +137,10 @@ export function useColors() {
     return get(colors, color) ?? color
   }
 
+  function getTwNameFromHex(hex: string) {
+    return paletteHexToTwName.get(hex)
+  }
+
   return {
     invertColor,
     hexToRgb,
@@ -133,5 +150,6 @@ export function useColors() {
     isHex,
     isRgba,
     resolveColor,
+    getTwNameFromHex,
   }
 }
