@@ -306,12 +306,12 @@ const wrapperProps = computed(() => {
   }
 
   &:not(.has-content) {
-    :slotted(.control) {
+    :slotted(> .control) {
       @apply color-true-gray-400;
     }
 
     &:not(:focus-within) {
-      :slotted(.control) {
+      :slotted(> .control) {
         @apply '!color-transparent';
       }
     }
