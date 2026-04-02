@@ -43,6 +43,7 @@ export function useTreeNode<T extends IItem = IItem>(payload: ITreeNodeProps<T>)
       node,
       selection: selection.value,
       idKey: idKey.value,
+      selectionConfig: selectionConfig.value,
     })
   })
 

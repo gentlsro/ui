@@ -25,6 +25,7 @@ const isSelected = computed(() => {
     node: props.node,
     selection: selection.value,
     idKey: 'id',
+    selectionConfig: selectionConfig.value,
   })
 })
 

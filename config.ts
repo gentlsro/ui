@@ -1617,8 +1617,11 @@ export const defaultComponentsConfig = {
         enabled: undefined,
         fnc: undefined,
       },
+      ui: {
+        labelClass: ({ defaults }) => defaults.all,
+      },
     },
-    merge: ['treeProps', 'contextMenuConfig', 'modifiers', 'dropZoneConfig'],
+    merge: ['treeProps', 'contextMenuConfig', 'modifiers', 'dropZoneConfig', 'ui'],
   },
 
   // ValueFormatter

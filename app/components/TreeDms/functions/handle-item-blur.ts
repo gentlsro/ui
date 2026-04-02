@@ -29,6 +29,7 @@ export async function handleItemBlur<T extends IItem>(payload: {
     nodeMetaById,
     labelKey,
     childrenKey,
+    selectionConfig,
   } = treeStore
 
   if (!inputEl || isLoadingByNodeId.value[node.value.id] || nodeEditing.value?.id !== node.value.id) {
@@ -74,9 +75,11 @@ export async function handleItemBlur<T extends IItem>(payload: {
         })?.ref,
       })
     }
+
     catch {
       shouldProceed = false
     }
+    
     finally {
       isLoadingByNodeId.value[node.value.id] = false
     }
@@ -109,6 +112,7 @@ export async function handleItemBlur<T extends IItem>(payload: {
     node: addedNode,
     selection: selection.value,
     idKey: 'id',
+    selectionConfig: selectionConfig.value,
   })
 
   if (isSelected) {

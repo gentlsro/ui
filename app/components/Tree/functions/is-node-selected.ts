@@ -6,8 +6,13 @@ export function isNodeSelected(payload: {
   node: ITreeNode
   idKey: ITreeProps['idKey']
   selection: ITreeProps['selection']
+  selectionConfig: ITreeProps['selectionConfig']
 }) {
-  const { node, selection, idKey = 'id' } = payload
+  const { node, selection, selectionConfig, idKey = 'id' } = payload
+
+  if (selectionConfig?.isNodeSelected) {
+    return selectionConfig.isNodeSelected({ node, selection })
+  }
 
   if (isNil(selection)) {
     return false

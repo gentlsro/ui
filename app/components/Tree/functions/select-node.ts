@@ -39,7 +39,13 @@ export async function selectNode<T extends IItem = IItem>(payload: {
 
   const isEmitKey = !!selectionConfig.value?.emitKey
   const isMulti = selectionConfig.value?.multi
-  const isSelected = isNodeSelected({ node, selection: selection.value, idKey: 'id' })
+
+  const isSelected = isNodeSelected({
+    node,
+    selection: selection.value,
+    idKey: 'id',
+    selectionConfig: selectionConfig.value as any,
+  })
 
   const children = getChildren<T>({
     node,

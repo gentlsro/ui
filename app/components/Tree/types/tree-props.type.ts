@@ -345,6 +345,14 @@ export type ITreeProps<T extends IItem = IItem> = {
     checkboxProps?: ICheckboxProps & AllowedComponentProps
 
     /**
+     * Custom function to determine whether a node is selected
+     */
+    isNodeSelected?: (payload: {
+      node: ITreeNode<T>
+      selection: ITreeProps['selection']
+    }) => boolean | null
+
+    /**
      * Function that is called before a node is selected
      *
      * Return `false` to prevent the selection from happening, any other value

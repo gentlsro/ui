@@ -184,7 +184,6 @@ onMounted(() => {
   &.is-selectable {
     @apply cursor-pointer;
   }
-
 }
 
 .tree-node__content-label {

@@ -115,6 +115,11 @@ defineExpose({ focus, select })
       </slot>
     </template>
 
+    <slot
+      name="prepend"
+      :node
+    />
+
     <span
       :key="triggerKey"
       ref="inputEl"

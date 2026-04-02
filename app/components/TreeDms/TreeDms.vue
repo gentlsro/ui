@@ -140,6 +140,7 @@ const getParentNode: NonUndefined<ITreeProps<T>['dndConfig']>['getParentNode'] =
         <TreeDmsSearch
           v-model:search="search"
           v-bind="searchProps"
+          :dms-ui="mergedProps.ui"
           :label
         >
           <template #label>
@@ -156,6 +157,13 @@ const getParentNode: NonUndefined<ITreeProps<T>['dndConfig']>['getParentNode'] =
         v-if="node.ref.type === folderKey"
         :node
       >
+        <template #prepend>
+          <slot
+            name="prepend"
+            :node
+          />
+        </template>
+
         <template #append>
           <slot
             name="append"
@@ -171,6 +179,13 @@ const getParentNode: NonUndefined<ITreeProps<T>['dndConfig']>['getParentNode'] =
         <template #icon>
           <slot
             name="icon"
+            :node
+          />
+        </template>
+
+        <template #prepend>
+          <slot
+            name="prepend"
             :node
           />
         </template>

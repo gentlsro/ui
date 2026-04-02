@@ -1,13 +1,18 @@
 <script setup lang="ts" generic="T extends IItem = IItem">
 // Types
 import type { ITreeProps } from '../Tree/types/tree-props.type'
+import type { ITreeDmsProps } from './types/tree-dms-props.type'
 
 // Store
 import { useTreeStore } from '../Tree/stores/tree.store'
 import { useTreeDmsStore } from './stores/tree-dms.store'
 
+// Constants
+import { TREE_DMS_DEFAULT_PROPS } from './constants/tree-dms-default-props.constant'
+
 type IProps = Pick<ITreeProps<T>, 'search' | 'searchConfig' | 'ui' | 'actionsConfig'>
   & { label?: string | (() => string) }
+  & { dmsUi?: ITreeDmsProps<T>['ui'] }
 
 const props = defineProps<IProps>()
 defineEmits<{
@@ -23,6 +28,16 @@ const search = defineModel<string>('search')
 
 const label = computed(() => {
   return typeof props.label === 'function' ? props.label() : props.label
+})
+
+const labelClass = computed(() => {
+  return props.dmsUi?.labelClass?.({
+    defaults: TREE_DMS_DEFAULT_PROPS.ui.labelClass(),
+  })
+})
+
+const labelStyle = computed(() => {
+  return props.dmsUi?.labelStyle?.()
 })
 
 async function handleCreateItem(type: string) {
@@ -57,7 +72,11 @@ async function handleCreateItem(type: string) {
     <template #actions>
       <div class="tree-dms__header">
         <slot name="label">
-          <h6 v-if="label">
+          <h6
+            v-if="label"
+            :class="labelClass"
+            :style="labelStyle"
+          >
             {{ label }}
           </h6>
         </slot>
