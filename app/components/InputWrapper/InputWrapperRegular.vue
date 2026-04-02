@@ -37,6 +37,13 @@ const inputContainerClass = computed(() => {
 })
 
 const inputContainerStyle = computed(() => {
+  if (props.ui?.inputContainerStyleObj) {
+    return {
+      ...props.ui.inputContainerStyleObj,
+      ...props.ui.inputContainerStyle?.(),
+    }
+  }
+
   return props.ui?.inputContainerStyle?.()
 })
 
@@ -48,6 +55,13 @@ const inputInnerContainerClass = computed(() => {
 })
 
 const inputInnerContainerStyle = computed(() => {
+  if (props.ui?.inputInnerContainerStyleObj) {
+    return {
+      ...props.ui.inputInnerContainerStyleObj,
+      ...props.ui.inputInnerContainerStyle?.(),
+    }
+  }
+
   return props.ui?.inputInnerContainerStyle?.()
 })
 </script>

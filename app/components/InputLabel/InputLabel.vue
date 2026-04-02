@@ -55,11 +55,22 @@ const labelClass = computed(() => {
 })
 
 const labelStyle = computed(() => {
+  let labelStyle: IItem | undefined
+
+  if (props.ui?.labelStyleObj) {
+    labelStyle = {
+      ...props.ui.labelStyleObj,
+      ...props.ui.labelStyle?.(),
+    }
+  } else {
+    labelStyle = mergedProps.value.ui?.labelStyle?.()
+  }
+
   return {
     '--activeColor': props.activeLabelColor,
     '--prependWidth': `${-1 * prependWidth.value}px`,
     '--labelInlineWidth': props.ui?.labelInlineWidth ?? '200px',
-    ...mergedProps.value.ui?.labelStyle,
+    ...labelStyle,
   }
 })
 

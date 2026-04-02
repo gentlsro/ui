@@ -99,6 +99,13 @@ const inputClass = computed(() => {
 })
 
 const inputStyle = computed(() => {
+  if (props.ui?.inputStyleObj) {
+    return {
+      ...props.ui.inputStyleObj,
+      ...props.ui.inputStyle?.(),
+    }
+  }
+
   return mergedProps.value.ui?.inputStyle?.()
 })
 

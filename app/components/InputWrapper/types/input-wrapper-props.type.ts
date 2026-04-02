@@ -199,6 +199,14 @@ export type IInputWrapperProps = IInputLabelProps & {
     inputContainerStyle?: () => CSSProperties
 
     /**
+     * Style of the input container
+     *
+     * Note: You should probably not use this, this is for special cases when
+     * we are not able to pass actual function (= maybe we are passing some JSON-ified style object)
+     */
+    inputContainerStyleObj?: CSSProperties
+
+    /**
      * Class of the inner container around the actual input tag
      */
     inputInnerContainerClass?: (payload: {
@@ -211,6 +219,14 @@ export type IInputWrapperProps = IInputLabelProps & {
     inputInnerContainerStyle?: () => CSSProperties
 
     /**
+     * Style of the inner container around the actual input tag
+     *
+     * Note: You should probably not use this, this is for special cases when
+     * we are not able to pass actual function (= maybe we are passing some JSON-ified style object)
+     */
+    inputInnerContainerStyleObj?: CSSProperties
+
+    /**
      * The class of the input tag
      */
     inputClass?: (payload: {
@@ -221,6 +237,14 @@ export type IInputWrapperProps = IInputLabelProps & {
      * The style of the input tag
      */
     inputStyle?: () => CSSProperties
+
+    /**
+     * The class of the label tag
+     *
+     * Note: You should probably not use this, this is for special cases when
+     * we are not able to pass actual function (= maybe we are passing some JSON-ified style object)
+     */
+    inputStyleObj?: CSSProperties
   }
 
   /**

@@ -70,6 +70,14 @@ export type IInputLabelProps = {
     labelStyle?: () => CSSProperties
 
     /**
+     * Style of the label
+     *
+     * Note: You should probably not use this, this is for special cases when
+     * we are not able to pass actual function (= maybe we are passing some JSON-ified style object)
+     */
+    labelStyleObj?: CSSProperties
+
+    /**
      * The width of the label when it's in inline mode (use actual CSS syntax)
      */
     labelInlineWidth?: string
