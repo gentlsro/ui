@@ -22,16 +22,19 @@ const scrollArea = ref<HTMLDivElement>()
 const ps = ref<PerfectScrollbar>()
 const self = getCurrentInstance()
 
-const contentEls = computed(() => {
-  if (!scrollArea.value) {
-    return
-  }
+const contentEls = computedWithControl(
+  () => [scrollArea.value],
+  () => {
+    if (!scrollArea.value) {
+      return
+    }
 
-  const children = scrollArea.value?.children ?? []
+    const children = scrollArea.value?.children ?? []
 
-  return Array.from(children)
-    .slice(0, -2) as MaybeElement[]
-})
+    return Array.from(children)
+      .slice(0, -2) as MaybeElement[]
+  },
+)
 
 function init() {
   if (scrollArea.value) {
@@ -72,6 +75,10 @@ useResizeObserver(contentEls, () => {
     ps.value?.update()
   })
 })
+
+useMutationObserver(scrollArea, () => {
+  contentEls.trigger()
+}, { childList: true })
 
 // Styles
 const containerClass = computed(() => {
