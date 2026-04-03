@@ -136,7 +136,7 @@ const contentStyle = computed(() => {
       </TreeSearch>
     </slot>
 
-    <VirtualScrollerVertical
+    <VirtualScroller
       v-if="!loading"
       ref="scrollerEl"
       class="tree__content"
@@ -178,7 +178,7 @@ const contentStyle = computed(() => {
         </slot>
         <slot name="content-inner" />
       </template>
-    </VirtualScrollerVertical>
+    </VirtualScroller>
 
     <slot name="loading">
       <TreeLoading v-if="loading" />
