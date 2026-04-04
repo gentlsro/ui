@@ -6,7 +6,7 @@ import type { IMiniCardProps } from '../types/mini-card-props.type'
 export const MINI_CARD_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'flex rounded-custom p-x-2 p-y-1.5 gap-2'
+      const base = 'flex rounded-custom p-x-2 p-y-1.5 gap-3'
 
       return {
         base,
@@ -24,7 +24,7 @@ export const MINI_CARD_DEFAULT_PROPS = {
     },
 
     iconClass() {
-      const base = 'color-blue-500 dark:color-blue-700 h-6 w-6'
+      const base = 'h-5 w-5 m-t-1'
 
       return {
         base,

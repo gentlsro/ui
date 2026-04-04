@@ -253,13 +253,15 @@ if (props.immediateFetch && mergedProps.value.loadData?.fnc) {
         :name="name || path || placeholder"
         :chip-props="mergedProps.chipProps"
       >
-        <template #default="{ item, index, optionByKey, isLast }">
+        <template #default="{ item, index, optionByKey, isLast, handleRemove }">
           <slot
             name="selection-item"
             :item
             :index
             :option-by-key
             :is-last
+            :handle-remove
+            :chip-props="mergedProps.chipProps"
           />
         </template>
       </SelectorInner>
@@ -286,10 +288,7 @@ if (props.immediateFetch && mergedProps.value.loadData?.fnc) {
           name="dropdown-icon"
           :is-open="isPickerActive"
         >
-          <div
-            i-fluent:chevron-up-down-24-regular
-            class="dropdown-icon"
-          />
+          <div class="dropdown-icon i-fluent:chevron-up-down-24-regular" />
         </slot>
       </div>
     </template>

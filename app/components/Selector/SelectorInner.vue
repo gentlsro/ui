@@ -140,6 +140,7 @@ const innerStyle = computed(() => {
         :index="idx"
         :option-by-key
         :is-last="isLast(idx)"
+        :handle-remove="() => handleRemove(idx)"
       >
         <SelectorChip
           :chip="item"
