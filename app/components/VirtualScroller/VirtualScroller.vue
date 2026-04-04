@@ -93,6 +93,10 @@ const lastScrollEvent = ref<Event>()
 const preventNextScroll = refAutoReset(false, 50)
 let lastScrollTop = 0
 
+const mergedProps = computed(() => {
+  return getComponentMergedProps('virtualScroller', props)
+})
+
 function getRowKey(row?: T) {
   return String(row?.[rowKey.value] || '')
 }
@@ -603,20 +607,48 @@ function renderOnlyVisible(
 
   return renderedRows.value
 }
+
+// Styles - Container
+const uiContainerClass = computed(() => {
+  return {
+    ...mergedProps.value?.ui?.containerClass?.({ defaults: VIRTUAL_SCROLLER_DEFAULT_PROPS.ui.containerClass() }),
+    'is-virtual': isMounted.value && isVirtual.value,
+  }
+})
+
+const uiContainerStyle = computed(() => {
+  return {
+    ...mergedProps.value?.ui?.containerStyle?.(),
+    ...virtualScrollStyle.value,
+  }
+})
+
+// Styles - Content
+const uiContentClass = computed(() => {
+  return mergedProps.value?.ui?.contentClass?.({ defaults: VIRTUAL_SCROLLER_DEFAULT_PROPS.ui.contentClass() })
+})
+
+const uiContentStyle = computed(() => {
+  return {
+    ...mergedProps.value?.ui?.contentStyle?.(),
+    ...containerStyle.value,
+  }
+})
 </script>
 
 <template>
   <div
     ref="virtualScrollEl"
     class="virtual-scroll"
-    :class="{ 'is-virtual': isMounted && isVirtual }"
-    :style="virtualScrollStyle"
+    :style="uiContainerStyle"
+    :class="uiContainerClass"
     tabindex="0"
   >
     <div
       ref="containerEl"
       class="virtual-scroll__content"
-      :style="containerStyle"
+      :style="uiContentStyle"
+      :class="uiContentClass"
     >
       <div
         v-for="row in renderedRows.rows"

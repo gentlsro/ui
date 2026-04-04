@@ -58,6 +58,30 @@ export type IVirtualScrollerProps<T> = {
    */
   ui?: {
     /**
+     * Class applied to the container
+     */
+    containerClass?: (payload: {
+      defaults: ReturnType<typeof VIRTUAL_SCROLLER_DEFAULT_PROPS['ui']['containerClass']>
+    }) => ClassType
+
+    /**
+     * Style applied to the container
+     */
+    containerStyle?: () => CSSProperties
+
+    /**
+     * Class applied to the content
+     */
+    contentClass?: (payload: {
+      defaults: ReturnType<typeof VIRTUAL_SCROLLER_DEFAULT_PROPS['ui']['contentClass']>
+    }) => ClassType
+
+    /**
+     * Style applied to the content
+     */
+    contentStyle?: () => CSSProperties
+
+    /**
      * Class applied to the row
      */
     rowClass?: (payload: {

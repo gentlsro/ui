@@ -1649,6 +1649,8 @@ export const defaultComponentsConfig = {
       watchWidth: undefined,
       ui: {
         rowClass: ({ defaults }) => defaults.all,
+        containerClass: ({ defaults }) => defaults.all,
+        contentClass: ({ defaults }) => defaults.all,
       },
     },
     merge: ['ui'],

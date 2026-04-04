@@ -101,7 +101,7 @@ export const TREE_DEFAULT_PROPS = {
     },
 
     searchClass() {
-      const base = 'flex flex-col'
+      const base = 'flex'
 
       return {
         base,

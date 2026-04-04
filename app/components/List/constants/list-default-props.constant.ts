@@ -76,7 +76,7 @@ export const LIST_DEFAULT_PROPS = {
     },
 
     rowGroupClass() {
-      const base = 'relative flex gap-x-2 cursor-default select-none items-center p-r-1 min-h-8 w-full'
+      const base = 'relative flex gap-x-2 cursor-default select-none p-r-1 min-h-8 w-full'
       const text = 'capitalize color-true-gray text-sm items-end p-b-0.5'
 
       return {
