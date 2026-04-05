@@ -12,7 +12,7 @@ import { TREE_DMS_DEFAULT_PROPS } from './constants/tree-dms-default-props.const
 
 type IProps = Pick<ITreeProps<T>, 'search' | 'searchConfig' | 'ui' | 'actionsConfig'>
   & { label?: string | (() => string) }
-  & { dmsUi?: ITreeDmsProps<T>['ui'] }
+  & { dmsUi?: ITreeDmsProps<T>['ui'], noActions?: ITreeDmsProps<T>['noActions'] }
 
 const props = defineProps<IProps>()
 defineEmits<{
@@ -82,6 +82,7 @@ async function handleCreateItem(type: string) {
         </slot>
 
         <TreeActions
+          v-if="!noActions"
           :ui
           :actions-config
           m="l-auto"

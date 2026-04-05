@@ -103,6 +103,11 @@ export type ITreeDmsProps<T extends IItem = IItem> = {
   noNodeIcon?: boolean | { file?: boolean, folder?: boolean }
 
   /**
+   * Whether to hide the "Actions"
+   */
+  noActions?: boolean
+
+  /**
    * Drop configuration
    */
   dropZoneConfig?: {

@@ -255,7 +255,7 @@ const arrowStyle = computed(() => {
 }
 
 .tooltip[placement^='top'] > .arrow {
-  @apply bottom--5px border-b-custom border-r-custom border-ca;
+  @apply bottom--4px border-b-custom border-r-custom border-ca;
 }
 
 .tooltip[placement^='bottom'] > .arrow {

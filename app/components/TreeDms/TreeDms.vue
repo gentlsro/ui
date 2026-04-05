@@ -142,6 +142,7 @@ const getParentNode: NonUndefined<ITreeProps<T>['dndConfig']>['getParentNode'] =
           v-bind="searchProps"
           :dms-ui="mergedProps.ui"
           :label
+          :no-actions
         >
           <template #label>
             <slot name="label" />
