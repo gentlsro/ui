@@ -16,7 +16,7 @@ export const CHECKBOX_DEFAULT_PROPS = {
       // Size variants
       let size = ''
 
-      const xs = 'min-h-6 p-x-1.5'
+      const xs = 'min-h-6 p-x-1'
       const sm = 'min-h-7 p-x-2'
       const md = 'min-h-8 p-x-2.5'
       const lg = 'min-h-9 p-x-3'

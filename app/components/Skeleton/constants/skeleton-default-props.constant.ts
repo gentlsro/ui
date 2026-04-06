@@ -7,7 +7,7 @@ export const SKELETON_DEFAULT_PROPS = {
     }) {
       const { variant } = payload
 
-      const base = 'cursor-wait bg-ca'
+      const base = 'relative cursor-wait bg-ca'
 
       // Variant states via CSS selectors
       const pulse = '[&.variant--pulse]:(animate-pulse)'
