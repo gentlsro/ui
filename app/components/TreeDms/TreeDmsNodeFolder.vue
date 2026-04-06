@@ -108,7 +108,7 @@ defineExpose({ focus, select })
       />
       <div
         v-else
-        class="shrink-0"
+        class="shrink-0 self-start m-t-px"
         :class="{ 'i-hugeicons:folder-01': isCollapsed, 'i-hugeicons:folder-02': !isCollapsed }"
       />
     </template>
@@ -128,6 +128,7 @@ defineExpose({ focus, select })
       autocapitalize="off"
       spellcheck="false"
       tabindex="0"
+      :class="{ 'line-clamp-2': nodeEditing?.id !== node.id }"
       @blur="handleBlur"
       @keydown="handleKeyPress"
     >
@@ -156,7 +157,7 @@ defineExpose({ focus, select })
   @apply flex items-center gap-x-2 gap-y-2px;
 
   &__name {
-    @apply truncate relative font-rem-14 outline-none rounded-custom p-x-1;
+    @apply relative font-rem-14 outline-none rounded-custom p-x-1;
   }
 
   .cancel-btn {

@@ -110,7 +110,7 @@ defineExpose({ focus, select })
         name="icon"
       >
         <div
-          class="i-hugeicons:file-01 shrink-0 w-5 h-5"
+          class="i-hugeicons:file-01 shrink-0 w-5 h-5 self-start m-t-px"
         />
       </slot>
     </template>
@@ -130,7 +130,7 @@ defineExpose({ focus, select })
       autocapitalize="off"
       spellcheck="false"
       tabindex="0"
-      :class="{ truncate: nodeEditing?.id !== node.id }"
+      :class="{ 'line-clamp-2': nodeEditing?.id !== node.id }"
       @blur="handleBlur"
       @keydown="handleKeyPress"
     >
