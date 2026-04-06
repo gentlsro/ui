@@ -108,7 +108,7 @@ defineExpose({ focus, select })
       />
       <div
         v-else
-        class="shrink-0 self-start m-t-px"
+        class="shrink-0 self-start m-t-px w-5 h-5"
         :class="{ 'i-hugeicons:folder-01': isCollapsed, 'i-hugeicons:folder-02': !isCollapsed }"
       />
     </template>
