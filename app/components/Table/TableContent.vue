@@ -94,19 +94,32 @@ const contentStyle = computed(() => {
   return props.ui?.contentStyle?.()
 })
 
-function handleVirtualScroll(ev: IVirtualScrollEvent) {
+async function handleVirtualScroll(ev: IVirtualScrollEvent) {
   const { visibleEndItem } = ev
   const isFetchMore = rowsSplit.value.length - visibleEndItem.index - 1 < FETCH_MORE_THRESHOLD
+  let shouldFetchMore = true
 
-  if (isFetchMore && hasMore.value && !paginationConfig.value?.enabled && !isDataLoading.value) {
-    tableStore.fetchAndSetData({ isFetchMore: true })
+  if (loadData.value?.onVirtualScroll) {
+    const virtualScrollResult = await loadData.value.onVirtualScroll({
+      ev,
+      isFetchMore,
+      getStore: () => tableStore,
+    })
+
+    if (virtualScrollResult === false) {
+      shouldFetchMore = false
+    }
   }
 
-  loadData.value?.onVirtualScroll?.({
-    ev,
-    isFetchMore,
-    getStore: () => tableStore,
-  })
+  if (
+    isFetchMore
+    && hasMore.value
+    && shouldFetchMore
+    && !paginationConfig.value?.enabled
+    && !isDataLoading.value
+  ) {
+    tableStore.fetchAndSetData({ isFetchMore: true })
+  }
 }
 
 /**

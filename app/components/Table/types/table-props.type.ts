@@ -213,12 +213,14 @@ export type ITableProps<
     /**
      * A function that gets called when the virtual scroll happens
      * This can be useful when you need to handle the `loadMore` logic manually
+     *
+     * Note: You can explicitly return `false` to prevent the default behavior of fetching more data
      */
     onVirtualScroll?: (payload: {
       getStore: () => ReturnType<typeof useTableStore>
       ev: IVirtualScrollEvent
       isFetchMore: boolean
-    }) => void
+    }) => void | false | Promise<void | false>
   }
 
   /**
