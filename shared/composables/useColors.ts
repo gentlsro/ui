@@ -14,9 +14,21 @@ function addColorsToMap(obj: Record<string, unknown>, path: string[], map: Map<s
   }
 }
 
-export const paletteHexToTwName = new Map<string, string>()
+// export const paletteHexToTwName = new Map<string, string>()
 
-addColorsToMap(colors as Record<string, unknown>, [], paletteHexToTwName)
+// addColorsToMap(colors as Record<string, unknown>, [], paletteHexToTwName)
+
+let paletteHexToTwName: Map<string, string> | undefined
+
+function getPaletteHexToTwName() {
+  if (!paletteHexToTwName) {
+    paletteHexToTwName = new Map()
+    addColorsToMap(colors, [], paletteHexToTwName)
+  }
+  return paletteHexToTwName
+}
+
+addColorsToMap(colors as Record<string, unknown>, [], getPaletteHexToTwName())
 
 export function useColors() {
   function invertColor(color: Color) {
@@ -138,7 +150,8 @@ export function useColors() {
   }
 
   function getTwNameFromHex(hex: string) {
-    return paletteHexToTwName.get(hex)
+    // return paletteHexToTwName.get(hex)
+    return getPaletteHexToTwName().get(hex)
   }
 
   return {
