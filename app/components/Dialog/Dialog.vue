@@ -169,6 +169,10 @@ function handleClickOutside(ev: Event) {
 
 // Animations
 function bounce() {
+  if (props.noBounce) {
+    return
+  }
+
   const _floatingEl = floatingEl.value as HTMLElement
 
   _floatingEl.addEventListener('animationend', () => {

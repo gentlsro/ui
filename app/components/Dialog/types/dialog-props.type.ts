@@ -38,6 +38,10 @@ export type IDialogProps = {
   modelValue?: boolean
 
   /**
+   * When true, the bounce animation will not be shown
+   */
+  noBounce?: boolean
+  /**
    * When true, the `Dialog` will not have a close button
    */
   noClose?: boolean
