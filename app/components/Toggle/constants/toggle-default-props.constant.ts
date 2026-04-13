@@ -33,8 +33,8 @@ export const TOGGLE_DEFAULT_PROPS = {
       let sizeClass = ''
 
       const sizes = {
-        xs: 'w-8 h-4.5 m-y-1 m-l-2 m-r-1.5',
-        xsContained: 'w-8 h-4.5 m-y-1 m-x-1.5',
+        xs: 'w-8 h-4.5 m-y-5px m-l-2 m-r-1.5',
+        xsContained: 'w-8 h-4.5 m-y-5px m-x-1.5',
         sm: 'w-9.5 h-5.5 m-y-1.25 m-l-3 m-r-1.5',
         smContained: 'w-9.5 h-5.5 m-y-1.25 m-x-1.5',
         md: 'w-11 h-6 m-y-5px m-l-4 m-r-2',
@@ -195,7 +195,7 @@ export const TOGGLE_DEFAULT_PROPS = {
       let sizeClass = ''
 
       const sizes = {
-        xs: 'font-rem-13 p-y-0.5 m-b-px',
+        xs: 'font-rem-13 p-y-0.5',
         sm: 'font-rem-14 p-y-1 m-b-2px',
         md: 'p-y-1 m-b-3px',
         lg: 'font-rem-18 p-y-1 m-b-3px',

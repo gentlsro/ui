@@ -25,6 +25,8 @@ const { nodeEditing, isLoadingByNodeId, hasNodeIcon } = treeDmsStore
 const inputEl = useTemplateRef('inputEl')
 const triggerKey = ref(0)
 
+useHoverTextScroll(inputEl)
+
 const node = defineModel<ITreeNode<T>>('node', { required: true })
 
 function handleBlur() {
@@ -130,7 +132,7 @@ defineExpose({ focus, select })
       autocapitalize="off"
       spellcheck="false"
       tabindex="0"
-      :class="{ 'line-clamp-2': nodeEditing?.id !== node.id }"
+      :class="{ truncate: nodeEditing?.id !== node.id }"
       @blur="handleBlur"
       @keydown="handleKeyPress"
     >
