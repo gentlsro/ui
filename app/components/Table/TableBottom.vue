@@ -62,8 +62,7 @@ const bottomStyle = computed(() => {
     >
       <div class="is-loading">
         <LoaderInline
-          size="sm"
-          rounded-full
+          class="h-8! w-18! rounded-full"
         />
       </div>
     </slot>
