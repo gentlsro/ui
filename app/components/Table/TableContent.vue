@@ -62,7 +62,7 @@ const virtualScrollComponent = computed(() => {
   const component = scrollerConfig.value?.scrollerComponent
 
   if (!component) {
-    return VirtualScroller
+    return VirtualScrollerGrid
   }
 
   if (typeof component === 'string') {
