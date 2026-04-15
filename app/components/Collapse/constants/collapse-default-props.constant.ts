@@ -82,7 +82,7 @@ export const COLLAPSE_DEFAULT_PROPS = {
     contentClass() {
       const base = 'flex flex-col overflow-auto rounded-b-custom'
       const bg = 'bg-white dark:bg-dark-950'
-      const border = 'border-x-1 border-b-1 border-ca'
+      const border = 'border-x-1 border-b-1 light:(border-slate-300) dark:(border-black)'
       const floating = '[&.is-floating]:(absolute z-11 left-0 right-0 bottom-0 translate-y-full)'
 
       return {
