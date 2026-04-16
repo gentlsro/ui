@@ -18,7 +18,7 @@ import { getListItemKey } from '../../List/functions/helpers'
 import type { ITableExport } from '../types/table-export.type'
 import { extendColumns } from '../functions/table-extend-columns'
 import { tableMergeColumns } from '../functions/table-merge-columns'
-import { getStateColumnData } from '../functions/get-state-column-data'
+import { getStateColumnData as getStateColumnDataDefault } from '../functions/get-state-column-data'
 import { tableSerializeSelect } from '../functions/table-serialize-select'
 import { tableTransformColumns } from '../functions/table-transform-columns'
 import { tableBuildQueryParams } from '../functions/table-build-query-params'
@@ -228,6 +228,7 @@ const [
   })
 
   const syncStateColumns = useDebounceFn(() => {
+    const { getStateColumnData = getStateColumnDataDefault } = modifiers.value ?? {}
     state.value.queryParams = decodeURIComponent(queryParams.value.toString())
 
     if (!noState.value) {
