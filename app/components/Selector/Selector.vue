@@ -351,7 +351,7 @@ if (props.immediateFetch && mergedProps.value.loadData?.fnc) {
 <style lang="scss" scoped>
 .selector {
   &-append {
-    @apply flex gap-1 flex-center m-x-2 shrink-0;
+    @apply flex gap-1 flex-center shrink-0;
   }
 }
 
