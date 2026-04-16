@@ -14,6 +14,7 @@ export function useForm(props: IFormProps) {
   // Layout
   const preventSubmitOnEnter = toRef(props, 'preventSubmitOnEnter')
   const noShortcuts = toRef(props, 'noShortcuts')
+  const noEnter = toRef(props, 'noEnter')
 
   function handleEnter(ev: KeyboardEvent) {
     const isCtrlKey = ev.ctrlKey || ev.metaKey
@@ -21,6 +22,12 @@ export function useForm(props: IFormProps) {
     const hasCustomEnterHandler = activeElement.value?.classList.contains('custom-enter')
 
     const isInputWithCustomEnterHandler = isInput && hasCustomEnterHandler
+
+    if (noEnter.value) {
+      // ev.preventDefault()
+
+      return
+    }
 
     if (
       preventSubmitOnEnter.value

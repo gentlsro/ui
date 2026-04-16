@@ -1,9 +1,13 @@
 {
   "file": {
+    "self": "File | Files",
     "add": "Add file | Add files",
     "upload": "Upload file by clicking here or dragging file | Upload files by clicking here or dragging files",
     "download": "Download file",
     "added": "File to upload",
+    "added2": "Added file | Added files",
+    "removed": "File to remove",
+    "removed2": "Removed file | Removed files",
     "remove": "Remove file",
     "uploading": "Uploading file",
     "uploaded": "File successfully uploaded",
@@ -82,5 +86,8 @@
     "addFirstCondition": "Add first condition",
     "negation": "Negated",
     "negation2": "Negation"
+  },
+  "general": {
+    "moveAndResizeAvailable": "You can move and resize this element"
   }
 }

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// Types
 import type { ITableProps } from './types/table-props.type'
 
 // Store
@@ -19,7 +20,7 @@ const {
   totalsEl,
   totalsX,
   visibleColumns,
-} = storeToRefs(tableStore)
+} = tableStore
 
 // Layout
 const totalsByField = computed(() => {

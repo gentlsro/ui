@@ -16,7 +16,7 @@ const {
   selection,
   selectionConfig,
   isCardView,
-} = storeToRefs(useTableStore())
+} = useTableStore()
 
 // Layout
 const featuresEnabledByName = computed<Record<TableFeature, boolean>>(() => {

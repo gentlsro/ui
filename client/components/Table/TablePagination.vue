@@ -2,9 +2,6 @@
 // Store
 import { useTableStore } from './stores/table.store'
 
-// Types
-import type { ITableProps } from './types/table-props.type'
-
 // Store
 const {
   isDataLoading,
@@ -12,7 +9,7 @@ const {
   totalPages,
   currentPage,
   paginationConfig,
-} = storeToRefs(useTableStore())
+} = useTableStore()
 
 const isFirstPage = computed(() => currentPage.value === 1)
 const isLastPage = computed(() => currentPage.value === totalPages.value)

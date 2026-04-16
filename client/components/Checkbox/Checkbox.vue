@@ -201,14 +201,10 @@ function handleKey(ev: KeyboardEvent) {
 
 <style lang="scss" scoped>
 .label {
-  @apply flex items-center relative gap-2 cursor-pointer transition-all
+  @apply flex relative gap-2 cursor-pointer transition-all
     rounded-custom select-none rounded-2;
 
   @apply '!outline-none';
-
-  .checkbox {
-    @apply self-start;
-  }
 
   &:focus-visible,
   &:focus {
@@ -277,8 +273,7 @@ function handleKey(ev: KeyboardEvent) {
 }
 
 .checkbox {
-  @apply flex flex-center rounded-2 border-primary border-2 shrink-0
-    self-start;
+  @apply flex flex-center rounded-2 border-primary border-2 shrink-0;
 
   &-label {
     @apply leading-tight;

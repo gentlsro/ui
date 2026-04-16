@@ -38,7 +38,7 @@ const hasAnyModifier = computed(() => {
 })
 
 const isVisible = computed(() => {
-  const { keyboardShortcuts } = uiState.value.general ?? {}
+  const { keyboardShortcuts } = uiState?.value?.general ?? {}
   const isVisible = keyboardShortcuts || props.forceVisibility
 
   return lastPointerDownType.value === 'mouse' && isVisible
@@ -126,7 +126,7 @@ const isVisible = computed(() => {
   @apply flex gap-1 items-center font-mono color-ca leading-none;
 
   &__wrapper {
-    @apply flex flex-center border-1 border-ca rounded-1 w-4.5 h-4.5
+    @apply flex flex-center border-1 border-ca rounded-1 min-w-4.5 min-h-4.5
       bg-white color-darker dark:(bg-darker color-white);
 
     & > .icon {

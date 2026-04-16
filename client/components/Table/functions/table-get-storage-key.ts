@@ -10,5 +10,9 @@ export function tableGetStorageKey(
   propsStorageKey: ITableProps['storageKey'],
   instance?: ComponentInternalInstance | null,
 ) {
+  if (propsStorageKey === null) {
+    return null
+  }
+
   return propsStorageKey ?? getComponentName(instance?.parent) ?? generateUUID()
 }

@@ -9,7 +9,7 @@ const {
   paginationConfig,
   rowsLimit,
   rows,
-} = storeToRefs(useTableStore())
+} = useTableStore()
 
 const isLimitReached = computed(() => {
   if (!rowsLimit.value) {

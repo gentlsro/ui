@@ -27,7 +27,7 @@ const {
   queryBuilder: queryBuilderStore,
   onDataFetchQueue,
   customData,
-} = storeToRefs(store)
+} = store
 
 const {
   deleteLayout = tableDeleteLayout,

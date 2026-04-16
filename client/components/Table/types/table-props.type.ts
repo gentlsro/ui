@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'vue'
+import type { NuxtLinkProps } from '#app'
 import type { Required } from 'utility-types'
-import type { IVirtualScrollerProps } from '$ui'
 import type { RouteLocationRaw } from '#vue-router'
 
 // Types
@@ -11,6 +11,7 @@ import type { ISelection } from '../../../types/selection.type'
 import type { ITableFetchPayload } from './table-fetch-payload.type'
 import type { IQueryBuilderProps } from '../../QueryBuilder/types/query-builder-props.type'
 import type { IVirtualScrollEvent } from '../../VirtualScroller/types/virtual-scroll-event.type'
+import type { IVirtualScrollerProps } from '../../VirtualScroller/types/virtual-scroller-props.type'
 
 // Models
 import type { TableColumn } from '../models/table-column.model'
@@ -37,7 +38,6 @@ import type { tableExtractPaginationFromUrl } from '../functions/table-extract-p
 import type { tableSerializePagination } from '../functions/table-serialize-pagination'
 import type { tableGetLayoutMeta } from '../functions/table-get-layout-meta'
 import type { ITableFilterItem } from './table-filter-item.type'
-import type { NuxtLinkProps } from '#app'
 
 export type ITableProps<
   K extends typeof tableBuildFetchPayload = typeof tableBuildFetchPayload,
@@ -91,7 +91,7 @@ export type ITableProps<
    */
   getFilterComponent?: (
     column: TableColumn<any>,
-    filterItem: ITableFilterItem
+    filterItem: ITableFilterItem,
   ) => Required<Partial<NonNullable<TableColumn['filterComponent']>>, 'component'> | undefined
 
   /**
@@ -161,7 +161,7 @@ export type ITableProps<
      */
     mergeFnc?: (
       initialParams: URLSearchParams,
-      stateOrDefaultParams: URLSearchParams
+      stateOrDefaultParams: URLSearchParams,
     ) => URLSearchParams
   }
 
@@ -269,7 +269,7 @@ export type ITableProps<
     onFetch?: (payload: {
       res: any
       getStore: () => ReturnType<typeof useTableStore>
-    }
+    },
     ) => IItem & { _preventFetchData?: boolean }
   }
 
@@ -411,6 +411,17 @@ export type ITableProps<
      * columns, filters, sorting, etc.
      */
     getLayoutMeta?: typeof tableGetLayoutMeta
+
+    /**
+     * A function that gets called when a filter item is changed
+     *
+     * Use-case: We might need to reset the `value` of the filter when comparator
+     * gets changed
+     */
+    onFilterItemChange?: (payload: {
+      item: ITableFilterItem
+      change: Partial<ITableFilterItem>
+    }) => void
   }
 
   /**

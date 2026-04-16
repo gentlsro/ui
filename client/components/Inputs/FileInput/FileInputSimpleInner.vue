@@ -37,6 +37,7 @@ function handleClick() {
       :chip="file"
       :class="ui?.chipClass"
       :style="ui?.chipStyle"
+      :no-download-button
       @remove="fileRemoveFnc(idx)"
     />
   </HorizontalScroller>
@@ -54,6 +55,7 @@ function handleClick() {
       :chip="file"
       :class="ui?.chipClass"
       :style="ui?.chipStyle"
+      :no-download-button
       @remove="fileRemoveFnc(idx)"
     />
   </ScrollArea>

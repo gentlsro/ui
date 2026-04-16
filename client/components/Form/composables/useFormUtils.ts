@@ -4,6 +4,7 @@ import type { IFormProps } from '../types/form-props.type'
 export function useFormUtils() {
   function getFormProps(props: IFormProps) {
     return reactivePick(props, [
+      'editDisabled',
       'editControls',
       'errors',
       'focusFirstInput',
@@ -12,6 +13,7 @@ export function useFormUtils() {
       'loading',
       'noSubmit',
       'noControls',
+      'noEnter',
       'preventSubmitOnEnter',
       'reset',
       'submitBtnProps',
@@ -27,6 +29,7 @@ export function useFormUtils() {
       'label',
       'noSubmit',
       'labelForcedVisibility',
+      'editDisabled',
       'editControls',
       'noEditControls',
       'noSubmit',

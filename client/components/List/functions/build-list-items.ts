@@ -2,8 +2,8 @@ import type { Required } from 'utility-types'
 import type { FuseOptions } from '@vueuse/integrations/useFuse.mjs'
 import { useSearching, useSorting } from '$utils'
 import type { GroupItem, SortItem } from '$utils'
-import { useGrouping } from '$utilsLayer/shared/composables/useGrouping'
-import type { IGroupRow } from '$utilsLayer/shared/composables/useGrouping'
+import { useGrouping } from '#layers/utilities/shared/composables/useGrouping'
+import type { IGroupRow } from '#layers/utilities/shared/composables/useGrouping'
 
 // Types
 import type { FuseResult } from 'fuse.js'
@@ -12,7 +12,7 @@ import type { IListProps } from '../types/list-props.type'
 
 // Functions
 import { getListItemKey, getListItemLabel } from './helpers'
-import { highlight } from '$utilsLayer/shared/functions/highlightText'
+import { highlight } from '#layers/utilities/shared/functions/highlightText'
 
 const { groupData } = useGrouping()
 const { searchData } = useSearching()

@@ -48,7 +48,7 @@ export function flattenTreeNodes<T extends IItem = IItem>(
 
   const _nodes: ITreeNode<T>[] = []
 
-  nodes.forEach(node => {
+  nodes.filter(Boolean).forEach(node => {
     // We adjust the meta
     nodeMetaById[node.id] = getTreeNodeMeta({ node, nodeMetaById, parent })
 

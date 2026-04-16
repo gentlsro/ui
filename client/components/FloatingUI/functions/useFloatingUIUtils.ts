@@ -47,22 +47,23 @@ export const matchWidth: Middleware = {
 }
 
 export function useFloatingUIUtils() {
-  function getElement(
+  function getElement(payload?: {
     elRef?: MaybeRefOrGetter<
-      MaybeElement<ReferenceElement> | HTMLElement | string | null
-    >,
+      MaybeElement<ReferenceElement> | HTMLElement | string | ((parentEl?: HTMLElement | null) => MaybeElement<ReferenceElement> | HTMLElement | string) | null
+    >
 
     /**
      * When `parentEl` is provided, the element will be searched within it
      */
-    parentEl?: HTMLElement,
-  ) {
+    parentEl?: HTMLElement
+  }) {
+    const { elRef, parentEl } = payload ?? {}
+
     if (!import.meta.client) {
-      return
+      return null
     }
 
-    const el = toValue(elRef)
-
+    const el = unref(elRef)
     if (el === null) {
       return null
     }
@@ -75,6 +76,11 @@ export function useFloatingUIUtils() {
     // When the element is already a DOM element, we just use it
     else if (el instanceof HTMLElement) {
       return el
+    }
+
+    // When we provided a function to resolve the element, we call it
+    else if (typeof el === 'function') {
+      return el(parentEl) as HTMLElement
     }
 
     // Otherwise, we assume it's a reference element

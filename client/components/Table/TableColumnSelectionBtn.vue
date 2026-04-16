@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { klona } from 'klona/full'
+import { moveItem } from '$utils'
 
 // Types
 import type { IListItem } from '../List/types/list-item.type'
@@ -8,11 +9,10 @@ import type { IListItem } from '../List/types/list-item.type'
 import type { TableColumn } from './models/table-column.model'
 
 // Functions
-import { reorderArray } from '$utilsLayer/client/functions/reorder-array'
+import { reorderArray } from './functions/reorder-array'
 import { useTableAutoFit } from './composables/useTableAutoFit'
 
 // Store
-import { moveItem } from '$utils'
 import { useTableStore } from './stores/table.store'
 
 // Store
@@ -20,7 +20,8 @@ const {
   internalColumns,
   visibleColumns: visibleColumnsStore,
   nonHelperColumns,
-} = storeToRefs(useTableStore())
+  onDataFetchQueue,
+} = useTableStore()
 
 // Utils
 const { fitColumns } = useTableAutoFit()
@@ -81,6 +82,7 @@ function handleApply() {
     }
   })
 
+  onDataFetchQueue.value.push(fitColumns)
   $hide()
 }
 
@@ -165,7 +167,7 @@ function handleRemove(idx: number) {
         no-edit-controls
         :ui="{
           contentClass: 'grow grid grid-cols-2 gap-2 overflow-auto',
-          controlsClass: 'p-x-0 p-b-0 p-t-1 border-t-1 border-ca',
+          controlsClass: 'flex gap-2 items-center shrink-0 p-x-0 p-b-0 p-t-1 border-t-1 border-ca',
           submitClass: '!w-auto bg-primary color-white',
         }"
         :submit-btn-props="{ size: 'sm', noUppercase: true }"

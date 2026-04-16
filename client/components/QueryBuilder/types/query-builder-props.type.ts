@@ -62,6 +62,6 @@ export type IQueryBuilderProps = {
    */
   getFilterComponent?: (
     column: TableColumn<any>,
-    filterItem: ITableFilterItem
+    filterItem: ITableFilterItem,
   ) => Required<Partial<NonNullable<TableColumn['filterComponent']>>, 'component'> | undefined
 }

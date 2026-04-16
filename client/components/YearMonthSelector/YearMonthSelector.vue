@@ -21,7 +21,7 @@ defineEmits<{
 }>()
 
 // Utils
-const { d } = useI18n()
+const { formatDate } = useDateUtils()
 
 const onFocus = props.eventHandlers?.onFocus
 const onBeforeFocus = props.eventHandlers?.onBeforeFocus
@@ -39,7 +39,7 @@ const modelFormatted = computed(() => {
     return ''
   }
 
-  return capitalize(d($date(model.value).valueOf(), 'yearMonth'))
+  return capitalize(formatDate(model.value, 'yearMonth'))
 })
 
 // Picker

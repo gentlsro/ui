@@ -8,7 +8,7 @@ const {
   currentPage,
   rows,
   totalRows,
-} = storeToRefs(useTableStore())
+} = useTableStore()
 
 const pageSize = computed(() => paginationConfig.value?.pageSize ?? 1)
 </script>
