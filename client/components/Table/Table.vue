@@ -293,15 +293,17 @@ onMounted(() => {
     </slot>
 
     <!-- Bottom -->
-    <TableBottom>
-      <template #loading="{ isDataLoading, isMetaLoading }">
-        <slot
-          name="loading"
-          :is-data-loading
-          :is-meta-loading
-        />
-      </template>
-    </TableBottom>
+    <slot name="bottom">
+      <TableBottom>
+        <template #loading="{ isDataLoading, isMetaLoading }">
+          <slot
+            name="loading"
+            :is-data-loading
+            :is-meta-loading
+          />
+        </template>
+      </TableBottom>
+    </slot>
 
     <!-- Default slot to be used for custom content (most likely absolutely positioned) -->
     <slot />

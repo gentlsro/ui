@@ -23,7 +23,9 @@ const isLimitReached = computed(() => {
 <template>
   <div class="table-bottom">
     <!-- Left -->
-    <TableTotalRows />
+    <slot name="total-rows">
+      <TableTotalRows />
+    </slot>
 
     <!-- Center -->
     <TablePagination v-if="paginationConfig?.enabled" />
