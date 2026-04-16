@@ -7,7 +7,7 @@ export const CHECKBOX_DEFAULT_PROPS = {
     }) {
       const { size: sizeProp } = payload
 
-      const base = 'flex items-center relative gap-2 cursor-pointer transition-all rounded-custom select-none rounded-2 !outline-none'
+      const base = 'flex items-start relative gap-2 cursor-pointer transition-all rounded-custom select-none rounded-2 !outline-none'
 
       // States
       const readonly = '[&.is-readonly]:(cursor-default)'
@@ -16,10 +16,10 @@ export const CHECKBOX_DEFAULT_PROPS = {
       // Size variants
       let size = ''
 
-      const xs = 'min-h-6 p-x-1'
-      const sm = 'min-h-7 p-x-5px'
-      const md = 'min-h-8 p-x-5px'
-      const lg = 'min-h-9 p-x-1.5'
+      const xs = 'min-h-7 p-1'
+      const sm = 'min-h-8 p-1.5'
+      const md = 'min-h-9 p-7px'
+      const lg = 'min-h-10 p-2'
 
       const sizes = {
         xs,
@@ -81,10 +81,10 @@ export const CHECKBOX_DEFAULT_PROPS = {
       // Size variants (via parent group)
       let size = ''
 
-      const xs = 'h-4 rounded-1 w-4 m-y-1'
-      const sm = 'h-4.5 rounded-1 w-4.5 m-y-1.25'
-      const md = 'h-5.5 rounded-1.5 w-5.5 m-y-5px'
-      const lg = 'h-6 rounded-1.5 w-6 m-y-6px'
+      const xs = 'h-4 rounded-1 w-4 m-y-0.5'
+      const sm = 'h-4.5 rounded-1 w-4.5 m-y-0.25'
+      const md = 'h-5 rounded-1.5 w-5 m-y-px'
+      const lg = 'h-6 rounded-1.5 w-6'
 
       const sizes = {
         xs,
@@ -123,10 +123,10 @@ export const CHECKBOX_DEFAULT_PROPS = {
       // Size variants (via parent group)
       let size = ''
 
-      const xs = 'font-rem-13 p-y-0.5 m-b-px'
-      const sm = 'font-rem-14 p-y-1 m-b-2px'
-      const md = 'p-y-1 m-b-3px'
-      const lg = 'font-rem-18 p-y-1 m-b-3px'
+      const xs = 'font-rem-13 p-y-1.5px'
+      const sm = 'font-rem-14'
+      const md = 'p-b-px'
+      const lg = 'font-rem-18'
 
       const sizes = {
         xs,
