@@ -50,9 +50,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
   const { el, mask, masked, unmasked, typed } = useIMask(maskRef, {
     onAccept: ev => {
       nextTick(() => {
-        const isMaskChanging = isMaskRefChanging.value
-
-        if (isMaskChanging) {
+        if (isMaskRefChanging.value) {
           typed.value = preservedValue.value
           lastValidValue.value = preservedValue.value
 
