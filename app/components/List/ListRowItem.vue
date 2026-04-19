@@ -128,7 +128,7 @@ const rowContentStyle = computed(() => {
 
 // D'n'D
 onMounted(() => {
-  nextTick(() => {
+  requestAnimationFrame(() => {
     if (isNew.value) {
       return
     }
@@ -222,7 +222,6 @@ onMounted(() => {
 }
 
 .list-row-item {
-
   &.is-dragging {
     @apply outline-2 outline-primary outline-dashed outline-offset--2 bg-primary/30;
 
