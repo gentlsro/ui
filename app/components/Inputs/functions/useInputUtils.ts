@@ -38,11 +38,25 @@ export function useInputUtils(options: IInputUtilsOptions) {
 
   // Mask
   const lastValidValue = ref<any>()
+  const isMaskRefChanging = shallowRef(false)
+  const preservedValue = shallowRef<any>()
   const { emptyValue } = toRefs(props)
+
+  function clearMaskChange() {
+    isMaskRefChanging.value = false
+    preservedValue.value = undefined
+  }
 
   const { el, mask, masked, unmasked, typed } = useIMask(maskRef, {
     onAccept: ev => {
       nextTick(() => {
+        if (isMaskRefChanging.value) {
+          typed.value = preservedValue.value
+          lastValidValue.value = preservedValue.value
+
+          return
+        }
+
         const val = maskEventHandlers?.onAccept?.(
           lastValidValue.value,
           ev,
@@ -63,6 +77,24 @@ export function useInputUtils(options: IInputUtilsOptions) {
 
   const originalModel = useVModel(props, 'modelValue', undefined, { defaultValue: props.emptyValue })
   const model = ref(originalModel.value)
+
+  const {
+    start: startMaskChangeTimeout,
+    stop: stopMaskChangeTimeout,
+  } = useTimeoutFn(() => {
+    if (!isMaskRefChanging.value) {
+      return
+    }
+
+    const currentVal = model.value
+
+    if (!isEqual(currentVal, preservedValue.value)) {
+      typed.value = currentVal
+      lastValidValue.value = currentVal
+    }
+
+    clearMaskChange()
+  }, 0, { immediate: false })
 
   // We also need to create an instance of mask to get the `masked` value
   // because `useIMask` initializes values in `onMounted` which would break SSR
@@ -311,6 +343,20 @@ export function useInputUtils(options: IInputUtilsOptions) {
       }
     }
   })
+
+  // When changing the mask, we need to preserve the value
+  watch(maskRef, () => {
+    stopMaskChangeTimeout()
+
+    const val = model.value
+
+    isMaskRefChanging.value = true
+    preservedValue.value = val
+    lastValidValue.value = val
+
+    // `nextTick` is not enough here, because the `maskRef` is changed in the same tick
+    startMaskChangeTimeout()
+  }, { flush: 'sync' })
 
   // We also need to sync the `model` when the `originalModel` changes
   watch(originalModel, val => {
