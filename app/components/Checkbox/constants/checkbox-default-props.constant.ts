@@ -16,10 +16,10 @@ export const CHECKBOX_DEFAULT_PROPS = {
       // Size variants
       let size = ''
 
-      const xs = 'min-h-7 p-1'
-      const sm = 'min-h-8 p-1.5'
-      const md = 'min-h-9 p-7px'
-      const lg = 'min-h-10 p-2'
+      const xs = 'min-h-7 p-x-1'
+      const sm = 'min-h-8 p-x-1.5'
+      const md = 'min-h-9 p-x-7px'
+      const lg = 'min-h-10 p-x-2'
 
       const sizes = {
         xs,
@@ -81,10 +81,10 @@ export const CHECKBOX_DEFAULT_PROPS = {
       // Size variants (via parent group)
       let size = ''
 
-      const xs = 'h-4 rounded-1 w-4 m-y-0.5'
-      const sm = 'h-4.5 rounded-1 w-4.5 m-y-0.25'
-      const md = 'h-5 rounded-1.5 w-5 m-y-px'
-      const lg = 'h-6 rounded-1.5 w-6'
+      const xs = 'h-4 rounded-1 w-4 m-y-1.5'
+      const sm = 'h-4.5 rounded-1 w-4.5 m-y-1.75'
+      const md = 'h-5 rounded-1.5 w-5 m-y-8px'
+      const lg = 'h-6 rounded-1.5 w-6 m-y-8px'
 
       const sizes = {
         xs,
@@ -123,10 +123,10 @@ export const CHECKBOX_DEFAULT_PROPS = {
       // Size variants (via parent group)
       let size = ''
 
-      const xs = 'font-rem-13 p-y-1.5px'
-      const sm = 'font-rem-14'
-      const md = 'p-b-px'
-      const lg = 'font-rem-18'
+      const xs = 'font-rem-13 p-y-5.5px'
+      const sm = 'font-rem-14 p-y-6px'
+      const md = 'p-y-7px'
+      const lg = 'font-rem-18 p-y-8px'
 
       const sizes = {
         xs,
