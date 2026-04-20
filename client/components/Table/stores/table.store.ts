@@ -17,6 +17,7 @@ import { tableNavigate } from '../functions/table-navigate'
 import { getListItemKey } from '../../List/functions/helpers'
 import { extendColumns } from '../functions/table-extend-columns'
 import { tableMergeColumns } from '../functions/table-merge-columns'
+import { getStateColumnData as getStateColumnDataDefault } from '../functions/get-state-column-data'
 import { getStateColumnData } from '../functions/get-state-column-data'
 import { tableSerializeSelect } from '../functions/table-serialize-select'
 import { tableTransformColumns } from '../functions/table-transform-columns'
@@ -213,6 +214,7 @@ const [
   })
 
   const syncStateColumns = useDebounceFn(() => {
+    const { getStateColumnData = getStateColumnDataDefault } = modifiers.value ?? {}
     state.value.queryParams = decodeURIComponent(queryParams.value.toString())
 
     if (!noState.value) {

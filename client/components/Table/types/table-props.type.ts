@@ -31,6 +31,7 @@ import type { tableExportData } from '../functions/table-export-data'
 import type { tableSaveLayout } from '../functions/table-save-layout'
 import type { tableDeleteLayout } from '../functions/table-delete-layout'
 import type { tableFilterValueChangeDebounce } from '../functions/table-filter-value-change-debounce'
+import type { getStateColumnData } from '../functions/get-state-column-data'
 
 // Store
 import type { useTableStore } from '../stores/table.store'
@@ -422,6 +423,11 @@ export type ITableProps<
       item: ITableFilterItem
       change: Partial<ITableFilterItem>
     }) => void
+
+    /**
+     * Function that returns the column data that should be saved to the state
+     */
+    getStateColumnData?: typeof getStateColumnData
   }
 
   /**
