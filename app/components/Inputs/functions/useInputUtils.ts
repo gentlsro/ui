@@ -77,11 +77,18 @@ export function useInputUtils(options: IInputUtilsOptions) {
 
   const originalModel = useVModel(props, 'modelValue', undefined, { defaultValue: props.emptyValue })
   const model = ref(originalModel.value)
+  const maskFrame = shallowRef<number>()
 
-  const {
-    start: startMaskChangeTimeout,
-    stop: stopMaskChangeTimeout,
-  } = useTimeoutFn(() => {
+  function cancelMaskChangeFrame() {
+    if (isNil(maskFrame.value)) {
+      return
+    }
+
+    cancelAnimationFrame(maskFrame.value)
+    maskFrame.value = undefined
+  }
+
+  function completeMaskChangeFrame() { 
     if (!isMaskRefChanging.value) {
       return
     }
@@ -94,7 +101,16 @@ export function useInputUtils(options: IInputUtilsOptions) {
     }
 
     clearMaskChange()
-  }, 0, { immediate: false })
+  }
+
+  function requestMaskChangeFrame() {
+    cancelMaskChangeFrame()
+
+    maskFrame.value = requestAnimationFrame(() => {
+      maskFrame.value = undefined
+      completeMaskChangeFrame()
+    })
+  }
 
   // We also need to create an instance of mask to get the `masked` value
   // because `useIMask` initializes values in `onMounted` which would break SSR
@@ -346,16 +362,12 @@ export function useInputUtils(options: IInputUtilsOptions) {
 
   // When changing the mask, we need to preserve the value
   watch(maskRef, () => {
-    stopMaskChangeTimeout()
-
-    const val = model.value
-
     isMaskRefChanging.value = true
-    preservedValue.value = val
-    lastValidValue.value = val
+    preservedValue.value = model.value
+    lastValidValue.value = model.value
 
     // `nextTick` is not enough here, because the `maskRef` is changed in the same tick
-    startMaskChangeTimeout()
+    requestMaskChangeFrame()
   }, { flush: 'sync' })
 
   // We also need to sync the `model` when the `originalModel` changes
@@ -370,6 +382,9 @@ export function useInputUtils(options: IInputUtilsOptions) {
       lastValidValue.value = model.value
     })
   })
+
+  // Cleanup
+  onBeforeUnmount(cancelMaskChangeFrame)
 
   provide('inputId', inputId)
 
