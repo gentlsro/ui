@@ -33,7 +33,7 @@ const {
   state,
   customData,
   rowKey,
-} = storeToRefs(tableStore)
+} = tableStore
 
 // Helpers
 function getUnifiedSchema(schema: string | URLSearchParams) {

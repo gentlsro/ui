@@ -10,7 +10,7 @@ const model = defineModel<boolean>({ default: false })
     name="menu"
     class="burger-wrapper"
     no-box-shadow
-    @click="model = !modelValue"
+    @click="model = !model"
   >
     <div
       class="burger"

@@ -6,6 +6,8 @@ export * from './client/types/component-props.type'
 export { BREAKPOINTS } from './shared/constants/breakpoints'
 export { extendNestedComponentProps } from './client/functions/extend-nested-component-props'
 export { getComponentMergedProps, getComponentProps } from './client/functions/get-component-props'
+export { COLORS_PREDEFINED } from './shared/constants/colors-predefined.constant'
+export { getRandomColor } from './shared/functions/get-random-color'
 
 // Btn
 export { BUTTON_PRESET } from './client/components/Button/constants/button-preset.constant'
@@ -46,6 +48,7 @@ export { queryBuilderDefault } from './client/components/QueryBuilder/constants/
 // Table
 export { useTableStore } from './client/components/Table/stores/table.store'
 export { TableColumn } from './client/components/Table/models/table-column.model'
+export { tableExtractDataFromUrl } from './client/components/Table/functions/table-extract-data-from-url'
 export type { ITableSortItem } from './client/components/Table/types/table-sort-item.type'
 export type { ITableTotal } from './client/components/Table/types/table-total.type'
 export type { ITableFetchPayload } from './client/components/Table/types/table-fetch-payload.type'
@@ -56,8 +59,7 @@ export type { TableFeature } from './client/components/Table/types/table-feature
 export type { ITableEmits } from './client/components/Table/types/table-emits.type'
 export type { ITableDistinctData } from './client/components/Table/types/table-distinct-data.type'
 export type { ITableLayout } from './client/components/Table/types/table-layout.type'
-
-export { tableExtractDataFromUrl } from './client/components/Table/functions/table-extract-data-from-url'
+export type { ITableStateColumn } from './client/components/Table/types/table-state-column.type'
 
 // Tree
 export { useTreeStore } from './client/components/Tree/stores/tree.store'

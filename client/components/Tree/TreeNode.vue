@@ -12,6 +12,7 @@ type IProps = {
   node: ITreeNode<T>
   nodeEl?: ITreeProps<T>['nodeEl']
   ui?: ITreeProps<T>['ui']
+  index: number
 }
 
 const props = defineProps<IProps>()
@@ -33,6 +34,7 @@ const {
   emits,
   dndConfig,
   nodeById,
+  collapseBtnProps,
 } = storeToRefs(treeStore)
 
 // Layout
@@ -140,13 +142,13 @@ async function handleToggleCollapse() {
 
 const nodeClass = computed(() => {
   return typeof props.ui?.nodeClass === 'function'
-    ? props.ui.nodeClass({ node: node.value, isSelected: isSelected.value })
+    ? props.ui.nodeClass({ node: node.value, isSelected: isSelected.value, index: props.index })
     : props.ui?.nodeClass
 })
 
 const nodeStyle = computed(() => {
   return typeof props.ui?.nodeStyle === 'function'
-    ? props.ui.nodeStyle({ node: node.value, isSelected: isSelected.value })
+    ? props.ui.nodeStyle({ node: node.value, isSelected: isSelected.value, index: props.index })
     : props.ui?.nodeStyle
 })
 
@@ -190,8 +192,10 @@ onMounted(() => {
         size="xs"
         icon="i-flowbite:chevron-right-outline !h-5 !w-5"
         color="ca"
-        class="collapse-btn"
-        :class="collapseBtnClass"
+        class="collapse-btn self-start m-t-1"
+        v-bind="collapseBtnProps"
+        :class="[collapseBtnClass, ui?.collapseBtnClass]"
+        :style="ui?.collapseBtnStyle"
         :loading="isLoading"
         @click.stop.prevent="handleToggleCollapse"
       />
@@ -262,7 +266,8 @@ onMounted(() => {
     }
 
     &.horizontal-connector::after {
-      @apply content-empty absolute top-1/2 border-t-1 border-ca border-dashed;
+      @apply content-empty absolute border-t-1 border-ca border-dashed;
+      top: min(24px, 50%);
 
       width: var(--treePadding);
     }
@@ -270,14 +275,12 @@ onMounted(() => {
 
   &.is-selected:not(.is-multi) {
     .tree-node__content {
-      @apply p-x-3;
-
       &::before {
-        @apply content-empty absolute left-0 top-0 h-full w-1 bg-primary rounded-l-custom;
+        @apply content-empty absolute left--1 top-2px bottom-2px w-1 bg-primary rounded-l-custom;
       }
 
       &::after {
-        @apply content-empty absolute right-0 top-0 h-full w-1 bg-primary rounded-r-custom;
+        @apply content-empty absolute right--1 top-2px bottom-2px w-1 bg-primary rounded-r-custom;
       }
     }
   }

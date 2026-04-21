@@ -2,7 +2,7 @@ import type { ComparatorEnum } from '$comparatorEnum'
 import type { ExtendedDataType } from '$dataType'
 
 // Functions
-import { getComparatorsByDataType } from '$utilsLayer/shared/constants/comparators-by-datatype.const'
+import { getComparatorsByDataType } from '#layers/utilities/shared/constants/comparators-by-datatype.const'
 
 // Constants
 import { SELECTOR_COMPARATORS } from '$utils'

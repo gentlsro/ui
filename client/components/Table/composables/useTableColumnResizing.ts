@@ -16,7 +16,6 @@ export function useTableColumnResizing() {
   const tableSlots = inject(tableSlotsKey)
 
   // Store
-  const { uiState } = storeToRefs(useUIStore())
   const {
     virtualScrollEl,
     autofitConfig,
@@ -26,7 +25,7 @@ export function useTableColumnResizing() {
     internalColumns,
     visibleColumns,
     uiConfig,
-  } = storeToRefs(useTableStore())
+  } = useTableStore()
 
   // Splitters (for resizing columns)
   let pageX = 0

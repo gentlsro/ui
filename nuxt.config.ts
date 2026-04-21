@@ -1,29 +1,21 @@
 // @unocss-include
 import { writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
+import { createResolver } from '@nuxt/kit'
 
-import {
-  presetAttributify,
-  presetIcons,
-  presetTypography,
-  presetUno,
-  transformerDirectives,
-  transformerVariantGroup,
-} from 'unocss'
-
-import { createResolver } from 'nuxt/kit'
-
-// Preset
+// UnoCSS
+import { presetWind3 } from 'unocss'
 import { gentlUIPreset } from './client/functions/unocss-preset'
 
 const { resolve } = createResolver(import.meta.url)
 const isMonorepo = import.meta.env.VITE_MONOREPO === 'true'
+const isInstallLayerDeps = import.meta.env.VITE_INSTALL_LAYER_DEPS === 'true'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   extends: isMonorepo
     ? [['../Utilities']]
-    : [['github:gentlsro/Utilities#master']],
+    : [['github:gentlsro/Utilities#nuxt-v4', { install: isInstallLayerDeps }]],
 
   // Modules https://nuxt.com/docs/api/configuration/nuxt-config#modules
   modules: [
@@ -31,10 +23,14 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     '@unocss/nuxt',
     '@pinia/nuxt',
-    'pinia-plugin-persistedstate/nuxt',
     '@nuxtjs/i18n',
     '@nuxtjs/device',
   ],
+
+  // Layer meta
+  $meta: {
+    name: 'ui',
+  },
 
   // SSR https://nuxt.com/docs/api/configuration/nuxt-config#ssr
   ssr: false,
@@ -91,7 +87,6 @@ export default defineNuxtConfig({
   alias: {
     $ui: join(process.cwd(), 'generated', 'ui.ts'),
     $uiConfig: join(process.cwd(), 'generated', 'uiConfig.ts'),
-    $uiLayer: resolve('.'),
   },
 
   build: {
@@ -178,17 +173,7 @@ export default defineNuxtConfig({
   // UnoCSS
   unocss: {
     preflight: false,
-    presets: [
-      presetUno(),
-      presetIcons(),
-      presetAttributify({ ignoreAttributes: ['size'] }),
-      presetTypography(),
-      gentlUIPreset(),
-    ],
-    transformers: [
-      transformerDirectives(),
-      transformerVariantGroup(),
-    ],
+    presets: [presetWind3(), gentlUIPreset()],
     safelist: ['color-contrast', 'i-emojione:flag-for-united-kingdom', 'i-emojione:flag-for-czechia'],
     nuxtLayers: true,
   },

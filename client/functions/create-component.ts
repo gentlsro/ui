@@ -1,5 +1,5 @@
 // Types
-import type { ComponentProps, IComponent } from '$utilsLayer/shared/types/component-map.type'
+import type { ComponentProps, IComponent } from '#layers/utilities/shared/types/component-map.type'
 
 /**
  * Returns an object with raw component and props.

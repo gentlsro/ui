@@ -1,4 +1,4 @@
-import type { IGroupRow } from '$utilsLayer/shared/composables/useGrouping'
+import type { IGroupRow } from '#layers/utilities/shared/composables/useGrouping'
 
 // Types
 import type { IListItem } from './list-item.type'
@@ -8,6 +8,7 @@ export type IListSlots = {
   'search': (props: { ui?: IListProps['ui'] }) => any
   'content': (props: { ui?: IListProps['ui'], scrollerConfig?: IListProps['scrollerConfig'] }) => any
   'item'?: (props: { row: IListItem, index: number, isDisabled?: boolean, isSelected?: boolean }) => any
+  'item-group'?: (props: { row: IGroupRow, index: number }) => any
   'noData'?: () => any
   'loading'?: () => any
   'move-handle'?: () => any

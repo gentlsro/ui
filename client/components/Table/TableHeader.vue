@@ -18,7 +18,7 @@ const {
   isContentVerticallyScrollable,
   visibleColumns,
   isCardView,
-} = storeToRefs(useTableStore())
+} = useTableStore()
 
 // Utils
 const { scrollbarWidth } = useOverflow()

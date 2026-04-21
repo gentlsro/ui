@@ -21,7 +21,7 @@ type IProps = {
 const props = defineProps<IProps>()
 
 // Store
-const { modifiers, internalColumns } = storeToRefs(useTableStore())
+const { modifiers, internalColumns } = useTableStore()
 const { filterValueChangeDebounce = tableFilterValueChangeDebounce } = modifiers.value ?? {}
 
 // Layout

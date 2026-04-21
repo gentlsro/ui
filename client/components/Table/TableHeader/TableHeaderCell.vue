@@ -24,7 +24,7 @@ const {
   selectionByKey,
   features,
   isCardView,
-} = storeToRefs(useTableStore())
+} = useTableStore()
 
 // Layout
 const hasFilterBtn = computed(() => {
@@ -102,7 +102,7 @@ function handleSelect() {
 
   // All selected
   else if (selectionState.value === true) {
-    selection.value = selectionConfig.value.multi ? [] : undefined
+    selection.value = selectionConfig.value?.multi ? [] : undefined
   }
 
   // Not all selected

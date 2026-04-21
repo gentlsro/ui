@@ -28,6 +28,11 @@ export type IFormProps = {
     | boolean
 
   /**
+   * If true, the edit button will be visible (if `editControls` is true) but disabled
+   */
+  editDisabled?: boolean
+
+  /**
    * Errors to display in the form.
    */
   errors?: string[]
@@ -108,6 +113,11 @@ export type IFormProps = {
    * If true, the form will include the submit button.
    */
   noSubmit?: boolean
+
+  /**
+   * If true, the form will not be submitted on `enter`, nor on `ctrl+enter`
+   */
+  noEnter?: boolean
 
   /**
    * If true, the form will not submit on enter.

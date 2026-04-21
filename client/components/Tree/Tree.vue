@@ -5,6 +5,7 @@ import { getActivePinia } from 'pinia'
 import type { ITreeProps } from './types/tree-props.type'
 import type { ITreeEmits } from './types/tree-emits.type'
 import type { ITreeNodeMeta } from './types/tree-node-meta.type'
+import type { IVirtualScrollerProps } from '../VirtualScroller/types/virtual-scroller-props.type'
 
 // Functions
 import { useTreeKeyboard } from './functions/useTreeKeyboard'
@@ -41,6 +42,10 @@ const mergedProps = computed(() => {
   return getComponentMergedProps('tree', props) as ITreeProps<T>
 })
 
+const scrollerConfig = computed(() => {
+  return mergedProps.value.scrollerConfig as IVirtualScrollerProps<T>
+})
+
 // Store
 const store = useTreeStore({ treeProps: props })
 const {
@@ -59,6 +64,8 @@ const {
   parentIdKey: storeParentIdKey,
   emits: storeEmits,
   dndConfig: storeDndConfig,
+  nodeById: storeNodeById,
+  collapseBtnProps: storeCollapseBtnProps,
 } = storeToRefs(store)
 
 storeEmits.value = {
@@ -79,6 +86,7 @@ syncRef(search, storeSearch, { direction: 'both' })
 syncRef(childrenKey, storeChildrenKey, { direction: 'ltr' })
 syncRef(parentIdKey, storeParentIdKey, { direction: 'ltr' })
 syncRef(meta, storeNodeMetaById, { direction: 'rtl' })
+syncRef(toRef(mergedProps.value, 'collapseBtnProps'), storeCollapseBtnProps, { direction: 'ltr' })
 
 // @ts-expect-error Some scuffed type
 syncRef(selection, storeSelection, { direction: 'both' })
@@ -86,7 +94,9 @@ syncRef(selection, storeSelection, { direction: 'both' })
 loadChildren.value = props.loadChildren
 
 // Init keyboard navigation
-useTreeKeyboard()
+if (!props.noKeyboard) {
+  useTreeKeyboard()
+}
 
 // Lifecycle
 // Dispose of store on unmount
@@ -124,10 +134,12 @@ defineExpose(treeGetExposed())
       class="nodes"
       :class="mergedProps.ui?.contentClass"
       :style="mergedProps.ui?.contentStyle"
+      v-bind="scrollerConfig"
     >
-      <template #default="{ row }">
+      <template #default="{ row, index }">
         <TreeNode
           :node="row"
+          :index
           :ui="mergedProps.ui"
           :node-el
           :connectors
@@ -141,6 +153,8 @@ defineExpose(treeGetExposed())
               :node="row"
               :collapse
               :level
+              :index
+              :parent="storeNodeById[row.parentId]"
             />
           </template>
 
@@ -150,6 +164,8 @@ defineExpose(treeGetExposed())
               :node="row"
               :collapse
               :level
+              :index
+              :parent="storeNodeById[row.parentId]"
             />
           </template>
         </TreeNode>

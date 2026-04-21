@@ -160,8 +160,9 @@ watch(notificationCounter, async () => {
       <li
         v-for="(subtitle, idx) in subtitleArr"
         :key="idx"
-        list="inside none"
+        list="inside"
         text="caption"
+        p="b-2"
       >
         {{ subtitle }}
       </li>

@@ -3,7 +3,7 @@
 import type { IMenuConfirmationProps } from './types/menu-confirmation-props.type'
 
 // Functions
-import { useMenuUtils } from '../Menu/functions/useMenuUtils'
+import { useMenuUtils } from '../Menu/composables/useMenuUtils'
 import { getComponentMergedProps, getComponentProps } from '../../functions/get-component-props'
 
 const props = withDefaults(defineProps<IMenuConfirmationProps>(), {

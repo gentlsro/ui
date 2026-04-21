@@ -24,7 +24,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
   const uiStore = useUIStore()
   const instance = getCurrentInstance()
   const { onBlur, onFocus } = eventHandlers
-  const hasBeenTouched = ref(false)
+  const isTouched = ref(false)
 
   const debouncedChange = useDebounceFn((val: any) => {
     if (!props.emitOnBlur) {
@@ -112,9 +112,10 @@ export function useInputUtils(options: IInputUtilsOptions) {
   })
 
   const hasClearableBtn = computed(() => {
-    return (
-      !props.readonly && !props.disabled && props.clearable && hasContent.value
-    )
+    return !props.readonly
+      && !props.disabled
+      && props.clearable
+      && hasContent.value
   })
 
   // Input methods
@@ -135,7 +136,8 @@ export function useInputUtils(options: IInputUtilsOptions) {
   }
 
   const clear = (shouldFocusAfterClear?: boolean) => {
-    typed.value = ''
+    // typed.value = ''
+    masked.value = ''
 
     if (shouldFocusAfterClear || !isBlurred.value) {
       setTimeout(() => focus(), 0)
@@ -261,6 +263,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
     }
 
     isBlurred.value = false
+    isTouched.value = !props.disabled && !props.readonly
 
     instance?.emit('focus')
     onFocus?.(isTouchEvent ? 'touch' : 'mouse', ev)
@@ -335,7 +338,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
     isBlurred,
     hasContent,
     wrapperProps,
-    hasBeenTouched,
+    isTouched,
     hasClearableBtn,
 
     // State

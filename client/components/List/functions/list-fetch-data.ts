@@ -1,4 +1,4 @@
-import type { IGroupRow } from '$utilsLayer/shared/composables/useGrouping'
+import type { IGroupRow } from '#layers/utilities/shared/composables/useGrouping'
 
 // Types
 import type { IListItem } from '../types/list-item.type'
@@ -69,7 +69,14 @@ export async function listFetchData(payload: {
   }, { noResolve: true })
 
   let _items = payloadKey ? get(res, payloadKey) : res
-  const _count = countKey ? get(res, countKey) : _items.length
+  let _count = _items.length
+  const hasCount = countKey && !isNil(get(res, countKey))
+
+  if (hasCount) {
+    _count = get(res, countKey)
+  } else if (totalRows) {
+    _count = totalRows
+  }
 
   if (onFetchData) {
     return onFetchData({
@@ -77,7 +84,7 @@ export async function listFetchData(payload: {
       items,
       itemsFetched: _items,
       count: _count,
-      totalRows,
+      totalRows: _count,
       res,
     })
   }
@@ -87,7 +94,7 @@ export async function listFetchData(payload: {
   }
 
   return {
-    hasMore: totalRows > _items.length,
+    hasMore: _count > _items.length,
     items: _items,
     totalRows: _count,
   }

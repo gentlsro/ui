@@ -9,7 +9,7 @@ const props = withDefaults(defineProps<IProps>(), {
   color: 'fill-primary',
 })
 
-const loaderClass = computedEager(() => {
+const loaderClass = computed(() => {
   switch (props.size) {
     case 'xs':
       return 'h-6 w-6'

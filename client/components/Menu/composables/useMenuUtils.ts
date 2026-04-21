@@ -5,8 +5,6 @@ import type { IMenuProps } from '../types/menu-props.type'
 import { useFloatingUIUtils } from '../../FloatingUI/functions/useFloatingUIUtils'
 
 export function useMenuUtils() {
-  const { getElement } = useFloatingUIUtils()
-
   function getMenuProps(props: IMenuProps) {
     return reactivePick(props, [
       'beforeHideFnc',
@@ -27,11 +25,10 @@ export function useMenuUtils() {
       'transitionDuration',
       'target',
       'referenceTarget',
+      'virtualConfiguration',
+      'virtualDimensions',
     ])
   }
 
-  return {
-    getMenuProps,
-    getElement,
-  }
+  return { getMenuProps }
 }

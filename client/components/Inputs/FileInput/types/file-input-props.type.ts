@@ -19,6 +19,7 @@ export type IFileInputProps = {
   downloadUrl?: string | ((file: IFile) => string)
 
   modelValue?: Array<File | IFile | FileModel> | null
+
   /**
    * Whether we can select multiple files
    */

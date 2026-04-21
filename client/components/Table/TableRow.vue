@@ -20,6 +20,7 @@ import { useTableStore } from './stores/table.store'
 type IProps = Pick<ITableProps, 'ui' | 'editable' | 'to' | 'showCopyBtn' | 'toLinkProps'> & {
   row: any | any[]
   index: number
+  isVisibleByColumnField: Record<string, boolean>
 }
 
 defineOptions({ inheritAttrs: false })
@@ -70,7 +71,7 @@ const {
   cellEditValue,
   emits,
   rowClickable,
-} = storeToRefs(tableStore)
+} = tableStore
 
 // Layout
 const [DefineValueTemplate, ReuseValueTemplate] = createReusableTemplate<{
@@ -443,6 +444,11 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
       :data-key="rowDataArray[0].rowKey"
       @click="handleEditCell(rowDataArray[0], column)"
     >
+      <!-- <div
+        v-if="!isVisibleByColumnField[column.column.field]"
+        class="td__placeholder"
+      /> -->
+
       <!-- Editing -->
       <template v-if="isEditingCell(rowDataArray[0], column)">
         <Component

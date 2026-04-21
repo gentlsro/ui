@@ -11,12 +11,12 @@ import type { ITableFilterItem } from '../types/table-filter-item.type'
 import type { ITableDistinctData } from '../types/table-distinct-data.type'
 
 // Constants
-import { DATE_TYPES } from '$utilsLayer/shared/types/datetime.type'
-import { getDefaultComparatorByDataType } from '$utilsLayer/shared/constants/default-comparator-by-data-type.const'
+import { DATE_TYPES } from '#layers/utilities/shared/types/datetime.type'
+import { getDefaultComparatorByDataType } from '#layers/utilities/shared/constants/default-comparator-by-data-type.const'
 
 // Functions
 import { getComponentProps } from '../../../functions/get-component-props'
-import { getDateSimpleValue } from '$utilsLayer/shared/composables/useDateUtils'
+import { getDateSimpleValue } from '#layers/utilities/shared/composables/useDateUtils'
 import { useRenderTemporaryTableCell } from '../composables/useRenderTemporaryTableCell'
 
 // Components
@@ -384,7 +384,7 @@ export class TableColumn<T = IItem> {
    * Usage: For getting distinct values from the server
    */
   getDistinctData?: (
-    col: TableColumn<T>
+    col: TableColumn<T>,
   ) => Promise<ITableDistinctData[]> | ITableDistinctData[]
 
   // Styling
@@ -555,7 +555,9 @@ export class TableColumn<T = IItem> {
         considerHeader ? headerWidth : 0,
         maxContentWidth + 1, // + 1 for the border
       ),
-      maxColumnWidthChars * 6 + 20, // When autofitting, we don't want to go over some predefined value
+
+      // When autofitting, we don't want to go over some predefined (arbitrary) value
+      maxColumnWidthChars * 6 + 20,
     )
 
     this.width = `${Math.ceil(colMinWidth)}px`
@@ -642,6 +644,7 @@ export class TableColumn<T = IItem> {
     this.local = col.local ?? false
     this.alwaysVisible = col.alwaysVisible ?? false
     this.noCopyBtn = col.noCopyBtn ?? false
+    this._width = col._width ?? 0
 
     // Editing
     this.noEdit = col.noEdit

@@ -1,15 +1,15 @@
-import type { z } from 'zod'
-import type { IVirtualScrollerProps } from '$ui'
+import type { z } from 'zod/v4'
 import type { ConcreteComponent, CSSProperties } from 'vue'
 import type { FuseOptions } from '@vueuse/integrations/useFuse'
 import type { GroupItem, SortItem } from '$utils'
-import type { IGroupRow } from '$utilsLayer/shared/composables/useGrouping'
+import type { IGroupRow } from '#layers/utilities/shared/composables/useGrouping'
 
 // Types
 import type { IListItem } from './list-item.type'
 import type { IListFetchFnc } from './list-fetch.type'
 import type { ISelection } from '../../../types/selection.type'
 import type { IListItemToAdd } from './list-item-to-add.type'
+import type { IVirtualScrollerProps } from '../../VirtualScroller/types/virtual-scroller-props.type'
 
 export type IListProps = {
   /**
@@ -43,7 +43,10 @@ export type IListProps = {
     /**
      * The function to use for transforming the added item
      */
-    transformAddedItem?: (item: IItem) => IItem
+    transformAddedItem?: (
+      item: IItem,
+      transformFnc: (fnc: (payload: { item: IListItemToAdd }) => IListItemToAdd) => void
+    ) => IItem
 
     /**
      * Validation schema for search input if creating of new item is allowed (allowAdd is set to true)
@@ -114,7 +117,7 @@ export type IListProps = {
     /**
      * The key to use for the items from the server response
      */
-    payloadKey?: string
+    payloadKey?: string | null
 
     /**
      * The key to use for the total count of items from the server response
@@ -314,7 +317,7 @@ export type IListProps = {
   /**
    * The selection value
    */
-  selection?: ISelection
+  selection?: ISelection<any>
 
   /**
    * The list selection

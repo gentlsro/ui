@@ -51,7 +51,7 @@ const isDeleted = autoResetRef(false, 2000)
 const route = useRoute()
 
 // Layout
-const loaderType = computedEager(() => {
+const loaderType = computed(() => {
   return $bp.lg.value && props.labels ? 'inline' : 'block'
 })
 
@@ -77,7 +77,7 @@ const availableActions = computed(() => ({
   ...(props.actions === true ? {} : props.actions),
 }))
 
-const hasAnyAction = computedEager(() => {
+const hasAnyAction = computed(() => {
   return Object.values(availableActions.value).some(Boolean)
 })
 

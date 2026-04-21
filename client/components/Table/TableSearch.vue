@@ -10,7 +10,7 @@ type IProps = Pick<ITableProps, 'search'>
 defineProps<IProps>()
 
 // Store
-const { isDataLoading, internalColumns } = storeToRefs(useTableStore())
+const { isDataLoading, internalColumns } = useTableStore()
 
 // Layout
 const search = defineModel<string>('search')

@@ -1,6 +1,8 @@
-import { useTreeStore } from '$ui'
 import { autoScrollPlugin, Draggable, PointerSensor } from 'dragdoll'
 import type { PointerSensorMoveEvent } from 'dragdoll'
+
+// Store
+import { useTreeStore } from '../stores/tree.store'
 
 const TREE_NODE_CLASSES = ['tree-node']
 
@@ -154,14 +156,16 @@ export function useTreeDragAndDrop() {
     }
 
     // Reset dragging
-    draggedNode.value = undefined
-    dragMeta.value = {
-      targetEl: undefined,
-      target: undefined,
-      placement: undefined,
-      dropIndicatorCSS: undefined,
-      sourceEl: undefined,
-    }
+    requestAnimationFrame(() => {
+      draggedNode.value = undefined
+      dragMeta.value = {
+        targetEl: undefined,
+        target: undefined,
+        placement: undefined,
+        dropIndicatorCSS: undefined,
+        sourceEl: undefined,
+      }
+    })
   }
 
   function handleScroll() {

@@ -1,9 +1,11 @@
-import type { ITextInputProps } from '$ui'
 import type { AllowedComponentProps, CSSProperties } from 'vue'
+import type { FuseOptions } from '@vueuse/integrations/useFuse.mjs'
 
 // Types
 import type { ITreeNodeMeta } from './tree-node-meta.type'
-import type { FuseOptions } from '@vueuse/integrations/useFuse.mjs'
+import type { IBtnProps } from '../../Button/types/btn-props.type'
+import type { IVirtualScrollerProps } from '../../VirtualScroller/types/virtual-scroller-props.type'
+import type { ITextInputProps } from '../../Inputs/TextInput/types/text-input-props.type'
 
 export type ITreeProps<T extends IItem = IItem> = {
   /**
@@ -12,6 +14,11 @@ export type ITreeProps<T extends IItem = IItem> = {
    * @default true
    */
   connectors?: boolean
+
+  /**
+   * The props to pass to the collapse button
+   */
+  collapseBtnProps?: IBtnProps
 
   /**
    * The key to use for the children nodes
@@ -49,6 +56,16 @@ export type ITreeProps<T extends IItem = IItem> = {
   nodeEl?: string | any
 
   /**
+   * When true, the keyboard navigation will be disabled
+   */
+  noKeyboard?: boolean
+
+  /**
+   * Scroller configuration
+   */
+  scrollerConfig?: Pick<IVirtualScrollerProps<any>, 'rowKey' | 'rowHeight' | 'overscan' | 'threshold' | 'watchWidth'>
+
+  /**
    * The search value
    */
   search?: string
@@ -67,7 +84,10 @@ export type ITreeProps<T extends IItem = IItem> = {
     /**
      * Function that is used for the search
      */
-    fnc?: (search: string | undefined, nodes: T[]) => T[] | Promise<T[]>
+    fnc?: (
+      search: string | undefined,
+      nodes: T[],
+    ) => T[] | Promise<T[]>
 
     /**
      * The extended search token for fuse.js library
@@ -147,7 +167,7 @@ export type ITreeProps<T extends IItem = IItem> = {
      * This is useful when we have a structure of different "types" of nodes,
      * let's say "ITEM" and "GROUP"
      *
-     * Obviously, we cannot drop "ITEM" on an "ITEM", souse this fnc to return the
+     * Obviously, we cannot drop "ITEM" on an "ITEM", so use this fnc to return the
      * parent "GROUP" node (if there is any)
      *
      * NOTE: This is relevant only for `dropMode = parent`
@@ -160,9 +180,21 @@ export type ITreeProps<T extends IItem = IItem> = {
     }) => ITreeNode<T> | undefined | null
 
     /**
-     * Function that is called when a node is moved
+     * Function that is called before a node is moved
+     * Must return the (adjusted) node
      *
      * Use-case: Call API
+     */
+    beforeMoved?: (payload: {
+      node: T
+      to?: T | null
+      nodeById: Record<string, T>
+      nodeMetaById?: Record<string, ITreeNodeMeta<T>>
+      revert: () => void
+    }) => ITreeNode<T> | Promise<ITreeNode<T>>
+
+    /**
+     * Function that is called when a node is moved
      */
     onMoved?: (payload: {
       node: T
@@ -180,7 +212,7 @@ export type ITreeProps<T extends IItem = IItem> = {
     /**
      * Function to be used for loading the children nodes
      */
-    fnc: (node: T) => Promise<T[]> | T[]
+    fnc: (node: T) => Promise<any> | any
 
     /**
      * Key to get the payload from the `fnc` response
@@ -217,6 +249,17 @@ export type ITreeProps<T extends IItem = IItem> = {
      * Whether the selection is multi-select
      */
     multi?: boolean
+
+    /**
+     * Function that is called before a node is selected
+     *
+     * Return `false` to prevent the selection from happening, any other value
+     * will not do anything
+     */
+    beforeSelect?: (payload: {
+      node: T
+      ev?: MouseEvent | KeyboardEvent
+    }) => void | boolean | undefined | Promise<void | boolean | undefined>
   }
 
   /**
@@ -234,14 +277,24 @@ export type ITreeProps<T extends IItem = IItem> = {
     contentStyle?: CSSProperties
 
     /**
+     * Class to apply to the collapse button
+     */
+    collapseBtnClass?: ClassType
+
+    /**
+     * Style to apply to the collapse button
+     */
+    collapseBtnStyle?: CSSProperties
+
+    /**
      * Class to apply to the nodes
      */
-    nodeClass?: ((payload: { node: T, isSelected: boolean }) => ClassType)
+    nodeClass?: ((payload: { node: T, isSelected: boolean, index: number }) => ClassType)
 
     /**
      * Style to apply to the nodes
      */
-    nodeStyle?: ((payload: { node: T, isSelected: boolean }) => CSSProperties)
+    nodeStyle?: ((payload: { node: T, isSelected: boolean, index: number }) => CSSProperties)
 
     /**
      * Margin (left) for the tree nodes. Uses regular CSS `margin-left` syntax
