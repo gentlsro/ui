@@ -105,7 +105,10 @@ const labelClass = computed(() => {
 })
 
 const labelStyle = computed(() => {
-  return mergedProps.value?.ui?.labelStyle?.()
+  return {
+    ...mergedProps.value?.ui?.labelStyleObj,
+    ...mergedProps.value?.ui?.labelStyle?.(),
+  }
 })
 
 // Styles - focus helper

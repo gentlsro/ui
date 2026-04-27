@@ -38,7 +38,7 @@ const middleware = ref([
   offset(props.offset),
   flip(),
   shift(),
-  ...(props.noArrow ? [] : [arrow({ element: arrowEl, padding: 4 })]),
+  ...(props.noArrow ? [] : [arrow({ element: arrowEl, padding: 8 })]),
 ])
 
 const { floatingStyles, placement, middlewareData } = useFloating(
@@ -259,14 +259,14 @@ const arrowStyle = computed(() => {
 }
 
 .tooltip[placement^='bottom'] > .arrow {
-  @apply top--5px border-t-custom border-l-custom border-ca;
+  @apply top--4px border-t-custom border-l-custom border-ca;
 }
 
 .tooltip[placement^='left'] > .arrow {
-  @apply right--5px border-r-custom border-t-custom border-ca;
+  @apply right--4px border-r-custom border-t-custom border-ca;
 }
 
 .tooltip[placement^='right'] > .arrow {
-  @apply left--5px border-l-custom border-b-custom border-ca;
+  @apply left--4px border-l-custom border-b-custom border-ca;
 }
 </style>

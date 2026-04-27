@@ -202,6 +202,14 @@ export type IBtnProps = IBtnNavigationProps & {
     labelStyle?: () => CSSProperties
 
     /**
+     * Style applied to the label
+     *
+     * Note: You should probably not use this, this is for special cases when
+     * we are not able to pass actual function (= maybe we are passing some JSON-ified style object)
+     */
+    labelStyleObj?: CSSProperties
+
+    /**
      * Classes applied to the focus helper
      */
     focusHelperClass?: (payload: {

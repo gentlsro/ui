@@ -91,7 +91,7 @@ function handleInputBlur(ev: FocusEvent) {
 }
 
 function handlePickColor(color?: string) {
-  model.value = color
+  originalModel.value = color
 
   if (props.autoClose) {
     isPickerActive.value = false
@@ -108,6 +108,7 @@ const {
   label,
   masked,
   model,
+  originalModel,
   isTouched,
   handleBlur,
   handleClickWrapper,
