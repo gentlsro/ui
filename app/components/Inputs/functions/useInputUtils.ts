@@ -136,8 +136,10 @@ export function useInputUtils(options: IInputUtilsOptions) {
   }
 
   const clear = (shouldFocusAfterClear?: boolean) => {
+    model.value = props.emptyValue
+    originalModel.value = props.emptyValue
     // typed.value = ''
-    masked.value = ''
+    // masked.value = ''
 
     if (shouldFocusAfterClear || !isBlurred.value) {
       setTimeout(() => focus(), 0)
@@ -342,6 +344,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
     hasClearableBtn,
 
     // State
+    originalModel,
     model,
     masked,
     typed,
