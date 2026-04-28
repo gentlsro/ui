@@ -41,9 +41,9 @@ const label = computed(() => {
 })
 
 const preset = computed(() => {
-  const presets = props.presets ?? BUTTON_PRESET
+  const presets = (props.presets ?? BUTTON_PRESET)
 
-  return props.preset ? presets[props.preset] : null,
+  return props.preset ? presets[props.preset] : null
 })
 
 const classes = computed(() => {
