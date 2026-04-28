@@ -5,7 +5,7 @@ import type { ITooltipProps } from '../../Tooltip/types/tooltip-props.type'
 import type { NavigateToOptions } from '#layers/utilities/app/types/navigate-to.type'
 
 // Constants
-import type { BUTTON_PRESET } from '../constants/button-preset.constant'
+import type { ButtonPresetDefaults } from '../constants/button-preset.constant'
 import type { BTN_DEFAULT_PROPS } from '../constants/btn-default-props.constant'
 import type { BREAKPOINTS } from '../../../../shared/constants/breakpoints'
 
@@ -13,7 +13,7 @@ export type CustomPresets = Record<string, { icon: string, color: string }>
 
 /** Built-in preset names plus keys of optional `presets` (merged with `BUTTON_PRESET` at runtime). */
 type BtnPresetKey<T extends CustomPresets>
-  = | keyof typeof BUTTON_PRESET
+  = | keyof ButtonPresetDefaults
     | (string extends keyof T ? never : keyof T)
 
 export type INavigation = {
@@ -132,9 +132,9 @@ export type IBtnProps<T extends CustomPresets = Record<string, never>> = IBtnNav
   preset?: BtnPresetKey<T>
 
   /**
-   * Extra presets merged with defaults (`BUTTON_PRESET`, see UI layer `button.merge`).
+   * Preset map: full `BUTTON_PRESET` (e.g. layer defaults) or extra entries merged on top of `BUTTON_PRESET`
    */
-  presets?: T
+  presets?: T | ButtonPresetDefaults
 
   /**
    * Whether the button should have a ripple effect

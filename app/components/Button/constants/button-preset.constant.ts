@@ -70,3 +70,5 @@ export const BUTTON_PRESET = {
     color: 'color-ca',
   },
 }
+
+export type ButtonPresetDefaults = typeof BUTTON_PRESET

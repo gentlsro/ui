@@ -6,7 +6,6 @@ import type { CustomPresets, IBtnProps } from './types/btn-props.type'
 import { useBtnUtils } from './functions/useBtnUtils'
 
 // Constants
-import type { BUTTON_PRESET } from './constants/button-preset.constant'
 import { BTN_DEFAULT_PROPS } from './constants/btn-default-props.constant'
 
 // Components
@@ -41,11 +40,7 @@ const label = computed(() => {
 })
 
 const preset = computed(() => {
-  const presets = mergedProps.value.presets as ((typeof BUTTON_PRESET) & T) | undefined
-
-  if (!presets) {
-    return null
-  }
+  const presets = mergedProps.value.presets
 
   return presets[props.preset as keyof typeof presets] ?? null
 })

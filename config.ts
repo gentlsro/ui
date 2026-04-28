@@ -77,6 +77,9 @@ import type { IVirtualScrollerVerticalProps } from './app/components/VirtualScro
 import type { IYearMonthSelectorProps } from './app/components/YearMonthSelector/types/year-month-selector-props.type'
 import type { IYearSelectorProps } from './app/components/YearSelector/types/year-selector-props.type'
 
+// Constants
+import { BUTTON_PRESET } from './app/components/Button/constants/button-preset.constant'
+
 export const defaultComponentsConfig = {
   // Badge
   badge: {
@@ -170,6 +173,7 @@ export const defaultComponentsConfig = {
       to: undefined,
       tooltip: undefined,
       type: 'button',
+      presets: BUTTON_PRESET,
       ui: {
         containerClass: ({ defaults }) => defaults.all,
         iconClass: ({ defaults }) => defaults.all,

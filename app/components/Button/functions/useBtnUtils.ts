@@ -1,5 +1,10 @@
 // Types
-import type { CustomPresets, IBtnProps } from '../types/btn-props.type'
+import type { IBtnNavigationProps, IBtnProps } from '../types/btn-props.type'
+
+type IBtnOrNuxtLinkResolverPickSource = Pick<
+  IBtnProps,
+  keyof IBtnNavigationProps
+>
 
 export function useBtnUtils() {
   function getBtnProps(props: IBtnProps) {
@@ -32,7 +37,7 @@ export function useBtnUtils() {
     ])
   }
 
-  function getBtnOrNuxtLinkResolverProps<T extends CustomPresets>(props: IBtnProps<T>) {
+  function getBtnOrNuxtLinkResolverProps(props: IBtnOrNuxtLinkResolverPickSource) {
     return reactivePick(props, [
       'disabled',
       'download',
