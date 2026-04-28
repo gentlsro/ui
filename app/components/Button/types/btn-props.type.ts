@@ -9,6 +9,12 @@ import type { BUTTON_PRESET } from '../constants/button-preset.constant'
 import type { BTN_DEFAULT_PROPS } from '../constants/btn-default-props.constant'
 import type { BREAKPOINTS } from '../../../../shared/constants/breakpoints'
 
+export type CustomPresets = Record<string, { icon: string, color: string }>
+
+type BtnPresetKey<T extends CustomPresets> = string extends keyof T
+  ? keyof typeof BUTTON_PRESET
+  : keyof T
+
 export type INavigation = {
   disabled?: boolean
   download?: boolean | string
@@ -36,7 +42,7 @@ export type IBtnNavigationProps = INavigation & {
   type?: 'button' | 'submit' | 'reset'
 }
 
-export type IBtnProps = IBtnNavigationProps & {
+export type IBtnProps<T extends CustomPresets = typeof BUTTON_PRESET> = IBtnNavigationProps & {
   /**
    * Alignment of the button content
    */
@@ -122,7 +128,14 @@ export type IBtnProps = IBtnNavigationProps & {
   /**
    * The preset of the button
    */
-  preset?: keyof typeof BUTTON_PRESET
+  preset?: BtnPresetKey<T>
+
+  /**
+   * Custom presets that can be referenced in the `preset` prop
+   *
+   * Note: If left empty, the default presets will be used
+   */
+  presets?: T
 
   /**
    * Whether the button should have a ripple effect

@@ -1,6 +1,6 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends CustomPresets">
 // Types
-import type { IBtnProps } from './types/btn-props.type'
+import type { CustomPresets, IBtnProps } from './types/btn-props.type'
 
 // Functions
 import { useBtnUtils } from './functions/useBtnUtils'
@@ -15,7 +15,7 @@ import BtnOrNuxtLinkResolver from './BtnOrNuxtLinkResolver.vue'
 // Directives
 import { vRipple } from '../../directives/ripple.directive'
 
-const props = withDefaults(defineProps<IBtnProps>(), {
+const props = withDefaults(defineProps<IBtnProps<T>>(), {
   ...getComponentProps('button'),
 })
 
@@ -40,9 +40,11 @@ const label = computed(() => {
   return props.label
 })
 
-const preset = computed(() =>
-  props.preset ? BUTTON_PRESET[props.preset] : null,
-)
+const preset = computed(() => {
+  const presets = props.presets ?? BUTTON_PRESET
+
+  return props.preset ? presets[props.preset] : null,
+})
 
 const classes = computed(() => {
   return [
