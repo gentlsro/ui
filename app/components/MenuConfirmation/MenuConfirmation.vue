@@ -24,7 +24,7 @@ const mergedProps = computed(() => {
 })
 
 // Layout
-const confirmBtnEl = useTemplateRef('confirmBtnEl')
+const confirmBtnEl = useTemplateRef<any>('confirmBtnEl')
 const isConfirmation = defineModel<boolean>({ default: false })
 
 function handleConfirm() {
