@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends CustomPresets">
+<script setup lang="ts" generic="T extends CustomPresets = Record<string, never>">
 // Types
 import type { CustomPresets, IBtnProps } from './types/btn-props.type'
 
@@ -6,7 +6,7 @@ import type { CustomPresets, IBtnProps } from './types/btn-props.type'
 import { useBtnUtils } from './functions/useBtnUtils'
 
 // Constants
-import { BUTTON_PRESET } from './constants/button-preset.constant'
+import type { BUTTON_PRESET } from './constants/button-preset.constant'
 import { BTN_DEFAULT_PROPS } from './constants/btn-default-props.constant'
 
 // Components
@@ -41,9 +41,13 @@ const label = computed(() => {
 })
 
 const preset = computed(() => {
-  const presets = (props.presets ?? BUTTON_PRESET)
+  const presets = mergedProps.value.presets as ((typeof BUTTON_PRESET) & T) | undefined
 
-  return props.preset ? presets[props.preset] : null
+  if (!presets) {
+    return null
+  }
+
+  return presets[props.preset as keyof typeof presets] ?? null
 })
 
 const classes = computed(() => {

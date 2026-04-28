@@ -179,7 +179,7 @@ export const defaultComponentsConfig = {
         loaderClass: ({ defaults }) => defaults.all,
       },
     },
-    merge: ['ui'],
+    merge: ['ui', 'presets'],
   },
 
   // ButtonGroup

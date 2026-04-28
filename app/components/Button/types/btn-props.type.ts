@@ -11,9 +11,10 @@ import type { BREAKPOINTS } from '../../../../shared/constants/breakpoints'
 
 export type CustomPresets = Record<string, { icon: string, color: string }>
 
-type BtnPresetKey<T extends CustomPresets> = string extends keyof T
-  ? keyof typeof BUTTON_PRESET
-  : keyof T
+/** Built-in preset names plus keys of optional `presets` (merged with `BUTTON_PRESET` at runtime). */
+type BtnPresetKey<T extends CustomPresets>
+  = | keyof typeof BUTTON_PRESET
+    | (string extends keyof T ? never : keyof T)
 
 export type INavigation = {
   disabled?: boolean
@@ -42,7 +43,7 @@ export type IBtnNavigationProps = INavigation & {
   type?: 'button' | 'submit' | 'reset'
 }
 
-export type IBtnProps<T extends CustomPresets = typeof BUTTON_PRESET> = IBtnNavigationProps & {
+export type IBtnProps<T extends CustomPresets = Record<string, never>> = IBtnNavigationProps & {
   /**
    * Alignment of the button content
    */
@@ -131,9 +132,7 @@ export type IBtnProps<T extends CustomPresets = typeof BUTTON_PRESET> = IBtnNavi
   preset?: BtnPresetKey<T>
 
   /**
-   * Custom presets that can be referenced in the `preset` prop
-   *
-   * Note: If left empty, the default presets will be used
+   * Extra presets merged with defaults (`BUTTON_PRESET`, see UI layer `button.merge`).
    */
   presets?: T
 
