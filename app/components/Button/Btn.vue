@@ -40,7 +40,7 @@ const label = computed(() => {
 })
 
 const preset = computed(() => {
-  const presets = mergedProps.value.presets
+  const presets = mergedProps.value.presets ?? {}
 
   return presets[props.preset as keyof typeof presets] ?? null
 })
