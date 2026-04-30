@@ -11,9 +11,13 @@ import type { BREAKPOINTS } from '../../../../shared/constants/breakpoints'
 
 export type CustomPresets = Record<string, { icon: string, color: string }>
 
+// eslint-disable-next-line ts/consistent-type-definitions
+export interface BtnPresetRegistry {}
+
 /** Built-in preset names plus keys of optional `presets` (merged with `BUTTON_PRESET` at runtime). */
 type BtnPresetKey<T extends CustomPresets>
   = | keyof ButtonPresetDefaults
+    | keyof BtnPresetRegistry
     | (string extends keyof T ? never : keyof T)
 
 export type INavigation = {
