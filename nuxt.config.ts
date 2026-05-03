@@ -95,20 +95,6 @@ export default defineNuxtConfig({
     transpile: ['imask', 'vue-imask'],
   },
 
-  nitro: {
-    imports: {
-      imports: [
-        //
-      ],
-
-      dirs: [
-        resolve('./shared/composables'),
-        resolve('./shared/constants'),
-        resolve('./shared/models'),
-      ],
-    },
-  },
-
   typescript: {
     includeWorkspace: true,
 
