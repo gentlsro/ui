@@ -96,8 +96,6 @@ export default defineNuxtConfig({
   },
 
   typescript: {
-    includeWorkspace: true,
-
     tsConfig: {
       compilerOptions: {
         paths: {
