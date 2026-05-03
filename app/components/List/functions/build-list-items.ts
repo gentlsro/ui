@@ -1,6 +1,3 @@
-import type { Required } from 'utility-types'
-import type { FuseOptions } from '@vueuse/integrations/useFuse.mjs'
-
 // Types
 import type { FuseResult } from 'fuse.js'
 import type { IListItem } from '../types/list-item.type'
@@ -20,7 +17,7 @@ export async function buildListItems(payload: {
   items: IItem[]
   search?: string
   noFilter?: boolean
-  fuseOptions: Required<FuseOptions<any>, 'keys'>
+  fuseOptions: IFuseOptions
   useWorker?: boolean
   groupBy?: GroupItem[]
   sortBy: SortItem[]

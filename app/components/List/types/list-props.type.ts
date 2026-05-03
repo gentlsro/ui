@@ -1,5 +1,4 @@
 import type { AllowedComponentProps, ConcreteComponent, CSSProperties } from 'vue'
-import type { FuseOptions } from '@vueuse/integrations/useFuse'
 
 // Types
 import type { IListItem } from './list-item.type'
@@ -256,7 +255,7 @@ export type IListProps = {
     /**
      * Fuse.js options
      */
-    fuseOptions?: FuseOptions<any>
+    fuseOptions?: IFuseOptions
 
     /**
      * When true, the searched items will have highlighted parts of the tex

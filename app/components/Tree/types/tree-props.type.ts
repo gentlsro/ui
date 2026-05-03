@@ -1,5 +1,4 @@
 import type { AllowedComponentProps, CSSProperties } from 'vue'
-import type { FuseOptions } from '@vueuse/integrations/useFuse.mjs'
 
 // Types
 import type { ITreeNode } from './tree-node.type'
@@ -152,7 +151,7 @@ export type ITreeProps<T extends IItem = IItem> = {
     /**
      * Fuse.js options
      */
-    fuseOptions?: FuseOptions<T>
+    fuseOptions?: IFuseOptions<T>
 
     /**
      * Props to pass to the search input

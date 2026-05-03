@@ -1,10 +1,8 @@
-import { ZodType } from 'zod'
 import type { Required } from 'utility-types'
 
 // Types
 import type { IListItem } from '../types/list-item.type'
 import type { IListProps } from '../types/list-props.type'
-import type { FuseOptions } from '@vueuse/integrations/useFuse'
 import type { IListEmitFncs } from '../types/list-emit-fncs.type'
 import type { IListDragMeta } from '../types/list-drag-meta.type'
 import type { IListItemToAdd } from '../types/list-item-to-add.type'
@@ -112,7 +110,7 @@ function createStore(injectionKey?: string) {
       defaultValue: undefined,
     }) as Ref<string | undefined>
 
-    const fuseOptions = ref<Required<FuseOptions<any>, 'keys'>>({
+    const fuseOptions = ref<IFuseOptions>({
       minMatchCharLength: 1,
       threshold: 0.4,
       isCaseSensitive: false,
