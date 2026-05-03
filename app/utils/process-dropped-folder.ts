@@ -1,13 +1,10 @@
 // NOTE: Completely vibe-coded
 
-// Add type definitions for missing browser APIs
+// Missing from lib.dom: Data Transfer + File System Access overlap
 declare global {
+  // eslint-disable-next-line ts/consistent-type-definitions -- merges with DOM `DataTransferItem`
   interface DataTransferItem {
     getAsFileSystemHandle?: () => Promise<FileSystemHandle>
-  }
-
-  interface FileSystemDirectoryHandle extends FileSystemHandle {
-    values: () => AsyncIterableIterator<FileSystemHandle>
   }
 }
 
