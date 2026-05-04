@@ -48,6 +48,7 @@ const menuItems = computed<Array<IBtnProps & { id: string }>>(() => {
             nodeEditing.value = nodeContextMenu.value
             $hide()
           },
+          style: 'order: 10;',
         },
         // Delete
         {
@@ -58,6 +59,7 @@ const menuItems = computed<Array<IBtnProps & { id: string }>>(() => {
           onClick: () => {
             isDelete.value = true
           },
+          style: 'order: 20;',
         },
       ]
 
@@ -89,6 +91,7 @@ const menuItems = computed<Array<IBtnProps & { id: string }>>(() => {
             })
             $hide()
           },
+          style: 'order: 10;',
         },
         // New folder
         {
@@ -114,6 +117,7 @@ const menuItems = computed<Array<IBtnProps & { id: string }>>(() => {
             })
             $hide()
           },
+          style: 'order: 20;',
         },
         // Rename
         {
@@ -125,6 +129,7 @@ const menuItems = computed<Array<IBtnProps & { id: string }>>(() => {
             nodeEditing.value = nodeContextMenu.value
             $hide()
           },
+          style: 'order: 30;',
         },
         // Delete
         {
@@ -136,6 +141,7 @@ const menuItems = computed<Array<IBtnProps & { id: string }>>(() => {
           onClick: () => {
             isDelete.value = true
           },
+          style: 'order: 40;',
         },
       ]
 
@@ -166,6 +172,7 @@ const menuItems = computed<Array<IBtnProps & { id: string }>>(() => {
             })
             $hide()
           },
+          style: 'order: 10;',
         },
         // New folder
         {
@@ -190,6 +197,7 @@ const menuItems = computed<Array<IBtnProps & { id: string }>>(() => {
             })
             $hide()
           },
+          style: 'order: 20;',
         },
       ]
   }
@@ -270,7 +278,6 @@ async function handleDelete() {
         @click="handleDelete"
       />
     </div>
-
     <!-- Selected -->
     <template v-else>
       <slot
