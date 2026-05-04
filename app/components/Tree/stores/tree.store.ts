@@ -116,6 +116,8 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     // D'n'D
     const draggedNode = ref<ITreeNode<T> | undefined>()
     const dragMeta = ref<ITreeDragMeta<T>>({})
+    const cancelDrag = ref(false)
+    const activeDraggable = shallowRef<any>(null)
 
     // Nodes
     const nodesFlattened = shallowRef<ITreeNode<T>[]>([])
@@ -190,6 +192,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
 
         if (!path) {
           agg[node.id] = []
+
           return agg
         }
 
@@ -380,6 +383,8 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       // D'n'D
       draggedNode,
       dragMeta,
+      cancelDrag,
+      activeDraggable,
 
       // Nodes
       nodeById,
