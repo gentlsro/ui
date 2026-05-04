@@ -65,7 +65,7 @@ defineExpose({
   clear: (payload?: { rowHeight?: number }) => {
     const { rowHeight } = payload ?? {}
 
-    heights.value = Array.from({ length: props.rows?.length ?? 0 }, () => rowHeight ?? props.rowHeight)
+    heights.value = Array.from({ length: props.rows?.length ?? 0 }).fill(rowHeight ?? props.rowHeight) as number[]
     renderedRows.value = { rows: [], firstRow: null, lastRow: null }
   },
 
@@ -154,7 +154,7 @@ const overscan = computed(() => {
 })
 
 const heights = ref<number[]>(
-  Array.from({ length: props.rows?.length ?? 0 }, () => props.rowHeight),
+  Array.from({ length: props.rows?.length ?? 0 }).fill(props.rowHeight) as number[],
 )
 
 const heightsCumulated = computed(() => {
@@ -476,12 +476,9 @@ watch(rows, (rows, rowsOld) => {
   // the default heights -> they will be recalculated when the rows are mounted
   if (props.fetchMore) {
     const newRowsCount = (rows.length ?? 0) - (rowsOld.length ?? 0)
-    const newHeights = Array.from(
-      { length: newRowsCount },
-      () => props.rowHeight,
-    )
+    const newHeights = Array.from({ length: newRowsCount }).fill(props.rowHeight)
 
-    heights.value = [...heights.value, ...newHeights]
+    heights.value = [...heights.value, ...newHeights] as number[]
 
     nextTick(() => {
       rerenderVisibleRows({ triggerScrollEvent: true, emitScrollEvent: false })
@@ -490,10 +487,7 @@ watch(rows, (rows, rowsOld) => {
 
   // Otherwise we want to recalculate the heights - basically reinitialize the component
   else {
-    heights.value = Array.from(
-      { length: rows.length ?? 0 },
-      () => props.rowHeight,
-    )
+    heights.value = Array.from({ length: rows.length ?? 0 }).fill(props.rowHeight) as number[]
 
     renderedRows.value = getRenderedRows(0, INITIAL_ROWS_RENDER_COUNT)
 
