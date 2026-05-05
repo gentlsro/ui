@@ -4,12 +4,14 @@ import type { IBtnProps } from '../Button/types/btn-props.type'
 // Store
 import { useTreeDmsStore } from './stores/tree-dms.store'
 import { useTreeStore } from '../Tree/stores/tree.store'
+import { isNodeSelected } from '../Tree/functions/is-node-selected'
 
 // Store
 const {
   selection,
   idKey,
   childrenKey,
+  selectionConfig,
   insertNode,
   removeNode,
   expandNode,
@@ -226,10 +228,21 @@ async function handleDelete() {
     }
   }
 
+  const isSelected = isNodeSelected({
+    node: nodeContextMenu.value,
+    selection: selection.value,
+    idKey: 'id',
+    selectionConfig: selectionConfig.value,
+  })
+
   removeNode(nodeContextMenu.value)
   isDelete.value = false
-  selection.value = undefined
   nodeContextMenu.value = undefined
+
+  if (isSelected) {
+    selection.value = undefined
+  }
+
   $hide()
 }
 </script>
