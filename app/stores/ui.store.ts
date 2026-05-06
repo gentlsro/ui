@@ -73,17 +73,13 @@ export const useUIStore = defineStore('__ui', () => {
 
   if (!isInitialized.value && import.meta.client) {
     document.documentElement.addEventListener('pointerdown', ev => {
-      requestAnimationFrame(() => {
-        lastPointerDownEvent.value = ev
-        lastPointerDownEl.value = ev.target as HTMLElement
-        lastPointerDownType.value = ev.pointerType
-      })
+      lastPointerDownEvent.value = ev
+      lastPointerDownEl.value = ev.target as HTMLElement
+      lastPointerDownType.value = ev.pointerType
     })
 
     document.documentElement.addEventListener('keydown', ev => {
-      requestAnimationFrame(() => {
-        lastKeydownEvent.value = ev
-      })
+      lastKeydownEvent.value = ev
     })
 
     document.documentElement.addEventListener('paste', ev => {
