@@ -39,8 +39,7 @@ function handleCopyBtnFormat(value: any) {
   if (typeof value === 'object') {
     try {
       return JSON.stringify(value, null, 2)
-    }
-    catch {
+    } catch {
       return value
     }
   } else {
@@ -384,7 +383,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
         :data-key="rowData.rowKey"
       >
         <!-- Label -->
-        <span class="td__label">
+        <span class="td-label">
           {{ column.column._label }}
 
           <!-- Edit button -->
@@ -410,7 +409,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
         </span>
 
         <!-- Value -->
-        <div class="td__value">
+        <div class="td-value">
           <!-- Editing -->
           <template v-if="isEditingCell(rowData, column)">
             <Component
