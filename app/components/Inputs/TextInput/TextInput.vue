@@ -158,7 +158,6 @@ defineExpose({
     </template>
 
     <template #default="{ inputClass, inputStyle }">
-      
       <input
         :id="inputId"
         ref="el"

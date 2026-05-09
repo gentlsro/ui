@@ -42,7 +42,7 @@ export type IInputWrapperProps = IInputLabelProps & {
   /**
    * The hint that will be shown below the input
    */
-  hint?: string
+  hint?: string | (() => string)
 
   /**
    * Whether the input is loading
