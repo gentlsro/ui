@@ -20,6 +20,7 @@ export function useTreeDragAndDrop() {
     treeEl,
     draggedNode,
     dragMeta,
+    cancelDrag,
     nodeById,
     dndConfig,
     nodeMetaById,
@@ -31,6 +32,32 @@ export function useTreeDragAndDrop() {
   let lastY = 0
   let shouldMove = true
   let startMousePosition = { x: 0, y: 0 }
+
+  // Hover-to-expand collapsed folders
+  let hoverExpandTimer: ReturnType<typeof setTimeout> | null = null
+  let hoverExpandTargetId: string | number | null = null
+
+  function startHoverExpandTimer(node: ITreeNode) {
+    if (hoverExpandTargetId === node.id) {
+      return
+    }
+
+    clearHoverExpandTimer()
+
+    hoverExpandTargetId = node.id
+    hoverExpandTimer = setTimeout(() => {
+      store.expandNode(node)
+    }, 800)
+  }
+
+  function clearHoverExpandTimer() {
+    if (hoverExpandTimer) {
+      clearTimeout(hoverExpandTimer)
+      hoverExpandTimer = null
+    }
+
+    hoverExpandTargetId = null
+  }
 
   function handleDragStart<T extends IItem = IItem>(payload: { item: ITreeNode<T>, el: HTMLElement }) {
     // Turn off selection while dragging
@@ -168,10 +195,21 @@ export function useTreeDragAndDrop() {
       } else {
         dragMeta.value.targetParent = { id: '__ROOT__' }
       }
+
+      // Hover-to-expand collapsed nodes
+      const nodeToExpand = parent ?? treeNode
+
+      if (nodeToExpand && nodeMetaById.value[nodeToExpand.id]?.isCollapsed) {
+        startHoverExpandTimer(nodeToExpand)
+      } else {
+        clearHoverExpandTimer()
+      }
     })
   }
 
   function handleDragEnd(drag?: Draggable['drag']) {
+    clearHoverExpandTimer()
+
     const isDragOutOfTree = !document
       .elementsFromPoint(x.value, y.value)
       .some(el => TREE_CLASS.some(cls => el.classList.contains(cls)))
@@ -186,7 +224,7 @@ export function useTreeDragAndDrop() {
     dragItem?.element.remove()
 
     // Resolve the drag
-    if (draggedNode.value && !isDragOutOfTree && shouldMove) {
+    if (draggedNode.value && !isDragOutOfTree && shouldMove && !cancelDrag.value) {
       moveNode({
         mode: dndConfig.value?.dropMode ?? 'parent',
         dragMeta: dragMeta.value,
@@ -194,6 +232,8 @@ export function useTreeDragAndDrop() {
         getStore: () => store,
       })
     }
+
+    cancelDrag.value = false
 
     // Reset dragging
     requestAnimationFrame(() => {
@@ -274,6 +314,7 @@ export function useTreeDragAndDrop() {
         treeElDom.addEventListener('scroll', handleScroll)
         treeElDom.classList.add('hide-scrollbar')
 
+        store.activeDraggable.value = draggable
         handleDragStart({ item, el })
       },
       onMove: drag => handleDragMove(drag.moveEvent as PointerSensorMoveEvent, drag.moveEvent.y - lastY),
@@ -281,6 +322,7 @@ export function useTreeDragAndDrop() {
         onEnd?.()
         treeElDom.removeEventListener('scroll', handleScroll)
         treeElDom.classList.remove('hide-scrollbar')
+        store.activeDraggable.value = null
 
         handleDragEnd(drag)
       },

@@ -4,12 +4,14 @@ import type { IBtnProps } from '../Button/types/btn-props.type'
 // Store
 import { useTreeDmsStore } from './stores/tree-dms.store'
 import { useTreeStore } from '../Tree/stores/tree.store'
+import { isNodeSelected } from '../Tree/functions/is-node-selected'
 
 // Store
 const {
   selection,
   idKey,
   childrenKey,
+  selectionConfig,
   insertNode,
   removeNode,
   expandNode,
@@ -48,6 +50,7 @@ const menuItems = computed<Array<IBtnProps & { id: string }>>(() => {
             nodeEditing.value = nodeContextMenu.value
             $hide()
           },
+          style: 'order: 10;',
         },
         // Delete
         {
@@ -58,6 +61,7 @@ const menuItems = computed<Array<IBtnProps & { id: string }>>(() => {
           onClick: () => {
             isDelete.value = true
           },
+          style: 'order: 20;',
         },
       ]
 
@@ -89,6 +93,7 @@ const menuItems = computed<Array<IBtnProps & { id: string }>>(() => {
             })
             $hide()
           },
+          style: 'order: 10;',
         },
         // New folder
         {
@@ -114,6 +119,7 @@ const menuItems = computed<Array<IBtnProps & { id: string }>>(() => {
             })
             $hide()
           },
+          style: 'order: 20;',
         },
         // Rename
         {
@@ -125,6 +131,7 @@ const menuItems = computed<Array<IBtnProps & { id: string }>>(() => {
             nodeEditing.value = nodeContextMenu.value
             $hide()
           },
+          style: 'order: 30;',
         },
         // Delete
         {
@@ -136,6 +143,7 @@ const menuItems = computed<Array<IBtnProps & { id: string }>>(() => {
           onClick: () => {
             isDelete.value = true
           },
+          style: 'order: 40;',
         },
       ]
 
@@ -166,6 +174,7 @@ const menuItems = computed<Array<IBtnProps & { id: string }>>(() => {
             })
             $hide()
           },
+          style: 'order: 10;',
         },
         // New folder
         {
@@ -190,6 +199,7 @@ const menuItems = computed<Array<IBtnProps & { id: string }>>(() => {
             })
             $hide()
           },
+          style: 'order: 20;',
         },
       ]
   }
@@ -218,10 +228,21 @@ async function handleDelete() {
     }
   }
 
+  const isSelected = isNodeSelected({
+    node: nodeContextMenu.value,
+    selection: selection.value,
+    idKey: 'id',
+    selectionConfig: selectionConfig.value,
+  })
+
   removeNode(nodeContextMenu.value)
   isDelete.value = false
-  selection.value = undefined
   nodeContextMenu.value = undefined
+
+  if (isSelected) {
+    selection.value = undefined
+  }
+
   $hide()
 }
 </script>
@@ -270,7 +291,6 @@ async function handleDelete() {
         @click="handleDelete"
       />
     </div>
-
     <!-- Selected -->
     <template v-else>
       <slot

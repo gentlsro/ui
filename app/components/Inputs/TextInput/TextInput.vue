@@ -29,6 +29,7 @@ const mergedProps = computed(() => {
 // Layout
 const wrapperEl = ref<HTMLDivElement>()
 const readonly = toRef(props, 'readonly')
+const isValueTemporaryVisible = ref(false)
 
 const wrapperElDom = computed(() => {
   return unrefElement(wrapperEl.value)
@@ -59,11 +60,44 @@ const {
   maskEventHandlers: props.maskEventHandlers,
 })
 
+const eyeBtnProps = computed(() => {
+  const _props = {
+    size: 'auto',
+    color: 'ca',
+    icon: isValueTemporaryVisible.value ? 'i-eva:eye-fill' : 'i-eva:eye-off-fill',
+    tabindex: '-1',
+  } as IBtnProps
+
+  switch (props.size) {
+    case 'sm':
+      _props.icon += ' w-4 h-4'
+
+      break
+
+    case 'md':
+      _props.icon += ' w-4.5 h-4.5'
+
+      break
+
+    case 'lg':
+      _props.icon += ' w-6 h-6'
+
+      break
+
+    default:
+      _props.icon += ' w-4.5 h-4.5'
+
+      break
+  }
+
+  return _props
+})
+
 const hasCopyBtn = computed(() => {
   return props.readonly && !props.disabled && !props.noCopy && hasContent.value
 })
 
-const type = computed(() => {
+const inputType = computed(() => {
   return props.inputType || props.type
 })
 
@@ -129,7 +163,7 @@ defineExpose({
         ref="el"
         :value="masked"
         flex="1"
-        :type
+        :type="isValueTemporaryVisible ? 'text' : inputType"
         :inputmode
         :placeholder
         :readonly
@@ -175,7 +209,7 @@ defineExpose({
 
     <!-- Append -->
     <template
-      v-if="$slots.append || hasCopyBtn || clearable"
+      v-if="$slots.append || hasCopyBtn || clearable || inputType === 'password'"
       #append
     >
       <div
@@ -186,6 +220,12 @@ defineExpose({
           name="append"
           :clear="clear"
           :focus="focus"
+        />
+
+        <Btn
+          v-if="inputType === 'password'"
+          v-bind="eyeBtnProps"
+          @click="isValueTemporaryVisible = !isValueTemporaryVisible"
         />
 
         <InputClearBtn

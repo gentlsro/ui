@@ -1,9 +1,13 @@
 <script setup lang="ts">
 type IProps = {
-  hint: string
+  hint: string | (() => string)
 }
 
-defineProps<IProps>()
+const props = defineProps<IProps>()
+
+const hint = computed(() => {
+  return typeof props.hint === 'function' ? props.hint() : props.hint
+})
 </script>
 
 <template>

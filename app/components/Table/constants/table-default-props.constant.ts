@@ -35,15 +35,15 @@ export const TABLE_DEFAULT_PROPS = {
       const card = '[&.is-card]:(flex-col gap-y-2px rounded-custom p-2 m-1 dark:bg-black overflow-auto light:(outline-1 outline-ca outline-solid bg-white))'
       const cardSelectable = '[&.is-card.is-selectable]:(cursor-pointer)'
       const cardSelected = '[&.is-card.is-selected]:(outline-1 outline-primary outline-solid bg-primary/15)'
-      const cardCell = '[&.is-card_.td]:(grid w-full items-start rounded-custom min-h-6 [grid-template-columns:1fr_3fr])'
-      const cardCellLabel = '[&.is-card_.td__label]:(relative text-caption text-xs min-h-6 p-t-1 line-clamp-2 h-full)'
-      const cardCellValue = '[&.is-card_.td__value]:(flex items-center gap-1 leading-tight self-center overflow-auto p-x-2)'
+      const cardCell = '[&.is-card_.td]:(grid w-full items-start rounded-custom min-h-6 [grid-template-columns:80px_3fr])'
+      const cardCellLabel = '[&.is-card_.td-label]:(relative text-caption text-xs text-right min-h-6 p-t-1 truncate)'
+      const cardCellValue = '[&.is-card_.td-value]:(flex items-center gap-1 leading-tight self-center overflow-auto p-x-2)'
       const cardEditableHover = '[&.is-card.is-editable_.td.is-editable:hover]:(shadow-ca shadow-consistent-xs)'
       const cardEditableHoverEditBtn = '[&.is-card.is-editable_.td.is-editable:hover_.edit-btn]:(flex)'
       const cardEditBtn = '[&.is-card.is-editable_.edit-btn]:(!absolute top-1/2 right-0 -translate-y-1/2 bg-white dark:bg-black hidden)'
       const cardCancelEditBtn = '[&.is-card.is-editable_.cancel-edit-btn]:(!absolute top-1/2 right-0 -translate-y-1/2 bg-white dark:bg-black hidden)'
       const cardEditingCancel = '[&.is-card_.td.is-editing_.cancel-edit-btn]:(flex)'
-      const cardEditingLabel = '[.tr-split.is-card-editing_&.is-card.is-editable_.td__label]:(color-black dark:color-white)'
+      const cardEditingLabel = '[.tr-split.is-card-editing_&.is-card.is-editable_.td-label]:(color-black dark:color-white)'
 
       return {
         base,
@@ -60,6 +60,7 @@ export const TABLE_DEFAULT_PROPS = {
         cardCancelEditBtn,
         cardEditingCancel,
         cardEditingLabel,
+        // all: `${base} ${cardCell} ${cardCellLabel} ${cardCellValue}`,
         all: `${base} ${clickable} ${card} ${cardSelectable} ${cardSelected} ${cardCell} ${cardCellLabel} ${cardCellValue} ${cardEditableHover} ${cardEditableHoverEditBtn} ${cardEditBtn} ${cardCancelEditBtn} ${cardEditingCancel} ${cardEditingLabel}`,
       } as const
     },

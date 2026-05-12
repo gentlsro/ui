@@ -14,9 +14,26 @@ export function useTreeKeyboard() {
     nodesVisible,
     nodeMetaById,
     nodeFocused,
+    draggedNode,
+    cancelDrag,
+    activeDraggable,
   } = store
 
   const { focused } = useFocusWithin(treeEl)
+
+  // Esc capture phase — fires before node @keydown handlers that call stopPropagation
+  useEventListener(document, 'keydown', handleEscape, { capture: true })
+
+  function handleEscape(ev: KeyboardEvent) {
+    if (ev.key !== 'Escape') {
+      return
+    }
+
+    if (draggedNode.value) {
+      cancelDrag.value = true
+      activeDraggable.value?.stop()
+    }
+  }
 
   onKeyStroke(
     ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter', 'Tab'],
