@@ -71,7 +71,9 @@ syncRef(toRef(props, 'getFilterComponent'), storeGetFilterComponentFnc, { direct
 // Lifecycle
 // When no items are provided, initialize the items with a group
 if (!props.items.length && !props.noInitialization) {
-  storeItems.value = queryBuilderInitializeItems()
+  nextTick(() => {
+    storeItems.value = queryBuilderInitializeItems()
+  })
 }
 
 useResizeObserver(queryBuilderEl, entries => {
