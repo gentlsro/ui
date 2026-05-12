@@ -604,10 +604,12 @@ function renderOnlyVisible(
 
 // Styles - Container
 const uiContainerClass = computed(() => {
-  return {
-    ...mergedProps.value?.ui?.containerClass?.({ defaults: VIRTUAL_SCROLLER_DEFAULT_PROPS.ui.containerClass() }),
-    'is-virtual': isMounted.value && isVirtual.value,
-  }
+  const containerClass = mergedProps.value?.ui?.containerClass?.({ defaults: VIRTUAL_SCROLLER_DEFAULT_PROPS.ui.containerClass() })
+
+  return [
+    { 'is-virtual': isMounted.value && isVirtual.value },
+    ...(containerClass ? [containerClass] : []),
+  ]
 })
 
 const uiContainerStyle = computed(() => {
