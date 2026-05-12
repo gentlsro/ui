@@ -14,6 +14,9 @@ const mergedProps = computed(() => {
   return getComponentMergedProps('buttonGroup', props)
 })
 
+// Layout
+const model = toRef(props, 'modelValue')
+
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
@@ -49,7 +52,7 @@ const activeStyle = computed(() => {
       v-bind="btn"
       :disabled
       disable-style="flat"
-      :class="{ [activeClass]: btn.value === modelValue }"
+      :class="model === btn.value && activeClass"
       :style="btn.value === modelValue ? activeStyle : undefined"
     >
       <template #default>

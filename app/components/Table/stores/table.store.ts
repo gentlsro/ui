@@ -390,6 +390,7 @@ const [
   const internalColumns = ref<TableColumn<any>[]>([])
 
   const internalColumnsByField = computed(() => {
+    // @ts-ignore Excessive
     return internalColumns.value.reduce((agg, col) => {
       agg[col.field] = col
 
@@ -649,6 +650,7 @@ const [
     }
 
     const lastRow = rows.value[rows.value.length - 1] as IItem
+
     return buildFetchPayload({
       columns: internalColumns.value,
       queryBuilder: queryBuilder.value,

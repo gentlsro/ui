@@ -214,8 +214,8 @@ const rowClassArray = computed(() => {
         'is-even': isEven,
         'is-editable': isEditableRow.value,
         'is-selectable': rowData?.isSelectable,
-        [alternateRowClass ?? '']: !!alternateRowClass && isEven && !isCardView.value,
       },
+      ...(alternateRowClass && isEven && !isCardView.value ? [alternateRowClass] : []),
     ]
   })
 })
