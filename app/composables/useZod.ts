@@ -175,6 +175,7 @@ export function useZod<Validation extends z.ZodType = z.ZodType>(payload?: IPayl
   })
 
   return {
+    scope,
     componentName,
     errorsStructure,
     validation,
