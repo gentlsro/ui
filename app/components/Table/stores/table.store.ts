@@ -649,6 +649,7 @@ const [
     }
 
     const lastRow = rows.value[rows.value.length - 1] as IItem
+
     return buildFetchPayload({
       columns: internalColumns.value,
       queryBuilder: queryBuilder.value,
