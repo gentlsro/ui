@@ -14,5 +14,5 @@ export function getLocalImageUrl(image?: string | null, options: { folder?: stri
 
   const { folder = '' } = options
 
-  return join(`${filesHost}/${folder}/${image}`)
+  return `${filesHost}/${join(`${folder}/${image}`)}`
 }
