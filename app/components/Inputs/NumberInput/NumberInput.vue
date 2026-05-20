@@ -66,6 +66,7 @@ const {
   el,
   inputId,
   model,
+  originalModel,
   masked,
   wrapperProps,
   hasNoValue,
@@ -209,7 +210,7 @@ defineExpose({
         <NumberInputStep
           v-if="step && !readonly && !disabled"
           v-bind="props"
-          v-model="model"
+          v-model="originalModel"
         />
       </div>
     </template>
