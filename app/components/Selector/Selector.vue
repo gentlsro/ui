@@ -97,6 +97,8 @@ const {
 const fieldProps = getFieldProps(props)
 
 // Layout
+const optionsOriginal = defineModel<ISelectorProps['options']>('options')
+
 const {
   isPreventNextFocus,
   hasContent,
@@ -128,7 +130,17 @@ function handleClear() {
 }
 
 // Options
-options.value = selectorTransformOptions(options.value, props)
+syncRef(
+  optionsOriginal,
+  options,
+  {
+    immediate: true,
+    direction: 'both',
+    transform: {
+      ltr: left => selectorTransformOptions(left, props),
+    },
+  },
+)
 
 const hasClearButton = computed(() => {
   return isEditable.value && props.clearable && hasContent.value

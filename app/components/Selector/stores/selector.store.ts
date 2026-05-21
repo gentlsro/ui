@@ -55,12 +55,7 @@ function createStore(injectionKey?: string) {
       defaultValue: [],
     }) as Ref<NonUndefined<ISelectorProps['addedItems']>>
 
-    const options = initRef({
-      propName: 'options',
-      instance,
-      props: selectorProps,
-      defaultValue: [],
-    }) as Ref<NonUndefined<ISelectorProps['options']>>
+    const options = ref([]) as Ref<NonUndefined<ISelectorProps['options']>>
 
     const isLoading = initRef({
       propName: 'loading',
