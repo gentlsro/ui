@@ -15,7 +15,7 @@ const mergedProps = computed(() => {
 })
 
 // Layout
-const model = toRef(props, 'modelValue')
+const model = defineModel<IButtonGroupProps['modelValue']>()
 
 // Styles - container
 const containerClass = computed(() => {
@@ -54,6 +54,7 @@ const activeStyle = computed(() => {
       disable-style="flat"
       :class="model === btn.value && activeClass"
       :style="btn.value === modelValue ? activeStyle : undefined"
+      @click="model = btn.value"
     >
       <template #default>
         <slot :name="btn.value" />
