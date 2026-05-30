@@ -76,7 +76,6 @@ export function useListKeyboard(config?: { registerKeyStroke?: boolean }) {
     if (!listItems.value || isUnfocused) {
       return
     }
-    console.log(ev.key)
 
     const isCtrl = ev.ctrlKey || ev.metaKey
 
