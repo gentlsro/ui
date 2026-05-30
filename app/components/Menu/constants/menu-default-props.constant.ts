@@ -10,7 +10,7 @@ export const MENU_DEFAULT_PROPS = {
       const background = 'dark:bg-dark-950/90 bg-white/90 backdrop-blur-2px'
       const border = 'rounded-custom border-1 border-ca'
       const limits = 'max-w-95vw max-h-95%'
-      const shadow = 'shadow-consistent-xs shadow-darker/20 shadow-light/8'
+      const shadow = 'light:(shadow-consistent-xs shadow-darker/12)'
 
       return {
         base,

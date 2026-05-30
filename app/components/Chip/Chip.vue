@@ -71,8 +71,13 @@ const labelStyle = computed(() => {
     :class="[classes, containerClass]"
     :style="containerStyle"
   >
+    <Icon
+      v-if="icon && typeof icon === 'string'"
+      :name="icon"
+    />
+
     <div
-      v-if="icon"
+      v-else-if="icon"
       :class="icon"
     />
 
