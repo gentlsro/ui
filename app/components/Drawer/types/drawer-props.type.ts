@@ -50,12 +50,18 @@ export type IDrawerProps = {
   /**
    * The title of the drawer
    */
-  title?: string
+  title?: string | false | (() => string | false | undefined)
 
   /**
    * The width of the drawer
    */
   width?: number
+
+  /**
+   * The element that the drawer should be anchored to when
+   * using the `absolute` prop
+   */
+  referenceEl?: HTMLElement | null
 
   /**
    * Visual configuration

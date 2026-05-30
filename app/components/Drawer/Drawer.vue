@@ -24,6 +24,14 @@ const mergedProps = computed(() => {
 // Layout
 const model = defineModel<boolean>({ default: false })
 
+const title = computed(() => {
+  if (typeof props.title === 'function') {
+    return props.title()
+  }
+
+  return props.title
+})
+
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
@@ -75,34 +83,39 @@ onClickOutside(drawerEl, handleClickOutside, {
 </script>
 
 <template>
-  <aside
-    ref="drawerEl"
-    class="drawer"
-    :class="[
-      `drawer--${side}`,
-      {
-        'is-open': model,
-        'is-full-height': fullHeight,
-        'is-absolute': absolute,
-      },
-      containerClass,
-    ]"
-    :style="[{ width: `${width}px` }, containerStyle]"
-    @transitionstart="handleTransition($event, 'start')"
-    @transitionend="handleTransition($event, 'end')"
+  <Teleport
+    :disabled="!referenceEl"
+    :to="referenceEl"
   >
-    <!-- Title -->
-    <slot name="title">
-      <DrawerTitle
-        v-if="title"
-        v-model="model"
-        :title
-        :ui="mergedProps.ui"
-      />
-    </slot>
+    <aside
+      ref="drawerEl"
+      class="drawer"
+      :class="[
+        `drawer--${side}`,
+        {
+          'is-open': model,
+          'is-full-height': fullHeight,
+          'is-absolute': absolute,
+        },
+        containerClass,
+      ]"
+      :style="[{ width: `${width}px` }, containerStyle]"
+      @transitionstart="handleTransition($event, 'start')"
+      @transitionend="handleTransition($event, 'end')"
+    >
+      <!-- Title -->
+      <slot name="title">
+        <DrawerTitle
+          v-if="title"
+          v-model="model"
+          :title
+          :ui="mergedProps.ui"
+        />
+      </slot>
 
-    <slot />
-  </aside>
+      <slot />
+    </aside>
+  </Teleport>
 </template>
 
 <style scoped lang="scss">

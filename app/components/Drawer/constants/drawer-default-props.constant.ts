@@ -3,7 +3,7 @@
 export const DRAWER_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'fixed flex flex-col gap-1 top-0 bg-light-200 dark:bg-dark-800 z-$zDrawer max-w-full overflow-auto'
+      const base = 'fixed flex flex-col gap-1 top-0 bg-white/85 dark:bg-dark-950/95 z-$zDrawer max-w-full overflow-auto'
 
       // Side positioning
       const right = '[&.drawer--right]:(right-0 translate-x-100%)'
