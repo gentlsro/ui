@@ -168,17 +168,21 @@ const menuProps = computed(() => {
 })
 
 // Preselect first
-if (props.preselectFirst) {
-  const firstOption = options.value[0]
+function preselectFirst() {
+  if (props.preselectFirst) {
+    const firstOption = options.value[0]
 
-  if (firstOption) {
-    model.value = getListItemEmitValue(firstOption, {
-      emitKey: props.emitKey,
-      itemKey: props.optionKey,
-      itemByKey: { [getListItemKey(firstOption, props.optionKey)]: firstOption },
-    })
+    if (firstOption) {
+      model.value = getListItemEmitValue(firstOption, {
+        emitKey: props.emitKey,
+        itemKey: props.optionKey,
+        itemByKey: { [getListItemKey(firstOption, props.optionKey)]: firstOption },
+      })
+    }
   }
 }
+
+preselectFirst()
 
 // Styles - append
 const appendClass = computed(() => {
@@ -209,13 +213,18 @@ watch(
 
 // Initialize the options if `immediate` is set
 if (props.immediateFetch && mergedProps.value.loadData?.fnc) {
+  const mergedListPropsLoadData = getComponentMergedProps('list', props.listProps)
+
   listFetchData({
-    search: search.value,
+    search: search.value ?? '',
     fn,
-    loadData: mergedProps.value.loadData,
+    loadData: merge(mergedListPropsLoadData.loadData, mergedProps.value.loadData),
     items: [],
     modifiers: mergedProps.value.listProps?.modifiers,
-  }).then(({ items }) => options.value = items)
+  }).then(({ items }) => {
+    options.value = items
+    preselectFirst()
+  })
 }
 </script>
 
