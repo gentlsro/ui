@@ -91,26 +91,29 @@ const selectionState = computed(() => {
 })
 
 function handleSelect() {
-  // Some selected
+  // Some rows selected (indeterminate) → select all
   if (selectionState.value === null) {
     const toSelect = rowKeys.value.map((rowKey, idx) => {
       return selectionConfig.value?.emitKey ? rowKey : rows.value[idx]
     })
 
+    selectionConfig.value?.onSelectAll?.(toSelect)
     selection.value = toSelect
   }
 
-  // All selected
+  // All rows selected → deselect all
   else if (selectionState.value === true) {
-    selection.value = selectionConfig.value.multi ? [] : undefined
+    selectionConfig.value?.onSelectAll?.([])
+    selection.value = selectionConfig.value?.multi ? [] : undefined
   }
 
-  // Not all selected
+  // No rows selected → select all
   else {
     const toSelect = rowKeys.value.map((rowKey, idx) => {
       return selectionConfig.value?.emitKey ? rowKey : rows.value[idx]
     })
 
+    selectionConfig.value?.onSelectAll?.(toSelect)
     selection.value = toSelect
   }
 }
