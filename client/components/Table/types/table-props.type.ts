@@ -521,6 +521,13 @@ export type ITableProps<
     disabled?: ((row: any) => boolean)
 
     /**
+     * Function that gets called when all rows are selected/deselected via the
+     * header checkbox. Receives the rows being selected, or an empty array when
+     * deselecting all.
+     */
+    onSelectAll?: (rows: any[]) => void
+
+    /**
      * Whether the selection is multi-select
      */
     multi?: boolean
