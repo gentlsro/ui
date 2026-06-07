@@ -799,6 +799,8 @@ const [
 
     if (!isNil(countFetched)) {
       totalRows.value = countFetched
+    } else {
+      totalRows.value = rowsFetched.length
     }
 
     rows.value = isFetchMore.value ? [...rows.value, ...rowsFetched] : rowsFetched
