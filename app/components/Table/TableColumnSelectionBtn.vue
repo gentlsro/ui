@@ -194,7 +194,7 @@ function handleRemove(idx: number) {
             :items="interactiveNonHelperColumns"
             item-key="field"
             item-label="_label"
-            :selection-config="{ enabled: true, multi: true, useCheckbox: true, checkboxProps: { class: 'm-t-1.5' } }"
+            :selection-config="{ enabled: true, multi: true, useCheckbox: true }"
           >
             <template #above="{ listItems, items }">
               <div

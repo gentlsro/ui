@@ -83,7 +83,6 @@ export const useUIStore = defineStore('__ui', () => {
     })
 
     document.documentElement.addEventListener('paste', ev => {
-      console.log('paste')
       lastPasteEvent.value = ev
     })
 
