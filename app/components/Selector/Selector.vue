@@ -169,7 +169,9 @@ const menuProps = computed(() => {
 
 // Preselect first
 function preselectFirst() {
-  if (props.preselectFirst) {
+  const isEmpty = isNil(model.value) || model.value === props.emptyValue
+
+  if (props.preselectFirst && isEmpty) {
     const firstOption = options.value[0]
 
     if (firstOption) {
