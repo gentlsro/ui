@@ -825,6 +825,7 @@ export const defaultComponentsConfig = {
       trigger: 'click',
       ui: {
         confirmBtnClass: ({ defaults }) => defaults.all,
+        confirmationTextClass: ({ defaults }) => defaults.all,
       },
     },
     merge: ['ui'],
