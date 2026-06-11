@@ -40,6 +40,7 @@ import type { IKeyboardShortcutProps } from './app/components/KeyboardShortcut/t
 import type { IListProps } from './app/components/List/types/list-props.type'
 import type { ILoaderProps } from './app/components/Loader/types/loader-props.type'
 import type { IMainBarProps } from './app/components/MainBar/types/main-bar-props.type'
+import type { IMarqueeProps } from './app/components/Marquee/types/marquee-props.type'
 import type { IMenuConfirmationProps } from './app/components/MenuConfirmation/types/menu-confirmation-props.type'
 import type { IMenuProps } from './app/components/Menu/types/menu-props.type'
 import type { IMenuProxyProps } from './app/components/MenuProxy/types/menu-proxy-props.type'
@@ -748,6 +749,23 @@ export const defaultComponentsConfig = {
     props: {
       variant: 'block',
     },
+  },
+
+  // Marquee
+  marquee: {
+    props: {
+      duration: '40s',
+      gap: '1rem',
+      pauseOnHover: undefined,
+      repeat: 4,
+      reverse: undefined,
+      vertical: undefined,
+      ui: {
+        containerClass: ({ defaults }) => defaults.all,
+        contentClass: ({ defaults }) => defaults.all,
+      },
+    },
+    merge: ['ui'],
   },
 
   // Menu
@@ -1768,6 +1786,7 @@ export type IUIConfig = {
   item: IConfigItem<IItemProps>
   list: IConfigItem<IListProps>
   loader: IConfigItem<ILoaderProps>
+  marquee: IConfigItem<IMarqueeProps>
   menuConfirmation: IConfigItem<IMenuConfirmationProps>
   menuProxy: IConfigItem<IMenuProxyProps>
   miniCard: IConfigItem<IMiniCardProps>
