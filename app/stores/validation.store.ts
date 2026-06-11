@@ -6,24 +6,6 @@ import { translateZodIssue } from '#layers/utilities/app/functions/translate-zod
 import type { SchemaType } from '../functions/is-field-required'
 import { isZodSchema } from '../functions/is-field-required'
 
-/**
- * Get translated message from a Zod issue
- */
-function getZodIssueMessage(issue: z.ZodIssue): string {
-  // Cast needed due to Zod internal type differences between ZodIssue and $ZodIssue
-  const result = (translateZodIssue as (issue: unknown) => string | { message: string } | null | undefined)(issue)
-
-  if (!result) {
-    return issue.message
-  }
-
-  if (typeof result === 'string') {
-    return result
-  }
-
-  return result.message ?? issue.message
-}
-
 export type ExtendedError = {
   error: unknown
 
@@ -83,7 +65,7 @@ function resolveErrorsRecursively(payload: {
     result.error.issues.forEach(issue => {
       errors?.push({
         $path: issue.path.join('.'),
-        $message: getZodIssueMessage(issue),
+        $message: issue.message,
         $schema: schema,
         $componentName: componentName,
         error: issue,
