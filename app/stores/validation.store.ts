@@ -109,7 +109,7 @@ function createStore(injectionKey?: string) {
           if (schema && state) {
             // Handle both ArkType and Zod schemas
             const result = isZodSchema(schema)
-              ? schema.safeParse(toValue(state))
+              ? schema.safeParse(toValue(state), { error: translateZodIssue })
               : schema(toValue(state))
 
             resolveErrorsRecursively({
