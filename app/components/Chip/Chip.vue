@@ -62,6 +62,13 @@ const labelClass = computed(() => {
 const labelStyle = computed(() => {
   return mergedProps.value?.ui?.labelStyle?.()
 })
+
+const isIconifyIcon = computed(() => {
+  const noSpacesRegex = /^\S+$/
+
+  return typeof props.icon === 'string'
+    && noSpacesRegex.test(props.icon)
+})
 </script>
 
 <template>
@@ -72,8 +79,8 @@ const labelStyle = computed(() => {
     :style="containerStyle"
   >
     <Icon
-      v-if="icon && typeof icon === 'string'"
-      :name="icon"
+      v-if="icon && isIconifyIcon"
+      :name="(icon as string)"
     />
 
     <div
