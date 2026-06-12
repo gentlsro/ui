@@ -64,6 +64,11 @@ const resizeClass = computed(() => {
   return props.autogrow ? 'resize-none' : props.resize
 })
 
+// Wrapper class
+const wrapperClass = computed(() => {
+  return !isBlurred.value ? 'is-focused' : ''
+})
+
 // Styles - append
 const appendClass = computed(() => {
   return mergedProps.value.ui?.appendClass?.({
@@ -96,6 +101,7 @@ defineExpose({
   <InputWrapper
     v-bind="wrapperProps"
     :id="inputId"
+    :class="wrapperClass"
     :has-content
     :ui="mergedProps.ui"
     .focus="focus"

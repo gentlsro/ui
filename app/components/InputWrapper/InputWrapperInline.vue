@@ -89,7 +89,7 @@ const inputInnerContainerStyle = computed(() => {
 
       <!-- Input -->
       <div
-        class="input-wrapper__input  input-wrapper__inline-input-input overflow-auto"
+        class="input-wrapper__input  input-wrapper__inline-input-input"
         :class="inputInnerContainerClass"
         :style="inputInnerContainerStyle"
       >
@@ -118,6 +118,13 @@ const inputInnerContainerStyle = computed(() => {
 <style lang="scss" scoped>
 .input-wrapper__inline {
   @apply flex flex-col rounded-$borderRadius;
+
+  // &:focus-within {
+  //   > .input-wrapper__inline-input > .input-wrapper__inline-border {
+  //     @apply ring-2 ring-primary ring-offset-2
+  //       ring-offset-white dark:ring-offset-black;
+  //   }
+  // }
 
   &-label {
     @apply shrink-0;
@@ -154,7 +161,7 @@ const inputInnerContainerStyle = computed(() => {
   }
 
   .input-wrapper__inline-input-error {
-    @apply p-x-3;
+    @apply p-x-1;
     grid-area: error;
   }
 

@@ -78,8 +78,11 @@ const {
   el,
   inputId,
   isEditable,
+  isBlurred,
   getFieldProps,
+  handleBlur,
   handleFocusOrClick,
+  handleClickWrapper,
 } = useFieldUtils({
   props,
   onBeforeFocus: ev => {
@@ -120,6 +123,7 @@ const wrapperClass = computed(() => {
       'is-active': isPickerActive.value,
       'has-content': hasContent.value,
       'is-menu-width-matched': !props.noMenuMatchWidth,
+      'is-focused': !isBlurred.value && !isPickerActive.value,
     },
   ]
 })
@@ -243,7 +247,8 @@ if (props.immediateFetch && mergedProps.value.loadData?.fnc) {
     data-onboarding="selector"
     .focus="handleFocusOrClick"
     @focus="handleFocusOrClick"
-    @click="handleFocusOrClick"
+    @blur="handleBlur"
+    @click="handleClickWrapper"
   >
     <!-- Label -->
     <template #label="labelProps">

@@ -292,6 +292,7 @@ export const defaultComponentsConfig = {
       noIcon: true,
       ui: {
         borderRadius: '0.5rem',
+        focusInputOnLabelClick: false,
         appendClass: ({ defaults }) => defaults.all,
       },
     },
@@ -355,6 +356,7 @@ export const defaultComponentsConfig = {
       currencyPosition: 'prepend',
       ui: {
         borderRadius: '0.5rem',
+        focusInputOnLabelClick: false,
         appendClass: ({ defaults }) => defaults.all,
       },
     },
@@ -377,6 +379,7 @@ export const defaultComponentsConfig = {
       stackLabel: true,
       ui: {
         borderRadius: '0.5rem',
+        focusInputOnLabelClick: false,
         appendClass: ({ defaults }) => defaults.all,
       },
       utc: utilsConfig.general.useUtc,
@@ -455,6 +458,7 @@ export const defaultComponentsConfig = {
       size: 'md',
       ui: {
         borderRadius: '0.5rem',
+        focusInputOnLabelClick: false,
       },
     },
     merge: ['ui'],
@@ -478,6 +482,7 @@ export const defaultComponentsConfig = {
       readonly: undefined,
       ui: {
         borderRadius: '0.5rem',
+        focusInputOnLabelClick: false,
       },
       inputProps: {},
     },
@@ -489,6 +494,7 @@ export const defaultComponentsConfig = {
     props: {
       ui: {
         borderRadius: '0.5rem',
+        focusInputOnLabelClick: false,
       },
     },
   },
@@ -508,6 +514,7 @@ export const defaultComponentsConfig = {
       noBorder: true,
       activeLabelColor: 'unset',
       ui: {
+        focusInputOnLabelClick: false,
         borderRadius: '0.5rem',
         inputContainerClass: () => '!bg-transparent',
         inputClass: () => '!p-0',
@@ -613,6 +620,7 @@ export const defaultComponentsConfig = {
       minSearchLength: 1,
       ui: {
         borderRadius: '0.5rem',
+        focusInputOnLabelClick: false,
         appendClass: ({ defaults }) => defaults.all,
       },
     },
@@ -655,10 +663,12 @@ export const defaultComponentsConfig = {
           base: '#737373',
           focus: 'var(--color-primary)',
         },
+        focusInputOnLabelClick: false,
         appendClass: ({ defaults }) => defaults.all,
         inputContainerClass: ({ defaults }) => defaults.all,
         hintClass: ({ defaults }) => defaults.all,
         errorClass: ({ defaults }) => defaults.all,
+        wrapperClass: ({ defaults }) => defaults.all,
       },
     },
     merge: ['ui'],
@@ -1000,6 +1010,7 @@ export const defaultComponentsConfig = {
       ui: {
         borderRadius: '0.5rem',
         appendClass: ({ defaults }) => defaults.all,
+        focusInputOnLabelClick: false,
       },
     },
     merge: ['ui'],
@@ -1197,6 +1208,7 @@ export const defaultComponentsConfig = {
       },
       ui: {
         borderRadius: '0.5rem',
+        focusInputOnLabelClick: false,
         inputClass: ({ defaults }) => `${defaults.all} flex items-center`,
         appendClass: ({ defaults }) => defaults.all,
         innerClass: ({ defaults }) => defaults.all,
@@ -1424,6 +1436,7 @@ export const defaultComponentsConfig = {
       stackLabel: true,
       ui: {
         borderRadius: '0.5rem',
+        focusInputOnLabelClick: false,
         appendClass: ({ defaults }) => defaults.all,
       },
     },
@@ -1446,6 +1459,7 @@ export const defaultComponentsConfig = {
       stackLabel: true,
       ui: {
         borderRadius: '0.5rem',
+        focusInputOnLabelClick: false,
         appendClass: ({ defaults }) => defaults.all,
       },
     },
@@ -1463,6 +1477,7 @@ export const defaultComponentsConfig = {
       stackLabel: true,
       ui: {
         borderRadius: '0.5rem',
+        focusInputOnLabelClick: false,
         appendClass: ({ defaults }) => defaults.all,
       },
     },

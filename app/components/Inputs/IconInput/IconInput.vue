@@ -41,6 +41,7 @@ const {
   label,
   masked,
   model,
+  isBlurred,
   isTouched,
   handleBlur,
   handleClickWrapper,
@@ -54,6 +55,11 @@ const {
   props,
   maskRef: ref({ mask: /.*/ }),
   menuElRef: menuProxyEl,
+})
+
+// Wrapper class
+const wrapperClass = computed(() => {
+  return !isBlurred.value ? 'is-focused' : ''
 })
 
 // Picker
@@ -106,6 +112,7 @@ defineExpose({
     v-bind="wrapperProps"
     :id="inputId"
     ref="wrapperEl"
+    :class="wrapperClass"
     :has-content
     :ui="mergedProps.ui"
     .focus="focus"

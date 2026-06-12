@@ -101,6 +101,11 @@ const inputType = computed(() => {
   return props.inputType || props.type
 })
 
+// Wrapper class
+const wrapperClass = computed(() => {
+  return !isBlurred.value ? 'is-focused' : ''
+})
+
 // Styles - append
 const appendClass = computed(() => {
   return mergedProps.value.ui?.appendClass?.({
@@ -133,6 +138,7 @@ defineExpose({
     :id="inputId"
     ref="wrapperEl"
     :ui="mergedProps.ui"
+    :class="wrapperClass"
     :has-content
     .focus="focus"
     @click="handleClickWrapper"

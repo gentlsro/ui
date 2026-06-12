@@ -92,6 +92,11 @@ export function useFieldUtils(options?: {
     instance?.emit('focus')
   }
 
+  function handleBlur(ev: FocusEvent) {
+    isBlurred.value = true
+    instance?.emit('blur', ev)
+  }
+
   function getFieldProps(props: IFieldProps) {
     return reactivePick(props, [
       'activeLabelColor',
@@ -127,8 +132,10 @@ export function useFieldUtils(options?: {
     hasClearableBtn,
     label,
     isTouched,
+    isBlurred,
     getFieldProps,
     handleClickWrapper,
     handleFocusOrClick,
+    handleBlur,
   }
 }

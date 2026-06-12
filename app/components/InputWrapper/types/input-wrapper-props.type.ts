@@ -245,6 +245,18 @@ export type IInputWrapperProps = IInputLabelProps & {
      * we are not able to pass actual function (= maybe we are passing some JSON-ified style object)
      */
     inputStyleObj?: CSSProperties
+
+    /**
+     * The class of the InputWrapper container
+     */
+    wrapperClass?: (payload: {
+      defaults: ReturnType<typeof INPUT_WRAPPER_DEFAULT_PROPS['ui']['wrapperClass']>
+    }) => ClassType
+
+    /**
+     * The style of the InputWrapper container
+     */
+    wrapperStyle?: () => CSSProperties
   }
 
   /**

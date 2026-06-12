@@ -73,6 +73,7 @@ const {
   hasClearableBtn,
   label,
   isTouched,
+  isBlurred,
   focus,
   select,
   blur,
@@ -84,6 +85,11 @@ const {
 } = useInputUtils({
   props,
   maskRef: mask,
+})
+
+// Wrapper class
+const wrapperClass = computed(() => {
+  return !isBlurred.value ? 'is-focused' : ''
 })
 
 // Styles - append
@@ -127,6 +133,7 @@ defineExpose({
   <InputWrapper
     v-bind="wrapperProps"
     :id="inputId"
+    :class="wrapperClass"
     :has-content="!hasNoValue"
     :ui="mergedProps.ui"
     .focus="focus"
