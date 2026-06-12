@@ -107,7 +107,7 @@ const inputInnerContainerStyle = computed(() => {
       </div>
 
       <!-- Errors & Hint -->
-      <div class="input-wrapper__inline-input-error">
+      <div class="input-wrapper__inline-input-error leading-none">
         <slot name="error" />
         <slot name="hint" />
       </div>

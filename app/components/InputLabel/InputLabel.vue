@@ -44,6 +44,7 @@ const labelClassLocal = computed(() => {
       'is-regular': isRegular,
       'is-floating': !isInline && (props.stackLabel || props.placeholder || props.hasContent),
       'is-mounted': isMounted.value,
+      'is-focusable': props.ui?.focusInputOnLabelClick,
     },
   ]
 })
@@ -112,6 +113,10 @@ label.label {
 
     @screen md {
       @apply min-w-$labelInlineWidth w-$labelInlineWidth text-right font-rem-14 p-y-0.5 p-x-0;
+    }
+
+    &:not(.is-focusable) {
+      @apply pointer-events-none;
     }
   }
 

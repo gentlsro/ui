@@ -45,6 +45,7 @@ const isModified = computed(() => {
 const labelProps = computed(() => {
   return {
     activeLabelColor: props.activeLabelColor,
+    focusInputOnLabelClick: mergedProps.value.ui?.focusInputOnLabelClick,
     hasContent: props.hasContent,
     hasError: !!issues.value.length,
     id: props.id,

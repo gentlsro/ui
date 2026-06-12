@@ -56,7 +56,13 @@ export type IInputLabelProps = {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: { /**
+          * When true, the input will be focused when the label is clicked
+          *
+          * Note: This is ONLY applicable for `inline` layout
+          */
+    focusInputOnLabelClick?: boolean
+
     /**
      * Class applied to the label
      */
