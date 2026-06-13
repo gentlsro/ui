@@ -54,6 +54,7 @@ import type { INumberInputProps } from './app/components/Inputs/NumberInput/type
 import type { IPageDrawerProps } from './app/components/Page/types/page-drawer-props.type'
 import type { IPageTitleProps } from './app/components/Page/types/page-title-props.type'
 import type { IPageWrapperProps } from './app/components/Page/types/page-wrapper-props.type'
+import type { IPivotProps } from './app/components/Pivot/types/pivot-props.type'
 import type { IProgressBarProps } from './app/components/ProgressBar/types/progress-bar-props.type'
 import type { IQueryBuilderProps } from './app/components/QueryBuilder/types/query-builder-props.type'
 import type { IRadioProps } from './app/components/Radio/types/radio-props.type'
@@ -1083,6 +1084,33 @@ export const defaultComponentsConfig = {
     merge: ['ui'],
   },
 
+  // Pivot
+  pivot: {
+    props: {
+      config: { useEmptyRow: false },
+      collapseConfig: { expandedLevelOnInit: 1 },
+      loadData: undefined,
+      minimumColumnWidth: 80,
+      ui: {
+        containerClass: ({ defaults }) => defaults.all,
+        contentClass: ({ defaults }) => defaults.all,
+        rowItemClass: ({ defaults }) => defaults.all,
+        rowItemCellClass: ({ defaults }) => defaults.all,
+        headerClass: ({ defaults }) => defaults.all,
+        rowHeaderClass: ({ defaults }) => defaults.all,
+        rowHeaderCellClass: ({ defaults }) => defaults.all,
+        valueHeaderClass: ({ defaults }) => defaults.all,
+        valueHeaderCellClass: ({ defaults }) => defaults.all,
+        valueItemClass: ({ defaults }) => defaults.all,
+        valueItemCellClass: ({ defaults }) => defaults.all,
+        valuesScrollerClass: ({ defaults }) => defaults.all,
+        rowsScrollerClass: ({ defaults }) => defaults.all,
+        rowsWrapperClass: ({ defaults }) => defaults.all,
+      },
+    },
+    merge: ['ui', 'loadData', 'collapseConfig', 'config'],
+  },
+
   // Query builder
   queryBuilder: {
     props: {
@@ -1814,6 +1842,7 @@ export type IUIConfig = {
   pageDrawer: IConfigItem<IPageDrawerProps>
   pageTitle: IConfigItem<IPageTitleProps>
   pageWrapper: IConfigItem<IPageWrapperProps>
+  pivot: IConfigItem<IPivotProps>
   progressBar: IConfigItem<IProgressBarProps>
   queryBuilder: IConfigItem<IQueryBuilderProps>
   radio: IConfigItem<IRadioProps>

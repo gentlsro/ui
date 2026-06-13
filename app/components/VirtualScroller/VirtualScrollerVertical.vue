@@ -161,6 +161,7 @@ defineExpose({
           :class="rowClass"
           :style="{
             ...rowStyle,
+            ...(rowHeight && { minHeight: `${rowHeight}px` }),
             'position': 'absolute',
             'top': 0,
             'left': 0,
@@ -188,7 +189,6 @@ defineExpose({
 <style lang="scss" scoped>
 .virtual-scroll {
   @apply relative overflow-auto outline-none;
-
 }
 
 .virtual-scroll__content {
