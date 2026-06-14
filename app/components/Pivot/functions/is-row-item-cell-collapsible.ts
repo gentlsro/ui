@@ -2,10 +2,10 @@
 import type { IPivotRowItemCell } from '../types/pivot-row-item-cell.type'
 
 // Models
-import type { PivotRow } from '../models/pivot-row.model'
+import type { PivotItem } from '../models/pivot-item.model'
 
 export function isRowItemCellCollapsible(payload: {
-  rows: PivotRow[]
+  rows: PivotItem[]
   item: Pick<IPivotRowItemCell, 'kind' | 'rowFieldIndex'>
 }) {
   const { rows, item } = payload

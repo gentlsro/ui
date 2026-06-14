@@ -80,6 +80,10 @@ onMounted(() => {
     :class="containerClass"
     :style="containerStyle"
   >
+    <slot name="top">
+      <PivotTop />
+    </slot>
+
     <slot name="header">
       <PivotHeader />
     </slot>

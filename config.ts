@@ -1095,6 +1095,8 @@ export const defaultComponentsConfig = {
       ui: {
         containerClass: ({ defaults }) => defaults.all,
         contentClass: ({ defaults }) => defaults.all,
+        topClass: ({ defaults }) => defaults.all,
+        titleClass: ({ defaults }) => defaults.all,
         rowItemClass: ({ defaults }) => defaults.all,
         rowItemCellClass: ({ defaults }) => defaults.all,
         headerClass: ({ defaults }) => defaults.all,
@@ -1108,6 +1110,8 @@ export const defaultComponentsConfig = {
         rowsScrollerClass: ({ defaults }) => defaults.all,
         rowsWrapperClass: ({ defaults }) => defaults.all,
         loadingClass: ({ defaults }) => defaults.all,
+        columnFiltersClass: ({ defaults }) => defaults.all,
+        filtersClass: ({ defaults }) => defaults.all,
       },
     },
     merge: ['ui', 'loadData', 'collapseConfig', 'config'],

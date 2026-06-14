@@ -1,45 +1,61 @@
 import { klona } from 'klona/full'
 import { toRaw } from 'vue'
+import type { ExtendedDataType } from '$dataType'
+import type { ComparatorEnum } from '$comparatorEnum'
 
 // Models
-import type { PivotRow } from '../models/pivot-row.model'
-import type { PivotColumn } from '../models/pivot-column.model'
-import type { PivotValue } from '../models/pivot-value.model'
+import type { PivotItem } from '../models/pivot-item.model'
 
-import type { IPivotTransformCorePayload } from './pivot-transform-data-core'
+import type {
+  IPivotTransformColumnField,
+  IPivotTransformCorePayload,
+  IPivotTransformRowField,
+  IPivotTransformValueField,
+} from './pivot-transform-data-core'
+import { getActivePivotFilterItems } from './pivot-filter-usage'
 
-export type IPivotTransformWorkerRow<T = IItem> = Pick<
-  PivotRow<T>,
-  'field' | 'dataType' | 'minWidth' | 'width' | 'widthResolved' | 'resizable'
->
+export type IPivotTransformWorkerRow<T extends IItem = IItem> = IPivotTransformRowField<T>
 
-export type IPivotTransformWorkerColumn<T = IItem> = Pick<
-  PivotColumn<T>,
-  'field' | 'minWidth' | 'width' | 'widthResolved'
-> & {
+export type IPivotTransformWorkerColumn<T extends IItem = IItem> = IPivotTransformColumnField<T> & {
+  minWidth?: PivotItem<T>['minWidth']
+  width?: PivotItem<T>['width']
+  widthResolved?: PivotItem<T>['widthResolved']
   _label: string
 }
 
-export type IPivotTransformWorkerValue<T = IItem> = Pick<
-  PivotValue<T>,
-  'field' | 'summaryType' | 'dataType' | 'minWidth' | 'width' | 'widthResolved'
+export type IPivotTransformWorkerValue<T extends IItem = IItem> = Pick<
+  IPivotTransformValueField<T>,
+  'field' | 'summaryType' | 'widthResolved'
 > & {
+  dataType?: PivotItem<T>['dataType']
+  minWidth?: PivotItem<T>['minWidth']
+  width?: PivotItem<T>['width']
   _label: string
 }
 
-export type IPivotTransformWorkerPayload<T = IItem> = {
+export type IPivotTransformWorkerFilter<T extends IItem = IItem> = {
+  field: ObjectKey<T>
+  dataType: ExtendedDataType
+  comparator: ComparatorEnum
+  filterValue?: any
+}
+
+export type IPivotTransformWorkerPayload<T extends IItem = IItem> = {
   data: T[]
   rows: IPivotTransformWorkerRow<T>[]
   columns: IPivotTransformWorkerColumn<T>[]
   values: IPivotTransformWorkerValue<T>[]
+  filters?: IPivotTransformWorkerFilter<T>[]
   locale?: string
 }
 
-function resolvePivotLabel<T>(
-  label: string | ((value: T) => string) | undefined,
-  field: ObjectKey<IItem>,
-  context: T,
-) {
+function resolvePivotLabel<T extends IItem>(payload: {
+  label: PivotItem<T>['label']
+  field: ObjectKey<T>
+  context: PivotItem<T>
+}) {
+  const { label, field, context } = payload
+
   if (typeof label === 'function') {
     return label(context)
   }
@@ -47,7 +63,7 @@ function resolvePivotLabel<T>(
   return label ?? String(field)
 }
 
-function serializePivotRow<T>(row: PivotRow<T>): IPivotTransformWorkerRow<T> {
+function serializePivotRow<T extends IItem>(row: IPivotTransformRowField<T>): IPivotTransformWorkerRow<T> {
   const raw = toRaw(row)
 
   return {
@@ -60,20 +76,20 @@ function serializePivotRow<T>(row: PivotRow<T>): IPivotTransformWorkerRow<T> {
   }
 }
 
-function serializePivotColumn<T>(column: PivotColumn<T>): IPivotTransformWorkerColumn<T> {
-  const raw = toRaw(column)
+function serializePivotColumn<T extends IItem>(column: IPivotTransformColumnField<T>): IPivotTransformWorkerColumn<T> {
+  const raw = toRaw(column) as IPivotTransformColumnField<T> & Partial<PivotItem<T>>
 
   return {
     field: raw.field,
     minWidth: raw.minWidth,
     width: raw.width,
     widthResolved: raw.widthResolved,
-    _label: resolvePivotLabel(raw.label, raw.field, raw),
+    _label: raw._label ?? resolvePivotLabel({ label: raw.label, field: raw.field, context: raw as PivotItem<T> }),
   }
 }
 
-function serializePivotValue<T>(value: PivotValue<T>): IPivotTransformWorkerValue<T> {
-  const raw = toRaw(value)
+function serializePivotValue<T extends IItem>(value: IPivotTransformValueField<T>): IPivotTransformWorkerValue<T> {
+  const raw = toRaw(value) as IPivotTransformValueField<T> & Partial<PivotItem<T>>
 
   return {
     field: raw.field,
@@ -82,11 +98,20 @@ function serializePivotValue<T>(value: PivotValue<T>): IPivotTransformWorkerValu
     minWidth: raw.minWidth,
     width: raw.width,
     widthResolved: raw.widthResolved,
-    _label: resolvePivotLabel(raw.label, raw.field, raw),
+    _label: raw._label,
   }
 }
 
-export function serializePivotTransformWorkerPayload<T>(
+function serializePivotFilters<T extends IItem>(items: PivotItem<T>[] = []) {
+  return getActivePivotFilterItems(items).map(filter => ({
+    field: filter.field,
+    dataType: filter.dataType,
+    comparator: filter.comparator,
+    filterValue: filter.value,
+  } satisfies IPivotTransformWorkerFilter<T>))
+}
+
+export function serializePivotTransformWorkerPayload<T extends IItem>(
   payload: IPivotTransformCorePayload<T>,
 ): IPivotTransformWorkerPayload<T> {
   return {
@@ -94,6 +119,7 @@ export function serializePivotTransformWorkerPayload<T>(
     rows: toRaw(payload.rows).map(serializePivotRow),
     columns: toRaw(payload.columns).map(serializePivotColumn),
     values: toRaw(payload.values).map(serializePivotValue),
+    filters: serializePivotFilters(payload.items),
     locale: payload.locale,
   }
 }

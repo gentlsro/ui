@@ -7,19 +7,16 @@ import type { IPivotTransformResult } from '../types/pivot-transform-result.type
 import { getInitialCollapsedGroupIds } from '../functions/pivot-group-collapse'
 import { getInitialCollapsedColumnGroupIds } from '../functions/pivot-column-collapse'
 import {
-
   pivotTransformDataCore,
   rehydratePivotTransformResult,
+  type IPivotTransformValueField,
 } from '../functions/pivot-transform-data-core'
-import type { IPivotTransformCorePayload } from '../functions/pivot-transform-data-core'
 import { shouldUsePivotTransformWorker } from '../functions/pivot-transform-complexity'
 import { serializePivotTransformWorkerPayload } from '../functions/pivot-transform-worker-payload'
 import { pivotTransformData } from '../functions/pivot-transform-data'
 
 // Models
-import type { PivotRow } from '../models/pivot-row.model'
-import type { PivotColumn } from '../models/pivot-column.model'
-import type { PivotValue } from '../models/pivot-value.model'
+import type { PivotItem } from '../models/pivot-item.model'
 
 import type { IPivotTransformWorkerPayload } from '../functions/pivot-transform-worker-payload'
 
@@ -27,11 +24,12 @@ import PivotTransformWorker from '../workers/pivot-transform.worker?worker'
 
 type IPivotFormatNumber = (value: number) => string
 
-type IPivotTransformPayload<T = IItem> = {
+type IPivotTransformPayload<T extends IItem = IItem> = {
   data: T[]
-  rows: PivotRow<T>[]
-  columns: PivotColumn<T>[]
-  values: PivotValue<T>[]
+  rows: PivotItem<T>[]
+  columns: PivotItem<T>[]
+  values: IPivotTransformValueField<T>[]
+  items?: PivotItem<T>[]
   state: IPivotState
   collapseConfig: IPivotProps<T>['collapseConfig']
   isFirstRender?: Ref<boolean>
@@ -40,7 +38,7 @@ type IPivotTransformPayload<T = IItem> = {
   useWorker?: boolean
 }
 
-function applyPivotTransformState<T>(
+function applyPivotTransformState<T extends IItem>(
   payload: IPivotTransformPayload<T>,
   result: IPivotTransformResult<T>,
 ) {
@@ -53,26 +51,27 @@ function applyPivotTransformState<T>(
   } = payload
 
   if (isFirstRender.value) {
-    state.collapsedGroupIds = getInitialCollapsedGroupIds(
-      result.data,
-      collapseConfig?.expandedLevelOnInit ?? 0,
-      rowFields.length,
-    )
-    state.collapsedColumnGroupIds = getInitialCollapsedColumnGroupIds(
-      result.columnTree,
-      collapseConfig?.expandedLevelOnInit ?? 0,
-      columnFields.length,
-    )
+    state.collapsedGroupIds = getInitialCollapsedGroupIds({
+      data: result.data,
+      expandedLevelOnInit: collapseConfig?.expandedLevelOnInit ?? 0,
+      rowFieldCount: rowFields.length,
+    })
+    state.collapsedColumnGroupIds = getInitialCollapsedColumnGroupIds({
+      tree: result.columnTree,
+      expandedLevelOnInit: collapseConfig?.expandedLevelOnInit ?? 0,
+      columnFieldCount: columnFields.length,
+    })
     isFirstRender.value = false
   }
 }
 
-function toWorkerPayload<T>(payload: IPivotTransformPayload<T>): IPivotTransformWorkerPayload<T> {
+function toWorkerPayload<T extends IItem>(payload: IPivotTransformPayload<T>): IPivotTransformWorkerPayload<T> {
   return serializePivotTransformWorkerPayload({
     data: payload.data,
     rows: payload.rows,
     columns: payload.columns,
     values: payload.values,
+    items: payload.items,
     locale: payload.locale,
   })
 }
@@ -89,7 +88,7 @@ export function usePivotTransform() {
 
   tryOnScopeDispose(workerTerminate)
 
-  const workerFn = <T>(payload: IPivotTransformWorkerPayload<T>) => {
+  const workerFn = <T extends IItem>(payload: IPivotTransformWorkerPayload<T>) => {
     if (workerStatus === 'RUNNING') {
       console.error('[usePivotTransform] You can only run one instance of the worker at a time.')
 

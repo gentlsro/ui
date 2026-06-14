@@ -1,17 +1,17 @@
 // Models
-import type { PivotRow } from '../models/pivot-row.model'
+import type { PivotItem } from '../models/pivot-item.model'
 
 export type IPivotSplitter<T = IItem> = {
-  field: PivotRow<T>['field']
+  field: PivotItem<T>['field']
   left: number
-  row: PivotRow<T>
+  row: PivotItem<T>
 }
 
 export type IActivePivotSplitter<T = IItem> = Omit<IPivotSplitter<T>, 'row'> & {
   minLeft: number
   top: number
   height: number
-  row: PivotRow<T>
+  row: PivotItem<T>
   adjustedWidth: number
   originalWidth: number
 }

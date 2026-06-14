@@ -7,7 +7,7 @@ import type { IPivotValueItemCell } from './types/pivot-value-item-cell.type'
 import { aggregatePivotValueCellsForColumn } from './functions/pivot-column-collapse'
 
 // Models
-import type { PivotValue } from './models/pivot-value.model'
+import type { PivotItem } from './models/pivot-item.model'
 
 // Store
 import { usePivotStore } from './stores/pivot.store'
@@ -57,7 +57,7 @@ const displayedCells = computed(() => {
           id: column.id,
           columnPath: column.columnPath,
           valueField: column.valueField as ObjectKey<T>,
-          value: column.value as PivotValue<T>,
+          value: column.value as PivotItem<T>,
         },
         formatNumber,
       })

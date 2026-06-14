@@ -2,8 +2,44 @@
 
 export const PIVOT_DEFAULT_PROPS = {
   ui: {
+    topClass() {
+      const base = 'flex shrink-0 bg-slate-600 color-white dark:(bg-black color-white)'
+
+      return {
+        base,
+        all: base,
+      } as const
+    },
+
     headerClass() {
       const base = 'relative flex shrink-0'
+
+      return {
+        base,
+        all: base,
+      } as const
+    },
+
+    titleClass() {
+      const base = 'font-rem-18 font-bold p-x-2 p-y-1'
+
+      return {
+        base,
+        all: base,
+      } as const
+    },
+
+    columnFiltersClass() {
+      const base = 'flex gap-2 items-center border-r border-white/50 p-r-2'
+
+      return {
+        base,
+        all: base,
+      } as const
+    },
+
+    filtersClass() {
+      const base = 'flex gap-2 items-center'
 
       return {
         base,
@@ -155,10 +191,12 @@ export const PIVOT_DEFAULT_PROPS = {
 
     valuesScrollerClass() {
       const base = 'grow overflow-x-scroll!'
+      const border = 'border-l-1 border-light-8 dark:border-dark-6'
 
       return {
         base,
-        all: base,
+        border,
+        all: `${base} ${border}`,
       } as const
     },
 

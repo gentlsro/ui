@@ -2,8 +2,7 @@ import type { IPivotValueColumnItem, IPivotValueHeaderCell } from '../types/pivo
 import type { IPivotValueItemCell } from '../types/pivot-value-item-cell.type'
 
 // Models
-import type { PivotColumn } from '../models/pivot-column.model'
-import type { PivotValue } from '../models/pivot-value.model'
+import type { PivotItem } from '../models/pivot-item.model'
 
 import {
   getInitialCollapsedGroupIds,
@@ -26,23 +25,26 @@ export function getPivotColumnGroupId(columnPath: string[], columnFieldIndex?: n
   return `${COLUMN_GROUP_ID_PREFIX}${columnFieldIndex}:${columnPath.slice(0, columnFieldIndex + 1).join('|')}`
 }
 
-export function isPivotColumnGroupCollapsed(
-  collapsedColumnGroupIds: Set<string>,
-  columnPath: string[],
-  level: number,
-) {
+export function isPivotColumnGroupCollapsed(payload: {
+  collapsedColumnGroupIds: Set<string>
+  columnPath: string[]
+  level: number
+}) {
+  const { collapsedColumnGroupIds, columnPath, level } = payload
   const groupId = getPivotColumnGroupId(columnPath, level)
 
   return collapsedColumnGroupIds.has(groupId)
 }
 
-function hasCollapsedColumnAncestor(
-  columnPath: string[],
-  collapsedColumnGroupIds: Set<string>,
-  upToLevel: number,
-) {
+function hasCollapsedColumnAncestor(payload: {
+  columnPath: string[]
+  collapsedColumnGroupIds: Set<string>
+  upToLevel: number
+}) {
+  const { columnPath, collapsedColumnGroupIds, upToLevel } = payload
+
   for (let level = 0; level < upToLevel; level++) {
-    if (isPivotColumnGroupCollapsed(collapsedColumnGroupIds, columnPath, level)) {
+    if (isPivotColumnGroupCollapsed({ collapsedColumnGroupIds, columnPath, level })) {
       return true
     }
   }
@@ -50,29 +52,31 @@ function hasCollapsedColumnAncestor(
   return false
 }
 
-function getVisibleColumnCount(
-  node: IPivotColumnTreeNode,
-  level: number,
-  columnFieldCount: number,
-  collapsedColumnGroupIds: Set<string>,
-  valuesCount: number,
-): number {
+function getVisibleColumnCount(payload: {
+  node: IPivotColumnTreeNode
+  level: number
+  columnFieldCount: number
+  collapsedColumnGroupIds: Set<string>
+  valuesCount: number
+}): number {
+  const { node, level, columnFieldCount, collapsedColumnGroupIds, valuesCount } = payload
+
   if (
     level < columnFieldCount - 1
-    && isPivotColumnGroupCollapsed(collapsedColumnGroupIds, node.path, level)
+    && isPivotColumnGroupCollapsed({ collapsedColumnGroupIds, columnPath: node.path, level })
   ) {
     return valuesCount
   }
 
   if (node.children.length) {
     return node.children.reduce(
-      (sum, child) => sum + getVisibleColumnCount(
-        child,
-        level + 1,
+      (sum, child) => sum + getVisibleColumnCount({
+        node: child,
+        level: level + 1,
         columnFieldCount,
         collapsedColumnGroupIds,
         valuesCount,
-      ),
+      }),
       0,
     )
   }
@@ -91,18 +95,19 @@ function getCollapsedHeaderRowspan(payload: {
   return remainingLevels + (hasMultipleValues ? 1 : 0)
 }
 
-function collectVisibleValueColumns<T>(
-  nodes: IPivotColumnTreeNode[],
-  level: number,
-  columnFieldCount: number,
-  collapsedColumnGroupIds: Set<string>,
-  valueFields: PivotValue<T>[],
-): IPivotValueColumnItem<T>[] {
+function collectVisibleValueColumns<T>(payload: {
+  nodes: IPivotColumnTreeNode[]
+  level: number
+  columnFieldCount: number
+  collapsedColumnGroupIds: Set<string>
+  valueFields: PivotItem<T>[]
+}): IPivotValueColumnItem<T>[] {
+  const { nodes, level, columnFieldCount, collapsedColumnGroupIds, valueFields } = payload
   const columns: IPivotValueColumnItem<T>[] = []
 
   for (const node of nodes) {
     const isCollapsed = level < columnFieldCount - 1
-      && isPivotColumnGroupCollapsed(collapsedColumnGroupIds, node.path, level)
+      && isPivotColumnGroupCollapsed({ collapsedColumnGroupIds, columnPath: node.path, level })
 
     if (isCollapsed) {
       for (const valueField of valueFields) {
@@ -125,13 +130,13 @@ function collectVisibleValueColumns<T>(
     }
 
     if (node.children.length) {
-      columns.push(...collectVisibleValueColumns(
-        node.children,
-        level + 1,
+      columns.push(...collectVisibleValueColumns({
+        nodes: node.children,
+        level: level + 1,
         columnFieldCount,
         collapsedColumnGroupIds,
         valueFields,
-      ))
+      }))
       continue
     }
 
@@ -154,39 +159,46 @@ function collectVisibleValueColumns<T>(
   return columns
 }
 
-function addVisibleHeaderNodesAtLevel(
-  row: IPivotValueHeaderCell[],
-  nodes: IPivotColumnTreeNode[],
-  targetLevel: number,
-  currentLevel: number,
-  payload: {
-    columnFieldCount: number
-    collapsedColumnGroupIds: Set<string>
-    valuesCount: number
-    hasMultipleValues: boolean
-  },
-) {
-  const { columnFieldCount, collapsedColumnGroupIds, valuesCount, hasMultipleValues } = payload
+function addVisibleHeaderNodesAtLevel(payload: {
+  row: IPivotValueHeaderCell[]
+  nodes: IPivotColumnTreeNode[]
+  targetLevel: number
+  currentLevel: number
+  columnFieldCount: number
+  collapsedColumnGroupIds: Set<string>
+  valuesCount: number
+  hasMultipleValues: boolean
+}) {
+  const {
+    row,
+    nodes,
+    targetLevel,
+    currentLevel,
+    columnFieldCount,
+    collapsedColumnGroupIds,
+    valuesCount,
+    hasMultipleValues,
+  } = payload
 
   for (const node of nodes) {
     const isCollapsed = currentLevel < columnFieldCount - 1
-      && isPivotColumnGroupCollapsed(collapsedColumnGroupIds, node.path, currentLevel)
+      && isPivotColumnGroupCollapsed({ collapsedColumnGroupIds, columnPath: node.path, level: currentLevel })
 
     if (currentLevel === targetLevel) {
-      if (hasCollapsedColumnAncestor(node.path, collapsedColumnGroupIds, currentLevel)) {
+      if (hasCollapsedColumnAncestor({ columnPath: node.path, collapsedColumnGroupIds, upToLevel: currentLevel })) {
         continue
       }
 
       row.push({
         id: `header:${targetLevel}:${node.path.join('|')}`,
         label: node.key,
-        colspan: getVisibleColumnCount(
+        colspan: getVisibleColumnCount({
           node,
-          currentLevel,
+          level: currentLevel,
           columnFieldCount,
           collapsedColumnGroupIds,
           valuesCount,
-        ),
+        }),
         rowspan: isCollapsed
           ? getCollapsedHeaderRowspan({
               level: currentLevel,
@@ -199,23 +211,27 @@ function addVisibleHeaderNodesAtLevel(
         columnFieldIndex: currentLevel,
       })
     } else if (!isCollapsed && node.children.length) {
-      addVisibleHeaderNodesAtLevel(
+      addVisibleHeaderNodesAtLevel({
         row,
-        node.children,
+        nodes: node.children,
         targetLevel,
-        currentLevel + 1,
-        payload,
-      )
+        currentLevel: currentLevel + 1,
+        columnFieldCount,
+        collapsedColumnGroupIds,
+        valuesCount,
+        hasMultipleValues,
+      })
     }
   }
 }
 
-function buildVisibleValueHeaderRows<T>(
-  columnFields: PivotColumn<T>[],
-  valueFields: PivotValue<T>[],
-  tree: IPivotColumnTreeNode[],
-  collapsedColumnGroupIds: Set<string>,
-): IPivotValueHeaderCell[][] {
+function buildVisibleValueHeaderRows<T>(payload: {
+  columnFields: PivotItem<T>[]
+  valueFields: PivotItem<T>[]
+  tree: IPivotColumnTreeNode[]
+  collapsedColumnGroupIds: Set<string>
+}): IPivotValueHeaderCell[][] {
+  const { columnFields, valueFields, tree, collapsedColumnGroupIds } = payload
   const rows: IPivotValueHeaderCell[][] = []
   const valuesCount = valueFields.length
   const hasMultipleValues = valuesCount > 1
@@ -224,17 +240,20 @@ function buildVisibleValueHeaderRows<T>(
   const grandTotalRowspan = hasMultipleValues
     ? columnFieldCount
     : totalHeaderRows
-  const headerPayload = {
-    columnFieldCount,
-    collapsedColumnGroupIds,
-    valuesCount,
-    hasMultipleValues,
-  }
 
   for (let level = 0; level < columnFieldCount; level++) {
     const row: IPivotValueHeaderCell[] = []
 
-    addVisibleHeaderNodesAtLevel(row, tree, level, 0, headerPayload)
+    addVisibleHeaderNodesAtLevel({
+      row,
+      nodes: tree,
+      targetLevel: level,
+      currentLevel: 0,
+      columnFieldCount,
+      collapsedColumnGroupIds,
+      valuesCount,
+      hasMultipleValues,
+    })
 
     if (level === 0) {
       row.push({
@@ -251,13 +270,13 @@ function buildVisibleValueHeaderRows<T>(
 
   if (hasMultipleValues) {
     const row: IPivotValueHeaderCell[] = []
-    const visibleColumns = collectVisibleValueColumns(
-      tree,
-      0,
+    const visibleColumns = collectVisibleValueColumns({
+      nodes: tree,
+      level: 0,
       columnFieldCount,
       collapsedColumnGroupIds,
       valueFields,
-    )
+    })
 
     for (const column of visibleColumns) {
       if (column.isCollapsedGroupColumn) {
@@ -292,8 +311,8 @@ function buildVisibleValueHeaderRows<T>(
 }
 
 export function buildVisiblePivotValueColumns<T>(payload: {
-  columnFields: PivotColumn<T>[]
-  valueFields: PivotValue<T>[]
+  columnFields: PivotItem<T>[]
+  valueFields: PivotItem<T>[]
   tree: IPivotColumnTreeNode[]
   collapsedColumnGroupIds: Set<string>
   allValueColumns: IPivotValueColumnItem<T>[]
@@ -327,13 +346,13 @@ export function buildVisiblePivotValueColumns<T>(payload: {
     }
   }
 
-  const valueColumns = collectVisibleValueColumns(
-    tree,
-    0,
-    columnFields.length,
+  const valueColumns = collectVisibleValueColumns({
+    nodes: tree,
+    level: 0,
+    columnFieldCount: columnFields.length,
     collapsedColumnGroupIds,
     valueFields,
-  )
+  })
 
   for (const valueField of valueFields) {
     valueColumns.push({
@@ -350,17 +369,22 @@ export function buildVisiblePivotValueColumns<T>(payload: {
   }
 
   const valueHeaderRows = tree.length
-    ? buildVisibleValueHeaderRows(columnFields, valueFields, tree, collapsedColumnGroupIds)
+    ? buildVisibleValueHeaderRows({ columnFields, valueFields, tree, collapsedColumnGroupIds })
     : []
 
   return { valueColumns, valueHeaderRows }
 }
 
-export function getInitialCollapsedColumnGroupIds(
-  tree: IPivotColumnTreeNode[],
-  expandedLevelOnInit = 0,
-  columnFieldCount = 0,
-) {
+export function getInitialCollapsedColumnGroupIds(payload: {
+  tree: IPivotColumnTreeNode[]
+  expandedLevelOnInit?: number
+  columnFieldCount?: number
+}) {
+  const {
+    tree,
+    expandedLevelOnInit = 0,
+    columnFieldCount = 0,
+  } = payload
   const groupPaths: string[][] = []
 
   function collectGroupPaths(nodes: IPivotColumnTreeNode[], level: number) {
@@ -379,11 +403,11 @@ export function getInitialCollapsedColumnGroupIds(
     groupIds: path.map((_, index) => getPivotColumnGroupId(path, index)),
   }))
 
-  return getInitialCollapsedGroupIds(
-    dataLikeItems as any,
+  return getInitialCollapsedGroupIds({
+    data: dataLikeItems as any,
     expandedLevelOnInit,
-    columnFieldCount,
-  )
+    rowFieldCount: columnFieldCount,
+  })
 }
 
 export function isPivotColumnHeaderHidden(
@@ -435,13 +459,13 @@ export function aggregatePivotValueCellsForColumn<T>(payload: {
     aggregated: number
     formattedValue: string
     kind?: string
-    value: PivotValue<T>
+    value: PivotItem<T>
   }>
   column: {
     id: string
     columnPath: string[]
     valueField: ObjectKey<T>
-    value: PivotValue<T>
+    value: PivotItem<T>
   }
   formatNumber: (value: number) => string
 }) {

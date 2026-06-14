@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T extends IItem = IItem">
 // Models
-import type { PivotRow } from './models/pivot-row.model'
+import type { PivotItem } from './models/pivot-item.model'
 
 // Constants
 import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
@@ -9,7 +9,7 @@ import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
 import { usePivotStore } from './stores/pivot.store'
 
 type IProps = {
-  row: PivotRow<T>
+  row: PivotItem<T>
 }
 
 const props = defineProps<IProps>()
@@ -38,8 +38,14 @@ const rowHeaderCellStyle = computed(() => {
     :data-pivot-row="String(row.field)"
     :title="row._label"
   >
-    <span class="min-w-0 truncate">
+    <span class="truncate grow">
       {{ row._label }}
     </span>
+
+    <!-- Filter -->
+    <PivotFilterBtn
+      :item="row"
+      size="auto"
+    />
   </div>
 </template>

@@ -17,6 +17,7 @@ const {
   rows,
   ui,
   hoveredIdx,
+  config,
   rowsVirtualScrollEl,
   valuesVirtualScrollEl,
   rowsWrapperEl,
@@ -57,6 +58,12 @@ const rowsScrollerClass = computed(() => {
   })
 })
 
+const rowsWrapperStyle = computed(() => {
+  const width = config.value?.leftPanelWidth
+
+  return { width }
+})
+
 const rowsWrapperClass = computed(() => {
   return ui.value?.rowsWrapperClass?.({
     defaults: PIVOT_DEFAULT_PROPS.ui.rowsWrapperClass(),
@@ -66,9 +73,7 @@ const rowsWrapperClass = computed(() => {
 const rowsScrollerStyle = computed(() => {
   const width = rows.value.reduce((agg, row) => agg + row._width, 0)
 
-  return {
-    width: `${width}px`,
-  }
+  return { width: `${width}px` }
 })
 </script>
 
@@ -79,27 +84,11 @@ const rowsScrollerStyle = computed(() => {
     :style="contentStyle"
   >
     <!-- Row items -->
-
     <div
       ref="rowsWrapperEl"
       :class="rowsWrapperClass"
+      :style="rowsWrapperStyle"
     >
-      <!-- <div
-        ref="rowsVirtualScrollEl"
-        class="virtual-scroll"
-        :class="rowsScrollerClass"
-      >
-        <PivotRowItem
-          v-for="(row, index) in visibleData"
-          :key="row.id"
-          :item="row.rowItem"
-          :group-ids="row.groupIds"
-          :class="{ 'is-odd': !(index % 2), 'is-hovered': hoveredIdx === index }"
-          @mouseenter="handleMouseEnter(index)"
-          @mouseleave="handleMouseLeave"
-        />
-      </div> -->
-
       <VirtualScrollerVertical
         ref="rowsVirtualScrollEl"
         class="pivot-content__rows grow"

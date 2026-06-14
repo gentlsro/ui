@@ -2,10 +2,10 @@
 import type { IPivotValueHeaderCell } from '../types/pivot-value-column-item.type'
 
 // Models
-import type { PivotColumn } from '../models/pivot-column.model'
+import type { PivotItem } from '../models/pivot-item.model'
 
 export function isValueHeaderCellCollapsible(payload: {
-  columns: PivotColumn[]
+  columns: PivotItem[]
   cell: Pick<IPivotValueHeaderCell, 'columnFieldIndex' | 'groupId'>
 }) {
   const { columns, cell } = payload

@@ -1,8 +1,10 @@
 import { SummaryEnum } from '#layers/utilities/shared/enums/summary.enum'
 
 // Models
-import type { PivotColumn } from '../models/pivot-column.model'
-import type { PivotValue } from '../models/pivot-value.model'
+import type {
+  IPivotTransformColumnField,
+  IPivotTransformValueField,
+} from './pivot-transform-data-core'
 
 type IPivotAccumulator = {
   summaryType: SummaryEnum
@@ -16,7 +18,7 @@ export type IPivotAggregationIndex = {
   matchCounts: Map<string, number>
 }
 
-function getPivotRowValue<T>(item: T, valueField: PivotValue<T>): number {
+function getPivotRowValue<T extends IItem>(item: T, valueField: IPivotTransformValueField<T>): number {
   if (valueField.summaryFormat) {
     const formatted = valueField.summaryFormat(item)
 
@@ -40,11 +42,12 @@ function getPivotAggregationKey<T>(columnPath: string[], valueField: ObjectKey<T
   return `${columnPath.join('|')}|${String(valueField)}`
 }
 
-function getOrCreateAccumulator(
-  accumulators: Map<string, IPivotAccumulator>,
-  key: string,
-  summaryType: SummaryEnum,
-): IPivotAccumulator {
+function getOrCreateAccumulator(payload: {
+  accumulators: Map<string, IPivotAccumulator>
+  key: string
+  summaryType: SummaryEnum
+}): IPivotAccumulator {
+  const { accumulators, key, summaryType } = payload
   let accumulator = accumulators.get(key)
 
   if (!accumulator) {
@@ -91,10 +94,10 @@ function finalizeAccumulator(accumulator: IPivotAccumulator): number {
   }
 }
 
-export function buildPivotAggregationIndex<T>(payload: {
+export function buildPivotAggregationIndex<T extends IItem>(payload: {
   items: T[]
-  columnFields: PivotColumn<T>[]
-  valueFields: PivotValue<T>[]
+  columnFields: IPivotTransformColumnField<T>[]
+  valueFields: IPivotTransformValueField<T>[]
 }): IPivotAggregationIndex {
   const { items, columnFields, valueFields } = payload
   const accumulators = new Map<string, IPivotAccumulator>()
@@ -110,18 +113,30 @@ export function buildPivotAggregationIndex<T>(payload: {
 
       if (columnFields.length) {
         addToAccumulator(
-          getOrCreateAccumulator(accumulators, `${columnPathKey}|${fieldKey}`, valueField.summaryType),
+          getOrCreateAccumulator({
+            accumulators,
+            key: `${columnPathKey}|${fieldKey}`,
+            summaryType: valueField.summaryType,
+          }),
           numericValue,
         )
       } else {
         addToAccumulator(
-          getOrCreateAccumulator(accumulators, `|${fieldKey}`, valueField.summaryType),
+          getOrCreateAccumulator({
+            accumulators,
+            key: `|${fieldKey}`,
+            summaryType: valueField.summaryType,
+          }),
           numericValue,
         )
       }
 
       addToAccumulator(
-        getOrCreateAccumulator(accumulators, `__grand_total__|${fieldKey}`, valueField.summaryType),
+        getOrCreateAccumulator({
+          accumulators,
+          key: `__grand_total__|${fieldKey}`,
+          summaryType: valueField.summaryType,
+        }),
         numericValue,
       )
     }

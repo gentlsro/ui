@@ -1,12 +1,41 @@
 import type { ExtendedDataType } from '$dataType'
 import type { Required } from 'utility-types'
 
-export class PivotRow<T = IItem> {
+// Models
+import type { SummaryEnum } from '#layers/utilities/shared/enums/summary.enum'
+import type { ComparatorEnum } from '$comparatorEnum'
+
+export type IPivotValueUsageSlot<T = IItem> = {
+  index: number
+  summaryType?: SummaryEnum
+  summaryFormat?: (row: T) => number
+}
+
+export class PivotItem<T = IItem> {
   field: ObjectKey<T>
-  label?: string | ((value: PivotRow<T>) => string)
+  label?: string | ((value: PivotItem<T>) => string)
   dataType: ExtendedDataType
   minWidth: number = 100
   resizable = true
+
+  /**
+   * Usage of the item
+   *
+   *  - `row` ~ can only be used once, we track its index
+   *  - `column` ~ can be used once, we track its index
+   *  - `value`~  can be used multiple times, we track its index
+   *  - `filter` ~ can be used multiple times, we track its index
+   */
+  usage: {
+    row?: { index: number }
+    column?: { index: number }
+    value?: IPivotValueUsageSlot<T>[]
+    filter?: {
+      index: number
+      comparator: ComparatorEnum
+      filterValue?: any
+    }[]
+  } = {}
 
   /**
    * The initial width of the row (currently only supports `px` units)
@@ -28,7 +57,7 @@ export class PivotRow<T = IItem> {
   get _label() {
     return typeof this.label === 'function'
       ? this.label(this)
-      : String(this.field)
+      : this.label ?? String(this.field)
   }
 
   getWidth(root?: ParentNode | null) {
@@ -98,7 +127,7 @@ export class PivotRow<T = IItem> {
     }
   }
 
-  constructor(obj: Required<Partial<PivotRow<T>>, 'field'>) {
+  constructor(obj: Required<Partial<PivotItem<T>>, 'field'>) {
     this.field = obj.field
     this.label = obj.label
     this.dataType = obj.dataType ?? 'string'
@@ -111,5 +140,8 @@ export class PivotRow<T = IItem> {
     if (!this.width.endsWith('%')) {
       this.widthResolved = this.width
     }
+
+    // Usage
+    this.usage = obj.usage ?? {}
   }
 }

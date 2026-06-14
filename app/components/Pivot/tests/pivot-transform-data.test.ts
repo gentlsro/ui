@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
+import { ComparatorEnum } from '$comparatorEnum'
 import { SummaryEnum } from '#layers/utilities/shared/enums/summary.enum'
-import { PivotColumn } from '../models/pivot-column.model'
-import { PivotRow } from '../models/pivot-row.model'
-import { PivotValue } from '../models/pivot-value.model'
+import { PivotItem } from '../models/pivot-item.model'
+import { resolvePivotValueField } from '../functions/pivot-item-usage'
 import {
   buildPivotAggregationIndex,
   getPivotAggregatedValue,
@@ -32,18 +32,24 @@ const TEST_DATA: ITestItem[] = [
 ]
 
 const ROW_FIELDS = [
-  new PivotRow<ITestItem>({ field: 'region', dataType: 'string' }),
-  new PivotRow<ITestItem>({ field: 'category', dataType: 'string' }),
+  new PivotItem<ITestItem>({ field: 'region', dataType: 'string' }),
+  new PivotItem<ITestItem>({ field: 'category', dataType: 'string' }),
 ]
 
 const COLUMN_FIELDS = [
-  new PivotColumn<ITestItem>({ field: 'year' }),
-  new PivotColumn<ITestItem>({ field: 'quarter' }),
+  new PivotItem<ITestItem>({ field: 'year' }),
+  new PivotItem<ITestItem>({ field: 'quarter' }),
 ]
 
 const VALUE_FIELDS = [
-  new PivotValue<ITestItem>({ field: 'revenue', summaryType: SummaryEnum.SUM }),
-  new PivotValue<ITestItem>({ field: 'units', summaryType: SummaryEnum.SUM }),
+  resolvePivotValueField(
+    new PivotItem<ITestItem>({ field: 'revenue' }),
+    { index: 0, summaryType: SummaryEnum.SUM },
+  ),
+  resolvePivotValueField(
+    new PivotItem<ITestItem>({ field: 'units' }),
+    { index: 1, summaryType: SummaryEnum.SUM },
+  ),
 ]
 
 function createTransformPayload(data: ITestItem[] = TEST_DATA) {
@@ -88,7 +94,10 @@ describe('buildPivotAggregationIndex', () => {
     const index = buildPivotAggregationIndex({
       items: TEST_DATA,
       columnFields: COLUMN_FIELDS,
-      valueFields: [new PivotValue<ITestItem>({ field: 'revenue', summaryType: SummaryEnum.COUNT })],
+      valueFields: [resolvePivotValueField(
+        new PivotItem<ITestItem>({ field: 'revenue' }),
+        { index: 0, summaryType: SummaryEnum.COUNT },
+      )],
     })
 
     expect(getPivotAggregatedValue({
@@ -153,6 +162,105 @@ describe('pivotTransformData', () => {
     expect(stickyRows).toContain('South / B')
     expect(stickyRows).not.toContain('North / B')
   })
+
+  it('keeps value column layout from unfiltered data when filters are active', () => {
+    const regionField = new PivotItem<ITestItem>({
+      field: 'region',
+      dataType: 'string',
+      usage: {
+        filter: [{
+          index: 0,
+          comparator: ComparatorEnum.EQUAL,
+          filterValue: 'South',
+        }],
+      },
+    })
+
+    const unfiltered = pivotTransformData(createTransformPayload())
+    const filtered = pivotTransformData({
+      ...createTransformPayload(),
+      items: [regionField],
+    })
+
+    expect(filtered.valueColumns.map(column => column.id))
+      .toEqual(unfiltered.valueColumns.map(column => column.id))
+
+    expect(filtered.valueHeaderRows.flat().map(cell => cell.id))
+      .toEqual(unfiltered.valueHeaderRows.flat().map(cell => cell.id))
+  })
+
+  it('filters source data by string comparator before aggregation', () => {
+    const regionField = new PivotItem<ITestItem>({
+      field: 'region',
+      dataType: 'string',
+      usage: {
+        filter: [{
+          index: 0,
+          comparator: ComparatorEnum.EQUAL,
+          filterValue: 'North',
+        }],
+      },
+    })
+
+    const result = pivotTransformData({
+      ...createTransformPayload(),
+      items: [regionField],
+    })
+
+    const grandTotal = result.data.find(row => row.rowItem.kind === 'grandTotal')
+
+    expect(grandTotal?.valueItem.cells.find(cell => cell.columnId.includes('grand-total|revenue'))?.aggregated)
+      .toBe(350)
+  })
+
+  it('filters source data by number comparator before aggregation', () => {
+    const revenueField = new PivotItem<ITestItem>({
+      field: 'revenue',
+      dataType: 'number',
+      usage: {
+        filter: [{
+          index: 0,
+          comparator: ComparatorEnum.GREATER_THAN_OR_EQUAL,
+          filterValue: 200,
+        }],
+      },
+    })
+
+    const result = pivotTransformData({
+      ...createTransformPayload(),
+      items: [revenueField],
+    })
+
+    const grandTotal = result.data.find(row => row.rowItem.kind === 'grandTotal')
+
+    expect(grandTotal?.valueItem.cells.find(cell => cell.columnId.includes('grand-total|revenue'))?.aggregated)
+      .toBe(200)
+  })
+
+  it('ignores filter slots without values', () => {
+    const regionField = new PivotItem<ITestItem>({
+      field: 'region',
+      dataType: 'string',
+      usage: {
+        filter: [{
+          index: 0,
+          comparator: ComparatorEnum.EQUAL,
+        }],
+      },
+    })
+
+    const unfiltered = pivotTransformData(createTransformPayload())
+    const filtered = pivotTransformData({
+      ...createTransformPayload(),
+      items: [regionField],
+    })
+
+    const unfilteredGrandTotal = unfiltered.data.find(row => row.rowItem.kind === 'grandTotal')
+    const filteredGrandTotal = filtered.data.find(row => row.rowItem.kind === 'grandTotal')
+
+    expect(filteredGrandTotal?.valueItem.cells.find(cell => cell.columnId.includes('grand-total|revenue'))?.aggregated)
+      .toBe(unfilteredGrandTotal?.valueItem.cells.find(cell => cell.columnId.includes('grand-total|revenue'))?.aggregated)
+  })
 })
 
 describe('applyPivotEmptyRows', () => {
@@ -199,9 +307,9 @@ describe('pivotTransformData performance', () => {
     }))
 
     const rows = [
-      new PivotRow<ITestItem>({ field: 'region', dataType: 'string' }),
-      new PivotRow<ITestItem>({ field: 'category', dataType: 'string' }),
-      new PivotRow<ITestItem>({ field: 'product', dataType: 'string' }),
+      new PivotItem<ITestItem>({ field: 'region', dataType: 'string' }),
+      new PivotItem<ITestItem>({ field: 'category', dataType: 'string' }),
+      new PivotItem<ITestItem>({ field: 'product', dataType: 'string' }),
     ]
 
     const startedAt = performance.now()

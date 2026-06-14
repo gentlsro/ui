@@ -1,4 +1,4 @@
-import type { PivotValue } from '../models/pivot-value.model'
+import type { PivotItem } from '../models/pivot-item.model'
 import type { PivotRowItemKind } from './pivot-row-item.type'
 
 export type IPivotValueItemCell<T = IItem> = {
@@ -7,7 +7,7 @@ export type IPivotValueItemCell<T = IItem> = {
   columnId: string
   columnPath: string[]
   valueField: ObjectKey<T>
-  value: PivotValue<T>
+  value: PivotItem<T>
   aggregated: number
   formattedValue: string
 }

@@ -5,32 +5,23 @@ import type { usePivotStore } from '../stores/pivot.store'
 
 // Constants
 import type { PIVOT_DEFAULT_PROPS } from '../constants/pivot-default-props.constant'
+import type { PivotItem } from '../models/pivot-item.model'
 
 export type IPivotProps<T = IItem> = {
+  /**
+   * The title of the pivot
+   */
+  title?: string | (() => string)
+
   /**
    * Explicitly provided data
    */
   data?: T[]
 
   /**
-   * Pivot rows
+   * Pivot items
    */
-  rows?: PivotRow[]
-
-  /**
-   * Pivot columns
-   */
-  columns?: PivotColumn[]
-
-  /**
-   * Pivot values
-   */
-  values?: PivotValue[]
-
-  /**
-   * Pivot filters
-   */
-  filters?: PivotFilter[]
+  items?: PivotItem<T>[]
 
   /**
    * Pivot configuration
@@ -40,6 +31,11 @@ export type IPivotProps<T = IItem> = {
      * Whether to use an empty row between pivot rows
      */
     useEmptyRow?: boolean
+
+    /**
+     * Width of the left panel in px
+     */
+    leftPanelWidth?: string
   }
 
   collapseConfig?: {
@@ -123,6 +119,18 @@ export type IPivotProps<T = IItem> = {
     }) => ClassType
 
     /**
+     * Class to apply to the top area
+     */
+    topClass?: (payload: {
+      defaults: ReturnType<typeof PIVOT_DEFAULT_PROPS['ui']['topClass']>
+    }) => ClassType
+
+    /**
+     * Style to apply to the top area
+     */
+    topStyle?: () => CSSProperties
+
+    /**
      * Class to apply to the header
      */
     headerClass?: (payload: {
@@ -133,6 +141,42 @@ export type IPivotProps<T = IItem> = {
      * Style to apply to the header
      */
     headerStyle?: () => CSSProperties
+
+    /**
+     * Class to apply to the title
+     */
+    titleClass?: (payload: {
+      defaults: ReturnType<typeof PIVOT_DEFAULT_PROPS['ui']['titleClass']>
+    }) => ClassType
+
+    /**
+     * Style to apply to the title
+     */
+    titleStyle?: () => CSSProperties
+
+    /**
+     * Class to apply to the column filters area
+     */
+    columnFiltersClass?: (payload: {
+      defaults: ReturnType<typeof PIVOT_DEFAULT_PROPS['ui']['columnFiltersClass']>
+    }) => ClassType
+
+    /**
+     * Style to apply to the column filters area
+     */
+    columnFiltersStyle?: () => CSSProperties
+
+    /**
+     * Class to apply to the filters area
+     */
+    filtersClass?: (payload: {
+      defaults: ReturnType<typeof PIVOT_DEFAULT_PROPS['ui']['filtersClass']>
+    }) => ClassType
+
+    /**
+     * Style to apply to the filters area
+     */
+    filtersStyle?: () => CSSProperties
 
     /**
      * Class to apply to the row header

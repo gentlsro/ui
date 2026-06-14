@@ -8,20 +8,19 @@ import type { IPivotTransformResult } from '../types/pivot-transform-result.type
 // Functions
 import { getInitialCollapsedGroupIds } from './pivot-group-collapse'
 import { getInitialCollapsedColumnGroupIds } from './pivot-column-collapse'
-import { pivotTransformDataCore } from './pivot-transform-data-core'
+import { pivotTransformDataCore, type IPivotTransformValueField } from './pivot-transform-data-core'
 
 // Models
-import type { PivotRow } from '../models/pivot-row.model'
-import type { PivotColumn } from '../models/pivot-column.model'
-import type { PivotValue } from '../models/pivot-value.model'
+import type { PivotItem } from '../models/pivot-item.model'
 
 type IPivotFormatNumber = (value: number) => string
 
-type IPivotTransformPayload<T = IItem> = {
+type IPivotTransformPayload<T extends IItem = IItem> = {
   data: T[]
-  rows: PivotRow<T>[]
-  columns: PivotColumn<T>[]
-  values: PivotValue<T>[]
+  rows: PivotItem<T>[]
+  columns: PivotItem<T>[]
+  values: IPivotTransformValueField<T>[]
+  items?: PivotItem<T>[]
   state: IPivotState
   collapseConfig: IPivotProps<T>['collapseConfig']
   isFirstRender?: Ref<boolean>
@@ -36,7 +35,7 @@ type IShouldInsertPivotEmptyRowAfterPayload<T> = {
 
 type IBuildEmptyDataItemPayload<T> = {
   afterRowId: string
-  rowFields: PivotRow<T>[]
+  rowFields: PivotItem<T>[]
   valueColumns: IPivotValueColumnItem<T>[]
 }
 
@@ -126,7 +125,7 @@ export function applyPivotEmptyRows<T>(
     useEmptyRow?: boolean
     rowFieldCount: number
     collapsedGroupIds: Set<string>
-    rowFields: PivotRow<T>[]
+    rowFields: PivotItem<T>[]
     valueColumns: IPivotValueColumnItem<T>[]
   },
 ) {
@@ -155,7 +154,7 @@ export function applyPivotEmptyRows<T>(
   return result
 }
 
-export function pivotTransformData<T = IItem>(
+export function pivotTransformData<T extends IItem = IItem>(
   payload: IPivotTransformPayload<T>,
 ): IPivotTransformResult<T> {
   const {
@@ -176,16 +175,16 @@ export function pivotTransformData<T = IItem>(
   })
 
   if (isFirstRender.value) {
-    state.collapsedGroupIds = getInitialCollapsedGroupIds(
-      result.data,
-      collapseConfig?.expandedLevelOnInit ?? 0,
-      rowFields.length,
-    )
-    state.collapsedColumnGroupIds = getInitialCollapsedColumnGroupIds(
-      result.columnTree,
-      collapseConfig?.expandedLevelOnInit ?? 0,
-      columnFields.length,
-    )
+    state.collapsedGroupIds = getInitialCollapsedGroupIds({
+      data: result.data,
+      expandedLevelOnInit: collapseConfig?.expandedLevelOnInit ?? 0,
+      rowFieldCount: rowFields.length,
+    })
+    state.collapsedColumnGroupIds = getInitialCollapsedColumnGroupIds({
+      tree: result.columnTree,
+      expandedLevelOnInit: collapseConfig?.expandedLevelOnInit ?? 0,
+      columnFieldCount: columnFields.length,
+    })
     isFirstRender.value = false
   }
 

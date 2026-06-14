@@ -89,11 +89,16 @@ export function isPivotRowVisible<T = IItem>(
   return true
 }
 
-export function getInitialCollapsedGroupIds<T = IItem>(
-  data: IPivotDataItem<T>[],
-  expandedLevelOnInit = 0,
-  rowFieldCount = 0,
-) {
+export function getInitialCollapsedGroupIds<T = IItem>(payload: {
+  data: IPivotDataItem<T>[]
+  expandedLevelOnInit?: number
+  rowFieldCount?: number
+}) {
+  const {
+    data,
+    expandedLevelOnInit = 0,
+    rowFieldCount = 0,
+  } = payload
   const collapsed = new Set<string>()
   const lastCollapsibleLevel = rowFieldCount - 2
 

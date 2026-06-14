@@ -1,10 +1,10 @@
-import type { PivotValue } from '../models/pivot-value.model'
+import type { PivotItem } from '../models/pivot-item.model'
 
 export type IPivotValueColumnItem<T = IItem> = {
   id: string
   columnPath: string[]
   valueField: ObjectKey<T>
-  value: PivotValue<T>
+  value: PivotItem<T>
   label: string
   isGrandTotal?: boolean
   isCollapsedGroupColumn?: boolean

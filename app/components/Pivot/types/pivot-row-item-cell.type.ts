@@ -1,4 +1,4 @@
-import type { PivotRow } from '../models/pivot-row.model'
+import type { PivotItem } from '../models/pivot-item.model'
 
 export type PivotRowItemCellKind = 'rowLabel' | 'subtotal' | 'grandTotal' | 'empty'
 
@@ -6,7 +6,7 @@ export type IPivotRowItemCell<T = IItem> = {
   id: string
   kind?: PivotRowItemCellKind
   rowFieldIndex?: number
-  row?: PivotRow<T>
+  row?: PivotItem<T>
   groupId: string
 
   ref: T

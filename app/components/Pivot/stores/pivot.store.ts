@@ -18,12 +18,22 @@ import {
   buildVisiblePivotValueColumns,
   togglePivotColumnGroupCollapse,
 } from '../functions/pivot-column-collapse'
+import {
+  getPivotFilterItems,
+  getPivotItemsByMultiUsage,
+  getPivotItemsBySingleUsage,
+  resolvePivotValueFields,
+  syncPivotMultiUsageIndices,
+  syncPivotSingleUsageIndices,
+} from '../functions/pivot-item-usage'
+import {
+  normalizePivotFilterSlotIndices,
+  syncTableColumnFiltersToPivotItem,
+} from '../functions/pivot-filter-usage'
 
 // Models
-import type { PivotRow } from '../models/pivot-row.model'
-import type { PivotColumn } from '../models/pivot-column.model'
-import type { PivotValue } from '../models/pivot-value.model'
-import type { PivotFilter } from '../models/pivot-filter.model'
+import type { PivotItem } from '../models/pivot-item.model'
+import type { TableColumn } from '../../Table/models/table-column.model'
 
 export const PIVOT_ID_KEY = Symbol('__pivotId')
 
@@ -77,6 +87,14 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     const minimumColumnWidth = toRef(props ?? {}, 'minimumColumnWidth', 80)
     const hoveredIdx = ref<number | undefined>()
 
+    const title = computed(() => {
+      if (typeof props?.title === 'function') {
+        return props.title()
+      }
+
+      return props?.title ?? ''
+    })
+
     const state = ref<IPivotState>({
       collapsedGroupIds: new Set<string>(),
       collapsedColumnGroupIds: new Set<string>(),
@@ -90,33 +108,48 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       defaultValue: [],
     }) as Ref<T[]>
 
-    const rows = initRef({
-      propName: 'rows',
+    const items = initRef({
+      propName: 'items',
       instance,
       props,
       defaultValue: [],
-    }) as Ref<PivotRow<T>[]>
+    }) as Ref<PivotItem<T>[]>
 
-    const columns = initRef({
-      propName: 'columns',
-      instance,
-      props,
-      defaultValue: [],
-    }) as Ref<PivotColumn<T>[]>
+    const rows = computed({
+      get() {
+        return getPivotItemsBySingleUsage(items.value, 'row')
+      },
+      set(value) {
+        syncPivotSingleUsageIndices({ items, ordered: value, role: 'row' })
+      },
+    })
 
-    const values = initRef({
-      propName: 'values',
-      instance,
-      props,
-      defaultValue: [],
-    }) as Ref<PivotValue<T>[]>
+    const columns = computed({
+      get() {
+        return getPivotItemsBySingleUsage(items.value, 'column')
+      },
+      set(value) {
+        syncPivotSingleUsageIndices({ items, ordered: value, role: 'column' })
+      },
+    })
 
-    const filters = initRef({
-      propName: 'filters',
-      instance,
-      props,
-      defaultValue: [],
-    }) as Ref<PivotFilter<T>[]>
+    const values = computed({
+      get() {
+        return getPivotItemsByMultiUsage(items.value, 'value')
+      },
+      set(value) {
+        syncPivotMultiUsageIndices({ items, ordered: value, role: 'value' })
+      },
+    })
+
+    const filters = computed({
+      get() {
+        return getPivotFilterItems(items.value)
+      },
+      set(value) {
+        syncPivotMultiUsageIndices({ items, ordered: value, role: 'filter' })
+      },
+    })
 
     // Data
     const data = ref<IPivotDataItem<T>[]>([])
@@ -168,6 +201,12 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       )
     }
 
+    function syncPivotItemFilters(item: PivotItem<T>, column: TableColumn<T>) {
+      syncTableColumnFiltersToPivotItem(item, column)
+      normalizePivotFilterSlotIndices(items.value)
+      recomputeData()
+    }
+
     async function recomputeData() {
       isTransforming.value = true
 
@@ -176,7 +215,8 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
           data: sourceData.value,
           rows: rows.value,
           columns: columns.value,
-          values: values.value,
+          values: resolvePivotValueFields(items.value),
+          items: items.value,
           collapseConfig: collapseConfig.value,
           state: state.value,
           isFirstRender,
@@ -202,7 +242,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
         : isNil(totalRows.value) ? data.value.length : totalRows.value
     }
 
-    watch([rows, columns, values, sourceData], () => {
+    watch([items, sourceData], () => {
       recomputeData()
     })
 
@@ -228,14 +268,17 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       minimumColumnWidth,
       state,
       hoveredIdx,
+      title,
 
       // Data fetching
       fetchAndSetData,
       recomputeData,
+      syncPivotItemFilters,
       toggleGroupCollapse,
       toggleColumnGroupCollapse,
 
       // Pivot config
+      items,
       rows,
       columns,
       values,

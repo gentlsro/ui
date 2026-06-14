@@ -18,69 +18,91 @@ import {
   buildPivotAggregationIndex,
   getPivotAggregatedValue,
 } from './pivot-aggregate-values'
+import { resolvePivotFilteredData } from './pivot-apply-data-filters'
+import type { IPivotTransformWorkerFilter } from './pivot-transform-worker-payload'
 
 // Models
-import type { PivotRow } from '../models/pivot-row.model'
-import type { PivotColumn } from '../models/pivot-column.model'
-import type { PivotValue } from '../models/pivot-value.model'
+import { SummaryEnum } from '#layers/utilities/shared/enums/summary.enum'
+import type { PivotItem } from '../models/pivot-item.model'
 
 type IPivotFormatNumber = (value: number) => string
 
-export type IPivotTransformCorePayload<T = IItem> = {
+export type IPivotTransformRowField<T extends IItem = IItem> = Pick<
+  PivotItem<T>,
+  'field' | 'dataType' | 'minWidth' | 'width' | 'widthResolved' | 'resizable'
+>
+
+export type IPivotTransformColumnField<T extends IItem = IItem> = Pick<
+  PivotItem<T>,
+  'field'
+>
+
+export type IPivotTransformValueField<T extends IItem = IItem> = {
+  field: ObjectKey<T>
+  summaryType: SummaryEnum
+  summaryFormat?: (row: T) => number
+  widthResolved: string
+  _label: string
+  item?: PivotItem<T>
+}
+
+export type IPivotTransformCorePayload<T extends IItem = IItem> = {
   data: T[]
-  rows: PivotRow<T>[]
-  columns: PivotColumn<T>[]
-  values: PivotValue<T>[]
+  rows: IPivotTransformRowField<T>[]
+  columns: IPivotTransformColumnField<T>[]
+  values: IPivotTransformValueField<T>[]
+  items?: PivotItem<T>[]
+  filters?: IPivotTransformWorkerFilter<T>[]
   formatNumber?: IPivotFormatNumber
   locale?: string
 }
 
-type IPivotAggregatedValueContext<T> = {
+type IPivotAggregatedValueContext<T extends IItem> = {
   items: T[]
   valueColumns: IPivotValueColumnItem<T>[]
-  columnFields: PivotColumn<T>[]
-  valueFields: PivotValue<T>[]
+  columnFields: IPivotTransformColumnField<T>[]
+  valueFields: IPivotTransformValueField<T>[]
   formatNumber: IPivotFormatNumber
 }
 
-type IBuildRowCellsPayload<T> = {
-  rowFields: PivotRow<T>[]
+type IBuildRowCellsPayload<T extends IItem> = {
+  rowFields: IPivotTransformRowField<T>[]
   cellKinds: PivotRowItemCellKind[]
   itemId: string
   refItem: T
   groupPath: string[]
 }
 
-type IBuildValueCellsPayload<T> = IPivotAggregatedValueContext<T> & {
+type IBuildValueCellsPayload<T extends IItem> = IPivotAggregatedValueContext<T> & {
   itemId: string
   kind: PivotRowItemKind
 }
 
-type IBuildValueItemPayload<T> = IPivotAggregatedValueContext<T> & {
+type IBuildValueItemPayload<T extends IItem> = IPivotAggregatedValueContext<T> & {
   itemId: string
   kind: PivotRowItemKind
   groupIds: string[]
 }
 
-type ISetCollapsedGroupValueItemPayload<T> = IPivotAggregatedValueContext<T> & {
+type ISetCollapsedGroupValueItemPayload<T extends IItem> = IPivotAggregatedValueContext<T> & {
   row: IPivotDataItem<T>
   groupId: string
 }
 
-type IBuildDataItemPayload<T> = IPivotAggregatedValueContext<T> & {
+type IBuildDataItemPayload<T extends IItem> = IPivotAggregatedValueContext<T> & {
   path: string[]
-  rowFields: PivotRow<T>[]
+  rowFields: IPivotTransformRowField<T>[]
   cellKinds: PivotRowItemCellKind[]
   kind?: PivotRowItemKind
 }
 
-type IBuildTabularRowsPayload<T> = IPivotAggregatedValueContext<T> & {
-  rowFields: PivotRow<T>[]
+type IBuildTabularRowsPayload<T extends IItem> = IPivotAggregatedValueContext<T> & {
+  rowFields: IPivotTransformRowField<T>[]
   level?: number
   parentPath?: string[]
 }
 
-function resolveFormatNumber<T>(payload: IPivotTransformCorePayload<T>) {
+function resolveFormatNumber<T extends IItem>(payload: IPivotTransformCorePayload<T>) {
   if (payload.formatNumber) {
     return payload.formatNumber
   }
@@ -94,7 +116,7 @@ function resolveFormatNumber<T>(payload: IPivotTransformCorePayload<T>) {
   return (value: number) => String(value)
 }
 
-function buildRowCells<T>(payload: IBuildRowCellsPayload<T>): IPivotRowItemCell<T>[] {
+function buildRowCells<T extends IItem>(payload: IBuildRowCellsPayload<T>): IPivotRowItemCell<T>[] {
   const { rowFields, cellKinds, itemId, refItem, groupPath } = payload
 
   return rowFields.map((rowField, index) => {
@@ -102,14 +124,14 @@ function buildRowCells<T>(payload: IBuildRowCellsPayload<T>): IPivotRowItemCell<
       id: `${itemId}-cell-${index}`,
       kind: cellKinds[index] ?? 'empty',
       rowFieldIndex: index,
-      row: rowField,
+      row: rowField as PivotItem<T>,
       groupId: getPivotGroupId(groupPath, index),
       ref: refItem,
     }
   })
 }
 
-function buildValueCells<T>(payload: IBuildValueCellsPayload<T>): IPivotValueItemCell<T>[] {
+function buildValueCells<T extends IItem>(payload: IBuildValueCellsPayload<T>): IPivotValueItemCell<T>[] {
   const {
     items,
     itemId,
@@ -146,7 +168,7 @@ function buildValueCells<T>(payload: IBuildValueCellsPayload<T>): IPivotValueIte
   })
 }
 
-function buildValueItem<T>(payload: IBuildValueItemPayload<T>): IPivotValueItem<T> {
+function buildValueItem<T extends IItem>(payload: IBuildValueItemPayload<T>): IPivotValueItem<T> {
   const { itemId, kind, groupIds, ...valueContext } = payload
 
   return {
@@ -157,7 +179,7 @@ function buildValueItem<T>(payload: IBuildValueItemPayload<T>): IPivotValueItem<
   }
 }
 
-function setCollapsedGroupValueItem<T>(payload: ISetCollapsedGroupValueItemPayload<T>) {
+function setCollapsedGroupValueItem<T extends IItem>(payload: ISetCollapsedGroupValueItemPayload<T>) {
   const { row, groupId, ...valueContext } = payload
 
   row.valueItem.collapsedGroupValueItems ??= {}
@@ -169,7 +191,7 @@ function setCollapsedGroupValueItem<T>(payload: ISetCollapsedGroupValueItemPaylo
   })
 }
 
-function buildDataItem<T>(payload: IBuildDataItemPayload<T>): IPivotDataItem<T> {
+function buildDataItem<T extends IItem>(payload: IBuildDataItemPayload<T>): IPivotDataItem<T> {
   const {
     path,
     rowFields,
@@ -204,7 +226,7 @@ function buildDataItem<T>(payload: IBuildDataItemPayload<T>): IPivotDataItem<T> 
   }
 }
 
-function buildTabularRows<T>(payload: IBuildTabularRowsPayload<T>): IPivotDataItem<T>[] {
+function buildTabularRows<T extends IItem>(payload: IBuildTabularRowsPayload<T>): IPivotDataItem<T>[] {
   const {
     items,
     rowFields,
@@ -288,25 +310,29 @@ function buildTabularRows<T>(payload: IBuildTabularRowsPayload<T>): IPivotDataIt
   return results
 }
 
-export function pivotTransformDataCore<T = IItem>(
+export function pivotTransformDataCore<T extends IItem = IItem>(
   payload: IPivotTransformCorePayload<T>,
 ): IPivotTransformResult<T> {
   const {
-    data,
+    data: sourceData,
     rows: rowFields,
     columns: columnFields,
     values: valueFields,
+    items = [],
+    filters = [],
   } = payload
+
+  const filteredData = resolvePivotFilteredData(sourceData, { items, filters })
 
   const formatNumber = resolveFormatNumber(payload)
 
-  const { valueColumns, valueHeaderRows, columnTree } = buildPivotValueColumns(
-    data,
+  const { valueColumns, valueHeaderRows, columnTree } = buildPivotValueColumns({
+    data: sourceData,
     columnFields,
     valueFields,
-  )
+  })
 
-  if (!data.length || !rowFields.length) {
+  if (!filteredData.length || !rowFields.length) {
     return {
       data: [],
       valueColumns,
@@ -324,7 +350,7 @@ export function pivotTransformDataCore<T = IItem>(
   }
 
   const tabularRows = buildTabularRows({
-    items: data,
+    items: filteredData,
     rowFields,
     ...valueContext,
   })
@@ -337,7 +363,7 @@ export function pivotTransformDataCore<T = IItem>(
     path: ['__grand_total__'],
     rowFields,
     cellKinds: grandTotalCellKinds,
-    items: data,
+    items: filteredData,
     kind: 'grandTotal',
     ...valueContext,
   }))
@@ -351,21 +377,21 @@ export function pivotTransformDataCore<T = IItem>(
   }
 }
 
-export function rehydratePivotTransformResult<T>(
+export function rehydratePivotTransformResult<T extends IItem>(
   result: IPivotTransformResult<T>,
   payload: {
-    rows: PivotRow<T>[]
-    values: PivotValue<T>[]
+    rows: PivotItem<T>[]
+    values: IPivotTransformValueField<T>[]
   },
 ): IPivotTransformResult<T> {
   const rowByField = new Map(payload.rows.map(row => [String(row.field), row]))
-  const valueByField = new Map(payload.values.map(value => [String(value.field), value]))
+  const valueByField = new Map(payload.values.map(value => [String(value.field), value.item]))
 
   const rehydrateValueField = (field: ObjectKey<T>) => {
     return valueByField.get(String(field)) ?? field
   }
 
-  const rehydrateRowField = (field?: ObjectKey<T> | PivotRow<T>) => {
+  const rehydrateRowField = (field?: ObjectKey<T> | PivotItem<T>) => {
     const key = typeof field === 'object' && field !== null && 'field' in field
       ? String(field.field)
       : String(field)
@@ -374,22 +400,22 @@ export function rehydratePivotTransformResult<T>(
   }
 
   for (const column of result.valueColumns) {
-    column.value = rehydrateValueField(column.valueField) as PivotValue<T>
+    column.value = rehydrateValueField(column.valueField) as PivotItem<T>
   }
 
   for (const item of result.data) {
     for (const cell of item.rowItem.cells) {
-      cell.row = rehydrateRowField(cell.row) as PivotRow<T>
+      cell.row = rehydrateRowField(cell.row) as PivotItem<T>
     }
 
     for (const cell of item.valueItem.cells) {
-      cell.value = rehydrateValueField(cell.valueField) as PivotValue<T>
+      cell.value = rehydrateValueField(cell.valueField) as PivotItem<T>
     }
 
     if (item.valueItem.collapsedGroupValueItems) {
       for (const collapsedItem of Object.values(item.valueItem.collapsedGroupValueItems)) {
         for (const cell of collapsedItem.cells) {
-          cell.value = rehydrateValueField(cell.valueField) as PivotValue<T>
+          cell.value = rehydrateValueField(cell.valueField) as PivotItem<T>
         }
       }
     }
