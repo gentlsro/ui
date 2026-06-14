@@ -6,12 +6,13 @@ import { PivotValue } from '../models/pivot-value.model'
 import {
   buildPivotAggregationIndex,
   getPivotAggregatedValue,
-} from './pivot-aggregate-values'
+} from '../functions/pivot-aggregate-values'
 import {
   applyPivotEmptyRows,
   pivotTransformData,
   shouldInsertPivotEmptyRowAfter,
-} from './pivot-transform-data'
+} from '../functions/pivot-transform-data'
+import { getPivotStickyIndices } from '../functions/pivot-group-collapse'
 
 type ITestItem = {
   region: string
@@ -139,6 +140,18 @@ describe('pivotTransformData', () => {
 
     expect(collapsedItem?.cells.find(cell => cell.columnPath.join('|') === '2024|Q1')?.aggregated)
       .toBe(300)
+  })
+
+  it('builds sticky indices for collapsible group header rows', () => {
+    const result = pivotTransformData(createTransformPayload())
+
+    expect(result.stickyIndices).toEqual(getPivotStickyIndices(result.data, ROW_FIELDS.length))
+
+    const stickyRows = result.stickyIndices.map(index => result.data[index]?.label)
+
+    expect(stickyRows).toContain('North / A')
+    expect(stickyRows).toContain('South / B')
+    expect(stickyRows).not.toContain('North / B')
   })
 })
 

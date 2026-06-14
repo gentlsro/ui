@@ -36,7 +36,7 @@ export const PIVOT_DEFAULT_PROPS = {
     },
 
     containerClass() {
-      const base = 'relative flex flex-col m-2 overflow-auto'
+      const base = 'relative flex flex-col grow m-2 overflow-auto'
       const border = 'border-t border-l border-light-8 dark:border-dark-6'
 
       return {
@@ -173,6 +173,15 @@ export const PIVOT_DEFAULT_PROPS = {
 
     rowsWrapperClass() {
       const base = 'flex flex-col shrink-0 overflow-x-scroll'
+
+      return {
+        base,
+        all: base,
+      } as const
+    },
+
+    loadingClass() {
+      const base = 'flex flex-center p-y-3 absolute inset-0 bg-white/68 dark:bg-dark-950/87 backdrop-blur-sm'
 
       return {
         base,

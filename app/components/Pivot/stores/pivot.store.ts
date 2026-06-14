@@ -6,9 +6,14 @@ import type { IPivotValueColumnItem, IPivotValueHeaderCell } from '../types/pivo
 import type { IPivotColumnTreeNode } from '../functions/pivot-column-collapse'
 
 // Functions
+import { usePivotTransform } from '../composables/usePivotTransform'
 import { pivotFetchData } from '../functions/pivot-fetch-data'
-import { applyPivotEmptyRows, pivotTransformData } from '../functions/pivot-transform-data'
-import { isPivotRowVisible, togglePivotGroupCollapse } from '../functions/pivot-group-collapse'
+import { applyPivotEmptyRows } from '../functions/pivot-transform-data'
+import {
+  getPivotStickyIndices,
+  isPivotRowVisible,
+  togglePivotGroupCollapse,
+} from '../functions/pivot-group-collapse'
 import {
   buildVisiblePivotValueColumns,
   togglePivotColumnGroupCollapse,
@@ -40,10 +45,25 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     // Utils
     const instance = getCurrentInstance()
     const { formatNumber } = useNumber()
+    const { currentLocale } = useLocale()
+    const { transformPivotData } = usePivotTransform()
 
-    const { isLoading, fn } = useFn({
+    const { isLoading: isRequestLoading, fn } = useFn({
       source: { type: 'store', name: 'pivot' },
     })
+
+    const isLoadingSource = initRef({
+      propName: 'loading',
+      instance,
+      props,
+      defaultValue: false,
+    })
+
+    const isLoading = computed(() => {
+      return isRequestLoading.value || isLoadingSource.value || isTransforming.value
+    })
+
+    const isFirstFetch = ref(true)
 
     // Layout
     const pivotEl = ref<HTMLElement>()
@@ -53,6 +73,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     const valuesVirtualScrollEl = ref<{ rerender: (noEmit?: boolean, resetHeights?: boolean) => void }>()
     const rowsWrapperEl = ref<HTMLElement>()
     const isFirstRender = shallowRef(true)
+    const isTransforming = ref(false)
     const minimumColumnWidth = toRef(props ?? {}, 'minimumColumnWidth', 80)
     const hoveredIdx = ref<number | undefined>()
 
@@ -132,6 +153,10 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       })
     })
 
+    const visibleStickyIndices = computed(() => {
+      return getPivotStickyIndices(visibleData.value, rows.value.length)
+    })
+
     function toggleGroupCollapse(groupId: string) {
       state.value.collapsedGroupIds = togglePivotGroupCollapse(state.value.collapsedGroupIds, groupId)
     }
@@ -143,22 +168,29 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       )
     }
 
-    function recomputeData() {
-      const result = pivotTransformData({
-        data: sourceData.value,
-        rows: rows.value,
-        columns: columns.value,
-        values: values.value,
-        collapseConfig: collapseConfig.value,
-        state: state.value,
-        isFirstRender,
-        formatNumber,
-      })
+    async function recomputeData() {
+      isTransforming.value = true
 
-      data.value = result.data
-      valueColumns.value = result.valueColumns
-      valueHeaderRows.value = result.valueHeaderRows
-      columnTree.value = result.columnTree
+      try {
+        const result = await transformPivotData({
+          data: sourceData.value,
+          rows: rows.value,
+          columns: columns.value,
+          values: values.value,
+          collapseConfig: collapseConfig.value,
+          state: state.value,
+          isFirstRender,
+          formatNumber,
+          locale: currentLocale.value.code,
+        })
+
+        data.value = result.data
+        valueColumns.value = result.valueColumns
+        valueHeaderRows.value = result.valueHeaderRows
+        columnTree.value = result.columnTree
+      } finally {
+        isTransforming.value = false
+      }
     }
 
     async function fetchAndSetData() {
@@ -183,6 +215,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
 
       // Utils
       isLoading,
+      isFirstFetch,
       fn,
 
       // Layout
@@ -212,6 +245,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       data,
       sourceData,
       visibleData,
+      visibleStickyIndices,
       valueColumns,
       visibleValueColumns,
       valueHeaderRows,

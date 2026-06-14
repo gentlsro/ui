@@ -15,6 +15,38 @@ function isGroupHeaderRowAtLevel<T = IItem>(row: Pick<IPivotDataItem<T>, 'rowIte
   return labelCell?.kind === 'rowLabel'
 }
 
+export function isPivotStickyGroupHeaderRow<T = IItem>(
+  row: IPivotDataItem<T>,
+  rowFieldCount: number,
+) {
+  const lastCollapsibleLevel = rowFieldCount - 2
+
+  if (lastCollapsibleLevel < 0) {
+    return false
+  }
+
+  return row.rowItem.cells.some(cell =>
+    cell.kind === 'rowLabel'
+    && cell.rowFieldIndex !== undefined
+    && cell.rowFieldIndex <= lastCollapsibleLevel,
+  )
+}
+
+export function getPivotStickyIndices<T = IItem>(
+  rows: IPivotDataItem<T>[],
+  rowFieldCount: number,
+) {
+  const indices: number[] = []
+
+  for (let index = 0; index < rows.length; index++) {
+    if (isPivotStickyGroupHeaderRow(rows[index]!, rowFieldCount)) {
+      indices.push(index)
+    }
+  }
+
+  return indices
+}
+
 export function isPivotRowVisible<T = IItem>(
   row: IPivotDataItem<T>,
   collapsedGroupIds: Set<string>,
@@ -57,8 +89,8 @@ export function isPivotRowVisible<T = IItem>(
   return true
 }
 
-export function getInitialCollapsedGroupIds(
-  data: IPivotDataItem[],
+export function getInitialCollapsedGroupIds<T = IItem>(
+  data: IPivotDataItem<T>[],
   expandedLevelOnInit = 0,
   rowFieldCount = 0,
 ) {

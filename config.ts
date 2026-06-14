@@ -1090,6 +1090,7 @@ export const defaultComponentsConfig = {
       config: { useEmptyRow: false },
       collapseConfig: { expandedLevelOnInit: 1 },
       loadData: undefined,
+      loading: undefined,
       minimumColumnWidth: 80,
       ui: {
         containerClass: ({ defaults }) => defaults.all,
@@ -1106,6 +1107,7 @@ export const defaultComponentsConfig = {
         valuesScrollerClass: ({ defaults }) => defaults.all,
         rowsScrollerClass: ({ defaults }) => defaults.all,
         rowsWrapperClass: ({ defaults }) => defaults.all,
+        loadingClass: ({ defaults }) => defaults.all,
       },
     },
     merge: ['ui', 'loadData', 'collapseConfig', 'config'],
@@ -1728,6 +1730,7 @@ export const defaultComponentsConfig = {
       rows: undefined,
       rowHeight: 36,
       rowKey: 'id' as any,
+      stickyIndices: undefined,
       virtualizerOptions: {
         overscan: 5,
       },

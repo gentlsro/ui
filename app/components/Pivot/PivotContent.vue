@@ -12,6 +12,7 @@ const PIVOT_ROW_HEIGHT = 32
 
 const {
   visibleData,
+  visibleStickyIndices,
   visibleValueColumns,
   rows,
   ui,
@@ -78,10 +79,27 @@ const rowsScrollerStyle = computed(() => {
     :style="contentStyle"
   >
     <!-- Row items -->
+
     <div
       ref="rowsWrapperEl"
       :class="rowsWrapperClass"
     >
+      <!-- <div
+        ref="rowsVirtualScrollEl"
+        class="virtual-scroll"
+        :class="rowsScrollerClass"
+      >
+        <PivotRowItem
+          v-for="(row, index) in visibleData"
+          :key="row.id"
+          :item="row.rowItem"
+          :group-ids="row.groupIds"
+          :class="{ 'is-odd': !(index % 2), 'is-hovered': hoveredIdx === index }"
+          @mouseenter="handleMouseEnter(index)"
+          @mouseleave="handleMouseLeave"
+        />
+      </div> -->
+
       <VirtualScrollerVertical
         ref="rowsVirtualScrollEl"
         class="pivot-content__rows grow"
@@ -90,6 +108,7 @@ const rowsScrollerStyle = computed(() => {
         row-key="id"
         :row-height="PIVOT_ROW_HEIGHT"
         :no-scroll-emit="true"
+        :sticky-indices="visibleStickyIndices"
         :style="rowsScrollerStyle"
       >
         <template #default="{ row, index }">
@@ -114,6 +133,7 @@ const rowsScrollerStyle = computed(() => {
       row-key="id"
       :row-height="PIVOT_ROW_HEIGHT"
       :no-scroll-emit="true"
+      :sticky-indices="visibleStickyIndices"
     >
       <template #default="{ row, index }">
         <PivotValueItem

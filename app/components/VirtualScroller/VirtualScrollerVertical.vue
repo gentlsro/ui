@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T extends IItem = IItem">
 import { getRect } from 'mezr'
-import { useVirtualizer } from '@tanstack/vue-virtual'
+import { defaultRangeExtractor, useVirtualizer } from '@tanstack/vue-virtual'
 
 // Types
 import type { IVirtualScrollEvent } from './types/virtual-scroll-event.type'
@@ -28,9 +28,24 @@ const rows = toRef(props, 'rows') as Ref<T[]>
 const containerEl = useTemplateRef('containerEl')
 const contentEl = useTemplateRef('contentEl')
 
+// Sticky rows
+const stickyIndices = toRef(props, 'stickyIndices')
+const stickyIndexSet = shallowRef(new Set<number>())
+const activeStickyIndex = ref<number>()
+
+watch(
+  stickyIndices,
+  indices => {
+    stickyIndexSet.value = new Set(indices ?? [])
+  },
+  { immediate: true },
+)
+
+const scrollMargin = computed(() => props.virtualizerOptions?.scrollMargin ?? 0)
+
 // Row virtualizer
 const rowVirtualizerOptions = computed(() => {
-  return {
+  const options = {
     count: rows.value.length,
     scrollMargin: 0,
     getScrollElement: () => containerEl.value,
@@ -39,12 +54,56 @@ const rowVirtualizerOptions = computed(() => {
 
     ...props.virtualizerOptions,
   }
+
+  const indices = [...stickyIndexSet.value]
+  if (!indices.length) {
+    return options
+  }
+
+  return {
+    ...options,
+    rangeExtractor: (range: Parameters<typeof defaultRangeExtractor>[0]) => {
+      const activeIndex = [...indices]
+        .reverse()
+        .find(index => range.startIndex >= index)
+
+      activeStickyIndex.value = activeIndex
+
+      const next = new Set(defaultRangeExtractor(range))
+      if (activeIndex !== undefined) {
+        next.add(activeIndex)
+      }
+
+      return [...next].sort((a, b) => a - b)
+    },
+  }
 })
 
 const rowVirtualizer = useVirtualizer(rowVirtualizerOptions as any)
 
 const virtualRows = computed(() => {
   return rowVirtualizer.value.getVirtualItems()
+})
+
+const renderedVirtualRows = computed(() => {
+  const active = activeStickyIndex.value
+  const stickySet = stickyIndexSet.value
+
+  return virtualRows.value.map(virtualRow => {
+    const isSticky = stickySet.has(virtualRow.index)
+    const isActiveSticky = active === virtualRow.index
+
+    return Object.assign({}, virtualRow, {
+      isSticky,
+      isActiveSticky,
+      positionStyle: isActiveSticky
+        ? { position: 'sticky' as const }
+        : {
+            'position': 'absolute' as const,
+            '--translateY': virtualRow.start - scrollMargin.value,
+          },
+    })
+  })
 })
 
 const totalHeight = computed(() => {
@@ -149,7 +208,7 @@ defineExpose({
       :style="contentStyle"
     >
       <template
-        v-for="virtualRow in virtualRows"
+        v-for="virtualRow in renderedVirtualRows"
         :key="(virtualRow.key as PropertyKey)"
       >
         <div
@@ -158,22 +217,29 @@ defineExpose({
           :data-idx="virtualRow.index"
           :data-key="virtualRow.key"
           class="virtual-scroll__row content-row"
-          :class="rowClass"
+          :class="[
+            rowClass,
+            {
+              'is-sticky': virtualRow.isSticky,
+              'is-sticky-active': virtualRow.isActiveSticky,
+            },
+          ]"
           :style="{
             ...rowStyle,
             ...(rowHeight && { minHeight: `${rowHeight}px` }),
-            'position': 'absolute',
+            ...virtualRow.positionStyle,
             'top': 0,
             'left': 0,
             'display': 'flex',
             '--rowHeight': virtualRow.size,
-            '--translateY': virtualRow.start - rowVirtualizer.options.scrollMargin,
           }"
         >
           <!-- Content -->
           <slot
             :row="rows[virtualRow.index]!"
             :index="virtualRow.index"
+            :is-sticky="virtualRow.isSticky"
+            :is-active-sticky="virtualRow.isActiveSticky"
             :style="{ minHeight: `${rowHeight}px` }"
           />
         </div>
@@ -198,6 +264,12 @@ defineExpose({
 .virtual-scroll__content .virtual-scroll__row {
   @apply w-full;
 
-  transform: translateY(calc(var(--translateY) * 1px));
+  &:not(.is-sticky-active) {
+    transform: translateY(calc(var(--translateY) * 1px));
+  }
+}
+
+.virtual-scroll__content .virtual-scroll__row.is-sticky {
+  @apply z-1;
 }
 </style>

@@ -59,6 +59,11 @@ export type IPivotProps<T = IItem> = {
   minimumColumnWidth?: number
 
   /**
+   * Set the `loading` state manually
+   */
+  loading?: boolean
+
+  /**
    * Load data configuration
    */
   loadData?: {
@@ -252,5 +257,17 @@ export type IPivotProps<T = IItem> = {
     rowsScrollerClass?: (payload: {
       defaults: ReturnType<typeof PIVOT_DEFAULT_PROPS['ui']['rowsScrollerClass']>
     }) => ClassType
+
+    /**
+     * Class to apply to the loading area
+     */
+    loadingClass?: (payload: {
+      defaults: ReturnType<typeof PIVOT_DEFAULT_PROPS['ui']['loadingClass']>
+    }) => ClassType
+
+    /**
+     * Style to apply to the loading area
+     */
+    loadingStyle?: () => CSSProperties
   }
 }

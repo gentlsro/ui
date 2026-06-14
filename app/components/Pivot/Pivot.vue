@@ -21,7 +21,15 @@ const uuid = generateUUID()
 provideLocal(PIVOT_ID_KEY, uuid)
 
 // Store
-const { pivotEl, ui, loadData, collapseConfig, config, fetchAndSetData } = usePivotStore({ props })
+const {
+  pivotEl,
+  ui,
+  loadData,
+  collapseConfig,
+  config,
+  fetchAndSetData,
+  isFirstFetch,
+} = usePivotStore({ props })
 
 // Syncing merged props with store
 syncRef(toRef(mergedProps.value, 'ui'), ui, { direction: 'ltr' })
@@ -35,6 +43,9 @@ const isImmediate = mergedProps.value.loadData?.immediate
 
 if (mergedProps.value.loadData?.fnc && isImmediate) {
   await fetchAndSetData()
+  isFirstFetch.value = false
+} else if (props.data?.length || !mergedProps.value.loadData?.fnc) {
+  isFirstFetch.value = false
 }
 
 // Styles - container
@@ -57,6 +68,7 @@ const containerStyle = computed(() => {
 onMounted(() => {
   if (!isImmediate) {
     fetchAndSetData()
+      .then(() => isFirstFetch.value = false)
   }
 })
 </script>
@@ -74,6 +86,10 @@ onMounted(() => {
 
     <slot name="content">
       <PivotContent />
+    </slot>
+
+    <slot name="loading">
+      <PivotLoading :ui="mergedProps.ui" />
     </slot>
   </div>
 </template>

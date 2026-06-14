@@ -7,4 +7,5 @@ export type IPivotTransformResult<T = IItem> = {
   valueColumns: IPivotValueColumnItem<T>[]
   valueHeaderRows: IPivotValueHeaderCell[][]
   columnTree: IPivotColumnTreeNode[]
+  stickyIndices: number[]
 }

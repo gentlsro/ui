@@ -24,6 +24,15 @@ export type IVirtualScrollerVerticalProps<T extends IItem = IItem> = {
   rowKey?: keyof T
 
   /**
+   * Row indices that stick to the top while scrolling.
+   *
+   * Typically group headers. The active sticky row updates as you scroll.
+   *
+   * @see https://tanstack.com/virtual/latest/docs/framework/vue/examples/sticky
+   */
+  stickyIndices?: number[]
+
+  /**
    * The options to pass to the virtualizer
    *
    * @see https://tanstack.com/virtual/latest/docs/api/virtualizer
