@@ -14,10 +14,10 @@ type IProps = {
 
 const props = defineProps<IProps>()
 
-const { valueColumns, ui } = usePivotStore()
+const { visibleValueColumns, ui } = usePivotStore()
 
 const column = computed(() => {
-  return valueColumns.value.find(col => col.id === props.item.columnId)
+  return visibleValueColumns.value.find(col => col.id === props.item.columnId)
 })
 
 const valueItemCellClass = computed(() => {

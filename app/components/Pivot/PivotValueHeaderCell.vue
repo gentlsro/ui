@@ -2,6 +2,10 @@
 // Types
 import type { IPivotValueHeaderCell } from './types/pivot-value-column-item.type'
 
+// Functions
+import { isPivotColumnHeaderHidden } from './functions/pivot-column-collapse'
+import { isValueHeaderCellCollapsible } from './functions/is-value-header-cell-collapsible'
+
 // Store
 import { usePivotStore } from './stores/pivot.store'
 
@@ -12,14 +16,34 @@ type IProps = {
   cell: IPivotValueHeaderCell
 }
 
-defineProps<IProps>()
+const props = defineProps<IProps>()
 
-const { ui } = usePivotStore()
+const { columns, ui, state } = usePivotStore()
+
+const isCollapsible = computed(() => {
+  return isValueHeaderCellCollapsible({ columns: columns.value, cell: props.cell })
+})
+
+const isHidden = computed(() => {
+  if (!props.cell.groupId) {
+    return false
+  }
+
+  return isPivotColumnHeaderHidden(
+    props.cell.groupId,
+    state.value.collapsedColumnGroupIds,
+  )
+})
 
 const valueHeaderCellClass = computed(() => {
-  return ui.value?.valueHeaderCellClass?.({
-    defaults: PIVOT_DEFAULT_PROPS.ui.valueHeaderCellClass(),
-  })
+  return [
+    ui.value?.valueHeaderCellClass?.({
+      defaults: PIVOT_DEFAULT_PROPS.ui.valueHeaderCellClass(),
+    }),
+    {
+      'is-collapsible': isCollapsible.value,
+    },
+  ]
 })
 
 const valueHeaderCellStyle = computed(() => {
@@ -34,7 +58,16 @@ const valueHeaderCellStyle = computed(() => {
     :style="valueHeaderCellStyle"
     :title="cell.label"
   >
-    <span class="truncate">
+    <PivotCollapseBtn
+      v-if="isCollapsible && !isHidden && cell.groupId"
+      :group-id="cell.groupId"
+      axis="column"
+    />
+
+    <span
+      v-if="!isHidden"
+      class="truncate"
+    >
       {{ cell.label }}
     </span>
   </div>

@@ -11,17 +11,23 @@ import type { IPivotTransformResult } from '../types/pivot-transform-result.type
 
 // Functions
 import { getInitialCollapsedGroupIds, getPivotGroupId } from './pivot-group-collapse'
+import { getInitialCollapsedColumnGroupIds } from './pivot-column-collapse'
 import {
   buildPivotValueColumns,
-  filterItemsByColumnPath,
   formatPivotValue,
 } from './pivot-build-value-columns'
+import { pivotGroupBy } from './pivot-group-by'
+import {
+  buildPivotAggregationIndex,
+  getPivotAggregatedValue,
+} from './pivot-aggregate-values'
 
 // Models
 import type { PivotRow } from '../models/pivot-row.model'
 import type { PivotColumn } from '../models/pivot-column.model'
 import type { PivotValue } from '../models/pivot-value.model'
-import { SummaryItem } from '#layers/utilities/shared/models/summary-item.model'
+
+type IPivotFormatNumber = (value: number) => string
 
 type IPivotTransformPayload<T = IItem> = {
   data: T[]
@@ -31,32 +37,69 @@ type IPivotTransformPayload<T = IItem> = {
   state: IPivotState
   collapseConfig: IPivotProps<T>['collapseConfig']
   isFirstRender?: Ref<boolean>
+  formatNumber: IPivotFormatNumber
 }
 
-function groupBy<T>(items: T[], field: ObjectKey<T>): Map<string, T[]> {
-  const map = new Map<string, T[]>()
-
-  for (const item of items) {
-    const key = String(get(item, field) ?? '')
-    const group = map.get(key)
-
-    if (group) {
-      group.push(item)
-    } else {
-      map.set(key, [item])
-    }
-  }
-
-  return map
+type IPivotAggregatedValueContext<T> = {
+  items: T[]
+  valueColumns: IPivotValueColumnItem<T>[]
+  columnFields: PivotColumn<T>[]
+  valueFields: PivotValue<T>[]
+  formatNumber: IPivotFormatNumber
 }
 
-function buildRowCells<T>(
-  rowFields: PivotRow<T>[],
-  cellKinds: PivotRowItemCellKind[],
-  itemId: string,
-  refItem: T,
-  groupPath: string[],
-): IPivotRowItemCell<T>[] {
+type IBuildRowCellsPayload<T> = {
+  rowFields: PivotRow<T>[]
+  cellKinds: PivotRowItemCellKind[]
+  itemId: string
+  refItem: T
+  groupPath: string[]
+}
+
+type IBuildValueCellsPayload<T> = IPivotAggregatedValueContext<T> & {
+  itemId: string
+  kind: PivotRowItemKind
+}
+
+type IBuildValueItemPayload<T> = IPivotAggregatedValueContext<T> & {
+  itemId: string
+  kind: PivotRowItemKind
+  groupIds: string[]
+}
+
+type ISetCollapsedGroupValueItemPayload<T> = IPivotAggregatedValueContext<T> & {
+  row: IPivotDataItem<T>
+  groupId: string
+}
+
+type IBuildDataItemPayload<T> = IPivotAggregatedValueContext<T> & {
+  path: string[]
+  rowFields: PivotRow<T>[]
+  cellKinds: PivotRowItemCellKind[]
+  kind?: PivotRowItemKind
+}
+
+type IBuildTabularRowsPayload<T> = IPivotAggregatedValueContext<T> & {
+  rowFields: PivotRow<T>[]
+  level?: number
+  parentPath?: string[]
+}
+
+type IBuildEmptyDataItemPayload<T> = {
+  afterRowId: string
+  rowFields: PivotRow<T>[]
+  valueColumns: IPivotValueColumnItem<T>[]
+}
+
+type IShouldInsertPivotEmptyRowAfterPayload<T> = {
+  row: IPivotDataItem<T>
+  collapsedGroupIds: Set<string>
+  rowFieldCount: number
+}
+
+function buildRowCells<T>(payload: IBuildRowCellsPayload<T>): IPivotRowItemCell<T>[] {
+  const { rowFields, cellKinds, itemId, refItem, groupPath } = payload
+
   return rowFields.map((rowField, index) => {
     return {
       id: `${itemId}-cell-${index}`,
@@ -69,25 +112,29 @@ function buildRowCells<T>(
   })
 }
 
-function buildValueCells<T>(
-  items: T[],
-  itemId: string,
-  kind: PivotRowItemKind,
-  valueColumns: IPivotValueColumnItem<T>[],
-  columnFields: PivotColumn<T>[],
-): IPivotValueItemCell<T>[] {
-  const { calculateSummary } = useSummaries()
+function buildValueCells<T>(payload: IBuildValueCellsPayload<T>): IPivotValueItemCell<T>[] {
+  const {
+    items,
+    itemId,
+    kind,
+    valueColumns,
+    columnFields,
+    valueFields,
+    formatNumber,
+  } = payload
+  const aggregationIndex = buildPivotAggregationIndex({
+    items,
+    columnFields,
+    valueFields,
+  })
 
   return valueColumns.map((column, index) => {
-    const filtered = filterItemsByColumnPath(items, columnFields, column.columnPath)
-    const summaryItem = new SummaryItem({
-      field: column.value.field,
-      summaryType: column.value.summaryType,
-      summaryFormat: column.value.summaryFormat,
-      label: column.value._label,
+    const { aggregated, matchCount } = getPivotAggregatedValue({
+      index: aggregationIndex,
+      columnPath: column.columnPath,
+      valueField: column.valueField,
     })
-    const aggregated = calculateSummary(summaryItem, filtered)
-    const showValue = filtered.length > 0 || kind !== 'data'
+    const showValue = matchCount > 0 || kind !== 'data'
 
     return {
       id: `${itemId}-value-${index}`,
@@ -97,69 +144,58 @@ function buildValueCells<T>(
       valueField: column.valueField,
       value: column.value,
       aggregated,
-      formattedValue: showValue ? formatPivotValue(aggregated, column.value) : '',
+      formattedValue: showValue ? formatPivotValue({ value: aggregated, formatNumber }) : '',
     }
   })
 }
 
-function buildValueItem<T>(
-  itemId: string,
-  kind: PivotRowItemKind,
-  items: T[],
-  valueColumns: IPivotValueColumnItem<T>[],
-  columnFields: PivotColumn<T>[],
-  groupIds: string[],
-): IPivotValueItem<T> {
+function buildValueItem<T>(payload: IBuildValueItemPayload<T>): IPivotValueItem<T> {
+  const { itemId, kind, groupIds, ...valueContext } = payload
+
   return {
     id: itemId,
     kind,
     groupIds,
-    cells: buildValueCells(items, itemId, kind, valueColumns, columnFields),
+    cells: buildValueCells({ itemId, kind, ...valueContext }),
   }
 }
 
-function setCollapsedGroupValueItem<T>(
-  row: IPivotDataItem<T>,
-  groupId: string,
-  groupItems: T[],
-  valueColumns: IPivotValueColumnItem<T>[],
-  columnFields: PivotColumn<T>[],
-) {
+function setCollapsedGroupValueItem<T>(payload: ISetCollapsedGroupValueItemPayload<T>) {
+  const { row, groupId, ...valueContext } = payload
+
   row.valueItem.collapsedGroupValueItems ??= {}
-  row.valueItem.collapsedGroupValueItems[groupId] = buildValueItem(
-    `${row.id}-collapsed-${groupId}`,
-    'data',
-    groupItems,
-    valueColumns,
-    columnFields,
-    row.groupIds,
-  )
+  row.valueItem.collapsedGroupValueItems[groupId] = buildValueItem({
+    itemId: `${row.id}-collapsed-${groupId}`,
+    kind: 'data',
+    groupIds: row.groupIds,
+    ...valueContext,
+  })
 }
 
-function buildDataItem<T>(
-  path: string[],
-  rowFields: PivotRow<T>[],
-  cellKinds: PivotRowItemCellKind[],
-  items: T[],
-  valueColumns: IPivotValueColumnItem<T>[],
-  columnFields: PivotColumn<T>[],
-  kind: PivotRowItemKind = 'data',
-): IPivotDataItem<T> {
+function buildDataItem<T>(payload: IBuildDataItemPayload<T>): IPivotDataItem<T> {
+  const {
+    path,
+    rowFields,
+    cellKinds,
+    kind = 'data',
+    ...valueContext
+  } = payload
+
   const pathId = path.join('|')
-  const refItem = items[0]!
+  const refItem = valueContext.items[0]!
   const itemId = kind === 'data' ? pathId : `${kind}:${pathId}`
-  const label = path.filter(part => !part.startsWith('__')).join(' / ')
   const groupPath = path.filter(part => !part.startsWith('__'))
+  const label = groupPath.join(' / ')
   const groupIds = groupPath.map((_, index) => getPivotGroupId(groupPath, index))
 
   const rowItem: IPivotRowItem<T> = {
     id: itemId,
     label,
     kind,
-    cells: buildRowCells(rowFields, cellKinds, itemId, refItem, groupPath),
+    cells: buildRowCells({ rowFields, cellKinds, itemId, refItem, groupPath }),
   }
 
-  const valueItem = buildValueItem(itemId, kind, items, valueColumns, columnFields, groupIds)
+  const valueItem = buildValueItem({ itemId, kind, groupIds, ...valueContext })
 
   return {
     id: itemId,
@@ -171,20 +207,21 @@ function buildDataItem<T>(
   }
 }
 
-function buildTabularRows<T>(
-  items: T[],
-  rowFields: PivotRow<T>[],
-  valueColumns: IPivotValueColumnItem<T>[],
-  columnFields: PivotColumn<T>[],
-  level = 0,
-  parentPath: string[] = [],
-): IPivotDataItem<T>[] {
+function buildTabularRows<T>(payload: IBuildTabularRowsPayload<T>): IPivotDataItem<T>[] {
+  const {
+    items,
+    rowFields,
+    level = 0,
+    parentPath = [],
+    ...valueContext
+  } = payload
+
   if (!rowFields.length) {
     return []
   }
 
   const field = rowFields[level]!
-  const groups = groupBy(items, field.field)
+  const groups = pivotGroupBy(items, field.field)
   const sortedKeys = [...groups.keys()].sort()
   const results: IPivotDataItem<T>[] = []
 
@@ -193,14 +230,13 @@ function buildTabularRows<T>(
     const currentPath = [...parentPath, key]
 
     if (level < rowFields.length - 1) {
-      const childRows = buildTabularRows(
-        groupItems,
+      const childRows = buildTabularRows({
+        items: groupItems,
         rowFields,
-        valueColumns,
-        columnFields,
-        level + 1,
-        currentPath,
-      )
+        level: level + 1,
+        parentPath: currentPath,
+        ...valueContext,
+      })
 
       childRows.forEach((row, childIndex) => {
         if (row.rowItem.kind !== 'data') {
@@ -213,13 +249,12 @@ function buildTabularRows<T>(
           labelCell.kind = childIndex === 0 ? 'rowLabel' : 'empty'
 
           if (childIndex === 0) {
-            setCollapsedGroupValueItem(
+            setCollapsedGroupValueItem({
               row,
-              labelCell.groupId,
-              groupItems,
-              valueColumns,
-              columnFields,
-            )
+              groupId: labelCell.groupId,
+              items: groupItems,
+              ...valueContext,
+            })
           }
         }
       })
@@ -230,39 +265,34 @@ function buildTabularRows<T>(
         index === level ? 'subtotal' as const : 'empty' as const,
       )
 
-      results.push(buildDataItem(
-        [...currentPath, '__subtotal__'],
+      results.push(buildDataItem({
+        path: [...currentPath, '__subtotal__'],
         rowFields,
-        subtotalCellKinds,
-        groupItems,
-        valueColumns,
-        columnFields,
-        'subtotal',
-      ))
+        cellKinds: subtotalCellKinds,
+        items: groupItems,
+        kind: 'subtotal',
+        ...valueContext,
+      }))
     } else {
       const rowCellKinds = rowFields.map((_, index) =>
         index === level ? 'rowLabel' as const : 'empty' as const,
       )
 
-      results.push(buildDataItem(
-        currentPath,
+      results.push(buildDataItem({
+        path: currentPath,
         rowFields,
-        rowCellKinds,
-        groupItems,
-        valueColumns,
-        columnFields,
-      ))
+        cellKinds: rowCellKinds,
+        items: groupItems,
+        ...valueContext,
+      }))
     }
   }
 
   return results
 }
 
-function buildEmptyDataItem<T>(
-  afterRowId: string,
-  rowFields: PivotRow<T>[],
-  valueColumns: IPivotValueColumnItem<T>[],
-): IPivotDataItem<T> {
+function buildEmptyDataItem<T>(payload: IBuildEmptyDataItemPayload<T>): IPivotDataItem<T> {
+  const { afterRowId, rowFields, valueColumns } = payload
   const itemId = `empty:${afterRowId}`
 
   return {
@@ -301,11 +331,9 @@ function buildEmptyDataItem<T>(
   }
 }
 
-export function shouldInsertPivotEmptyRowAfter<T>(
-  row: IPivotDataItem<T>,
-  collapsedGroupIds: Set<string>,
-  rowFieldCount: number,
-) {
+export function shouldInsertPivotEmptyRowAfter<T>(payload: IShouldInsertPivotEmptyRowAfterPayload<T>) {
+  const { row, collapsedGroupIds, rowFieldCount } = payload
+
   if (row.rowItem.kind === 'grandTotal' || row.rowItem.kind === 'emptyRow') {
     return false
   }
@@ -362,8 +390,16 @@ export function applyPivotEmptyRows<T>(
   for (const row of visibleRows) {
     result.push(row)
 
-    if (shouldInsertPivotEmptyRowAfter(row, payload.collapsedGroupIds, payload.rowFieldCount)) {
-      result.push(buildEmptyDataItem(row.id, payload.rowFields, payload.valueColumns))
+    if (shouldInsertPivotEmptyRowAfter({
+      row,
+      collapsedGroupIds: payload.collapsedGroupIds,
+      rowFieldCount: payload.rowFieldCount,
+    })) {
+      result.push(buildEmptyDataItem({
+        afterRowId: row.id,
+        rowFields: payload.rowFields,
+        valueColumns: payload.valueColumns,
+      }))
     }
   }
 
@@ -381,9 +417,10 @@ export function pivotTransformData<T = IItem>(
     state,
     collapseConfig,
     isFirstRender = ref(true),
+    formatNumber,
   } = payload
 
-  const { valueColumns, valueHeaderRows } = buildPivotValueColumns(
+  const { valueColumns, valueHeaderRows, columnTree } = buildPivotValueColumns(
     data,
     columnFields,
     valueFields,
@@ -394,34 +431,46 @@ export function pivotTransformData<T = IItem>(
       data: [],
       valueColumns,
       valueHeaderRows,
+      columnTree,
     }
   }
 
-  const tabularRows = buildTabularRows(
-    data,
-    rowFields,
+  const valueContext = {
     valueColumns,
     columnFields,
-  )
+    valueFields,
+    formatNumber,
+  }
+
+  const tabularRows = buildTabularRows({
+    items: data,
+    rowFields,
+    ...valueContext,
+  })
+
   const grandTotalCellKinds = rowFields.map((_, index) =>
     index === 0 ? 'grandTotal' as const : 'empty' as const,
   )
 
-  tabularRows.push(buildDataItem(
-    ['__grand_total__'],
+  tabularRows.push(buildDataItem({
+    path: ['__grand_total__'],
     rowFields,
-    grandTotalCellKinds,
-    data,
-    valueColumns,
-    columnFields,
-    'grandTotal',
-  ))
+    cellKinds: grandTotalCellKinds,
+    items: data,
+    kind: 'grandTotal',
+    ...valueContext,
+  }))
 
   if (isFirstRender.value) {
     state.collapsedGroupIds = getInitialCollapsedGroupIds(
       tabularRows as IPivotDataItem[],
       collapseConfig?.expandedLevelOnInit ?? 0,
       rowFields.length,
+    )
+    state.collapsedColumnGroupIds = getInitialCollapsedColumnGroupIds(
+      columnTree,
+      collapseConfig?.expandedLevelOnInit ?? 0,
+      columnFields.length,
     )
     isFirstRender.value = false
   }
@@ -430,5 +479,6 @@ export function pivotTransformData<T = IItem>(
     data: tabularRows,
     valueColumns,
     valueHeaderRows,
+    columnTree,
   }
 }

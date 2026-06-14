@@ -7,6 +7,7 @@ export type IPivotValueColumnItem<T = IItem> = {
   value: PivotValue<T>
   label: string
   isGrandTotal?: boolean
+  isCollapsedGroupColumn?: boolean
   width: string
 }
 
@@ -17,4 +18,6 @@ export type IPivotValueHeaderCell = {
   rowspan: number
   level: number
   width?: string
+  groupId?: string
+  columnFieldIndex?: number
 }

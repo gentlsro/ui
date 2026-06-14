@@ -1,44 +1,23 @@
 import type { IPivotValueColumnItem, IPivotValueHeaderCell } from '../types/pivot-value-column-item.type'
+import type { IPivotColumnTreeNode } from './pivot-column-collapse'
+import { pivotGroupBy } from './pivot-group-by'
 
 // Models
 import type { PivotColumn } from '../models/pivot-column.model'
 import type { PivotValue } from '../models/pivot-value.model'
-
-type IColumnTreeNode = {
-  key: string
-  path: string[]
-  children: IColumnTreeNode[]
-}
-
-function groupBy<T>(items: T[], field: ObjectKey<T>): Map<string, T[]> {
-  const map = new Map<string, T[]>()
-
-  for (const item of items) {
-    const key = String(get(item, field) ?? '')
-    const group = map.get(key)
-
-    if (group) {
-      group.push(item)
-    } else {
-      map.set(key, [item])
-    }
-  }
-
-  return map
-}
 
 function buildColumnTree<T>(
   items: T[],
   columnFields: PivotColumn<T>[],
   level = 0,
   parentPath: string[] = [],
-): IColumnTreeNode[] {
+): IPivotColumnTreeNode[] {
   if (!columnFields.length || level >= columnFields.length) {
     return []
   }
 
   const field = columnFields[level]!
-  const groups = groupBy(items, field.field)
+  const groups = pivotGroupBy(items, field.field)
   const sortedKeys = [...groups.keys()].sort()
 
   return sortedKeys.map(key => {
@@ -56,8 +35,8 @@ function buildColumnTree<T>(
   })
 }
 
-function flattenColumnTreeLeaves(nodes: IColumnTreeNode[]): IColumnTreeNode[] {
-  const results: IColumnTreeNode[] = []
+function flattenColumnTreeLeaves(nodes: IPivotColumnTreeNode[]): IPivotColumnTreeNode[] {
+  const results: IPivotColumnTreeNode[] = []
 
   for (const node of nodes) {
     if (node.children.length) {
@@ -70,7 +49,7 @@ function flattenColumnTreeLeaves(nodes: IColumnTreeNode[]): IColumnTreeNode[] {
   return results
 }
 
-function getNodeColspan(node: IColumnTreeNode, valuesCount: number): number {
+function getNodeColspan(node: IPivotColumnTreeNode, valuesCount: number): number {
   if (node.children.length) {
     return node.children.reduce(
       (sum, child) => sum + getNodeColspan(child, valuesCount),
@@ -84,8 +63,8 @@ function getNodeColspan(node: IColumnTreeNode, valuesCount: number): number {
 function buildValueHeaderRows<T>(
   columnFields: PivotColumn<T>[],
   valueFields: PivotValue<T>[],
-  tree: IColumnTreeNode[],
-  leaves: IColumnTreeNode[],
+  tree: IPivotColumnTreeNode[],
+  leaves: IPivotColumnTreeNode[],
 ): IPivotValueHeaderCell[][] {
   const rows: IPivotValueHeaderCell[][] = []
   const valuesCount = valueFields.length
@@ -97,7 +76,7 @@ function buildValueHeaderRows<T>(
 
   function addNodesAtLevel(
     row: IPivotValueHeaderCell[],
-    nodes: IColumnTreeNode[],
+    nodes: IPivotColumnTreeNode[],
     targetLevel: number,
     currentLevel = 0,
   ) {
@@ -190,9 +169,10 @@ export function buildPivotValueColumns<T>(
 ): {
   valueColumns: IPivotValueColumnItem<T>[]
   valueHeaderRows: IPivotValueHeaderCell[][]
+  columnTree: IPivotColumnTreeNode[]
 } {
   if (!valueFields.length) {
-    return { valueColumns: [], valueHeaderRows: [] }
+    return { valueColumns: [], valueHeaderRows: [], columnTree: [] }
   }
 
   const valueColumns: IPivotValueColumnItem<T>[] = []
@@ -224,6 +204,7 @@ export function buildPivotValueColumns<T>(
     return {
       valueColumns,
       valueHeaderRows: buildFlatValueHeaderRows(valueFields, valueColumns),
+      columnTree: [],
     }
   }
 
@@ -265,14 +246,14 @@ export function buildPivotValueColumns<T>(
     ? buildValueHeaderRows(columnFields, valueFields, tree, leaves)
     : buildFlatValueHeaderRows(valueFields, valueColumns)
 
-  return { valueColumns, valueHeaderRows }
+  return { valueColumns, valueHeaderRows, columnTree: tree }
 }
 
 export function filterItemsByColumnPath<T>(
   items: T[],
   columnFields: PivotColumn<T>[],
   columnPath: string[],
-): T[] {
+) {
   if (!columnPath.length || columnPath[0] === '__grand_total__') {
     return items
   }
@@ -284,12 +265,15 @@ export function filterItemsByColumnPath<T>(
   })
 }
 
-export function formatPivotValue<T>(value: number, _pivotValue: PivotValue<T>): string {
+export function formatPivotValue(payload: {
+  value: number
+  formatNumber: (value: number) => string
+}) {
+  const { value, formatNumber } = payload
+
   if (!Number.isFinite(value)) {
     return ''
   }
 
-  const rounded = Math.round(value * 100) / 100
-
-  return String(rounded)
+  return formatNumber(value)
 }

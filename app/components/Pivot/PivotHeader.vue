@@ -5,7 +5,7 @@ import { usePivotStore } from './stores/pivot.store'
 // Constants
 import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
 
-const { rows, valueColumns, ui } = usePivotStore()
+const { rows, visibleValueColumns, ui } = usePivotStore()
 
 const headerClass = computed(() => {
   return ui.value?.headerClass?.({
@@ -26,6 +26,6 @@ const headerStyle = computed(() => {
     :style="headerStyle"
   >
     <PivotRowHeader />
-    <PivotValueHeader v-if="valueColumns.length" />
+    <PivotValueHeader v-if="visibleValueColumns.length" />
   </div>
 </template>

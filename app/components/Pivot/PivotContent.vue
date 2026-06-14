@@ -8,19 +8,28 @@ import { usePivotStore } from './stores/pivot.store'
 // Constants
 import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
 
-const PIVOT_ROW_HEIGHT = 28
+const PIVOT_ROW_HEIGHT = 32
 
 const {
   visibleData,
-  valueColumns,
+  visibleValueColumns,
   rows,
   ui,
+  hoveredIdx,
   rowsVirtualScrollEl,
   valuesVirtualScrollEl,
   rowsWrapperEl,
 } = usePivotStore()
 
 usePivotScrollSync()
+
+function handleMouseEnter(index: number) {
+  hoveredIdx.value = index
+}
+
+function handleMouseLeave() {
+  hoveredIdx.value = undefined
+}
 
 // Styles - Content
 const contentClass = computed(() => {
@@ -83,10 +92,13 @@ const rowsScrollerStyle = computed(() => {
         :no-scroll-emit="true"
         :style="rowsScrollerStyle"
       >
-        <template #default="{ row }">
+        <template #default="{ row, index }">
           <PivotRowItem
             :item="row.rowItem"
             :group-ids="row.groupIds"
+            :class="{ 'is-odd': !(index % 2), 'is-hovered': hoveredIdx === index }"
+            @mouseenter="handleMouseEnter(index)"
+            @mouseleave="handleMouseLeave"
           />
         </template>
       </VirtualScrollerVertical>
@@ -94,7 +106,7 @@ const rowsScrollerStyle = computed(() => {
 
     <!-- Value items -->
     <VirtualScrollerVertical
-      v-if="valueColumns.length"
+      v-if="visibleValueColumns.length"
       ref="valuesVirtualScrollEl"
       class="pivot-content__values"
       :class="valuesScrollerClass"
@@ -103,8 +115,13 @@ const rowsScrollerStyle = computed(() => {
       :row-height="PIVOT_ROW_HEIGHT"
       :no-scroll-emit="true"
     >
-      <template #default="{ row }">
-        <PivotValueItem :item="row.valueItem" />
+      <template #default="{ row, index }">
+        <PivotValueItem
+          :item="row.valueItem"
+          :class="{ 'is-odd': !(index % 2), 'is-hovered': hoveredIdx === index }"
+          @mouseenter="handleMouseEnter(index)"
+          @mouseleave="handleMouseLeave"
+        />
       </template>
     </VirtualScrollerVertical>
   </div>

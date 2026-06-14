@@ -16,7 +16,7 @@ type IPlacedHeaderCell = {
   rowEnd: number
 }
 
-const { valueHeaderRows, valueColumns, valueHeaderEl, ui } = usePivotStore()
+const { visibleValueHeaderRows, visibleValueColumns, valueHeaderEl, ui } = usePivotStore()
 
 const valueHeaderClass = computed(() => {
   return ui.value?.valueHeaderClass?.({
@@ -29,13 +29,13 @@ const valueHeaderStyle = computed(() => {
 })
 
 const gridTemplateColumns = computed(() => {
-  return valueColumns.value
+  return visibleValueColumns.value
     .map(column => column.width)
     .join(' ')
 })
 
 const gridMinWidth = computed(() => {
-  const totalWidth = valueColumns.value.reduce((sum, column) => {
+  const totalWidth = visibleValueColumns.value.reduce((sum, column) => {
     return sum + (Number.parseFloat(column.width) || 0)
   }, 0)
 
@@ -43,16 +43,16 @@ const gridMinWidth = computed(() => {
 })
 
 const placedCells = computed(() => {
-  if (!valueHeaderRows.value.length) {
+  if (!visibleValueHeaderRows.value.length) {
     return [] as IPlacedHeaderCell[]
   }
 
-  const rowCount = valueHeaderRows.value.length
-  const colCount = valueColumns.value.length
+  const rowCount = visibleValueHeaderRows.value.length
+  const colCount = visibleValueColumns.value.length
   const occupied = Array.from({ length: rowCount }, () => Array.from({ length: colCount }, () => false))
   const placed: IPlacedHeaderCell[] = []
 
-  valueHeaderRows.value.forEach((headerRow, rowIndex) => {
+  visibleValueHeaderRows.value.forEach((headerRow, rowIndex) => {
     let colIndex = 0
 
     for (const cell of headerRow) {
@@ -84,7 +84,7 @@ const placedCells = computed(() => {
 
 <template>
   <div
-    v-if="valueColumns.length"
+    v-if="visibleValueColumns.length"
     ref="valueHeaderEl"
     class="pivot-value-header"
     :class="valueHeaderClass"
@@ -95,7 +95,7 @@ const placedCells = computed(() => {
       :style="{
         display: 'grid',
         gridTemplateColumns,
-        gridTemplateRows: `repeat(${valueHeaderRows.length}, auto)`,
+        gridTemplateRows: `repeat(${visibleValueHeaderRows.length}, auto)`,
         minWidth: gridMinWidth,
         width: gridMinWidth,
       }"

@@ -3,11 +3,16 @@ import type { IPivotProps } from '../types/pivot-props.type'
 import type { IPivotState } from '../types/pivot-state.type'
 import type { IPivotDataItem } from '../types/pivot-data-item.type'
 import type { IPivotValueColumnItem, IPivotValueHeaderCell } from '../types/pivot-value-column-item.type'
+import type { IPivotColumnTreeNode } from '../functions/pivot-column-collapse'
 
 // Functions
 import { pivotFetchData } from '../functions/pivot-fetch-data'
 import { applyPivotEmptyRows, pivotTransformData } from '../functions/pivot-transform-data'
 import { isPivotRowVisible, togglePivotGroupCollapse } from '../functions/pivot-group-collapse'
+import {
+  buildVisiblePivotValueColumns,
+  togglePivotColumnGroupCollapse,
+} from '../functions/pivot-column-collapse'
 
 // Models
 import type { PivotRow } from '../models/pivot-row.model'
@@ -34,6 +39,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
 
     // Utils
     const instance = getCurrentInstance()
+    const { formatNumber } = useNumber()
 
     const { isLoading, fn } = useFn({
       source: { type: 'store', name: 'pivot' },
@@ -48,9 +54,11 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     const rowsWrapperEl = ref<HTMLElement>()
     const isFirstRender = shallowRef(true)
     const minimumColumnWidth = toRef(props ?? {}, 'minimumColumnWidth', 80)
+    const hoveredIdx = ref<number | undefined>()
 
     const state = ref<IPivotState>({
       collapsedGroupIds: new Set<string>(),
+      collapsedColumnGroupIds: new Set<string>(),
     })
 
     // Pivot config
@@ -93,6 +101,20 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     const data = ref<IPivotDataItem<T>[]>([])
     const valueColumns = ref<IPivotValueColumnItem<T>[]>([])
     const valueHeaderRows = ref<IPivotValueHeaderCell[][]>([])
+    const columnTree = ref<IPivotColumnTreeNode[]>([])
+
+    const visibleValueLayout = computed(() => {
+      return buildVisiblePivotValueColumns({
+        columnFields: columns.value,
+        valueFields: values.value,
+        tree: columnTree.value,
+        collapsedColumnGroupIds: state.value.collapsedColumnGroupIds,
+        allValueColumns: valueColumns.value as IPivotValueColumnItem<T>[],
+      })
+    })
+
+    const visibleValueColumns = computed(() => visibleValueLayout.value.valueColumns)
+    const visibleValueHeaderRows = computed(() => visibleValueLayout.value.valueHeaderRows)
 
     const totalRows = shallowRef<number>()
 
@@ -106,12 +128,19 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
         rowFieldCount: rows.value.length,
         collapsedGroupIds: state.value.collapsedGroupIds,
         rowFields: rows.value,
-        valueColumns: valueColumns.value as IPivotValueColumnItem<T>[],
+        valueColumns: visibleValueColumns.value as IPivotValueColumnItem<T>[],
       })
     })
 
     function toggleGroupCollapse(groupId: string) {
       state.value.collapsedGroupIds = togglePivotGroupCollapse(state.value.collapsedGroupIds, groupId)
+    }
+
+    function toggleColumnGroupCollapse(groupId: string) {
+      state.value.collapsedColumnGroupIds = togglePivotColumnGroupCollapse(
+        state.value.collapsedColumnGroupIds,
+        groupId,
+      )
     }
 
     function recomputeData() {
@@ -123,11 +152,13 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
         collapseConfig: collapseConfig.value,
         state: state.value,
         isFirstRender,
+        formatNumber,
       })
 
       data.value = result.data
       valueColumns.value = result.valueColumns
       valueHeaderRows.value = result.valueHeaderRows
+      columnTree.value = result.columnTree
     }
 
     async function fetchAndSetData() {
@@ -137,15 +168,11 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       totalRows.value = !isNil(res.totalRows)
         ? res.totalRows
         : isNil(totalRows.value) ? data.value.length : totalRows.value
-
-      recomputeData()
     }
 
     watch([rows, columns, values, sourceData], () => {
       recomputeData()
     })
-
-    recomputeData()
 
     const returnedData = {
       // Configs
@@ -167,11 +194,13 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       rowsWrapperEl,
       minimumColumnWidth,
       state,
+      hoveredIdx,
 
       // Data fetching
       fetchAndSetData,
       recomputeData,
       toggleGroupCollapse,
+      toggleColumnGroupCollapse,
 
       // Pivot config
       rows,
@@ -184,7 +213,10 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       sourceData,
       visibleData,
       valueColumns,
+      visibleValueColumns,
       valueHeaderRows,
+      visibleValueHeaderRows,
+      columnTree,
       totalRows,
     }
 

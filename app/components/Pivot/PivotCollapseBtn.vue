@@ -4,17 +4,29 @@ import { usePivotStore } from './stores/pivot.store'
 
 type IProps = {
   groupId: string
+  axis?: 'row' | 'column'
 }
 
-const props = defineProps<IProps>()
+const props = withDefaults(defineProps<IProps>(), {
+  axis: 'row',
+})
 
-const { state, toggleGroupCollapse } = usePivotStore()
+const { state, toggleGroupCollapse, toggleColumnGroupCollapse } = usePivotStore()
 
 const isCollapsed = computed(() => {
+  if (props.axis === 'column') {
+    return state.value.collapsedColumnGroupIds.has(props.groupId)
+  }
+
   return state.value.collapsedGroupIds.has(props.groupId)
 })
 
 function handleToggleCollapse() {
+  if (props.axis === 'column') {
+    toggleColumnGroupCollapse(props.groupId)
+    return
+  }
+
   toggleGroupCollapse(props.groupId)
 }
 </script>
