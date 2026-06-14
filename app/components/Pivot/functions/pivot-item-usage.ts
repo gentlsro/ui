@@ -1,5 +1,6 @@
 // Models
 import { SummaryEnum } from '#layers/utilities/shared/enums/summary.enum'
+import type { IPivotFilterSlot } from './pivot-filter-usage'
 import type { IPivotValueUsageSlot, PivotItem } from '../models/pivot-item.model'
 import type { IPivotTransformValueField } from './pivot-transform-data-core'
 
@@ -123,7 +124,10 @@ export function syncPivotMultiUsageIndices<T extends IItem>(payload: {
 
       if (slot) {
         item.usage.filter.push({ ...slot, index })
+        return
       }
+
+      item.usage.filter.push({ index } as IPivotFilterSlot<T>)
     })
 
     return

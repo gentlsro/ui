@@ -21,7 +21,7 @@ export const PIVOT_DEFAULT_PROPS = {
     },
 
     titleClass() {
-      const base = 'font-rem-18 font-bold p-x-2 p-y-1'
+      const base = 'flex items-center gap-2 font-rem-18 font-bold p-x-2 p-y-1 min-w-70'
 
       return {
         base,
@@ -50,7 +50,7 @@ export const PIVOT_DEFAULT_PROPS = {
     rowHeaderClass() {
       const base = 'relative flex overflow-auto shrink-0 hide-scrollbar'
       const border = 'border-b border-light-8 dark:border-dark-6'
-      const bg = 'bg-slate-100 dark:bg-dark-950'
+      const bg = 'bg-slate-200 dark:bg-dark-950'
 
       return {
         base,
@@ -131,7 +131,7 @@ export const PIVOT_DEFAULT_PROPS = {
 
     valueHeaderClass() {
       const base = 'grow min-w-0 overflow-hidden p-r-$scrollbarWidth'
-      const bg = 'bg-slate-100 dark:bg-dark-950'
+      const bg = 'bg-slate-200 dark:bg-dark-950'
 
       return {
         base,

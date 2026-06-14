@@ -11,7 +11,7 @@ import { TableColumn } from '../../Table/models/table-column.model'
 export type IPivotFilterSlot<T extends IItem = IItem> = NonNullable<PivotItem<T>['usage']['filter']>[number]
 
 export function getPivotItemFilterSlots<T extends IItem>(item: PivotItem<T>) {
-  return item.usage.filter ?? []
+  return (item.usage.filter ?? []).filter(slot => slot.comparator !== undefined)
 }
 
 export function isPivotFilterSlotActive(slot: IPivotFilterSlot) {

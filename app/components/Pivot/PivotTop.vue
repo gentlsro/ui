@@ -7,6 +7,8 @@ import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
 
 const { title, ui, config, rows } = usePivotStore()
 
+const isConfigurationOpen = ref(false)
+
 // Styles - top
 const topClass = computed(() => {
   return ui.value?.topClass?.({
@@ -40,15 +42,39 @@ const titleStyle = computed(() => {
     :class="topClass"
     :style="topStyle"
   >
-    <!-- Title -->
-    <h4
-      v-if="title"
-      class="pivot-top__title"
+    <!-- Left -->
+    <div
       :class="titleClass"
       :style="titleStyle"
     >
-      {{ title }}
-    </h4>
+      <Btn
+        size="sm"
+        icon="i-material-symbols:tune-rounded w-5! h-5!"
+        :tooltip="{ label: $t('general.configuration') }"
+      >
+        <Menu
+          v-model="isConfigurationOpen"
+          :title="$t('general.configuration')"
+          w="240"
+          h="200"
+          no-uplift
+          placement="bottom-start"
+        >
+          <PivotConfiguration
+            :is-open="isConfigurationOpen"
+            @submit="isConfigurationOpen = false"
+          />
+        </Menu>
+      </Btn>
+
+      <!-- Title -->
+      <h4
+        v-if="title"
+        class="pivot-top__title"
+      >
+        {{ title }}
+      </h4>
+    </div>
 
     <!-- Filters -->
     <slot name="filters">
