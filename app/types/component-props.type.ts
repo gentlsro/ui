@@ -150,9 +150,6 @@ export * from '../components/Page/types/page-drawer-props.type'
 export * from '../components/Page/types/page-title-props.type'
 export * from '../components/Page/types/page-wrapper-props.type'
 
-// Pivot
-export * from '../components/Pivot/types/pivot-props.type'
-
 // ProgressBar
 export * from '../components/ProgressBar/types/progress-bar-props.type'
 
