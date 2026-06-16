@@ -2,7 +2,7 @@
 import type { PivotItem } from '../models/pivot-item.model'
 
 // Functions
-import { getActivePivotFilterItems } from './pivot-filter-usage'
+import { getActivePivotFilterItems } from './pivot-filter-items'
 import type { IPivotTransformWorkerFilter } from './pivot-transform-worker-payload'
 
 function applyPivotFilters<T extends IItem>(data: T[], filters: FilterItem<T>[]) {

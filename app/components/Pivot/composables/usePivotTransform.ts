@@ -7,10 +7,11 @@ import type { IPivotTransformResult } from '../types/pivot-transform-result.type
 import { getInitialCollapsedGroupIds } from '../functions/pivot-group-collapse'
 import { getInitialCollapsedColumnGroupIds } from '../functions/pivot-column-collapse'
 import {
+
   pivotTransformDataCore,
   rehydratePivotTransformResult,
-  type IPivotTransformValueField,
 } from '../functions/pivot-transform-data-core'
+import type { IPivotTransformValueField } from '../functions/pivot-transform-data-core'
 import { shouldUsePivotTransformWorker } from '../functions/pivot-transform-complexity'
 import { serializePivotTransformWorkerPayload } from '../functions/pivot-transform-worker-payload'
 import { pivotTransformData } from '../functions/pivot-transform-data'

@@ -12,7 +12,7 @@ import type {
   IPivotTransformRowField,
   IPivotTransformValueField,
 } from './pivot-transform-data-core'
-import { getActivePivotFilterItems } from './pivot-filter-usage'
+import { getActivePivotFilterItems } from './pivot-filter-items'
 
 export type IPivotTransformWorkerRow<T extends IItem = IItem> = IPivotTransformRowField<T>
 
