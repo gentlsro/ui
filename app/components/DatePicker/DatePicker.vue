@@ -305,7 +305,7 @@ defineExpose({
         </div>
       </div>
 
-      <ScrollArea
+      <div
         data-onboarding="date-picker-days"
         class="date-picker-days"
         :class="daysGridClass"
@@ -331,7 +331,7 @@ defineExpose({
             />
           </template>
         </DatePickerDay>
-      </ScrollArea>
+      </div>
     </div>
 
     <div
@@ -356,6 +356,7 @@ defineExpose({
 
 <style lang="scss" scoped>
 .date-picker-days {
+  overflow: hidden;
   grid-auto-rows: minmax(40px, auto);
 }
 </style>
