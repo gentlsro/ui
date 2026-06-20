@@ -8,7 +8,7 @@ import { usePivotStore } from '../stores/pivot.store'
 
 export function usePivotRowResizing<T extends IItem = IItem>() {
   const {
-    rows,
+    displayRowFields,
     pivotEl,
     rowHeaderEl,
     rowsVirtualScrollEl,
@@ -29,7 +29,7 @@ export function usePivotRowResizing<T extends IItem = IItem>() {
     return unrefElement(pivotEl) ?? undefined
   }
 
-  function getRowWidthPx(row: (typeof rows.value)[number]) {
+  function getRowWidthPx(row: (typeof displayRowFields.value)[number]) {
     if (Number.isFinite(row._width) && row._width > 0) {
       return row._width
     }
@@ -40,13 +40,13 @@ export function usePivotRowResizing<T extends IItem = IItem>() {
   const rowSplitters = computed(() => {
     const splitters: IPivotSplitter<T>[] = []
 
-    if (!rows.value.length) {
+    if (!displayRowFields.value.length) {
       return splitters
     }
 
     let lastLeftPosition = 0
 
-    rows.value.forEach(row => {
+    displayRowFields.value.forEach(row => {
       const rowWidth = getRowWidthPx(row)
       lastLeftPosition += rowWidth
 
@@ -71,12 +71,12 @@ export function usePivotRowResizing<T extends IItem = IItem>() {
       return
     }
 
-    rows.value.forEach(row => {
+    displayRowFields.value.forEach(row => {
       row._width = row.getWidthPx(root)
     })
   }
 
-  function getMinRowWidth(row: (typeof rows.value)[number]) {
+  function getMinRowWidth(row: (typeof displayRowFields.value)[number]) {
     return Math.max(row.minWidth, getResolvedMinimumColumnWidth())
   }
 
@@ -84,7 +84,7 @@ export function usePivotRowResizing<T extends IItem = IItem>() {
     splitter: IPivotSplitter<T>,
     ev: PointerEvent,
   ) {
-    const row = rows.value.find(r => r.field === splitter.field)
+    const row = displayRowFields.value.find(r => r.field === splitter.field)
 
     if (!row) {
       return
@@ -184,9 +184,12 @@ export function usePivotRowResizing<T extends IItem = IItem>() {
 
     // Trigger the reactivity and rerender the virtual scroll
     nextTick(() => {
-      rows.value = [...rows.value]
+      displayRowFields.value.forEach(row => {
+        if (row.field === current.row.field) {
+          row.setResizedWidth(adjustedWidth)
+        }
+      })
       measureRowWidths()
-      // rowsVirtualScrollEl.value?.rerender()
     })
   }
 

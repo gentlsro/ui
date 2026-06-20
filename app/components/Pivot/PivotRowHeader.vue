@@ -7,8 +7,9 @@ import { usePivotRowResizing } from './composables/usePivotRowResizing'
 
 // Constants
 import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
+import { PIVOT_MEASURE_ROW_FIELD } from './constants/pivot-measure-row.constant'
 
-const { rows, rowHeaderEl, ui, config } = usePivotStore<T>()
+const { displayRowFields, showMeasureColumn, rowHeaderEl, ui, config } = usePivotStore<T>()
 
 const {
   activeSplitter,
@@ -31,7 +32,7 @@ const rowHeaderStyle = computed(() => {
 })
 
 watch(
-  () => rows.value.length,
+  () => displayRowFields.value.length,
   () => {
     nextTick(measureRowWidths)
   },
@@ -50,9 +51,10 @@ onMounted(() => {
     :style="rowHeaderStyle"
   >
     <PivotRowHeaderCell
-      v-for="row in rows"
+      v-for="row in displayRowFields"
       :key="String(row.field)"
       :row="row"
+      :is-measure-column="showMeasureColumn && row.field === PIVOT_MEASURE_ROW_FIELD"
     />
 
     <span

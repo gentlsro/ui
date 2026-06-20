@@ -14,7 +14,7 @@ const {
   visibleData,
   visibleStickyIndices,
   visibleValueColumns,
-  rows,
+  displayRowFields,
   ui,
   hoveredIdx,
   config,
@@ -71,7 +71,7 @@ const rowsWrapperClass = computed(() => {
 })
 
 const rowsScrollerStyle = computed(() => {
-  const width = rows.value.reduce((agg, row) => agg + row._width, 0)
+  const width = displayRowFields.value.reduce((agg, row) => agg + row._width, 0)
 
   return { width: `${width}px` }
 })

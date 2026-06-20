@@ -10,4 +10,8 @@ export type IPivotDataItem<T = IItem> = {
 
   rowItem: IPivotRowItem<T>
   valueItem: IPivotValueItem<T>
+
+  activeValueField?: ObjectKey<T>
+  measureIndex?: number
+  measureCount?: number
 }

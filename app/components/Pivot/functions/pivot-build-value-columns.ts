@@ -80,11 +80,13 @@ function buildValueHeaderRows<T extends IItem>(payload: {
   valueFields: IPivotTransformValueField<T>[]
   tree: IPivotColumnTreeNode[]
   leaves: IPivotColumnTreeNode[]
+  valuesOnRows?: boolean
 }): IPivotValueHeaderCell[][] {
-  const { columnFields, valueFields, tree, leaves } = payload
+  const { columnFields, valueFields, tree, leaves, valuesOnRows } = payload
   const rows: IPivotValueHeaderCell[][] = []
-  const valuesCount = valueFields.length
-  const hasMultipleValues = valuesCount > 1
+  const expandMeasuresOnRows = valuesOnRows && valueFields.length > 1
+  const valuesCount = expandMeasuresOnRows ? 1 : valueFields.length
+  const hasMultipleValues = !expandMeasuresOnRows && valueFields.length > 1
   const totalHeaderRows = columnFields.length + (hasMultipleValues ? 1 : 0)
   const grandTotalRowspan = hasMultipleValues
     ? columnFields.length
@@ -189,41 +191,65 @@ export function buildPivotValueColumns<T extends IItem>(payload: {
   data: T[]
   columnFields: IPivotTransformColumnField<T>[]
   valueFields: IPivotTransformValueField<T>[]
+  valuesOnRows?: boolean
 }): {
   valueColumns: IPivotValueColumnItem<T>[]
   valueHeaderRows: IPivotValueHeaderCell[][]
   columnTree: IPivotColumnTreeNode[]
 } {
-  const { data, columnFields, valueFields } = payload
+  const { data, columnFields, valueFields, valuesOnRows } = payload
 
   if (!valueFields.length) {
     return { valueColumns: [], valueHeaderRows: [], columnTree: [] }
   }
 
+  const expandMeasuresOnRows = valuesOnRows && valueFields.length > 1
+  const primaryValueField = valueFields[0]!
   const valueColumns: IPivotValueColumnItem<T>[] = []
 
   if (!columnFields.length) {
-    for (const valueField of valueFields) {
+    if (expandMeasuresOnRows) {
       valueColumns.push({
-        id: `value:${String(valueField.field)}`,
+        id: 'value',
         columnPath: [],
-        valueField: valueField.field,
-        value: valueField.item ?? { field: valueField.field } as PivotItem<T>,
-        label: valueField._label,
-        width: valueField.widthResolved,
+        valueField: primaryValueField.field,
+        value: primaryValueField.item ?? { field: primaryValueField.field } as PivotItem<T>,
+        label: primaryValueField._label,
+        width: primaryValueField.widthResolved,
       })
-    }
 
-    for (const valueField of valueFields) {
       valueColumns.push({
-        id: `grand-total:${String(valueField.field)}`,
+        id: 'grand-total',
         columnPath: ['__grand_total__'],
-        valueField: valueField.field,
-        value: valueField.item ?? { field: valueField.field } as PivotItem<T>,
+        valueField: primaryValueField.field,
+        value: primaryValueField.item ?? { field: primaryValueField.field } as PivotItem<T>,
         label: 'Grand Total',
         isGrandTotal: true,
-        width: valueField.widthResolved,
+        width: primaryValueField.widthResolved,
       })
+    } else {
+      for (const valueField of valueFields) {
+        valueColumns.push({
+          id: `value:${String(valueField.field)}`,
+          columnPath: [],
+          valueField: valueField.field,
+          value: valueField.item ?? { field: valueField.field } as PivotItem<T>,
+          label: valueField._label,
+          width: valueField.widthResolved,
+        })
+      }
+
+      for (const valueField of valueFields) {
+        valueColumns.push({
+          id: `grand-total:${String(valueField.field)}`,
+          columnPath: ['__grand_total__'],
+          valueField: valueField.field,
+          value: valueField.item ?? { field: valueField.field } as PivotItem<T>,
+          label: 'Grand Total',
+          isGrandTotal: true,
+          width: valueField.widthResolved,
+        })
+      }
     }
 
     return {
@@ -236,39 +262,62 @@ export function buildPivotValueColumns<T extends IItem>(payload: {
   const tree = buildColumnTree({ items: data, columnFields })
   const leaves = flattenColumnTreeLeaves(tree)
 
-  for (const leaf of leaves) {
-    for (const valueField of valueFields) {
-      const pathLabel = leaf.path.join(' / ')
-
+  if (expandMeasuresOnRows) {
+    for (const leaf of leaves) {
       valueColumns.push({
-        id: `${leaf.path.join('|')}|${String(valueField.field)}`,
+        id: leaf.path.join('|'),
         columnPath: leaf.path,
+        valueField: primaryValueField.field,
+        value: primaryValueField.item ?? { field: primaryValueField.field } as PivotItem<T>,
+        label: leaf.path.join(' / '),
+        width: primaryValueField.widthResolved,
+      })
+    }
+
+    valueColumns.push({
+      id: 'grand-total',
+      columnPath: ['__grand_total__'],
+      valueField: primaryValueField.field,
+      value: primaryValueField.item ?? { field: primaryValueField.field } as PivotItem<T>,
+      label: 'Grand Total',
+      isGrandTotal: true,
+      width: primaryValueField.widthResolved,
+    })
+  } else {
+    for (const leaf of leaves) {
+      for (const valueField of valueFields) {
+        const pathLabel = leaf.path.join(' / ')
+
+        valueColumns.push({
+          id: `${leaf.path.join('|')}|${String(valueField.field)}`,
+          columnPath: leaf.path,
+          valueField: valueField.field,
+          value: valueField.item ?? { field: valueField.field } as PivotItem<T>,
+          label: valueFields.length > 1
+            ? `${pathLabel} / ${valueField._label}`
+            : pathLabel,
+          width: valueField.widthResolved,
+        })
+      }
+    }
+
+    for (const valueField of valueFields) {
+      valueColumns.push({
+        id: `grand-total|${String(valueField.field)}`,
+        columnPath: ['__grand_total__'],
         valueField: valueField.field,
-        value: valueField.item ?? { field: valueField.field } as PivotItem<T>,
+        value: valueField as unknown as PivotItem<T>,
         label: valueFields.length > 1
-          ? `${pathLabel} / ${valueField._label}`
-          : pathLabel,
+          ? `Grand Total / ${valueField._label}`
+          : 'Grand Total',
+        isGrandTotal: true,
         width: valueField.widthResolved,
       })
     }
   }
 
-  for (const valueField of valueFields) {
-    valueColumns.push({
-      id: `grand-total|${String(valueField.field)}`,
-      columnPath: ['__grand_total__'],
-      valueField: valueField.field,
-      value: valueField as PivotItem<T>,
-      label: valueFields.length > 1
-        ? `Grand Total / ${valueField._label}`
-        : 'Grand Total',
-      isGrandTotal: true,
-      width: valueField.widthResolved,
-    })
-  }
-
   const valueHeaderRows = leaves.length
-    ? buildValueHeaderRows({ columnFields, valueFields, tree, leaves })
+    ? buildValueHeaderRows({ columnFields, valueFields, tree, leaves, valuesOnRows })
     : buildFlatValueHeaderRows(valueFields, valueColumns)
 
   return { valueColumns, valueHeaderRows, columnTree: tree }

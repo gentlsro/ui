@@ -10,11 +10,20 @@ import { usePivotStore } from './stores/pivot.store'
 
 type IProps = {
   row: PivotItem<T>
+  isMeasureColumn?: boolean
 }
 
 const props = defineProps<IProps>()
 
 const { ui } = usePivotStore()
+
+const headerLabel = computed(() => {
+  if (props.isMeasureColumn) {
+    return $t('pivot.measureField')
+  }
+
+  return props.row._label
+})
 
 const rowHeaderCellClass = computed(() => {
   return ui.value?.rowHeaderCellClass?.({
@@ -36,14 +45,15 @@ const rowHeaderCellStyle = computed(() => {
     :class="rowHeaderCellClass"
     :style="rowHeaderCellStyle"
     :data-pivot-row="String(row.field)"
-    :title="row._label"
+    :title="headerLabel"
   >
     <span class="truncate grow">
-      {{ row._label }}
+      {{ headerLabel }}
     </span>
 
     <!-- Filter -->
     <PivotFilterBtn
+      v-if="!isMeasureColumn"
       :item="row"
       size="auto"
     />

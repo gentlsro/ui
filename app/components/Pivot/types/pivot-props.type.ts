@@ -36,6 +36,16 @@ export type IPivotProps<T = IItem> = {
      * Width of the left panel in px
      */
     leftPanelWidth?: string
+
+    /**
+     * Show value measures as rows instead of columns (Power BI "Show values on rows")
+     */
+    valuesOnRows?: boolean
+
+    /**
+     * Width of the synthetic measure label column
+     */
+    measureColumnWidth?: string
   }
 
   collapseConfig?: {

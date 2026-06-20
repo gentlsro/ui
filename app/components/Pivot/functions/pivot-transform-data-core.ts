@@ -55,6 +55,7 @@ export type IPivotTransformCorePayload<T extends IItem = IItem> = {
   filters?: IPivotTransformWorkerFilter<T>[]
   formatNumber?: IPivotFormatNumber
   locale?: string
+  valuesOnRows?: boolean
 }
 
 type IPivotAggregatedValueContext<T extends IItem> = {
@@ -76,12 +77,14 @@ type IBuildRowCellsPayload<T extends IItem> = {
 type IBuildValueCellsPayload<T extends IItem> = IPivotAggregatedValueContext<T> & {
   itemId: string
   kind: PivotRowItemKind
+  activeValueField?: ObjectKey<T>
 }
 
 type IBuildValueItemPayload<T extends IItem> = IPivotAggregatedValueContext<T> & {
   itemId: string
   kind: PivotRowItemKind
   groupIds: string[]
+  activeValueField?: ObjectKey<T>
 }
 
 type ISetCollapsedGroupValueItemPayload<T extends IItem> = IPivotAggregatedValueContext<T> & {
@@ -100,6 +103,14 @@ type IBuildTabularRowsPayload<T extends IItem> = IPivotAggregatedValueContext<T>
   rowFields: IPivotTransformRowField<T>[]
   level?: number
   parentPath?: string[]
+  valuesOnRows?: boolean
+}
+
+function shouldExpandMeasuresOnRows<T extends IItem>(payload: {
+  valuesOnRows?: boolean
+  valueFields: IPivotTransformValueField<T>[]
+}) {
+  return !!payload.valuesOnRows && payload.valueFields.length > 1
 }
 
 function resolveFormatNumber<T extends IItem>(payload: IPivotTransformCorePayload<T>) {
@@ -140,6 +151,7 @@ function buildValueCells<T extends IItem>(payload: IBuildValueCellsPayload<T>): 
     columnFields,
     valueFields,
     formatNumber,
+    activeValueField,
   } = payload
   const aggregationIndex = buildPivotAggregationIndex({
     items,
@@ -148,20 +160,22 @@ function buildValueCells<T extends IItem>(payload: IBuildValueCellsPayload<T>): 
   })
 
   return valueColumns.map((column, index) => {
+    const fieldForAggregation = activeValueField ?? column.valueField
     const { aggregated, matchCount } = getPivotAggregatedValue({
       index: aggregationIndex,
       columnPath: column.columnPath,
-      valueField: column.valueField,
+      valueField: fieldForAggregation,
     })
     const showValue = matchCount > 0 || kind !== 'data'
+    const valueFieldMeta = valueFields.find(field => field.field === fieldForAggregation)
 
     return {
       id: `${itemId}-value-${index}`,
       kind,
       columnId: column.id,
       columnPath: column.columnPath,
-      valueField: column.valueField,
-      value: column.value,
+      valueField: fieldForAggregation,
+      value: valueFieldMeta?.item ?? { field: fieldForAggregation } as PivotItem<T>,
       aggregated,
       formattedValue: showValue ? formatPivotValue({ value: aggregated, formatNumber }) : '',
     }
@@ -187,8 +201,79 @@ function setCollapsedGroupValueItem<T extends IItem>(payload: ISetCollapsedGroup
     itemId: `${row.id}-collapsed-${groupId}`,
     kind: 'data',
     groupIds: row.groupIds,
+    activeValueField: row.activeValueField,
     ...valueContext,
   })
+}
+
+function expandDataItemByMeasures<T extends IItem>(
+  item: IPivotDataItem<T>,
+  valueFields: IPivotTransformValueField<T>[],
+  valueContext: IPivotAggregatedValueContext<T>,
+): IPivotDataItem<T>[] {
+  return valueFields.map((valueField, measureIndex) => {
+    const isFirst = measureIndex === 0
+    const itemId = `${item.id}|${String(valueField.field)}`
+
+    const cells = item.rowItem.cells.map(cell => ({
+      ...cell,
+      id: `${itemId}-cell-${cell.rowFieldIndex}`,
+      kind: isFirst ? cell.kind : 'empty' as PivotRowItemCellKind,
+    }))
+
+    cells.push({
+      id: `${itemId}-measure-label`,
+      kind: 'valueLabel',
+      rowFieldIndex: cells.length,
+      groupId: item.groupIds.at(-1) ?? item.id,
+      ref: item.rowItem.cells[0]!.ref,
+      label: valueField._label,
+    })
+
+    return {
+      ...item,
+      id: itemId,
+      activeValueField: valueField.field,
+      measureIndex,
+      measureCount: valueFields.length,
+      rowItem: {
+        ...item.rowItem,
+        id: itemId,
+        cells,
+      },
+      valueItem: buildValueItem({
+        itemId,
+        kind: item.rowItem.kind ?? 'data',
+        groupIds: item.groupIds,
+        activeValueField: valueField.field,
+        ...valueContext,
+      }),
+    }
+  })
+}
+
+type IExpandMeasuresPayload<T extends IItem> = {
+  valuesOnRows?: boolean
+  valueFields: IPivotTransformValueField<T>[]
+  valueContext: Omit<IPivotAggregatedValueContext<T>, 'items'>
+  items: T[]
+}
+
+function pushDataItems<T extends IItem>(
+  results: IPivotDataItem<T>[],
+  item: IPivotDataItem<T>,
+  payload: IExpandMeasuresPayload<T>,
+) {
+  if (shouldExpandMeasuresOnRows(payload)) {
+    results.push(...expandDataItemByMeasures(
+      item,
+      payload.valueFields,
+      { ...payload.valueContext, items: payload.items },
+    ))
+    return
+  }
+
+  results.push(item)
 }
 
 function buildDataItem<T extends IItem>(payload: IBuildDataItemPayload<T>): IPivotDataItem<T> {
@@ -232,11 +317,18 @@ function buildTabularRows<T extends IItem>(payload: IBuildTabularRowsPayload<T>)
     rowFields,
     level = 0,
     parentPath = [],
+    valuesOnRows,
     ...valueContext
   } = payload
 
   if (!rowFields.length) {
     return []
+  }
+
+  const expandPayload = {
+    valuesOnRows,
+    valueFields: valueContext.valueFields,
+    valueContext,
   }
 
   const field = rowFields[level]!
@@ -254,6 +346,7 @@ function buildTabularRows<T extends IItem>(payload: IBuildTabularRowsPayload<T>)
         rowFields,
         level: level + 1,
         parentPath: currentPath,
+        valuesOnRows,
         ...valueContext,
       })
 
@@ -284,26 +377,32 @@ function buildTabularRows<T extends IItem>(payload: IBuildTabularRowsPayload<T>)
         index === level ? 'subtotal' as const : 'empty' as const,
       )
 
-      results.push(buildDataItem({
+      pushDataItems(results, buildDataItem({
         path: [...currentPath, '__subtotal__'],
         rowFields,
         cellKinds: subtotalCellKinds,
         items: groupItems,
         kind: 'subtotal',
         ...valueContext,
-      }))
+      }), {
+        ...expandPayload,
+        items: groupItems,
+      })
     } else {
       const rowCellKinds = rowFields.map((_, index) =>
         index === level ? 'rowLabel' as const : 'empty' as const,
       )
 
-      results.push(buildDataItem({
+      pushDataItems(results, buildDataItem({
         path: currentPath,
         rowFields,
         cellKinds: rowCellKinds,
         items: groupItems,
         ...valueContext,
-      }))
+      }), {
+        ...expandPayload,
+        items: groupItems,
+      })
     }
   }
 
@@ -320,6 +419,7 @@ export function pivotTransformDataCore<T extends IItem = IItem>(
     values: valueFields,
     items = [],
     filters = [],
+    valuesOnRows,
   } = payload
 
   const filteredData = resolvePivotFilteredData(sourceData, { items, filters })
@@ -330,6 +430,7 @@ export function pivotTransformDataCore<T extends IItem = IItem>(
     data: sourceData,
     columnFields,
     valueFields,
+    valuesOnRows,
   })
 
   if (!filteredData.length || !rowFields.length) {
@@ -349,9 +450,16 @@ export function pivotTransformDataCore<T extends IItem = IItem>(
     formatNumber,
   }
 
+  const expandPayload = {
+    valuesOnRows,
+    valueFields,
+    valueContext,
+  }
+
   const tabularRows = buildTabularRows({
     items: filteredData,
     rowFields,
+    valuesOnRows,
     ...valueContext,
   })
 
@@ -359,14 +467,17 @@ export function pivotTransformDataCore<T extends IItem = IItem>(
     index === 0 ? 'grandTotal' as const : 'empty' as const,
   )
 
-  tabularRows.push(buildDataItem({
+  pushDataItems(tabularRows, buildDataItem({
     path: ['__grand_total__'],
     rowFields,
     cellKinds: grandTotalCellKinds,
     items: filteredData,
     kind: 'grandTotal',
     ...valueContext,
-  }))
+  }), {
+    ...expandPayload,
+    items: filteredData,
+  })
 
   return {
     data: tabularRows,

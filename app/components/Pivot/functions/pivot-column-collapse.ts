@@ -101,8 +101,11 @@ function collectVisibleValueColumns<T>(payload: {
   columnFieldCount: number
   collapsedColumnGroupIds: Set<string>
   valueFields: PivotItem<T>[]
+  valuesOnRows?: boolean
 }): IPivotValueColumnItem<T>[] {
-  const { nodes, level, columnFieldCount, collapsedColumnGroupIds, valueFields } = payload
+  const { nodes, level, columnFieldCount, collapsedColumnGroupIds, valueFields, valuesOnRows } = payload
+  const expandMeasuresOnRows = valuesOnRows && valueFields.length > 1
+  const primaryValueField = valueFields[0]!
   const columns: IPivotValueColumnItem<T>[] = []
 
   for (const node of nodes) {
@@ -110,20 +113,32 @@ function collectVisibleValueColumns<T>(payload: {
       && isPivotColumnGroupCollapsed({ collapsedColumnGroupIds, columnPath: node.path, level })
 
     if (isCollapsed) {
-      for (const valueField of valueFields) {
-        const pathLabel = node.path.join(' / ')
+      const pathLabel = node.path.join(' / ')
 
+      if (expandMeasuresOnRows) {
         columns.push({
-          id: `collapsed:${node.path.join('|')}|${String(valueField.field)}`,
+          id: `collapsed:${node.path.join('|')}`,
           columnPath: node.path,
-          valueField: valueField.field,
-          value: valueField,
-          label: valueFields.length > 1
-            ? `${pathLabel} / ${valueField._label}`
-            : pathLabel,
-          width: valueField.widthResolved,
+          valueField: primaryValueField.field,
+          value: primaryValueField,
+          label: pathLabel,
+          width: primaryValueField.widthResolved,
           isCollapsedGroupColumn: true,
         })
+      } else {
+        for (const valueField of valueFields) {
+          columns.push({
+            id: `collapsed:${node.path.join('|')}|${String(valueField.field)}`,
+            columnPath: node.path,
+            valueField: valueField.field,
+            value: valueField,
+            label: valueFields.length > 1
+              ? `${pathLabel} / ${valueField._label}`
+              : pathLabel,
+            width: valueField.widthResolved,
+            isCollapsedGroupColumn: true,
+          })
+        }
       }
 
       continue
@@ -136,23 +151,35 @@ function collectVisibleValueColumns<T>(payload: {
         columnFieldCount,
         collapsedColumnGroupIds,
         valueFields,
+        valuesOnRows,
       }))
       continue
     }
 
-    for (const valueField of valueFields) {
-      const pathLabel = node.path.join(' / ')
+    const pathLabel = node.path.join(' / ')
 
+    if (expandMeasuresOnRows) {
       columns.push({
-        id: `${node.path.join('|')}|${String(valueField.field)}`,
+        id: node.path.join('|'),
         columnPath: node.path,
-        valueField: valueField.field,
-        value: valueField,
-        label: valueFields.length > 1
-          ? `${pathLabel} / ${valueField._label}`
-          : pathLabel,
-        width: valueField.widthResolved,
+        valueField: primaryValueField.field,
+        value: primaryValueField,
+        label: pathLabel,
+        width: primaryValueField.widthResolved,
       })
+    } else {
+      for (const valueField of valueFields) {
+        columns.push({
+          id: `${node.path.join('|')}|${String(valueField.field)}`,
+          columnPath: node.path,
+          valueField: valueField.field,
+          value: valueField,
+          label: valueFields.length > 1
+            ? `${pathLabel} / ${valueField._label}`
+            : pathLabel,
+          width: valueField.widthResolved,
+        })
+      }
     }
   }
 
@@ -230,11 +257,13 @@ function buildVisibleValueHeaderRows<T>(payload: {
   valueFields: PivotItem<T>[]
   tree: IPivotColumnTreeNode[]
   collapsedColumnGroupIds: Set<string>
+  valuesOnRows?: boolean
 }): IPivotValueHeaderCell[][] {
-  const { columnFields, valueFields, tree, collapsedColumnGroupIds } = payload
+  const { columnFields, valueFields, tree, collapsedColumnGroupIds, valuesOnRows } = payload
   const rows: IPivotValueHeaderCell[][] = []
-  const valuesCount = valueFields.length
-  const hasMultipleValues = valuesCount > 1
+  const expandMeasuresOnRows = valuesOnRows && valueFields.length > 1
+  const valuesCount = expandMeasuresOnRows ? 1 : valueFields.length
+  const hasMultipleValues = !expandMeasuresOnRows && valueFields.length > 1
   const columnFieldCount = columnFields.length
   const totalHeaderRows = columnFieldCount + (hasMultipleValues ? 1 : 0)
   const grandTotalRowspan = hasMultipleValues
@@ -276,6 +305,7 @@ function buildVisibleValueHeaderRows<T>(payload: {
       columnFieldCount,
       collapsedColumnGroupIds,
       valueFields,
+      valuesOnRows,
     })
 
     for (const column of visibleColumns) {
@@ -316,6 +346,7 @@ export function buildVisiblePivotValueColumns<T>(payload: {
   tree: IPivotColumnTreeNode[]
   collapsedColumnGroupIds: Set<string>
   allValueColumns: IPivotValueColumnItem<T>[]
+  valuesOnRows?: boolean
 }): {
   valueColumns: IPivotValueColumnItem<T>[]
   valueHeaderRows: IPivotValueHeaderCell[][]
@@ -326,7 +357,10 @@ export function buildVisiblePivotValueColumns<T>(payload: {
     tree,
     collapsedColumnGroupIds,
     allValueColumns,
+    valuesOnRows,
   } = payload
+
+  const expandMeasuresOnRows = valuesOnRows && valueFields.length > 1
 
   if (!valueFields.length) {
     return { valueColumns: [], valueHeaderRows: [] }
@@ -352,24 +386,33 @@ export function buildVisiblePivotValueColumns<T>(payload: {
     columnFieldCount: columnFields.length,
     collapsedColumnGroupIds,
     valueFields,
+    valuesOnRows,
   })
 
-  for (const valueField of valueFields) {
-    valueColumns.push({
-      id: `grand-total|${String(valueField.field)}`,
-      columnPath: ['__grand_total__'],
-      valueField: valueField.field,
-      value: valueField,
-      label: valueFields.length > 1
-        ? `Grand Total / ${valueField._label}`
-        : 'Grand Total',
-      isGrandTotal: true,
-      width: valueField.widthResolved,
-    })
+  if (expandMeasuresOnRows) {
+    const grandTotal = allValueColumns.find(column => column.isGrandTotal)
+
+    if (grandTotal) {
+      valueColumns.push(grandTotal)
+    }
+  } else {
+    for (const valueField of valueFields) {
+      valueColumns.push({
+        id: `grand-total|${String(valueField.field)}`,
+        columnPath: ['__grand_total__'],
+        valueField: valueField.field,
+        value: valueField,
+        label: valueFields.length > 1
+          ? `Grand Total / ${valueField._label}`
+          : 'Grand Total',
+        isGrandTotal: true,
+        width: valueField.widthResolved,
+      })
+    }
   }
 
   const valueHeaderRows = tree.length
-    ? buildVisibleValueHeaderRows({ columnFields, valueFields, tree, collapsedColumnGroupIds })
+    ? buildVisibleValueHeaderRows({ columnFields, valueFields, tree, collapsedColumnGroupIds, valuesOnRows })
     : []
 
   return { valueColumns, valueHeaderRows }

@@ -18,9 +18,13 @@ type IProps = {
 const props = defineProps<IProps>()
 
 // Store
-const { rows, ui, state } = usePivotStore()
+const { rows, displayRowFields, measureRowColumn, showMeasureColumn, ui, state } = usePivotStore()
 
 const isCollapsible = computed(() => {
+  if (props.item.kind === 'valueLabel') {
+    return false
+  }
+
   return isRowItemCellCollapsible({ rows: rows.value, item: props.item })
 })
 
@@ -35,6 +39,10 @@ const isHidden = computed(() => {
 })
 
 const cellValue = computed(() => {
+  if (props.item.kind === 'valueLabel') {
+    return props.item.label ?? ''
+  }
+
   if (props.item.kind === 'empty') {
     return ''
   }
@@ -68,7 +76,11 @@ const rowItemCellClass = computed(() => {
 
 const rowItemCellStyle = computed(() => {
   const rowItemCellStyle = ui.value?.rowItemCellStyle?.()
-  const width = props.item.row?.widthResolved
+  let width = props.item.row?.widthResolved
+
+  if (props.item.kind === 'valueLabel' && showMeasureColumn.value) {
+    width = measureRowColumn.value.widthResolved
+  }
 
   return Object.assign({}, rowItemCellStyle, { width })
 })

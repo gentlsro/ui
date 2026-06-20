@@ -32,8 +32,12 @@ import {
 } from '../functions/pivot-filter-usage'
 
 // Models
-import type { PivotItem } from '../models/pivot-item.model'
+import { PivotItem } from '../models/pivot-item.model'
 import type { TableColumn } from '../../Table/models/table-column.model'
+import {
+  PIVOT_DEFAULT_MEASURE_COLUMN_WIDTH,
+  PIVOT_MEASURE_ROW_FIELD,
+} from '../constants/pivot-measure-row.constant'
 
 export const PIVOT_ID_KEY = Symbol('__pivotId')
 
@@ -151,6 +155,44 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       },
     })
 
+    const measureRowColumn = shallowRef(new PivotItem<T>({
+      field: PIVOT_MEASURE_ROW_FIELD as ObjectKey<T>,
+      label: '',
+      width: config.value?.measureColumnWidth ?? PIVOT_DEFAULT_MEASURE_COLUMN_WIDTH,
+      dataType: 'string',
+      resizable: true,
+    }))
+
+    watch(
+      () => config.value?.measureColumnWidth,
+      (measureColumnWidth) => {
+        const width = measureColumnWidth ?? PIVOT_DEFAULT_MEASURE_COLUMN_WIDTH
+        measureRowColumn.value.width = width
+        measureRowColumn.value.widthResolved = width
+      },
+      { immediate: true },
+    )
+
+    function getPivotLayoutSignature() {
+      return `${rows.value.map(row => String(row.field)).join('|')}::${columns.value.map(column => String(column.field)).join('|')}`
+    }
+
+    const pivotLayoutSignature = ref(getPivotLayoutSignature())
+
+    const showMeasureColumn = computed(() => {
+      return !!config.value?.valuesOnRows && values.value.length > 1
+    })
+
+    const displayRowFields = computed(() => {
+      if (!showMeasureColumn.value) {
+        return rows.value
+      }
+
+      return [...rows.value, measureRowColumn.value]
+    })
+
+    const displayRowFieldCount = computed(() => displayRowFields.value.length)
+
     // Data
     const data = ref<IPivotDataItem<T>[]>([])
     const valueColumns = ref<IPivotValueColumnItem<T>[]>([])
@@ -164,6 +206,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
         tree: columnTree.value,
         collapsedColumnGroupIds: state.value.collapsedColumnGroupIds,
         allValueColumns: valueColumns.value as IPivotValueColumnItem<T>[],
+        valuesOnRows: config.value?.valuesOnRows,
       })
     })
 
@@ -181,14 +224,22 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
         useEmptyRow: config.value?.useEmptyRow,
         rowFieldCount: rows.value.length,
         collapsedGroupIds: state.value.collapsedGroupIds,
-        rowFields: rows.value,
+        rowFields: displayRowFields.value,
         valueColumns: visibleValueColumns.value as IPivotValueColumnItem<T>[],
+        includeMeasureColumn: showMeasureColumn.value,
       })
     })
 
     const visibleStickyIndices = computed(() => {
       return getPivotStickyIndices(visibleData.value, rows.value.length)
     })
+
+    function updateConfig(partial: Partial<NonNullable<IPivotProps<T>['config']>>) {
+      config.value = {
+        ...config.value,
+        ...partial,
+      }
+    }
 
     function toggleGroupCollapse(groupId: string) {
       state.value.collapsedGroupIds = togglePivotGroupCollapse(state.value.collapsedGroupIds, groupId)
@@ -211,6 +262,15 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       isTransforming.value = true
 
       try {
+        const nextLayoutSignature = getPivotLayoutSignature()
+
+        if (nextLayoutSignature !== pivotLayoutSignature.value) {
+          pivotLayoutSignature.value = nextLayoutSignature
+          isFirstRender.value = true
+          state.value.collapsedGroupIds = new Set<string>()
+          state.value.collapsedColumnGroupIds = new Set<string>()
+        }
+
         const result = await transformPivotData({
           data: sourceData.value,
           rows: rows.value,
@@ -222,12 +282,17 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
           isFirstRender,
           formatNumber,
           locale: currentLocale.value.code,
+          valuesOnRows: config.value?.valuesOnRows,
         })
 
         data.value = result.data
         valueColumns.value = result.valueColumns
         valueHeaderRows.value = result.valueHeaderRows
         columnTree.value = result.columnTree
+
+        await nextTick()
+        rowsVirtualScrollEl.value?.rerender()
+        valuesVirtualScrollEl.value?.rerender()
       } finally {
         isTransforming.value = false
       }
@@ -242,7 +307,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
         : isNil(totalRows.value) ? data.value.length : totalRows.value
     }
 
-    watch([items, sourceData], () => {
+    watch([items, sourceData, () => config.value?.valuesOnRows], () => {
       recomputeData()
     })
 
@@ -276,10 +341,15 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       syncPivotItemFilters,
       toggleGroupCollapse,
       toggleColumnGroupCollapse,
+      updateConfig,
 
       // Pivot config
       items,
       rows,
+      displayRowFields,
+      displayRowFieldCount,
+      showMeasureColumn,
+      measureRowColumn: computed(() => measureRowColumn.value),
       columns,
       values,
       filters,

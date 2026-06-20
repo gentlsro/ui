@@ -1087,7 +1087,7 @@ export const defaultComponentsConfig = {
   // Pivot
   pivot: {
     props: {
-      config: { useEmptyRow: false },
+      config: { useEmptyRow: false, valuesOnRows: false },
       collapseConfig: { expandedLevelOnInit: 1 },
       loadData: undefined,
       loading: undefined,

@@ -1,4 +1,3 @@
-// Types
 import type { IPivotProps } from '../types/pivot-props.type'
 import type { IPivotState } from '../types/pivot-state.type'
 import type { IPivotDataItem } from '../types/pivot-data-item.type'
@@ -9,6 +8,8 @@ import type { IPivotTransformResult } from '../types/pivot-transform-result.type
 import { getInitialCollapsedGroupIds } from './pivot-group-collapse'
 import { getInitialCollapsedColumnGroupIds } from './pivot-column-collapse'
 import { pivotTransformDataCore, type IPivotTransformValueField } from './pivot-transform-data-core'
+
+import type { IPivotRowItemCell } from '../types/pivot-row-item-cell.type'
 
 // Models
 import type { PivotItem } from '../models/pivot-item.model'
@@ -25,6 +26,7 @@ type IPivotTransformPayload<T extends IItem = IItem> = {
   collapseConfig: IPivotProps<T>['collapseConfig']
   isFirstRender?: Ref<boolean>
   formatNumber: IPivotFormatNumber
+  valuesOnRows?: boolean
 }
 
 type IShouldInsertPivotEmptyRowAfterPayload<T> = {
@@ -37,11 +39,32 @@ type IBuildEmptyDataItemPayload<T> = {
   afterRowId: string
   rowFields: PivotItem<T>[]
   valueColumns: IPivotValueColumnItem<T>[]
+  includeMeasureColumn?: boolean
 }
 
 function buildEmptyDataItem<T>(payload: IBuildEmptyDataItemPayload<T>): IPivotDataItem<T> {
-  const { afterRowId, rowFields, valueColumns } = payload
+  const { afterRowId, rowFields, valueColumns, includeMeasureColumn } = payload
   const itemId = `empty:${afterRowId}`
+
+  const cells: IPivotRowItemCell<T>[] = rowFields.map((rowField, index) => ({
+    id: `${itemId}-cell-${index}`,
+    kind: 'empty' as const,
+    rowFieldIndex: index,
+    row: rowField,
+    groupId: '',
+    ref: {} as T,
+  }))
+
+  if (includeMeasureColumn) {
+    cells.push({
+      id: `${itemId}-measure-label`,
+      kind: 'valueLabel' as const,
+      rowFieldIndex: cells.length,
+      row: rowFields.at(-1)!,
+      groupId: '',
+      ref: {} as T,
+    })
+  }
 
   return {
     id: itemId,
@@ -52,14 +75,7 @@ function buildEmptyDataItem<T>(payload: IBuildEmptyDataItemPayload<T>): IPivotDa
       id: itemId,
       label: '',
       kind: 'emptyRow',
-      cells: rowFields.map((rowField, index) => ({
-        id: `${itemId}-cell-${index}`,
-        kind: 'empty',
-        rowFieldIndex: index,
-        row: rowField,
-        groupId: '',
-        ref: {} as T,
-      })),
+      cells,
     },
     valueItem: {
       id: itemId,
@@ -83,6 +99,14 @@ export function shouldInsertPivotEmptyRowAfter<T>(payload: IShouldInsertPivotEmp
   const { row, collapsedGroupIds, rowFieldCount } = payload
 
   if (row.rowItem.kind === 'grandTotal' || row.rowItem.kind === 'emptyRow') {
+    return false
+  }
+
+  if (
+    row.measureIndex !== undefined
+    && row.measureCount !== undefined
+    && row.measureIndex < row.measureCount - 1
+  ) {
     return false
   }
 
@@ -111,7 +135,9 @@ export function shouldInsertPivotEmptyRowAfter<T>(payload: IShouldInsertPivotEmp
       return true
     }
 
-    if (level === rowFieldCount - 1 && rowFieldCount <= 2) {
+    const lastDataRowFieldIndex = rowFieldCount - 1
+
+    if (level === lastDataRowFieldIndex && rowFieldCount <= 2) {
       return true
     }
   }
@@ -127,6 +153,7 @@ export function applyPivotEmptyRows<T>(
     collapsedGroupIds: Set<string>
     rowFields: PivotItem<T>[]
     valueColumns: IPivotValueColumnItem<T>[]
+    includeMeasureColumn?: boolean
   },
 ) {
   if (!payload.useEmptyRow) {
@@ -147,6 +174,7 @@ export function applyPivotEmptyRows<T>(
         afterRowId: row.id,
         rowFields: payload.rowFields,
         valueColumns: payload.valueColumns,
+        includeMeasureColumn: payload.includeMeasureColumn,
       }))
     }
   }
@@ -172,6 +200,7 @@ export function pivotTransformData<T extends IItem = IItem>(
     rows: rowFields,
     columns: columnFields,
     formatNumber,
+    valuesOnRows: corePayload.valuesOnRows,
   })
 
   if (isFirstRender.value) {

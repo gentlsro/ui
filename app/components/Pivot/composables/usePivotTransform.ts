@@ -36,6 +36,7 @@ type IPivotTransformPayload<T extends IItem = IItem> = {
   isFirstRender?: Ref<boolean>
   formatNumber: IPivotFormatNumber
   locale?: string
+  valuesOnRows?: boolean
   useWorker?: boolean
 }
 
@@ -74,6 +75,7 @@ function toWorkerPayload<T extends IItem>(payload: IPivotTransformPayload<T>): I
     values: payload.values,
     items: payload.items,
     locale: payload.locale,
+    valuesOnRows: payload.valuesOnRows,
   })
 }
 

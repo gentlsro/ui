@@ -49,7 +49,7 @@ const SUMMARY_OPTIONS = [
   SummaryEnum.MEDIAN,
 ] as const
 
-const { items } = usePivotStore<T>()
+const { items, config, updateConfig } = usePivotStore<T>()
 
 const allFieldsEl = useTemplateRef('allFieldsEl')
 const rowFieldsEl = useTemplateRef('rowFieldsEl')
@@ -58,6 +58,7 @@ const filterFieldsEl = useTemplateRef('filterFieldsEl')
 const dataFieldsEl = useTemplateRef('dataFieldsEl')
 
 const draftItems = ref([]) as Ref<PivotItem<T>[]>
+const draftValuesOnRows = ref(false)
 
 const draftRows = computed(() => getPivotItemsBySingleUsage(draftItems.value, 'row'))
 const draftColumns = computed(() => getPivotItemsBySingleUsage(draftItems.value, 'column'))
@@ -135,6 +136,7 @@ function resetDraftItems() {
   valueSlotKeys = new WeakMap()
   valueSlotKeyIndex = 0
   draftItems.value = items.value.map(clonePivotItem)
+  draftValuesOnRows.value = !!config.value?.valuesOnRows
   normalizeDraftUsage()
 }
 
@@ -369,6 +371,8 @@ function handleSubmit() {
     draftItems.value.map(item => [String(item.field), item]),
   )
 
+  updateConfig({ valuesOnRows: draftValuesOnRows.value })
+
   for (const item of items.value) {
     const draftItem = draftItemsByField.get(String(item.field))
 
@@ -542,6 +546,25 @@ onBeforeUnmount(() => {
 
       <!-- Right column -->
       <div class="flex flex-col gap-3 min-h-0 h-full">
+        <!-- Layout -->
+        <div class="flex flex-col gap-2">
+          <header class="section-header">
+            <div class="i-material-symbols:view-agenda w-4 h-4" />
+            <span>{{ $t('pivot.layout') }}</span>
+          </header>
+
+          <div class="p-1 rounded-custom bg-slate-100 dark:bg-dark-900">
+            <Checkbox
+              v-model="draftValuesOnRows"
+              size="sm"
+              no-hover-effect
+              class="pivot-configuration__no-drag"
+              :label="$t('pivot.valuesOnRows')"
+              :disabled="draftValues.length < 2"
+            />
+          </div>
+        </div>
+
         <!-- Row fields -->
         <section>
           <header class="section-header">
@@ -681,14 +704,14 @@ onBeforeUnmount(() => {
 section {
   @apply flex grow flex-col gap-1 shrink-0;
 
-  .section-header {
-    @apply flex shrink-0 items-center gap-1.5 font-rem-11 font-bold uppercase tracking-wide color-ca p-l-1;
-  }
-
   .section-content {
     @apply flex grow flex-col gap-1 overflow-auto p-1 rounded-custom overflow-x-hidden
     bg-slate-100 dark:bg-dark-900;
   }
+}
+
+.section-header {
+  @apply flex shrink-0 items-center gap-1.5 font-rem-11 font-bold uppercase tracking-wide color-ca p-l-1;
 }
 
 .pivot-configuration__item {

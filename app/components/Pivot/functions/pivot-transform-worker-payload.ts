@@ -47,6 +47,7 @@ export type IPivotTransformWorkerPayload<T extends IItem = IItem> = {
   values: IPivotTransformWorkerValue<T>[]
   filters?: IPivotTransformWorkerFilter<T>[]
   locale?: string
+  valuesOnRows?: boolean
 }
 
 function resolvePivotLabel<T extends IItem>(payload: {
@@ -121,5 +122,6 @@ export function serializePivotTransformWorkerPayload<T extends IItem>(
     values: toRaw(payload.values).map(serializePivotValue),
     filters: serializePivotFilters(payload.items),
     locale: payload.locale,
+    valuesOnRows: payload.valuesOnRows,
   }
 }

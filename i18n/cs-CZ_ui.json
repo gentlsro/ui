@@ -95,6 +95,9 @@
     "filterFields": "Filtry",
     "rowFields": "Řádky",
     "columnFields": "Sloupce",
-    "dataFields": "Hodnoty"
+    "dataFields": "Hodnoty",
+    "layout": "Rozvržení",
+    "valuesOnRows": "Zobrazit hodnoty v řádcích",
+    "measureField": "Ukazatel"
   }
 }
