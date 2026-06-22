@@ -203,7 +203,7 @@ export function pivotTransformData<T extends IItem = IItem>(
     valuesOnRows: corePayload.valuesOnRows,
   })
 
-  if (isFirstRender.value) {
+  if (isFirstRender.value && result.data.length > 0) {
     state.collapsedGroupIds = getInitialCollapsedGroupIds({
       data: result.data,
       expandedLevelOnInit: collapseConfig?.expandedLevelOnInit ?? 0,

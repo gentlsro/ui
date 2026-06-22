@@ -52,7 +52,7 @@ function applyPivotTransformState<T extends IItem>(
     isFirstRender = ref(true),
   } = payload
 
-  if (isFirstRender.value) {
+  if (isFirstRender.value && result.data.length > 0) {
     state.collapsedGroupIds = getInitialCollapsedGroupIds({
       data: result.data,
       expandedLevelOnInit: collapseConfig?.expandedLevelOnInit ?? 0,
