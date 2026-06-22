@@ -87,11 +87,6 @@ type IBuildValueItemPayload<T extends IItem> = IPivotAggregatedValueContext<T> &
   activeValueField?: ObjectKey<T>
 }
 
-type ISetCollapsedGroupValueItemPayload<T extends IItem> = IPivotAggregatedValueContext<T> & {
-  row: IPivotDataItem<T>
-  groupId: string
-}
-
 type IBuildDataItemPayload<T extends IItem> = IPivotAggregatedValueContext<T> & {
   path: string[]
   rowFields: IPivotTransformRowField<T>[]
@@ -191,19 +186,6 @@ function buildValueItem<T extends IItem>(payload: IBuildValueItemPayload<T>): IP
     groupIds,
     cells: buildValueCells({ itemId, kind, ...valueContext }),
   }
-}
-
-function setCollapsedGroupValueItem<T extends IItem>(payload: ISetCollapsedGroupValueItemPayload<T>) {
-  const { row, groupId, ...valueContext } = payload
-
-  row.valueItem.collapsedGroupValueItems ??= {}
-  row.valueItem.collapsedGroupValueItems[groupId] = buildValueItem({
-    itemId: `${row.id}-collapsed-${groupId}`,
-    kind: 'data',
-    groupIds: row.groupIds,
-    activeValueField: row.activeValueField,
-    ...valueContext,
-  })
 }
 
 function expandDataItemByMeasures<T extends IItem>(
@@ -341,6 +323,21 @@ function buildTabularRows<T extends IItem>(payload: IBuildTabularRowsPayload<T>)
     const currentPath = [...parentPath, key]
 
     if (level < rowFields.length - 1) {
+      const groupHeaderCellKinds = rowFields.map((_, index) =>
+        index === level ? 'rowLabel' as const : 'empty' as const,
+      )
+
+      pushDataItems(results, buildDataItem({
+        path: currentPath,
+        rowFields,
+        cellKinds: groupHeaderCellKinds,
+        items: groupItems,
+        ...valueContext,
+      }), {
+        ...expandPayload,
+        items: groupItems,
+      })
+
       const childRows = buildTabularRows({
         items: groupItems,
         rowFields,
@@ -350,7 +347,7 @@ function buildTabularRows<T extends IItem>(payload: IBuildTabularRowsPayload<T>)
         ...valueContext,
       })
 
-      childRows.forEach((row, childIndex) => {
+      childRows.forEach((row) => {
         if (row.rowItem.kind !== 'data') {
           return
         }
@@ -358,16 +355,7 @@ function buildTabularRows<T extends IItem>(payload: IBuildTabularRowsPayload<T>)
         const labelCell = row.rowItem.cells.find(cell => cell.rowFieldIndex === level)
 
         if (labelCell) {
-          labelCell.kind = childIndex === 0 ? 'rowLabel' : 'empty'
-
-          if (childIndex === 0) {
-            setCollapsedGroupValueItem({
-              row,
-              groupId: labelCell.groupId,
-              items: groupItems,
-              ...valueContext,
-            })
-          }
+          labelCell.kind = 'empty'
         }
       })
 

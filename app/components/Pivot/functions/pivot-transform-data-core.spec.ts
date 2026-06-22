@@ -75,4 +75,46 @@ describe('pivotTransformDataCore valuesOnRows', () => {
     expect(frigoRows.every(row => row.rowItem.cells.some(cell => cell.kind === 'valueLabel'))).toBe(true)
     expect(result.valueColumns.filter(column => !column.isGrandTotal)).toHaveLength(2)
   })
+
+  it('nested rows: inserts explicit group header rows at each hierarchy level', () => {
+    const nestedData = [
+      { center: 'Frigo', car: 'Truck', plate: 'ABC', month: '2026-01', revenue: 100, cost: 40 },
+      { center: 'Frigo', car: 'Van', plate: 'DEF', month: '2026-01', revenue: 50, cost: 20 },
+    ]
+    const nestedRows = [
+      { field: 'center' as const, dataType: 'string' as const, minWidth: 100, width: '120px', widthResolved: '120px', resizable: true },
+      { field: 'car' as const, dataType: 'string' as const, minWidth: 100, width: '120px', widthResolved: '120px', resizable: true },
+      { field: 'plate' as const, dataType: 'string' as const, minWidth: 100, width: '120px', widthResolved: '120px', resizable: true },
+    ]
+
+    const result = pivotTransformDataCore({
+      data: nestedData,
+      rows: nestedRows,
+      columns,
+      values,
+      valuesOnRows: true,
+    })
+
+    const centerHeader = result.data.find(row =>
+      row.groupPath.join('|') === 'Frigo'
+      && row.activeValueField === 'revenue',
+    )
+    const carHeader = result.data.find(row =>
+      row.groupPath.join('|') === 'Frigo|Truck'
+      && row.activeValueField === 'revenue',
+    )
+    const leafRow = result.data.find(row =>
+      row.groupPath.join('|') === 'Frigo|Truck|ABC'
+      && row.activeValueField === 'revenue',
+    )
+
+    expect(centerHeader?.rowItem.cells.find(cell => cell.rowFieldIndex === 0)?.kind).toBe('rowLabel')
+    expect(centerHeader?.rowItem.cells.find(cell => cell.rowFieldIndex === 1)?.kind).toBe('empty')
+    expect(carHeader?.rowItem.cells.find(cell => cell.rowFieldIndex === 1)?.kind).toBe('rowLabel')
+    expect(leafRow?.rowItem.cells.find(cell => cell.rowFieldIndex === 0)?.kind).toBe('empty')
+    expect(leafRow?.rowItem.cells.find(cell => cell.rowFieldIndex === 2)?.kind).toBe('rowLabel')
+    expect(centerHeader?.valueItem.cells[0]?.aggregated).toBe(150)
+    expect(carHeader?.valueItem.cells[0]?.aggregated).toBe(100)
+    expect(leafRow?.valueItem.cells[0]?.aggregated).toBe(100)
+  })
 })

@@ -1,21 +1,33 @@
 <script setup lang="ts" generic="T extends IItem = IItem">
 // Types
 import type { IPivotRowItem } from './types/pivot-row-item.type'
+import type { IPivotDataItem } from './types/pivot-data-item.type'
 
 // Store
 import { usePivotStore } from './stores/pivot.store'
+import { getPivotPromotedRowLabelLevels } from './functions/pivot-group-collapse'
 
 // Constants
 import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
 
 type IProps = {
-  item: IPivotRowItem<T>
-  groupIds: string[]
+  row: IPivotDataItem<T>
+  rowIndex: number
 }
 
 const props = defineProps<IProps>()
 
-const { ui } = usePivotStore()
+const { ui, state, rows, visibleData } = usePivotStore()
+
+const promotedLevels = computed(() => {
+  return getPivotPromotedRowLabelLevels({
+    row: props.row,
+    visibleRows: visibleData.value as IPivotDataItem<T>[],
+    rowIndex: props.rowIndex,
+    collapsedGroupIds: state.value.collapsedGroupIds,
+    rowFieldCount: rows.value.length,
+  })
+})
 
 // Styles - row item
 const rowItemClass = computed(() => {
@@ -24,9 +36,9 @@ const rowItemClass = computed(() => {
       defaults: PIVOT_DEFAULT_PROPS.ui.rowItemClass(),
     }),
     {
-      'is-subtotal': props.item.kind === 'subtotal',
-      'is-grand-total': props.item.kind === 'grandTotal',
-      'is-empty-row': props.item.kind === 'emptyRow',
+      'is-subtotal': props.row.rowItem.kind === 'subtotal',
+      'is-grand-total': props.row.rowItem.kind === 'grandTotal',
+      'is-empty-row': props.row.rowItem.kind === 'emptyRow',
     },
   ]
 })
@@ -43,9 +55,12 @@ const rowItemStyle = computed(() => {
     :style="rowItemStyle"
   >
     <PivotRowItemCell
-      v-for="cell in item.cells"
+      v-for="cell in row.rowItem.cells"
       :key="cell.id"
       :item="cell"
+      :group-ids="row.groupIds"
+      :group-path="row.groupPath"
+      :promoted-levels="promotedLevels"
     />
   </div>
 </template>

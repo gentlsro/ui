@@ -4,6 +4,7 @@ import type { IPivotRowItemCell } from './types/pivot-row-item-cell.type'
 
 // Functions
 import { isRowItemCellCollapsible } from './functions/is-row-item-cell-collapsible'
+import { isPivotRowCellHiddenByCollapsedAncestor } from './functions/pivot-group-collapse'
 
 // Constants
 import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
@@ -13,34 +14,61 @@ import { usePivotStore } from './stores/pivot.store'
 
 type IProps = {
   item: IPivotRowItemCell<T>
+  groupIds: string[]
+  groupPath: string[]
+  promotedLevels: number[]
 }
 
 const props = defineProps<IProps>()
 
 // Store
-const { rows, displayRowFields, measureRowColumn, showMeasureColumn, ui, state } = usePivotStore()
+const { rows, measureRowColumn, showMeasureColumn, ui, state } = usePivotStore()
+
+const isPromoted = computed(() => {
+  const level = props.item.rowFieldIndex
+
+  return level !== undefined && props.promotedLevels.includes(level)
+})
+
+const collapseGroupId = computed(() => {
+  const level = props.item.rowFieldIndex
+
+  if (isPromoted.value && level !== undefined) {
+    return props.groupIds[level] ?? props.item.groupId
+  }
+
+  return props.item.groupId
+})
 
 const isCollapsible = computed(() => {
   if (props.item.kind === 'valueLabel') {
     return false
   }
 
+  if (isPromoted.value) {
+    return isRowItemCellCollapsible({
+      rows: rows.value,
+      item: { kind: 'rowLabel', rowFieldIndex: props.item.rowFieldIndex },
+    })
+  }
+
   return isRowItemCellCollapsible({ rows: rows.value, item: props.item })
 })
 
 const isHidden = computed(() => {
-  const groupWithoutLevel = props.item.groupId.slice(2)
-
-  return state.value.collapsedGroupIds.values()
-    .some(groupId => {
-      return groupWithoutLevel.startsWith(groupId.slice(2))
-        && groupId !== props.item.groupId
-    })
+  return isPivotRowCellHiddenByCollapsedAncestor(
+    collapseGroupId.value,
+    state.value.collapsedGroupIds,
+  )
 })
 
 const cellValue = computed(() => {
   if (props.item.kind === 'valueLabel') {
     return props.item.label ?? ''
+  }
+
+  if (isPromoted.value && props.item.rowFieldIndex !== undefined) {
+    return props.groupPath[props.item.rowFieldIndex] ?? ''
   }
 
   if (props.item.kind === 'empty') {
@@ -58,6 +86,10 @@ const cellValue = computed(() => {
   }
 
   return value
+})
+
+const showCellContent = computed(() => {
+  return !isHidden.value && (isCollapsible.value || cellValue.value !== '')
 })
 
 // Styles - row item cell
@@ -94,11 +126,11 @@ const rowItemCellStyle = computed(() => {
   >
     <PivotCollapseBtn
       v-if="isCollapsible && !isHidden"
-      :group-id="item.groupId"
+      :group-id="collapseGroupId"
     />
 
     <span
-      v-if="!isHidden && cellValue !== ''"
+      v-if="showCellContent && cellValue !== ''"
       class="min-w-0 truncate"
     >
       {{ cellValue }}

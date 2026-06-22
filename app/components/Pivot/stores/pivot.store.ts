@@ -247,7 +247,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
 
     const visibleData = computed(() => {
       const visible = (data.value as IPivotDataItem<T>[]).filter(row => {
-        return isPivotRowVisible(row, state.value.collapsedGroupIds)
+        return isPivotRowVisible(row, state.value.collapsedGroupIds, rows.value.length)
       })
 
       return applyPivotEmptyRows(visible, {
