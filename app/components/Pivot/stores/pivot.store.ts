@@ -49,15 +49,21 @@ type IConfig<T extends IItem = IItem> = {
 function createStore<T extends IItem = IItem>(injectionKey?: string) {
   const injectionState = createInjectionState((payload?: IConfig<T>) => {
     const { props } = payload ?? {}
+    const instance = getCurrentInstance()
 
     // Configs
     const loadData = ref(props?.loadData)
     const collapseConfig = ref(props?.collapseConfig) as Ref<IPivotProps<T>['collapseConfig']>
-    const config = ref(props?.config) as Ref<IPivotProps<T>['config']>
     const ui = ref(props?.ui)
 
+    const config = initRef({
+      propName: 'config',
+      instance,
+      props,
+      defaultValue: {},
+    }) as Ref<IPivotProps<T>['config']>
+
     // Utils
-    const instance = getCurrentInstance()
     const { formatNumber } = useNumber()
     const { currentLocale } = useLocale()
     const { transformPivotData } = usePivotTransform()
@@ -165,7 +171,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
 
     watch(
       () => config.value?.measureColumnWidth,
-      (measureColumnWidth) => {
+      measureColumnWidth => {
         const width = measureColumnWidth ?? PIVOT_DEFAULT_MEASURE_COLUMN_WIDTH
         measureRowColumn.value.width = width
         measureRowColumn.value.widthResolved = width
@@ -192,6 +198,30 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     })
 
     const displayRowFieldCount = computed(() => displayRowFields.value.length)
+
+    function getRowFieldWidthPx(row: PivotItem<T>) {
+      if (Number.isFinite(row._width) && row._width > 0) {
+        return row._width
+      }
+
+      const resolved = Number.parseFloat(row.widthResolved)
+
+      return Number.isFinite(resolved) && resolved > 0 ? resolved : row.minWidth
+    }
+
+    const displayRowFieldsTotalWidthPx = computed(() => {
+      return displayRowFields.value.reduce((sum, row) => sum + getRowFieldWidthPx(row), 0)
+    })
+
+    const resolvedLeftPanelWidth = computed(() => {
+      if (config.value?.leftPanelWidth) {
+        return config.value.leftPanelWidth
+      }
+
+      const totalWidth = displayRowFieldsTotalWidthPx.value
+
+      return totalWidth > 0 ? `${totalWidth}px` : undefined
+    })
 
     // Data
     const data = ref<IPivotDataItem<T>[]>([])
@@ -348,6 +378,8 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       rows,
       displayRowFields,
       displayRowFieldCount,
+      displayRowFieldsTotalWidthPx,
+      resolvedLeftPanelWidth,
       showMeasureColumn,
       measureRowColumn: computed(() => measureRowColumn.value),
       columns,

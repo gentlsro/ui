@@ -9,7 +9,7 @@ import { usePivotRowResizing } from './composables/usePivotRowResizing'
 import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
 import { PIVOT_MEASURE_ROW_FIELD } from './constants/pivot-measure-row.constant'
 
-const { displayRowFields, showMeasureColumn, rowHeaderEl, ui, config } = usePivotStore<T>()
+const { displayRowFields, showMeasureColumn, rowHeaderEl, ui, resolvedLeftPanelWidth } = usePivotStore<T>()
 
 const {
   activeSplitter,
@@ -26,9 +26,8 @@ const rowHeaderClass = computed(() => {
 
 const rowHeaderStyle = computed(() => {
   const style = ui.value?.rowHeaderStyle?.()
-  const width = config.value?.leftPanelWidth
 
-  return Object.assign({}, style, { width })
+  return Object.assign({}, style, { width: resolvedLeftPanelWidth.value })
 })
 
 watch(

@@ -136,6 +136,7 @@ export class PivotItem<T = IItem> {
     this.width = obj.width ?? '200px'
     this.minWidth = obj.minWidth ?? 100
     this.resizable = obj.resizable ?? this.resizable
+    this._width = Math.max(this.minWidth, Number(stringToFloat(this.width) || 0))
 
     if (!this.width.endsWith('%')) {
       this.widthResolved = this.width

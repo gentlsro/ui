@@ -9,6 +9,7 @@ import { usePivotStore } from '../stores/pivot.store'
 export function usePivotRowResizing<T extends IItem = IItem>() {
   const {
     displayRowFields,
+    items,
     pivotEl,
     rowHeaderEl,
     rowsVirtualScrollEl,
@@ -74,6 +75,8 @@ export function usePivotRowResizing<T extends IItem = IItem>() {
     displayRowFields.value.forEach(row => {
       row._width = row.getWidthPx(root)
     })
+
+    items.value = [...items.value]
   }
 
   function getMinRowWidth(row: (typeof displayRowFields.value)[number]) {
@@ -179,17 +182,11 @@ export function usePivotRowResizing<T extends IItem = IItem>() {
       return
     }
 
-    // Set the width
     row.setResizedWidth(adjustedWidth)
 
-    // Trigger the reactivity and rerender the virtual scroll
     nextTick(() => {
-      displayRowFields.value.forEach(row => {
-        if (row.field === current.row.field) {
-          row.setResizedWidth(adjustedWidth)
-        }
-      })
-      measureRowWidths()
+      items.value = [...items.value]
+      rowsVirtualScrollEl.value?.rerender()
     })
   }
 

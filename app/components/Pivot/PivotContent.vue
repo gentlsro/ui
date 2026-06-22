@@ -14,10 +14,10 @@ const {
   visibleData,
   visibleStickyIndices,
   visibleValueColumns,
-  displayRowFields,
+  displayRowFieldsTotalWidthPx,
+  resolvedLeftPanelWidth,
   ui,
   hoveredIdx,
-  config,
   rowsVirtualScrollEl,
   valuesVirtualScrollEl,
   rowsWrapperEl,
@@ -59,9 +59,7 @@ const rowsScrollerClass = computed(() => {
 })
 
 const rowsWrapperStyle = computed(() => {
-  const width = config.value?.leftPanelWidth
-
-  return { width }
+  return { width: resolvedLeftPanelWidth.value }
 })
 
 const rowsWrapperClass = computed(() => {
@@ -71,9 +69,7 @@ const rowsWrapperClass = computed(() => {
 })
 
 const rowsScrollerStyle = computed(() => {
-  const width = displayRowFields.value.reduce((agg, row) => agg + row._width, 0)
-
-  return { width: `${width}px` }
+  return { width: `${displayRowFieldsTotalWidthPx.value}px` }
 })
 </script>
 

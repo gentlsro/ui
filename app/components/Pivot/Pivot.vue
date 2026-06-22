@@ -35,7 +35,10 @@ const {
 syncRef(toRef(mergedProps.value, 'ui'), ui, { direction: 'ltr' })
 syncRef(toRef(mergedProps.value, 'loadData'), loadData, { direction: 'ltr' })
 syncRef(toRef(mergedProps.value, 'collapseConfig'), collapseConfig, { direction: 'ltr' })
-syncRef(toRef(mergedProps.value, 'config'), config, { direction: 'ltr' })
+
+watchEffect(() => {
+  console.log('Log ~ config:', config.value)
+})
 
 // Immediate fetch
 const isImmediate = mergedProps.value.loadData?.immediate

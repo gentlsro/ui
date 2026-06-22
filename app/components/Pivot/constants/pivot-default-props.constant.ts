@@ -72,7 +72,7 @@ export const PIVOT_DEFAULT_PROPS = {
     },
 
     containerClass() {
-      const base = 'relative flex flex-col grow m-2 overflow-auto'
+      const base = 'relative flex flex-col grow overflow-auto'
       const border = 'border-t border-l border-light-8 dark:border-dark-6'
 
       return {

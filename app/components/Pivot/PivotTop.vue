@@ -5,7 +5,7 @@ import { usePivotStore } from './stores/pivot.store'
 // Constants
 import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
 
-const { title, ui, config, displayRowFields } = usePivotStore()
+const { title, ui, resolvedLeftPanelWidth } = usePivotStore()
 
 const isConfigurationOpen = ref(false)
 
@@ -29,10 +29,8 @@ const titleClass = computed(() => {
 
 const titleStyle = computed(() => {
   const style = ui.value?.titleStyle?.()
-  const width = config.value?.leftPanelWidth
-    ?? `${displayRowFields.value.reduce((agg, row) => agg + row._width, 0)}px`
 
-  return Object.assign({}, style, { width })
+  return Object.assign({}, style, { width: resolvedLeftPanelWidth.value })
 })
 </script>
 
