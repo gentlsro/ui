@@ -19,7 +19,7 @@ export const MARQUEE_DEFAULT_PROPS = {
     }) {
       const { pauseOnHover, vertical } = payload
 
-      const base = 'flex shrink-0 justify-around gap-$gap'
+      const base = 'flex shrink-0 gap-$gap'
       const verticalLayout = vertical ? 'flex-col' : ''
       const paused = pauseOnHover ? 'group-hover:[animation-play-state:paused]' : ''
 
