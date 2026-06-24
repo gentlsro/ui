@@ -1,15 +1,16 @@
 import type { IPivotProps } from '../types/pivot-props.type'
 import type { IPivotState } from '../types/pivot-state.type'
 import type { IPivotDataItem } from '../types/pivot-data-item.type'
+import type { IPivotRowItemCell } from '../types/pivot-row-item-cell.type'
 import type { IPivotValueColumnItem } from '../types/pivot-value-column-item.type'
 import type { IPivotTransformResult } from '../types/pivot-transform-result.type'
+import type { IPivotTransformValueField } from './pivot-transform-data-core'
 
 // Functions
 import { getInitialCollapsedGroupIds } from './pivot-group-collapse'
 import { getInitialCollapsedColumnGroupIds } from './pivot-column-collapse'
-import { pivotTransformDataCore, type IPivotTransformValueField } from './pivot-transform-data-core'
-
-import type { IPivotRowItemCell } from '../types/pivot-row-item-cell.type'
+import { applyPivotDataFilters } from './pivot-apply-data-filters'
+import { pivotTransformDataCore } from './pivot-transform-data-core'
 
 // Models
 import type { PivotItem } from '../models/pivot-item.model'
@@ -192,11 +193,17 @@ export function pivotTransformData<T extends IItem = IItem>(
     collapseConfig,
     isFirstRender = ref(true),
     formatNumber,
+    items,
     ...corePayload
   } = payload
 
+  const filteredData = items?.length
+    ? applyPivotDataFilters(corePayload.data, items)
+    : corePayload.data
+
   const result = pivotTransformDataCore({
     ...corePayload,
+    data: filteredData,
     rows: rowFields,
     columns: columnFields,
     formatNumber,

@@ -18,11 +18,11 @@ import {
   buildPivotAggregationIndex,
   getPivotAggregatedValue,
 } from './pivot-aggregate-values'
-import { resolvePivotFilteredData } from './pivot-apply-data-filters'
+import { applyPivotSerializedFilters } from './pivot-filter-serialized-data'
 import type { IPivotTransformWorkerFilter } from './pivot-transform-worker-payload'
 
 // Models
-import { SummaryEnum } from '#layers/utilities/shared/enums/summary.enum'
+import type { SummaryEnum } from '#layers/utilities/shared/enums/summary.enum'
 import type { PivotItem } from '../models/pivot-item.model'
 
 type IPivotFormatNumber = (value: number) => string
@@ -56,6 +56,7 @@ export type IPivotTransformCorePayload<T extends IItem = IItem> = {
   formatNumber?: IPivotFormatNumber
   locale?: string
   valuesOnRows?: boolean
+  transliterate?: boolean
 }
 
 type IPivotAggregatedValueContext<T extends IItem> = {
@@ -252,6 +253,7 @@ function pushDataItems<T extends IItem>(
       payload.valueFields,
       { ...payload.valueContext, items: payload.items },
     ))
+
     return
   }
 
@@ -347,7 +349,7 @@ function buildTabularRows<T extends IItem>(payload: IBuildTabularRowsPayload<T>)
         ...valueContext,
       })
 
-      childRows.forEach((row) => {
+      childRows.forEach(row => {
         if (row.rowItem.kind !== 'data') {
           return
         }
@@ -405,12 +407,14 @@ export function pivotTransformDataCore<T extends IItem = IItem>(
     rows: rowFields,
     columns: columnFields,
     values: valueFields,
-    items = [],
     filters = [],
     valuesOnRows,
+    transliterate,
   } = payload
 
-  const filteredData = resolvePivotFilteredData(sourceData, { items, filters })
+  const filteredData = filters.length
+    ? applyPivotSerializedFilters(sourceData, filters, { transliterate })
+    : sourceData
 
   const formatNumber = resolveFormatNumber(payload)
 

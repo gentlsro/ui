@@ -2,6 +2,7 @@
 import type { PivotItem } from '../models/pivot-item.model'
 
 // Functions
+import { applyPivotSerializedFilters } from './pivot-filter-serialized-data'
 import { getActivePivotFilterItems } from './pivot-filter-items'
 import type { IPivotTransformWorkerFilter } from './pivot-transform-worker-payload'
 
@@ -13,22 +14,6 @@ function applyPivotFilters<T extends IItem>(data: T[], filters: FilterItem<T>[])
   const { filterData } = useFiltering()
 
   return filterData(data, filters)
-}
-
-export function applyPivotSerializedFilters<T extends IItem>(
-  data: T[],
-  filters: IPivotTransformWorkerFilter<T>[],
-): T[] {
-  if (!filters.length) {
-    return data
-  }
-
-  return applyPivotFilters(data, filters.map(filter => new FilterItem<T>({
-    field: filter.field,
-    dataType: filter.dataType,
-    comparator: filter.comparator,
-    value: filter.filterValue,
-  })))
 }
 
 export function applyPivotDataFilters<T extends IItem>(
@@ -43,6 +28,7 @@ export function resolvePivotFilteredData<T extends IItem>(
   payload: {
     items?: PivotItem<T>[]
     filters?: IPivotTransformWorkerFilter<T>[]
+    transliterate?: boolean
   },
 ): T[] {
   if (payload.items?.length) {
@@ -50,8 +36,12 @@ export function resolvePivotFilteredData<T extends IItem>(
   }
 
   if (payload.filters?.length) {
-    return applyPivotSerializedFilters(data, payload.filters)
+    return applyPivotSerializedFilters(data, payload.filters, {
+      transliterate: payload.transliterate,
+    })
   }
 
   return data
 }
+
+export { applyPivotSerializedFilters }

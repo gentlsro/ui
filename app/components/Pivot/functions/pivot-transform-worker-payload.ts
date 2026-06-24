@@ -2,6 +2,7 @@ import { klona } from 'klona/full'
 import { toRaw } from 'vue'
 import type { ExtendedDataType } from '$dataType'
 import type { ComparatorEnum } from '$comparatorEnum'
+import { utilsConfig } from '$utilsConfig'
 
 // Models
 import type { PivotItem } from '../models/pivot-item.model'
@@ -48,6 +49,7 @@ export type IPivotTransformWorkerPayload<T extends IItem = IItem> = {
   filters?: IPivotTransformWorkerFilter<T>[]
   locale?: string
   valuesOnRows?: boolean
+  transliterate?: boolean
 }
 
 function resolvePivotLabel<T extends IItem>(payload: {
@@ -123,5 +125,6 @@ export function serializePivotTransformWorkerPayload<T extends IItem>(
     filters: serializePivotFilters(payload.items),
     locale: payload.locale,
     valuesOnRows: payload.valuesOnRows,
+    transliterate: utilsConfig.general.transliterate,
   }
 }

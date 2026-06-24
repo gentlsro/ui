@@ -1,3 +1,5 @@
+import { get } from 'lodash-es'
+
 import type { IPivotValueColumnItem, IPivotValueHeaderCell } from '../types/pivot-value-column-item.type'
 import type { IPivotColumnTreeNode } from './pivot-column-collapse'
 import type {
