@@ -1,3 +1,5 @@
+import type { AllowedComponentProps } from 'vue'
+
 // Types
 import type { IInputProps } from '../../types/input-props.type'
 import type { IMenuProps } from '../../../Menu/types/menu-props.type'
@@ -31,5 +33,5 @@ export type ITextInputProps = IInputProps & {
   /**
    * The props that should be passed to the tooltip
    */
-  tooltipProps?: IMenuProps
+  tooltipProps?: IMenuProps & AllowedComponentProps
 }
