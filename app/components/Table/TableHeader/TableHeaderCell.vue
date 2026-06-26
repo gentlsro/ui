@@ -145,11 +145,13 @@ function handleSelect() {
       :column="column"
       :ui="{ headerInnerCellClass, headerCellInnerStyle }"
     >
-      <Checkbox
-        v-if="column.field === '_selectable'"
-        :model-value="selectionState"
-        @update:model-value="handleSelect"
-      />
+      <template v-if="column.field === '_selectable'">
+        <Checkbox
+          v-if="selectionConfig?.multi"
+          :model-value="selectionState"
+          @update:model-value="handleSelect"
+        />
+      </template>
 
       <span
         v-else

@@ -142,7 +142,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
     // masked.value = ''
 
     if (shouldFocusAfterClear || !isBlurred.value) {
-      setTimeout(() => focus(), 0)
+      setTimeout(focus, 0)
     }
 
     setTimeout(() => {
@@ -159,11 +159,10 @@ export function useInputUtils(options: IInputUtilsOptions) {
       || !!lastTarget?.closest('.input-wrapper__focusable')
 
     const isSameWrapper = inputElement.value?.closest('.wrapper__body') === lastTarget?.closest('.wrapper__body')
-
-    // `Tab` handling
     const relatedTargetWrapper = relatedTarget?.closest('.wrapper__body')
-    const isRelatedTargetFocusable = !relatedTargetWrapper
-      || relatedTargetWrapper === inputElement.value?.closest('.wrapper__body')
+    const inputWrapper = inputElement.value?.closest('.wrapper__body')
+    const isRelatedTargetFocusable = !relatedTarget
+      || relatedTargetWrapper === inputWrapper
 
     // We prevent the blur event when clicking on focusable elements
     // in the same wrapper

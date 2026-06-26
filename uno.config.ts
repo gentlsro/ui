@@ -29,6 +29,7 @@ export default defineConfig({
       /^(hide-scrollbar)$/,
       (_, { rawSelector }) => {
         const selector = toEscapedSelector(rawSelector)
+
         return `
         ${selector} {
           -ms-overflow-style: none;
@@ -93,6 +94,7 @@ export default defineConfig({
       /^(?:border|b)-([blrtxy])(?:-ca)?$/,
       ([_, d]) => {
         const pre = d ? `-${d}` : ''
+
         return `dark:border${pre}-true-gray-600 border${pre}-true-gray-300`
       },
     ],
@@ -103,6 +105,7 @@ export default defineConfig({
       /^(?:border|b)-([blrtxy])(?:-custom)?$/,
       ([_, d]) => {
         const pre = d ? `-${d}` : ''
+
         return `border${pre}-${borderWidth}`
       },
     ],
@@ -113,6 +116,7 @@ export default defineConfig({
       /^rounded-([blrtxy])(?:-custom)?$/,
       ([_, d]) => {
         const pre = d ? `-${d}` : ''
+
         return `rounded${pre}-${rounding}`
       },
     ],

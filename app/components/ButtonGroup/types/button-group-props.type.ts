@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'vue'
+import type { AllowedComponentProps, CSSProperties } from 'vue'
 
 // Types
 import type { IBtnProps } from '../../Button/types/btn-props.type'
@@ -20,7 +20,7 @@ export type IButtonGroupProps = {
   /**
    * A list of buttons in the group
    */
-  buttons: Array<IBtnProps & { value: any }>
+  buttons: Array<IBtnProps & AllowedComponentProps & { value: any }>
 
   /**
    * Visual configuration

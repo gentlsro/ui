@@ -83,6 +83,7 @@ const {
   handleClickWrapper,
   handleFocusOrClick,
   handleBlur,
+  isBlurred,
 } = useInputUtils({
   props,
   maskRef: mask,
@@ -240,6 +241,11 @@ function handleBeforeInput(ev: Event) {
   }
 }
 
+// Wrapper class
+const wrapperClass = computed(() => {
+  return !isBlurred.value ? 'is-focused' : ''
+})
+
 // Styles - append
 const appendClass = computed(() => {
   return mergedProps.value.ui?.appendClass?.({
@@ -266,6 +272,7 @@ defineExpose({
   <InputWrapper
     v-bind="wrapperProps"
     :id="inputId"
+    :class="wrapperClass"
     :has-content="!hasNoValue"
     .focus="focus"
     @click="handleClickWrapper"

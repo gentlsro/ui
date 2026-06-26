@@ -6,7 +6,7 @@ import type { IPageWrapperProps } from '../types/page-wrapper-props.type'
 export const PAGE_WRAPPER_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'ease-out grow z-$zPageWrapper'
+      const base = 'relative ease-out grow z-$zPageWrapper'
       const scrollable = '[&:not(.is-scrollable)]:(overflow-auto flex flex-col)'
       const padded = '[&.is-padded]:m-t-$navHeight'
 

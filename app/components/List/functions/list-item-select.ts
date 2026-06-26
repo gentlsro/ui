@@ -18,6 +18,7 @@ export async function listItemSelect(payload: {
   addConfig: IListProps['addConfig']
   isSelected: boolean
   itemKey?: string
+  itemLabel?: string
   addedItems: Ref<IListItemToAdd[]>
   emits: IListEmitFncs
   searchInput: InstanceType<typeof SearchInput> | undefined
@@ -34,6 +35,7 @@ export async function listItemSelect(payload: {
     isSelected,
     addConfig,
     itemKey = 'id',
+    itemLabel = 'label',
     addedItems,
     emits,
     searchInput,
@@ -93,6 +95,8 @@ export async function listItemSelect(payload: {
         emits,
         isAddedItem,
         itemKey,
+        itemLabel,
+        isNewItem: '_isNew' in item,
       })
     }
 
@@ -128,6 +132,8 @@ export async function listItemSelect(payload: {
       emits,
       isAddedItem,
       itemKey,
+      itemLabel,
+      isNewItem: '_isNew' in item,
     })
 
     nextTick(() => searchInput?.clear(true))

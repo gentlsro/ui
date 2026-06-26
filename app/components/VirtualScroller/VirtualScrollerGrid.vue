@@ -205,6 +205,7 @@ defineExpose({
           :data-key="virtualRow.key"
           class="virtual-scroll__row content-row"
           :style="{
+            ...(rowHeight && { minHeight: `${rowHeight}px` }),
             'position': 'absolute',
             'top': 0,
             'left': 0,

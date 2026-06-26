@@ -57,6 +57,7 @@ export function gentlUIPreset(): Preset {
         /^(hide-scrollbar)$/,
         (_, { rawSelector }) => {
           const selector = toEscapedSelector(rawSelector)
+
           return `
           ${selector} {
             -ms-overflow-style: none;
@@ -73,6 +74,7 @@ export function gentlUIPreset(): Preset {
         /^(reset-autofill)$/,
         (_, { rawSelector }) => {
           const selector = toEscapedSelector(rawSelector)
+
           return `
           ${selector} input:-webkit-autofill,
           ${selector} input:-webkit-autofill:hover,
@@ -133,6 +135,7 @@ export function gentlUIPreset(): Preset {
               break
             }
           }
+
           return {
             'box-shadow': `${
               inset ? 'inset ' : ''
@@ -161,6 +164,7 @@ export function gentlUIPreset(): Preset {
         /^(?:border|b)-([blrtxy])(?:-ca)?$/,
         ([_, d]) => {
           const pre = d ? `-${d}` : ''
+
           return `dark:border${pre}-true-gray-600 border${pre}-true-gray-300`
         },
       ],
@@ -171,6 +175,7 @@ export function gentlUIPreset(): Preset {
         /^(?:border|b)-([blrtxy])(?:-custom)?$/,
         ([_, d]) => {
           const pre = d ? `-${d}` : ''
+
           return `border${pre}-${borderWidth}`
         },
       ],
@@ -181,6 +186,7 @@ export function gentlUIPreset(): Preset {
         /^rounded-([blrtxy])(?:-custom)?$/,
         ([_, d]) => {
           const pre = d ? `-${d}` : ''
+
           return `rounded${pre}-${rounding}`
         },
       ],

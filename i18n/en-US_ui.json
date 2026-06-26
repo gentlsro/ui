@@ -89,5 +89,12 @@
   },
   "general": {
     "moveAndResizeAvailable": "You can move and resize this element"
+  },
+  "pivot": {
+    "allFields": "All fields",
+    "filterFields": "Filters",
+    "rowFields": "Rows",
+    "columnFields": "Columns",
+    "dataFields": "Values"
   }
 }

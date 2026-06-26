@@ -16,7 +16,9 @@ export function listHandleAdd(payload: {
   isSelected: boolean
   emits: IListEmitFncs
   isAddedItem?: boolean
+  isNewItem?: boolean
   itemKey?: string
+  itemLabel?: string
 }) {
   const {
     isMulti,
@@ -27,8 +29,23 @@ export function listHandleAdd(payload: {
     addedItems,
     isAddedItem,
     itemKey = 'id',
+    isNewItem,
+    itemLabel = 'label',
   } = payload
-  const { noLocalAdd, keepAddedItems, transformAddedItem } = addConfig ?? {}
+  const {
+    noLocalAdd,
+    keepAddedItems,
+    transformAddedItem = (item: IItem) => {
+      if (isNewItem) {
+        const obj: IItem = {}
+
+        set(obj, itemKey, item.label)
+        set(obj, itemLabel, item.label)
+
+        return obj
+      }
+    },
+  } = addConfig ?? {}
 
   function handleTransformFnc(fnc: (payload: { item: IListItemToAdd }) => IListItemToAdd) {
     return fnc({ item: _item })

@@ -311,6 +311,7 @@ function createStore(injectionKey?: string) {
           itemKey: itemKey.value,
         }),
         itemKey: itemKey.value,
+        itemLabel: itemLabel.value,
         addedItems,
         addConfig: addConfig.value,
         emits: emits.value,

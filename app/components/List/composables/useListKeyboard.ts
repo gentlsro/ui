@@ -158,11 +158,11 @@ export function useListKeyboard(config?: { registerKeyStroke?: boolean }) {
     // Got to a group
     else if ('isGroup' in itemSelected) {
       if (ev.key === 'PageUp') {
-        handleKey({ ...ev, key: 'ArrowUp' })
+        handleKey({ ...ev, key: 'ArrowUp' }, { force: true })
       } else if (ev.key === 'PageDown') {
-        handleKey({ ...ev, key: 'ArrowDown' })
+        handleKey({ ...ev, key: 'ArrowDown' }, { force: true })
       } else {
-        handleKey(ev)
+        handleKey(ev, { force: true })
       }
     }
 

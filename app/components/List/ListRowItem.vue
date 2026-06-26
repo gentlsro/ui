@@ -195,7 +195,7 @@ onMounted(() => {
         :style="rowContentStyle"
       >
         <span
-          break-words
+          class="break-words text-wrap"
           v-html="item._highlighted"
         />
 

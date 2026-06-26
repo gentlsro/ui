@@ -89,5 +89,12 @@
   },
   "general": {
     "moveAndResizeAvailable": "Tento element lze přesouvat a měnit jeho velikost"
+  },
+  "pivot": {
+    "allFields": "Všechna pole",
+    "filterFields": "Filtry",
+    "rowFields": "Řádky",
+    "columnFields": "Sloupce",
+    "dataFields": "Hodnoty"
   }
 }

@@ -78,6 +78,17 @@ const confirmBtnClass = computed(() => {
 const confirmBtnStyle = computed(() => {
   return mergedProps.value?.ui?.confirmBtnStyle?.()
 })
+
+// Styles - confirmationText
+const confirmationTextClass = computed(() => {
+  return mergedProps.value?.ui?.confirmationTextClass?.({
+    defaults: MENU_CONFIRMATION_DEFAULT_PROPS.ui.confirmationTextClass(),
+  })
+})
+
+const confirmationTextStyle = computed(() => {
+  return mergedProps.value?.ui?.confirmationTextStyle?.()
+})
 </script>
 
 <template>
@@ -97,10 +108,8 @@ const confirmBtnStyle = computed(() => {
       :hide="() => menuEl?.hide()"
     >
       <div
-        bg="ca"
-        rounded="custom"
-        p="2"
-        text="center"
+        :class="confirmationTextClass"
+        :style="confirmationTextStyle"
       >
         {{ confirmationText || $t('general.confirmAction') }}
       </div>

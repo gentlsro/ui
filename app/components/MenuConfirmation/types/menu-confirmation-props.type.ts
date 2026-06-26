@@ -54,5 +54,17 @@ export type IMenuConfirmationProps = IMenuProps & {
      * Style to apply to the 'confirm' button
      */
     confirmBtnStyle?: () => CSSProperties
+
+    /**
+     * Style to apply to the confirmation text
+     */
+    confirmationTextStyle?: () => CSSProperties
+
+    /**
+     * Class to apply to the confirmation text
+     */
+    confirmationTextClass?: (payload: {
+      defaults: ReturnType<typeof MENU_CONFIRMATION_DEFAULT_PROPS['ui']['confirmationTextClass']>
+    }) => ClassType
   }
 }

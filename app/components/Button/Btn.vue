@@ -171,6 +171,7 @@ const loaderStyle = computed(() => {
     <slot
       name="label"
       :ui="mergedProps.ui"
+      :style="labelStyle"
     >
       <div
         v-if="label"

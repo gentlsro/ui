@@ -16,6 +16,7 @@ const props = withDefaults(defineProps<IFieldProps>(), {
 
 defineEmits<{
   (e: 'focus', ev: FocusEvent | MouseEvent): void
+  (e: 'blur', ev: FocusEvent | MouseEvent): void
 }>()
 
 // Utils
@@ -88,6 +89,7 @@ defineExpose({
         :data-placeholder="placeholder"
         :name="name || path || label || placeholder"
         @focus="$emit('focus', $event)"
+        @blur="$emit('blur', $event)"
       >
         <slot />
       </span>

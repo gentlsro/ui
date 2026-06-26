@@ -45,6 +45,7 @@ const isModified = computed(() => {
 const labelProps = computed(() => {
   return {
     activeLabelColor: props.activeLabelColor,
+    focusInputOnLabelClick: mergedProps.value.ui?.focusInputOnLabelClick,
     hasContent: props.hasContent,
     hasError: !!issues.value.length,
     id: props.id,
@@ -59,7 +60,12 @@ const labelProps = computed(() => {
 })
 
 const wrapperClass = computed(() => {
+  const wrapperClass = mergedProps.value.ui?.wrapperClass?.({
+    defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.wrapperClass(),
+  })
+
   return [
+    wrapperClass,
     `wrapper--${props.size}`,
     props.cursor,
     {
@@ -174,7 +180,7 @@ const wrapperProps = computed(() => {
 <template>
   <div
     ref="wrapperEl"
-    class="wrapper"
+    class="wrapper group/wrapper"
     :class="wrapperClass"
     :style="wrapperStyleVariables"
     data-cy="input-field"
@@ -285,7 +291,7 @@ const wrapperProps = computed(() => {
 
 <style lang="scss" scoped>
 .wrapper {
-  @apply relative flex flex-col rounded-$borderRadius;
+  @apply relative flex flex-col;
 
   .wrapper__body {
     @apply relative;

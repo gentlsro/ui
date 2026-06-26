@@ -120,6 +120,9 @@ export * from '../components/Loader/types/loader-props.type'
 // MainBar
 export * from '../components/MainBar/types/main-bar-props.type'
 
+// Marquee
+export * from '../components/Marquee/types/marquee-props.type'
+
 // Menu
 export * from '../components/Menu/types/menu-emits.type'
 export * from '../components/Menu/types/menu-props.type'

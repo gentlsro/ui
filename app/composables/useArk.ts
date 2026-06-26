@@ -176,6 +176,8 @@ export function useArk<Validation extends Type = any>(payload?: IPayload<Validat
   })
 
   return {
+    scope,
+    componentName,
     errorsStructure,
     validation,
     validate,

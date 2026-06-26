@@ -21,7 +21,7 @@ export const RADIO_DEFAULT_PROPS = {
       const sizeClass = sizes[size]
 
       // States (via CSS selectors)
-      const checked = '[&.is-checked]:(font-semibold)'
+      const checked = '[&.is-checked]:()'
       const disabled = '[&.is-disabled]:(cursor-not-allowed op-50)'
 
       return {
@@ -45,8 +45,8 @@ export const RADIO_DEFAULT_PROPS = {
       // Size variants
       const sizes = {
         xs: 'h-3.5 w-3.5 m-t-5px',
-        sm: 'h-4.5 w-4.5 m-t-7px',
-        md: 'h-5.5 w-5.5 m-t-9px',
+        sm: 'h-4 w-4 m-t-8px',
+        md: 'h-5 w-5 m-t-10px',
         lg: 'h-6 w-6 m-t-12px',
       } as const
 
@@ -111,4 +111,3 @@ export const RADIO_DEFAULT_PROPS = {
     },
   },
 }
-
