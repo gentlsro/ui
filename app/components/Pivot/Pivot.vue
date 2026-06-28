@@ -2,6 +2,9 @@
 // Types
 import type { IPivotProps } from './types/pivot-props.type'
 
+// Functions
+import { pivotGetExposed } from './functions/pivot-get-exposed'
+
 // Constants
 import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
 
@@ -36,9 +39,7 @@ syncRef(toRef(mergedProps.value, 'ui'), ui, { direction: 'ltr' })
 syncRef(toRef(mergedProps.value, 'loadData'), loadData, { direction: 'ltr' })
 syncRef(toRef(mergedProps.value, 'collapseConfig'), collapseConfig, { direction: 'ltr' })
 
-watchEffect(() => {
-  console.log('Log ~ config:', config.value)
-})
+defineExpose(pivotGetExposed())
 
 // Immediate fetch
 const isImmediate = mergedProps.value.loadData?.immediate
