@@ -16,10 +16,7 @@ const props = withDefaults(defineProps<IDialogProps>(), {
 
 const emits = defineEmits<{
   (e: 'update:modelValue', val: boolean): void
-  (e: 'hide'): void
-  (e: 'show'): void
-  (e: 'beforeHide'): void
-  (e: 'beforeShow'): void
+  (e: 'hide' | 'show' | 'beforeHide' | 'beforeShow'): void
 }>()
 
 defineExpose({
@@ -40,7 +37,7 @@ const mergedProps = computed(() => {
 })
 
 // Layout
-const model = defineModel({ default: false })
+const model = defineModel<boolean>({ default: false })
 const isChangeForced = ref(false)
 const debouncedModel = ref(model.value)
 const zIndex = ref(0)

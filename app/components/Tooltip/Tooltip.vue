@@ -30,7 +30,7 @@ const mergedProps = computed(() => {
 
 // Layout
 const referenceTarget = toRef(props, 'referenceTarget')
-const model = defineModel({ default: false })
+const model = defineModel<boolean>({ default: false })
 const tooltipEl = ref<HTMLElement>()
 const referenceEl = ref<Element>() // Element that menu is attached to
 const arrowEl = ref<HTMLDivElement>()

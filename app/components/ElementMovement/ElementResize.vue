@@ -13,7 +13,7 @@ const props = withDefaults(defineProps<IElementMovementProps>(), {
 // Template
 const dimensions = defineModel<NonUndefined<IElementMovementProps['dimensions']>>(
   'dimensions',
-  { default: { x: 0, y: 0, w: 0, h: 0 } },
+  { default: () => ({ x: 0, y: 0, w: 0, h: 0 }) },
 )
 const resizeHandlesEl = ref<HTMLElement>()
 
