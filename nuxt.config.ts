@@ -120,11 +120,11 @@ export default defineNuxtConfig({
               ? await preset()
               : preset
 
-            // @ts-expect-error
+            // @ts-expect-error - presetAwaited is of type Preset
             Object.assign(colors, presetAwaited?.theme?.colors)
           }
         } else {
-          // @ts-expect-error
+          // @ts-expect-error - presetAwaited is of type Preset
           Object.assign(colors, presetAwaited?.theme?.colors)
         }
       }
@@ -160,7 +160,6 @@ export default defineNuxtConfig({
     ],
   },
 
-  // @ts-ignore
   icon: {
     size: '1em',
     mode: 'svg',
