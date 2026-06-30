@@ -1,24 +1,21 @@
 import { addTemplate, createResolver, defineNuxtModule } from 'nuxt/kit'
+import type { Nuxt } from 'nuxt/schema'
 import { existsSync } from 'node:fs'
 
 const { resolve } = createResolver(import.meta.url)
 const currentDir = resolve('..')
 
-export default defineNuxtModule({
-  setup: async (_, nuxt) => {
-    console.log('✔ Process UI...')
-    const componentPaths: string[] = []
+const UI_CONFIG = '#build/uiConfig.ts'
 
-    const configPaths = nuxt.options._layers
-      .map(layer => {
-        const isBase = layer.cwd === currentDir
-        const configPath = isBase ? 'config' : 'ui-config'
+function setAliasPaths(nuxt: Nuxt, alias: string, tsPath: string) {
+  nuxt.options.typescript.tsConfig ??= {}
+  nuxt.options.typescript.tsConfig.compilerOptions ??= {}
+  nuxt.options.typescript.tsConfig.compilerOptions.paths ??= {}
+  nuxt.options.typescript.tsConfig.compilerOptions.paths[alias] = [tsPath]
+}
 
-        return { path: resolve(layer.cwd, configPath), isBase, cwd: layer.cwd }
-      })
-      .filter(({ path }) => existsSync(`${path}.ts`))
-
-    const code = `import { customDefu } from '#layers/utilities/shared/utils/custom-defu'
+function generateUIConfigCode(configPaths: { path: string }[]) {
+  return `import { customDefu } from '#layers/utilities/shared/utils/custom-defu'
 ${configPaths.map(({ path }, idx) => `import config${idx} from '${path}'`).join('\n')}
 
 const uiConfigMerged = customDefu(${configPaths.map((_, idx) => `config${idx}`).join(', ')})
@@ -87,22 +84,36 @@ export const uiConfig = wrapProps(uiConfigMerged)
 export type IUIConfig = typeof uiConfig
 export default uiConfig
 `
+}
+
+export default defineNuxtModule({
+  setup: async (_, nuxt) => {
+    console.log('✔ Process UI...')
+
+    const configPaths = nuxt.options._layers
+      .map(layer => {
+        const isBase = layer.cwd === currentDir
+        const configPath = isBase ? 'config' : 'ui-config'
+
+        return { path: resolve(layer.cwd, 'app', configPath) }
+      })
+      .filter(({ path }) => existsSync(`${path}.ts`))
+
+    const configCode = generateUIConfigCode(configPaths)
 
     addTemplate({
-      filename: `${nuxt.options.rootDir}/generated/uiConfig.ts`,
+      filename: 'uiConfig.ts',
       write: true,
-      getContents: () => code,
+      getContents: () => configCode,
     })
 
-    nuxt.hook('vite:extendConfig', config => {
-      if (config.resolve) {
-        if (!config.resolve.alias) {
-          config.resolve.alias = {}
-        }
+    setAliasPaths(nuxt, '$uiConfig', './uiConfig.ts')
 
+    nuxt.hook('vite:extendConfig', (config) => {
+      if (config.resolve) {
         config.resolve.alias = {
           ...config.resolve.alias,
-          $uiConfig: `${nuxt.options.rootDir}/generated/uiConfig.ts`,
+          $uiConfig: UI_CONFIG,
         }
       }
     })

@@ -1,8 +1,6 @@
 // @unocss-include
-import { join } from 'pathe'
 import { createResolver } from 'nuxt/kit'
 import { writeFile } from 'node:fs/promises'
-import { cwd } from 'node:process'
 
 const isMonorepo = import.meta.env.VITE_MONOREPO === 'true'
 const isInstallLayerDeps = true
@@ -10,9 +8,7 @@ const isInstallLayerDeps = true
 const { resolve } = createResolver(import.meta.url)
 
 export default defineNuxtConfig({
-  extends: isMonorepo
-    ? [['../Utilities']]
-    : [['github:gentlsro/Utilities#v2.2', { install: isInstallLayerDeps }]],
+  extends: [['../Utilities']],
 
   modules: [
     '@nuxtjs/i18n',
@@ -38,8 +34,6 @@ export default defineNuxtConfig({
       { name: 'useUIStore', from: resolve('./app/stores/ui.store.ts') },
       { name: 'useBreadcrumbs', from: resolve('./app/components/Breadcrumbs/functions/useBreadcrumbs') },
       { name: 'notify', from: resolve('./app/components/Notification/functions/useNotifications') },
-
-      { name: 'extendUIConfig', from: resolve('./config.ts') },
     ],
 
     dirs: [
@@ -83,7 +77,6 @@ export default defineNuxtConfig({
   },
 
   alias: {
-    $uiConfig: join(cwd(), 'generated', 'uiConfig.ts'),
     $uiProps: resolve('./app/types/component-props.type.ts'),
   },
 
@@ -96,7 +89,6 @@ export default defineNuxtConfig({
     tsConfig: {
       compilerOptions: {
         paths: {
-          $uiConfig: [join(cwd(), 'generated', 'uiConfig.ts')],
           $uiProps: [resolve('./app/types/component-props.type.ts')],
         },
       },
