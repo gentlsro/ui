@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'vue'
 
-import type { PredictDataTypeOptions } from '#layers/utilities/shared/types/predict-data-type-options.type'
+import type { PredictDataTypeOptions } from '#layers/utilities/app/types/predict-data-type-options.type'
 
 // Constants
 import type { VALUE_FORMATTER_DEFAULT_PROPS } from '../constants/value-formatter-default-props.constant'

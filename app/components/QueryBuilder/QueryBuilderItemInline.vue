@@ -1,14 +1,15 @@
 <script setup lang="ts">
+import utilsConfig from '$utilsConfig'
+
 // Types
 import type { IQueryBuilderItem, IQueryBuilderItemProps } from './types/query-builder-item-props.type'
 
 // Functions
-import { useColors } from '../../../shared/composables/useColors'
+import { useColors } from '../../composables/useColors'
 import { useQueryBuilderStore } from './query-builder.store'
 
 // Constants
 import { QUERY_BUILDER_LEVEL_COLORS } from './constants/query-builder-level-colors.constant'
-import { NON_VALUE_COMPARATORS } from '#layers/utilities/shared/constants/comparators-by-category.const'
 
 defineOptions({
   inheritAttrs: false,
@@ -22,6 +23,9 @@ const emits = defineEmits<{
   (e: 'add:row'): void
   (e: 'delete:row', item: IQueryBuilderItem): void
 }>()
+
+// Constants
+const NON_VALUE_COMPARATORS = getNonValueComparators(utilsConfig.dataTypeExtend.nonValueComparators)
 
 // Store
 const { columns, items } = useQueryBuilderStore()

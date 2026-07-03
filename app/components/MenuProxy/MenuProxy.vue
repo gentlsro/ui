@@ -5,7 +5,7 @@ import type { Placement } from '@floating-ui/dom'
 import type { IMenuProxyProps } from './types/menu-proxy-props.type'
 
 // Constants
-import { $bp } from '../../../shared/constants/breakpoints'
+import { $bp } from '../../constants/breakpoints'
 
 // Components
 import Menu from '../Menu/Menu.vue'

@@ -4,7 +4,7 @@ import type { IMonthSelectorProps } from './types/month-selector-props.type'
 
 // Constants
 import { MONTH_SELECTOR_DEFAULT_PROPS } from './constants/month-selector-default-props.constant'
-import { $bp } from '../../../shared/constants/breakpoints'
+import { $bp } from '../../constants/breakpoints'
 
 type Month = {
   idx: number

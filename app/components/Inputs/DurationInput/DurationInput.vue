@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { MODIFIER_BY_UNIT } from '#layers/utilities/shared/composables/useDuration'
-import type { DurationUnit } from '#layers/utilities/shared/composables/useDuration'
+import { MODIFIER_BY_UNIT } from '#layers/utilities/app/composables/useDuration'
+import type { DurationUnit } from '#layers/utilities/app/composables/useDuration'
 
 // Types
 import type { IDurationInputProps } from './types/duration-input-props.type'
 
 // Functions
-import { isNumeric } from '#layers/utilities/shared/functions/is-numeric'
+import { isNumeric } from '#layers/utilities/app/functions/is-numeric'
 
 const props = withDefaults(defineProps<IDurationInputProps>(), {
   ...getComponentProps('durationInput'),

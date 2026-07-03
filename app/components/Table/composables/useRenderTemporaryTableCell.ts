@@ -4,6 +4,7 @@ import type { ITableProps } from '../types/table-props.type'
 
 // Models
 import type { TableColumn } from '../models/table-column.model'
+import { getUtilityValueOptions } from '../../../utils/get-utility-value-options'
 
 // Components
 import Checkbox from '../../Checkbox/Checkbox.vue'
@@ -56,8 +57,9 @@ export function useRenderTemporaryTableCell() {
     let cleanup: () => void = () => {}
 
     const value = col.valueGetter(row)
-    const formattedValue = formatValue(value, row, {
-      format: col.format,
+	    const formattedValue = formatValue(value, row, {
+	      ...getUtilityValueOptions(),
+	      format: col.format,
       dataType: col.dataType,
     })
 

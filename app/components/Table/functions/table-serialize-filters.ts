@@ -1,11 +1,13 @@
 import dayjs from 'dayjs/esm'
+import utilsConfig from '$utilsConfig'
 
 // Types
 import type { ITableFilterItem } from '../types/table-filter-item.type'
 import type { IQueryBuilderRow } from '../../QueryBuilder/types/query-builder-row-props.type'
 
 // Constants
-import { NON_VALUE_COMPARATORS, SELECTOR_COMPARATORS } from '#layers/utilities/shared/constants/comparators-by-category.const'
+const NON_VALUE_COMPARATORS = getNonValueComparators(utilsConfig.dataTypeExtend.nonValueComparators)
+const SELECTOR_COMPARATORS = getSelectorComparators(utilsConfig.dataTypeExtend.selectorComparators)
 
 export function tableSerializeFilters(
   filtersOrQueryBuilder: Array<ITableFilterItem | IQueryBuilderRow>,

@@ -1,4 +1,4 @@
-import { useSemiRandom } from '#layers/utilities/shared/composables/useSemiRandom'
+import { useSemiRandom } from '#layers/utilities/app/composables/useSemiRandom'
 
 // Functions
 import { useColors } from '../composables/useColors'

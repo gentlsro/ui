@@ -5,7 +5,7 @@ import type { IListProps } from '../types/list-props.type'
 
 // Functions
 import { getListItemKey, getListItemLabel } from './helpers'
-import { highlight } from '#layers/utilities/shared/functions/highlightText'
+import { highlight } from '#layers/utilities/app/functions/highlightText'
 
 const { groupData } = useGrouping()
 const { searchData } = useSearching()

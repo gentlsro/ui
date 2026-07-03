@@ -15,7 +15,7 @@ function setAliasPaths(nuxt: Nuxt, alias: string, tsPath: string) {
 }
 
 function generateUIConfigCode(configPaths: { path: string }[]) {
-  return `import { customDefu } from '#layers/utilities/shared/utils/custom-defu'
+  return `import { customDefu } from '#layers/utilities/app/utils/custom-defu'
 ${configPaths.map(({ path }, idx) => `import config${idx} from '${path}'`).join('\n')}
 
 const uiConfigMerged = customDefu(${configPaths.map((_, idx) => `config${idx}`).join(', ')})

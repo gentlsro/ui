@@ -4,7 +4,7 @@ import type { CrudAction } from './types/crud-action.type'
 import type { ICrudBtnProps, ICrudBtnsProps } from './types/crud-btn-props.type'
 
 // Constants
-import { $bp } from '../../../shared/constants/breakpoints'
+import { $bp } from '../../constants/breakpoints'
 import { CRUD_BTNS_DEFAULT_PROPS } from './constants/crud-btns-default-props.constant'
 
 const props = withDefaults(defineProps<ICrudBtnsProps>(), {

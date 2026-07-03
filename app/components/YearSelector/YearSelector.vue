@@ -3,7 +3,7 @@
 import type { IYearSelectorProps } from './types/year-selector-props.type'
 
 // Constants
-import { $bp } from '../../../shared/constants/breakpoints'
+import { $bp } from '../../constants/breakpoints'
 import { YEAR_SELECTOR_DEFAULT_PROPS } from './constants/year-selector-default-props.constant'
 
 // Components

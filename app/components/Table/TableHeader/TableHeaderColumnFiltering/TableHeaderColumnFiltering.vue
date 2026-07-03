@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { VNode } from 'vue'
+import utilsConfig from '$utilsConfig'
 import { ComparatorEnum } from '$comparatorEnum'
 
 // Types
@@ -15,7 +16,7 @@ import { getAvailableComparators } from '../../functions/get-available-comparato
 import { useTableStore } from '../../stores/table.store'
 
 // Constants
-import { BOOLEANISH_COMPARATORS } from '#layers/utilities/shared/constants/comparators-by-category.const'
+const BOOLEANISH_COMPARATORS = getBooleanishComparators(utilsConfig.dataTypeExtend.booleanishComparators)
 
 type IProps = {
   column: TableColumn
@@ -138,7 +139,7 @@ watchOnce(isMounted, () => {
     <!-- Content -->
     <div class="filtering__content">
       <TableHeaderColumnFilteringItem
-        v-for="(item, idx) in interactiveFilters"
+        v-for="item in interactiveFilters"
         ref="filteringItemEl"
         :key="item.id"
         :item

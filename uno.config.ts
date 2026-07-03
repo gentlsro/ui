@@ -13,7 +13,7 @@ import {
 import { FileSystemIconLoader } from '@iconify/utils/lib/loader/node-loaders'
 
 // Breakpoints
-import { BREAKPOINTS_PX } from './shared/constants/breakpoints'
+import { BREAKPOINTS_PX } from './app/constants/breakpoints'
 import { gentlUIPreset } from './app/constants/unocss-preset'
 
 const fontSize = 16

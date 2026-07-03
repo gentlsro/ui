@@ -1,18 +1,20 @@
 <script setup lang="ts">
+import { type } from 'arktype'
+import utilsConfig from '$utilsConfig'
 import type { ComparatorEnum } from '$comparatorEnum'
 
 // Functions
 import { useTableStore } from './stores/table.store'
-
-// Constants
-import { NON_VALUE_COMPARATORS } from '#layers/utilities/shared/constants/comparators-by-category.const'
-import { type } from 'arktype'
+import { getUtilityValueOptions } from '../../utils/get-utility-value-options'
 
 type IProps = {
   filter: FilterItem
 }
 
 const props = defineProps<IProps>()
+
+// Constants
+const NON_VALUE_COMPARATORS = getNonValueComparators(utilsConfig.dataTypeExtend.nonValueComparators)
 
 // Store
 const { internalColumns } = useTableStore()
@@ -40,8 +42,9 @@ const formattedValue = computed(() => {
   return formatValue(
     props.filter.value,
     undefined,
-    {
-      dataType: props.filter.dataType,
+	    {
+	      ...getUtilityValueOptions(),
+	      dataType: props.filter.dataType,
       format,
       localeIso: currentLocaleCode.value,
       source: { type: 'component', name: 'TableFilterChip' },

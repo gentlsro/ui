@@ -20,4 +20,4 @@ logs
 generated
 errors
 .nuxtrc
-shared/constants/colors.json
+app/constants/colors.json

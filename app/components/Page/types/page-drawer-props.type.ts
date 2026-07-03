@@ -1,6 +1,6 @@
 // Types
 import type { CSSProperties } from 'vue'
-import type { BREAKPOINTS } from '../../../../shared/constants/breakpoints'
+import type { BREAKPOINTS } from '../../../constants/breakpoints'
 
 // Constants
 import type { PAGE_DRAWER_DEFAULT_PROPS } from '../constants/page-drawer-default-props.constant'

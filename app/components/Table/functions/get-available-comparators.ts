@@ -1,11 +1,12 @@
+import utilsConfig from '$utilsConfig'
 import type { ComparatorEnum } from '$comparatorEnum'
 import type { ExtendedDataType } from '$dataType'
 
 // Functions
-import { getComparatorsByDataType } from '#layers/utilities/shared/constants/comparators-by-datatype.const'
+import { getComparatorsByDataType } from '#layers/utilities/app/constants/comparators-by-datatype.const'
 
 // Constants
-import { SELECTOR_COMPARATORS } from '#layers/utilities/shared/constants/comparators-by-category.const'
+import { getSelectorComparators } from '#layers/utilities/app/constants/comparators-by-category.const'
 
 /**
  * Gets the available comparators for a given data type
@@ -24,10 +25,14 @@ export function getAvailableComparators(
     extraComparators = [],
   } = options
 
-  const comparatorsByDataType = getComparatorsByDataType(dataType)
+  const selectorComparators = getSelectorComparators(utilsConfig.dataTypeExtend.selectorComparators)
+  const comparatorsByDataType = getComparatorsByDataType(
+    dataType,
+    utilsConfig.dataTypeExtend.comparatorsByDataType,
+  )
   const comparators: ComparatorEnum[] = [
     ...comparatorsByDataType,
-    ...SELECTOR_COMPARATORS,
+    ...selectorComparators,
     ...extraComparators,
   ]
 
@@ -38,7 +43,7 @@ export function getAvailableComparators(
   } else if (!includeSelectorComparators) {
     return uniq([
       ...comparators.filter(comparator => {
-        return !SELECTOR_COMPARATORS.includes(comparator)
+        return !selectorComparators.includes(comparator)
       }),
       ...comparatorsByDataType,
       ...extraComparators,

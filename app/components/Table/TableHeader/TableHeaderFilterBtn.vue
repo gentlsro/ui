@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { klona } from 'klona/full'
+import utilsConfig from '$utilsConfig'
 
 // Types
 import type { ITableFilterItem } from '../types/table-filter-item.type'
@@ -14,7 +15,7 @@ import { tableFilterValueChangeDebounce } from '../functions/table-filter-value-
 import { useTableStore } from '../stores/table.store'
 
 // Constants
-import { NON_VALUE_COMPARATORS } from '#layers/utilities/shared/constants/comparators-by-category.const'
+const NON_VALUE_COMPARATORS = getNonValueComparators(utilsConfig.dataTypeExtend.nonValueComparators)
 
 type IProps = {
   column: TableColumn

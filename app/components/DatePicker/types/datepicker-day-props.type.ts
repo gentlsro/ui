@@ -1,5 +1,5 @@
 // Types
-import type { Day } from '#layers/utilities/shared/models/day.model'
+import type { Day } from '#layers/utilities/app/models/day.model'
 
 // Models
 import type { DayEvent } from './DayEvent.type'

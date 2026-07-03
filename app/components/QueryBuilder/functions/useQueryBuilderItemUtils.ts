@@ -1,3 +1,4 @@
+import utilsConfig from '$utilsConfig'
 import { ComparatorEnum } from '$comparatorEnum'
 
 // Types
@@ -7,7 +8,9 @@ import type { ITableFilterItem } from '../../Table/types/table-filter-item.type'
 import type { TableColumn } from '../../Table/models/table-column.model'
 
 // Constants
-import { BOOLEANISH_COMPARATORS, NON_VALUE_COMPARATORS, SELECTOR_COMPARATORS } from '#layers/utilities/shared/constants/comparators-by-category.const'
+const NON_VALUE_COMPARATORS = getNonValueComparators(utilsConfig.dataTypeExtend.nonValueComparators)
+const BOOLEANISH_COMPARATORS = getBooleanishComparators(utilsConfig.dataTypeExtend.booleanishComparators)
+const SELECTOR_COMPARATORS = getSelectorComparators(utilsConfig.dataTypeExtend.selectorComparators)
 
 export function useQueryBuilderItemUtils(item: Ref<ITableFilterItem>) {
   function checkIsBooleanishComparator(comparator: ComparatorEnum) {

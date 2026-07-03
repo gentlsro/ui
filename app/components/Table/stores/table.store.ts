@@ -799,7 +799,7 @@ const [
 
     if (!isNil(countFetched)) {
       totalRows.value = countFetched
-    } else {
+    } else if (!totalRows.value) {
       totalRows.value = rowsFetched.length
     }
 

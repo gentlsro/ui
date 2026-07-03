@@ -6,11 +6,11 @@ import type { ICurrencyInputProps } from './types/currency-input-props.type'
 
 // Functions
 import { useInputUtils } from '../functions/useInputUtils'
-import { isNumeric } from '#layers/utilities/shared/functions/is-numeric'
+import { isNumeric } from '#layers/utilities/app/functions/is-numeric'
 import { useInputValidationUtils } from '../functions/useInputValidationUtils'
 
 // Constants
-import { CURRENCY_DEFAULT } from '#layers/utilities/shared/i18n'
+import { CURRENCY_DEFAULT } from '#layers/utilities/app/i18n'
 import { INPUT_WRAPPER_DEFAULT_PROPS } from '../../InputWrapper/constants/input-wrapper-default-props'
 
 const props = withDefaults(defineProps<ICurrencyInputProps>(), {

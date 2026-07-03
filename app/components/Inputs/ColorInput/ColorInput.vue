@@ -4,7 +4,7 @@ import type { IColorInputProps } from './types/color-props.type'
 
 // Functions
 import { useInputUtils } from '../functions/useInputUtils'
-import { useColors } from '../../../../shared/composables/useColors'
+import { useColors } from '../../../composables/useColors'
 import { useInputValidationUtils } from '../functions/useInputValidationUtils'
 
 // Constants

@@ -7,7 +7,7 @@ import type { DayEvent } from './DayEvent.type'
 import type { DATE_PICKER_DEFAULT_PROPS } from '../constants/datepicker-default-props.constant'
 
 // Models
-import type { DayEnum } from '#layers/utilities/shared/enums/day.enum'
+import type { DayEnum } from '#layers/utilities/app/enums/day.enum'
 
 export type IDatePickerProps = {
   /**

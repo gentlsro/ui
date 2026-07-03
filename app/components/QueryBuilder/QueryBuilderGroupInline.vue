@@ -5,7 +5,7 @@ import type { ComparatorEnum } from '$comparatorEnum'
 import type { IQueryBuilderGroup, IQueryBuilderGroupProps } from './types/query-builder-group-props.type'
 
 // Functions
-import { useColors } from '../../../shared/composables/useColors'
+import { useColors } from '../../composables/useColors'
 
 // Store
 import { useQueryBuilderStore } from './query-builder.store'

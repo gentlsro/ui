@@ -1,5 +1,5 @@
 // Constants
-import { $bp } from '../../shared/constants/breakpoints'
+import { $bp } from '../constants/breakpoints'
 
 export function useMobile() {
   const { isMobile: isMobileDevice } = useDevice()

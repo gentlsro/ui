@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
-import colors from '../../../../shared/constants/colors.json'
+import colors from '../../../constants/colors.json'
 
 // Types
 import type { IColorPickerProps } from './types/color-picker-props.type'
 
 // Functions
-import { useColors } from '../../../../shared/composables/useColors'
+import { useColors } from '../../../composables/useColors'
 
 // Constants
 import { GENERIC_COLORS, THEME_COLORS } from './constants/brand-colors'

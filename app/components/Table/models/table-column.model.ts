@@ -2,6 +2,7 @@ import type { Required } from 'utility-types'
 import type { CSSProperties } from 'vue'
 import type { ExtendedDataType } from '$dataType'
 import { ComparatorEnum } from '$comparatorEnum'
+import utilsConfig from '$utilsConfig'
 
 // Types
 import type { ITableProps } from '../types/table-props.type'
@@ -9,17 +10,15 @@ import type { ITableSortItem } from '../types/table-sort-item.type'
 import type { ITableFilterItem } from '../types/table-filter-item.type'
 import type { ITableDistinctData } from '../types/table-distinct-data.type'
 
-// Constants
-import { DATE_TYPES } from '#layers/utilities/shared/types/datetime.type'
-import { NON_VALUE_COMPARATORS } from '#layers/utilities/shared/constants/comparators-by-category.const'
-import { getDefaultComparatorByDataType } from '#layers/utilities/shared/constants/default-comparator-by-data-type.const'
-
 // Functions
-import { getDateSimpleValue } from '#layers/utilities/shared/composables/useDateUtils'
+import { getDateSimpleValue } from '#layers/utilities/app/composables/useDateUtils'
 import { useRenderTemporaryTableCell } from '../composables/useRenderTemporaryTableCell'
 
 // Components
 import DynamicInput from '../../Inputs/DynamicInput/DynamicInput.vue'
+
+const DATE_TYPES = getDateTypes(utilsConfig.dataTypeExtend.dateTimeDataTypes)
+const NON_VALUE_COMPARATORS = getNonValueComparators(utilsConfig.dataTypeExtend.nonValueComparators)
 
 export class TableColumn<T = IItem> {
   /**
@@ -475,7 +474,10 @@ export class TableColumn<T = IItem> {
 
   setDataType(dataType?: ExtendedDataType, defaultComparator?: ComparatorEnum) {
     this.dataType = dataType || 'string'
-    this.comparator = defaultComparator ?? getDefaultComparatorByDataType(dataType)
+    this.comparator = defaultComparator ?? getDefaultComparatorByDataType(dataType, {
+      comparatorsByDataType: utilsConfig.dataTypeExtend.comparatorsByDataType,
+      defaultComparatorByDataType: utilsConfig.dataTypeExtend.defaultComparatorByDataType,
+    })
   }
 
   async autoFit(payload: {

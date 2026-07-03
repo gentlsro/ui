@@ -4,7 +4,7 @@ import type { IDatePickerProps } from './types/datepicker-props.type'
 import type { DayEvent } from './types/DayEvent.type'
 
 // Models
-import type { Day } from '#layers/utilities/shared/models/day.model'
+import type { Day } from '#layers/utilities/app/models/day.model'
 
 // Constants
 import { DATE_PICKER_DEFAULT_PROPS } from './constants/datepicker-default-props.constant'

@@ -8,6 +8,7 @@ import type { TableColumn } from './models/table-column.model'
 
 // Constants
 import { TABLE_DEFAULT_PROPS } from './constants/table-default-props.constant'
+import { getUtilityValueOptions } from '../../utils/get-utility-value-options'
 
 type IProps = Pick<ITableProps, 'ui'> & {
   column: TableColumn
@@ -44,8 +45,9 @@ const totalText = computed(() => {
     return ''
   }
 
-  const valueFormatted = formatValue(props.total?.value, undefined, {
-    dataType: props.total?.dataType,
+	  const valueFormatted = formatValue(props.total?.value, undefined, {
+	    ...getUtilityValueOptions(),
+	    dataType: props.total?.dataType,
     localeIso: currentLocale.value.code,
     source: { type: 'component', name: 'TableTotalsCell' },
   })

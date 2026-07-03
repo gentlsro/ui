@@ -3,6 +3,7 @@ import type { ITableExport } from '../types/table-export.type'
 
 // Models
 import type { TableColumn } from '../models/table-column.model'
+import { getUtilityValueOptions } from '../../../utils/get-utility-value-options'
 
 export async function tableExportData(payload: {
   rows: IItem[]
@@ -23,9 +24,12 @@ export async function tableExportData(payload: {
 
     columns.forEach(col => {
       const colValueRaw = col.valueGetter(row)
-      const colValue = col.format?.(row, colValueRaw)
-        ?? parseValue(colValueRaw, col.dataType, { dateFormat: 'YYYY-MM-DD HH:mm:ss' })
-        ?? colValueRaw
+	      const colValue = col.format?.(row, colValueRaw)
+	        ?? parseValue(colValueRaw, col.dataType, {
+	          ...getUtilityValueOptions(),
+	          dateFormat: 'YYYY-MM-DD HH:mm:ss',
+	        })
+	        ?? colValueRaw
 
       const colLabel = col._label || col.field
 

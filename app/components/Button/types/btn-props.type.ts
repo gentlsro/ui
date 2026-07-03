@@ -7,7 +7,7 @@ import type { NavigateToOptions } from '#layers/utilities/app/types/navigate-to.
 // Constants
 import type { ButtonPresetDefaults } from '../constants/button-preset.constant'
 import type { BTN_DEFAULT_PROPS } from '../constants/btn-default-props.constant'
-import type { BREAKPOINTS } from '../../../../shared/constants/breakpoints'
+import type { BREAKPOINTS } from '../../../constants/breakpoints'
 
 export type CustomPresets = Record<string, { icon: string, color: string }>
 

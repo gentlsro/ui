@@ -1,5 +1,5 @@
 // Types
-import type { ComponentProps } from '#layers/utilities/shared/types/component-map.type'
+import type { ComponentProps } from '#layers/utilities/app/types/component-map.type'
 import { resolveRegisteredComponent } from './resolve-registered-component'
 
 /**

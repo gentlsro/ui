@@ -7,9 +7,7 @@ const isMonorepo = import.meta.env.VITE_MONOREPO === 'true'
 const { resolve } = createResolver(import.meta.url)
 
 export default defineNuxtConfig({
-  extends: [
-    isMonorepo ? ['../Utilities'] : [],
-  ],
+  extends: ['../Utilities'],
 
   modules: [
     '@nuxtjs/i18n',
@@ -38,9 +36,8 @@ export default defineNuxtConfig({
     ],
 
     dirs: [
-      resolve('./shared/composables'),
-      resolve('./shared/constants'),
-      resolve('./shared/models'),
+      resolve('./app/composables'),
+      resolve('./app/constants'),
       resolve('./app/types'),
       resolve('./app/components/**/*.model.ts'),
     ],
@@ -149,7 +146,7 @@ export default defineNuxtConfig({
           Object.assign(colors, presetAwaited?.theme?.colors)
         }
       }
-      await writeFile(resolve('./shared/constants/colors.json'), JSON.stringify(colors, null, 2), 'utf8')
+      await writeFile(resolve('./app/constants/colors.json'), JSON.stringify(colors, null, 2), 'utf8')
     },
   },
 
