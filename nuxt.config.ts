@@ -1,13 +1,20 @@
 // @unocss-include
 import { createResolver } from 'nuxt/kit'
+import { loadEnv } from 'vite'
 import { writeFile } from 'node:fs/promises'
+import { cwd, env as processEnv } from 'node:process'
 
-const isMonorepo = import.meta.env.VITE_MONOREPO === 'true'
+const env = {
+  ...import.meta.env,
+  ...loadEnv('', processEnv.NUXT_DOTENV_DIR ?? cwd(), ''),
+}
+
+const isMonorepo = env.VITE_MONOREPO === 'true'
 
 const { resolve } = createResolver(import.meta.url)
 
 export default defineNuxtConfig({
-  extends: ['../Utilities'],
+  extends: isMonorepo ? [] : ['github:gentlsro/Utilities#v2.3'],
 
   modules: [
     '@nuxtjs/i18n',

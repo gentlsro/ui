@@ -4,9 +4,9 @@
   "private": true,
   "main": "./nuxt.config.ts",
   "scripts": {
-    "prepare": "nuxt prepare",
     "typecheck": "nuxt typecheck",
-    "update": "npx npm-check-updates -t latest --interactive"
+    "update": "npx npm-check-updates -t latest --interactive",
+    "postinstall": "nuxt prepare"
   },
   "dependencies": {
     "arktype": "2.2.1",
