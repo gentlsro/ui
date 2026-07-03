@@ -1,20 +1,11 @@
 // @unocss-include
 import { createResolver } from 'nuxt/kit'
-import { loadEnv } from 'vite'
 import { writeFile } from 'node:fs/promises'
-import { cwd, env as processEnv } from 'node:process'
-
-const env = {
-  ...import.meta.env,
-  ...loadEnv('', processEnv.NUXT_DOTENV_DIR ?? cwd(), ''),
-}
-
-const isMonorepo = env.VITE_MONOREPO === 'true'
 
 const { resolve } = createResolver(import.meta.url)
 
 export default defineNuxtConfig({
-  extends: isMonorepo ? [] : ['github:gentlsro/Utilities#v2.3'],
+  extends: ['@gentl/utilities'],
 
   modules: [
     '@nuxtjs/i18n',
@@ -119,10 +110,8 @@ export default defineNuxtConfig({
   },
 
   typescript: {
-    includeWorkspace: true,
     tsConfig: {
       compilerOptions: {
-        types: ['nuxt'],
         paths: {
           $uiProps: [resolve('./app/types/component-props.type.ts')],
         },
@@ -187,7 +176,6 @@ export default defineNuxtConfig({
     ],
   },
 
-  // @ts-expect-error - bad types
   icon: {
     size: '1em',
     mode: 'svg',
@@ -199,5 +187,11 @@ export default defineNuxtConfig({
 
   unocss: {
     nuxtLayers: true,
+  },
+
+  eslint: {
+    config: {
+      standalone: false,
+    },
   },
 })
