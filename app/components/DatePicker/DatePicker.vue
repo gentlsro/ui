@@ -17,6 +17,7 @@ const emits = defineEmits<{
 }>()
 
 // Utils
+const uiStore = useUIStore()
 const mergedProps = computed(() => getComponentMergedProps('datePicker', props))
 
 // Constants
@@ -151,7 +152,8 @@ function handleDaySelect(day: Day, event: MouseEvent) {
   }
 
   if (props.multi) {
-    const isCtrl = event.ctrlKey || event.metaKey
+    const isTouch = uiStore.lastPointerDownEvent?.pointerType !== 'mouse'
+    const isCtrl = event.ctrlKey || event.metaKey || isTouch
     const isShift = event.shiftKey
     const _isSelected = isSelected(day)
 
