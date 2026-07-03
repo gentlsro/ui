@@ -1,7 +1,6 @@
 <script setup lang="ts">
 // Types
 import type { IValueFormatterProps } from './types/value-formatter-props.type'
-import { getUtilityValueOptions } from '../../utils/get-utility-value-options'
 
 // Constants
 import { VALUE_FORMATTER_DEFAULT_PROPS } from './constants/value-formatter-default-props.constant'
@@ -23,7 +22,6 @@ const { currentLocale } = useLocale()
 
 const formattedValue = computed(() => {
 	  return formatValue(props.value, props.row, {
-	    ...getUtilityValueOptions(),
 	    dataType: props.dataType,
     format: props.format,
     emptyValue: props.emptyValue,
@@ -36,7 +34,6 @@ const formattedValue = computed(() => {
 
 const formattedOriginalValue = computed(() => {
 	  return formatValue(props.previousValue, props.row, {
-	    ...getUtilityValueOptions(),
 	    dataType: props.dataType,
     format: props.format,
     emptyValue: props.emptyValue,

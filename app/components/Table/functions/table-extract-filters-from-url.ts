@@ -1,6 +1,4 @@
 import { ComparatorEnum } from '$comparatorEnum'
-import utilsConfig from '$utilsConfig'
-
 // Types
 import type { IQueryBuilderGroup } from '../../QueryBuilder/types/query-builder-group-props.type'
 import type { IQueryBuilderItem } from '../../QueryBuilder/types/query-builder-item-props.type'
@@ -8,13 +6,12 @@ import type { IQueryBuilderRow } from '../../QueryBuilder/types/query-builder-ro
 
 // Models
 import type { TableColumn } from '../models/table-column.model'
-import { getUtilityValueOptions } from '../../../utils/get-utility-value-options'
 
 // Constants
 import type { ITableProps } from '../types/table-props.type'
 
 // Constants
-const SELECTOR_COMPARATORS = getSelectorComparators(utilsConfig.dataTypeExtend.selectorComparators)
+const SELECTOR_COMPARATORS = getSelectorComparators()
 const AND_CONDITION = 'AND'
 const OR_CONDITION = 'OR'
 const NOT_AND_CONDITION = 'NOT_AND'
@@ -186,10 +183,9 @@ function parseItemSegment(
       ? value.slice(1, -1).split(',')
       : value
 
-	  const parseValueOptions = getUtilityValueOptions()
 	  const parsedValue = Array.isArray(_value)
-	    ? _value.map(val => parseValue(val, col?.dataType, parseValueOptions))
-	    : parseValue(value, col?.dataType, parseValueOptions)
+	    ? _value.map(val => parseValue(val, col?.dataType))
+	    : parseValue(value, col?.dataType)
 
   const item: IQueryBuilderItem = {
     id: generateUUID(),

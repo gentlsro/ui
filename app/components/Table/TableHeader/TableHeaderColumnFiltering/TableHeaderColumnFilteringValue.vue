@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import utilsConfig from '$utilsConfig'
-
 // Types
 import type { IInputProps } from '../../../Inputs/types/input-props.type'
 import type { ITableFilterItem } from '../../types/table-filter-item.type'
@@ -112,10 +110,10 @@ const isInValueSimple = computed(() => {
 })
 
 const inInputProps = computed(() => {
-  const isNumberDataType = utilsConfig.dataTypeExtend.numberDataTypes.includes(column.value.dataType)
+  const isNumberType = isNumberDataType(column.value.dataType)
 
   // Allow only numbers, commas, spaces and dots
-  if (isNumberDataType) {
+  if (isNumberType) {
     return {
       mask: {
         mask: /^[0-9,.\s]+$/,

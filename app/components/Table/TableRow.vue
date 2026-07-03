@@ -14,7 +14,6 @@ import type { TableColumn } from './models/table-column.model'
 
 // Functions
 import { tableSelectRow } from './functions/table-select-row'
-import { getUtilityValueOptions } from '../../utils/get-utility-value-options'
 
 // Constants
 import { TABLE_DEFAULT_PROPS } from './constants/table-default-props.constant'
@@ -115,7 +114,6 @@ const rowDataArray = computed(() => {
 
           const cellValue = col.valueGetter(row)
 	          const cellFormattedValue = formatValue(cellValue, row, {
-	            ...getUtilityValueOptions(),
 	            format: col.format,
             dataType: col.dataType,
             comparator: col.comparator,

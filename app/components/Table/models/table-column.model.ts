@@ -2,7 +2,6 @@ import type { Required } from 'utility-types'
 import type { CSSProperties } from 'vue'
 import type { ExtendedDataType } from '$dataType'
 import { ComparatorEnum } from '$comparatorEnum'
-import utilsConfig from '$utilsConfig'
 
 // Types
 import type { ITableProps } from '../types/table-props.type'
@@ -17,8 +16,8 @@ import { useRenderTemporaryTableCell } from '../composables/useRenderTemporaryTa
 // Components
 import DynamicInput from '../../Inputs/DynamicInput/DynamicInput.vue'
 
-const DATE_TYPES = getDateTypes(utilsConfig.dataTypeExtend.dateTimeDataTypes)
-const NON_VALUE_COMPARATORS = getNonValueComparators(utilsConfig.dataTypeExtend.nonValueComparators)
+const DATE_TYPES = getDateTypes()
+const NON_VALUE_COMPARATORS = getNonValueComparators()
 
 export class TableColumn<T = IItem> {
   /**
@@ -474,10 +473,7 @@ export class TableColumn<T = IItem> {
 
   setDataType(dataType?: ExtendedDataType, defaultComparator?: ComparatorEnum) {
     this.dataType = dataType || 'string'
-    this.comparator = defaultComparator ?? getDefaultComparatorByDataType(dataType, {
-      comparatorsByDataType: utilsConfig.dataTypeExtend.comparatorsByDataType,
-      defaultComparatorByDataType: utilsConfig.dataTypeExtend.defaultComparatorByDataType,
-    })
+    this.comparator = defaultComparator ?? getDefaultComparatorByDataType(dataType)
   }
 
   async autoFit(payload: {

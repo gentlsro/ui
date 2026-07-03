@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import utilsConfig from '$utilsConfig'
-
 // Types
 import type { IQueryBuilderItem, IQueryBuilderItemProps } from './types/query-builder-item-props.type'
 
@@ -25,7 +23,7 @@ const emits = defineEmits<{
 }>()
 
 // Constants
-const NON_VALUE_COMPARATORS = getNonValueComparators(utilsConfig.dataTypeExtend.nonValueComparators)
+const NON_VALUE_COMPARATORS = getNonValueComparators()
 
 // Store
 const { columns, items } = useQueryBuilderStore()

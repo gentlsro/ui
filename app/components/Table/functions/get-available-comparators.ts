@@ -1,4 +1,3 @@
-import utilsConfig from '$utilsConfig'
 import type { ComparatorEnum } from '$comparatorEnum'
 import type { ExtendedDataType } from '$dataType'
 
@@ -25,11 +24,8 @@ export function getAvailableComparators(
     extraComparators = [],
   } = options
 
-  const selectorComparators = getSelectorComparators(utilsConfig.dataTypeExtend.selectorComparators)
-  const comparatorsByDataType = getComparatorsByDataType(
-    dataType,
-    utilsConfig.dataTypeExtend.comparatorsByDataType,
-  )
+  const selectorComparators = getSelectorComparators()
+  const comparatorsByDataType = getComparatorsByDataType(dataType)
   const comparators: ComparatorEnum[] = [
     ...comparatorsByDataType,
     ...selectorComparators,

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { VNode } from 'vue'
-import utilsConfig from '$utilsConfig'
 import { ComparatorEnum } from '$comparatorEnum'
 
 // Types
@@ -16,7 +15,7 @@ import { getAvailableComparators } from '../../functions/get-available-comparato
 import { useTableStore } from '../../stores/table.store'
 
 // Constants
-const BOOLEANISH_COMPARATORS = getBooleanishComparators(utilsConfig.dataTypeExtend.booleanishComparators)
+const BOOLEANISH_COMPARATORS = getBooleanishComparators()
 
 type IProps = {
   column: TableColumn

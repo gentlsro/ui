@@ -7,7 +7,6 @@ import { TableColumn } from '../models/table-column.model'
 
 // Functions
 import { tableExtractDataFromUrl } from './table-extract-data-from-url'
-import { getUtilityValueOptions } from '../../../utils/get-utility-value-options'
 
 function getUsedProperties(payload: {
   shouldUrlBeUsed?: boolean
@@ -238,14 +237,12 @@ export function tableTransformColumns(payload: {
 	      // Then, we add the filters from the URL / schema and possibly merge the
 	      // filters from the URL / schema with the predefined filters (based on comparator)
 	      const toMerge: FilterItem[] = []
-	      const utilityValueOptions = getUtilityValueOptions()
 
       col.filters = [
         ...col.filters,
         ...filterItems
           .map(filter => {
 	            const parseValueOptions = {
-	              ...utilityValueOptions,
 	              dateFormat: 'YYYY-MM-DD',
 	              comparator: filter.comparator,
 	            }
