@@ -3,12 +3,13 @@ import { createResolver } from 'nuxt/kit'
 import { writeFile } from 'node:fs/promises'
 
 const isMonorepo = import.meta.env.VITE_MONOREPO === 'true'
-const isInstallLayerDeps = true
 
 const { resolve } = createResolver(import.meta.url)
 
 export default defineNuxtConfig({
-  extends: [['../Utilities']],
+  extends: [
+    isMonorepo ? ['../Utilities'] : [],
+  ],
 
   modules: [
     '@nuxtjs/i18n',
@@ -83,6 +84,34 @@ export default defineNuxtConfig({
   build: {
     // No touchy or I cut fingers
     transpile: ['imask', 'vue-imask'],
+  },
+
+  vite: {
+    optimizeDeps: {
+      include: [
+        '@floating-ui/vue',
+        'arktype',
+        'axios',
+        'change-case',
+        'dayjs/esm',
+        'dayjs/esm/locale/cs',
+        'dayjs/esm/locale/en-gb',
+        'dayjs/esm/plugin/customParseFormat',
+        'dayjs/esm/plugin/dayOfYear',
+        'dayjs/esm/plugin/duration',
+        'dayjs/esm/plugin/isBetween',
+        'dayjs/esm/plugin/isSameOrAfter',
+        'dayjs/esm/plugin/isSameOrBefore',
+        'dayjs/esm/plugin/isoWeek',
+        'dayjs/esm/plugin/quarterOfYear',
+        'dayjs/esm/plugin/timezone',
+        'dayjs/esm/plugin/utc',
+        'lodash-es',
+        'perfect-scrollbar',
+        'uuid',
+        'zod',
+      ],
+    },
   },
 
   typescript: {

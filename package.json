@@ -4,7 +4,7 @@
   "private": true,
   "main": "./nuxt.config.ts",
   "scripts": {
-    "dev:prepare": "nuxt prepare",
+    "prepare": "nuxt prepare",
     "typecheck": "nuxt typecheck",
     "update": "npx npm-check-updates -t latest --interactive"
   },
