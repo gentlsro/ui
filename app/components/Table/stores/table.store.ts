@@ -260,7 +260,7 @@ const [
   const splitRowsConfig = ref<ITableProps['splitRows']>(tableProps?.splitRows ?? [])
   const loadMetaData = ref<ITableProps['loadMetaData']>(tableProps?.loadMetaData)
   const loadData = ref<ITableProps['loadData']>(tableProps?.loadData)
-  const queryBuilderProps = ref<ITableProps['queryBuilderProps']>(tableProps?.queryBuilderProps)
+  const queryBuilderProps = ref(tableProps?.queryBuilderProps) as Ref<ITableProps['queryBuilderProps']>
   const autofitConfig = ref<ITableProps['autoFit']>(tableProps?.autoFit)
   const features = ref<ITableProps['features']>(tableProps?.features ?? [])
   const paginationConfig = ref<NonNullable<ITableProps['paginationConfig']>>(
