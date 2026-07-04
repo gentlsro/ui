@@ -1,9 +1,6 @@
 /* eslint-disable perfectionist/sort-exports */
 import colors from '../constants/colors.json'
 
-// Shared
-export { BaseTableColumn } from '../../shared/models/base-table-column.model'
-
 // Constants
 export * from '../constants/breakpoints'
 export * from '../constants/colors-predefined.constant'
