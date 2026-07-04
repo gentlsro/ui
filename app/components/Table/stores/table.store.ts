@@ -387,10 +387,9 @@ const [
 
   // SECTION Columns
   // Columns
-  const internalColumns = ref<TableColumn<any>[]>([])
+  const internalColumns = ref([]) as Ref<TableColumn<any>[]>
 
   const internalColumnsByField = computed(() => {
-    // @ts-ignore Excessive
     return internalColumns.value.reduce((agg, col) => {
       agg[col.field] = col
 
