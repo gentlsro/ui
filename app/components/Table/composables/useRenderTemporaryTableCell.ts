@@ -22,8 +22,9 @@ function splitStringInMiddle(input: string): string {
   const words = input.split(' ')
 
   // If single word or empty, return the input
-  if (words.length <= 1)
+  if (words.length <= 1) {
     return input
+  }
 
   // For two words, return the longer one
   if (words.length === 2) {
@@ -56,8 +57,8 @@ export function useRenderTemporaryTableCell() {
     let cleanup: () => void = () => {}
 
     const value = col.valueGetter(row)
-	    const formattedValue = formatValue(value, row, {
-	      format: col.format,
+    const formattedValue = formatValue(value, row, {
+      format: col.format,
       dataType: col.dataType,
     })
 
