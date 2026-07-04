@@ -26,6 +26,10 @@ export default defineNuxtConfig({
     ],
   },
 
+  future: {
+    compatibilityVersion: 5,
+  },
+
   imports: {
     imports: [
       { name: 'useUIStore', from: resolve('./app/stores/ui.store.ts') },
