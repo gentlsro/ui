@@ -60,7 +60,7 @@ function createStore(injectionKey?: string) {
     const instance = getCurrentInstance()
 
     // Data
-    const columns = ref<TableColumn<any>[]>([])
+    const columns = ref([]) as Ref<TableColumn<any>[]>
     const draggedItem = ref<IQueryBuilderDraggedItem | undefined>()
     const collapsedById = ref<Record<string | number, boolean>>({})
 

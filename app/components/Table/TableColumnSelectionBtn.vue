@@ -26,7 +26,7 @@ const {
 const { fitColumns } = useTableAutoFit()
 
 // Layout
-const visibleColumnsLocal = ref<TableColumn[]>([])
+const visibleColumnsLocal = ref([]) as Ref<TableColumn[]>
 
 const interactiveNonHelperColumns = computed(() => {
   return nonHelperColumns.value.filter(col => !col.nonInteractive)
