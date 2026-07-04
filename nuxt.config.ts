@@ -43,8 +43,8 @@ export default defineNuxtConfig({
     ],
 
     dirs: [
-      resolve('./app/composables'),
       resolve('./app/constants'),
+      resolve('./app/functions'),
       resolve('./app/types'),
       resolve('./app/components/**/*.model.ts'),
     ],
