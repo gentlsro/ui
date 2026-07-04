@@ -32,13 +32,6 @@ export default defineNuxtConfig({
       { name: 'useBreadcrumbs', from: resolve('./app/components/Breadcrumbs/functions/useBreadcrumbs') },
       { name: 'notify', from: resolve('./app/components/Notification/functions/useNotifications') },
     ],
-
-    dirs: [
-      resolve('./app/constants'),
-      resolve('./app/functions'),
-      resolve('./app/types'),
-      resolve('./app/components/**/*.model.ts'),
-    ],
   },
 
   app: {
