@@ -6,6 +6,8 @@ import { extendUIConfig } from './utils/extend-ui-config'
 // Constants
 import { BUTTON_PRESET } from './components/Button/constants/button-preset.constant'
 
+const useUtc = import.meta.env.NUXT_PUBLIC_USE_UTC === 'true'
+
 export const defaultComponentsConfig = {
   // Badge
   badge: {
@@ -307,7 +309,7 @@ export const defaultComponentsConfig = {
         focusInputOnLabelClick: false,
         appendClass: ({ defaults }) => defaults.all,
       },
-      utc: useRuntimeConfig().public.useUtc === 'true',
+      utc: useUtc,
     },
     merge: ['ui'],
   },
@@ -317,7 +319,7 @@ export const defaultComponentsConfig = {
     props: {
       excludedDays: [],
       modelValue: undefined,
-      utc: useRuntimeConfig().public.useUtc === 'true',
+      utc: useUtc,
       ui: {
         containerClass: ({ defaults }) => defaults.all,
         daysGridClass: ({ defaults }) => defaults.all,
