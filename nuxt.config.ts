@@ -26,10 +26,6 @@ export default defineNuxtConfig({
     ],
   },
 
-  future: {
-    compatibilityVersion: 5,
-  },
-
   imports: {
     imports: [
       { name: 'useUIStore', from: resolve('./app/stores/ui.store.ts') },
@@ -76,6 +72,10 @@ export default defineNuxtConfig({
   build: {
     // No touchy or I cut fingers
     transpile: ['imask', 'vue-imask'],
+  },
+
+  future: {
+    compatibilityVersion: 5,
   },
 
   vite: {
