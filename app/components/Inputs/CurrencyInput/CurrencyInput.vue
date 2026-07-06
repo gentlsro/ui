@@ -6,7 +6,6 @@ import type { ICurrencyInputProps } from './types/currency-input-props.type'
 
 // Functions
 import { useInputUtils } from '../functions/useInputUtils'
-import { isNumeric } from '#layers/utilities/app/functions/is-numeric'
 import { useInputValidationUtils } from '../functions/useInputValidationUtils'
 
 // Constants
