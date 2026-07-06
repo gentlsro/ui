@@ -70,7 +70,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      theme: '',
+      theme: undefined as string | undefined,
     },
   },
 
