@@ -3,6 +3,7 @@ import { createResolver } from 'nuxt/kit'
 import { loadEnv } from 'vite'
 import { writeFile } from 'node:fs/promises'
 import { cwd, env as processEnv } from 'node:process'
+import { prepareLocalNuxtLayers } from './prepare-layers'
 
 const env = {
   ...import.meta.env,
@@ -128,6 +129,8 @@ export default defineNuxtConfig({
   },
 
   hooks: {
+    'ready': prepareLocalNuxtLayers,
+
     'unocss:config': async config => {
       console.log('✔ Creating colors.json file...')
       const colors: Record<string, string> = {}
@@ -184,7 +187,6 @@ export default defineNuxtConfig({
     ],
   },
 
-  // @ts-expect-error - bad types
   icon: {
     size: '1em',
     mode: 'svg',
