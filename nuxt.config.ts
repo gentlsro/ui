@@ -1,6 +1,7 @@
 // @unocss-include
 import { createResolver } from 'nuxt/kit'
 import { writeFile } from 'node:fs/promises'
+import { prepareLocalNuxtLayers } from './prepare-layers'
 
 const { resolve } = createResolver(import.meta.url)
 
@@ -117,6 +118,8 @@ export default defineNuxtConfig({
   },
 
   hooks: {
+    'ready': prepareLocalNuxtLayers,
+
     'unocss:config': async config => {
       console.log('✔ Creating colors.json file...')
       const colors: Record<string, string> = {}
