@@ -5,9 +5,6 @@ import type { DurationUnit } from '#layers/utilities/app/composables/useDuration
 // Types
 import type { IDurationInputProps } from './types/duration-input-props.type'
 
-// Functions
-import { isNumeric } from '#layers/utilities/app/functions/is-numeric'
-
 const props = withDefaults(defineProps<IDurationInputProps>(), {
   ...getComponentProps('durationInput'),
 })
