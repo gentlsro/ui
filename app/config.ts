@@ -1,6 +1,5 @@
 // @unocss-include
 
-import { utilsConfig } from '$utilsConfig'
 import type { IUIConfig } from './types/ui-config.type'
 import { extendUIConfig } from './utils/extend-ui-config'
 
@@ -308,7 +307,7 @@ export const defaultComponentsConfig = {
         focusInputOnLabelClick: false,
         appendClass: ({ defaults }) => defaults.all,
       },
-      utc: utilsConfig.general.useUtc,
+      utc: useRuntimeConfig().public.useUtc === 'true',
     },
     merge: ['ui'],
   },
@@ -318,7 +317,7 @@ export const defaultComponentsConfig = {
     props: {
       excludedDays: [],
       modelValue: undefined,
-      utc: utilsConfig.general.useUtc,
+      utc: useRuntimeConfig().public.useUtc === 'true',
       ui: {
         containerClass: ({ defaults }) => defaults.all,
         daysGridClass: ({ defaults }) => defaults.all,
