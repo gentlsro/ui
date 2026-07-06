@@ -117,10 +117,8 @@ export default defineNuxtConfig({
   },
 
   typescript: {
-    includeWorkspace: true,
     tsConfig: {
       compilerOptions: {
-        types: ['nuxt'],
         paths: {
           $uiProps: [resolve('./app/types/component-props.type.ts')],
         },
