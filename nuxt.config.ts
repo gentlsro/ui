@@ -14,7 +14,7 @@ const isMonorepo = env.VITE_MONOREPO === 'true'
 const { resolve } = createResolver(import.meta.url)
 
 export default defineNuxtConfig({
-  extends: isMonorepo ? [] : ['github:gentlsro/Utilities#v2.3'],
+  extends: isMonorepo ? [] : ['github:gentlsro/Utilities#2.3'],
 
   modules: [
     '@nuxtjs/i18n',
