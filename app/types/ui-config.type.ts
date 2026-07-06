@@ -72,6 +72,7 @@ import type { IVirtualScrollerProps } from '../components/VirtualScroller/types/
 import type { IVirtualScrollerVerticalProps } from '../components/VirtualScroller/types/virtual-scroller-vertical-props.type'
 import type { IYearMonthSelectorProps } from '../components/YearMonthSelector/types/year-month-selector-props.type'
 import type { IYearSelectorProps } from '../components/YearSelector/types/year-selector-props.type'
+
 type IConfigItem<T> = {
   props: Partial<T>
   merge?: Array<keyof T>
