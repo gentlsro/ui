@@ -1,7 +1,7 @@
 import { spawn } from 'node:child_process'
 import { existsSync } from 'node:fs'
 import { createRequire } from 'node:module'
-import { dirname, join, relative } from 'node:path'
+import { basename, dirname, join, relative } from 'node:path'
 import { execPath, env as processEnv } from 'node:process'
 import type { Nuxt } from 'nuxt/schema'
 
@@ -9,10 +9,37 @@ const PREPARING_LAYERS_ENV = 'GENTL_PREPARING_NUXT_LAYERS'
 const require = createRequire(import.meta.url)
 const nuxiBin = join(dirname(require.resolve('nuxt/package.json')), 'bin/nuxt.mjs')
 
-function isLocalLibLayer(rootDir: string, layerDir: string) {
-  const relativePath = relative(rootDir, layerDir)
+const WORKSPACE_LAYER_DIRS = ['libs', 'packages'] as const
 
-  return relativePath !== 'libs' && relativePath.split(/[\\/]/)[0] === 'libs'
+function isLocalLibLayer(rootDir: string, layerDir: string) {
+  if (layerDir === rootDir) {
+    return false
+  }
+
+  const relativePath = relative(rootDir, layerDir)
+  if (!relativePath || relativePath === '.') {
+    return false
+  }
+
+  const segments = relativePath.split(/[\\/]/)
+
+  for (const workspaceDir of WORKSPACE_LAYER_DIRS) {
+    const index = segments.indexOf(workspaceDir)
+    if (index === -1 || index >= segments.length - 1) {
+      continue
+    }
+
+    if (segments.slice(0, index).every(segment => segment === '..')) {
+      return true
+    }
+  }
+
+  if (segments[0] === '..' && segments.length === 2 && segments[1] !== '..') {
+    const workspaceParent = basename(dirname(rootDir))
+    return WORKSPACE_LAYER_DIRS.includes(workspaceParent as typeof WORKSPACE_LAYER_DIRS[number])
+  }
+
+  return false
 }
 
 function runLayerPrepare(layerDir: string, rootDir: string) {
