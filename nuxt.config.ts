@@ -33,6 +33,13 @@ export default defineNuxtConfig({
       { name: 'useBreadcrumbs', from: resolve('./app/components/Breadcrumbs/functions/useBreadcrumbs') },
       { name: 'notify', from: resolve('./app/components/Notification/functions/useNotifications') },
     ],
+
+    dirs: [
+      resolve('./app/constants'),
+      resolve('./app/functions'),
+      resolve('./app/types'),
+      resolve('./app/components/**/*.model.ts'),
+    ],
   },
 
   app: {
@@ -66,6 +73,12 @@ export default defineNuxtConfig({
     },
   },
 
+  nitro: {
+    imports: {
+      dirsScanOptions: { fileFilter: () => false },
+    },
+  },
+
   alias: {
     $uiProps: resolve('./app/types/component-props.type.ts'),
   },
@@ -77,34 +90,6 @@ export default defineNuxtConfig({
 
   future: {
     compatibilityVersion: 5,
-  },
-
-  vite: {
-    optimizeDeps: {
-      include: [
-        '@floating-ui/vue',
-        'arktype',
-        'axios',
-        'change-case',
-        'dayjs/esm',
-        'dayjs/esm/locale/cs',
-        'dayjs/esm/locale/en-gb',
-        'dayjs/esm/plugin/customParseFormat',
-        'dayjs/esm/plugin/dayOfYear',
-        'dayjs/esm/plugin/duration',
-        'dayjs/esm/plugin/isBetween',
-        'dayjs/esm/plugin/isSameOrAfter',
-        'dayjs/esm/plugin/isSameOrBefore',
-        'dayjs/esm/plugin/isoWeek',
-        'dayjs/esm/plugin/quarterOfYear',
-        'dayjs/esm/plugin/timezone',
-        'dayjs/esm/plugin/utc',
-        'lodash-es',
-        'perfect-scrollbar',
-        'uuid',
-        'zod',
-      ],
-    },
   },
 
   typescript: {
