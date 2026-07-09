@@ -12,7 +12,7 @@ type IProps = {
 const props = defineProps<IProps>()
 
 // Store
-const { internalColumns } = useTableStore()
+const { internalColumns, tableEl } = useTableStore()
 
 // Layout
 const btnProps = computed(() => {
@@ -22,7 +22,7 @@ const btnProps = computed(() => {
 })
 
 function handleFreezeColumn() {
-  props.column.freeze(internalColumns.value)
+  props.column.freeze(internalColumns.value, unrefElement(tableEl.value) ?? document)
 }
 </script>
 
