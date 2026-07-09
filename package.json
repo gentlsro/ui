@@ -3,6 +3,14 @@
   "type": "module",
   "private": true,
   "main": "./nuxt.config.ts",
+  "gentl": {
+    "nuxtLayer": {
+      "name": "ui",
+      "extends": [
+        "utilities"
+      ]
+    }
+  },
   "scripts": {
     "typecheck": "nuxt typecheck",
     "update": "npx npm-check-updates -t latest --interactive",
