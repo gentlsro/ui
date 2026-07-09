@@ -3,6 +3,14 @@
   "type": "module",
   "private": true,
   "main": "./nuxt.config.ts",
+  "gentl": {
+    "nuxtLayer": {
+      "name": "ui",
+      "extends": [
+        "utilities"
+      ]
+    }
+  },
   "scripts": {
     "nuxt:prepare": "nuxt prepare",
     "typecheck": "nuxt typecheck",

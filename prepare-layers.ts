@@ -17,6 +17,7 @@ function isLocalLibLayer(rootDir: string, layerDir: string) {
   }
 
   const relativePath = relative(rootDir, layerDir)
+
   if (!relativePath || relativePath === '.') {
     return false
   }
@@ -25,6 +26,7 @@ function isLocalLibLayer(rootDir: string, layerDir: string) {
 
   for (const workspaceDir of WORKSPACE_LAYER_DIRS) {
     const index = segments.indexOf(workspaceDir)
+
     if (index === -1 || index >= segments.length - 1) {
       continue
     }
@@ -36,6 +38,7 @@ function isLocalLibLayer(rootDir: string, layerDir: string) {
 
   if (segments[0] === '..' && segments.length === 2 && segments[1] !== '..') {
     const workspaceParent = basename(dirname(rootDir))
+
     return WORKSPACE_LAYER_DIRS.includes(workspaceParent as typeof WORKSPACE_LAYER_DIRS[number])
   }
 
