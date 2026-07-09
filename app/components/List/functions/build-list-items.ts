@@ -7,10 +7,6 @@ import type { IListProps } from '../types/list-props.type'
 import { getListItemKey, getListItemLabel } from './helpers'
 import { highlight } from '#layers/utilities/shared/functions/highlightText'
 
-const { groupData } = useGrouping()
-const { searchData } = useSearching()
-const { sortData } = useSorting()
-
 export async function buildListItems(payload: {
   itemKey?: string
   itemLabel?: IListProps['itemLabel']
@@ -25,6 +21,10 @@ export async function buildListItems(payload: {
   sortingConfig?: IListProps['sortingConfig']
   addedItemById: Record<string, IListItemToAdd>
 }) {
+  const { groupData } = useGrouping()
+  const { searchData } = useSearching()
+  const { sortData } = useSorting()
+
   const {
     itemKey = 'id',
     itemLabel = 'label',
