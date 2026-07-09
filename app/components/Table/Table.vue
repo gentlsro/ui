@@ -135,7 +135,7 @@ syncRef(toRef(mergedProps.value, 'ui'), uiConfig, { direction: 'ltr', immediate:
 // When columns change, make sure to get their real widths
 watch(visibleColumns, cols => {
   nextTick(() => {
-    cols.forEach(col => col._width = col.getWidth())
+    cols.forEach(col => col._width = col.getWidth(tableEl.value))
 
     // Idk, it just requires a second tick re-measure the scrollbars
     nextTick(() => {
@@ -175,7 +175,7 @@ defineExpose(tableGetExposed())
 // On mount, we get the column' real widths
 onMounted(() => {
   nextTick(() => {
-    visibleColumns.value.forEach(col => col._width = col.getWidth())
+    visibleColumns.value.forEach(col => col._width = col.getWidth(tableEl.value))
   })
 })
 </script>

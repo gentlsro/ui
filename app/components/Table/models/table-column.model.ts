@@ -453,8 +453,8 @@ export class TableColumn<T = IItem> {
   /**
    * Gets the width in px (returns a number)
    */
-  getWidth() {
-    const el = document.querySelector(`[data-column="${this.field}"]`)
+  getWidth(scope: ParentNode = document) {
+    const el = scope.querySelector(`[data-column="${this.field}"]`)
 
     if (!el) {
       return 0
@@ -570,7 +570,7 @@ export class TableColumn<T = IItem> {
     this.width = `${Math.ceil(colMinWidth)}px`
   }
 
-  freeze(columns: TableColumn[]) {
+  freeze(columns: TableColumn[], scope: ParentNode = document) {
     const isFrozen = this.frozen
 
     // We unfreeze any other frozen column
@@ -587,7 +587,7 @@ export class TableColumn<T = IItem> {
 
       let left = 0
       columns.slice(0, colIdx + 1).forEach(col => {
-        const colEl = document.querySelector(`[data-column="${col.field}"]`)
+        const colEl = scope.querySelector(`[data-column="${col.field}"]`)
         const colWidthPx = colEl
           ? getComputedStyle(colEl).getPropertyValue('width')
           : '0px'
