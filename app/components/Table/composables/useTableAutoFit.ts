@@ -12,6 +12,7 @@ export function useTableAutoFit() {
     rows,
     internalColumns,
     minimumColumnWidth,
+    tableEl,
     virtualScrollEl,
     visibleColumns,
     uiConfig,
@@ -36,6 +37,8 @@ export function useTableAutoFit() {
       isJustify = !!(ev?.ctrlKey || ev?.metaKey)
     }
 
+    const scope = unrefElement(tableEl.value) ?? document
+
     const resizableColumns = visibleColumns.value
       .filter(col => col.resizable && !col.isHelperCol)
       .slice(0, 25)
@@ -43,7 +46,7 @@ export function useTableAutoFit() {
     const helperColsWidth = internalColumns.value
       .filter(col => col.isHelperCol)
       .reduce((agg, col) => {
-        const colWidth = col.getWidth()
+        const colWidth = col.getWidth(scope)
         agg += colWidth
 
         return agg
@@ -52,7 +55,7 @@ export function useTableAutoFit() {
     // Justify columns ~ will try to distribute the space evenly between all columns
     if (isJustify) {
       let colsTotalWidth = resizableColumns.reduce((agg, col) => {
-        const colWidth = col.getWidth()
+        const colWidth = col.getWidth(scope)
         agg += colWidth
 
         return agg
@@ -86,7 +89,7 @@ export function useTableAutoFit() {
       }
 
       const colsTotalWidth = resizableColumns.reduce((agg, col) => {
-        const colWidth = col.getWidth()
+        const colWidth = col.getWidth(scope)
         agg += colWidth
 
         return agg
@@ -100,7 +103,7 @@ export function useTableAutoFit() {
       }
 
       resizableColumns.forEach(col => {
-        const columnWidth = (virtualScrollWidth / colsTotalWidth) * col.getWidth()
+        const columnWidth = (virtualScrollWidth / colsTotalWidth) * col.getWidth(scope)
         const colWidth = Math.max(columnWidth, col.minWidth || 0, minimumColumnWidth.value)
 
         col.width = `${colWidth}px`
