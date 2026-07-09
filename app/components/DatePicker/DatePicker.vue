@@ -182,12 +182,12 @@ function handleDaySelect(day: Day, event: MouseEvent) {
 
       if (isOneSelected) {
         const selectedDate = (model.value as any[])[0] as Datetime
-        const isSame = $date(selectedDate).isSame(day.dateObj, 'd')
+        const isSame = $date(selectedDate, { utc: props.utc }).isSame(day.dateObj, 'd')
 
         if (isSame) {
           model.value = []
         } else {
-          const datesSorted = [$date(selectedDate), day.dateObj].sort((a, b) => a.diff(b, 'd'))
+          const datesSorted = [$date(selectedDate, { utc: props.utc }), day.dateObj].sort((a, b) => a.diff(b, 'd'))
           let firstDate = datesSorted[0]!
           const lastDate = datesSorted[1]!
           const dates = [firstDate] as Datetime[]
