@@ -26,7 +26,7 @@ export const useUIStore = defineStore('__ui', () => {
         },
       },
     }),
-    domain: rC.public.domain ?? undefined,
+    domain: rC.public.domain || undefined,
     watch: true,
   })
 
