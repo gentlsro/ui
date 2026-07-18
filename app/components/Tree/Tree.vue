@@ -136,8 +136,6 @@ const contentStyle = computed(() => {
       </TreeSearch>
     </slot>
 
-    {{ dndConfig?.enabled }}
-
     <VirtualScroller
       v-if="!loading"
       ref="scrollerEl"
