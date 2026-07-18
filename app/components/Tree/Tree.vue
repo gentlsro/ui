@@ -58,14 +58,14 @@ const nodeHovered = defineModel<ITreeNode<T> | undefined>('nodeHovered')
 // Syncing merged props with store
 syncRef(nodeFocused, storeNodeFocused, { direction: 'both' })
 syncRef(nodeHovered, storeNodeHovered, { direction: 'both' })
-syncRef(toRef(mergedProps.value, 'ui'), ui, { direction: 'ltr' })
-syncRef(toRef(mergedProps.value, 'searchConfig'), searchConfig, { direction: 'ltr' })
-syncRef(toRef(mergedProps.value, 'actionsConfig'), actionsConfig, { direction: 'ltr' })
-syncRef(toRef(mergedProps.value, 'dndConfig'), dndConfig, { direction: 'ltr' })
-syncRef(toRef(mergedProps.value, 'loadChildrenConfig'), loadChildrenConfig, { direction: 'ltr' })
-syncRef(toRef(mergedProps.value, 'collapseConfig'), collapseConfig, { direction: 'ltr' })
-syncRef(toRef(mergedProps.value, 'selectionConfig'), selectionConfig, { direction: 'ltr' })
-syncRef(toRef(mergedProps.value, 'sortingConfig'), sortingConfig, { direction: 'ltr' })
+syncRef(toRef(() => mergedProps.value.ui), ui, { direction: 'ltr' })
+syncRef(toRef(() => mergedProps.value.searchConfig), searchConfig, { direction: 'ltr' })
+syncRef(toRef(() => mergedProps.value.actionsConfig), actionsConfig, { direction: 'ltr' })
+syncRef(toRef(() => mergedProps.value.dndConfig), dndConfig, { direction: 'ltr' })
+syncRef(toRef(() => mergedProps.value.loadChildrenConfig), loadChildrenConfig, { direction: 'ltr' })
+syncRef(toRef(() => mergedProps.value.collapseConfig), collapseConfig, { direction: 'ltr' })
+syncRef(toRef(() => mergedProps.value.selectionConfig), selectionConfig, { direction: 'ltr' })
+syncRef(toRef(() => mergedProps.value.sortingConfig), sortingConfig, { direction: 'ltr' })
 
 // Init keyboard navigation
 if (!props.noKeyboard) {
@@ -135,6 +135,8 @@ const contentStyle = computed(() => {
         </template>
       </TreeSearch>
     </slot>
+
+    {{ dndConfig?.enabled }}
 
     <VirtualScroller
       v-if="!loading"
