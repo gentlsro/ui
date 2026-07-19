@@ -2,9 +2,6 @@
 import type { ITreeNode } from '../types/tree-node.type'
 import type { ITreeProps } from '../types/tree-props.type'
 
-// Utils
-const { searchData } = useSearching()
-
 export async function searchNodes<T extends IItem = IItem>(payload: {
   nodesFlattened: ITreeNode<T>[]
   search: string
@@ -17,6 +14,7 @@ export async function searchNodes<T extends IItem = IItem>(payload: {
   searchConfig?: ITreeProps<T>['searchConfig']
   collapseConfig?: ITreeProps<T>['collapseConfig']
 }): Promise<ITreeNode<T>[]> {
+  const { searchData } = useSearching()
   const {
     nodesFlattened,
     search,
