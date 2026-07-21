@@ -227,7 +227,6 @@ export const TOGGLE_DEFAULT_PROPS = {
 
       return {
         base,
-        size,
         hover,
         all: `${base} ${hover}`,
       } as const
