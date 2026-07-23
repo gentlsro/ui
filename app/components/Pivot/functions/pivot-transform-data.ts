@@ -1,0 +1,228 @@
+import type { IPivotProps } from '../types/pivot-props.type'
+import type { IPivotState } from '../types/pivot-state.type'
+import type { IPivotDataItem } from '../types/pivot-data-item.type'
+import type { IPivotRowItemCell } from '../types/pivot-row-item-cell.type'
+import type { IPivotValueColumnItem } from '../types/pivot-value-column-item.type'
+import type { IPivotTransformResult } from '../types/pivot-transform-result.type'
+import type { IPivotTransformValueField } from './pivot-transform-data-core'
+
+// Functions
+import { getInitialCollapsedGroupIds } from './pivot-group-collapse'
+import { getInitialCollapsedColumnGroupIds } from './pivot-column-collapse'
+import { applyPivotDataFilters } from './pivot-apply-data-filters'
+import { pivotTransformDataCore } from './pivot-transform-data-core'
+
+// Models
+import type { PivotItem } from '../models/pivot-item.model'
+
+type IPivotFormatNumber = (value: number) => string
+
+type IPivotTransformPayload<T extends IItem = IItem> = {
+  data: T[]
+  rows: PivotItem<T>[]
+  columns: PivotItem<T>[]
+  values: IPivotTransformValueField<T>[]
+  items?: PivotItem<T>[]
+  state: IPivotState
+  collapseConfig: IPivotProps<T>['collapseConfig']
+  isFirstRender?: Ref<boolean>
+  formatNumber: IPivotFormatNumber
+  valuesOnRows?: boolean
+}
+
+type IShouldInsertPivotEmptyRowAfterPayload<T> = {
+  row: IPivotDataItem<T>
+  collapsedGroupIds: Set<string>
+  rowFieldCount: number
+}
+
+type IBuildEmptyDataItemPayload<T> = {
+  afterRowId: string
+  rowFields: PivotItem<T>[]
+  valueColumns: IPivotValueColumnItem<T>[]
+  includeMeasureColumn?: boolean
+}
+
+function buildEmptyDataItem<T>(payload: IBuildEmptyDataItemPayload<T>): IPivotDataItem<T> {
+  const { afterRowId, rowFields, valueColumns, includeMeasureColumn } = payload
+  const itemId = `empty:${afterRowId}`
+
+  const cells: IPivotRowItemCell<T>[] = rowFields.map((rowField, index) => ({
+    id: `${itemId}-cell-${index}`,
+    kind: 'empty' as const,
+    rowFieldIndex: index,
+    row: rowField,
+    groupId: '',
+    ref: {} as T,
+  }))
+
+  if (includeMeasureColumn) {
+    cells.push({
+      id: `${itemId}-measure-label`,
+      kind: 'valueLabel' as const,
+      rowFieldIndex: cells.length,
+      row: rowFields.at(-1)!,
+      groupId: '',
+      ref: {} as T,
+    })
+  }
+
+  return {
+    id: itemId,
+    label: '',
+    groupPath: [],
+    groupIds: [],
+    rowItem: {
+      id: itemId,
+      label: '',
+      kind: 'emptyRow',
+      cells,
+    },
+    valueItem: {
+      id: itemId,
+      kind: 'emptyRow',
+      groupIds: [],
+      cells: valueColumns.map((column, index) => ({
+        id: `${itemId}-value-${index}`,
+        kind: 'emptyRow',
+        columnId: column.id,
+        columnPath: column.columnPath,
+        valueField: column.valueField,
+        value: column.value,
+        aggregated: 0,
+        formattedValue: '',
+      })),
+    },
+  }
+}
+
+export function shouldInsertPivotEmptyRowAfter<T>(payload: IShouldInsertPivotEmptyRowAfterPayload<T>) {
+  const { row, collapsedGroupIds, rowFieldCount } = payload
+
+  if (row.rowItem.kind === 'grandTotal' || row.rowItem.kind === 'emptyRow') {
+    return false
+  }
+
+  if (
+    row.measureIndex !== undefined
+    && row.measureCount !== undefined
+    && row.measureIndex < row.measureCount - 1
+  ) {
+    return false
+  }
+
+  if (row.rowItem.kind === 'subtotal') {
+    return true
+  }
+
+  if (row.rowItem.kind !== 'data') {
+    return false
+  }
+
+  for (const cell of row.rowItem.cells) {
+    if (cell.kind !== 'rowLabel') {
+      continue
+    }
+
+    const level = cell.rowFieldIndex
+
+    if (level === undefined) {
+      continue
+    }
+
+    const groupId = row.groupIds[level]
+
+    if (groupId && collapsedGroupIds.has(groupId)) {
+      return true
+    }
+
+    const lastDataRowFieldIndex = rowFieldCount - 1
+
+    if (level === lastDataRowFieldIndex && rowFieldCount <= 2) {
+      return true
+    }
+  }
+
+  return false
+}
+
+export function applyPivotEmptyRows<T>(
+  visibleRows: IPivotDataItem<T>[],
+  payload: {
+    useEmptyRow?: boolean
+    rowFieldCount: number
+    collapsedGroupIds: Set<string>
+    rowFields: PivotItem<T>[]
+    valueColumns: IPivotValueColumnItem<T>[]
+    includeMeasureColumn?: boolean
+  },
+) {
+  if (!payload.useEmptyRow) {
+    return visibleRows
+  }
+
+  const result: IPivotDataItem<T>[] = []
+
+  for (const row of visibleRows) {
+    result.push(row)
+
+    if (shouldInsertPivotEmptyRowAfter({
+      row,
+      collapsedGroupIds: payload.collapsedGroupIds,
+      rowFieldCount: payload.rowFieldCount,
+    })) {
+      result.push(buildEmptyDataItem({
+        afterRowId: row.id,
+        rowFields: payload.rowFields,
+        valueColumns: payload.valueColumns,
+        includeMeasureColumn: payload.includeMeasureColumn,
+      }))
+    }
+  }
+
+  return result
+}
+
+export function pivotTransformData<T extends IItem = IItem>(
+  payload: IPivotTransformPayload<T>,
+): IPivotTransformResult<T> {
+  const {
+    rows: rowFields,
+    columns: columnFields,
+    state,
+    collapseConfig,
+    isFirstRender = ref(true),
+    formatNumber,
+    items,
+    ...corePayload
+  } = payload
+
+  const filteredData = items?.length
+    ? applyPivotDataFilters(corePayload.data, items)
+    : corePayload.data
+
+  const result = pivotTransformDataCore({
+    ...corePayload,
+    data: filteredData,
+    rows: rowFields,
+    columns: columnFields,
+    formatNumber,
+    valuesOnRows: corePayload.valuesOnRows,
+  })
+
+  if (isFirstRender.value && result.data.length > 0) {
+    state.collapsedGroupIds = getInitialCollapsedGroupIds({
+      data: result.data,
+      expandedLevelOnInit: collapseConfig?.expandedLevelOnInit ?? 0,
+      rowFieldCount: rowFields.length,
+    })
+    state.collapsedColumnGroupIds = getInitialCollapsedColumnGroupIds({
+      tree: result.columnTree,
+      expandedLevelOnInit: collapseConfig?.expandedLevelOnInit ?? 0,
+      columnFieldCount: columnFields.length,
+    })
+    isFirstRender.value = false
+  }
+
+  return result
+}

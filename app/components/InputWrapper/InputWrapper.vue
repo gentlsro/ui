@@ -309,7 +309,7 @@ const wrapperProps = computed(() => {
     }
 
     :slotted(.control) {
-      @apply bg-inherit outline-none rounded-$borderRadius;
+      @apply bg-inherit outline-none rounded-$borderRadius min-h-inherit;
 
       font-size: var(--fontSize);
       line-height: var(--lineHeight);
