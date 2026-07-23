@@ -74,17 +74,17 @@ export function useTreeDragAndDrop() {
   }
 
   function handleDragMove(
-    ev: Pick<PointerSensorMoveEvent, 'x' | 'y' | 'target'>,
+    ev: Pick<PointerSensorMoveEvent, 'x' | 'y'>,
     delta = 0,
   ) {
-    const { x, y, target } = ev
+    const { x, y } = ev
     lastY = y
     const elements = document.elementsFromPoint(x, y)
     shouldMove = true
 
-    const draggedOverItem = elements
-      .find(el => el.classList.contains('content-row'))
-      ?.children[0] as HTMLElement
+    const draggedOverContentRow = elements
+      .find(el => el.classList.contains('content-row')) as HTMLElement | undefined
+    const draggedOverItem = draggedOverContentRow?.children[0] as HTMLElement | undefined
 
     const draggedOverItemId = draggedOverItem?.dataset.id
     const draggedOverItemPath = draggedOverItem?.dataset.path
@@ -126,7 +126,7 @@ export function useTreeDragAndDrop() {
       return
     }
 
-    const t = (target as HTMLElement)?.closest('.content-row') as HTMLElement
+    const t = draggedOverContentRow
 
     if (!t) {
       return
@@ -253,7 +253,6 @@ export function useTreeDragAndDrop() {
       handleDragMove({
         x: x.value,
         y: y.value,
-        target: document.elementFromPoint(x.value, y.value),
       })
     })
   }

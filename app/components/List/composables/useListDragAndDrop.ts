@@ -66,8 +66,8 @@ export function useListDragAndDrop(payload?: {
     }
   }
 
-  function handleDragMove(ev: Pick<PointerSensorMoveEvent, 'x' | 'y' | 'target'>, delta = 0) {
-    const { x, y, target } = ev
+  function handleDragMove(ev: Pick<PointerSensorMoveEvent, 'x' | 'y'>, delta = 0) {
+    const { x, y } = ev
     lastY = y
     const elements = document.elementsFromPoint(x, y)
     const listElDom = unrefElement(listEl as any) as HTMLElement
@@ -75,6 +75,7 @@ export function useListDragAndDrop(payload?: {
     const draggedOverItem = elements.find(el => {
       return LIST_ITEM_CLASSES.some(cls => el.classList.contains(cls))
     }) as HTMLElement
+    const draggedOverContentRow = draggedOverItem?.closest('.content-row') as HTMLElement | null
 
     // If we're over a previous item, we don't do anything
     const draggedOverItemId = draggedOverItem?.dataset.id
@@ -104,7 +105,7 @@ export function useListDragAndDrop(payload?: {
       return
     }
 
-    const t = (target as HTMLElement)?.closest('.content-row') as HTMLElement
+    const t = draggedOverContentRow
 
     if (!t) {
       return
@@ -271,7 +272,6 @@ export function useListDragAndDrop(payload?: {
       handleDragMove({
         x: x.value,
         y: y.value,
-        target: document.elementFromPoint(x.value, y.value),
       })
     })
   }
