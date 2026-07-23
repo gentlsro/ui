@@ -103,7 +103,7 @@ function handleMountedFilteringItem(node: VNode) {
 
 watchOnce(isMounted, () => {
   // We automatically add the first filter when the column has no filters
-  if (!column.value.filters.length) {
+  if (!interactiveFilters.value.length) {
     handleAddFilter()
   }
 
