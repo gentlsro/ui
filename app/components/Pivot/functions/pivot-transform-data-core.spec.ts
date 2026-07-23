@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest'
-import { SummaryEnum } from '#layers/utilities/shared/enums/summary.enum'
 import { pivotTransformDataCore } from './pivot-transform-data-core'
 
 const data = [

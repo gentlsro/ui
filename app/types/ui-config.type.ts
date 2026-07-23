@@ -49,6 +49,7 @@ import type { INumberInputProps } from '../components/Inputs/NumberInput/types/n
 import type { IPageDrawerProps } from '../components/Page/types/page-drawer-props.type'
 import type { IPageTitleProps } from '../components/Page/types/page-title-props.type'
 import type { IPageWrapperProps } from '../components/Page/types/page-wrapper-props.type'
+import type { IPivotProps } from '../components/Pivot/types/pivot-props.type'
 import type { IProgressBarProps } from '../components/ProgressBar/types/progress-bar-props.type'
 import type { IQueryBuilderProps } from '../components/QueryBuilder/types/query-builder-props.type'
 import type { IRadioProps } from '../components/Radio/types/radio-props.type'
@@ -135,6 +136,7 @@ export type IUIConfig = {
   pageDrawer: IConfigItem<IPageDrawerProps>
   pageTitle: IConfigItem<IPageTitleProps>
   pageWrapper: IConfigItem<IPageWrapperProps>
+  pivot: IConfigItem<IPivotProps>
   progressBar: IConfigItem<IProgressBarProps>
   queryBuilder: IConfigItem<IQueryBuilderProps>
   radio: IConfigItem<IRadioProps>

@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest'
-import { SummaryEnum } from '#layers/utilities/shared/enums/summary.enum'
 import { PivotItem } from '../models/pivot-item.model'
 import { getInitialCollapsedGroupIds, isPivotRowVisible } from './pivot-group-collapse'
 import { pivotTransformData } from './pivot-transform-data'

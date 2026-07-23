@@ -22,7 +22,6 @@ import { applyPivotSerializedFilters } from './pivot-filter-serialized-data'
 import type { IPivotTransformWorkerFilter } from './pivot-transform-worker-payload'
 
 // Models
-import type { SummaryEnum } from '#layers/utilities/shared/enums/summary.enum'
 import type { PivotItem } from '../models/pivot-item.model'
 
 type IPivotFormatNumber = (value: number) => string
