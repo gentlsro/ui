@@ -1,7 +1,6 @@
 <script setup lang="ts" generic="T extends IItem = IItem">
 import Sortable from 'sortablejs'
 import type { SortableEvent } from 'sortablejs'
-import { SummaryEnum } from '#layers/utilities/shared/enums/summary.enum'
 
 // Models
 import { PivotItem } from './models/pivot-item.model'
@@ -321,6 +320,7 @@ function toggleItem(item: PivotItem<T>) {
     setRoleOrder('value', draftValues.value.filter(value => value !== item))
     clearItemUsage(item)
     normalizeDraftUsage()
+
     return
   }
 
@@ -332,6 +332,7 @@ function handleSortableAdd(role: IPivotConfigRole, evt: SortableEvent) {
 
   if (!item) {
     evt.item.remove()
+
     return
   }
 

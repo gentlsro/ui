@@ -117,6 +117,8 @@ function serializePivotFilters<T extends IItem>(items: PivotItem<T>[] = []) {
 export function serializePivotTransformWorkerPayload<T extends IItem>(
   payload: IPivotTransformCorePayload<T>,
 ): IPivotTransformWorkerPayload<T> {
+  const rC = useRuntimeConfig()
+
   return {
     data: klona(toRaw(payload.data)),
     rows: toRaw(payload.rows).map(serializePivotRow),
@@ -125,6 +127,6 @@ export function serializePivotTransformWorkerPayload<T extends IItem>(
     filters: serializePivotFilters(payload.items),
     locale: payload.locale,
     valuesOnRows: payload.valuesOnRows,
-    transliterate: utilsConfig.general.transliterate,
+    transliterate: rC.public.transliterate,
   }
 }

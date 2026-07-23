@@ -101,26 +101,28 @@ export function useTreeDragAndDrop() {
       return
     }
 
+    if (!draggedOverItem) {
+      dragMeta.value.target = null
+      dragMeta.value.targetParent = { id: '__ROOT__' }
+      dragMeta.value.dropAllowed = dndConfig.value?.canBeDropped?.({
+        draggedNode: draggedNode.value,
+        nodeById: nodeById.value,
+        nodeMetaById: nodeMetaById.value,
+      }) ?? true
+
+      return
+    }
+
     const {
       y: draggedOverItemY,
       height: draggedOverItemHeight,
-    } = draggedOverItem?.getBoundingClientRect() ?? {}
+    } = draggedOverItem.getBoundingClientRect()
 
     const isAbove = y <= (draggedOverItemY + draggedOverItemHeight / 2)
     const isSamePlacement = dragMeta.value?.placement === (isAbove ? 'above' : 'below')
     const isSame = isDraggedOverSameItem && isSamePlacement
 
-    if (isSame || !draggedOverItem || !draggedNode.value) {
-      if (!draggedOverItem && !isSelf) {
-        dragMeta.value.target = null
-        dragMeta.value.targetParent = { id: '__ROOT__' }
-        dragMeta.value.dropAllowed = dndConfig.value?.canBeDropped?.({
-          draggedNode: draggedNode.value!,
-          nodeById: nodeById.value,
-          nodeMetaById: nodeMetaById.value,
-        }) ?? true
-      }
-
+    if (isSame || !draggedNode.value) {
       // shouldMove = false
 
       return

@@ -1,9 +1,5 @@
 import { ComparatorEnum } from '$comparatorEnum'
 
-// Constants
-import { NON_VALUE_COMPARATORS } from '#layers/utilities/shared/constants/comparators-by-category.const'
-import { getDefaultComparatorByDataType } from '#layers/utilities/shared/constants/default-comparator-by-data-type.const'
-
 // Models
 import type { PivotItem } from '../models/pivot-item.model'
 import { TableColumn } from '../../Table/models/table-column.model'
@@ -42,7 +38,7 @@ export function syncTableColumnFiltersToPivotItem<T extends IItem>(
   column: TableColumn<T>,
 ) {
   const filters = column.filters.filter(filter => {
-    const isNonValueComparator = NON_VALUE_COMPARATORS.includes(filter.comparator)
+    const isNonValueComparator = getNonValueComparators().includes(filter.comparator)
     const isUndefinedValue = filter.value === undefined
     const isEmptyArray = Array.isArray(filter.value) && !filter.value.length
 

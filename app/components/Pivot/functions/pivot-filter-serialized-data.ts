@@ -1,6 +1,3 @@
-import { useText } from '#layers/utilities/shared/composables/useText'
-import { filterData } from '#layers/utilities/shared/functions/filter-data'
-
 import type { IPivotTransformWorkerFilter } from './pivot-transform-worker-payload'
 
 export function applyPivotSerializedFilters<T extends IItem>(

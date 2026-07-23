@@ -1,6 +1,3 @@
-// Constants
-import { NON_VALUE_COMPARATORS } from '#layers/utilities/shared/constants/comparators-by-category.const'
-
 // Models
 import type { PivotItem } from '../models/pivot-item.model'
 
@@ -15,7 +12,7 @@ export function isPivotFilterSlotActive(slot: IPivotFilterSlot) {
     return false
   }
 
-  if (NON_VALUE_COMPARATORS.includes(slot.comparator)) {
+  if (getNonValueComparators().includes(slot.comparator)) {
     return true
   }
 

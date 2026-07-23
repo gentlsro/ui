@@ -2,7 +2,6 @@ import type { ExtendedDataType } from '$dataType'
 import type { Required } from 'utility-types'
 
 // Models
-import type { SummaryEnum } from '#layers/utilities/shared/enums/summary.enum'
 import type { ComparatorEnum } from '$comparatorEnum'
 
 export type IPivotValueUsageSlot<T = IItem> = {
