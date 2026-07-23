@@ -1010,6 +1010,39 @@ export const defaultComponentsConfig = {
     merge: ['ui'],
   },
 
+  // Pivot
+  pivot: {
+    props: {
+      config: { useEmptyRow: false, valuesOnRows: false },
+      collapseConfig: { expandedLevelOnInit: 0 },
+      loadData: undefined,
+      loading: undefined,
+      minimumColumnWidth: 80,
+      ui: {
+        containerClass: ({ defaults }) => defaults.all,
+        contentClass: ({ defaults }) => defaults.all,
+        topClass: ({ defaults }) => defaults.all,
+        titleClass: ({ defaults }) => defaults.all,
+        rowItemClass: ({ defaults }) => defaults.all,
+        rowItemCellClass: ({ defaults }) => defaults.all,
+        headerClass: ({ defaults }) => defaults.all,
+        rowHeaderClass: ({ defaults }) => defaults.all,
+        rowHeaderCellClass: ({ defaults }) => defaults.all,
+        valueHeaderClass: ({ defaults }) => defaults.all,
+        valueHeaderCellClass: ({ defaults }) => defaults.all,
+        valueItemClass: ({ defaults }) => defaults.all,
+        valueItemCellClass: ({ defaults }) => defaults.all,
+        valuesScrollerClass: ({ defaults }) => defaults.all,
+        rowsScrollerClass: ({ defaults }) => defaults.all,
+        rowsWrapperClass: ({ defaults }) => defaults.all,
+        loadingClass: ({ defaults }) => defaults.all,
+        columnFiltersClass: ({ defaults }) => defaults.all,
+        filtersClass: ({ defaults }) => defaults.all,
+      },
+    },
+    merge: ['ui', 'loadData', 'collapseConfig', 'config'],
+  },
+
   // Query builder
   queryBuilder: {
     props: {

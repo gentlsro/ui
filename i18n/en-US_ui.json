@@ -95,6 +95,9 @@
     "filterFields": "Filters",
     "rowFields": "Rows",
     "columnFields": "Columns",
-    "dataFields": "Values"
+    "dataFields": "Values",
+    "layout": "Layout",
+    "valuesOnRows": "Show values on rows",
+    "measureField": "Measure"
   }
 }

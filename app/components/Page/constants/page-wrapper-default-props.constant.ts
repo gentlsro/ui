@@ -19,7 +19,7 @@ export const PAGE_WRAPPER_DEFAULT_PROPS = {
     },
 
     contentClass() {
-      const base = 'flex flex-col grow overflow-auto'
+      const base = 'flex flex-col grow overflow-y-auto overflow-x-hidden'
 
       return {
         base,

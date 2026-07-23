@@ -180,6 +180,14 @@ defineExpose({
       />
     </template>
 
+    <template #label="{ labelProps, required }">
+      <slot
+        name="label"
+        :label-props
+        :required
+      />
+    </template>
+
     <template #default="{ inputClass, inputStyle }">
       <input
         :id="inputId"

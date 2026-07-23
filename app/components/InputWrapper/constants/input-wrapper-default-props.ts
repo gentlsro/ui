@@ -41,7 +41,7 @@ export const INPUT_WRAPPER_DEFAULT_PROPS = {
     },
 
     hintClass() {
-      const base = 'color-ca font-rem-12 leading-tight p-y-2px p-x-2'
+      const base = 'color-ca font-rem-12 leading-tight p-y-2px p-x-2 inline-block'
 
       return {
         base,
