@@ -65,7 +65,7 @@ export function useColors() {
   /**
    * Convert hex color to rgba
    */
-  function hexToRgb(hex: string, alpha?: number) {
+  function hexToRgb(hex = '', alpha?: number) {
     hex = hex.replace('#', '')
 
     const r = Number.parseInt(hex.substring(0, 2), 16)
