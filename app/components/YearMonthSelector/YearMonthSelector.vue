@@ -6,6 +6,7 @@ import type { IYearMonthSelectorProps } from './types/year-month-selector-props.
 
 // Functions
 import { useFieldUtils } from '../Field/functions/useFieldUtils'
+import { getYearMonthModelValue } from './functions/get-year-month-model-value'
 
 // Constants
 import { INPUT_WRAPPER_DEFAULT_PROPS } from '../InputWrapper/constants/input-wrapper-default-props'
@@ -34,6 +35,23 @@ const mergedProps = computed(() => {
 // Layout
 const fieldEl = useTemplateRef('fieldEl')
 const model = defineModel<Datetime>()
+const pickerModel = computed<Datetime>({
+  get() {
+    return model.value
+  },
+  set(value) {
+    if (value === null || value === undefined) {
+      model.value = value
+
+      return
+    }
+
+    model.value = getYearMonthModelValue({
+      date: $date(value),
+      valueFormat: props.valueFormat ?? 'timestamp',
+    })
+  },
+})
 
 const modelFormatted = computed(() => {
   if (!model.value) {
@@ -53,14 +71,10 @@ function handlePickerIconClick(ev: MouseEvent) {
     return
   }
 
-  if (isPickerActive.value) {
-    ev.preventDefault()
-    ev.stopPropagation()
+  ev.preventDefault()
+  ev.stopPropagation()
 
-    return
-  }
-
-  isPickerActive.value = true
+  isPickerActive.value = !isPickerActive.value
 }
 
 function handleMonthSelect() {
@@ -76,6 +90,21 @@ const { el, getFieldProps, handleFocusOrClick, isEditable } = useFieldUtils({
 })
 
 const fieldProps = getFieldProps(props)
+
+function handleWrapperMouseDown(ev: MouseEvent) {
+  const target = ev.target as HTMLElement
+  const isFocusable = !!target.closest('.input-wrapper__focusable')
+
+  if (!isEditable.value || !isFocusable || target.closest('button')) {
+    return
+  }
+
+  if (isPickerActive.value) {
+    ev.preventDefault()
+  }
+
+  isPickerActive.value = !isPickerActive.value
+}
 
 // Styles - append
 const appendClass = computed(() => {
@@ -119,6 +148,7 @@ onMounted(() => {
     :has-content="!!model"
     .focus="handleFocusOrClick"
     @focus="!readonly && handleFocusOrClick($event)"
+    @mousedown="handleWrapperMouseDown"
   >
     <span ref="el">
       {{ modelFormatted }}
@@ -140,12 +170,12 @@ onMounted(() => {
       @before-show="pickerState = 'show'"
       @before-hide="pickerState = 'hide'"
     >
-      <YearSelector v-model="model" />
+      <YearSelector v-model="pickerModel" />
 
       <Separator />
 
       <MonthSelectorGrid
-        v-model="model"
+        v-model="pickerModel"
         :utc
         @update:model-value="handleMonthSelect"
       />

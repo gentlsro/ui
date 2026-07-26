@@ -6,11 +6,14 @@ import type { IFieldProps } from '../../Field/types/field-props.type'
 // Constants
 import type { YEAR_MONTH_SELECTOR_DEFAULT_PROPS } from '../constants/year-month-selector-default-props.constant'
 
+export type YearMonthValueFormat = 'timestamp' | 'year-month'
+
 export type IYearMonthSelectorProps = IFieldProps & {
   clearable?: boolean
   emptyValue?: any
   modelValue?: Datetime
   utc?: boolean
+  valueFormat?: YearMonthValueFormat
 
   /**
    * Visual configuration

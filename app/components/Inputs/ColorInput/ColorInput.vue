@@ -63,8 +63,8 @@ const colorSelectedTw = computed(() => {
   return getTwNameFromHex(model.value)
 })
 
-/** `palette-scale` as in Tailwind / Uno (e.g. `blue-600`, `rose-DEFAULT`) */
-const TW_LIKE_COLOR_TOKEN = /^[a-z][a-z0-9]*-(?:\d{1,3}|DEFAULT)$/i
+/** `palette-scale` as in Tailwind / Uno (e.g. `blue-600`, `purple.500`, `rose-DEFAULT`) */
+const TW_LIKE_COLOR_TOKEN = /^[a-z][a-z0-9]*[.-](?:\d{1,3}|DEFAULT)$/i
 
 function handleInputBlur(ev: FocusEvent) {
   if (!props.transformTw || typeof model.value !== 'string') {
