@@ -1675,6 +1675,7 @@ export const defaultComponentsConfig = {
   yearMonthSelector: {
     props: {
       stackLabel: true,
+      valueFormat: 'timestamp' as const,
       ui: {
         appendClass: ({ defaults }) => defaults.all,
         pickerIconClass: ({ defaults }) => defaults.all,
