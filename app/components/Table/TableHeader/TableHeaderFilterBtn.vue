@@ -13,14 +13,14 @@ import { tableFilterValueChangeDebounce } from '../functions/table-filter-value-
 // Store
 import { useTableStore } from '../stores/table.store'
 
+const props = defineProps<IProps>()
+
 // Constants
 import { NON_VALUE_COMPARATORS } from '#layers/utilities/shared/constants/comparators-by-category.const'
 
 type IProps = {
   column: TableColumn
 }
-
-const props = defineProps<IProps>()
 
 // Store
 const { modifiers, internalColumns } = useTableStore()
@@ -49,7 +49,7 @@ const btnClass = computed(() => {
 function handleClick(ev: PointerEvent) {
   const isShift = ev.shiftKey
 
-  // When shift is not used, we open the menu
+  // When shift is not used, we simply open the menu
   if (!isShift) {
     $hide({ all: true, type: 'menu' })
     isMenuOpen.value = true
@@ -57,7 +57,11 @@ function handleClick(ev: PointerEvent) {
     return
   }
 
-  // Otherwise we quick-sort the column
+  // Otherwise (with shift) we quick-sort the column
+  if (!column.value.sortable) {
+    return
+  }
+
   const currentSort = column.value.sort
   let newSort = column.value.sort
 
