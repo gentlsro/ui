@@ -227,6 +227,7 @@ const contentStyle = computed(() => {
           v-if="$slots.title || $slots.header || title"
           name="header"
           :hide
+          :mousedown="handleMoveMouseDown"
         >
           <MenuHeader
             :ui="mergedProps.ui"
