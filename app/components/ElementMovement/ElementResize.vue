@@ -46,15 +46,15 @@ function handleMouseDown(payload: {
     <!-- Top -->
     <span class="resize-handles__top">
       <div
-        class="resize-handles__top-left handle cursor-nw-resize"
+        class="resize-handles__top-left handle cursor-nw-resize rounded-br-1"
         @mousedown.stop.prevent="handleMouseDown({ ev: $event, corner: 'nw' })"
       />
       <div
-        class="resize-handles__top-center grow handle cursor-n-resize"
+        class="resize-handles__top-center grow handle cursor-n-resize rounded-b-1"
         @mousedown.stop.prevent="handleMouseDown({ ev: $event, corner: 'n' })"
       />
       <div
-        class="resize-handles__top-right handle cursor-ne-resize"
+        class="resize-handles__top-right handle cursor-ne-resize rounded-bl-1"
         @mousedown.stop.prevent="handleMouseDown({ ev: $event, corner: 'ne' })"
       />
     </span>
@@ -62,11 +62,11 @@ function handleMouseDown(payload: {
     <!-- Middle - Vertical -->
     <span class="resize-handles__middle">
       <div
-        class="resize-handles__middle-left !h-full handle cursor-w-resize"
+        class="resize-handles__middle-left !h-full handle cursor-w-resize rounded-r-1"
         @mousedown.stop.prevent="handleMouseDown({ ev: $event, corner: 'w' })"
       />
       <div
-        class="resize-handles__middle-right !h-full handle cursor-e-resize"
+        class="resize-handles__middle-right !h-full handle cursor-e-resize rounded-l-1"
         @mousedown.stop.prevent="handleMouseDown({ ev: $event, corner: 'e' })"
       />
     </span>
@@ -74,15 +74,15 @@ function handleMouseDown(payload: {
     <!-- Bottom -->
     <span class="resize-handles__bottom">
       <div
-        class="resize-handles__bottom-left handle cursor-sw-resize"
+        class="resize-handles__bottom-left handle cursor-sw-resize rounded-tr-1"
         @mousedown.stop.prevent="handleMouseDown({ ev: $event, corner: 'sw' })"
       />
       <div
-        class="resize-handles__bottom-center grow handle cursor-s-resize"
+        class="resize-handles__bottom-center grow handle cursor-s-resize rounded-t-1"
         @mousedown.stop.prevent="handleMouseDown({ ev: $event, corner: 's' })"
       />
       <div
-        class="resize-handles__bottom-right handle cursor-se-resize"
+        class="resize-handles__bottom-right handle cursor-se-resize rounded-tl-1"
         @mousedown.stop.prevent="handleMouseDown({ ev: $event, corner: 'se' })"
       />
     </span>
@@ -109,12 +109,12 @@ function handleMouseDown(payload: {
   }
 
   &__middle {
-    @apply top-3 bottom-3;
+    @apply top-1 bottom-1;
   }
 }
 
 .handle {
-  @apply w-3 h-3 pointer-events-auto;
+  @apply w-1 h-1 min-w-1 min-h-1 pointer-events-auto;
 
   &:hover {
     @apply bg-primary/50;
