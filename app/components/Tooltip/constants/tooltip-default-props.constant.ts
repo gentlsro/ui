@@ -41,7 +41,7 @@ export const TOOLTIP_DEFAULT_PROPS = {
     },
 
     descriptionClass() {
-      const base = 'font-rem-12 text-caption'
+      const base = 'font-rem-12 text-caption leading-tight'
 
       return {
         base,
