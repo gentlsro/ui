@@ -45,7 +45,6 @@ export function useBreadcrumbs(
 
       if (title) {
         pageTitle.value = String(title)
-        console.log('🚀 ~ setTitle ~ pageTitle.value:', pageTitle.value)
         useHead({ title: String(title) })
       }
     }
