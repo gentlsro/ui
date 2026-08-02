@@ -147,7 +147,7 @@ const inputInnerContainerStyle = computed(() => {
   }
 
   .input-wrapper__inline-input-input {
-    @apply flex flex-col;
+    @apply flex flex-col overflow-auto;
     grid-area: input;
   }
 
