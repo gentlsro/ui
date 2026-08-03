@@ -30,7 +30,7 @@ export const LIST_DEFAULT_PROPS = {
     },
 
     rowClass() {
-      const base = 'gap-1 p-r-2 rounded-custom truncate font-rem-14 m-b-px w-full'
+      const base = 'gap-1 p-r-2 rounded-custom truncate font-rem-14 m-b-px w-full cursor-default'
       const row = 'flex w-full items-center'
       const col = 'flex flex-col'
 
