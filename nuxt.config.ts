@@ -1,4 +1,5 @@
 // @unocss-include
+import { existsSync } from 'node:fs'
 import { createResolver } from 'nuxt/kit'
 import { loadEnv } from 'vite'
 import { writeFile } from 'node:fs/promises'
@@ -13,9 +14,10 @@ const env = {
 const isMonorepo = env.VITE_MONOREPO === 'true'
 
 const { resolve } = createResolver(import.meta.url)
+const hasUtilitiesLib = isMonorepo || existsSync(resolve('../Utilities'))
 
 export default defineNuxtConfig({
-  extends: isMonorepo ? [] : ['github:gentlsro/Utilities#2.3'],
+  extends: hasUtilitiesLib ? [] : ['github:gentlsro/Utilities#2.3'],
 
   modules: [
     '@nuxtjs/i18n',
@@ -82,12 +84,6 @@ export default defineNuxtConfig({
     },
   },
 
-  nitro: {
-    imports: {
-      dirsScanOptions: { fileFilter: () => false },
-    },
-  },
-
   alias: {
     $uiProps: resolve('./app/types/component-props.type.ts'),
   },
@@ -99,6 +95,12 @@ export default defineNuxtConfig({
 
   future: {
     compatibilityVersion: 5,
+  },
+
+  nitro: {
+    imports: {
+      dirsScanOptions: { fileFilter: () => false },
+    },
   },
 
   typescript: {
