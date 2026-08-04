@@ -36,6 +36,7 @@ const {
   performance,
   fetchAndSetData,
   isFirstFetch,
+  visibleData,
   emits,
 } = usePivotStore({ props })
 
@@ -110,7 +111,8 @@ onMounted(() => {
     </slot>
 
     <slot name="content">
-      <PivotContent />
+      <PivotContent v-if="visibleData.length" />
+      <PivotEmpty v-else />
     </slot>
 
     <slot name="loading">
