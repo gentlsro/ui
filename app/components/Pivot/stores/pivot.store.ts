@@ -5,6 +5,7 @@ import type { IPivotDataItem } from '../types/pivot-data-item.type'
 import type { IPivotValueColumnItem, IPivotValueHeaderCell } from '../types/pivot-value-column-item.type'
 import type { IPivotColumnTreeNode } from '../functions/pivot-column-collapse'
 import type { IPivotTransformEstimate } from '../types/pivot-transform-estimate.type'
+import type { IPivotEmitFncs } from '../types/pivot-emits.type'
 
 // Functions
 import { usePivotTransform } from '../composables/usePivotTransform'
@@ -105,6 +106,13 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     const transformError = shallowRef<Error>()
     const minimumColumnWidth = toRef(props ?? {}, 'minimumColumnWidth', 80)
     const hoveredIdx = ref<number | undefined>()
+    const rowClickable = computed(() => props?.rowClickable ?? false)
+    const cellClickable = computed(() => props?.cellClickable ?? false)
+
+    const emits = ref<IPivotEmitFncs<T>>({
+      rowClick: () => {},
+      cellClick: () => {},
+    })
 
     const title = computed(() => {
       if (typeof props?.title === 'function') {
@@ -554,6 +562,11 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       minimumColumnWidth,
       state,
       hoveredIdx,
+      rowClickable,
+      cellClickable,
+
+      // Emits
+      emits,
       title,
 
       // Data fetching

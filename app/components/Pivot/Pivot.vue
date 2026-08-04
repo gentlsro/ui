@@ -1,6 +1,7 @@
 <script setup lang="ts" generic="T extends IItem = IItem" vapor>
 // Types
 import type { IPivotProps } from './types/pivot-props.type'
+import type { IPivotEmits } from './types/pivot-emits.type'
 
 // Functions
 import { pivotGetExposed } from './functions/pivot-get-exposed'
@@ -15,6 +16,8 @@ import { PIVOT_ID_KEY, usePivotStore } from './stores/pivot.store'
 const props = withDefaults(defineProps<IPivotProps<T>>(), {
   ...getComponentProps('pivot'),
 })
+
+const emit = defineEmits<IPivotEmits<T>>()
 
 const mergedProps = computed(() => {
   return getComponentMergedProps('pivot', props)
@@ -33,7 +36,13 @@ const {
   performance,
   fetchAndSetData,
   isFirstFetch,
+  emits,
 } = usePivotStore({ props })
+
+emits.value = {
+  rowClick: payload => emit('click:row', payload),
+  cellClick: payload => emit('click:cell', payload),
+}
 
 // Syncing merged props with store
 syncRef(toRef(mergedProps.value, 'ui'), ui, { direction: 'ltr' })

@@ -10,6 +10,16 @@ import type { IPivotPerformanceConfig } from '../constants/pivot-performance.con
 
 export type IPivotProps<T = IItem> = {
   /**
+   * Whether row headers emit click:row interactions
+   */
+  rowClickable?: boolean
+
+  /**
+   * Whether value cells emit click:cell interactions
+   */
+  cellClickable?: boolean
+
+  /**
    * The title of the pivot
    */
   title?: string | (() => string)

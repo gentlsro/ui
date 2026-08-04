@@ -2,6 +2,7 @@
 // Types
 import type { IPivotValueItem } from './types/pivot-value-item.type'
 import type { IPivotValueItemCell } from './types/pivot-value-item-cell.type'
+import type { IPivotDataItem } from './types/pivot-data-item.type'
 
 // Functions
 import { aggregatePivotValueCellsForColumn } from './functions/pivot-column-collapse'
@@ -18,6 +19,7 @@ import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
 
 type IProps = {
   item: IPivotValueItem<T>
+  row: IPivotDataItem<T>
 }
 
 const props = defineProps<IProps>()
@@ -126,6 +128,7 @@ const valueItemStyle = computed(() => {
       :key="cell.id"
       :item="cell"
       :column="visibleValueColumns[index]!"
+      :row
     />
   </div>
 </template>

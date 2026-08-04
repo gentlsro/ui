@@ -99,6 +99,7 @@ export const PIVOT_DEFAULT_PROPS = {
       const bg = 'bg-slate-100 dark:bg-dark-950'
       const alternate = '[&.is-odd]:(bg-white dark:bg-dark-900)'
       const hovered = '[&.is-hovered]:(!bg-slate-200 !dark:bg-black outline-1 outline-primary outline-solid outline-offset--1)'
+      const clickable = '[&.is-clickable]:(cursor-pointer) [&.is-clickable:focus-visible]:(outline-2 outline-primary outline-solid outline-offset--2)'
 
       return {
         base,
@@ -107,8 +108,9 @@ export const PIVOT_DEFAULT_PROPS = {
         border,
         alternate,
         hovered,
+        clickable,
         bg,
-        all: `${base} ${subtotal} ${grandTotal} ${bg} ${border} ${alternate} ${hovered}`,
+        all: `${base} ${subtotal} ${grandTotal} ${bg} ${border} ${alternate} ${hovered} ${clickable}`,
       } as const
     },
 
@@ -179,13 +181,15 @@ export const PIVOT_DEFAULT_PROPS = {
       const border = 'border-r border-light-8 dark:border-dark-6'
       const total = '[&.is-total]:(font-bold)'
       const grandTotal = '[&.is-grand-total]:(font-bold)'
+      const clickable = '[&.is-clickable]:(cursor-pointer) [&.is-clickable:focus-visible]:(outline-2 outline-primary outline-solid outline-offset--2)'
 
       return {
         base,
         total,
         grandTotal,
+        clickable,
         border,
-        all: `${base} ${total} ${grandTotal} ${border}`,
+        all: `${base} ${total} ${grandTotal} ${border} ${clickable}`,
       } as const
     },
 

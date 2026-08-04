@@ -4,6 +4,7 @@ import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
 const mocks = vi.hoisted(() => ({
   disposers: [] as Array<() => void>,
+  throwDataCloneOn: undefined as string | undefined,
   workers: [] as any[],
 }))
 
@@ -20,6 +21,10 @@ vi.mock('../workers/pivot-transform.worker?worker', () => ({
 
     postMessage(message: any) {
       this.messages.push(message)
+
+      if (mocks.throwDataCloneOn === message.type) {
+        throw new DOMException('The object could not be cloned.', 'DataCloneError')
+      }
     }
 
     terminate() {
@@ -70,6 +75,7 @@ beforeAll(async () => {
 
 beforeEach(() => {
   mocks.disposers = []
+  mocks.throwDataCloneOn = undefined
   mocks.workers = []
 })
 
@@ -191,4 +197,16 @@ describe('pivot transform job lifecycle', () => {
 
     expect(worker.messages.filter((message: any) => message.type === 'SET_DATA')).toHaveLength(1)
   })
+
+  it.each(['SET_DATA', 'TRANSFORM']) (
+    'falls back to the main thread when %s cannot be cloned',
+    async messageType => {
+      mocks.throwDataCloneOn = messageType
+      const transform = usePivotTransform()
+      const result = await transform.transformPivotData(createPayload())
+
+      expect(result.data).not.toHaveLength(0)
+      expect(mocks.workers[0].terminated).toBe(true)
+    },
+  )
 })

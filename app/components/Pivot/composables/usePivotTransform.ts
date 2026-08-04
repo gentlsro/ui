@@ -70,6 +70,13 @@ function createPivotAbortError(message = 'Pivot transform was superseded.') {
   return new DOMException(message, 'AbortError')
 }
 
+function isPivotDataCloneError(error: unknown) {
+  return !!error
+    && typeof error === 'object'
+    && 'name' in error
+    && error.name === 'DataCloneError'
+}
+
 function applyPivotTransformState<T extends IItem>(
   payload: IPivotTransformPayload<T>,
   result: IPivotTransformResult<T>,
@@ -335,10 +342,26 @@ export function usePivotTransform() {
       hasSummaryFormat: payload.values.some(value => !!value.summaryFormat),
     })
 
-    const coreResult = useWorker
-      ? await runWorkerTransform(payload)
-      : await runMainThreadTransform(payload)
-    const result = useWorker
+    let usedWorker = useWorker
+    let coreResult: IPivotTransformResult<T>
+
+    if (usedWorker) {
+      try {
+        coreResult = await runWorkerTransform(payload)
+      } catch (error) {
+        if (!isPivotDataCloneError(error)) {
+          throw error
+        }
+
+        workerTerminate()
+        usedWorker = false
+        coreResult = await runMainThreadTransform(payload)
+      }
+    } else {
+      coreResult = await runMainThreadTransform(payload)
+    }
+
+    const result = usedWorker
       ? rehydratePivotTransformResult(coreResult, {
           rows: payload.rows,
           values: payload.values,

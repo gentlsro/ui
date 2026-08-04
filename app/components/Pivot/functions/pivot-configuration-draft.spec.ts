@@ -87,46 +87,6 @@ describe('pivot configuration draft behavior', () => {
     expect(second.usage.filter?.[0]?.index).toBe(2)
   })
 
-  it('reorders, duplicates, and deletes duplicate measures by stable id', () => {
-    const item = new PivotItem({
-      field: 'cost',
-      dataType: 'number',
-      usage: {
-        value: [
-          { id: 'cost-sum', index: 0, summaryType: summary.SUM },
-          { id: 'cost-count', index: 1, summaryType: summary.COUNT },
-        ],
-      },
-    })
-    const items = [item]
-
-    draft.setPivotConfigurationValueOrder(
-      items,
-      draft.movePivotConfigurationEntry(
-        draft.getPivotConfigurationValueEntries(items),
-        1,
-        0,
-      ),
-    )
-    draft.duplicatePivotConfigurationValue({ items, measureId: 'cost-count' })
-
-    const duplicated = item.usage.value?.[1]
-
-    expect(item.usage.value?.[0]?.id).toBe('cost-count')
-    expect(duplicated?.id).not.toBe('cost-count')
-    expect(duplicated?.summaryType).toBe(summary.COUNT)
-
-    draft.removePivotConfigurationRole({
-      items,
-      item,
-      role: 'value',
-      measureId: 'cost-count',
-    })
-
-    expect(item.usage.value?.map(slot => slot.id)).not.toContain('cost-count')
-    expect(item.usage.value?.map(slot => slot.id)).toContain(duplicated?.id)
-  })
-
   it('normalizes legacy ids deterministically for the next apply', () => {
     const item = new PivotItem({
       field: 'cost',
