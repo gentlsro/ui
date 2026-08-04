@@ -122,6 +122,7 @@ const rowsScrollerStyle = computed(() => {
       <template #default="{ row, index }">
         <PivotValueItem
           :item="row.valueItem"
+          :row
           :class="{ 'is-odd': !(index % 2), 'is-hovered': hoveredIdx === index }"
           @mouseenter="handleMouseEnter(index)"
           @mouseleave="handleMouseLeave"

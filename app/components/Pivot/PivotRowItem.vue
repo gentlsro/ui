@@ -15,7 +15,7 @@ type IProps = {
 
 const props = defineProps<IProps>()
 
-const { ui, promotedRowLabelLevelsById } = usePivotStore()
+const { ui, promotedRowLabelLevelsById, rowClickable, emits } = usePivotStore<T>()
 
 const promotedLevels = computed(() => {
   return promotedRowLabelLevelsById.value.get(props.row.id) ?? []
@@ -38,13 +38,35 @@ const rowItemClass = computed(() => {
 const rowItemStyle = computed(() => {
   return ui.value?.rowItemStyle?.()
 })
+
+function handleRowClick(ev: MouseEvent | KeyboardEvent) {
+  if (!rowClickable.value) {
+    return
+  }
+
+  emits.value.rowClick({ ev, row: props.row })
+}
+
+function handleRowKeydown(ev: KeyboardEvent) {
+  if (ev.target !== ev.currentTarget) {
+    return
+  }
+
+  handleRowClick(ev)
+}
 </script>
 
 <template>
   <div
     class="pivot-row-item"
-    :class="rowItemClass"
+    :class="[rowItemClass, { 'is-clickable': rowClickable }]"
     :style="rowItemStyle"
+    :role="rowClickable ? 'row' : undefined"
+    :tabindex="rowClickable ? 0 : undefined"
+    :aria-label="rowClickable ? row.label : undefined"
+    :aria-keyshortcuts="rowClickable ? 'Enter Space' : undefined"
+    @click="handleRowClick"
+    @keydown.enter.space.prevent="handleRowKeydown"
   >
     <PivotRowItemCell
       v-for="cell in row.rowItem.cells"

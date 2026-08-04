@@ -16,7 +16,6 @@ import {
 } from './functions/pivot-measure-id'
 import {
   addPivotConfigurationRole,
-  duplicatePivotConfigurationValue,
   getPivotConfigurationValueEntries,
   isPivotConfigurationItemUsed,
   movePivotConfigurationEntry,
@@ -229,10 +228,6 @@ function handleSortableUpdate(role: IPivotConfigurationRole, evt: SortableEvent)
   }
 
   normalizeDraftUsage()
-}
-
-function duplicateValueEntry(entry: IPivotConfigurationValueEntry<T>) {
-  duplicatePivotConfigurationValue({ items: draftItems.value, measureId: entry.id })
 }
 
 function handleEntryKeydown(
@@ -641,15 +636,6 @@ onBeforeUnmount(() => {
                   </div>
                 </Menu>
               </Btn>
-
-              <Btn
-                size="auto"
-                icon="i-material-symbols:content-copy-outline-rounded"
-                class="pivot-configuration__no-drag"
-                :aria-label="$t('pivot.duplicateMeasure', { field: entry.item._label })"
-                :tooltip="{ label: $t('pivot.duplicateMeasure', { field: entry.item._label }) }"
-                @click="duplicateValueEntry(entry)"
-              />
 
               <Btn
                 preset="TRASH"

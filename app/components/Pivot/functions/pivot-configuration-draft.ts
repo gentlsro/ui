@@ -212,29 +212,6 @@ export function removePivotConfigurationRole<T extends IItem>(payload: {
   normalizePivotConfigurationUsage(items)
 }
 
-export function duplicatePivotConfigurationValue<T extends IItem>(payload: {
-  items: PivotItem<T>[]
-  measureId: string
-}) {
-  const entries = getPivotConfigurationValueEntries(payload.items)
-  const index = entries.findIndex(entry => entry.id === payload.measureId)
-  const entry = entries[index]
-
-  if (!entry) {
-    return
-  }
-
-  const id = createPivotMeasureId(entry.item.field)
-
-  entries.splice(index + 1, 0, {
-    item: entry.item,
-    slot: { ...entry.slot, id, index: index + 1 },
-    id,
-  })
-  setPivotConfigurationValueOrder(payload.items, entries)
-  normalizePivotConfigurationUsage(payload.items)
-}
-
 export function togglePivotConfigurationItem<T extends IItem>(payload: {
   items: PivotItem<T>[]
   item: PivotItem<T>
