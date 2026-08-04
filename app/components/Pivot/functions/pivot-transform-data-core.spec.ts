@@ -1,5 +1,14 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { pivotTransformDataCore } from './pivot-transform-data-core'
+
+const summary = {
+  SUM: 'SUM' as SummaryEnum,
+  COUNT: 'COUNT' as SummaryEnum,
+  AVERAGE: 'AVERAGE' as SummaryEnum,
+  MEDIAN: 'MEDIAN' as SummaryEnum,
+}
+
+vi.stubGlobal('SummaryEnum', summary)
 
 const data = [
   { center: 'Frigo', month: '2026-01', revenue: 100, cost: 40 },
@@ -10,8 +19,8 @@ const data = [
 const rows = [{ field: 'center' as const, dataType: 'string' as const, minWidth: 100, width: '120px', widthResolved: '120px', resizable: true }]
 const columns = [{ field: 'month' as const }]
 const values = [
-  { field: 'revenue' as const, summaryType: SummaryEnum.SUM, widthResolved: '80px', _label: 'Revenue' },
-  { field: 'cost' as const, summaryType: SummaryEnum.SUM, widthResolved: '80px', _label: 'Cost' },
+  { measureId: 'revenue-sum', field: 'revenue' as const, summaryType: summary.SUM, widthResolved: '80px', _label: 'Revenue' },
+  { measureId: 'cost-sum', field: 'cost' as const, summaryType: summary.SUM, widthResolved: '80px', _label: 'Cost' },
 ]
 
 describe('pivotTransformDataCore valuesOnRows', () => {

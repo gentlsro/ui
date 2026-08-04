@@ -12,6 +12,7 @@ export type IPivotDataItem<T = IItem> = {
   valueItem: IPivotValueItem<T>
 
   activeValueField?: ObjectKey<T>
+  activeMeasureId?: string
   measureIndex?: number
   measureCount?: number
 }

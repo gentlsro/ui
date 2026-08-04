@@ -1,8 +1,6 @@
-import { klona } from 'klona/full'
 import { toRaw } from 'vue'
 import type { ExtendedDataType } from '$dataType'
 import type { ComparatorEnum } from '$comparatorEnum'
-import { utilsConfig } from '$utilsConfig'
 
 // Models
 import type { PivotItem } from '../models/pivot-item.model'
@@ -26,7 +24,7 @@ export type IPivotTransformWorkerColumn<T extends IItem = IItem> = IPivotTransfo
 
 export type IPivotTransformWorkerValue<T extends IItem = IItem> = Pick<
   IPivotTransformValueField<T>,
-  'field' | 'summaryType' | 'widthResolved'
+  'measureId' | 'field' | 'summaryType' | 'widthResolved'
 > & {
   dataType?: PivotItem<T>['dataType']
   minWidth?: PivotItem<T>['minWidth']
@@ -95,6 +93,7 @@ function serializePivotValue<T extends IItem>(value: IPivotTransformValueField<T
   const raw = toRaw(value) as IPivotTransformValueField<T> & Partial<PivotItem<T>>
 
   return {
+    measureId: raw.measureId,
     field: raw.field,
     summaryType: raw.summaryType,
     dataType: raw.dataType,
@@ -120,7 +119,7 @@ export function serializePivotTransformWorkerPayload<T extends IItem>(
   const rC = useRuntimeConfig()
 
   return {
-    data: klona(toRaw(payload.data)),
+    data: toRaw(payload.data),
     rows: toRaw(payload.rows).map(serializePivotRow),
     columns: toRaw(payload.columns).map(serializePivotColumn),
     values: toRaw(payload.values).map(serializePivotValue),

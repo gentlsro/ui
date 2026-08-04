@@ -87,10 +87,11 @@ function buildEmptyDataItem<T>(payload: IBuildEmptyDataItemPayload<T>): IPivotDa
         kind: 'emptyRow',
         columnId: column.id,
         columnPath: column.columnPath,
+        measureId: column.measureId,
         valueField: column.valueField,
         value: column.value,
         aggregated: 0,
-        formattedValue: '',
+        hasValue: false,
       })),
     },
   }

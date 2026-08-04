@@ -16,6 +16,18 @@ export function getPivotTransformComplexity(payload: {
   return dataCount * Math.max(1, dimensions)
 }
 
+export function getPivotWorstCaseOutputCells(payload: {
+  dataCount: number
+  rowCount: number
+  columnCount: number
+  valueCount: number
+}) {
+  const rowCardinality = payload.rowCount ? payload.dataCount : 1
+  const columnCardinality = payload.columnCount ? payload.dataCount : 1
+
+  return rowCardinality * columnCardinality * Math.max(1, payload.valueCount)
+}
+
 export function shouldUsePivotTransformWorker(payload: {
   dataCount: number
   rowCount: number
@@ -32,4 +44,5 @@ export function shouldUsePivotTransformWorker(payload: {
   }
 
   return getPivotTransformComplexity(payload) >= PIVOT_TRANSFORM_WORKER_THRESHOLD
+    || getPivotWorstCaseOutputCells(payload) >= PIVOT_TRANSFORM_WORKER_THRESHOLD
 }

@@ -5,6 +5,7 @@ import type { Required } from 'utility-types'
 import type { ComparatorEnum } from '$comparatorEnum'
 
 export type IPivotValueUsageSlot<T = IItem> = {
+  id?: string
   index: number
   summaryType?: SummaryEnum
   summaryFormat?: (row: T) => number

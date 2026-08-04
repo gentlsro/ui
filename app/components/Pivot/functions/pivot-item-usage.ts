@@ -2,6 +2,7 @@
 import type { IPivotFilterSlot } from './pivot-filter-usage'
 import type { IPivotValueUsageSlot, PivotItem } from '../models/pivot-item.model'
 import type { IPivotTransformValueField } from './pivot-transform-data-core'
+import { createPivotMeasureId, resolvePivotMeasureId } from './pivot-measure-id'
 
 type IPivotSingleUsageRole = 'row' | 'column'
 type IPivotMultiUsageRole = 'value' | 'filter'
@@ -20,6 +21,7 @@ export function resolvePivotValueField<T extends IItem>(
   slot: IPivotValueUsageSlot<T>,
 ): IPivotTransformValueField<T> {
   return {
+    measureId: resolvePivotMeasureId(item.field, slot),
     field: item.field,
     summaryType: slot.summaryType ?? SummaryEnum.SUM,
     summaryFormat: slot.summaryFormat,
@@ -40,9 +42,27 @@ export function resolvePivotValueFields<T extends IItem>(
     }
   }
 
-  return entries
+  const fields = entries
     .toSorted((a, b) => a.slot.index - b.slot.index)
     .map(({ item, slot }) => resolvePivotValueField(item, slot))
+
+  const fieldCounts = new Map<string, number>()
+
+  for (const field of fields) {
+    const key = String(field.field)
+
+    fieldCounts.set(key, (fieldCounts.get(key) ?? 0) + 1)
+  }
+
+  return fields.map(field => ({
+    ...field,
+    _label: fieldCounts.get(String(field.field))! > 1
+      ? $t('pivot.aggregatedMeasureLabel', {
+          summary: $t(`summary.${field.summaryType}`),
+          field: field._label,
+        })
+      : field._label,
+  }))
 }
 
 export function getPivotItemsByMultiUsage<T extends IItem>(
@@ -112,22 +132,26 @@ export function syncPivotMultiUsageIndices<T extends IItem>(payload: {
       delete item.usage.filter
     }
 
-    ordered.forEach((item, index) => {
+    let nextIndex = 0
+
+    ordered.forEach(item => {
       if (!filterItems.has(item)) {
         return
       }
 
       item.usage.filter ??= []
 
-      const slot = previousSlots.get(item)?.shift()
+      const slots = previousSlots.get(item) ?? []
 
-      if (slot) {
-        item.usage.filter.push({ ...slot, index })
+      if (slots.length) {
+        for (const slot of slots) {
+          item.usage.filter.push({ ...slot, index: nextIndex++ })
+        }
 
         return
       }
 
-      item.usage.filter.push({ index } as IPivotFilterSlot<T>)
+      item.usage.filter.push({ index: nextIndex++ } as IPivotFilterSlot<T>)
     })
 
     return
@@ -149,12 +173,22 @@ export function syncPivotMultiUsageIndices<T extends IItem>(payload: {
 
     if (!slot) {
       item.usage.value ??= []
-      item.usage.value.push({ index })
+      item.usage.value.push({
+        id: createPivotMeasureId(item.field),
+        index,
+        summaryType: isNumberDataType(item.dataType)
+          ? SummaryEnum.SUM
+          : SummaryEnum.COUNT,
+      })
 
       return
     }
 
     item.usage.value ??= []
-    item.usage.value.push({ ...slot, index })
+    item.usage.value.push({
+      ...slot,
+      id: resolvePivotMeasureId(item.field, slot),
+      index,
+    })
   })
 }

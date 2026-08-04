@@ -1,6 +1,15 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { getInitialCollapsedGroupIds, isPivotRowCellHiddenByCollapsedAncestor, isPivotRowVisible } from './pivot-group-collapse'
 import { pivotTransformDataCore } from './pivot-transform-data-core'
+
+const summary = {
+  SUM: 'SUM' as SummaryEnum,
+  COUNT: 'COUNT' as SummaryEnum,
+  AVERAGE: 'AVERAGE' as SummaryEnum,
+  MEDIAN: 'MEDIAN' as SummaryEnum,
+}
+
+vi.stubGlobal('SummaryEnum', summary)
 
 const nestedData = [
   { center: 'Frigo', car: 'Truck', plate: 'ABC', month: '2026-01', revenue: 100, cost: 40 },
@@ -15,8 +24,8 @@ const nestedRows = [
 
 const columns = [{ field: 'month' as const }]
 const values = [
-  { field: 'revenue' as const, summaryType: SummaryEnum.SUM, widthResolved: '80px', _label: 'Revenue' },
-  { field: 'cost' as const, summaryType: SummaryEnum.SUM, widthResolved: '80px', _label: 'Cost' },
+  { measureId: 'revenue-sum', field: 'revenue' as const, summaryType: summary.SUM, widthResolved: '80px', _label: 'Revenue' },
+  { measureId: 'cost-sum', field: 'cost' as const, summaryType: summary.SUM, widthResolved: '80px', _label: 'Cost' },
 ]
 
 describe('pivot group collapse with nested rows', () => {
@@ -57,11 +66,11 @@ describe('pivot group collapse with nested rows', () => {
   })
 
   it('does not hide sibling stredisko labels when another stredisko prefix matches', () => {
-    const collapsedGroupIds = new Set(['0:Distibuce - frigo'])
+    const collapsedGroupIds = new Set(['0:Distibuce%20-%20frigo'])
 
-    expect(isPivotRowCellHiddenByCollapsedAncestor('0:Distibuce - frigo režie', collapsedGroupIds)).toBe(false)
-    expect(isPivotRowCellHiddenByCollapsedAncestor('1:Distibuce - frigo|', collapsedGroupIds)).toBe(true)
-    expect(isPivotRowCellHiddenByCollapsedAncestor('0:Distibuce - frigo', collapsedGroupIds)).toBe(false)
+    expect(isPivotRowCellHiddenByCollapsedAncestor('0:Distibuce%20-%20frigo%20re%C5%BEie', collapsedGroupIds)).toBe(false)
+    expect(isPivotRowCellHiddenByCollapsedAncestor('1:Distibuce%20-%20frigo/child', collapsedGroupIds)).toBe(true)
+    expect(isPivotRowCellHiddenByCollapsedAncestor('0:Distibuce%20-%20frigo', collapsedGroupIds)).toBe(false)
   })
 
   it('expanded center hides center summary and shows collapsed car headers', () => {

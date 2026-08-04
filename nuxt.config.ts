@@ -1,4 +1,5 @@
 // @unocss-include
+import { existsSync } from 'node:fs'
 import { createResolver } from 'nuxt/kit'
 import { writeFile } from 'node:fs/promises'
 import { prepareLocalNuxtLayers } from './prepare-layers'
@@ -73,12 +74,6 @@ export default defineNuxtConfig({
     },
   },
 
-  nitro: {
-    imports: {
-      dirsScanOptions: { fileFilter: () => false },
-    },
-  },
-
   alias: {
     $uiProps: resolve('./app/types/component-props.type.ts'),
   },
@@ -90,6 +85,12 @@ export default defineNuxtConfig({
 
   future: {
     compatibilityVersion: 5,
+  },
+
+  nitro: {
+    imports: {
+      dirsScanOptions: { fileFilter: () => false },
+    },
   },
 
   typescript: {

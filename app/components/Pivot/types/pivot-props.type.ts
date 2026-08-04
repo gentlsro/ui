@@ -6,6 +6,7 @@ import type { usePivotStore } from '../stores/pivot.store'
 // Constants
 import type { PIVOT_DEFAULT_PROPS } from '../constants/pivot-default-props.constant'
 import type { PivotItem } from '../models/pivot-item.model'
+import type { IPivotPerformanceConfig } from '../constants/pivot-performance.constant'
 
 export type IPivotProps<T = IItem> = {
   /**
@@ -63,6 +64,11 @@ export type IPivotProps<T = IItem> = {
    * Minimum width of a row column in px
    */
   minimumColumnWidth?: number
+
+  /**
+   * Client-side transform warning thresholds
+   */
+  performance?: IPivotPerformanceConfig
 
   /**
    * Set the `loading` state manually

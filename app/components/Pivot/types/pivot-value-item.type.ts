@@ -6,5 +6,6 @@ export type IPivotValueItem<T = IItem> = {
   kind?: PivotRowItemKind
   groupIds: string[]
   cells: IPivotValueItemCell<T>[]
+  columnGroupCells?: Record<string, IPivotValueItemCell<T>>
   collapsedGroupValueItems?: Record<string, IPivotValueItem<T>>
 }

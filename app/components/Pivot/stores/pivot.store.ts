@@ -4,12 +4,14 @@ import type { IPivotState } from '../types/pivot-state.type'
 import type { IPivotDataItem } from '../types/pivot-data-item.type'
 import type { IPivotValueColumnItem, IPivotValueHeaderCell } from '../types/pivot-value-column-item.type'
 import type { IPivotColumnTreeNode } from '../functions/pivot-column-collapse'
+import type { IPivotTransformEstimate } from '../types/pivot-transform-estimate.type'
 
 // Functions
 import { usePivotTransform } from '../composables/usePivotTransform'
 import { pivotFetchData } from '../functions/pivot-fetch-data'
 import { applyPivotEmptyRows } from '../functions/pivot-transform-data'
 import {
+  buildPivotPromotedRowLabelLevels,
   getPivotStickyIndices,
   isPivotRowVisible,
   togglePivotGroupCollapse,
@@ -54,6 +56,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     // Configs
     const loadData = ref(props?.loadData)
     const collapseConfig = ref(props?.collapseConfig) as Ref<IPivotProps<T>['collapseConfig']>
+    const performance = ref(props?.performance) as Ref<IPivotProps<T>['performance']>
     const ui = ref(props?.ui)
 
     const config = initRef({
@@ -66,7 +69,11 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     // Utils
     const { formatNumber } = useNumber()
     const { currentLocale } = useLocale()
-    const { transformPivotData } = usePivotTransform()
+    const {
+      transformPivotData,
+      continueTransform: continuePendingTransform,
+      cancelTransform: cancelPendingTransform,
+    } = usePivotTransform()
 
     const { isLoading: isRequestLoading, fn } = useFn({
       source: { type: 'store', name: 'pivot' },
@@ -94,6 +101,8 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     const rowsWrapperEl = ref<HTMLElement>()
     const isFirstRender = shallowRef(true)
     const isTransforming = ref(false)
+    const performanceWarning = shallowRef<IPivotTransformEstimate>()
+    const transformError = shallowRef<Error>()
     const minimumColumnWidth = toRef(props ?? {}, 'minimumColumnWidth', 80)
     const hoveredIdx = ref<number | undefined>()
 
@@ -152,6 +161,11 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       },
     })
 
+    const resolvedValueFields = computed(() => resolvePivotValueFields(items.value))
+    const resolvedValueFieldsById = computed(() => new Map(
+      resolvedValueFields.value.map(value => [value.measureId, value]),
+    ))
+
     const filters = computed({
       get() {
         return getPivotFilterItems(items.value)
@@ -179,8 +193,14 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       { immediate: true },
     )
 
-    function getPivotLayoutSignature() {
-      return `${rows.value.map(row => String(row.field)).join('|')}::${columns.value.map(column => String(column.field)).join('|')}`
+    function getPivotLayoutSignature(candidateItems = items.value) {
+      const rowFields = getPivotItemsBySingleUsage(candidateItems, 'row')
+      const columnFields = getPivotItemsBySingleUsage(candidateItems, 'column')
+
+      return JSON.stringify({
+        rows: rowFields.map(row => String(row.field)),
+        columns: columnFields.map(column => String(column.field)),
+      })
     }
 
     const pivotLayoutSignature = ref(getPivotLayoutSignature())
@@ -229,13 +249,28 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     const valueHeaderRows = ref<IPivotValueHeaderCell[][]>([])
     const columnTree = ref<IPivotColumnTreeNode[]>([])
 
+    const layoutValueColumns = computed(() => valueColumns.value.map(column => {
+      const valueField = resolvedValueFieldsById.value.get(column.measureId)
+
+      if (!valueField) {
+        return column
+      }
+
+      return {
+        ...column,
+        valueField: valueField.field,
+        value: valueField.item ?? column.value,
+        width: valueField.widthResolved,
+      }
+    }))
+
     const visibleValueLayout = computed(() => {
       return buildVisiblePivotValueColumns({
         columnFields: columns.value,
-        valueFields: values.value,
+        valueFields: resolvedValueFields.value,
         tree: columnTree.value,
         collapsedColumnGroupIds: state.value.collapsedColumnGroupIds,
-        allValueColumns: valueColumns.value as IPivotValueColumnItem<T>[],
+        allValueColumns: layoutValueColumns.value as IPivotValueColumnItem<T>[],
         valuesOnRows: config.value?.valuesOnRows,
       })
     })
@@ -264,6 +299,14 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       return getPivotStickyIndices(visibleData.value, rows.value.length)
     })
 
+    const promotedRowLabelLevelsById = computed(() => {
+      return buildPivotPromotedRowLabelLevels({
+        visibleRows: visibleData.value,
+        collapsedGroupIds: state.value.collapsedGroupIds,
+        rowFieldCount: rows.value.length,
+      })
+    })
+
     function updateConfig(partial: Partial<NonNullable<IPivotProps<T>['config']>>) {
       config.value = {
         ...config.value,
@@ -285,72 +328,220 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     function syncPivotItemFilters(item: PivotItem<T>, column: TableColumn<T>) {
       syncTableColumnFiltersToPivotItem(item, column)
       normalizePivotFilterSlotIndices(items.value)
-      recomputeData()
     }
 
-    async function recomputeData() {
+    function getPivotAggregationSignature(
+      candidateItems: PivotItem<T>[],
+    ) {
+      return JSON.stringify({
+        rows: getPivotItemsBySingleUsage(candidateItems, 'row').map(item => String(item.field)),
+        columns: getPivotItemsBySingleUsage(candidateItems, 'column').map(item => String(item.field)),
+        values: resolvePivotValueFields(candidateItems).map(value => ({
+          id: value.measureId,
+          field: String(value.field),
+          summaryType: value.summaryType,
+          summaryFormat: value.summaryFormat ? String(value.summaryFormat) : undefined,
+        })),
+        filters: candidateItems.flatMap(item => (item.usage.filter ?? []).map(filter => ({
+          field: String(item.field),
+          index: filter.index,
+          comparator: filter.comparator,
+          filterValue: filter.filterValue,
+        }))),
+      })
+    }
+
+    function getPivotProjectionSignature(
+      candidateItems: PivotItem<T>[],
+      candidateConfig: IPivotProps<T>['config'],
+    ) {
+      return JSON.stringify({
+        valuesOnRows: !!candidateConfig?.valuesOnRows,
+        values: resolvePivotValueFields(candidateItems).map(value => ({
+          id: value.measureId,
+          label: value._label,
+        })),
+      })
+    }
+
+    const aggregationSignature = computed(() => getPivotAggregationSignature(items.value))
+    const projectionSignature = computed(() => getPivotProjectionSignature(items.value, config.value))
+    const sourceDataVersion = shallowRef(0)
+    let recomputeGeneration = 0
+    let lastCompletedTransformKey = ''
+
+    function getAggregationKey(signature: string) {
+      return `${sourceDataVersion.value}:${signature}`
+    }
+
+    function getTransformKey(aggregation: string, projection: string) {
+      return `${getAggregationKey(aggregation)}:${projection}`
+    }
+
+    async function runTransform(payload?: {
+      candidateItems?: PivotItem<T>[]
+      candidateConfig?: IPivotProps<T>['config']
+      commitConfiguration?: boolean
+    }) {
+      const candidateItems = payload?.candidateItems ?? items.value
+      const candidateConfig = payload?.candidateConfig ?? config.value
+      const candidateRows = getPivotItemsBySingleUsage(candidateItems, 'row')
+      const candidateColumns = getPivotItemsBySingleUsage(candidateItems, 'column')
+      const candidateValues = resolvePivotValueFields(candidateItems)
+      const candidateAggregationSignature = getPivotAggregationSignature(candidateItems)
+      const candidateProjectionSignature = getPivotProjectionSignature(candidateItems, candidateConfig)
+      const transformKey = getTransformKey(
+        candidateAggregationSignature,
+        candidateProjectionSignature,
+      )
+      const generation = ++recomputeGeneration
+      const nextLayoutSignature = getPivotLayoutSignature(candidateItems)
+      const hierarchyChanged = nextLayoutSignature !== pivotLayoutSignature.value
+      const nextState: IPivotState = hierarchyChanged
+        ? {
+            collapsedGroupIds: new Set<string>(),
+            collapsedColumnGroupIds: new Set<string>(),
+          }
+        : {
+            collapsedGroupIds: new Set(state.value.collapsedGroupIds),
+            collapsedColumnGroupIds: new Set(state.value.collapsedColumnGroupIds),
+          }
+      const nextIsFirstRender = shallowRef(hierarchyChanged || isFirstRender.value)
+
       isTransforming.value = true
+      performanceWarning.value = undefined
+      transformError.value = undefined
 
       try {
-        const nextLayoutSignature = getPivotLayoutSignature()
-
-        if (nextLayoutSignature !== pivotLayoutSignature.value) {
-          pivotLayoutSignature.value = nextLayoutSignature
-          isFirstRender.value = true
-          state.value.collapsedGroupIds = new Set<string>()
-          state.value.collapsedColumnGroupIds = new Set<string>()
-        }
-
         const result = await transformPivotData({
           data: sourceData.value,
-          rows: rows.value,
-          columns: columns.value,
-          values: resolvePivotValueFields(items.value),
-          items: items.value,
+          rows: candidateRows,
+          columns: candidateColumns,
+          values: candidateValues,
+          items: candidateItems,
           collapseConfig: collapseConfig.value,
-          state: state.value,
-          isFirstRender,
+          state: nextState,
+          isFirstRender: nextIsFirstRender,
           formatNumber,
           locale: currentLocale.value.code,
-          valuesOnRows: config.value?.valuesOnRows,
+          valuesOnRows: candidateConfig?.valuesOnRows,
+          performance: performance.value,
+          aggregationKey: getAggregationKey(candidateAggregationSignature),
+          onPerformanceWarning: estimate => {
+            if (generation === recomputeGeneration) {
+              performanceWarning.value = estimate
+            }
+          },
         })
 
+        if (generation !== recomputeGeneration) {
+          return false
+        }
+
+        if (payload?.commitConfiguration) {
+          items.value = candidateItems
+          config.value = candidateConfig
+        }
+
+        pivotLayoutSignature.value = nextLayoutSignature
+        state.value = nextState
+        isFirstRender.value = nextIsFirstRender.value
         data.value = result.data
         valueColumns.value = result.valueColumns
         valueHeaderRows.value = result.valueHeaderRows
         columnTree.value = result.columnTree
+        performanceWarning.value = undefined
+        lastCompletedTransformKey = transformKey
 
         await nextTick()
         rowsVirtualScrollEl.value?.rerender()
         valuesVirtualScrollEl.value?.rerender()
+
+        return true
+      } catch (error) {
+        if (error instanceof DOMException && error.name === 'AbortError') {
+          return false
+        }
+
+        if (generation === recomputeGeneration) {
+          transformError.value = error instanceof Error ? error : new Error(String(error))
+        }
+
+        return false
       } finally {
-        isTransforming.value = false
+        if (generation === recomputeGeneration) {
+          isTransforming.value = false
+        }
       }
     }
 
+    function recomputeData() {
+      return runTransform()
+    }
+
+    function applyConfiguration(payload: {
+      items: PivotItem<T>[]
+      config: IPivotProps<T>['config']
+    }) {
+      return runTransform({
+        candidateItems: payload.items,
+        candidateConfig: payload.config,
+        commitConfiguration: true,
+      })
+    }
+
+    function continueTransform() {
+      performanceWarning.value = undefined
+      continuePendingTransform()
+    }
+
+    function cancelTransform() {
+      performanceWarning.value = undefined
+      cancelPendingTransform()
+    }
+
+    let fetchGeneration = 0
+
     async function fetchAndSetData() {
+      const generation = ++fetchGeneration
       const res = await pivotFetchData({ getStore: () => returnedData })
 
-      sourceData.value = res.items
+      if (generation !== fetchGeneration) {
+        return
+      }
+
+      sourceData.value = markRaw(res.items)
       totalRows.value = !isNil(res.totalRows)
         ? res.totalRows
         : isNil(totalRows.value) ? data.value.length : totalRows.value
     }
 
-    watch([items, sourceData, () => config.value?.valuesOnRows], () => {
-      recomputeData()
-    })
+    watch(sourceData, () => sourceDataVersion.value++, { flush: 'sync' })
+
+    watch(
+      [sourceDataVersion, aggregationSignature, projectionSignature],
+      ([, aggregation, projection]) => {
+        if (getTransformKey(aggregation, projection) !== lastCompletedTransformKey) {
+          recomputeData()
+        }
+      },
+      { immediate: true },
+    )
 
     const returnedData = {
       // Configs
       loadData,
       collapseConfig,
+      performance,
       config,
       ui,
 
       // Utils
       isLoading,
       isFirstFetch,
+      isTransforming,
+      performanceWarning,
+      transformError,
       fn,
 
       // Layout
@@ -368,6 +559,9 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       // Data fetching
       fetchAndSetData,
       recomputeData,
+      applyConfiguration,
+      continueTransform,
+      cancelTransform,
       syncPivotItemFilters,
       toggleGroupCollapse,
       toggleColumnGroupCollapse,
@@ -391,6 +585,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       sourceData,
       visibleData,
       visibleStickyIndices,
+      promotedRowLabelLevelsById,
       valueColumns,
       visibleValueColumns,
       valueHeaderRows,

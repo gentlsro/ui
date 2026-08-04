@@ -1,28 +1,29 @@
 // Types
 import type { IPivotDataItem } from '../types/pivot-data-item.type'
+import { getPivotPathId } from './pivot-path-id'
 
 export function getPivotGroupId(groupPath: string[], rowFieldIndex?: number) {
   if (rowFieldIndex === undefined) {
-    return groupPath.join('|')
+    return getPivotPathId(groupPath)
   }
 
-  return `${rowFieldIndex}:${groupPath.slice(0, rowFieldIndex + 1).join('|')}`
+  return `${rowFieldIndex}:${getPivotPathId(groupPath.slice(0, rowFieldIndex + 1))}`
 }
 
 export function isPivotRowCellHiddenByCollapsedAncestor(
   cellGroupId: string,
   collapsedGroupIds: Set<string>,
 ) {
-  const cellPath = cellGroupId.slice(2)
+  const cellPath = cellGroupId.slice(cellGroupId.indexOf(':') + 1)
 
   for (const collapsedGroupId of collapsedGroupIds) {
     if (cellGroupId === collapsedGroupId) {
       continue
     }
 
-    const collapsedPath = collapsedGroupId.slice(2)
+    const collapsedPath = collapsedGroupId.slice(collapsedGroupId.indexOf(':') + 1)
 
-    if (cellPath.startsWith(`${collapsedPath}|`)) {
+    if (cellPath.startsWith(`${collapsedPath}/`)) {
       return true
     }
   }
@@ -72,7 +73,7 @@ export function getPivotPromotedRowLabelLevels<T = IItem>(payload: {
       continue
     }
 
-    const isFirstDescendant = !visibleRows.slice(0, rowIndex).some((previous) => {
+    const isFirstDescendant = !visibleRows.slice(0, rowIndex).some(previous => {
       if (previous.groupIds[level] !== groupId) {
         return false
       }
@@ -90,6 +91,47 @@ export function getPivotPromotedRowLabelLevels<T = IItem>(payload: {
   }
 
   return levels
+}
+
+export function buildPivotPromotedRowLabelLevels<T = IItem>(payload: {
+  visibleRows: IPivotDataItem<T>[]
+  collapsedGroupIds: Set<string>
+  rowFieldCount: number
+}) {
+  const { visibleRows, collapsedGroupIds, rowFieldCount } = payload
+  const seenGroupIdsByLevel = Array.from({ length: rowFieldCount }, () => new Set<string>())
+  const promotedLevelsByRowId = new Map<string, number[]>()
+  const lastCollapsibleLevel = rowFieldCount - 2
+
+  for (const row of visibleRows) {
+    const levels: number[] = []
+
+    promotedLevelsByRowId.set(row.id, levels)
+
+    if (
+      lastCollapsibleLevel < 0
+      || (row.measureIndex !== undefined && row.measureIndex !== 0)
+    ) {
+      continue
+    }
+
+    for (let level = 0; level <= lastCollapsibleLevel; level++) {
+      const groupId = row.groupIds[level]
+
+      if (!groupId || collapsedGroupIds.has(groupId) || isPivotSummaryDataRowAtLevel(row, level)) {
+        continue
+      }
+
+      const seenGroupIds = seenGroupIdsByLevel[level]!
+
+      if (!seenGroupIds.has(groupId)) {
+        levels.push(level)
+        seenGroupIds.add(groupId)
+      }
+    }
+  }
+
+  return promotedLevelsByRowId
 }
 
 export function isPivotRowVisible<T = IItem>(

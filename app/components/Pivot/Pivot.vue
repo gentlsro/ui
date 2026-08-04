@@ -4,6 +4,7 @@ import type { IPivotProps } from './types/pivot-props.type'
 
 // Functions
 import { pivotGetExposed } from './functions/pivot-get-exposed'
+import { shouldFetchPivotData } from './functions/pivot-should-fetch-data'
 
 // Constants
 import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
@@ -29,7 +30,7 @@ const {
   ui,
   loadData,
   collapseConfig,
-  config,
+  performance,
   fetchAndSetData,
   isFirstFetch,
 } = usePivotStore({ props })
@@ -38,17 +39,21 @@ const {
 syncRef(toRef(mergedProps.value, 'ui'), ui, { direction: 'ltr' })
 syncRef(toRef(mergedProps.value, 'loadData'), loadData, { direction: 'ltr' })
 syncRef(toRef(mergedProps.value, 'collapseConfig'), collapseConfig, { direction: 'ltr' })
+syncRef(toRef(mergedProps.value, 'performance'), performance, { direction: 'ltr' })
 
 defineExpose(pivotGetExposed())
 
 // Immediate fetch
-const isImmediate = mergedProps.value.loadData?.immediate
-  && (!props.data || !props.data.length)
+const hasLoadData = !!mergedProps.value.loadData?.fnc
+const isImmediate = shouldFetchPivotData({
+  data: props.data,
+  loadData: mergedProps.value.loadData,
+}, 'setup')
 
-if (mergedProps.value.loadData?.fnc && isImmediate) {
+if (isImmediate) {
   await fetchAndSetData()
   isFirstFetch.value = false
-} else if (props.data?.length || !mergedProps.value.loadData?.fnc) {
+} else if (props.data !== undefined || !hasLoadData) {
   isFirstFetch.value = false
 }
 
@@ -70,7 +75,10 @@ const containerStyle = computed(() => {
 })
 
 onMounted(() => {
-  if (!isImmediate) {
+  if (shouldFetchPivotData({
+    data: props.data,
+    loadData: mergedProps.value.loadData,
+  }, 'mounted')) {
     fetchAndSetData()
       .then(() => isFirstFetch.value = false)
   }
@@ -99,5 +107,7 @@ onMounted(() => {
     <slot name="loading">
       <PivotLoading :ui="mergedProps.ui" />
     </slot>
+
+    <PivotPerformanceWarning />
   </div>
 </template>
