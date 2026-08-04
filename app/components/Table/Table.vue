@@ -85,6 +85,7 @@ const {
   loadData,
   rowsLimit,
   customData,
+  exportData,
   isInitialLoad,
   isDataLoading,
   emits: storeEmits,
@@ -113,6 +114,7 @@ syncRef(toRef(props, 'emptyValue'), emptyValue, { direction: 'ltr' })
 syncRef(loadMetaDataRef, loadMetaData, { direction: 'ltr' })
 syncRef(loadDataRef, loadData, { direction: 'ltr' })
 syncRef(modifiersRef, modifiers, { direction: 'ltr', immediate: false })
+syncRef(toRef(props, 'exportData', []), exportData, { direction: 'ltr' })
 syncRef(queryBuilderPropsRef, queryBuilderProps, { direction: 'ltr' })
 syncRef(toRef(props, 'allowComparatorsOfSameType'), allowComparatorsOfSameType, { direction: 'ltr' })
 syncRef(rows, rowsStore, { direction: 'both' })
