@@ -52,7 +52,10 @@ const activeStyle = computed(() => {
       v-bind="btn"
       :disabled
       disable-style="flat"
-      :class="model === btn.value && activeClass"
+      :class="[
+        model === btn.value && activeClass,
+        { 'is-first': idx === 0, 'is-last': idx === buttons.length - 1 },
+      ]"
       :style="btn.value === modelValue ? activeStyle : undefined"
       @click="model = btn.value"
     >

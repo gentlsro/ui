@@ -4,16 +4,32 @@ import type { SortableEvent } from 'sortablejs'
 
 // Models
 import { PivotItem } from './models/pivot-item.model'
-import type { IPivotValueUsageSlot } from './models/pivot-item.model'
 
 // Functions
 import {
   getPivotFilterItems,
   getPivotItemsByMultiUsage,
   getPivotItemsBySingleUsage,
-  syncPivotMultiUsageIndices,
-  syncPivotSingleUsageIndices,
 } from './functions/pivot-item-usage'
+import {
+  normalizePivotMeasureIds,
+} from './functions/pivot-measure-id'
+import {
+  addPivotConfigurationRole,
+  duplicatePivotConfigurationValue,
+  getPivotConfigurationValueEntries,
+  isPivotConfigurationItemUsed,
+  movePivotConfigurationEntry,
+  normalizePivotConfigurationUsage,
+  removePivotConfigurationRole,
+  setPivotConfigurationRoleOrder,
+  setPivotConfigurationValueOrder,
+  togglePivotConfigurationItem,
+} from './functions/pivot-configuration-draft'
+import type {
+  IPivotConfigurationRole,
+  IPivotConfigurationValueEntry,
+} from './functions/pivot-configuration-draft'
 
 // Store
 import { usePivotStore } from './stores/pivot.store'
@@ -24,14 +40,6 @@ type IProps = {
 
 type IEmits = {
   submit: []
-}
-
-type IPivotConfigRole = 'row' | 'column' | 'filter' | 'value'
-
-type IValueEntry = {
-  item: PivotItem<T>
-  slot: IPivotValueUsageSlot<T>
-  key: string
 }
 
 const props = defineProps<IProps>()
@@ -48,7 +56,13 @@ const SUMMARY_OPTIONS = [
   SummaryEnum.MEDIAN,
 ] as const
 
-const { items, config, updateConfig } = usePivotStore<T>()
+const {
+  items,
+  config,
+  applyConfiguration,
+  cancelTransform,
+  transformError,
+} = usePivotStore<T>()
 
 const allFieldsEl = useTemplateRef('allFieldsEl')
 const rowFieldsEl = useTemplateRef('rowFieldsEl')
@@ -64,25 +78,9 @@ const draftColumns = computed(() => getPivotItemsBySingleUsage(draftItems.value,
 const draftValues = computed(() => getPivotItemsByMultiUsage(draftItems.value, 'value'))
 const draftFilters = computed(() => getPivotFilterItems(draftItems.value))
 
-let valueSlotKeys = new WeakMap<IPivotValueUsageSlot<T>, string>()
-let valueSlotKeyIndex = 0
 let sortableInstances: Sortable[] = []
 
-const draftValueEntries = computed<IValueEntry[]>(() => {
-  const entries: IValueEntry[] = []
-
-  for (const item of draftItems.value) {
-    for (const slot of item.usage.value ?? []) {
-      entries.push({
-        item,
-        slot,
-        key: getValueSlotKey(slot),
-      })
-    }
-  }
-
-  return entries.toSorted((a, b) => a.slot.index - b.slot.index)
-})
+const draftValueEntries = computed(() => getPivotConfigurationValueEntries(draftItems.value))
 
 const sortableOptions = {
   animation: 150,
@@ -132,41 +130,10 @@ function clonePivotItem(item: PivotItem<T>) {
 }
 
 function resetDraftItems() {
-  valueSlotKeys = new WeakMap()
-  valueSlotKeyIndex = 0
   draftItems.value = items.value.map(clonePivotItem)
+  normalizePivotMeasureIds(draftItems.value)
   draftValuesOnRows.value = !!config.value?.valuesOnRows
   normalizeDraftUsage()
-}
-
-function getValueSlotKey(slot: IPivotValueUsageSlot<T>) {
-  const existingKey = valueSlotKeys.get(slot)
-
-  if (existingKey) {
-    return existingKey
-  }
-
-  const key = `value-${valueSlotKeyIndex++}`
-
-  valueSlotKeys.set(slot, key)
-
-  return key
-}
-
-function isItemUsed(item: PivotItem<T>) {
-  return !!(
-    item.usage.row
-    || item.usage.column
-    || item.usage.value?.length
-    || item.usage.filter !== undefined
-  )
-}
-
-function clearItemUsage(item: PivotItem<T>) {
-  delete item.usage.row
-  delete item.usage.column
-  delete item.usage.value
-  delete item.usage.filter
 }
 
 function getItemFromEl(el: HTMLElement) {
@@ -179,155 +146,48 @@ function getItemFromEl(el: HTMLElement) {
   return draftItems.value.find(item => String(item.field) === field)
 }
 
-function getFieldOrderFromContainer(container: HTMLElement) {
-  return [...container.querySelectorAll<HTMLElement>('.pivot-configuration__item')]
-    .map(el => getItemFromEl(el))
-    .filter((item): item is PivotItem<T> => !!item)
-}
-
-function getValueOrderFromContainer(container: HTMLElement) {
-  return [...container.querySelectorAll<HTMLElement>('.pivot-configuration__item')]
-    .map(el => {
-      const valueKey = el.dataset.valueKey
-
-      if (valueKey) {
-        return draftValueEntries.value.find(entry => entry.key === valueKey)?.item
-      }
-
-      return getItemFromEl(el)
-    })
-    .filter((item): item is PivotItem<T> => !!item)
-}
-
-function uniqueItems(ordered: PivotItem<T>[]) {
-  return ordered.filter((item, index) => ordered.indexOf(item) === index)
-}
-
-function insertItemAt(ordered: PivotItem<T>[], item: PivotItem<T>, index: number) {
-  const nextOrdered = ordered.filter(current => current !== item)
-  const nextIndex = Math.max(0, Math.min(index, nextOrdered.length))
-
-  nextOrdered.splice(nextIndex, 0, item)
-
-  return nextOrdered
-}
-
-function setRoleOrder(role: IPivotConfigRole, ordered: PivotItem<T>[]) {
-  switch (role) {
-    case 'row':
-      syncPivotSingleUsageIndices({ items: draftItems, ordered: uniqueItems(ordered), role: 'row' })
-      break
-    case 'column':
-      syncPivotSingleUsageIndices({ items: draftItems, ordered: uniqueItems(ordered), role: 'column' })
-      break
-    case 'filter':
-      syncPivotMultiUsageIndices({ items: draftItems, ordered: uniqueItems(ordered), role: 'filter' })
-      break
-    case 'value':
-      syncPivotMultiUsageIndices({ items: draftItems, ordered, role: 'value' })
-      break
-  }
+function setRoleOrder(role: IPivotConfigurationRole, ordered: PivotItem<T>[]) {
+  setPivotConfigurationRoleOrder(draftItems.value, role, ordered)
 }
 
 function normalizeDraftUsage() {
-  setRoleOrder('row', draftRows.value)
-  setRoleOrder('column', draftColumns.value)
-  setRoleOrder('filter', draftFilters.value)
-  setRoleOrder('value', draftValues.value)
+  normalizePivotConfigurationUsage(draftItems.value)
 }
 
-function moveItemToRole(
+function addItemToRole(
   item: PivotItem<T>,
-  role: IPivotConfigRole,
+  role: IPivotConfigurationRole,
   index: number,
-  targetOrder?: PivotItem<T>[],
 ) {
-  const nextRows = draftRows.value.filter(row => row !== item)
-  const nextColumns = draftColumns.value.filter(column => column !== item)
-  const nextFilters = draftFilters.value.filter(filter => filter !== item)
-  const nextValues = draftValues.value.filter(value => value !== item)
-  const orderedTarget = targetOrder
-    ? uniqueItems(targetOrder)
-    : undefined
-
-  clearItemUsage(item)
-
-  switch (role) {
-    case 'row':
-      setRoleOrder('row', orderedTarget ?? insertItemAt(nextRows, item, index))
-      setRoleOrder('column', nextColumns)
-      setRoleOrder('filter', nextFilters)
-      setRoleOrder('value', nextValues)
-      break
-    case 'column':
-      setRoleOrder('row', nextRows)
-      setRoleOrder('column', orderedTarget ?? insertItemAt(nextColumns, item, index))
-      setRoleOrder('filter', nextFilters)
-      setRoleOrder('value', nextValues)
-      break
-    case 'filter':
-      item.usage.filter = []
-      setRoleOrder('row', nextRows)
-      setRoleOrder('column', nextColumns)
-      setRoleOrder('filter', orderedTarget ?? insertItemAt(nextFilters, item, index))
-      setRoleOrder('value', nextValues)
-      break
-    case 'value':
-      item.usage.value = [{ index: 0, summaryType: SummaryEnum.SUM }]
-      setRoleOrder('row', nextRows)
-      setRoleOrder('column', nextColumns)
-      setRoleOrder('filter', nextFilters)
-      setRoleOrder('value', orderedTarget ?? insertItemAt(nextValues, item, index))
-      break
-  }
-
-  normalizeDraftUsage()
+  addPivotConfigurationRole({ items: draftItems.value, item, role, index })
 }
 
-function removeItemFromRole(item: PivotItem<T>, role: IPivotConfigRole) {
-  switch (role) {
-    case 'row':
-      setRoleOrder('row', draftRows.value.filter(row => row !== item))
-      break
-    case 'column':
-      setRoleOrder('column', draftColumns.value.filter(column => column !== item))
-      break
-    case 'filter':
-      setRoleOrder('filter', draftFilters.value.filter(filter => filter !== item))
-      break
-    case 'value':
-      setRoleOrder('value', draftValues.value.filter(value => value !== item))
-      break
-  }
-
-  normalizeDraftUsage()
+function removeItemFromRole(item: PivotItem<T>, role: IPivotConfigurationRole) {
+  removePivotConfigurationRole({ items: draftItems.value, item, role })
 }
 
-function removeValueEntry(entry: IValueEntry) {
-  const ordered = draftValueEntries.value
-    .filter(current => current.key !== entry.key)
-    .map(current => current.item)
+function removeValueEntry(entry: IPivotConfigurationValueEntry<T>) {
+  removePivotConfigurationRole({
+    items: draftItems.value,
+    item: entry.item,
+    role: 'value',
+    measureId: entry.id,
+  })
+}
 
-  setRoleOrder('value', ordered)
-  normalizeDraftUsage()
+function removeRoleEntry(
+  item: PivotItem<T>,
+  role: IPivotConfigurationRole,
+  measureId?: string,
+) {
+  removePivotConfigurationRole({ items: draftItems.value, item, role, measureId })
 }
 
 function toggleItem(item: PivotItem<T>) {
-  if (isItemUsed(item)) {
-    setRoleOrder('row', draftRows.value.filter(row => row !== item))
-    setRoleOrder('column', draftColumns.value.filter(column => column !== item))
-    setRoleOrder('filter', draftFilters.value.filter(filter => filter !== item))
-    setRoleOrder('value', draftValues.value.filter(value => value !== item))
-    clearItemUsage(item)
-    normalizeDraftUsage()
-
-    return
-  }
-
-  moveItemToRole(item, 'row', draftRows.value.length)
+  togglePivotConfigurationItem({ items: draftItems.value, item })
 }
 
-function handleSortableAdd(role: IPivotConfigRole, evt: SortableEvent) {
+function handleSortableAdd(role: IPivotConfigurationRole, evt: SortableEvent) {
   const item = getItemFromEl(evt.item)
 
   if (!item) {
@@ -336,45 +196,105 @@ function handleSortableAdd(role: IPivotConfigRole, evt: SortableEvent) {
     return
   }
 
-  const container = evt.to as HTMLElement
-  const ordered = role === 'value'
-    ? getValueOrderFromContainer(container)
-    : getFieldOrderFromContainer(container)
+  const sourceRole = (evt.from as HTMLElement).dataset.role as IPivotConfigurationRole | 'all' | undefined
+  const measureId = evt.item.dataset.measureId
+  const index = evt.newDraggableIndex ?? evt.newIndex ?? 0
 
-  moveItemToRole(item, role, evt.newIndex ?? 0, ordered)
   evt.item.remove()
+
+  if (sourceRole && sourceRole !== 'all' && sourceRole !== role) {
+    removeRoleEntry(item, sourceRole, measureId)
+  }
+
+  addItemToRole(item, role, index)
 }
 
-function handleSortableUpdate(role: IPivotConfigRole, evt: SortableEvent) {
-  const container = evt.to as HTMLElement
-  const ordered = role === 'value'
-    ? getValueOrderFromContainer(container)
-    : getFieldOrderFromContainer(container)
+function handleSortableUpdate(role: IPivotConfigurationRole, evt: SortableEvent) {
+  const from = evt.oldDraggableIndex ?? evt.oldIndex ?? 0
+  const to = evt.newDraggableIndex ?? evt.newIndex ?? 0
 
-  setRoleOrder(role, ordered)
+  if (role === 'value') {
+    setPivotConfigurationValueOrder(
+      draftItems.value,
+      movePivotConfigurationEntry(draftValueEntries.value, from, to),
+    )
+  } else {
+    const entries = role === 'row'
+      ? draftRows.value
+      : role === 'column'
+        ? draftColumns.value
+        : draftFilters.value
+
+    setRoleOrder(role, movePivotConfigurationEntry(entries, from, to))
+  }
+
   normalizeDraftUsage()
 }
 
-function handleSummaryTypeChange(entry: IValueEntry, summaryType: SummaryEnum) {
+function duplicateValueEntry(entry: IPivotConfigurationValueEntry<T>) {
+  duplicatePivotConfigurationValue({ items: draftItems.value, measureId: entry.id })
+}
+
+function handleEntryKeydown(
+  event: KeyboardEvent,
+  role: IPivotConfigurationRole,
+  item: PivotItem<T>,
+  measureId?: string,
+) {
+  if (!event.altKey || !['ArrowUp', 'ArrowDown'].includes(event.key)) {
+    return
+  }
+
+  event.preventDefault()
+
+  const direction = event.key === 'ArrowUp' ? -1 : 1
+
+  if (role === 'value') {
+    const entries = draftValueEntries.value
+    const currentIndex = entries.findIndex(entry => entry.id === measureId)
+    const targetIndex = Math.max(0, Math.min(currentIndex + direction, entries.length - 1))
+
+    setPivotConfigurationValueOrder(
+      draftItems.value,
+      movePivotConfigurationEntry(entries, currentIndex, targetIndex),
+    )
+
+    return
+  }
+
+  const entries = role === 'row'
+    ? draftRows.value
+    : role === 'column'
+      ? draftColumns.value
+      : draftFilters.value
+  const currentIndex = entries.indexOf(item)
+  const targetIndex = Math.max(0, Math.min(currentIndex + direction, entries.length - 1))
+
+  setRoleOrder(role, movePivotConfigurationEntry(entries, currentIndex, targetIndex))
+}
+
+function handleSummaryTypeChange(
+  entry: IPivotConfigurationValueEntry<T>,
+  summaryType: SummaryEnum,
+) {
   entry.slot.summaryType = summaryType
 
   $hide()
 }
 
-function getSummaryType(entry: IValueEntry) {
+function getSummaryType(entry: IPivotConfigurationValueEntry<T>) {
   return entry.slot.summaryType ?? SummaryEnum.SUM
 }
 
-function handleSubmit() {
+async function handleSubmit() {
   normalizeDraftUsage()
 
   const draftItemsByField = new Map(
     draftItems.value.map(item => [String(item.field), item]),
   )
+  const nextItems = items.value.map(clonePivotItem)
 
-  updateConfig({ valuesOnRows: draftValuesOnRows.value })
-
-  for (const item of items.value) {
+  for (const item of nextItems) {
     const draftItem = draftItemsByField.get(String(item.field))
 
     if (!draftItem) {
@@ -384,8 +304,17 @@ function handleSubmit() {
     item.usage = cloneItemUsage(draftItem.usage)
   }
 
-  items.value = [...items.value]
-  emit('submit')
+  const applied = await applyConfiguration({
+    items: nextItems,
+    config: {
+      ...config.value,
+      valuesOnRows: draftValuesOnRows.value,
+    },
+  })
+
+  if (applied) {
+    emit('submit')
+  }
 }
 
 function createSortable(
@@ -446,6 +375,8 @@ function destroySortables() {
 
 watch(() => props.isOpen, async isOpen => {
   if (!isOpen) {
+    cancelTransform()
+
     return
   }
 
@@ -460,6 +391,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  cancelTransform()
   destroySortables()
 })
 </script>
@@ -475,6 +407,13 @@ onBeforeUnmount(() => {
     :submit-btn-props="{ size: 'sm', noUppercase: true }"
     @submit="handleSubmit"
   >
+    <Banner
+      v-if="transformError"
+      variant="error"
+      outlined
+      :label="transformError.message"
+    />
+
     <div class="flex-1 grid grid-cols-2 gap-3">
       <!-- Left column -->
       <div class="flex flex-col gap-3">
@@ -488,6 +427,7 @@ onBeforeUnmount(() => {
           <div
             ref="allFieldsEl"
             class="section-content"
+            data-role="all"
           >
             <div
               v-for="item in draftItems"
@@ -496,7 +436,7 @@ onBeforeUnmount(() => {
               :data-field="String(item.field)"
             >
               <Checkbox
-                :model-value="isItemUsed(item)"
+                :model-value="isPivotConfigurationItemUsed(item)"
                 :check-value="true"
                 :uncheck-value="false"
                 size="sm"
@@ -522,12 +462,16 @@ onBeforeUnmount(() => {
           <div
             ref="filterFieldsEl"
             class="section-content"
+            data-role="filter"
           >
             <div
               v-for="item in draftFilters"
               :key="`filter-${String(item.field)}`"
               class="pivot-configuration__item flex items-center gap-2 min-h-7 p-2 rounded-custom bg-white dark:bg-dark-950 cursor-grab"
               :data-field="String(item.field)"
+              data-role="filter"
+              tabindex="0"
+              @keydown="handleEntryKeydown($event, 'filter', item)"
             >
               <span class="grow truncate font-rem-12">
                 {{ item._label }}
@@ -536,7 +480,7 @@ onBeforeUnmount(() => {
               <Btn
                 preset="TRASH"
                 size="auto"
-                tabindex="-1"
+                :aria-label="$t('pivot.removeField', { field: item._label })"
                 class="pivot-configuration__no-drag"
                 @click="removeItemFromRole(item, 'filter')"
               />
@@ -576,12 +520,16 @@ onBeforeUnmount(() => {
           <div
             ref="rowFieldsEl"
             class="section-content"
+            data-role="row"
           >
             <div
               v-for="item in draftRows"
               :key="`row-${String(item.field)}`"
               class="pivot-configuration__item flex items-center gap-2 min-h-7 p-2 rounded-custom bg-white dark:bg-dark-950 cursor-grab"
               :data-field="String(item.field)"
+              data-role="row"
+              tabindex="0"
+              @keydown="handleEntryKeydown($event, 'row', item)"
             >
               <span class="grow truncate font-rem-12">
                 {{ item._label }}
@@ -590,7 +538,7 @@ onBeforeUnmount(() => {
               <Btn
                 preset="TRASH"
                 size="auto"
-                tabindex="-1"
+                :aria-label="$t('pivot.removeField', { field: item._label })"
                 class="pivot-configuration__no-drag"
                 @click="removeItemFromRole(item, 'row')"
               />
@@ -608,12 +556,16 @@ onBeforeUnmount(() => {
           <div
             ref="columnFieldsEl"
             class="section-content"
+            data-role="column"
           >
             <div
               v-for="item in draftColumns"
               :key="`column-${String(item.field)}`"
               class="pivot-configuration__item flex items-center gap-2 min-h-7 p-2 rounded-custom bg-white dark:bg-dark-950 cursor-grab"
               :data-field="String(item.field)"
+              data-role="column"
+              tabindex="0"
+              @keydown="handleEntryKeydown($event, 'column', item)"
             >
               <span class="grow truncate font-rem-12">
                 {{ item._label }}
@@ -622,7 +574,7 @@ onBeforeUnmount(() => {
               <Btn
                 preset="TRASH"
                 size="auto"
-                tabindex="-1"
+                :aria-label="$t('pivot.removeField', { field: item._label })"
                 class="pivot-configuration__no-drag"
                 @click="removeItemFromRole(item, 'column')"
               />
@@ -640,13 +592,17 @@ onBeforeUnmount(() => {
           <div
             ref="dataFieldsEl"
             class="section-content"
+            data-role="value"
           >
             <div
               v-for="entry in draftValueEntries"
-              :key="entry.key"
+              :key="entry.id"
               class="pivot-configuration__item flex items-center gap-1 min-h-7 p-2 rounded-custom bg-white dark:bg-dark-950 cursor-grab"
               :data-field="String(entry.item.field)"
-              :data-value-key="entry.key"
+              :data-measure-id="entry.id"
+              data-role="value"
+              tabindex="0"
+              @keydown="handleEntryKeydown($event, 'value', entry.item, entry.id)"
             >
               <span class="grow truncate font-rem-12">
                 {{ entry.item._label }}
@@ -687,9 +643,18 @@ onBeforeUnmount(() => {
               </Btn>
 
               <Btn
+                size="auto"
+                icon="i-material-symbols:content-copy-outline-rounded"
+                class="pivot-configuration__no-drag"
+                :aria-label="$t('pivot.duplicateMeasure', { field: entry.item._label })"
+                :tooltip="{ label: $t('pivot.duplicateMeasure', { field: entry.item._label }) }"
+                @click="duplicateValueEntry(entry)"
+              />
+
+              <Btn
                 preset="TRASH"
                 size="auto"
-                tabindex="-1"
+                :aria-label="$t('pivot.removeMeasure', { field: entry.item._label })"
                 class="pivot-configuration__no-drag"
                 @click="removeValueEntry(entry)"
               />

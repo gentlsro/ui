@@ -1,6 +1,7 @@
 <script setup lang="ts" generic="T extends IItem = IItem">
 // Types
 import type { IPivotValueItemCell } from './types/pivot-value-item-cell.type'
+import type { IPivotValueColumnItem } from './types/pivot-value-column-item.type'
 
 // Store
 import { usePivotStore } from './stores/pivot.store'
@@ -10,15 +11,13 @@ import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
 
 type IProps = {
   item: IPivotValueItemCell<T>
+  column: IPivotValueColumnItem<T>
 }
 
 const props = defineProps<IProps>()
 
-const { visibleValueColumns, ui } = usePivotStore()
-
-const column = computed(() => {
-  return visibleValueColumns.value.find(col => col.id === props.item.columnId)
-})
+const { ui } = usePivotStore()
+const { formatNumber } = useNumber()
 
 const valueItemCellClass = computed(() => {
   return [
@@ -34,9 +33,17 @@ const valueItemCellClass = computed(() => {
 
 const valueItemCellStyle = computed(() => {
   const valueItemCellStyle = ui.value?.valueItemCellStyle?.()
-  const width = column.value?.width ?? props.item.value.widthResolved
+  const width = props.column.width ?? props.item.value.widthResolved
 
   return Object.assign({}, valueItemCellStyle, { width })
+})
+
+const formattedValue = computed(() => {
+  if (!props.item.hasValue || !Number.isFinite(props.item.aggregated)) {
+    return ''
+  }
+
+  return formatNumber(props.item.aggregated)
 })
 </script>
 
@@ -48,10 +55,10 @@ const valueItemCellStyle = computed(() => {
     :data-pivot-value-column="item.columnId"
   >
     <span
-      v-if="item.formattedValue !== ''"
+      v-if="formattedValue !== ''"
       class="truncate"
     >
-      {{ item.formattedValue }}
+      {{ formattedValue }}
     </span>
   </div>
 </template>

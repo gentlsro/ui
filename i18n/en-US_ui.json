@@ -98,6 +98,14 @@
     "dataFields": "Values",
     "layout": "Layout",
     "valuesOnRows": "Show values on rows",
-    "measureField": "Measure"
+    "measureField": "Measure",
+    "removeField": "Remove {field}",
+    "removeMeasure": "Remove measure {field}",
+    "duplicateMeasure": "Duplicate measure {field}",
+    "aggregatedMeasureLabel": "{summary} of {field}",
+    "performanceWarning": "This pivot may be slow",
+    "performanceWarningDetails": "{sourceRows} source rows will produce {rows} pivot rows, {columns} value columns, and {cells} logical value cells.",
+    "returnToConfiguration": "Return to configuration",
+    "runAnyway": "Run anyway"
   }
 }

@@ -1,7 +1,17 @@
-import { describe, expect, it } from 'vitest'
-import { PivotItem } from '../models/pivot-item.model'
+import { describe, expect, it, vi } from 'vitest'
+import { ref } from 'vue'
+import type { PivotItem } from '../models/pivot-item.model'
 import { getInitialCollapsedGroupIds, isPivotRowVisible } from './pivot-group-collapse'
 import { pivotTransformData } from './pivot-transform-data'
+
+const summary = {
+  SUM: 'SUM' as SummaryEnum,
+  COUNT: 'COUNT' as SummaryEnum,
+  AVERAGE: 'AVERAGE' as SummaryEnum,
+  MEDIAN: 'MEDIAN' as SummaryEnum,
+}
+
+vi.stubGlobal('SummaryEnum', summary)
 
 type RowData = {
   center: string
@@ -18,15 +28,15 @@ const nestedData: RowData[] = [
 ]
 
 const nestedRows = [
-  new PivotItem<RowData>({ field: 'center', dataType: 'string', minWidth: 100, width: '120px', widthResolved: '120px', resizable: true }),
-  new PivotItem<RowData>({ field: 'car', dataType: 'string', minWidth: 100, width: '120px', widthResolved: '120px', resizable: true }),
-  new PivotItem<RowData>({ field: 'plate', dataType: 'string', minWidth: 100, width: '120px', widthResolved: '120px', resizable: true }),
-]
+  { field: 'center' as const, dataType: 'string' as const, minWidth: 100, width: '120px', widthResolved: '120px', resizable: true },
+  { field: 'car' as const, dataType: 'string' as const, minWidth: 100, width: '120px', widthResolved: '120px', resizable: true },
+  { field: 'plate' as const, dataType: 'string' as const, minWidth: 100, width: '120px', widthResolved: '120px', resizable: true },
+] as unknown as PivotItem<RowData>[]
 
-const columns = [new PivotItem<RowData>({ field: 'month' })]
+const columns = [{ field: 'month' as const }] as unknown as PivotItem<RowData>[]
 const values = [
-  { field: 'revenue' as const, summaryType: SummaryEnum.SUM, widthResolved: '80px', _label: 'Revenue' },
-  { field: 'cost' as const, summaryType: SummaryEnum.SUM, widthResolved: '80px', _label: 'Cost' },
+  { measureId: 'revenue-sum', field: 'revenue' as const, summaryType: summary.SUM, widthResolved: '80px', _label: 'Revenue' },
+  { measureId: 'cost-sum', field: 'cost' as const, summaryType: summary.SUM, widthResolved: '80px', _label: 'Cost' },
 ]
 
 describe('pivotTransformData expandedLevelOnInit', () => {

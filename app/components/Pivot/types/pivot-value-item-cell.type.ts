@@ -6,8 +6,9 @@ export type IPivotValueItemCell<T = IItem> = {
   kind?: PivotRowItemKind
   columnId: string
   columnPath: string[]
+  measureId: string
   valueField: ObjectKey<T>
   value: PivotItem<T>
   aggregated: number
-  formattedValue: string
+  hasValue: boolean
 }

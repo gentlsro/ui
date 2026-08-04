@@ -1018,6 +1018,11 @@ export const defaultComponentsConfig = {
       loadData: undefined,
       loading: undefined,
       minimumColumnWidth: 80,
+      performance: {
+        sourceRowWarningThreshold: 100_000,
+        outputCellWarningThreshold: 250_000,
+        valueColumnWarningThreshold: 250,
+      },
       ui: {
         containerClass: ({ defaults }) => defaults.all,
         contentClass: ({ defaults }) => defaults.all,
@@ -1040,7 +1045,7 @@ export const defaultComponentsConfig = {
         filtersClass: ({ defaults }) => defaults.all,
       },
     },
-    merge: ['ui', 'loadData', 'collapseConfig', 'config'],
+    merge: ['ui', 'loadData', 'collapseConfig', 'config', 'performance'],
   },
 
   // Query builder

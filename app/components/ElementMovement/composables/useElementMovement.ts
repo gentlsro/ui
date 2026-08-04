@@ -26,6 +26,7 @@ function getMouseFromEvent(event: MouseEvent | TouchEvent): { x: number, y: numb
   if (event instanceof MouseEvent) {
     return { x: event.clientX, y: event.clientY }
   }
+
   return {
     x: event.touches[0]?.clientX ?? 0,
     y: event.touches[0]?.clientY ?? 0,
@@ -59,6 +60,7 @@ function enableTextSelection() {
 }
 
 export function useElementMovement(payload: {
+  constrainToPage?: boolean
   dimensions?: Ref<IDimensions>
   referenceEl?: MaybeElementRef<any>
   limits?: {
@@ -72,6 +74,7 @@ export function useElementMovement(payload: {
     dimensions = ref({ x: 0, y: 0, w: 0, h: 0 }),
     referenceEl,
     limits,
+    constrainToPage = true,
   } = payload
 
   const isMoving = ref(false)
@@ -266,7 +269,7 @@ export function useElementMovement(payload: {
       ? (document.body?.clientWidth || document.documentElement?.clientWidth || window.innerWidth)
       : Number.POSITIVE_INFINITY
 
-    if (Number.isFinite(pageWidth)) {
+    if (constrainToPage && Number.isFinite(pageWidth)) {
       // East-side resizing: right edge cannot exceed pageWidth
       if (corner === 'e' || corner === 'ne' || corner === 'se') {
         const maxWidthByPage = Math.max(0, pageWidth - original.x)

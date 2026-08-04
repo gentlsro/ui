@@ -3,6 +3,7 @@ import type { PivotItem } from '../models/pivot-item.model'
 export type IPivotValueColumnItem<T = IItem> = {
   id: string
   columnPath: string[]
+  measureId: string
   valueField: ObjectKey<T>
   value: PivotItem<T>
   label: string

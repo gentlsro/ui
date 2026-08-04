@@ -1,10 +1,14 @@
 import { get } from 'lodash-es'
 
-// Models
+// Types
 import type {
   IPivotTransformColumnField,
+  IPivotTransformRowField,
   IPivotTransformValueField,
 } from './pivot-transform-data-core'
+
+// Functions
+import { getPivotPathId } from './pivot-path-id'
 
 type IPivotAccumulator = {
   summaryType: SummaryEnum
@@ -13,12 +17,22 @@ type IPivotAccumulator = {
   values?: number[]
 }
 
-export type IPivotAggregationIndex = {
-  values: Map<string, number>
-  matchCounts: Map<string, number>
+type IPivotAggregatedValue = {
+  aggregated: number
+  matchCount: number
 }
 
-function getPivotRowValue<T extends IItem>(item: T, valueField: IPivotTransformValueField<T>): number {
+type IPivotAccumulatorIndex = Map<string, Map<string, Map<string, IPivotAccumulator>>>
+
+export type IPivotAggregationIndex = {
+  values: Map<string, Map<string, Map<string, IPivotAggregatedValue>>>
+  rowPathCountByDepth: number[]
+}
+
+const GRAND_TOTAL_KEY = 'grand-total'
+const EMPTY_PATH_KEY = 'empty-path'
+
+function getPivotRowValue<T extends IItem>(item: T, valueField: IPivotTransformValueField<T>) {
   if (valueField.summaryFormat) {
     const formatted = valueField.summaryFormat(item)
 
@@ -30,25 +44,37 @@ function getPivotRowValue<T extends IItem>(item: T, valueField: IPivotTransformV
   return typeof raw === 'number' ? raw : 0
 }
 
-function getPivotAggregationKey<T>(columnPath: string[], valueField: ObjectKey<T>): string {
-  if (columnPath[0] === '__grand_total__') {
-    return `__grand_total__|${String(valueField)}`
+function getAggregationPathKey(path: string[], isGrandTotal = false) {
+  if (isGrandTotal) {
+    return GRAND_TOTAL_KEY
   }
 
-  if (!columnPath.length) {
-    return `|${String(valueField)}`
-  }
-
-  return `${columnPath.join('|')}|${String(valueField)}`
+  return path.length ? `path:${getPivotPathId(path)}` : EMPTY_PATH_KEY
 }
 
 function getOrCreateAccumulator(payload: {
-  accumulators: Map<string, IPivotAccumulator>
-  key: string
+  accumulators: IPivotAccumulatorIndex
+  rowKey: string
+  columnKey: string
+  measureId: string
   summaryType: SummaryEnum
-}): IPivotAccumulator {
-  const { accumulators, key, summaryType } = payload
-  let accumulator = accumulators.get(key)
+}) {
+  const { accumulators, rowKey, columnKey, measureId, summaryType } = payload
+  let columnAccumulators = accumulators.get(rowKey)
+
+  if (!columnAccumulators) {
+    columnAccumulators = new Map()
+    accumulators.set(rowKey, columnAccumulators)
+  }
+
+  let measureAccumulators = columnAccumulators.get(columnKey)
+
+  if (!measureAccumulators) {
+    measureAccumulators = new Map()
+    columnAccumulators.set(columnKey, measureAccumulators)
+  }
+
+  let accumulator = measureAccumulators.get(measureId)
 
   if (!accumulator) {
     accumulator = {
@@ -57,7 +83,7 @@ function getOrCreateAccumulator(payload: {
       sum: 0,
       values: summaryType === SummaryEnum.MEDIAN ? [] : undefined,
     }
-    accumulators.set(key, accumulator)
+    measureAccumulators.set(measureId, accumulator)
   }
 
   return accumulator
@@ -72,7 +98,7 @@ function addToAccumulator(accumulator: IPivotAccumulator, numericValue: number) 
   }
 }
 
-function finalizeAccumulator(accumulator: IPivotAccumulator): number {
+function finalizeAccumulator(accumulator: IPivotAccumulator) {
   switch (accumulator.summaryType) {
     case SummaryEnum.COUNT:
       return accumulator.count
@@ -85,8 +111,13 @@ function finalizeAccumulator(accumulator: IPivotAccumulator): number {
 
     case SummaryEnum.MEDIAN: {
       const values = accumulator.values!.toSorted((a, b) => a - b)
+      const middle = Math.floor(values.length / 2)
 
-      return values[Math.floor(values.length / 2)] ?? 0
+      if (values.length % 2 === 0) {
+        return ((values[middle - 1] ?? 0) + (values[middle] ?? 0)) / 2
+      }
+
+      return values[middle] ?? 0
     }
 
     default:
@@ -96,72 +127,94 @@ function finalizeAccumulator(accumulator: IPivotAccumulator): number {
 
 export function buildPivotAggregationIndex<T extends IItem>(payload: {
   items: T[]
+  rowFields: IPivotTransformRowField<T>[]
   columnFields: IPivotTransformColumnField<T>[]
   valueFields: IPivotTransformValueField<T>[]
 }): IPivotAggregationIndex {
-  const { items, columnFields, valueFields } = payload
-  const accumulators = new Map<string, IPivotAccumulator>()
+  const { items, rowFields, columnFields, valueFields } = payload
+  const accumulators: IPivotAccumulatorIndex = new Map()
+  const rowPathsByDepth = rowFields.map(() => new Set<string>())
 
   for (const item of items) {
-    const columnPathKey = columnFields.length
-      ? columnFields.map(field => String(get(item, field.field) ?? '')).join('|')
-      : ''
+    const fullRowPath = rowFields.map(field => String(get(item, field.field) ?? ''))
+    const fullColumnPath = columnFields.map(field => String(get(item, field.field) ?? ''))
+    const rowPaths = rowFields.map((_, index) => ({
+      path: fullRowPath.slice(0, index + 1),
+      isGrandTotal: false,
+    }))
+    const columnPaths = (columnFields.length
+      ? columnFields.map((_, index) => fullColumnPath.slice(0, index + 1))
+      : [[]])
+      .map(path => ({ path, isGrandTotal: false }))
+
+    columnPaths.push({ path: [], isGrandTotal: true })
+
+    rowPaths.forEach((entry, index) => rowPathsByDepth[index]!.add(getPivotPathId(entry.path)))
+    rowPaths.push({ path: [], isGrandTotal: true })
 
     for (const valueField of valueFields) {
-      const fieldKey = String(valueField.field)
       const numericValue = getPivotRowValue(item, valueField)
 
-      if (columnFields.length) {
-        addToAccumulator(
-          getOrCreateAccumulator({
+      for (const rowPath of rowPaths) {
+        for (const columnPath of columnPaths) {
+          const accumulator = getOrCreateAccumulator({
             accumulators,
-            key: `${columnPathKey}|${fieldKey}`,
+            rowKey: getAggregationPathKey(rowPath.path, rowPath.isGrandTotal),
+            columnKey: getAggregationPathKey(columnPath.path, columnPath.isGrandTotal),
+            measureId: valueField.measureId,
             summaryType: valueField.summaryType,
-          }),
-          numericValue,
-        )
-      } else {
-        addToAccumulator(
-          getOrCreateAccumulator({
-            accumulators,
-            key: `|${fieldKey}`,
-            summaryType: valueField.summaryType,
-          }),
-          numericValue,
-        )
-      }
+          })
 
-      addToAccumulator(
-        getOrCreateAccumulator({
-          accumulators,
-          key: `__grand_total__|${fieldKey}`,
-          summaryType: valueField.summaryType,
-        }),
-        numericValue,
-      )
+          addToAccumulator(accumulator, numericValue)
+        }
+      }
     }
   }
 
-  const values = new Map<string, number>()
-  const matchCounts = new Map<string, number>()
+  const values: IPivotAggregationIndex['values'] = new Map()
 
-  for (const [key, accumulator] of accumulators) {
-    values.set(key, finalizeAccumulator(accumulator))
-    matchCounts.set(key, accumulator.count)
+  for (const [rowKey, columnAccumulators] of accumulators) {
+    const columnValues = new Map<string, Map<string, IPivotAggregatedValue>>()
+
+    values.set(rowKey, columnValues)
+
+    for (const [columnKey, measureAccumulators] of columnAccumulators) {
+      const measureValues = new Map<string, IPivotAggregatedValue>()
+
+      columnValues.set(columnKey, measureValues)
+
+      for (const [measureId, accumulator] of measureAccumulators) {
+        measureValues.set(measureId, {
+          aggregated: finalizeAccumulator(accumulator),
+          matchCount: accumulator.count,
+        })
+      }
+    }
   }
 
-  return { values, matchCounts }
+  return {
+    values,
+    rowPathCountByDepth: rowPathsByDepth.map(paths => paths.size),
+  }
 }
 
-export function getPivotAggregatedValue<T>(payload: {
+export function getPivotAggregatedValue(payload: {
   index: IPivotAggregationIndex
+  rowPath: string[]
   columnPath: string[]
-  valueField: ObjectKey<T>
-}): { aggregated: number, matchCount: number } {
-  const key = getPivotAggregationKey(payload.columnPath, payload.valueField)
+  measureId: string
+  rowGrandTotal?: boolean
+  columnGrandTotal?: boolean
+}): IPivotAggregatedValue {
+  const rowValues = payload.index.values.get(
+    getAggregationPathKey(payload.rowPath, payload.rowGrandTotal),
+  )
+  const columnValues = rowValues?.get(
+    getAggregationPathKey(payload.columnPath, payload.columnGrandTotal),
+  )
 
-  return {
-    aggregated: payload.index.values.get(key) ?? 0,
-    matchCount: payload.index.matchCounts.get(key) ?? 0,
+  return columnValues?.get(payload.measureId) ?? {
+    aggregated: 0,
+    matchCount: 0,
   }
 }

@@ -98,6 +98,14 @@
     "dataFields": "Hodnoty",
     "layout": "Rozvržení",
     "valuesOnRows": "Zobrazit hodnoty v řádcích",
-    "measureField": "Ukazatel"
+    "measureField": "Ukazatel",
+    "removeField": "Odebrat {field}",
+    "removeMeasure": "Odebrat ukazatel {field}",
+    "duplicateMeasure": "Duplikovat ukazatel {field}",
+    "aggregatedMeasureLabel": "{summary} – {field}",
+    "performanceWarning": "Tato kontingenční tabulka může být pomalá",
+    "performanceWarningDetails": "{sourceRows} zdrojových řádků vytvoří {rows} řádků kontingenční tabulky, {columns} hodnotových sloupců a {cells} logických hodnotových buněk.",
+    "returnToConfiguration": "Zpět do konfigurace",
+    "runAnyway": "Přesto spustit"
   }
 }

@@ -1,4 +1,16 @@
+export type IElementResizeHandle = 'nw' | 'n' | 'ne' | 'w' | 'e' | 'sw' | 's' | 'se'
+
 export type IElementMovementProps = {
+  /**
+   * Resize handles to render
+   */
+  handles?: ReadonlyArray<IElementResizeHandle>
+
+  /**
+   * Prevent resizing beyond the page's horizontal bounds
+   */
+  constrainToPage?: boolean
+
   /**
    * Dimensions of the thing we're resizing
    */

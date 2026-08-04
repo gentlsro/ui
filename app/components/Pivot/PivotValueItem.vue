@@ -8,6 +8,7 @@ import { aggregatePivotValueCellsForColumn } from './functions/pivot-column-coll
 
 // Models
 import type { PivotItem } from './models/pivot-item.model'
+import { getPivotPathId } from './functions/pivot-path-id'
 
 // Store
 import { usePivotStore } from './stores/pivot.store'
@@ -21,8 +22,7 @@ type IProps = {
 
 const props = defineProps<IProps>()
 
-const { state, visibleValueColumns, ui } = usePivotStore()
-const { formatNumber } = useNumber()
+const { state, visibleValueColumns, ui } = usePivotStore<T>()
 
 const displayedItem = computed(() => {
   const collapsedItems = props.item.collapsedGroupValueItems
@@ -51,15 +51,27 @@ const displayedCells = computed(() => {
     }
 
     if (column.isCollapsedGroupColumn) {
+      const activeMeasure = item.cells[0]
+      const measureId = activeMeasure?.measureId ?? column.measureId
+      const groupCell = item.columnGroupCells?.[`${getPivotPathId(column.columnPath)}:${measureId}`]
+
+      if (groupCell) {
+        return {
+          ...groupCell,
+          id: `${item.id}-${column.id}`,
+          columnId: column.id,
+        }
+      }
+
       return aggregatePivotValueCellsForColumn<T>({
         cells: item.cells as Parameters<typeof aggregatePivotValueCellsForColumn<T>>[0]['cells'],
         column: {
           id: column.id,
           columnPath: column.columnPath,
-          valueField: column.valueField as ObjectKey<T>,
-          value: column.value as PivotItem<T>,
+          measureId,
+          valueField: activeMeasure?.valueField ?? column.valueField as ObjectKey<T>,
+          value: activeMeasure?.value ?? column.value as PivotItem<T>,
         },
-        formatNumber,
       })
     }
 
@@ -68,10 +80,11 @@ const displayedCells = computed(() => {
       kind: item.kind,
       columnId: column.id,
       columnPath: column.columnPath,
+      measureId: column.measureId,
       valueField: column.valueField,
       value: column.value,
       aggregated: 0,
-      formattedValue: '',
+      hasValue: false,
     } as IPivotValueItemCell<T>
   })
 })
@@ -109,9 +122,10 @@ const valueItemStyle = computed(() => {
     :style="valueItemStyle"
   >
     <PivotValueItemCell
-      v-for="cell in displayedCells"
+      v-for="(cell, index) in displayedCells"
       :key="cell.id"
       :item="cell"
+      :column="visibleValueColumns[index]!"
     />
   </div>
 </template>

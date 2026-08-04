@@ -75,8 +75,6 @@ export function usePivotRowResizing<T extends IItem = IItem>() {
     displayRowFields.value.forEach(row => {
       row._width = row.getWidthPx(root)
     })
-
-    items.value = [...items.value]
   }
 
   function getMinRowWidth(row: (typeof displayRowFields.value)[number]) {

@@ -5,28 +5,20 @@ import type { IPivotDataItem } from './types/pivot-data-item.type'
 
 // Store
 import { usePivotStore } from './stores/pivot.store'
-import { getPivotPromotedRowLabelLevels } from './functions/pivot-group-collapse'
 
 // Constants
 import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
 
 type IProps = {
   row: IPivotDataItem<T>
-  rowIndex: number
 }
 
 const props = defineProps<IProps>()
 
-const { ui, state, rows, visibleData } = usePivotStore()
+const { ui, promotedRowLabelLevelsById } = usePivotStore()
 
 const promotedLevels = computed(() => {
-  return getPivotPromotedRowLabelLevels({
-    row: props.row,
-    visibleRows: visibleData.value as IPivotDataItem<T>[],
-    rowIndex: props.rowIndex,
-    collapsedGroupIds: state.value.collapsedGroupIds,
-    rowFieldCount: rows.value.length,
-  })
+  return promotedRowLabelLevelsById.value.get(props.row.id) ?? []
 })
 
 // Styles - row item
