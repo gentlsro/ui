@@ -6,6 +6,6 @@
 
 <style lang="scss" scoped>
 .page-wrapper--loading {
-  @apply flex flex-center fit;
+  @apply flex flex-center fit grow;
 }
 </style>
