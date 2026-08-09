@@ -112,7 +112,10 @@ label.label {
     @apply order--1 font-rem-13;
 
     @screen md {
-      @apply min-w-$labelInlineWidth w-$labelInlineWidth text-right font-rem-14 p-y-0.5 p-x-0;
+      @apply text-right font-rem-14 p-y-0.5 p-x-0;
+
+      width: var(--labelInlineWidth);
+      min-width: var(--labelInlineWidth);
     }
 
     &:not(.is-focusable) {
