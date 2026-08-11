@@ -3,8 +3,7 @@
 import type { IPivotRowItemCell } from './types/pivot-row-item-cell.type'
 
 // Functions
-import { isRowItemCellCollapsible } from './functions/is-row-item-cell-collapsible'
-import { isPivotRowCellHiddenByCollapsedAncestor } from './functions/pivot-group-collapse'
+import { resolvePivotRowItemCell } from './functions/pivot-resolve-row-item-cell'
 
 // Constants
 import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
@@ -25,88 +24,26 @@ const props = defineProps<IProps>()
 const { currentLocaleCode } = useLocale()
 
 // Store
-const { rows, measureRowColumn, showMeasureColumn, ui, state } = usePivotStore()
+const { rows, measureRowColumn, showMeasureColumn, ui, state } = usePivotStore<T>()
 
-const isPromoted = computed(() => {
-  const level = props.item.rowFieldIndex
-
-  return level !== undefined && props.promotedLevels.includes(level)
-})
-
-const collapseGroupId = computed(() => {
-  const level = props.item.rowFieldIndex
-
-  if (isPromoted.value && level !== undefined) {
-    return props.groupIds[level] ?? props.item.groupId
-  }
-
-  return props.item.groupId
-})
-
-const isCollapsible = computed(() => {
-  if (props.item.kind === 'valueLabel') {
-    return false
-  }
-
-  if (isPromoted.value) {
-    return isRowItemCellCollapsible({
-      rows: rows.value,
-      item: { kind: 'rowLabel', rowFieldIndex: props.item.rowFieldIndex },
-    })
-  }
-
-  return isRowItemCellCollapsible({ rows: rows.value, item: props.item })
-})
-
-const isHidden = computed(() => {
-  return isPivotRowCellHiddenByCollapsedAncestor(
-    collapseGroupId.value,
-    state.value.collapsedGroupIds,
-  )
-})
-
-const cellValue = computed(() => {
-  if (props.item.kind === 'valueLabel') {
-    return props.item.label ?? ''
-  }
-
-  if (isPromoted.value && props.item.rowFieldIndex !== undefined) {
-    return props.groupPath[props.item.rowFieldIndex] ?? ''
-  }
-
-  if (props.item.kind === 'empty') {
-    return ''
-  }
-
-  if (props.item.kind === 'grandTotal') {
-    return 'Grand Total'
-  }
-
-  const value = get(props.item.ref, props.item.row?.field as ObjectKey<T>)
-
-  return value
-})
-
-const formattedCellValue = computed(() => {
-  const dataType = ['empty', 'grandTotal', 'valueLabel'].includes(props.item.kind ?? '')
-    ? undefined
-    : props.item.row?.dataType
-  const value = formatValue(cellValue.value, props.item.ref, {
-    dataType,
-    format: props.item.row?.format,
+const resolved = computed(() => {
+  return resolvePivotRowItemCell({
+    item: props.item,
+    groupIds: props.groupIds,
+    groupPath: props.groupPath,
+    promotedLevels: props.promotedLevels,
+    rows: rows.value,
+    collapsedGroupIds: state.value.collapsedGroupIds,
     localeIso: currentLocaleCode.value,
-    source: { type: 'component', name: 'PivotRowItemCell' },
+    formatCellValue: ({ value, row, dataType, format, localeIso }) => {
+      return formatValue(value, row, {
+        dataType,
+        format,
+        localeIso,
+        source: { type: 'component', name: 'PivotRowItemCell' },
+      })
+    },
   })
-
-  if (props.item.kind === 'subtotal' && !isPromoted.value) {
-    return `${value} Total`
-  }
-
-  return value
-})
-
-const showCellContent = computed(() => {
-  return !isHidden.value && (isCollapsible.value || cellValue.value !== '')
 })
 
 // Styles - row item cell
@@ -116,7 +53,7 @@ const rowItemCellClass = computed(() => {
       defaults: PIVOT_DEFAULT_PROPS.ui.rowItemCellClass(),
     }),
     {
-      'is-collapsible': isCollapsible.value,
+      'is-collapsible': resolved.value.isCollapsible,
       'is-total': props.item.kind === 'subtotal',
       'is-grand-total': props.item.kind === 'grandTotal',
     },
@@ -142,15 +79,15 @@ const rowItemCellStyle = computed(() => {
     :style="rowItemCellStyle"
   >
     <PivotCollapseBtn
-      v-if="isCollapsible && !isHidden"
-      :group-id="collapseGroupId"
+      v-if="resolved.isCollapsible && !resolved.isHidden"
+      :group-id="resolved.collapseGroupId"
     />
 
     <span
-      v-if="showCellContent && formattedCellValue !== ''"
+      v-if="resolved.showContent && resolved.displayValue !== ''"
       class="min-w-0 truncate"
     >
-      {{ formattedCellValue }}
+      {{ resolved.displayValue }}
     </span>
   </div>
 </template>

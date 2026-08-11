@@ -4,9 +4,9 @@ import type { IPivotRowItemCell } from '../types/pivot-row-item-cell.type'
 // Models
 import type { PivotItem } from '../models/pivot-item.model'
 
-export function isRowItemCellCollapsible(payload: {
-  rows: PivotItem[]
-  item: Pick<IPivotRowItemCell, 'kind' | 'rowFieldIndex'>
+export function isRowItemCellCollapsible<T extends IItem>(payload: {
+  rows: PivotItem<T>[]
+  item: Pick<IPivotRowItemCell<T>, 'kind' | 'rowFieldIndex'>
 }) {
   const { rows, item } = payload
 

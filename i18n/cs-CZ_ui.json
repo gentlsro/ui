@@ -91,6 +91,7 @@
     "moveAndResizeAvailable": "Tento element lze přesouvat a měnit jeho velikost"
   },
   "pivot": {
+    "rawData": "Zdrojová data",
     "allFields": "Všechna pole",
     "filterFields": "Filtry",
     "rowFields": "Řádky",

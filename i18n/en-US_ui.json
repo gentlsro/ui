@@ -91,6 +91,7 @@
     "moveAndResizeAvailable": "You can move and resize this element"
   },
   "pivot": {
+    "rawData": "Raw data",
     "allFields": "All fields",
     "filterFields": "Filters",
     "rowFields": "Rows",
