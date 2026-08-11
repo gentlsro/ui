@@ -22,6 +22,7 @@ export function pivotFiltersToTableColumnFilters<T extends IItem>(item: PivotIte
     dataType: item.dataType,
     comparator: slot.comparator,
     value: slot.filterValue,
+    format: item.format,
   }))
 }
 
@@ -62,8 +63,11 @@ export function pivotItemToTableColumn<T extends IItem>(item: PivotItem<T>) {
     field: item.field as TableColumn<T>['field'],
     dataType: item.dataType,
     label: item._label,
-    comparator: getDefaultComparatorByDataType(item.dataType),
+    comparator: item.comparator ?? getDefaultComparatorByDataType(item.dataType),
+    comparators: item.comparators,
     filters: pivotFiltersToTableColumnFilters(item),
+    format: item.format,
+    getDistinctData: item.getDistinctData,
   })
 }
 

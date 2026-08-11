@@ -143,7 +143,7 @@ export const PIVOT_DEFAULT_PROPS = {
     },
 
     valueHeaderCellClass() {
-      const base = 'font-rem-12 font-bold shrink-0 min-w-10 flex items-start gap-2 p-x-2 p-y-1'
+      const base = 'font-rem-12 font-bold shrink-0 min-w-10 flex items-center gap-2 p-x-2 p-y-1'
       const border = 'border-r border-b border-light-8 dark:border-dark-6'
       const collapsible = '[&.is-collapsible]:(p-l-1)'
 

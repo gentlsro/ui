@@ -71,6 +71,7 @@ function replaceColumnCopyFilters(filters: FilterItem<T>[]) {
     filters,
     comparators: column.comparators,
     extraComparators: column.extraComparators,
+    format: column.format,
     getDistinctData: column.getDistinctData,
     filterComponent: column.filterComponent,
   })
@@ -183,16 +184,21 @@ defineExpose({
     </div>
 
     <div class="pivot-filter-menu__content">
-      <PivotFilterMenuItem
-        v-for="filterItem in interactiveFilters"
-        ref="filteringItemEl"
-        :key="filterItem.id"
-        :item="filterItem"
-        :column="columnCopy"
-        :modify-fnc="modifyFnc"
-        @vue:mounted="handleMountedFilteringItem"
-        @remove:item="handleRemoveFilter(filterItem)"
-      />
+      <template
+        v-for="(filterItem, index) in interactiveFilters"
+        :key="index"
+      >
+        <PivotFilterMenuItem
+          ref="filteringItemEl"
+          :item="filterItem"
+          :column="columnCopy"
+          :modify-fnc="modifyFnc"
+          @vue:mounted="handleMountedFilteringItem"
+          @remove:item="handleRemoveFilter(filterItem)"
+        />
+
+        <Separator v-if="index !== interactiveFilters.length - 1" />
+      </template>
     </div>
 
     <!-- Add filter -->
@@ -202,7 +208,7 @@ defineExpose({
       no-uppercase
       outlined
       preset="ADD"
-      m="1"
+      m="2"
       :label="$t('table.addFilter')"
       bg="!white !dark:black"
       @click="handleAddFilter"
@@ -212,10 +218,10 @@ defineExpose({
 
 <style scoped lang="scss">
 .pivot-filter-menu {
-  @apply flex flex-col gap-1 p-2;
+  @apply flex flex-col gap-1;
 
   &__title {
-    @apply flex items-center gap-2;
+    @apply flex items-center gap-2 p-x-2 p-y-1;
 
     &-label {
       @apply grow font-semibold font-rem-14;
@@ -223,7 +229,7 @@ defineExpose({
   }
 
   &__content {
-    @apply flex flex-col gap-2;
+    @apply flex flex-col gap-2 p-x-1;
   }
 }
 </style>

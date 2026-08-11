@@ -117,9 +117,13 @@ function handleClearSorting() {
           :ui="{ contentClass: ({ defaults }) => `${defaults.all} items-center gap-1` }"
           grow
         >
-          <span class="table-toolbar__sorting-label">
-            {{ $t('table.sortBy') }}:
-          </span>
+          <div class="flex items-center p-r-1 color-ca">
+            <Icon
+              name="i-hugeicons:sorting-a-z-02"
+              class="w-5 h-5 shrink-0 "
+            />
+            :
+          </div>
 
           <div
             flex="~ items-center gap-1"
@@ -129,18 +133,21 @@ function handleClearSorting() {
           />
 
           <Btn
-            preset="TRASH"
+            preset="CLOSE"
             size="xs"
             :label="$t('general.sorting.clear')"
-            :ui="{ labelClass: ({ defaults }) => `${defaults.all} hidden md:flex` }"
+            :ui="{ labelClass: ({ defaults }) => `${defaults.all} hidden @xl:flex` }"
             data-cy="clear-sorting"
+            :tooltip="{
+              label: $t('general.sorting.clear'),
+            }"
             @click="handleClearSorting"
           />
         </HorizontalScroller>
       </slot>
     </div>
 
-    <div flex="~ items-center gap-2">
+    <div flex="~ items-center @2xl:gap-2">
       <!-- Auto-fit -->
       <slot
         v-if="!isCardView"

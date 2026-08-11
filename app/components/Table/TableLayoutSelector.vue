@@ -64,20 +64,20 @@ function handleLayoutApply(layout?: ITableLayout) {
 
 <template>
   <Btn
-    icon="i-solar:eye-linear lg:m-r-1"
+    icon="i-solar:eye-linear @2xl:m-r-1"
     p="!x-2"
     size="sm"
     color="ca"
     no-uppercase
   >
     <!-- Label -->
-    <div class="items-center hidden lg:flex gap-1">
+    <div class="items-center hidden @2xl:flex gap-1">
       <span text="xs">
         {{ $t('table.useLayout') }}
       </span>
     </div>
 
-    <div class="i-flowbite:chevron-right-outline h-4 w-4 rotate-90 lt-lg:(absolute bottom--1.5 left-1/2 -translate-x-1/2)" />
+    <div class="i-flowbite:chevron-right-outline h-4 w-4 rotate-90 chevron-icon" />
 
     <!-- Layout selector menu -->
     <Menu
@@ -195,5 +195,11 @@ function handleLayoutApply(layout?: ITableLayout) {
 
 .layout-item-actions {
   @apply absolute top-1 right-1 items-center gap-px flex;
+}
+
+.chevron-icon {
+  @container (max-width: 671px) {
+    @apply absolute bottom--1.5 left-1/2 -translate-x-1/2;
+  }
 }
 </style>

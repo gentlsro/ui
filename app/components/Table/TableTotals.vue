@@ -34,7 +34,11 @@ const totalsByField = computed(() => {
 })
 
 // Data fetching
-watch(rows, getTotals)
+watch(
+  [rows, () => props.totals],
+  getTotals,
+  { immediate: true },
+)
 
 async function getTotals() {
   if (typeof props.totals === 'function') {
@@ -54,6 +58,10 @@ async function getTotals() {
 
   else if (props.totals) {
     totals.value = props.totals
+  }
+
+  else {
+    totals.value = undefined
   }
 }
 </script>

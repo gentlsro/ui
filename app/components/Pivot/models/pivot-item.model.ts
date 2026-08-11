@@ -3,6 +3,7 @@ import type { Required } from 'utility-types'
 
 // Models
 import type { ComparatorEnum } from '$comparatorEnum'
+import type { TableColumn } from '../../Table/models/table-column.model'
 
 export type IPivotValueUsageSlot<T = IItem> = {
   id?: string
@@ -17,6 +18,30 @@ export class PivotItem<T = IItem> {
   dataType: ExtendedDataType
   minWidth: number = 100
   resizable = true
+
+  /**
+   * Function to format the value of the item
+   * Usage: Same semantics as `TableColumn.format`
+   */
+  format?: TableColumn<T>['format']
+
+  /**
+   * Function to get distinct data for the filter dropdown
+   * Usage: Same semantics as `TableColumn.getDistinctData`
+   */
+  getDistinctData?: TableColumn<T>['getDistinctData']
+
+  /**
+   * The initial / default comparator when adding a filter
+   * Usage: Same semantics as `TableColumn.comparator`
+   */
+  comparator?: ComparatorEnum
+
+  /**
+   * If used, these will be the only available comparators
+   * Usage: Same semantics as `TableColumn.comparators`
+   */
+  comparators?: ComparatorEnum[]
 
   /**
    * Usage of the item
@@ -131,6 +156,10 @@ export class PivotItem<T = IItem> {
     this.field = obj.field
     this.label = obj.label
     this.dataType = obj.dataType ?? 'string'
+    this.format = obj.format
+    this.getDistinctData = obj.getDistinctData
+    this.comparator = obj.comparator
+    this.comparators = obj.comparators
 
     // Width
     this.width = obj.width ?? '200px'

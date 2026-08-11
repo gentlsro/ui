@@ -24,6 +24,7 @@ const isCollapsed = computed(() => {
 function handleToggleCollapse() {
   if (props.axis === 'column') {
     toggleColumnGroupCollapse(props.groupId)
+
     return
   }
 
@@ -33,10 +34,11 @@ function handleToggleCollapse() {
 
 <template>
   <Btn
-    icon="i-flowbite:chevron-right-outline !h-4 !w-4"
-    class="pivot-collapse-btn shrink-0"
+    icon="i-flowbite:chevron-right-outline !h-4.5 !w-4.5"
+    class="pivot-collapse-btn shrink-0 p-0.5!"
     :class="{ 'rotate-90': !isCollapsed }"
     size="auto"
+    :ripple="false"
     @mousedown.stop.prevent
     @click.stop.prevent="handleToggleCollapse"
   />
