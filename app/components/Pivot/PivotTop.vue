@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import PivotExportBtn from './PivotExportBtn.vue'
+
 // Store
 import { usePivotStore } from './stores/pivot.store'
 
@@ -81,5 +83,13 @@ const titleStyle = computed(() => {
         <PivotFilters />
       </div>
     </slot>
+
+    <!-- Actions -->
+    <div
+      m="l-auto"
+      p="x-2 y-1"
+    >
+      <PivotExportBtn />
+    </div>
   </div>
 </template>
