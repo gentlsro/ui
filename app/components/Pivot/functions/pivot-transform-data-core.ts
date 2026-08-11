@@ -38,7 +38,9 @@ export type IPivotTransformRowField<T extends IItem = IItem> = Pick<
 export type IPivotTransformColumnField<T extends IItem = IItem> = Pick<
   PivotItem<T>,
   'field'
->
+> & {
+  dataType?: PivotItem<T>['dataType']
+}
 
 export type IPivotTransformValueField<T extends IItem = IItem> = {
   measureId: string
@@ -357,7 +359,7 @@ function buildTabularRows<T extends IItem>(payload: IBuildTabularRowsPayload<T>)
   }
 
   const field = rowFields[level]!
-  const groups = pivotGroupBy(items, field.field)
+  const groups = pivotGroupBy(items, field.field, field.dataType)
   const sortedKeys = [...groups.keys()].sort()
   const results: IPivotDataItem<T>[] = []
 

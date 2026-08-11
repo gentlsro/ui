@@ -44,8 +44,8 @@ const totalText = computed(() => {
     return ''
   }
 
-	  const valueFormatted = formatValue(props.total?.value, undefined, {
-	    dataType: props.total?.dataType,
+  const valueFormatted = formatValue(props.total?.value, undefined, {
+    dataType: props.total?.dataType,
     localeIso: currentLocale.value.code,
     source: { type: 'component', name: 'TableTotalsCell' },
   })

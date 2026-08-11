@@ -19,7 +19,7 @@ const { fitColumns } = useTableAutoFit()
     @click="fitColumns"
   >
     <!-- Label -->
-    <div class="items-center hidden lg:flex gap-1">
+    <div class="items-center hidden @2xl:flex gap-1">
       <span text="xs">
         {{ $t('table.fitColumns') }}
       </span>

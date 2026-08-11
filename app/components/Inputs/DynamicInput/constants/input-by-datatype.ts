@@ -11,6 +11,7 @@ import TimeInput from '../../TimeInput/TimeInput.vue'
 import NumberInput from '../../NumberInput/NumberInput.vue'
 import CurrencyInput from '../../CurrencyInput/CurrencyInput.vue'
 import DurationInput from '../../DurationInput/DurationInput.vue'
+import YearMonthSelector from '../../../YearMonthSelector/YearMonthSelector.vue'
 
 export function getInputByDataType(
   dataType: ExtendedDataType,
@@ -95,7 +96,7 @@ export function getInputByDataType(
     case 'yearMonth':
     case 'yearMonthSimple':
       return createComponent({
-        component: TimeInput,
+        component: YearMonthSelector,
         props,
         icon: 'i-carbon:calendar',
       })
@@ -103,7 +104,7 @@ export function getInputByDataType(
     case 'time':
     case 'timeSimple':
       return createComponent({
-        component: TextInput,
+        component: TimeInput,
         props,
         icon: 'i-ion:time-outline',
       })

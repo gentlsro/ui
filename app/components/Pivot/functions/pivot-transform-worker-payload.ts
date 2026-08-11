@@ -82,6 +82,7 @@ function serializePivotColumn<T extends IItem>(column: IPivotTransformColumnFiel
 
   return {
     field: raw.field,
+    dataType: raw.dataType,
     minWidth: raw.minWidth,
     width: raw.width,
     widthResolved: raw.widthResolved,

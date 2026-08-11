@@ -123,7 +123,7 @@ function handleRemove(idx: number) {
     data-cy="columns-button"
   >
     <!-- Label -->
-    <div class="items-center hidden lg:flex gap-1">
+    <div class="items-center hidden @2xl:flex gap-1">
       <span text="xs">
         {{ $t('general.column', 2) }}
       </span>

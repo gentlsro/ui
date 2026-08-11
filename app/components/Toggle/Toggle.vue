@@ -191,7 +191,11 @@ const focusHelperStyle = computed(() => {
     @keydown="handleKeyDown"
     @click.stop.prevent="handleStateChange"
   >
-    <slot name="prepend" />
+    <slot
+      name="prepend"
+      :label-style
+      :label-class
+    />
 
     <div
       class="toggle"

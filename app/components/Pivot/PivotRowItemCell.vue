@@ -21,6 +21,9 @@ type IProps = {
 
 const props = defineProps<IProps>()
 
+// Utils
+const { currentLocaleCode } = useLocale()
+
 // Store
 const { rows, measureRowColumn, showMeasureColumn, ui, state } = usePivotStore()
 
@@ -81,7 +84,21 @@ const cellValue = computed(() => {
 
   const value = get(props.item.ref, props.item.row?.field as ObjectKey<T>)
 
-  if (props.item.kind === 'subtotal') {
+  return value
+})
+
+const formattedCellValue = computed(() => {
+  const dataType = ['empty', 'grandTotal', 'valueLabel'].includes(props.item.kind ?? '')
+    ? undefined
+    : props.item.row?.dataType
+  const value = formatValue(cellValue.value, props.item.ref, {
+    dataType,
+    format: props.item.row?.format,
+    localeIso: currentLocaleCode.value,
+    source: { type: 'component', name: 'PivotRowItemCell' },
+  })
+
+  if (props.item.kind === 'subtotal' && !isPromoted.value) {
     return `${value} Total`
   }
 
@@ -130,10 +147,10 @@ const rowItemCellStyle = computed(() => {
     />
 
     <span
-      v-if="showCellContent && cellValue !== ''"
+      v-if="showCellContent && formattedCellValue !== ''"
       class="min-w-0 truncate"
     >
-      {{ cellValue }}
+      {{ formattedCellValue }}
     </span>
   </div>
 </template>

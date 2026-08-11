@@ -30,7 +30,7 @@ export function buildPivotColumnTree<T extends IItem>(payload: {
   }
 
   const field = columnFields[level]!
-  const groups = pivotGroupBy(items, field.field)
+  const groups = pivotGroupBy(items, field.field, field.dataType)
   const sortedKeys = [...groups.keys()].sort()
 
   return sortedKeys.map(key => {
@@ -111,6 +111,7 @@ function buildValueHeaderRows<T extends IItem>(payload: {
           colspan: getNodeColspan(node, valuesCount),
           rowspan: 1,
           level: targetLevel,
+          columnFieldIndex: targetLevel,
         })
       } else if (node.children.length) {
         addNodesAtLevel({

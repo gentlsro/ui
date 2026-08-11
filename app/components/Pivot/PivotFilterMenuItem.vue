@@ -43,6 +43,7 @@ defineExpose({ focus: () => valueInputEl.value?.focus() })
         preset="TRASH"
         size="sm"
         tabindex="-1"
+        class="bg-white dark:bg-black outline-1 outline-ca outline-solid"
         @click="$emit('remove:item')"
       />
     </div>
@@ -59,7 +60,8 @@ defineExpose({ focus: () => valueInputEl.value?.focus() })
 
 <style scoped lang="scss">
 .pivot-filter-menu-item {
-  @apply flex flex-col gap-1 p-1 border-ca bg-ca border-dotted rounded-custom;
+  @apply flex flex-col gap-1 p-1.5 border-ca border-dotted rounded-custom
+    bg-slate-100 dark:bg-dark-900;
 
   &__comparator {
     @apply flex gap-1;

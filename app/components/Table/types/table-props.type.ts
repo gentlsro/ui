@@ -568,7 +568,7 @@ export type ITableProps<
    * Split rows configuration
    *
    * You can use this to split the rows into multiple columns
-   * If a breakpoint uses a number > 1, it will automatically switch to the card view
+   * If a breakpoint uses a `count` value > 1, it will automatically switch to the card view
    *
    * Example: [
    *  { breakpoint: 600, count: 2 },

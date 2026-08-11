@@ -18,7 +18,20 @@ type IProps = {
 
 const props = defineProps<IProps>()
 
+// Utils
+const { currentLocaleCode } = useLocale()
+
 const { columns, ui, state } = usePivotStore()
+
+const columnField = computed(() => {
+  const index = props.cell.columnFieldIndex
+
+  if (index === undefined) {
+    return undefined
+  }
+
+  return columns.value[index]
+})
 
 const isCollapsible = computed(() => {
   return isValueHeaderCellCollapsible({ columns: columns.value, cell: props.cell })
@@ -33,6 +46,22 @@ const isHidden = computed(() => {
     props.cell.groupId,
     state.value.collapsedColumnGroupIds,
   )
+})
+
+const formattedLabel = computed(() => {
+  const field = columnField.value
+
+  if (!field) {
+    return props.cell.label
+  }
+
+  // Group keys are raw; format via the column field for Table-like display.
+  return formatValue(props.cell.label, undefined, {
+    dataType: field.dataType,
+    format: field.format,
+    localeIso: currentLocaleCode.value,
+    source: { type: 'component', name: 'PivotValueHeaderCell' },
+  })
 })
 
 const valueHeaderCellClass = computed(() => {
@@ -56,7 +85,7 @@ const valueHeaderCellStyle = computed(() => {
     class="pivot-value-header-cell"
     :class="valueHeaderCellClass"
     :style="valueHeaderCellStyle"
-    :title="cell.label"
+    :title="formattedLabel"
   >
     <PivotCollapseBtn
       v-if="isCollapsible && !isHidden && cell.groupId"
@@ -68,7 +97,7 @@ const valueHeaderCellStyle = computed(() => {
       v-if="!isHidden"
       class="truncate"
     >
-      {{ cell.label }}
+      {{ formattedLabel }}
     </span>
   </div>
 </template>

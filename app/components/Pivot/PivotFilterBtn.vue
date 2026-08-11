@@ -47,7 +47,7 @@ function handleBeforeHide() {
     <template v-if="showLabel">
       <span
         v-if="showLabel"
-        class="font-rem-12 uppercase"
+        class="font-rem-12"
       >
         {{ item._label }}
       </span>
@@ -64,6 +64,7 @@ function handleBeforeHide() {
       :no-arrow="false"
       no-transition
       no-uplift
+      dense
       @before-hide="handleBeforeHide"
     >
       <PivotFilterMenu

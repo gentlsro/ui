@@ -336,6 +336,9 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     function syncPivotItemFilters(item: PivotItem<T>, column: TableColumn<T>) {
       syncTableColumnFiltersToPivotItem(item, column)
       normalizePivotFilterSlotIndices(items.value)
+
+      // Trigger the deep reactivity
+      items.value = [...items.value]
     }
 
     function getPivotAggregationSignature(

@@ -17,6 +17,25 @@ beforeAll(async () => {
   vi.stubGlobal('filterData', ({ data, filters }: any) => data.filter((row: any) => {
     return filters.every((filter: any) => row[filter.field] === filter.value)
   }))
+  vi.stubGlobal('getDateTypes', () => [
+    'date',
+    'dateSimple',
+    'datetime',
+    'datetimeSimple',
+    'timestamp',
+    'timestampSimple',
+    'fullDateTime',
+    'fullDateTimeSimple',
+    'yearMonth',
+    'yearMonthSimple',
+  ])
+  vi.stubGlobal('getDateSimpleValue', (value: any) => {
+    const date = value instanceof Date ? value : new Date(value)
+
+    return Number.isNaN(date.getTime())
+      ? Number.NaN
+      : Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
+  })
   transformModule = await import('./pivot-transform-data-core')
 })
 

@@ -19,6 +19,7 @@ type IProps = {
 const props = defineProps<IProps>()
 
 const { ui, rowClickable, cellClickable, emits } = usePivotStore<T>()
+const { currentLocaleCode } = useLocale()
 const { formatNumber } = useNumber()
 
 const isClickable = computed(() => cellClickable.value || rowClickable.value)
@@ -45,6 +46,18 @@ const valueItemCellStyle = computed(() => {
 const formattedValue = computed(() => {
   if (!props.item.hasValue || !Number.isFinite(props.item.aggregated)) {
     return ''
+  }
+
+  const format = props.item.value.format
+
+  if (format) {
+    // Aggregates have no single source row; formatValue falls back to `{}`.
+    return formatValue(props.item.aggregated, undefined, {
+      dataType: props.item.value.dataType,
+      format,
+      localeIso: currentLocaleCode.value,
+      source: { type: 'component', name: 'PivotValueItemCell' },
+    })
   }
 
   return formatNumber(props.item.aggregated)

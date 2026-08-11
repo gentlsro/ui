@@ -1,6 +1,7 @@
 <script setup lang="ts" generic="T extends IItem = IItem">
 import Sortable from 'sortablejs'
 import type { SortableEvent } from 'sortablejs'
+import { klona } from 'klona/full'
 
 // Models
 import { PivotItem } from './models/pivot-item.model'
@@ -89,41 +90,38 @@ const sortableOptions = {
   preventOnFilter: true,
 } satisfies Partial<Sortable.Options>
 
-function cloneItemUsage(usage: PivotItem<T>['usage']) {
-  const clone: PivotItem<T>['usage'] = {}
-
-  if (usage.row) {
-    clone.row = { ...usage.row }
-  }
-
-  if (usage.column) {
-    clone.column = { ...usage.column }
-  }
-
-  if (usage.value) {
-    clone.value = usage.value.map(slot => ({ ...slot }))
-  }
-
-  if (usage.filter) {
-    clone.filter = usage.filter.map(slot => ({ ...slot }))
-  }
-
-  return clone
-}
-
 function clonePivotItem(item: PivotItem<T>) {
+  const source = klona(toRaw(item))
+  const width = typeof source.width === 'string' ? source.width : '200px'
+  const usage = source.usage ?? {}
+
+  // Guard against corrupted non-array slots (e.g. mistaken scalar/date assignment).
+  if (usage.value !== undefined && !Array.isArray(usage.value)) {
+    delete usage.value
+  }
+
+  if (usage.filter !== undefined && !Array.isArray(usage.filter)) {
+    delete usage.filter
+  }
+
+  // Recreate the class instance so getters/methods (`_label`, width helpers) stay intact.
+  // Functions are not cloned by `klona`, so reattach them from the live item.
   const clone = new PivotItem<T>({
-    field: item.field,
-    label: item.label,
-    dataType: item.dataType,
-    minWidth: item.minWidth,
-    resizable: item.resizable,
-    usage: cloneItemUsage(item.usage),
-    width: item.width,
+    field: source.field,
+    label: source.label,
+    dataType: source.dataType,
+    minWidth: source.minWidth,
+    resizable: source.resizable,
+    usage,
+    width,
+    format: item.format,
+    getDistinctData: item.getDistinctData,
+    comparator: source.comparator,
+    comparators: source.comparators,
   })
 
-  clone.widthResolved = item.widthResolved
-  clone._width = item._width
+  clone.widthResolved = source.widthResolved || width
+  clone._width = source._width
 
   return clone
 }
@@ -284,20 +282,9 @@ function getSummaryType(entry: IPivotConfigurationValueEntry<T>) {
 async function handleSubmit() {
   normalizeDraftUsage()
 
-  const draftItemsByField = new Map(
-    draftItems.value.map(item => [String(item.field), item]),
-  )
-  const nextItems = items.value.map(clonePivotItem)
-
-  for (const item of nextItems) {
-    const draftItem = draftItemsByField.get(String(item.field))
-
-    if (!draftItem) {
-      continue
-    }
-
-    item.usage = cloneItemUsage(draftItem.usage)
-  }
+  // Draft is the source of truth on apply; re-clone so we never submit shared
+  // reactive usage references from the live `items` computed.
+  const nextItems = draftItems.value.map(clonePivotItem)
 
   const applied = await applyConfiguration({
     items: nextItems,
@@ -440,6 +427,11 @@ onBeforeUnmount(() => {
                 @update:model-value="toggleItem(item)"
               />
 
+              <QueryBuilderItemDataTypeShortcut
+                :data-type="item.dataType"
+                class="shrink-0"
+              />
+
               <span class="grow truncate font-rem-12">
                 {{ item._label }}
               </span>
@@ -448,7 +440,7 @@ onBeforeUnmount(() => {
         </section>
 
         <!-- Filter fields -->
-        <section>
+        <section min-h="40">
           <header class="section-header">
             <div class="i-ic:round-filter-alt w-4 h-4" />
             <span>{{ $t('pivot.filterFields') }}</span>
@@ -485,7 +477,7 @@ onBeforeUnmount(() => {
       </div>
 
       <!-- Right column -->
-      <div class="flex flex-col gap-3 min-h-0 h-full">
+      <div class="flex flex-col gap-3 h-full">
         <!-- Layout -->
         <div class="flex flex-col gap-2">
           <header class="section-header">
@@ -506,7 +498,7 @@ onBeforeUnmount(() => {
         </div>
 
         <!-- Row fields -->
-        <section>
+        <section min-h="40">
           <header class="section-header">
             <div class="i-material-symbols:view-list w-4 h-4" />
             <span>{{ $t('pivot.rowFields') }}</span>
@@ -542,7 +534,7 @@ onBeforeUnmount(() => {
         </section>
 
         <!-- Column fields -->
-        <section>
+        <section min-h="40">
           <header class="section-header">
             <div class="i-material-symbols:view-column w-4 h-4" />
             <span>{{ $t('pivot.columnFields') }}</span>
@@ -578,7 +570,7 @@ onBeforeUnmount(() => {
         </section>
 
         <!-- Data fields -->
-        <section>
+        <section min-h="40">
           <header class="section-header">
             <div class="i-material-symbols:functions w-4 h-4" />
             <span>{{ $t('pivot.dataFields') }}</span>
@@ -608,6 +600,8 @@ onBeforeUnmount(() => {
                 no-uppercase
                 no-hover-effect
                 :ripple="false"
+                align="left"
+                icon="i-flowbite:chevron-right-outline order-last rotate-90"
                 class="shrink-0 p-y-1.5px! pivot-configuration__no-drag"
                 :label="$t(`summary.${getSummaryType(entry)}`)"
                 :ui="{
@@ -619,7 +613,6 @@ onBeforeUnmount(() => {
                   h="!auto"
                   dense
                   no-uplift
-                  placement="left-start"
                 >
                   <div class="flex flex-col gap-0.5 p-1">
                     <Btn
