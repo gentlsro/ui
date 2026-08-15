@@ -50,8 +50,9 @@ watch(
     if (isOpen) {
       el.style.height = '0px'
 
-      await nextTick()
-      el.style.height = `${getContentHeight(el.scrollHeight)}px`
+      requestAnimationFrame(() => {
+        el.style.height = `${getContentHeight(el.scrollHeight)}px`
+      })
     } else {
       el.style.height = `${getContentHeight(el.scrollHeight)}px`
 
@@ -139,6 +140,10 @@ const contentInnerStyle = computed(() => {
 .collapse__content {
   &.in-transition {
     @apply overflow-hidden;
+  }
+
+  &.is-floating {
+    @apply absolute top-0 left-0 right-0 bg-white dark:bg-dark-950 z-100;
   }
 }
 
