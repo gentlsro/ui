@@ -4,12 +4,7 @@ import { createResolver } from 'nuxt/kit'
 import { writeFile } from 'node:fs/promises'
 import { cwd } from 'node:process'
 
-// Constants
-import { gentlUIPreset } from './app/constants/unocss-preset'
-
 const isMonorepo = import.meta.env.VITE_MONOREPO === 'true'
-const isInstallLayerDeps = true
-
 const { resolve } = createResolver(import.meta.url)
 
 export default defineNuxtConfig({
