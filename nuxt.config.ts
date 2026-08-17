@@ -15,7 +15,7 @@ const { resolve } = createResolver(import.meta.url)
 export default defineNuxtConfig({
   extends: isMonorepo
     ? [['../Utilities']]
-    : [['github:gentlsro/Utilities#v2.1', { install: isInstallLayerDeps }]],
+    : ['github:gentlsro/Utilities#v2.1'],
 
   modules: [
     '@nuxtjs/i18n',
