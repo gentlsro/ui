@@ -12,7 +12,6 @@ const env = {
 }
 
 const isMonorepo = env.VITE_MONOREPO === 'true'
-
 const { resolve } = createResolver(import.meta.url)
 const hasUtilitiesLib = isMonorepo || existsSync(resolve('../Utilities'))
 
