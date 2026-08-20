@@ -2,11 +2,13 @@ import type { Required } from 'utility-types'
 
 // Types
 import type { ITableLayout } from '../types/table-layout.type'
+import type { ITableApplyQueryParamsPayload } from './table-apply-query-params'
 
 // Functions
 import { tableSelectRow } from './table-select-row'
 import { useTableAutoFit } from '../composables/useTableAutoFit'
 import { tableApplyLayout } from './table-apply-layout'
+import { tableApplyQueryParams } from './table-apply-query-params'
 import type { tableBuildFetchPayload } from './table-build-fetch-payload'
 
 // Store
@@ -22,6 +24,10 @@ export function tableGetExposed() {
     store: () => tableStore,
     fitColumns,
     applyLayout: (payload: { layout?: ITableLayout }) => tableApplyLayout({
+      ...payload,
+      getStore: () => tableStore,
+    }),
+    applyQueryParams: (payload: ITableApplyQueryParamsPayload): void => tableApplyQueryParams({
       ...payload,
       getStore: () => tableStore,
     }),

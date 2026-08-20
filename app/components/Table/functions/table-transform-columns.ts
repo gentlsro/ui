@@ -28,10 +28,14 @@ function getUsedProperties(payload: {
   } = payload
 
   const isUrlUsed = shouldUrlBeUsed
-    && (urlResult.filters.length
+    && (forceUrlUsage
+      || urlResult.filters.length
       || urlResult.sort.length
       || urlResult.queryBuilder.length
-      || urlResult.visibleColumns.length)
+      || urlResult.visibleColumns.length
+      || urlResult.search !== null
+      || urlResult.pagination.skip !== undefined
+      || urlResult.pagination.take !== undefined)
 
   const isSchemaUsed = shouldSchemaBeUsed
     && (defaultSchemaResult.filters.length
@@ -88,6 +92,7 @@ export function tableTransformColumns(payload: {
     initialSchemaConfig,
     defaultSchema,
     stateSchema,
+    forceUrlUsage,
   } = payload
 
   // Create a copy of the columns
@@ -169,7 +174,7 @@ export function tableTransformColumns(payload: {
     stateSchemaResult,
     urlResult,
     modifiers,
-    forceUrlUsage: !!initialParams,
+    forceUrlUsage: forceUrlUsage || !!initialParams,
   })
 
   if (!isSchemaUsed && !isUrlUsed) {
@@ -234,18 +239,18 @@ export function tableTransformColumns(payload: {
       // First, we add the predefined filters
       col.filters = col.filtersPredefined ?? []
 
-	      // Then, we add the filters from the URL / schema and possibly merge the
-	      // filters from the URL / schema with the predefined filters (based on comparator)
-	      const toMerge: FilterItem[] = []
+      // Then, we add the filters from the URL / schema and possibly merge the
+      // filters from the URL / schema with the predefined filters (based on comparator)
+      const toMerge: FilterItem[] = []
 
       col.filters = [
         ...col.filters,
         ...filterItems
           .map(filter => {
-	            const parseValueOptions = {
-	              dateFormat: 'YYYY-MM-DD',
-	              comparator: filter.comparator,
-	            }
+            const parseValueOptions = {
+              dateFormat: 'YYYY-MM-DD',
+              comparator: filter.comparator,
+            }
             const colProps = pick(col, [
               'field',
               'filterField',
@@ -301,6 +306,7 @@ export function tableTransformColumns(payload: {
   return {
     queryBuilder,
     columns: _columns,
+    search: result.search,
     filtersUsed: !!filters.length,
     sortUsed: !!sort.length,
     selectUsed: !!visibleColumns.length,
