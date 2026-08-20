@@ -1,5 +1,4 @@
 // @unocss-include
-import { existsSync } from 'node:fs'
 import { createResolver } from 'nuxt/kit'
 import { writeFile } from 'node:fs/promises'
 import { prepareLocalNuxtLayers } from './prepare-layers'

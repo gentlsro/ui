@@ -50,11 +50,15 @@ export function tableExtractDataFromUrl(payload: {
   // Pagination
   const pagination = extractPaginationFromUrl(params)
 
+  // Search
+  const search = params.get('search')
+
   return {
     sort,
     queryBuilder,
     filters,
     visibleColumns,
     pagination,
+    search,
   }
 }

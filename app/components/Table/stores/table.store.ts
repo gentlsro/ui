@@ -455,6 +455,7 @@ const [
       columns: _columns,
       queryBuilder: qb,
       pagination,
+      search: searchResult,
       isSchemaUsed,
       isUrlUsed,
     } = tableTransformColumns({
@@ -481,6 +482,7 @@ const [
     // Set the query builder
     if (isSchemaUsed || isUrlUsed) {
       queryBuilder.value = qb.length ? qb : queryBuilderInitializeItems()
+      search.value = searchResult ?? ''
 
       if (!noState.value) {
         state.value.queryBuilder = queryBuilder.value
