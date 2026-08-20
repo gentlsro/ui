@@ -383,7 +383,7 @@ onBeforeUnmount(() => {
     :label="$t('general.apply')"
     :icon="false"
     :ui="{
-      contentClass: () => 'flex flex-col gap-2 grow',
+      contentClass: () => 'flex flex-col gap-2 grow overflow-auto',
       controlsClass: () => 'sticky flex items-center shrink-0 gap-2 bottom-0 z-1 rounded-b-custom',
     }"
     :submit-btn-props="{ size: 'sm', noUppercase: true }"
@@ -396,11 +396,11 @@ onBeforeUnmount(() => {
       :label="transformError.message"
     />
 
-    <div class="flex-1 grid grid-cols-2 gap-3">
+    <div class="flex-1 grid grid-cols-2 gap-3 overflow-auto">
       <!-- Left column -->
-      <div class="flex flex-col gap-3">
+      <div class="flex flex-col gap-3 overflow-auto">
         <!-- All fields -->
-        <section>
+        <section class="grow overflow-auto">
           <header class="section-header">
             <div class="i-material-symbols:apps w-4 h-4" />
             <span>{{ $t('pivot.allFields') }}</span>
@@ -408,7 +408,7 @@ onBeforeUnmount(() => {
 
           <div
             ref="allFieldsEl"
-            class="section-content"
+            class="section-content grow overflow-auto"
             data-role="all"
           >
             <div
@@ -647,7 +647,7 @@ onBeforeUnmount(() => {
 
 <style scoped lang="scss">
 section {
-  @apply flex grow flex-col gap-1 shrink-0;
+  @apply flex grow flex-col gap-1;
 
   .section-content {
     @apply flex grow flex-col gap-1 overflow-auto p-1 rounded-custom overflow-x-hidden
