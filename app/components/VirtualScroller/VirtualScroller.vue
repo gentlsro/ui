@@ -488,11 +488,10 @@ watch(rows, (rows, rowsOld) => {
   // Otherwise we want to recalculate the heights - basically reinitialize the component
   else {
     heights.value = Array.from({ length: rows.length ?? 0 }).fill(props.rowHeight) as number[]
-
     renderedRows.value = getRenderedRows(0, INITIAL_ROWS_RENDER_COUNT)
 
     nextTick(() => {
-      rerenderVisibleRows({ triggerScrollEvent: true, emitScrollEvent: false, resetHeights: true })
+      rerenderVisibleRows({ triggerScrollEvent: true, emitScrollEvent: true, resetHeights: true })
     })
   }
 
