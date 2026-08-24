@@ -123,7 +123,13 @@ export function useInputUtils(options: IInputUtilsOptions) {
   const select = () => inputElement.value?.select()
 
   const focus = (alignCursor?: boolean, preventScroll?: boolean) => {
+    const activeBefore = document.activeElement
+
     inputElement.value?.focus({ preventScroll })
+
+    if (isIosKeyboardFocusHolder(activeBefore)) {
+      releaseIosKeyboardFocus()
+    }
 
     if (alignCursor === true) {
       mask.value?.alignCursorFriendly()
@@ -217,6 +223,23 @@ export function useInputUtils(options: IInputUtilsOptions) {
     }
   }
 
+  function isTouchPointer(ev?: Event) {
+    const pointerType = ev instanceof PointerEvent
+      ? ev.pointerType
+      : uiStore.lastPointerDownType
+
+    return pointerType === 'touch' || pointerType === 'pen'
+  }
+
+  // Block focus (and the keyboard) on touch. Do not open the picker here:
+  // the same tap's leftover click would land on the overlay. The wrapper
+  // click handler opens it after that click hits the still-closed input.
+  function handlePointerDown(ev: PointerEvent) {
+    if (preventFocusOnTouch && isTouchPointer(ev)) {
+      ev.preventDefault()
+    }
+  }
+
   // Click & focus handling
   function handleFocusOrClick(ev?: Event) {
     if (uiStore.hasUserLeftPage) {
@@ -242,7 +265,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
 
     // In some cases, for example `DateInput`, we don't want to focus the input
     // on mobile phones
-    const isTouchEvent = uiStore.lastPointerDownEvent?.pointerType !== 'mouse'
+    const isTouchEvent = isTouchPointer(ev)
     const isFocusPrevented = preventFocusOnTouch && isTouchEvent
 
     // When event is not a `FocusEvent`, we focus it and align the cursor
@@ -260,6 +283,10 @@ export function useInputUtils(options: IInputUtilsOptions) {
     }
 
     if (isFocusPrevented) {
+      if (isFocusEvent) {
+        blur()
+      }
+
       return
     }
 
@@ -358,6 +385,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
     blur,
     getInputElement,
     handleFocusOrClick,
+    handlePointerDown,
     handleClickWrapper,
   }
 }

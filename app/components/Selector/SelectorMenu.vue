@@ -112,7 +112,7 @@ whenever(isPickerActive, () => {
     v-model="isPickerActive"
     v-model:placement="placement"
     tabindex="-1"
-    max-height="50%"
+    max-height="var(--selector-menu-max-height)"
     :reference-target="menuProps?.referenceTarget ?? referenceEl"
     class="selector-menu"
     :class="menuClass"
@@ -193,6 +193,21 @@ whenever(isPickerActive, () => {
 </template>
 
 <style lang="scss">
+.selector-menu {
+  --selector-menu-max-height: min(50dvh, calc(var(--visual-viewport-height, 100dvh) - 1rem));
+
+  // Floating UI writes an inline pixel max-height from `window.innerHeight`.
+  // Keep the CSS viewport/keyboard value in charge of the visible cap.
+  max-height: var(--selector-menu-max-height) !important;
+  overscroll-behavior: contain;
+}
+
+@media (max-width: 639px) {
+  .selector-menu {
+    --selector-menu-max-height: min(70dvh, calc(var(--visual-viewport-height, 100dvh) - 1rem));
+  }
+}
+
 .selector-menu[placement='top'] {
   .list-content {
     @apply p-t-2;

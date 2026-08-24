@@ -122,6 +122,22 @@ function commitHide() {
   emits('hide')
 }
 
+watch(model, (isOpen, wasOpen) => {
+  if (isOpen && !wasOpen) {
+    lockDialogBackgroundScroll()
+  }
+
+  if (!isOpen && wasOpen) {
+    unlockDialogBackgroundScroll()
+  }
+})
+
+onBeforeUnmount(() => {
+  if (model.value) {
+    unlockDialogBackgroundScroll()
+  }
+})
+
 // We sync the model with the debouncedModel immediately when the value is `true`
 // to show the content immediately to trigger the transition
 whenever(model, isVisible => {

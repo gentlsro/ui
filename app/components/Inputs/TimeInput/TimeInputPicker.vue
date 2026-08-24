@@ -68,8 +68,6 @@ const menuProxyEl = useTemplateRef('menuProxyEl')
 const hourEl = useTemplateRef('hourEl')
 const minuteEl = useTemplateRef('minuteEl')
 const isPickerActive = ref(false)
-const preventNextChangeFromMobileInputs = autoResetRef(false, 50)
-const preventPickerSync = autoResetRef(false, 1000)
 const isAm = useVModel(props, 'isAm', emits, { eventName: 'update:is-am' })
 const preventNextIsAmChange = useVModel(props, 'preventNextIsAmChange', emits, {
   eventName: 'update:prevent-next-is-am-change',
@@ -79,12 +77,34 @@ const usedTouch = computed(() => {
   return lastPointerDownEvent.value?.pointerType !== 'mouse'
 })
 
+const storedTime = computed(() => {
+  const candidate = typeof model.value === 'string' ? model.value : props.modelValueLocalized
+
+  return /^\d{2}:\d{2}$/.test(candidate ?? '')
+    ? candidate!
+    : (props.modelValueLocalized || '12:00')
+})
+
+function toPickerHour(hh: string) {
+  const hour = Number(hh)
+
+  if (!props.is12h || Number.isNaN(hour)) {
+    return padStart(hh, 2, '0')
+  }
+
+  if (hour === 0 || hour === 12) {
+    return '12'
+  }
+
+  return padStart(String(hour > 12 ? hour - 12 : hour), 2, '0')
+}
+
 const localizedTimeParts = computed(() => {
-  const time = props.modelValueLocalized || '12:00'
+  const [hh = '12', mm = '00'] = storedTime.value.split(':')
 
   return {
-    hh: time.split(':')[0],
-    mm: time.split(':')[1],
+    hh: toPickerHour(hh),
+    mm: padStart(mm, 2, '0'),
   }
 })
 
@@ -92,49 +112,56 @@ function handlePickerHide() {
   isPickerActive.value = false
 }
 
-function setValue(
-  val: string | undefined | null,
-  type: 'h' | 'm' | 'both',
-  syncScrollPickers?: boolean,
-  syncWithInputs?: boolean,
-) {
-  if (typeof val !== 'string' || preventNextChangeFromMobileInputs.value) {
+function setValue(val: string | undefined | null, type: 'h' | 'm' | 'both') {
+  if (typeof val !== 'string') {
     return
   }
 
   if (type === 'both') {
+    const [hh = '12', mm = '00'] = val.split(':')
+
     preventNextIsAmChange.value = true
-    isAm.value = +val.split(':')[0]! < 12
+    isAm.value = +hh < 12
+    model.value = `${toPickerHour(hh)}:${padStart(mm, 2, '0')}`
 
-    model.value = val
-  } else {
-    const [hh, mm] = (props.modelValueLocalized || '12:00').split(':')
-
-    if (type === 'h') {
-      model.value = `${val}:${mm}`
-    } else {
-      model.value = `${hh}:${val}`
-    }
+    return
   }
 
-  // When using header inputs on mobile, we need to manually sync the vertical
-  // scroll pickers
-  if (syncScrollPickers && !preventPickerSync.value) {
-    syncInternalValueWithPicker()
+  if (!/^\d{1,2}$/.test(val)) {
+    return
   }
 
-  // On mobiles, when using scroll and have one of the header inputs focused,
-  // we need to manually sync the value of the input
-  if (syncWithInputs && usedTouch.value) {
-    preventPickerSync.value = true
-    preventNextChangeFromMobileInputs.value = true
-  }
+  const padded = padStart(val, 2, '0')
+  const { hh, mm } = localizedTimeParts.value
+
+  model.value = type === 'h'
+    ? `${padded}:${mm}`
+    : `${hh}:${padded}`
+}
+
+function setPeriod(nextIsAm: boolean) {
+  const { hh, mm } = localizedTimeParts.value
+
+  isAm.value = nextIsAm
+  model.value = `${hh}:${mm}`
 }
 
 function syncInternalValueWithPicker() {
-  hourEl.value?.sync()
-  minuteEl.value?.sync()
+  nextTick(() => {
+    hourEl.value?.sync()
+    minuteEl.value?.sync()
+  })
 }
+
+watch(storedTime, () => {
+  syncInternalValueWithPicker()
+})
+
+watch(isPickerActive, isActive => {
+  if (isActive) {
+    syncInternalValueWithPicker()
+  }
+})
 
 defineExpose({
   show: () => menuProxyEl.value?.show(),
@@ -177,7 +204,7 @@ defineExpose({
           :label="$t('general.hour', 1)"
           inputmode="decimal"
           :ui="{ inputClass: () => 'text-center w-full' }"
-          @update:model-value="setValue($event, 'h', true)"
+          @update:model-value="setValue($event, 'h')"
         />
         <TextInput
           layout="regular"
@@ -187,7 +214,7 @@ defineExpose({
           :label="$t('general.minute', 1)"
           inputmode="decimal"
           :ui="{ inputClass: () => 'text-center w-full' }"
-          @update:model-value="setValue($event, 'm', true)"
+          @update:model-value="setValue($event, 'm')"
         />
       </div>
     </template>
@@ -202,14 +229,14 @@ defineExpose({
         :model-value="localizedTimeParts.hh"
         flex="1"
         :items="hourOptions"
-        @update:model-value="setValue($event, 'h', undefined, true)"
+        @update:model-value="setValue($event, 'h')"
       />
       <VerticalScrollPicker
         ref="minuteEl"
         :model-value="localizedTimeParts.mm"
         flex="1"
         :items="minuteOptions"
-        @update:model-value="setValue($event, 'm', undefined, true)"
+        @update:model-value="setValue($event, 'm')"
       />
 
       <!-- AM/PM -->
@@ -222,11 +249,12 @@ defineExpose({
         <Btn
           size="sm"
           :ripple="false"
-          @click="isAm = true"
+          @click="setPeriod(true)"
         >
           <template #label>
             <div
               transition="transform duration-200"
+              font="mono"
               :class="[
                 !isAm ? 'font-thin' : 'font-bold',
                 { 'scale-65': !isAm },
@@ -240,11 +268,12 @@ defineExpose({
         <Btn
           size="sm"
           :ripple="false"
-          @click="isAm = false"
+          @click="setPeriod(false)"
         >
           <template #label>
             <div
               transition="transform duration-200"
+              font="mono"
               :class="[isAm ? 'font-thin scale-65' : 'font-bold']"
             >
               {{ $t('general.pm') }}
@@ -276,7 +305,7 @@ defineExpose({
             center
             class="shortcuts-chip"
             :class="{ 'is-12h': is12h }"
-            @click="setValue(shortcut.value, 'both', true, true)"
+            @click="setValue(shortcut.value, 'both')"
           />
         </HorizontalScroller>
       </Field>

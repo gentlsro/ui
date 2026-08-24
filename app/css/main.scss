@@ -1,5 +1,12 @@
 $baseFontSize: 16px;
 
+:root {
+  --visual-viewport-width: 100dvw;
+  --visual-viewport-height: 100dvh;
+  --visual-viewport-offset-top: 0px;
+  --visual-viewport-offset-left: 0px;
+}
+
 html {
   // height: 100%;
   font-size: $baseFontSize;
@@ -18,6 +25,25 @@ body {
 
 html.dark {
   @apply bg-darker color-white;
+}
+
+html.is-dialog-open,
+html.is-dialog-open body {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+html.is-dialog-open .page-wrapper,
+html.is-dialog-open .page-wrapper__content {
+  overflow: hidden !important;
+  overscroll-behavior: none;
+}
+
+html.is-dialog-open .dialog,
+html.is-dialog-open .dialog .virtual-scroll,
+html.is-dialog-open .dialog .scroll-picker__scroller {
+  touch-action: pan-y;
+  overscroll-behavior: contain;
 }
 
 .link {

@@ -87,6 +87,7 @@ export function useFieldUtils(options?: {
     }
 
     el.value?.focus?.()
+    retainIosKeyboardFocus()
     isTouched.value = isEditable.value
     isBlurred.value = false
     instance?.emit('focus')
