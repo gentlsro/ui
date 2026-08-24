@@ -121,6 +121,19 @@ function handleClickOutside(ev: Event) {
 onClickOutside(drawerEl, handleClickOutside, {
   ignore: props.ignoreClickOutside,
 })
+
+useHead(() => ({
+  style: [{
+    key: `page-drawer-${props.side}`,
+    innerHTML: `
+      @media (max-width: ${BREAKPOINTS[props.absoluteBreakpoint] - 1}px) {
+        .page-drawer--${props.side}.is-absolute-full-width {
+          width: 100%;
+        }
+      }
+    `,
+  }],
+}))
 </script>
 
 <template>
@@ -180,10 +193,6 @@ header.is-hidden ~ .page-drawer {
 
   &-filler {
     height: min(52px, var(--navHeight));
-  }
-
-  &.is-absolute-full-width {
-    @apply w-full;
   }
 
   &--left {

@@ -23,6 +23,7 @@ type IConfig<T extends IItem = IItem> = {
 function createStore<T extends IItem = IItem>(injectionKey?: string) {
   const injectionState = createInjectionState((payload?: IConfig<T>) => {
     const { treeProps } = payload ?? {}
+    const { searchData } = useSearching()
 
     // Utils
     const instance = getCurrentInstance()
@@ -235,6 +236,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
             childrenIdsByNodeId: childrenIdsByNodeId.value,
             searchConfig: searchConfig.value,
             collapseConfig: collapseConfig.value,
+            searchData,
           })
         }
 

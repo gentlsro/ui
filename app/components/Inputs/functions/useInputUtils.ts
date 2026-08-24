@@ -299,7 +299,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
 
   // Autofocus on init
   setTimeout(() => {
-    if (props.autofocus) {
+    if (props.autofocus && import.meta.client) {
       focus(undefined, true)
     }
   }, props.autofocusTimeout ?? 0)
