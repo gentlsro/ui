@@ -151,6 +151,7 @@ const {
   isBlurred,
   isTouched,
   handleFocusOrClick,
+  handlePointerDown,
   handleClickWrapper,
   focus,
   select,
@@ -251,6 +252,7 @@ defineExpose({
           ...(hasNoValue && { color: 'var(--placeholder-color)' }),
         }"
         v-bind="inputProps"
+        @pointerdown="handlePointerDown"
         @focus="handleFocusOrClick"
         @blur="handleBlur"
       >

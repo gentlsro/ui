@@ -45,6 +45,46 @@ function isMaskString(val?: string) {
   return val === PATTERN
 }
 
+const TIME_RE = /^\d{2}:\d{2}$/
+
+function parseTimeParts(time?: string | undefined | null) {
+  if (!TIME_RE.test(time ?? '')) {
+    return undefined
+  }
+
+  const [hh = '12', mm = '00'] = time!.split(':')
+
+  return { hh, mm }
+}
+
+function toPickerHour(hh: string) {
+  const hour = Number(hh)
+
+  if (!is12h.value || Number.isNaN(hour)) {
+    return padStart(hh, 2, '0')
+  }
+
+  if (hour === 0 || hour === 12) {
+    return '12'
+  }
+
+  return padStart(String(hour > 12 ? hour - 12 : hour), 2, '0')
+}
+
+function toStoredHour(pickerHour: string, am = isAm.value) {
+  const hour = Number(pickerHour)
+
+  if (!is12h.value || Number.isNaN(hour)) {
+    return padStart(pickerHour, 2, '0')
+  }
+
+  if (am) {
+    return hour === 12 ? '00' : padStart(String(hour), 2, '0')
+  }
+
+  return hour === 12 ? '12' : padStart(String(hour + 12), 2, '0')
+}
+
 function localizeTime(time?: string | undefined) {
   if (!isTime(time) || isMaskString(time)) {
     return ''
@@ -52,13 +92,7 @@ function localizeTime(time?: string | undefined) {
 
   const [hh = '00', mm = '00'] = time!.split(':')
 
-  if (is12h.value && +hh >= 13) {
-    return `${padStart(String(+hh % 12), 2, '0')}:${mm}`
-  } else if (is12h.value && +hh < 1) {
-    return `12:${mm}`
-  }
-
-  return time
+  return `${toPickerHour(hh)}:${padStart(mm, 2, '0')}`
 }
 
 function delocalizeTime(time?: string | undefined) {
@@ -68,11 +102,7 @@ function delocalizeTime(time?: string | undefined) {
 
   const [hh = '00', mm = '00'] = time!.split(':')
 
-  if (is12h.value && !isAm.value && +hh < 12) {
-    return `${+hh + 12}:${mm}`
-  }
-
-  return time
+  return `${toStoredHour(hh)}:${padStart(mm, 2, '0')}`
 }
 
 // Constants
@@ -83,19 +113,7 @@ const readonly = toRef(props, 'readonly')
 const preventNextIsAmChange = autoResetRef(false, 50)
 
 const delocalizedTimeParts = computed(() => {
-  const validTimeRegex = /^\d{2}:\d{2}$/
-  const isValidTime = validTimeRegex.test(props.modelValue)
-
-  if (!isValidTime) {
-    return { hh: '12', mm: '00' }
-  }
-
-  const time = props.modelValue || '12:00'
-
-  return {
-    hh: time.split(':')[0],
-    mm: time.split(':')[1],
-  }
+  return parseTimeParts(props.modelValue) ?? { hh: '12', mm: '00' }
 })
 
 // Mask
@@ -177,6 +195,7 @@ const {
   getInputElement,
   handleClickWrapper,
   handleFocusOrClick,
+  handlePointerDown,
   handleBlur,
 } = useInputUtils({
   props: propsExtended,
@@ -198,39 +217,50 @@ function handleInput(ev: Event) {
     }
   }
 
-  setTimeout(() => {
-    timeInputPickerEl.value?.sync()
-  }, 100)
+  timeInputPickerEl.value?.sync()
 }
 
 // Picker
 const timeInputPickerEl = useTemplateRef('timeInputPickerEl')
 
-// Watch `isAm` changes
-watch(isAm, isAm => {
+function currentDisplayParts() {
+  const fromModel = parseTimeParts(typeof model.value === 'string' ? model.value : undefined)
+  const fromLocalized = parseTimeParts(modelValueLocalized.value)
+  const fromProps = parseTimeParts(props.modelValue)
+  const parts = fromModel ?? fromLocalized ?? fromProps ?? { hh: '12', mm: '00' }
+
+  return {
+    hh: toPickerHour(parts.hh),
+    mm: padStart(parts.mm, 2, '0'),
+  }
+}
+
+// Keep the mask in 12h and emit the 24h value when AM/PM changes.
+watch(isAm, am => {
   if (preventNextIsAmChange.value || !is12h.value) {
     return
   }
 
-  if (isTime(model.value)) {
-    const { hh, mm } = delocalizedTimeParts.value
+  const { hh, mm } = currentDisplayParts()
 
-    if (isAm && +hh >= 12) {
-      model.value = `${padStart(String(+hh % 12), 2, '0')}:${mm}`
-    } else if (!isAm && +hh < 12) {
-      model.value = `${+hh + 12}:${mm}`
-    }
-  } else {
-    model.value = isAm ? '00:00' : '12:00'
-  }
-
-  emits('update:modelValue', model.value)
+  preventNextIsAmChange.value = true
+  emits('update:modelValue', `${toStoredHour(hh, am)}:${mm}`)
 })
 
-// Watch `modelValue` changes
 watch(model, () => {
   preventNextIsAmChange.value = true
-  isAm.value = +delocalizedTimeParts.value.hh < 12
+  timeInputPickerEl.value?.sync()
+})
+
+watch(() => props.modelValue, val => {
+  const parts = parseTimeParts(val)
+
+  if (!parts || !is12h.value) {
+    return
+  }
+
+  preventNextIsAmChange.value = true
+  isAm.value = +parts.hh < 12
 })
 
 const { path } = useInputValidationUtils(props)
@@ -312,6 +342,7 @@ defineExpose({
           ...(hasNoValue && { color: 'var(--placeholder-color)' }),
         }"
         v-bind="inputProps"
+        @pointerdown="handlePointerDown"
         @focus="handleFocusOrClick"
         @input="handleInput"
         @blur="handleBlur"

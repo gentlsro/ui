@@ -357,6 +357,11 @@ defineExpose({
 </template>
 
 <style lang="scss" scoped>
+.date-picker {
+  width: min(90vw, 400px);
+  max-width: 100%;
+}
+
 .date-picker-days {
   overflow: hidden;
   grid-auto-rows: minmax(40px, auto);

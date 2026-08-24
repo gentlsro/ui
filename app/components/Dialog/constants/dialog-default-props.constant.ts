@@ -17,7 +17,13 @@ export const DIALOG_DEFAULT_PROPS = {
     },
 
     wrapperClass() {
-      const base = 'flex fixed inset-0 pointer-events-none z-$zIndex'
+      const base = [
+        'flex fixed pointer-events-none z-$zIndex',
+        'top-[var(--visual-viewport-offset-top,0px)]',
+        'left-[var(--visual-viewport-offset-left,0px)]',
+        'w-[var(--visual-viewport-width,100%)]',
+        'h-[var(--visual-viewport-height,100dvh)]',
+      ].join(' ')
 
       const positionTop = '[&[position="top"]]:(justify-center items-start)'
       const positionBottom = '[&[position="bottom"]]:(justify-center items-end)'

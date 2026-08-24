@@ -10,307 +10,194 @@ const props = withDefaults(defineProps<IVerticalScrollPickerProps>(), {
   optionKey: 'id',
   optionLabel: 'label',
 })
-defineEmits<{
+
+const emits = defineEmits<{
   (e: 'update:modelValue', val: any): void
 }>()
 
-// Data
-const internalValue = ref(props.modelValue)
-const model = useVModel(props, 'modelValue')
-const items = toRef(props, 'items', [...Array.from({ length: 11 }).keys()])
-const initialIdx = items.value.findIndex(opt => opt === internalValue.value)
-const selectedIdx = ref(initialIdx > -1 ? initialIdx : 0)
-const itemsExtended = ref<any[]>([])
-
-function getOptions() {
-  if (items.value.length <= props.maxVisible) {
-    itemsExtended.value = items.value
-
-    return
-  }
-
-  const iterations = Math.ceil(5000 / items.value.length)
-  const opts: any[] = []
-  for (let i = 0; i < iterations; i++) {
-    opts.push(items.value)
-  }
-
-  itemsExtended.value = opts.flat()
-}
-
-getOptions()
-
-// Layout
-const lastClickY = ref(0)
-const isInitialized = ref(false)
-const hasSmoothScroll = ref(false)
-const isScrolling = ref(false)
-const scrollPicker = ref<HTMLDivElement>()
-const itemHeight = toRef(props, 'itemHeight')
+const items = computed(() => props.items ?? [])
+const scrollEl = ref<HTMLElement>()
+const isJumping = ref(false)
 
 const overscan = computed(() => Math.floor(props.maxVisible / 2))
 
 const containerStyle = computed<CSSProperties>(() => {
   return {
-    maxHeight: `${Math.min(
-      props.maxVisible * itemHeight.value,
-      items.value.length * itemHeight.value,
-    )}px`,
+    '--item-height': `${props.itemHeight}px`,
+    'height': `${props.maxVisible * props.itemHeight}px`,
   }
 })
 
-function handlePointerDown(ev: PointerEvent) {
-  lastClickY.value = ev.y
-  preventNextScrollRef.value = false
-}
-
-function handleMousedown() {
-  document.documentElement.classList.add('cursor-grabbing')
-
-  window.addEventListener('mousemove', handleMousemove)
-  window.addEventListener('mouseup', handleMouseup)
-}
-
-function handleMousemove(ev: MouseEvent) {
-  const { movementY } = ev
-
-  hasSmoothScroll.value = false
-  containerProps.ref.value!.scrollTop -= movementY
-}
-
-function handleMouseup() {
-  document.documentElement.classList.remove('cursor-grabbing')
-  hasSmoothScroll.value = true
-
-  window.removeEventListener('mousemove', handleMousemove)
-  window.removeEventListener('mouseup', handleMouseup)
-}
-
-function handleClick(ev: PointerEvent, idx: number) {
-  if (ev.y === lastClickY.value) {
-    hasSmoothScroll.value = true
-    scrollTo(idx)
-  }
-}
-
-// Virtual list
-const preventNextScrollRef = autoResetRef(false, 1000)
-const { list, containerProps, wrapperProps, scrollTo } = useVirtualList(
-  itemsExtended,
-  { itemHeight: itemHeight.value, overscan: overscan.value + 1 },
-)
-
-useScroll(containerProps.ref, {
-  onScroll: () => {
-    isScrolling.value = true
-    stop()
-
-    if (preventNextScrollRef.value) {
-      return
-    }
-
-    adjustScrollDebounced()
-    throttledUpdateModelValue(
-      itemsExtended.value[
-        Math.round(containerProps.ref.value!.scrollTop / itemHeight.value)
-        + overscan.value
-      ],
-    )
-
-    if (itemsExtended.value.length !== items.value.length) {
-      const container = containerProps.ref.value
-
-      const addBottom
-        = container!.scrollHeight - container!.scrollTop
-        <= (props.maxVisible + overscan.value) * itemHeight.value
-      if (addBottom) {
-        itemsExtended.value.push(...items.value)
-      }
-
-      const diffTop = container!.scrollTop - overscan.value * itemHeight.value
-      if (diffTop <= 0) {
-        hasSmoothScroll.value = false
-        itemsExtended.value.unshift(...items.value)
-        nextTick(() => {
-          container!.scrollTop
-            += items.value.length * itemHeight.value + Math.abs(diffTop)
-          hasSmoothScroll.value = true
-        })
-      }
-    }
-  },
-  onStop: () => {
-    if (preventNextScrollRef.value) {
-      return
-    }
-
-    isScrolling.value = false
-    hasSmoothScroll.value = true
-    adjustScrollDebounced()
-  },
-  idle: 500,
+const spacerStyle = computed<CSSProperties>(() => {
+  return { height: `${overscan.value * props.itemHeight}px` }
 })
 
-const adjustScrollDebounced = useDebounceFn(() => {
-  if (!scrollPicker.value) {
+function indexForValue(value: any) {
+  return items.value.findIndex(item => item === value)
+}
+
+function indexFromScrollTop(scrollTop: number) {
+  return Math.round(scrollTop / props.itemHeight)
+}
+
+function scrollToIndex(index: number) {
+  const el = scrollEl.value
+
+  if (!el || index < 0) {
     return
   }
 
-  if (isScrolling.value) {
-    adjustScrollDebounced()
-
-    return
-  }
-
-  selectedIdx.value = Math.round(
-    containerProps.ref.value!.scrollTop / itemHeight.value,
-  )
-  scrollTo(selectedIdx.value)
-
-  start()
-}, 500)
-
-// Helpers
-function reinitializeScroller(preselectIdx?: number) {
-  hasSmoothScroll.value = false
-  getOptions()
-  const iterations = Math.round(Math.ceil(5000 / items.value.length) / 2)
-  const idx
-    = iterations * items.value.length
-    + items.value.length
-    + ((preselectIdx ?? selectedIdx.value) % items.value.length)
-    + (isInitialized.value ? 0 : -2)
-
-  nextTick(() => {
-    scrollTo(idx)
-    hasSmoothScroll.value = true
+  isJumping.value = true
+  el.scrollTop = index * props.itemHeight
+  requestAnimationFrame(() => {
+    isJumping.value = false
   })
 }
 
-const { start, stop } = useTimeoutFn(() => reinitializeScroller(), 350)
+function emitIndex(index: number) {
+  const value = items.value[index]
 
-const throttledUpdateModelValue = useThrottleFn(
-  (value: any) => {
-    internalValue.value = value
-    model.value = value
-  },
-  100,
-  true,
-  true,
-)
+  if (!isNil(value) && value !== props.modelValue) {
+    emits('update:modelValue', value)
+  }
+}
+
+function settle() {
+  if (!scrollEl.value || isJumping.value) {
+    return
+  }
+
+  emitIndex(indexFromScrollTop(scrollEl.value.scrollTop))
+}
+
+function handleItemClick(index: number) {
+  scrollToIndex(index)
+  emitIndex(index)
+}
+
+function sync() {
+  scrollToIndex(indexForValue(props.modelValue))
+}
+
+useScroll(scrollEl, {
+  onStop: settle,
+  idle: 240,
+})
+
+watch(() => props.modelValue, value => {
+  if (isJumping.value) {
+    return
+  }
+
+  const current = items.value[indexFromScrollTop(scrollEl.value?.scrollTop ?? 0)]
+
+  if (current === value) {
+    return
+  }
+
+  sync()
+})
 
 onMounted(() => {
-  reinitializeScroller()
-  isInitialized.value = true
-  preventNextScrollRef.value = true
+  nextTick(sync)
 })
 
 defineExpose({
-  sync: () => {
-    nextTick(() => {
-      const idx = items.value.findIndex(opt => opt === model.value)
-
-      if (idx > -1) {
-        preventNextScrollRef.value = true
-        reinitializeScroller(idx - 2)
-      }
-    })
-  },
+  sync: () => nextTick(sync),
 })
 </script>
 
 <template>
   <div
-    ref="scrollPicker"
-    flex="~ col"
+    class="scroll-picker"
+    :style="containerStyle"
   >
-    <!-- Header -->
-    <slot name="header">
-      <div
-        v-if="title"
-        flex="~"
-        h="8"
-        items-center
-      >
-        <h6
-          flex="1"
-          text="center"
-          p="r-2"
-          truncate
-        >
-          <span>
-            {{ title }}
-          </span>
-        </h6>
-      </div>
-    </slot>
-
     <div
-      flex="~ 1 col"
-      relative
-      overflow="auto"
-      :style="containerStyle"
-      rounded="custom"
-      border="ca 1"
+      v-if="title"
+      class="scroll-picker__title"
     >
+      {{ title }}
+    </div>
+
+    <div class="scroll-picker__frame">
       <div
-        v-bind="containerProps"
-        style="height: 100%"
-        hide-scrollbar
-        select="none"
-        :class="{
-          'scroll-smooth': hasSmoothScroll,
-          'cursor-grab': !isScrolling,
-        }"
-        @mousedown="handleMousedown"
+        ref="scrollEl"
+        class="scroll-picker__scroller hide-scrollbar"
       >
-        <div v-bind="wrapperProps">
-          <div
-            v-for="item in list"
-            :key="item.index"
-            :style="{ height: `${itemHeight}px` }"
-            flex="~ center"
-            transition="transform duration-150"
-            @pointerdown="handlePointerDown"
-            @pointerup="handleClick($event, item.index - 2)"
-          >
-            {{ item.data }}
-          </div>
+        <div
+          class="scroll-picker__spacer"
+          :style="spacerStyle"
+        />
+
+        <div
+          v-for="(item, index) in items"
+          :key="index"
+          class="scroll-picker__item"
+          @click="handleItemClick(index)"
+        >
+          {{ item }}
         </div>
+
+        <div
+          class="scroll-picker__spacer"
+          :style="spacerStyle"
+        />
       </div>
 
-      <!-- Indicator -->
-      <div
-        w="full"
-        absolute
-        top="50%"
-        transform="translate-y--50%"
-        pointer-events="none"
-        border="y-2 ca"
-        :style="{ height: `${itemHeight}px` }"
-      />
-
-      <!-- Darkened area - Top side -->
-      <div
-        top="0"
-        w="full"
-        absolute
-        pointer-events="none"
-        bg="white/80 dark:darker/90"
-        :style="{ height: `calc(50% - ${itemHeight / 2}px)` }"
-        rounded="t-2"
-      />
-
-      <!-- Darkened area - Bottom side -->
-      <div
-        bottom="0"
-        w="full"
-        absolute
-        pointer-events="none"
-        bg="white/80 dark:darker/90"
-        :style="{ height: `calc(50% - ${itemHeight / 2}px)` }"
-        rounded="b-2"
-      />
+      <div class="scroll-picker__indicator" />
+      <div class="scroll-picker__shade scroll-picker__shade--top" />
+      <div class="scroll-picker__shade scroll-picker__shade--bottom" />
     </div>
   </div>
 </template>
+
+<style lang="scss" scoped>
+.scroll-picker {
+  @apply flex flex-col min-w-0;
+
+  &__title {
+    @apply flex items-center justify-center h-8 p-r-2 truncate;
+  }
+
+  &__frame {
+    @apply relative overflow-hidden rounded-custom border border-ca;
+  }
+
+  &__scroller {
+    @apply h-full overflow-y-auto select-none;
+
+    scroll-snap-type: y proximity;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  &__item {
+    @apply flex items-center justify-center font-mono;
+
+    height: var(--item-height);
+    scroll-snap-align: center;
+  }
+
+  &__indicator {
+    @apply absolute left-0 w-full pointer-events-none border-y-2 border-ca;
+
+    top: 50%;
+    height: var(--item-height);
+    transform: translateY(-50%);
+  }
+
+  &__shade {
+    @apply absolute left-0 w-full pointer-events-none bg-white/80 dark:bg-darker/90;
+
+    height: calc(50% - var(--item-height) / 2);
+
+    &--top {
+      @apply top-0 rounded-t-2;
+    }
+
+    &--bottom {
+      @apply bottom-0 rounded-b-2;
+    }
+  }
+}
+</style>

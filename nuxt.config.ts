@@ -58,7 +58,7 @@ export default defineNuxtConfig({
       script: [
         {
           key: 'page-size-init',
-          innerHTML: '(function(){var d=document.documentElement;d.style.setProperty(\'--page-width\',d.clientWidth+\'px\');d.style.setProperty(\'--page-height\',d.clientHeight+\'px\');})();',
+          innerHTML: '(function(){var d=document.documentElement;var v=window.visualViewport;d.style.setProperty(\'--page-width\',d.clientWidth+\'px\');d.style.setProperty(\'--page-height\',d.clientHeight+\'px\');d.style.setProperty(\'--visual-viewport-width\',(v&&v.width||d.clientWidth)+\'px\');d.style.setProperty(\'--visual-viewport-height\',(v&&v.height||d.clientHeight)+\'px\');d.style.setProperty(\'--visual-viewport-offset-top\',(v&&v.offsetTop||0)+\'px\');d.style.setProperty(\'--visual-viewport-offset-left\',(v&&v.offsetLeft||0)+\'px\');})();',
           tagPosition: 'head',
         },
       ],

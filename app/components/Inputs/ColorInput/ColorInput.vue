@@ -114,6 +114,7 @@ const {
   handleBlur,
   handleClickWrapper,
   handleFocusOrClick,
+  handlePointerDown,
   focus,
   select,
   blur,
@@ -123,6 +124,7 @@ const {
   props,
   maskRef: ref({ mask: /.*/ }),
   menuElRef: menuProxyEl,
+  preventFocusOnTouch: true,
 })
 
 // Wrapper class
@@ -208,6 +210,7 @@ defineExpose({
         :class="inputClass"
         :style="inputStyle"
         v-bind="inputProps"
+        @pointerdown="handlePointerDown"
         @focus="handleFocusOrClick"
         @blur="handleInputBlur"
       >

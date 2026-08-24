@@ -3,7 +3,7 @@
 export const DATE_PICKER_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'flex flex-col min-w-77 xm:w-70 overflow-auto'
+      const base = 'flex flex-col overflow-auto'
 
       return {
         base,
