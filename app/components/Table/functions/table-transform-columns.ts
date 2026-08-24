@@ -43,7 +43,8 @@ function getUsedProperties(payload: {
       || defaultSchemaResult.queryBuilder.length
       || defaultSchemaResult.visibleColumns.length)
 
-  const result = isUrlUsed && (modifiers?.useUrl || forceUrlUsage)
+  const isUrlResultUsed = isUrlUsed && (modifiers?.useUrl || forceUrlUsage)
+  const result = isUrlResultUsed
     ? urlResult
     : defaultSchemaResult
 
@@ -53,12 +54,12 @@ function getUsedProperties(payload: {
     result.visibleColumns = defaultSchemaResult.visibleColumns
   }
 
-  // Another special case, if the `stateSchema` has some pagination, while the
-  // `defaultSchema` doesn't, we use the pagination from the `stateSchema`
+  // Restore pagination from local storage only when the URL is not the source.
+  // URL skip/take must win over stored pagination (e.g. another tab on page 10).
   const isStateSchemaUsed = stateSchemaResult.pagination.skip !== undefined || stateSchemaResult.pagination.take !== undefined
   const isDefaultSchemaUsed = defaultSchemaResult.pagination.skip !== undefined || defaultSchemaResult.pagination.take !== undefined
 
-  if (isStateSchemaUsed && !isDefaultSchemaUsed) {
+  if (isStateSchemaUsed && !isDefaultSchemaUsed && !isUrlResultUsed) {
     result.pagination = stateSchemaResult.pagination
   }
 
