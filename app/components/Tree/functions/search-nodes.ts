@@ -13,8 +13,8 @@ export async function searchNodes<T extends IItem = IItem>(payload: {
   childrenIdsByNodeId?: Record<ITreeNode['id'], ITreeNode['id'][]>
   searchConfig?: ITreeProps<T>['searchConfig']
   collapseConfig?: ITreeProps<T>['collapseConfig']
+  searchData: ReturnType<typeof useSearching>['searchData']
 }): Promise<ITreeNode<T>[]> {
-  const { searchData } = useSearching()
   const {
     nodesFlattened,
     search,
@@ -26,6 +26,7 @@ export async function searchNodes<T extends IItem = IItem>(payload: {
     childrenIdsByNodeId,
     searchConfig,
     collapseConfig: _collapseConfig = { showCollapsedWhenSearched: true },
+    searchData,
   } = payload
 
   const includeInSearchConfig = searchConfig?.includeInSearch
