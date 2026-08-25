@@ -162,7 +162,7 @@ defineExpose({ focus, select })
 
   &__name {
     @apply relative font-rem-14 outline-none rounded-custom p-x-1
-    overflow-auto;
+    overflow-hidden;
   }
 
   .cancel-btn {

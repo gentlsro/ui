@@ -157,7 +157,8 @@ defineExpose({ focus, select })
   @apply flex items-center gap-x-2 gap-y-2px;
 
   &__name {
-    @apply relative font-rem-14 outline-none rounded-custom p-x-1;
+    @apply relative font-rem-14 outline-none rounded-custom p-x-1
+    overflow-hidden;
   }
 
   .cancel-btn {
