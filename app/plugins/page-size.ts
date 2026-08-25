@@ -1,5 +1,7 @@
 export default defineNuxtPlugin(() => {
-  const { isActiveElementInput } = useUIStore()
+  const uiStore = useUIStore()
+  const { isActiveElementInput } = uiStore
+  const { viewportWidthCookie, viewportHeightCookie } = storeToRefs(uiStore)
 
   if (!import.meta.client) {
     return
@@ -10,6 +12,9 @@ export default defineNuxtPlugin(() => {
   const setSize = (w: number, h: number) => {
     document.documentElement.style.setProperty('--page-width', `${w}px`)
     document.documentElement.style.setProperty('--page-height', `${h}px`)
+
+    viewportWidthCookie.value = w
+    viewportHeightCookie.value = h
   }
 
   const setViewportSize = () => {

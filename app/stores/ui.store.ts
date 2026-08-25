@@ -40,6 +40,14 @@ export const useUIStore = defineStore('__ui', () => {
     }
   }
 
+  // Viewport
+  const {
+    viewportWidthCookie,
+    viewportHeightCookie,
+    height,
+    width,
+  } = useViewport()
+
   // Temporary component
   // Usage: When we need to render a component temporarily to calculate its
   // dimensions (e.g. table cell), we can use this
@@ -117,6 +125,12 @@ export const useUIStore = defineStore('__ui', () => {
     lastPointerDownEl,
     lastPointerDownType,
     lastPasteEvent,
+
+    // Viewport
+    viewportWidthCookie,
+    viewportHeightCookie,
+    height,
+    width,
 
     setState: skipHydrate(setState),
 
