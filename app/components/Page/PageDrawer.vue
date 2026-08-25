@@ -6,7 +6,7 @@ import type { IPageDrawerProps } from './types/page-drawer-props.type'
 import { useLayoutStore } from '../../stores/layout.store'
 
 // Constants
-import { $bp } from '../../constants/breakpoints'
+import { BREAKPOINTS } from '../../constants/breakpoints'
 import { PAGE_DRAWER_DEFAULT_PROPS } from './constants/page-drawer-default-props.constant'
 
 const props = withDefaults(defineProps<IPageDrawerProps>(), {
@@ -31,12 +31,10 @@ const isMini = defineModel<boolean>('mini', { default: false })
 const classes = computed(() => {
   return [
     `page-drawer--${props.side}`,
-    `${isMini.value ? 'w-$drawerMiniWidth' : 'w-$drawerWidth'}`,
+    isMini.value ? 'w-$drawerMiniWidth' : 'w-$drawerWidth',
     {
       'is-mini': isMini.value,
       'is-open': model.value,
-      'is-absolute': !$bp[props.absoluteBreakpoint].value,
-      'is-absolute-full-width': !isMini.value && !$bp[props.absoluteFullWidthBreakpoint].value,
     },
   ]
 })
@@ -122,18 +120,38 @@ onClickOutside(drawerEl, handleClickOutside, {
   ignore: props.ignoreClickOutside,
 })
 
-useHead(() => ({
-  style: [{
-    key: `page-drawer-${props.side}`,
-    innerHTML: `
-      @media (max-width: ${BREAKPOINTS[props.absoluteBreakpoint] - 1}px) {
-        .page-drawer--${props.side}.is-absolute-full-width {
-          width: 100%;
+// Breakpoints are instance props, so media queries cannot live in the SFC stylesheet.
+useHead(() => {
+  const side = props.side ?? 'left'
+  const selector = `.page-drawer--${side}`
+  const absoluteMaxWidth = BREAKPOINTS[props.absoluteBreakpoint ?? 'md'] - 1
+  const fullWidthMaxWidth = BREAKPOINTS[props.absoluteFullWidthBreakpoint ?? 'md'] - 1
+
+  return {
+    style: [{
+      key: `page-drawer-${side}`,
+      textContent: `
+        @media (max-width: ${fullWidthMaxWidth}px) {
+          ${selector}:not(.is-mini) {
+            width: 100%;
+          }
         }
-      }
-    `,
-  }],
-}))
+
+        @media (max-width: ${absoluteMaxWidth}px) {
+          aside.page-drawer${selector} {
+            position: absolute;
+          }
+
+          ${selector}.is-open:not(.is-mini) ~ .page-wrapper {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            transform: translateX(0) !important;
+          }
+        }
+      `,
+    }],
+  }
+})
 </script>
 
 <template>

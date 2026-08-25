@@ -161,7 +161,7 @@ defineExpose({ focus, select })
   }
 
   .cancel-btn {
-    @apply m-l-auto m-r-1
+    @apply m-l-auto m-r-1 shrink-0
       color-negative
       bg-white dark:bg-black
       p-x-1.5;
