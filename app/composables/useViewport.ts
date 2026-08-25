@@ -10,8 +10,16 @@ function parseViewportDimension(value: unknown): number | undefined {
   return Math.round(size)
 }
 
-const FALLBACK_WIDTH = 1280
-const FALLBACK_HEIGHT = 800
+const DEVICE_VIEWPORT_BY_CLASS = {
+  mobile: { width: 400, height: 844 },
+  tablet: { width: 800, height: 1024 },
+  desktop: { width: 1536, height: 1080 },
+} as const
+
+type IViewportGuess = {
+  width: number
+  height: number
+}
 
 export function useViewport() {
   const viewportWidthCookie = useCookie<number | undefined>('screen_size', {
@@ -29,21 +37,38 @@ export function useViewport() {
     'sec-ch-viewport-height',
     'viewport-height',
   ])
+  const { isMobile, isTablet } = useDevice()
 
   const clientHintWidth = parseViewportDimension(headers['sec-ch-viewport-width'])
     ?? parseViewportDimension(headers['viewport-width'])
   const clientHintHeight = parseViewportDimension(headers['sec-ch-viewport-height'])
     ?? parseViewportDimension(headers['viewport-height'])
 
-  const guessed = computed(() => ({
-    width: import.meta.client
-      ? parseViewportDimension(viewportWidthCookie.value) ?? FALLBACK_WIDTH
-      : clientHintWidth ?? parseViewportDimension(viewportWidthCookie.value) ?? FALLBACK_WIDTH,
+  function getDeviceViewportGuess(): IViewportGuess {
+    if (isMobile) {
+      return DEVICE_VIEWPORT_BY_CLASS.mobile
+    }
 
-    height: import.meta.client
-      ? parseViewportDimension(viewportHeightCookie.value) ?? FALLBACK_HEIGHT
-      : clientHintHeight ?? parseViewportDimension(viewportHeightCookie.value) ?? FALLBACK_HEIGHT,
-  }))
+    if (isTablet) {
+      return DEVICE_VIEWPORT_BY_CLASS.tablet
+    }
+
+    return DEVICE_VIEWPORT_BY_CLASS.desktop
+  }
+
+  const guessed = useState<IViewportGuess>('ui-viewport', () => {
+    const deviceGuess = getDeviceViewportGuess()
+
+    return {
+      width: clientHintWidth
+        ?? parseViewportDimension(viewportWidthCookie.value)
+        ?? deviceGuess.width,
+
+      height: clientHintHeight
+        ?? parseViewportDimension(viewportHeightCookie.value)
+        ?? deviceGuess.height,
+    }
+  })
 
   if (clientHintWidth) {
     viewportWidthCookie.value = clientHintWidth
@@ -64,18 +89,13 @@ export function useViewport() {
     if (height) {
       viewportHeightCookie.value = height
     }
-  })
 
-  console.log('🚀 ~ useViewport', {
-    side: import.meta.server ? 'server' : 'client',
-    width: guessed.value.width,
-    height: guessed.value.height,
-    candidates: {
-      clientHintWidth,
-      clientHintHeight,
-      viewportWidthCookie: viewportWidthCookie.value,
-      viewportHeightCookie: viewportHeightCookie.value,
-    },
+    if (width || height) {
+      guessed.value = {
+        width: width ?? guessed.value.width,
+        height: height ?? guessed.value.height,
+      }
+    }
   })
 
   const width = computed(() => guessed.value.width)
