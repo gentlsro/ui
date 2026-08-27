@@ -329,6 +329,18 @@ export function useInputUtils(options: IInputUtilsOptions) {
     const isEmptyValue = isEqual(val, props.emptyValue)
     const isSame = isEqual(val, typed.value) || (typed.value === '' && isEmptyValue)
 
+    // Special case
+    // IMask parses Number('') as 0, so `typed` already equals 0 while the field is still
+    // visually empty. Setting `typed` to 0 then no-ops in Vue/vue-imask — push the display
+    // through `unmasked`/`masked` instead.
+    if (isSame && !isEmptyValue && unmasked.value === '') {
+      const displayValue = String(val)
+      unmasked.value = displayValue
+      masked.value = displayValue
+
+      return
+    }
+
     if (!isSame) {
       if (isEmptyValue) {
         // typed.value = props.emptyValue
