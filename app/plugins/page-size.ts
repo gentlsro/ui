@@ -1,12 +1,11 @@
-export default defineNuxtPlugin(() => {
-  const uiStore = useUIStore()
-  const { isActiveElementInput } = uiStore
-  const { viewportWidthCookie, viewportHeightCookie } = storeToRefs(uiStore)
+import { isActiveElementInput } from '../utils/is-active-element-input'
 
+export default defineNuxtPlugin(() => {
   if (!import.meta.client) {
     return
   }
 
+  const { viewportWidthCookie, viewportHeightCookie } = useViewport()
   const { isMobile } = useDevice()
 
   const setSize = (w: number, h: number) => {

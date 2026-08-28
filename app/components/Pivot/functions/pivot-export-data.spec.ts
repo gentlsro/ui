@@ -69,8 +69,8 @@ const currentView: IPivotCurrentViewExport = {
 }
 
 describe('buildPivotCurrentViewSheet', () => {
-  it('places hierarchical headers and preserves typed aggregate values', () => {
-    const sheet = buildPivotCurrentViewSheet(currentView)
+  it('places hierarchical headers and preserves typed aggregate values', async () => {
+    const sheet = await buildPivotCurrentViewSheet(currentView)
 
     expect(sheet.A1?.v).toBe('Center')
     expect(sheet.C1?.v).toBe('2026')
