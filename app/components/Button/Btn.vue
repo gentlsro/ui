@@ -176,7 +176,7 @@ const isIconifyIcon = computed(() => {
       />
 
       <div
-        v-else-if="icon || preset"
+        v-else-if="icon || preset?.icon"
         class="btn-icon"
         :class="[icon || preset?.icon, iconClass]"
         :style="iconStyle"
