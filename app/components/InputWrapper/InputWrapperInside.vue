@@ -145,7 +145,7 @@ const inputInnerContainerStyle = computed(() => {
   }
 
   .input-wrapper__inside-label {
-    @apply fit overflow-hidden;
+    @apply fit;
     grid-column: 2 / 3;
     grid-row: 1 / 3;
   }

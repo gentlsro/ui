@@ -15,6 +15,7 @@ export function useInputWrapperUtils() {
       'hasContent',
       'hint',
       'label',
+      'labelHint',
       'layout',
       'loading',
       'marker',

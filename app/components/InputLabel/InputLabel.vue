@@ -4,6 +4,7 @@ import type { IInputLabelProps } from './types/input-label-props.type'
 
 // Constants
 import { INPUT_LABEL_DEFAULT_PROPS } from './constants/input-label-default-props'
+import { $bp } from '../../constants/breakpoints'
 
 const props = withDefaults(defineProps<IInputLabelProps>(), {
   ...getComponentProps('inputLabel'),
@@ -29,6 +30,33 @@ const label = computed(() => {
   return props.label
 })
 
+// Label hint
+const isLabelHintTooltipOpen = shallowRef(false)
+const labelHintEl = useTemplateRef<HTMLElement>('labelHintEl')
+const labelHintTooltipId = useId()
+const isMobileLabelHint = $bp.smaller('md')
+
+const labelHint = computed(() => mergedProps.value.labelHint)
+
+const hasLabelHint = computed(() => {
+  return Boolean(labelHint.value?.label)
+})
+
+const labelHintTooltipProps = computed(() => ({
+  placement: isMobileLabelHint.value ? 'bottom-end' : 'right',
+  ...labelHint.value?.props,
+}))
+
+function openLabelHintTooltip() {
+  isLabelHintTooltipOpen.value = true
+}
+
+function closeLabelHintTooltip() {
+  isLabelHintTooltipOpen.value = false
+}
+
+onClickOutside(labelHintEl, closeLabelHintTooltip)
+
 // Styles - Label
 const labelClassLocal = computed(() => {
   const isInline = props.layout === 'inline'
@@ -45,6 +73,8 @@ const labelClassLocal = computed(() => {
       'is-floating': !isInline && (props.stackLabel || props.placeholder || props.hasContent),
       'is-mounted': isMounted.value,
       'is-focusable': props.ui?.focusInputOnLabelClick,
+      'has-hint': hasLabelHint.value,
+      'is-mobile-hint': hasLabelHint.value && isMobileLabelHint.value,
     },
   ]
 })
@@ -94,7 +124,41 @@ onMounted(() => {
     :class="[labelClassLocal, labelClass]"
     :style="labelStyle"
   >
-    {{ label }}
+    <span class="label__content">
+      <span class="label__text">
+        {{ label }}
+      </span>
+
+      <!-- Label hint -->
+      <span
+        v-if="hasLabelHint"
+        ref="labelHintEl"
+        class="label__hint"
+        role="button"
+        tabindex="0"
+        :aria-label="labelHint?.label"
+        :aria-describedby="isLabelHintTooltipOpen ? labelHintTooltipId : undefined"
+        @click.stop.prevent="openLabelHintTooltip"
+        @focus="openLabelHintTooltip"
+        @blur="closeLabelHintTooltip"
+        @keydown.enter.space.stop.prevent="openLabelHintTooltip"
+        @keydown.esc.stop.prevent="closeLabelHintTooltip"
+      >
+        <span
+          class="label__hint-icon"
+          :class="labelHint?.icon"
+        />
+
+        <Tooltip
+          v-if="labelHint?.label"
+          :id="labelHintTooltipId"
+          v-model="isLabelHintTooltipOpen"
+          :offset="8"
+          :content="{ title: labelHint?.label }"
+          v-bind="labelHintTooltipProps"
+        />
+      </span>
+    </span>
 
     <slot />
   </label>
@@ -107,6 +171,27 @@ label.label {
 
   // @apply z-10; // Is this needed? It fucks up a lot of things...
 
+  .label__content {
+    @apply flex items-start gap-0.5 w-full max-w-full;
+  }
+
+  .label__text {
+    @apply truncate;
+  }
+
+  .label__hint {
+    @apply relative inline-flex flex-none items-start pointer-events-auto
+      cursor-help top--2px;
+  }
+
+  &.is-mobile-hint .label__hint {
+    @apply cursor-pointer p-1 m--1;
+  }
+
+  .label__hint-icon {
+    @apply w-3 h-3 color-blue-300;
+  }
+
   // Layout ~ Inline
   &.is-inline {
     @apply order--1 font-rem-13;
@@ -116,6 +201,11 @@ label.label {
 
       width: var(--labelInlineWidth);
       min-width: var(--labelInlineWidth);
+      max-width: var(--labelInlineWidth);
+
+      .label__content {
+        @apply justify-end;
+      }
     }
 
     &:not(.is-focusable) {
@@ -131,6 +221,18 @@ label.label {
   // Layout ~ not Inline
   &:not(.is-inline) {
     @apply origin-top-left left-0 top-0 truncate w-full overflow-hidden;
+  }
+
+  &.has-hint:not(.is-inline) {
+    overflow: visible;
+  }
+
+  &.is-inside {
+    @apply absolute;
+
+    .label__hint {
+      @apply top--8px;
+    }
   }
 
   // Size: Small
@@ -188,7 +290,7 @@ label.label {
     @apply translate-y--1px;
   }
 
-  &.is-required::after {
+  &.is-required .label__text::after {
     content: ' *';
     @apply color-negative;
   }

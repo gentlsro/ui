@@ -50,6 +50,7 @@ const labelProps = computed(() => {
     hasError: !!issues.value.length,
     id: props.id,
     label: props.label,
+    labelHint: props.labelHint,
     layout: props.layout,
     placeholder: props.placeholder,
     required: props.required,

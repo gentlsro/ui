@@ -95,8 +95,9 @@ function assignEvents() {
 
     setTimeout(() => {
       const isStillInside = referenceEl.value?.classList.contains('tooltip-hovered')
+      const stillHasFocus = referenceEl.value?.contains(document.activeElement)
 
-      if (!isStillInside) {
+      if (!isStillInside && !stillHasFocus) {
         model.value = false
       }
     }, props.delay?.[1] || 0)
@@ -192,6 +193,7 @@ const arrowStyle = computed(() => {
       v-if="model"
       ref="tooltipEl"
       class="tooltip group/tooltip"
+      role="tooltip"
       :class="[classes, containerClass]"
       :style="{ ...floatingStyles, ...containerStyle, '--zIndex': zIndex }"
       :placement

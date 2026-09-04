@@ -559,12 +559,15 @@ export const defaultComponentsConfig = {
     props: {
       required: undefined,
       activeLabelColor: 'var(--color-primary)',
+      labelHint: {
+        icon: 'i-lucide:info',
+      },
       ui: {
         labelClass: ({ defaults }) => defaults.all,
         labelInlineWidth: '200px',
       },
     },
-    merge: ['ui'],
+    merge: ['ui', 'labelHint'],
   },
 
   // InputWrapper
@@ -576,6 +579,7 @@ export const defaultComponentsConfig = {
       errors: undefined,
       errorVisible: undefined,
       hint: undefined,
+      labelHint: undefined,
       layout: 'regular',
       loading: undefined,
       marker: undefined,
@@ -1418,6 +1422,7 @@ export const defaultComponentsConfig = {
       emptyValue: undefined,
       errorTakesSpace: true,
       errorVisible: true,
+      labelHint: undefined,
       mask: { mask: /.*/ },
       required: undefined,
       size: 'md',
