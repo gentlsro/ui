@@ -47,7 +47,8 @@ function getSplitterLeft(splitter: ITableSplitter) {
   // We move the splitter by the scrollX value when the column is frozen
   const offsetX = column.semiFrozen ? headerX.value : 0
 
-  return `${splitter.left + offsetX - 3}px`
+  // The 1px center stripe must sit inside the column's right edge, like its border.
+  return `${splitter.left + offsetX - 4}px`
 }
 </script>
 
@@ -90,7 +91,7 @@ function getSplitterLeft(splitter: ITableSplitter) {
         v-if="activeSplitter"
         class="splitter splitter--active"
         :style="{
-          left: `${activeSplitter.left - 3}px`,
+          left: `${activeSplitter.left - 4}px`,
           top: `${activeSplitter.top}px`,
           height: `${activeSplitter.height}px`,
         }"
@@ -102,6 +103,7 @@ function getSplitterLeft(splitter: ITableSplitter) {
           v-for="splitter in columnSplitters"
           :key="splitter.field"
           class="splitter"
+          :class="{ 'splitter--last': splitter.column === visibleColumns[visibleColumns.length - 1] }"
           :style="{ left: getSplitterLeft(splitter) }"
           @pointerdown.stop.prevent="handleSplitterPointerDown(splitter, $event)"
         />
@@ -121,6 +123,13 @@ function getSplitterLeft(splitter: ITableSplitter) {
 
   &:hover {
     @apply border-x-3px border-ca bg-black dark:bg-white cursor-col-resize;
+  }
+
+  // Keep the final hit area inside the table without moving its visible stripe.
+  &--last,
+  &--last:hover {
+    width: 4px;
+    border-right-width: 0;
   }
 }
 </style>

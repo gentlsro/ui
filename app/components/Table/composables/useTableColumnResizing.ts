@@ -57,14 +57,6 @@ export function useTableColumnResizing() {
         })
       })
 
-    // We need to move the last splitter a bit to the left so it doesn't create overflow
-    // But only in case the last column is actually resizable
-    const lastCol = visibleColumns.value[visibleColumns.value.length - 1]
-
-    if (lastCol?.resizable && splitters.length) {
-      splitters[splitters.length - 1]!.left -= 4
-    }
-
     return splitters
   })
 
@@ -102,9 +94,15 @@ export function useTableColumnResizing() {
     const headerDom = unrefElement(headerEl as any) as HTMLElement
     const { y: headerY, height: headerHeight } = headerDom.getBoundingClientRect()
 
-    const { height: tableHeight } = (headerDom.parentElement
-      ?.querySelector('.virtual-scroll__content') as HTMLElement)
-      ?.getBoundingClientRect() ?? { height: headerHeight }
+    // The content can span thousands of offscreen rows. End the guide at the
+    // scroll viewport instead, above the table footer.
+    const bodyRect = headerDom.parentElement
+      ?.querySelector('.virtual-scroll')
+      ?.getBoundingClientRect()
+
+    const guideHeight = bodyRect
+      ? Math.max(headerHeight, bodyRect.bottom - headerY)
+      : headerHeight
 
     pageX = ev.pageX
 
@@ -113,7 +111,7 @@ export function useTableColumnResizing() {
       left: pageX,
       minLeft: ev.pageX - colWidth + minimumColumnWidth.value - 4, // 4px is the middle of the splitter
       top: headerY,
-      height: headerHeight + tableHeight,
+      height: guideHeight,
       column: col!,
       adjustedWidth: colWidth,
       originalWidth: colWidth,
