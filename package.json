@@ -38,14 +38,14 @@
     "mezr": "catalog:",
     "nuxt": "catalog:",
     "pathe": "catalog:",
-    "sortablejs": "catalog:",
-    "uuid": "catalog:",
-    "zod": "catalog:",
     "perfect-scrollbar": "catalog:",
     "pinia": "catalog:",
+    "sortablejs": "catalog:",
     "tikki": "catalog:",
+    "uuid": "catalog:",
     "vue-imask": "catalog:",
-    "xlsx": "catalog:"
+    "xlsx": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:",
@@ -53,7 +53,6 @@
     "@iconify/utils": "catalog:",
     "@nuxt/eslint": "catalog:",
     "@nuxt/fonts": "catalog:",
-    "@nuxt/hints": "catalog:",
     "@nuxt/icon": "catalog:",
     "@nuxt/image": "catalog:",
     "@nuxt/scripts": "catalog:",
