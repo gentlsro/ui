@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { MaskedRange } from 'imask'
 import type { FactoryOpts } from 'imask'
 
 // Types
@@ -8,6 +7,7 @@ import type { IDateInputProps } from './types/date-input-props.type'
 // Functions
 import { useInputUtils } from '../functions/useInputUtils'
 import { useInputValidationUtils } from '../functions/useInputValidationUtils'
+import { MaskedDateRange } from './functions/masked-date-range'
 
 // Constants
 import { INPUT_WRAPPER_DEFAULT_PROPS } from '../../InputWrapper/constants/input-wrapper-default-props'
@@ -44,13 +44,15 @@ const PATTERN = computed(() => getCurrentLocaleDateFormat())
 
 const mask = computed<FactoryOpts>(() => {
   return {
-    mask: PATTERN.value,
+    // Keep day/month/year blocks independent when deleting in the middle.
+    // Backticks are IMask boundaries, not part of the displayed date format.
+    mask: PATTERN.value.replace(/DD|MM|YYYY/g, block => `\`${block}`),
     pattern: PATTERN.value,
     lazy: false,
     overwrite: true,
     blocks: {
       DD: {
-        mask: MaskedRange,
+        mask: MaskedDateRange,
         placeholderChar: 'D',
         autofix: 'pad',
         from: 1,
@@ -58,7 +60,7 @@ const mask = computed<FactoryOpts>(() => {
         maxLength: 2,
       },
       MM: {
-        mask: MaskedRange,
+        mask: MaskedDateRange,
         placeholderChar: 'M',
         autofix: 'pad',
         from: 1,
@@ -66,7 +68,7 @@ const mask = computed<FactoryOpts>(() => {
         maxLength: 2,
       },
       YYYY: {
-        mask: MaskedRange,
+        mask: MaskedDateRange,
         placeholderChar: 'Y',
         autofix: 'pad',
         from: 1900,
@@ -162,6 +164,7 @@ const {
 } = useInputUtils({
   props,
   maskRef: mask,
+  preserveValueOnMaskChange: true,
   maskEventHandlers: {
     onCompleted: () => {
       if (!preventSync.value) {

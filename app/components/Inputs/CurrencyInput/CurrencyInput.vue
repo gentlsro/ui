@@ -67,6 +67,7 @@ const {
   model,
   masked,
   typed,
+  setTypedValue,
   unmasked,
   wrapperProps,
   hasNoValue,
@@ -110,7 +111,7 @@ const {
           const val = (refs?.typed.value ?? 0).toFixed(digits).replace(/\./g, '')
           const typedValue = Number(`${val.slice(0, sliceRange)}.${val.slice(sliceRange)}`)
 
-          refs.typed.value = typedValue
+          setTypedValue(typedValue)
 
           // When no decimals are provided, we need to reset the input focus for mask to refresh
           if (!decimals) {
@@ -175,16 +176,16 @@ function handleBeforeInput(ev: Event) {
   // initialize the value to `0.0` and add the digit
   if (isAllSelected && ev.data) {
     if (ev.data.length === 1 && isNumeric(ev.data)) {
-      typed.value = Number(`0.0${ev.data}`)
+      setTypedValue(Number(`0.0${ev.data}`))
     } else if (ev.data.length === 1 && ev.data === '-') {
-      typed.value = typed.value * -1
+      setTypedValue(typed.value * -1)
     }
   }
 
   // When the entire text is selected and we're not providing any data (for example backspace/delete),
   // we reset the value to the `emptyValue`
   else if (isAllSelected) {
-    typed.value = props.emptyValue
+    setTypedValue(props.emptyValue)
   }
 
   // When providing data (typing or pasting) while we are at the end of the input,
@@ -227,12 +228,12 @@ function handleBeforeInput(ev: Event) {
 
     // When inputting an actual 0
     else if (val === 0) {
-      masked.value = '0.00'
+      setTypedValue(0)
 
       return
     }
 
-    typed.value = val
+    setTypedValue(val)
 
     ev.preventDefault()
     ev.stopPropagation()
