@@ -122,11 +122,6 @@ watch(referenceTarget, () => {
 onMounted(() => {
   nextTick(() => {
     assignReferenceEl()
-
-    if (props.manual) {
-      return
-    }
-
     assignEvents()
   })
 })

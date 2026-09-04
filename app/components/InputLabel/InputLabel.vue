@@ -42,20 +42,38 @@ const hasLabelHint = computed(() => {
   return Boolean(labelHint.value?.label)
 })
 
+const isLabelHintTooltipManual = computed(() => {
+  return Boolean(labelHint.value?.props?.manual)
+})
+
 const labelHintTooltipProps = computed(() => ({
   placement: isMobileLabelHint.value ? 'bottom-end' : 'right',
   ...labelHint.value?.props,
 }))
 
-function openLabelHintTooltip() {
-  isLabelHintTooltipOpen.value = true
+function setLabelHintTooltipOpen(open: boolean) {
+  isLabelHintTooltipOpen.value = open
 }
 
-function closeLabelHintTooltip() {
-  isLabelHintTooltipOpen.value = false
+function handleLabelHintMouseEnter() {
+  if (isLabelHintTooltipManual.value) {
+    setLabelHintTooltipOpen(true)
+  }
 }
 
-onClickOutside(labelHintEl, closeLabelHintTooltip)
+function handleLabelHintMouseLeave() {
+  if (!isLabelHintTooltipManual.value) {
+    return
+  }
+
+  const stillHasFocus = labelHintEl.value?.contains(document.activeElement)
+
+  if (!stillHasFocus) {
+    setLabelHintTooltipOpen(false)
+  }
+}
+
+onClickOutside(labelHintEl, () => setLabelHintTooltipOpen(false))
 
 // Styles - Label
 const labelClassLocal = computed(() => {
@@ -138,11 +156,13 @@ onMounted(() => {
         tabindex="0"
         :aria-label="labelHint?.label"
         :aria-describedby="isLabelHintTooltipOpen ? labelHintTooltipId : undefined"
-        @click.stop.prevent="openLabelHintTooltip"
-        @focus="openLabelHintTooltip"
-        @blur="closeLabelHintTooltip"
-        @keydown.enter.space.stop.prevent="openLabelHintTooltip"
-        @keydown.esc.stop.prevent="closeLabelHintTooltip"
+        @click.stop.prevent="setLabelHintTooltipOpen(true)"
+        @focus="setLabelHintTooltipOpen(true)"
+        @blur="setLabelHintTooltipOpen(false)"
+        @mouseenter="handleLabelHintMouseEnter"
+        @mouseleave="handleLabelHintMouseLeave"
+        @keydown.enter.space.stop.prevent="setLabelHintTooltipOpen(true)"
+        @keydown.esc.stop.prevent="setLabelHintTooltipOpen(false)"
       >
         <span
           class="label__hint-icon"
