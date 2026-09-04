@@ -11,6 +11,7 @@ export type IListSlots = {
     ui?: IListProps['ui']
     searchConfig?: IListProps['searchConfig']
   }) => any
+  'search-right'?: () => any
 
   'content': (props: {
     ui?: IListProps['ui']

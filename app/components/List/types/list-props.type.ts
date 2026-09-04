@@ -178,6 +178,11 @@ export type IListProps = {
   moveHandleTarget?: any
 
   /**
+   * Whether the internal move handle takes space when an item is not reorderable
+   */
+  moveHandleTakesSpace?: boolean
+
+  /**
    * When true, the list will not be filtered locally
    * If `loadData.fnc` is not provided and `noFilter` is true, the SearchInput will not be shown
    */

@@ -169,7 +169,11 @@ defineExpose(listGetExposed())
         :search-config="mergedProps.searchConfig"
         :ui="mergedProps.ui"
         :dense
-      />
+      >
+        <template #right>
+          <slot name="search-right" />
+        </template>
+      </ListSearch>
     </slot>
 
     <!-- Above -->
@@ -192,6 +196,7 @@ defineExpose(listGetExposed())
         :ui="mergedProps.ui"
         :scroller-config="mergedProps.scrollerConfig"
         :move-handle-target
+        :move-handle-takes-space
         :dense
         @change:content-size="$emit('change:contentSize', $event)"
       >

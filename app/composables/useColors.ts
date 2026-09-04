@@ -1,4 +1,5 @@
 import type { Color } from 'invert-color'
+import type { CSSProperties } from 'vue'
 import invert from 'invert-color'
 
 // Constants
@@ -28,6 +29,18 @@ function getPaletteHexToTwName() {
 addColorsToMap(colors as Record<string, unknown>, [], getPaletteHexToTwName())
 
 export function useColors() {
+  function getColorPreviewStyle(color?: string | null): CSSProperties {
+    if (color) {
+      return { backgroundColor: color }
+    }
+
+    return {
+      backgroundColor: '#f8fafc',
+      backgroundImage: 'conic-gradient(#d1d5db 25%, #f8fafc 0 50%, #d1d5db 0 75%, #f8fafc 0)',
+      backgroundSize: '12px 12px',
+    }
+  }
+
   function invertColor(color: Color) {
     try {
       return invert(color, { black: '#000000', white: '#ffffff', threshold: 0.5 })
@@ -160,5 +173,6 @@ export function useColors() {
     isRgba,
     resolveColor,
     getTwNameFromHex,
+    getColorPreviewStyle,
   }
 }

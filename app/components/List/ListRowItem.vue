@@ -13,7 +13,7 @@ import { useListDragAndDrop } from './composables/useListDragAndDrop'
 // Constants
 import { LIST_DEFAULT_PROPS } from './constants/list-default-props.constant'
 
-type IProps = Pick<IListProps, 'ui' | 'noHover' | 'reorderable' | 'disabledFnc' | 'moveHandleTarget'> & {
+type IProps = Pick<IListProps, 'ui' | 'noHover' | 'reorderable' | 'disabledFnc' | 'moveHandleTarget' | 'moveHandleTakesSpace'> & {
   item: IListItem
   isLast: boolean
 }
@@ -87,6 +87,7 @@ const rowClassLocal = computed(() => {
 
   return {
     'is-reorderable': isReorderable,
+    'move-handle-takes-space': props.moveHandleTakesSpace,
     'is-selected': isSelected.value,
     'is-focused': itemFocused.value?.id === item.value?.id,
     'is-selectable': selectionConfig.value?.enabled,
@@ -256,6 +257,10 @@ onMounted(() => {
   &:not(.is-reorderable) {
     .list-move-handle {
       @apply hidden;
+    }
+
+    &.move-handle-takes-space .list-move-handle {
+      @apply invisible flex;
     }
   }
 }

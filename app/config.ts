@@ -145,8 +145,12 @@ export const defaultComponentsConfig = {
       size: 'sm',
       uncheckValue: false,
       ui: {
-        containerClass: ({ defaults }) => defaults.all,
-        checkboxClass: ({ defaults }) => defaults.all,
+        containerClass: ({ defaults }) => `${defaults.all} [&.is-disabled]:!op-70`,
+        checkboxClass: ({ defaults }) => [
+          defaults.all,
+          'group-[.is-disabled.is-checked]/checkbox:(bg-primary border-primary)',
+          'group-[.is-disabled.is-indeterminate]/checkbox:(bg-primary border-primary)',
+        ],
         labelClass: ({ defaults }) => defaults.all,
         focusHelperClass: ({ defaults }) => defaults.all,
       },

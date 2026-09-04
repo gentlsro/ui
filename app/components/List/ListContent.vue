@@ -11,7 +11,7 @@ import { useListKeyboard } from './composables/useListKeyboard'
 // Constants
 import { LIST_DEFAULT_PROPS } from './constants/list-default-props.constant'
 
-type IProps = Pick<IListProps, 'ui' | 'noHover' | 'reorderable' | 'disabledFnc' | 'scrollerConfig' | 'moveHandleTarget' | 'dense'>
+type IProps = Pick<IListProps, 'ui' | 'noHover' | 'reorderable' | 'disabledFnc' | 'scrollerConfig' | 'moveHandleTarget' | 'moveHandleTakesSpace' | 'dense'>
 
 const props = defineProps<IProps>()
 defineEmits<{
@@ -111,6 +111,7 @@ const contentStyle = computed(() => {
           :is-last="index === listItems.length - 1"
           :disabled-fnc
           :move-handle-target
+          :move-handle-takes-space
           @mouseenter="handleMouseEnter(row, index)"
           @mouseleave="handleMouseLeave(row, index)"
         >
