@@ -16,7 +16,7 @@ const { resolve } = createResolver(import.meta.url)
 const hasUtilitiesLib = isMonorepo || existsSync(resolve('../Utilities'))
 
 export default defineNuxtConfig({
-  extends: hasUtilitiesLib ? [] : ['github:gentlsro/Utilities#2.3'],
+  extends: hasUtilitiesLib ? ['../Utilities'] : ['github:gentlsro/Utilities#2.3'],
 
   modules: [
     '@nuxtjs/i18n',

@@ -21,6 +21,7 @@
     "axios": "1.18.1",
     "change-case": "5.4.4",
     "dayjs": "1.11.21",
+    "defu": "6.1.7",
     "fuse.js": "7.4.2",
     "jsonwebtoken": "9.0.3",
     "klona": "2.0.6",
