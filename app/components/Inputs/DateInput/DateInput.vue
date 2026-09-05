@@ -307,7 +307,7 @@ defineExpose({
         ref="menuProxyEl"
         v-model="isPickerActive"
         manual
-        position="top"
+        position="center"
         placement="bottom-start"
         no-uplift
         :fit="false"
@@ -334,6 +334,10 @@ defineExpose({
 </template>
 
 <style lang="scss" scoped>
+.control {
+  font-variant-numeric: tabular-nums;
+}
+
 .picker-icon {
   @apply cursor-pointer color-ca h-6 w-6;
 }
