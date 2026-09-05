@@ -37,6 +37,7 @@ const mergedProps = computed(() => {
 })
 
 // Layout
+const hostAnchor = useTemplateRef<HTMLSpanElement>('hostAnchor')
 const model = defineModel<boolean>({ default: false })
 const isChangeForced = ref(false)
 const debouncedModel = ref(model.value)
@@ -99,7 +100,7 @@ const {
   dialogWrapperEl,
   floatingEl,
   triggerEl,
-} = useDialogLayout(modelHandler, props)
+} = useDialogLayout(modelHandler, props, () => hostAnchor.value?.parentElement)
 
 function hide(ignorePersistent = true) {
   if (props.persistent && !ignorePersistent) {
@@ -271,6 +272,10 @@ const contentClasses = computed(() => {
 </script>
 
 <template>
+  <span
+    ref="hostAnchor"
+    hidden
+  />
   <Teleport
     v-if="debouncedModel"
     to="body"

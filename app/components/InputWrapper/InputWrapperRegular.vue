@@ -16,7 +16,29 @@ const props = defineProps<
 >()
 
 // Layout
-const isMounted = useMounted()
+const isMounted = ref(false)
+// With stackLabel=false, the empty label starts after the prepend (grid column 2).
+// When focused or filled, it floats to the field's left edge using this width as
+// a negative offset. Observe the actual prepend so resizing/hiding it stays correct;
+// anchoring every label in column 1 would overlap the prepend in the empty state.
+const prependEl = useTemplateRef<HTMLDivElement>('prependEl')
+const prependWidth = ref(0)
+let prependObserver: ResizeObserver | undefined
+
+onMounted(() => {
+  const element = prependEl.value
+
+  if (element) {
+    const measure = () => prependWidth.value = element.clientWidth
+    measure()
+    prependObserver = new ResizeObserver(measure)
+    prependObserver.observe(element)
+  }
+
+  isMounted.value = true
+})
+
+onUnmounted(() => prependObserver?.disconnect())
 
 const classes = computed(() => {
   return {
@@ -70,6 +92,7 @@ const inputInnerContainerStyle = computed(() => {
   <div
     class="input-wrapper__regular"
     :class="classes"
+    :style="{ '--prependWidth': `${-prependWidth}px` }"
   >
     <!-- Label -->
     <div
@@ -87,7 +110,10 @@ const inputInnerContainerStyle = computed(() => {
     />
 
     <!-- Prepend -->
-    <div class="input-wrapper__prepend input-wrapper__regular-prepend input-wrapper__focusable">
+    <div
+      ref="prependEl"
+      class="input-wrapper__prepend input-wrapper__regular-prepend input-wrapper__focusable"
+    >
       <slot name="prepend" />
     </div>
 
@@ -147,7 +173,7 @@ const inputInnerContainerStyle = computed(() => {
 
   .input-wrapper__regular-label {
     @apply self-start relative fit;
-    grid-column: 2 / 5;
+    grid-column: 2 / -1;
     grid-row: 1 / 3;
   }
 

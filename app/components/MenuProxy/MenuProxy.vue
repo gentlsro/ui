@@ -34,15 +34,20 @@ const model = defineModel<boolean>({ default: false })
 const virtualDimensions = defineModel<IMenuProxyProps['virtualDimensions']>('virtualDimensions')
 const menuProxyEl = ref<InstanceType<typeof Menu | typeof Dialog>>()
 
-const isMenu = computed(() => $bp[props.breakpoint].value)
+const isMounted = ref(false)
+
+const isMenu = computed(() => isMounted.value && $bp[props.breakpoint].value)
 
 const noOverlay = computed(() => {
   if (!isNil(props.noOverlay)) {
     return props.noOverlay
   }
 
-  return $bp[props.breakpoint].value
+  return isMenu.value
 })
+
+// Lifecycle
+onMounted(() => isMounted.value = true)
 
 defineExpose({
   show: () => menuProxyEl.value?.show(),

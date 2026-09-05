@@ -26,7 +26,7 @@ export function useInputMask(maskRef: Ref<FactoryOpts>, options: InputMaskOption
   // together, before any application accept/complete handlers can run.
   const bindingOptions = shallowRef({ ...maskOptions.value })
   let reformatting = false
-  const binding = useIMask(bindingOptions, {
+  const binding = useIMask<HTMLInputElement | HTMLTextAreaElement, FactoryOpts>(bindingOptions, {
     onAccept: event => {
       if (!reformatting) {
         options.onAccept?.(event)
@@ -62,6 +62,7 @@ export function useInputMask(maskRef: Ref<FactoryOpts>, options: InputMaskOption
   function setTypedValue(value: any) {
     if (options.isEmptyValue(value)) {
       clear()
+
       return
     }
 
@@ -121,6 +122,7 @@ export function useInputMask(maskRef: Ref<FactoryOpts>, options: InputMaskOption
           }
           live.updateControl()
         }
+
         return
       }
 

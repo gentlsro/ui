@@ -10,15 +10,11 @@ const props = withDefaults(defineProps<IInputLabelProps>(), {
 })
 
 // Utils
-const self = getCurrentInstance()
-
 const mergedProps = computed(() => {
   return getComponentMergedProps('inputLabel', props)
 })
 
 // Layout
-// Adjustment of label position when we use `prepend` slot
-const prependWidth = ref(0)
 const isMounted = ref(false)
 
 const label = computed(() => {
@@ -69,7 +65,6 @@ const labelStyle = computed(() => {
 
   return {
     '--activeColor': props.activeLabelColor,
-    '--prependWidth': `${-1 * prependWidth.value}px`,
     '--labelInlineWidth': props.ui?.labelInlineWidth ?? '200px',
     ...labelStyle,
   }
@@ -77,12 +72,7 @@ const labelStyle = computed(() => {
 
 onMounted(() => {
   nextTick(() => {
-    const prepend = self?.vnode.el?.parentNode.parentNode.querySelector('.input-wrapper__regular-prepend')
-    prependWidth.value = prepend?.clientWidth ?? 0
-
-    nextTick(() => {
-      isMounted.value = true
-    })
+    isMounted.value = true
   })
 })
 </script>
@@ -186,6 +176,9 @@ label.label {
 
   &.is-floating.is-regular {
     @apply translate-y--1px;
+    // Only the floating label compensates for prepend width; the resting label
+    // stays beside the prepend. The focus rule below must use the same offset.
+    left: var(--prependWidth, 0px);
   }
 
   &.is-required::after {
@@ -208,6 +201,7 @@ label.label {
 
     &.is-regular {
       @apply translate-y--1px;
+      left: var(--prependWidth, 0px);
     }
   }
 
@@ -229,12 +223,6 @@ label.label.is-inline {
 .wrapper__body:not(.selector-wrapper):focus-within {
   label.label:not(.is-inside):not(.is-inline) {
     @apply p-x-1;
-  }
-}
-
-.wrapper {
-  label.label.is-regular {
-    left: var(--prependWidth);
   }
 }
 

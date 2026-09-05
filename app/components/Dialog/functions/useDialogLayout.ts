@@ -4,9 +4,12 @@ import type { IDialogProps } from '../types/dialog-props.type'
 // Functions
 import { useDialogUtils } from './useDialogUtils'
 
-export function useDialogLayout(model: Ref<boolean>, props: IDialogProps) {
+export function useDialogLayout(
+  model: Ref<boolean>,
+  props: IDialogProps,
+  getHost: () => HTMLElement | null | undefined,
+) {
   // Utils
-  const instance = getCurrentInstance()
   const { getElement } = useDialogUtils()
 
   // Layout
@@ -19,45 +22,26 @@ export function useDialogLayout(model: Ref<boolean>, props: IDialogProps) {
     model.value = !model.value
   }
 
-  // Watch for element changes
-  watch(
-    () => props.target,
-    () => {
-      const parentEl = instance?.vnode?.el?.parentNode
+  const isMounted = ref(false)
+  onMounted(() => isMounted.value = true)
 
-      if (triggerEl.value instanceof HTMLElement) {
-        triggerEl.value?.removeEventListener(props.trigger ?? 'click', toggle)
-      }
-
-      triggerEl.value = getElement({ elRef: props.target ?? parentEl, parentEl })
-
-      // Add event listeners when not using the `manual` mode
-      if (!props.manual && triggerEl.value instanceof HTMLElement) {
-        triggerEl.value?.addEventListener(props.trigger ?? 'click', toggle)
-      }
-    },
-  )
-
-  // Lifecycle
-  onMounted(async () => {
-    await nextTick()
-
-    const parentEl = instance?.vnode?.el?.parentNode
-
-    // Assign the elements
-    triggerEl.value = getElement({ elRef: props.target ?? parentEl, parentEl })
-
-    // Add event listeners when not using the `manual` mode
-    if (!props.manual && triggerEl.value instanceof HTMLElement) {
-      triggerEl.value?.addEventListener(props.trigger ?? 'click', toggle)
+  // Capture the exact target/event for cleanup. Both can change while mounted;
+  // reading the new props during cleanup would leave the old listener attached.
+  watchEffect(onCleanup => {
+    if (!isMounted.value) {
+      return
     }
-  })
 
-  onBeforeUnmount(() => {
-    if (triggerEl.value instanceof HTMLElement) {
-      triggerEl.value?.removeEventListener(props.trigger ?? 'click', toggle)
+    const parentEl = getHost() ?? undefined
+    const target = getElement({ elRef: props.target ?? parentEl, parentEl })
+    const event = props.trigger ?? 'click'
+    triggerEl.value = target
+
+    if (!props.manual && target instanceof HTMLElement) {
+      target.addEventListener(event, toggle)
+      onCleanup(() => target.removeEventListener(event, toggle))
     }
-  })
+  }, { flush: 'post' })
 
   return {
     triggerEl,

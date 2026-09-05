@@ -99,9 +99,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
     return props.label
   })
 
-  const inputElement = computed(() => {
-    return unrefElement(el.value as any) as HTMLInputElement | undefined
-  })
+  const inputElement = el
 
   const hasContent = computed(() => {
     return props.hasContent || !isEmpty.value || !!props.placeholder

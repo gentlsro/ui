@@ -22,7 +22,7 @@ export function useFileInput(payload: {
   })
 
   const { isOverDropZone } = useDropZone(
-    () => unrefElement(fileFieldEl as any),
+    () => fileFieldEl.value?.element,
     handleAddFile,
   )
 

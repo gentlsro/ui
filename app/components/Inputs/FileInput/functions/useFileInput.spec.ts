@@ -9,7 +9,14 @@ function mountInput(multi: boolean) {
   const model = ref<IFileInputProps['modelValue']>([])
   const emit = vi.fn()
   let input: ReturnType<typeof useFileInput>
-  const surface = defineComponent({ setup: () => () => h('div') })
+  const surface = defineComponent({
+    setup(_, { expose }) {
+      const element = ref<HTMLDivElement>()
+      expose({ element })
+
+      return () => h('div', [h('div', { 'ref': element, 'data-drop-zone': '' })])
+    },
+  })
   const wrapper = mount(defineComponent({
     setup() {
       input = useFileInput({ model, props: { multi }, emit })
@@ -79,6 +86,9 @@ describe('file input callbacks', () => {
       const transfer = new DataTransfer()
       transfer.items.add(file)
       await wrapper.trigger('drop', { dataTransfer: transfer })
+      expect(model.value).toEqual([])
+      expect(emit).not.toHaveBeenCalled()
+      await wrapper.get('[data-drop-zone]').trigger('drop', { dataTransfer: transfer })
       expect(model.value!.map(item => item.name)).toEqual(['dropped.txt'])
       expect(emit).toHaveBeenCalledExactlyOnceWith('filesAdded', model.value)
     } finally {
