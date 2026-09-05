@@ -149,10 +149,10 @@ const appendStyle = computed(() => {
 // Validations
 const { path } = useInputValidationUtils(props)
 
-// Lifcecycle
+// Picker anchor
 onMounted(() => {
-  referenceEl.value = unrefElement(wrapperEl as any)
-    ?.querySelector('.input-wrapper-border') as HTMLDivElement
+  referenceEl.value = wrapperEl.value?.element
+    ?.querySelector<HTMLDivElement>('.input-wrapper-border') ?? undefined
 })
 
 defineExpose({

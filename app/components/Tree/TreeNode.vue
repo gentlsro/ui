@@ -2,10 +2,13 @@
 // Types
 import type { ITreeNode } from './types/tree-node.type'
 import type { ITreeNodeProps } from './types/tree-node-props.type'
+import type { FloatingTarget } from '../../composables/useFloatingUIUtils'
 
 // Composables
 import { useTreeNode } from './composables/useTreeNode'
-import { useTreeDragAndDrop } from './composables/useTreeDragAndDrop'
+
+// Store
+import { useTreeStore } from './stores/tree.store'
 
 // Functions
 import { selectNode } from './functions/select-node'
@@ -16,11 +19,11 @@ import { TREE_DEFAULT_PROPS } from './constants/tree-default-props.constant'
 defineOptions({ inheritAttrs: false })
 const props = defineProps<ITreeNodeProps<T>>()
 // Utils
-const { createDraggable } = useTreeDragAndDrop()
+const { createDraggable, scrollerEl } = useTreeStore<T>()
+const { getElement } = useFloatingUIUtils()
 
 const {
   emits,
-  isDndEnabled,
   usesFlatSearchView,
   treeNodeStyle,
   treeNodeClass,
@@ -32,7 +35,7 @@ const {
 } = useTreeNode(props)
 
 // Layout
-const treeNodeEl = useTemplateRef('treeNodeEl')
+const treeNodeEl = useTemplateRef<FloatingTarget>('treeNodeEl')
 const treeCollapseBtnEl = useTemplateRef('treeCollapseBtnEl')
 const node = toRef(props, 'node') as Ref<ITreeNode<T>>
 const isPreventClick = refAutoReset(false, 100)
@@ -92,25 +95,34 @@ const nodeContentStyle = computed(() => {
   })
 })
 
-// D'n'D
-onMounted(() => {
-  if (!isDndEnabled.value) {
+// Node roots are stable for their mounted lifetime; custom Vapor nodes expose element.
+let unmounting = false
+let releaseDrag: ReturnType<typeof createDraggable>
+onMounted(async () => {
+  await nextTick()
+  if (unmounting) {
     return
   }
 
-  nextTick(() => {
-    const _el = unrefElement(treeNodeEl as any) as HTMLElement
+  const element = getElement({ elRef: treeNodeEl.value })
+  if (!(element instanceof HTMLElement)) {
+    return
+  }
 
-    createDraggable({
-      el: _el,
-      item: node.value,
-
-      // When dragging happened (`onEnd` is called), we want to prevent the click
-      onEnd: () => {
+  releaseDrag = createDraggable({
+    el: element,
+    item: node.value,
+    onEnd: () => {
+      if (!unmounting) {
         isPreventClick.value = true
-      },
-    })
+      }
+    },
   })
+})
+
+onBeforeUnmount(() => {
+  unmounting = true
+  releaseDrag?.(!!scrollerEl.value?.element?.classList.contains('is-virtual'))
 })
 </script>
 

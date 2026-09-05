@@ -22,7 +22,7 @@ const btnProps = computed(() => {
 })
 
 function handleFreezeColumn() {
-  props.column.freeze(internalColumns.value, unrefElement(tableEl.value) ?? document)
+  props.column.freeze(internalColumns.value, tableEl.value ?? document)
 }
 </script>
 

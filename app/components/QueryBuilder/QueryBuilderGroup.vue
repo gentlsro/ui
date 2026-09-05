@@ -12,6 +12,10 @@ const emits = defineEmits<{
   (e: 'delete:row', item: IQueryBuilderGroup): void
 }>()
 
+const element = useTemplateRef<HTMLUListElement>('element')
+
+defineExpose({ element })
+
 // Store
 const {
   allowNegation,
@@ -113,6 +117,7 @@ const collapseProps = computed(() => {
 
 <template>
   <ul
+    ref="element"
     class="qb-row qb-group"
     :class="{
       'is-hovered': hoveredItem === item,

@@ -8,6 +8,7 @@ import { LIST_DEFAULT_PROPS } from './constants/list-default-props.constant'
 type IProps = Pick<IListProps, 'ui'>
 
 const props = defineProps<IProps>()
+const element = useTemplateRef<HTMLDivElement>('element')
 
 const moveHandleClass = computed(() => {
   return props.ui?.moveHandleClass?.({
@@ -28,10 +29,13 @@ const moveHandleIconClass = computed(() => {
 const moveHandleIconStyle = computed(() => {
   return props.ui?.moveHandleIconStyle?.()
 })
+
+defineExpose({ element })
 </script>
 
 <template>
   <div
+    ref="element"
     class="list-move-handle"
     :class="moveHandleClass"
     :style="moveHandleStyle"

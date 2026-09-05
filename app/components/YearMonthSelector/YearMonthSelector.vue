@@ -131,10 +131,8 @@ const pickerIconStyle = computed(() => {
 
 onMounted(() => {
   nextTick(() => {
-    const fieldElDom = unrefElement(fieldEl as any)
-    const wrapperElDom = fieldElDom?.querySelector('.input-wrapper-border')
-
-    referenceEl.value = wrapperElDom
+    referenceEl.value = fieldEl.value?.element
+      ?.querySelector<HTMLElement>('.input-wrapper-border') ?? undefined
   })
 })
 </script>

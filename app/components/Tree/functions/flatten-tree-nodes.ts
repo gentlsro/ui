@@ -13,7 +13,7 @@ async function traverseNodes<T extends IItem = IItem>(payload: {
   labelKey?: string
   level?: number
   path?: string
-  nodeMetaById: Ref<Record<ITreeNode['id'], ITreeNodeMeta>>
+  nodeMetaById: Record<ITreeNode['id'], ITreeNodeMeta>
   collapseConfig?: ITreeProps<T>['collapseConfig']
   sortingConfig?: ITreeProps<T>['sortingConfig']
 }): Promise<ITreeNode<T>[]> {
@@ -86,8 +86,8 @@ async function traverseNodes<T extends IItem = IItem>(payload: {
     // Upsert nodeMetaById
     const isExpanded = level < (collapseConfig?.expandedLevelOnInit ?? 0)
 
-    const existingMeta = nodeMetaById.value[nodeId]
-    nodeMetaById.value[nodeId] = {
+    const existingMeta = nodeMetaById[nodeId]
+    nodeMetaById[nodeId] = {
       level,
       path: nodePath,
       isChildrenLoaded: existingMeta?.isChildrenLoaded ?? isChildrenLoaded,
@@ -142,12 +142,20 @@ export async function flattenTreeNodes<T extends IItem = IItem>(payload: {
     args.path = path
   }
 
+  // Traversal can await sorting or child nodes. Publish metadata once so those
+  // yields do not rerender the visible tree separately for every visited node.
+  const nextMeta = { ...nodeMetaById.value }
   const _nodes: ITreeNode<T>[] = []
   const flattenedNodes = await traverseNodes({
     ...payload,
     ...args,
     flattenedNodes: _nodes,
+    nodeMetaById: nextMeta,
   })
+
+  // initRef/useModel does not deep-wrap newly assigned local values. Collapse
+  // toggles mutate metadata in place, so keep the published map reactive.
+  nodeMetaById.value = reactive(nextMeta)
 
   return flattenedNodes
 }

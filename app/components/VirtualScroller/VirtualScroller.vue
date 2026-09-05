@@ -48,7 +48,10 @@ defineSlots<{
   }) => any
 }>()
 
+const virtualScrollEl = useTemplateRef<HTMLDivElement>('virtualScrollEl')
+
 defineExpose({
+  element: virtualScrollEl,
   scrollToTop: () => scrollTo(0),
   scrollToBottom,
   scrollTo,
@@ -113,7 +116,6 @@ const INITIAL_ROWS_RENDER_COUNT = props.initialRowsRenderCount
 const rows = toRef(props, 'rows')
 const columns = toRef(props, 'columns')
 const containerEl = useTemplateRef('containerEl')
-const virtualScrollEl = useTemplateRef('virtualScrollEl')
 const isMounted = ref(false)
 const rowHeight = toRef(props, 'rowHeight')
 const rowKey = toRef(props, 'rowKey') as Ref<keyof T>

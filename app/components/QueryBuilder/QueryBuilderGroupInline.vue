@@ -44,6 +44,9 @@ function handleSetCondition(val: 'AND' | 'OR') {
   conditionMenuEl.value?.hide()
 }
 
+let openItemTimer: ReturnType<typeof setTimeout> | undefined
+onBeforeUnmount(() => clearTimeout(openItemTimer))
+
 function handleAddCondition(useParent?: boolean) {
   const parent = useParent ? props.parent : item.value
 
@@ -67,15 +70,13 @@ function handleAddCondition(useParent?: boolean) {
     },
   ]
 
-  nextTick(() => {
-    const addedEl = queryBuilderEl.value?.querySelector(
-      `[data-path="${newPath}"]`,
-    ) as HTMLElement
-
-    setTimeout(() => {
-      addedEl?.click()
-    }, 150)
-  })
+  clearTimeout(openItemTimer)
+  openItemTimer = setTimeout(() => {
+    const addedEl = queryBuilderEl.value?.querySelector<HTMLElement>(`[data-path="${newPath}"]`)
+    if (addedEl?.isConnected) {
+      addedEl.click()
+    }
+  }, 150)
 }
 
 function handleSetNegation() {

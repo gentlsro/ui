@@ -5,59 +5,61 @@ import type { PointerSensorMoveEvent } from 'dragdoll'
 
 // Types
 import type { IListItem } from '../types/list-item.type'
+import type { IListDragMeta } from '../types/list-drag-meta.type'
+import type { IListEmitFncs } from '../types/list-emit-fncs.type'
 
 // Functions
 import { getElementSize } from '#layers/utilities/app/functions/get-element-size'
 
-// Store
-import { useListStore } from '../stores/list.store'
 import { getListItemKey } from '../functions/helpers'
 
 const LIST_ITEM_CLASSES = ['list-row-item', 'list-row-group']
 
-export function useListDragAndDrop(payload?: {
-  onDragEnd?: () => void
-}) {
-  const { onDragEnd } = payload ?? {}
+type IConfig = {
+  listEl: Readonly<Ref<{ element?: HTMLElement | null } | undefined>>
+  items: Ref<IItem[]>
+  listItems: Readonly<Ref<Array<IListItem | IGroupRow>>>
+  draggedItem: Ref<IListItem | undefined>
+  dragMeta: Ref<IListDragMeta>
+  itemKey: Readonly<Ref<string>>
+  onItemMoved: IListEmitFncs['itemMoved']
+}
 
-  // Store
-  const {
-    listEl,
-    items,
-    listItems,
-    draggedItem,
-    dragMeta,
-    itemKey,
-    emits,
-  } = useListStore()
+export function useListDragAndDrop(config: IConfig) {
+  const { listEl, items, listItems, draggedItem, dragMeta, itemKey, onItemMoved } = config
 
   // Utils
   let lastY = 0
+  let moveFrame = 0
+  let scrollFrame = 0
   const { x, y } = useSharedMouse()
+  let cancelActiveDrag: (() => void) | undefined
+
+  // The List owns the active session even while virtualization recycles its source row.
+  onBeforeUnmount(() => cancelActiveDrag?.())
+  watch([listEl, listItems], ([scroller, rows], [previousScroller]) => {
+    if (cancelActiveDrag && (scroller !== previousScroller
+      || !rows.some(row => row.id === draggedItem.value?.id))) {
+      cancelActiveDrag()
+    }
+  }, { flush: 'post' })
 
   function handleDragStart(payload: { item: IListItem, el: HTMLElement }) {
     // Turn off selection while dragging
     getSelection()?.removeAllRanges()
     document.documentElement.classList.add('select-none')
 
-    // Get the list padding top to calculate the correct position of drop indicator
-    const listElDom = unrefElement(listEl as any) as HTMLElement
-
-    if (listElDom) {
-      const listPaddingTop = getComputedStyle(listElDom).paddingTop
-
-      dragMeta.value.dropIndicatorCSS = { top: listPaddingTop }
-    }
+    const listElDom = listEl.value?.element
 
     draggedItem.value = payload.item
     dragMeta.value = {
       ...dragMeta.value,
       sourceRect: getElementSize(payload.el).total,
-      sourceEl: payload.el as HTMLElement,
+      sourceEl: payload.el,
     }
 
     if (listElDom) {
-      const items = listElDom.querySelectorAll('.content-row') as NodeListOf<HTMLElement>
+      const items = listElDom.querySelectorAll<HTMLElement>('.content-row')
 
       items.forEach(item => {
         item.style.transition = 'transform 125ms linear'
@@ -70,12 +72,21 @@ export function useListDragAndDrop(payload?: {
     const { x, y } = ev
     lastY = y
     const elements = document.elementsFromPoint(x, y)
-    const listElDom = unrefElement(listEl as any) as HTMLElement
+    const listElDom = listEl.value?.element
 
-    const draggedOverItem = elements.find(el => {
-      return LIST_ITEM_CLASSES.some(cls => el.classList.contains(cls))
-    }) as HTMLElement
-    const draggedOverContentRow = draggedOverItem?.closest('.content-row') as HTMLElement | null
+    if (!listElDom || !draggedItem.value) {
+      return
+    }
+
+    const draggedOverItem = elements.find((el): el is HTMLElement => {
+      return el instanceof HTMLElement && listElDom.contains(el)
+        && LIST_ITEM_CLASSES.some(cls => el.classList.contains(cls))
+    })
+    const draggedOverContentRow = draggedOverItem?.closest<HTMLElement>('.content-row')
+
+    if (!draggedOverItem || !draggedOverContentRow) {
+      return
+    }
 
     // If we're over a previous item, we don't do anything
     const draggedOverItemId = draggedOverItem?.dataset.id
@@ -84,7 +95,7 @@ export function useListDragAndDrop(payload?: {
     const {
       y: draggedOverItemY,
       height: draggedOverItemHeight,
-    } = draggedOverItem?.getBoundingClientRect() ?? {}
+    } = draggedOverItem.getBoundingClientRect()
 
     let isAbove = y <= (draggedOverItemY + draggedOverItemHeight / 2)
 
@@ -112,7 +123,17 @@ export function useListDragAndDrop(payload?: {
     }
     const targetIdx = Number(t?.getAttribute('data-idx'))
 
-    requestAnimationFrame(() => {
+    // Keep the drop target current even if the pointer is released before the next frame.
+    dragMeta.value.placement = isAbove ? 'above' : 'below'
+    dragMeta.value.targetEl = t
+    dragMeta.value.target = listItems.value.find(item => String(item.id) === draggedOverItem.dataset.id)
+
+    cancelAnimationFrame(moveFrame)
+    moveFrame = requestAnimationFrame(() => {
+      if (!draggedItem.value || !t.isConnected || listEl.value?.element !== listElDom) {
+        return
+      }
+
       // When virtual scroll is used, we use the drop indicator
       if (dragMeta.value.isVirtualScroll) {
         const computedStyle = getComputedStyle(t)
@@ -136,8 +157,8 @@ export function useListDragAndDrop(payload?: {
 
           listItems.value.forEach((item, idx) => {
             const isPreceedingItem = idx >= idxStart && idx < idxEnd
-            const el = (listElDom.querySelector(`[data-id="${item.id}"]`) as HTMLElement)
-              ?.closest('.content-row') as HTMLElement
+            const el = listElDom.querySelector<HTMLElement>(`[data-id="${item.id}"]`)
+              ?.closest<HTMLElement>('.content-row')
 
             if (isPreceedingItem && el) {
               el.style.setProperty('--translate3D', `0, ${dragMeta.value.sourceRect?.height}px, 0`)
@@ -157,8 +178,8 @@ export function useListDragAndDrop(payload?: {
 
           listItems.value.forEach((item, idx) => {
             const isFollowingItem = idx >= idxStart && idx < idxEnd
-            const el = (listElDom.querySelector(`[data-id="${item.id}"]`) as HTMLElement)
-              ?.closest('.content-row') as HTMLElement
+            const el = listElDom.querySelector<HTMLElement>(`[data-id="${item.id}"]`)
+              ?.closest<HTMLElement>('.content-row')
 
             if (isFollowingItem && el) {
               el.style.setProperty('--translate3D', `0, -${dragMeta.value.sourceRect?.height}px, 0`)
@@ -173,20 +194,18 @@ export function useListDragAndDrop(payload?: {
         }
 
         // Move the item itself
-        const selfDom = (listElDom.querySelector(`[data-id="${draggedItem.value?.id}"]`) as HTMLElement)
-          ?.closest('.content-row') as HTMLElement
+        const selfDom = listElDom.querySelector<HTMLElement>(`[data-id="${draggedItem.value?.id}"]`)
+          ?.closest<HTMLElement>('.content-row')
         if (selfDom) {
           selfDom.style.setProperty('--translate3D', `0, ${moveSelf}px, 0`)
         }
       }
-
-      dragMeta.value.placement = isAbove ? 'above' : 'below'
-      dragMeta.value.targetEl = t
-      dragMeta.value.target = listItems.value?.find(item => String(item.id) === String(draggedOverItem.dataset.id))
     })
   }
 
   function handleDragEnd(drag?: Draggable['drag']) {
+    cancelAnimationFrame(moveFrame)
+    cancelAnimationFrame(scrollFrame)
     const dragItem = drag?.items[0]
 
     // Turn on selection
@@ -214,13 +233,12 @@ export function useListDragAndDrop(payload?: {
       toIdx = toIdx - 1
     }
 
-    if (drag && !!dragMeta.value.target?.id) {
+    if (drag && !isNil(targetId) && fromIdx >= 0 && toIdx >= 0) {
       items.value = moveItem(items.value, fromIdx, toIdx)
-      emits.value.itemMoved(draggedItem.value!.ref, items.value)
+      onItemMoved(draggedItem.value!.ref, items.value)
     }
 
     // Reset dragging
-    onDragEnd?.()
     draggedItem.value = undefined
     dragMeta.value = {
       targetEl: undefined,
@@ -230,10 +248,10 @@ export function useListDragAndDrop(payload?: {
       sourceEl: undefined,
     }
 
-    const listElDom = unrefElement(listEl as any) as HTMLElement
+    const listElDom = listEl.value?.element
 
     if (listElDom) {
-      const items = listElDom.querySelectorAll('.content-row') as NodeListOf<HTMLElement>
+      const items = listElDom.querySelectorAll<HTMLElement>('.content-row')
 
       items.forEach(item => {
         item.style.transition = ''
@@ -268,7 +286,8 @@ export function useListDragAndDrop(payload?: {
   }
 
   function handleScroll() {
-    requestAnimationFrame(() => {
+    cancelAnimationFrame(scrollFrame)
+    scrollFrame = requestAnimationFrame(() => {
       handleDragMove({
         x: x.value,
         y: y.value,
@@ -281,24 +300,30 @@ export function useListDragAndDrop(payload?: {
     containerEl: HTMLElement
     itemId: IListItem['id']
     moveHandleEl: HTMLElement
+    canDrag: () => boolean
+    onDragStart: () => void
+    onDragEnd: () => void
   }) {
-    const { el, containerEl, itemId, moveHandleEl } = payload
+    const { el, containerEl, itemId, moveHandleEl, canDrag, onDragStart, onDragEnd } = payload
 
-    if (!moveHandleEl) {
-      return
-    }
-
+    let disposed = false
+    let released = false
+    let clone: HTMLElement | undefined
     const pointerSensor = new PointerSensor(moveHandleEl)
     const draggable = new Draggable([pointerSensor], {
+      startPredicate: () => canDrag(),
       elements: () => {
-        const listElDom = unrefElement(listEl as any) as HTMLElement
+        const listElDom = listEl.value?.element
         dragMeta.value.isVirtualScroll = !!listElDom?.classList.contains('is-virtual')
-        const clone = createClone(el)
+        clone = createClone(el)
 
         return [clone]
       },
       frozenStyles: () => ['left', 'top'],
       onStart: drag => {
+        cancelActiveDrag?.()
+        cancelActiveDrag = dispose
+        onDragStart()
         lastY = drag.startEvent.y
         const item = listItems.value.find(item => item.id === itemId) as IListItem
         containerEl.addEventListener('scroll', handleScroll)
@@ -311,7 +336,14 @@ export function useListDragAndDrop(payload?: {
         containerEl.removeEventListener('scroll', handleScroll)
         containerEl.classList.remove('hide-scrollbar')
 
-        handleDragEnd(drag)
+        cancelActiveDrag = undefined
+        handleDragEnd(disposed ? undefined : drag)
+        onDragEnd()
+
+        if (released) {
+          // Finish Draggable's end callback before destroying the orphaned registration.
+          queueMicrotask(dispose)
+        }
       },
     }).use(autoScrollPlugin({
       speed: (_, { distance, threshold }) => {
@@ -329,7 +361,30 @@ export function useListDragAndDrop(payload?: {
       ],
     }))
 
-    return draggable
+    // Draggable.destroy() calls onEnd; disposal must cancel, not commit a move.
+    // The sensor has its own listeners and must be destroyed separately.
+    function dispose() {
+      if (disposed) {
+        return
+      }
+
+      disposed = true
+      draggable.destroy()
+      pointerSensor.destroy()
+      clone?.remove()
+
+      if (cancelActiveDrag === dispose) {
+        cancelActiveDrag = undefined
+      }
+    }
+
+    return (preserveActive = false) => {
+      if (preserveActive && draggable.drag && !draggable.drag.isEnded) {
+        released = true
+      } else {
+        dispose()
+      }
+    }
   }
 
   return {

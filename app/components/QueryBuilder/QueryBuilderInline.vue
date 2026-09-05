@@ -60,6 +60,9 @@ function clearFilter() {
   ]
 }
 
+let openItemTimer: ReturnType<typeof setTimeout> | undefined
+onBeforeUnmount(() => clearTimeout(openItemTimer))
+
 function handleAddFirstCondition() {
   const firstGroup = storeItems.value[0] as IQueryBuilderGroup
 
@@ -77,15 +80,13 @@ function handleAddFirstCondition() {
     },
   ]
 
-  nextTick(() => {
-    const addedEl = unrefElement(queryBuilderEl)?.querySelector(
-      `[data-path="${path}"]`,
-    ) as HTMLElement
-
-    setTimeout(() => {
-      addedEl?.click()
-    }, 150)
-  })
+  clearTimeout(openItemTimer)
+  openItemTimer = setTimeout(() => {
+    const addedEl = queryBuilderEl.value?.querySelector<HTMLElement>(`[data-path="${path}"]`)
+    if (addedEl?.isConnected) {
+      addedEl.click()
+    }
+  }, 150)
 }
 
 // Column filters

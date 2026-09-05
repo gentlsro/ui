@@ -22,7 +22,7 @@ export function useTreeKeyboard() {
   const { focused } = useFocusWithin(treeEl)
 
   // Esc capture phase — fires before node @keydown handlers that call stopPropagation
-  useEventListener(document, 'keydown', handleEscape, { capture: true })
+  useEventListener(() => import.meta.client ? document : undefined, 'keydown', handleEscape, { capture: true })
 
   function handleEscape(ev: KeyboardEvent) {
     if (ev.key !== 'Escape') {

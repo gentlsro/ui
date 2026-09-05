@@ -1,3 +1,4 @@
+import type { FloatingTarget } from '../../../composables/useFloatingUIUtils'
 import type { CSSProperties } from 'vue'
 
 // Constants
@@ -70,7 +71,7 @@ export type IDialogProps = {
   /**
    * Element that triggers the Floating UI
    */
-  target?: any
+  target?: FloatingTarget
 
   /**
    * Title of the floating element

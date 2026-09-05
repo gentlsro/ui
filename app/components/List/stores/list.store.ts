@@ -8,6 +8,7 @@ import type { IListDragMeta } from '../types/list-drag-meta.type'
 import type { IListItemToAdd } from '../types/list-item-to-add.type'
 
 // Functions
+import { useListDragAndDrop } from '../composables/useListDragAndDrop'
 import { getListItemKey } from '../functions/helpers'
 import { listFetchData } from '../functions/list-fetch-data'
 import { buildListItems } from '../functions/build-list-items'
@@ -386,6 +387,16 @@ function createStore(injectionKey?: string) {
       fetchData: _payload => {},
     })
 
+    const { createDraggable } = useListDragAndDrop({
+      listEl,
+      items,
+      listItems,
+      draggedItem,
+      dragMeta,
+      itemKey,
+      onItemMoved: (item, items) => emits.value.itemMoved(item, items),
+    })
+
     const returnedData = {
       // Configs
       modifiers,
@@ -453,6 +464,7 @@ function createStore(injectionKey?: string) {
       fetchAndSetData,
 
       // D'n'D
+      createDraggable,
       draggedItem,
       dragMeta,
       isDragging,

@@ -27,12 +27,12 @@ const mergedProps = computed(() => {
 })
 
 // Layout
-const wrapperEl = ref<HTMLDivElement>()
+const wrapperEl = useTemplateRef('wrapperEl')
 const readonly = toRef(props, 'readonly')
 const isValueTemporaryVisible = ref(false)
 
 const wrapperElDom = computed(() => {
-  return unrefElement(wrapperEl.value)
+  return wrapperEl.value?.element
 })
 
 const {

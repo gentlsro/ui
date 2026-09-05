@@ -22,7 +22,7 @@ export function useListKeyboard(config: { onSubmit: () => void, registerKeyStrok
   } = useListStore()
 
   // Layout
-  const itemFocusedEl = ref<HTMLDivElement>()
+  const itemFocusedEl = shallowRef<HTMLElement | null>(null)
 
   function handleMouseEnter(item: any, index: number) {
     if (!('isGroup' in item) && !preventNextHoverEvent.value) {
@@ -176,9 +176,12 @@ export function useListKeyboard(config: { onSubmit: () => void, registerKeyStrok
     // Regular item
     else {
       nextTick(() => {
-        const listElDom = unrefElement(listEl)
-        resume()
-        itemFocusedEl.value = listElDom?.querySelector('.list-row-item.is-focused') as HTMLDivElement
+        const listElDom: HTMLElement | undefined = listEl.value?.element
+        itemFocusedEl.value = listElDom?.querySelector<HTMLElement>('.list-row-item.is-focused') ?? null
+
+        if (itemFocusedEl.value) {
+          resume()
+        }
       })
     }
 

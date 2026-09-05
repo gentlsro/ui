@@ -1,6 +1,7 @@
 import type { AllowedComponentProps, ConcreteComponent, CSSProperties } from 'vue'
 
 // Types
+import type { FloatingTarget } from '../../../composables/useFloatingUIUtils'
 import type { IListItem } from './list-item.type'
 import type { IListFetchFnc } from './list-fetch.type'
 import type { IListItemToAdd } from './list-item-to-add.type'
@@ -167,15 +168,17 @@ export type IListProps = {
   }
 
   /**
-   * The move handle target
+   * The move handle target, resolved once when the row mounts.
+   * Keep its DOM element stable; remount the row to change the target.
    * If not explicitly provided, the "internal" move handle will be used
    *
    * Can be
    *  DOM selector
    *  DOM element
-   *  Vue component ref
+   *  Vue component ref exposing `element` in Vapor
+   *  Getter returning one of these targets
    */
-  moveHandleTarget?: any
+  moveHandleTarget?: FloatingTarget
 
   /**
    * Whether the internal move handle takes space when an item is not reorderable
@@ -214,7 +217,9 @@ export type IListProps = {
   reorderable?: boolean | ((item: any) => boolean)
 
   /**
-   * The tag to use for the row
+   * The tag or component to use for the row.
+   * Vapor components expose their draggable HTMLElement as `element`.
+   * Keep the root element stable for the row lifetime.
    */
   rowComponent?: ConcreteComponent | string
 

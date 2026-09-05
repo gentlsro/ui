@@ -1,10 +1,9 @@
 import type { CSSProperties } from 'vue'
-import type { MaybeElement } from '@floating-ui/vue'
+import type { FloatingTarget } from '../../../composables/useFloatingUIUtils'
 
 import type {
   OffsetOptions,
   Placement,
-  ReferenceElement,
 } from '@floating-ui/dom'
 
 // Constants
@@ -65,11 +64,10 @@ export type ITooltipProps = {
   placement?: Placement
 
   /**
-   * This prop is not used in <Dialog /> but it needs to be here because <Menu /> uses it
-   * therefore <MenuProxy /> uses it. If it wasn't here, the HTML would try
-   * to stringify it and throw an error.
+   * DOM element, selector, getter, or component exposing `element`.
+   * Defaults to the declaration-site parent when omitted.
    */
-  referenceTarget?: MaybeElement<ReferenceElement> | HTMLElement | string | null
+  referenceTarget?: FloatingTarget
 
   /**
    * Visual configuration

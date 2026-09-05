@@ -85,7 +85,9 @@ storeEmits.value = {
 defineExpose(treeGetExposed())
 
 // Init
-await init()
+// Keep setup synchronous across the Vapor boundary; SSR waits for initial data.
+const initialization = init()
+onServerPrefetch(() => initialization)
 
 // Styles - Container
 const containerClass = computed(() => {

@@ -1,11 +1,16 @@
 // Types
+import type { Draggable } from 'dragdoll'
 import type { ITreeNode } from '../types/tree-node.type'
 import type { ITreeProps } from '../types/tree-props.type'
 import type { ITreeEmitFncs } from '../types/tree-emit-fncs.type'
 import type { ITreeNodeMeta } from '../types/tree-node-meta.type'
 import type { ITreeDragMeta } from '../types/tree-drag-meta.type'
 
+// Composables
+import { useTreeDragAndDrop } from '../composables/useTreeDragAndDrop'
+
 // Functions
+import { moveNode } from '../functions/move-node'
 import { searchNodes } from '../functions/search-nodes'
 import { insertNodes } from '../functions/insert-nodes'
 import { removeNodes } from '../functions/remove-nodes'
@@ -87,7 +92,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     const draggedNode = ref<ITreeNode<T> | undefined>()
     const dragMeta = ref<ITreeDragMeta<T>>({})
     const cancelDrag = ref(false)
-    const activeDraggable = shallowRef<any>(null)
+    const activeDraggable = shallowRef<Draggable | null>(null)
 
     // Nodes
     const nodesFlattened = shallowRef<ITreeNode<T>[]>([])
@@ -115,15 +120,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     })
 
     // Nodes search & visible
-    const nodesVisible = ref<ITreeNode<T>[]>([])
     const nodesSearched = ref<ITreeNode<T>[]>([])
-
-    const collapsedIds = computed(() => {
-      return nodesSearched.value
-        .filter(node => nodeMetaById.value[node.id]?.isCollapsed)
-        .map(node => node.id)
-        .join(',')
-    })
 
     const { trigger: flattenTrigger } = watchTriggerable([model, idKey, labelKey, childrenKey], async ([nodes]) => {
       nodesFlattened.value = await flattenTreeNodes<T>({
@@ -210,9 +207,9 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       },
     )
 
-    watch([nodesSearched, collapsedIds], ([nodes]) => {
+    const nodesVisible = computed(() => {
       // Only get non-collapsed nodes
-      nodesVisible.value = nodes
+      return nodesSearched.value
         .filter(node => {
           const { path } = nodeMetaById.value[node.id] ?? {}
           const usesFlatSearchView = isSearched.value && !searchConfig.value?.keepParents
@@ -229,7 +226,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
 
           return parentsMeta.every(parentMeta => !parentMeta?.isCollapsed)
         })
-    }, { immediate: true })
+    })
 
     // Sync the flattened nodes back to the source nodes
     // (we must keep the hierarchy)
@@ -312,6 +309,28 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       })
     }
 
+    const { createDraggable } = useTreeDragAndDrop<T>({
+      treeEl,
+      scrollerEl,
+      draggedNode,
+      dragMeta,
+      cancelDrag,
+      activeDraggable,
+      nodeById,
+      nodeMetaById,
+      dndConfig,
+      childrenKey,
+      expandNode,
+      onMove: (node, meta) => {
+        moveNode({
+          mode: dndConfig.value?.dropMode ?? 'parent',
+          nodeToMove: node,
+          dragMeta: meta,
+          getStore: () => returnedData,
+        })
+      },
+    })
+
     const returnedData = {
       // Utils
       idKey,
@@ -349,6 +368,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       nodeHovered,
 
       // D'n'D
+      createDraggable,
       draggedNode,
       dragMeta,
       cancelDrag,

@@ -1,3 +1,4 @@
+import type { FloatingTarget } from '../../../composables/useFloatingUIUtils'
 import type { CSSProperties } from 'vue'
 import type { Boundary, OffsetOptions, Placement } from '@floating-ui/dom'
 
@@ -130,12 +131,12 @@ export type IMenuProps = {
   /**
    * The reference element that the `Menu` is attached to
    */
-  referenceTarget?: any
+  referenceTarget?: FloatingTarget
 
   /**
    * Element that triggers the Floating UI
    */
-  target?: any
+  target?: FloatingTarget
 
   /**
    * Title of the menu

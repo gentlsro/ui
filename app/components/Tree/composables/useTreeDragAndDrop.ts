@@ -3,33 +3,53 @@ import type { PointerSensorMoveEvent } from 'dragdoll'
 
 // Types
 import type { ITreeNode } from '../types/tree-node.type'
+import type { ITreeNodeMeta } from '../types/tree-node-meta.type'
+import type { ITreeDragMeta } from '../types/tree-drag-meta.type'
+import type { ITreeProps } from '../types/tree-props.type'
 
-// Functions
-import { moveNode } from '../functions/move-node'
+type IConfig<T extends IItem> = {
+  treeEl: Ref<HTMLElement | undefined>
+  scrollerEl: Readonly<Ref<{ element?: HTMLElement | null } | undefined>>
+  draggedNode: Ref<ITreeNode<T> | undefined>
+  dragMeta: Ref<ITreeDragMeta<T>>
+  cancelDrag: Ref<boolean>
+  activeDraggable: Ref<Draggable | null>
+  nodeById: Readonly<Ref<Record<string, ITreeNode<T>>>>
+  nodeMetaById: Ref<Record<string, ITreeNodeMeta>>
+  dndConfig: Ref<ITreeProps<T>['dndConfig']>
+  childrenKey: Readonly<Ref<string>>
+  expandNode: (node: ITreeNode<T>) => void
+  onMove: (node: ITreeNode<T>, meta: ITreeDragMeta<T>) => void
+}
 
-// Store
-import { useTreeStore } from '../stores/tree.store'
-
-const TREE_CLASS = ['tree']
-const TREE_NODE_CLASSES = ['tree-node']
-
-export function useTreeDragAndDrop() {
-  // Store
-  const store = useTreeStore()
+export function useTreeDragAndDrop<T extends IItem>(config: IConfig<T>) {
   const {
     treeEl,
+    scrollerEl,
     draggedNode,
     dragMeta,
     cancelDrag,
+    activeDraggable,
     nodeById,
     dndConfig,
     nodeMetaById,
     childrenKey,
-  } = store
+    expandNode,
+    onMove,
+  } = config
 
   // Utils
   const { x, y } = useSharedMouse()
-  let lastY = 0
+  let scrollFrame = 0
+  let cancelActiveDrag: (() => void) | undefined
+
+  onBeforeUnmount(() => cancelActiveDrag?.())
+  watch([scrollerEl, nodeById], ([scroller, nodes], [previousScroller]) => {
+    if (cancelActiveDrag && (scroller !== previousScroller
+      || !nodes[draggedNode.value?.id ?? ''])) {
+      cancelActiveDrag()
+    }
+  }, { flush: 'post' })
   let shouldMove = true
   let startMousePosition = { x: 0, y: 0 }
 
@@ -37,7 +57,7 @@ export function useTreeDragAndDrop() {
   let hoverExpandTimer: ReturnType<typeof setTimeout> | null = null
   let hoverExpandTargetId: string | number | null = null
 
-  function startHoverExpandTimer(node: ITreeNode) {
+  function startHoverExpandTimer(node: ITreeNode<T>) {
     if (hoverExpandTargetId === node.id) {
       return
     }
@@ -46,7 +66,7 @@ export function useTreeDragAndDrop() {
 
     hoverExpandTargetId = node.id
     hoverExpandTimer = setTimeout(() => {
-      store.expandNode(node)
+      expandNode(node)
     }, 800)
   }
 
@@ -59,7 +79,7 @@ export function useTreeDragAndDrop() {
     hoverExpandTargetId = null
   }
 
-  function handleDragStart<T extends IItem = IItem>(payload: { item: ITreeNode<T>, el: HTMLElement }) {
+  function handleDragStart(payload: { item: ITreeNode<T>, el: HTMLElement }) {
     // Turn off selection while dragging
     getSelection()?.removeAllRanges()
     document.documentElement.classList.add('select-none')
@@ -75,24 +95,25 @@ export function useTreeDragAndDrop() {
 
   function handleDragMove(
     ev: Pick<PointerSensorMoveEvent, 'x' | 'y'>,
-    delta = 0,
   ) {
     const { x, y } = ev
-    lastY = y
     const elements = document.elementsFromPoint(x, y)
     shouldMove = true
 
-    const draggedOverContentRow = elements
-      .find(el => el.classList.contains('content-row')) as HTMLElement | undefined
-    const draggedOverItem = draggedOverContentRow?.children[0] as HTMLElement | undefined
+    const draggedOverItem = elements.find((el): el is HTMLElement => {
+      return el instanceof HTMLElement && !!treeEl.value?.contains(el) && el.classList.contains('tree-node')
+    })
+    const draggedOverContentRow = draggedOverItem?.closest<HTMLElement>('.content-row')
 
     const draggedOverItemId = draggedOverItem?.dataset.id
     const draggedOverItemPath = draggedOverItem?.dataset.path
     const isDraggedOverSameItem = draggedOverItemId === dragMeta.value?.target?.id
     const isSelf = draggedOverItemId === String(draggedNode.value?.id)
-    const isInsideSelf = draggedOverItemPath?.startsWith(nodeMetaById.value[draggedNode.value?.id ?? '']?.path ?? '')
+    const sourcePath = nodeMetaById.value[draggedNode.value?.id ?? '']?.path
+    const isInsideSelf = !!sourcePath && draggedOverItemPath?.startsWith(`${sourcePath}.${childrenKey.value}.`)
 
     if (isSelf || isInsideSelf || !draggedNode.value) {
+      clearHoverExpandTimer()
       dragMeta.value.target = null
       dragMeta.value.targetEl = undefined
 
@@ -102,6 +123,8 @@ export function useTreeDragAndDrop() {
     }
 
     if (!draggedOverItem) {
+      clearHoverExpandTimer()
+      dragMeta.value.targetEl = undefined
       dragMeta.value.target = null
       dragMeta.value.targetParent = { id: '__ROOT__' }
       dragMeta.value.dropAllowed = dndConfig.value?.canBeDropped?.({
@@ -134,87 +157,88 @@ export function useTreeDragAndDrop() {
       return
     }
 
-    requestAnimationFrame(() => {
-      const targetId = draggedOverItem.dataset.id as string
-      const treeNode = nodeById.value?.[targetId]
+    const targetId = draggedOverItem.dataset.id as string
+    const treeNode = nodeById.value?.[targetId]
 
-      const isDropAllowed = dndConfig.value?.canBeDropped?.({
+    const isDropAllowed = dndConfig.value?.canBeDropped?.({
+      draggedNode: draggedNode.value!,
+      targetNode: treeNode,
+      nodeById: nodeById.value,
+      nodeMetaById: nodeMetaById.value,
+    }) ?? true
+
+    if (!isDropAllowed) {
+      clearHoverExpandTimer()
+      dragMeta.value.dropAllowed = false
+      dragMeta.value.target = null
+
+      return
+    } else {
+      dragMeta.value.dropAllowed = true
+    }
+
+    dragMeta.value.placement = isAbove ? 'above' : 'below'
+    dragMeta.value.target = treeNode
+
+    if (dndConfig.value?.dropMode === 'place') {
+      dragMeta.value.targetEl = t
+    }
+
+    // Drop mode = 'place'
+    // = we use the drop indicator and placement (above or below)
+    const targetNodeMeta = nodeMetaById.value[targetId]
+    const computedStyle = getComputedStyle(t)
+    const tHeight = +computedStyle.getPropertyValue('--rowHeight')
+    const tTranslateY = +computedStyle.getPropertyValue('--translateY')
+
+    dragMeta.value.dropIndicatorCSS = Object.assign(
+      {},
+      dragMeta.value.dropIndicatorCSS,
+      {
+        '--translateY': isAbove ? (tTranslateY) : `${tTranslateY + tHeight}`,
+        '--left': `${((targetNodeMeta?.level ?? 0) + 1) * 12}px`,
+      },
+    )
+
+    let parent: ITreeNode<T> | null | undefined
+
+    if (dndConfig.value?.getParentNode) {
+      parent = dndConfig.value?.getParentNode?.({
+        dragMeta: dragMeta.value,
         draggedNode: draggedNode.value!,
         targetNode: treeNode,
         nodeById: nodeById.value,
         nodeMetaById: nodeMetaById.value,
-      }) ?? true
+        childrenKey: childrenKey.value,
+      })
+    } else if (draggedOverItemId) {
+      parent = nodeById.value[draggedOverItemId]
+    }
 
-      if (!isDropAllowed) {
-        dragMeta.value.dropAllowed = false
-        dragMeta.value.target = null
+    if (parent) {
+      dragMeta.value.targetParent = parent
+    } else {
+      dragMeta.value.targetParent = { id: '__ROOT__' }
+    }
 
-        return
-      } else {
-        dragMeta.value.dropAllowed = true
-      }
+    // Hover-to-expand collapsed nodes
+    const nodeToExpand = parent ?? treeNode
 
-      dragMeta.value.placement = isAbove ? 'above' : 'below'
-      dragMeta.value.target = treeNode
-
-      if (dndConfig.value?.dropMode === 'place') {
-        dragMeta.value.targetEl = t
-      }
-
-      // Drop mode = 'place'
-      // = we use the drop indicator and placement (above or below)
-      const targetNodeMeta = nodeMetaById.value[targetId]
-      const computedStyle = getComputedStyle(t)
-      const tHeight = +computedStyle.getPropertyValue('--rowHeight')
-      const tTranslateY = +computedStyle.getPropertyValue('--translateY')
-
-      dragMeta.value.dropIndicatorCSS = Object.assign(
-        {},
-        dragMeta.value.dropIndicatorCSS,
-        {
-          '--translateY': isAbove ? (tTranslateY) : `${tTranslateY + tHeight}`,
-          '--left': `${((targetNodeMeta?.level ?? 0) + 1) * 12}px`,
-        },
-      )
-
-      let parent: ITreeNode | null | undefined
-
-      if (dndConfig.value?.getParentNode) {
-        parent = dndConfig.value?.getParentNode?.({
-          dragMeta: dragMeta.value,
-          draggedNode: draggedNode.value!,
-          targetNode: treeNode,
-          nodeById: nodeById.value,
-          nodeMetaById: nodeMetaById.value,
-          childrenKey: childrenKey.value,
-        })
-      } else if (draggedOverItemId) {
-        parent = nodeById.value[draggedOverItemId]
-      }
-
-      if (parent) {
-        dragMeta.value.targetParent = parent
-      } else {
-        dragMeta.value.targetParent = { id: '__ROOT__' }
-      }
-
-      // Hover-to-expand collapsed nodes
-      const nodeToExpand = parent ?? treeNode
-
-      if (nodeToExpand && nodeMetaById.value[nodeToExpand.id]?.isCollapsed) {
-        startHoverExpandTimer(nodeToExpand)
-      } else {
-        clearHoverExpandTimer()
-      }
-    })
+    if (nodeToExpand && nodeMetaById.value[nodeToExpand.id]?.isCollapsed) {
+      startHoverExpandTimer(nodeToExpand)
+    } else {
+      clearHoverExpandTimer()
+    }
   }
 
   function handleDragEnd(drag?: Draggable['drag']) {
     clearHoverExpandTimer()
+    cancelAnimationFrame(scrollFrame)
 
-    const isDragOutOfTree = !document
+    const root = treeEl.value
+    const isDragOutOfTree = !root || !document
       .elementsFromPoint(x.value, y.value)
-      .some(el => TREE_CLASS.some(cls => el.classList.contains(cls)))
+      .includes(root)
 
     const dragItem = drag?.items[0]
 
@@ -226,32 +250,20 @@ export function useTreeDragAndDrop() {
     dragItem?.element.remove()
 
     // Resolve the drag
-    if (draggedNode.value && !isDragOutOfTree && shouldMove && !cancelDrag.value) {
-      moveNode({
-        mode: dndConfig.value?.dropMode ?? 'parent',
-        dragMeta: dragMeta.value,
-        nodeToMove: draggedNode.value,
-        getStore: () => store,
-      })
+    if (drag && draggedNode.value && !isDragOutOfTree && shouldMove && !cancelDrag.value && dragMeta.value.dropAllowed) {
+      onMove(draggedNode.value, { ...dragMeta.value })
     }
 
     cancelDrag.value = false
 
-    // Reset dragging
-    requestAnimationFrame(() => {
-      draggedNode.value = undefined
-      dragMeta.value = {
-        targetEl: undefined,
-        target: undefined,
-        placement: undefined,
-        dropIndicatorCSS: undefined,
-        sourceEl: undefined,
-      }
-    })
+    // Clear immediately so a later frame cannot overwrite the next drag session.
+    draggedNode.value = undefined
+    dragMeta.value = {}
   }
 
   function handleScroll() {
-    requestAnimationFrame(() => {
+    cancelAnimationFrame(scrollFrame)
+    scrollFrame = requestAnimationFrame(() => {
       handleDragMove({
         x: x.value,
         y: y.value,
@@ -298,36 +310,56 @@ export function useTreeDragAndDrop() {
     return undefined
   }
 
-  function createDraggable<T extends IItem = IItem>(payload: {
+  function createDraggable(payload: {
     el: HTMLElement
     item: ITreeNode<T>
     onEnd?: () => void
   }) {
     const { el, item, onEnd } = payload
-    const treeElDom = unrefElement(treeEl) as HTMLElement
+    const scrollElement = scrollerEl.value?.element
+    if (!scrollElement) {
+      return
+    }
+
+    let disposed = false
+    let released = false
+    let clone: HTMLElement | undefined
 
     const pointerSensor = new PointerSensor(el)
     const draggable = new Draggable([pointerSensor], {
-      elements: () => [createClone(el)],
-      frozenStyles: () => ['left', 'top'],
-      onStart: drag => {
-        lastY = drag.startEvent.y
-        treeElDom.addEventListener('scroll', handleScroll)
-        treeElDom.classList.add('hide-scrollbar')
+      elements: () => {
+        clone = createClone(el)
 
-        store.activeDraggable.value = draggable
+        return [clone]
+      },
+      frozenStyles: () => ['left', 'top'],
+      onStart: () => {
+        cancelActiveDrag?.()
+        cancelActiveDrag = dispose
+        scrollElement.addEventListener('scroll', handleScroll)
+        scrollElement.classList.add('hide-scrollbar')
+
+        activeDraggable.value = draggable
         handleDragStart({ item, el })
       },
-      onMove: drag => handleDragMove(drag.moveEvent as PointerSensorMoveEvent, drag.moveEvent.y - lastY),
+      onMove: drag => handleDragMove(drag.moveEvent as PointerSensorMoveEvent),
       onEnd: drag => {
         onEnd?.()
-        treeElDom.removeEventListener('scroll', handleScroll)
-        treeElDom.classList.remove('hide-scrollbar')
-        store.activeDraggable.value = null
+        scrollElement.removeEventListener('scroll', handleScroll)
+        scrollElement.classList.remove('hide-scrollbar')
+        activeDraggable.value = null
 
-        handleDragEnd(drag)
+        cancelActiveDrag = undefined
+        handleDragEnd(disposed ? undefined : drag)
+        if (released) {
+          queueMicrotask(dispose)
+        }
       },
       startPredicate: data => {
+        if (!dndConfig.value?.enabled) {
+          return false
+        }
+
         const { x, y, type } = data.event
 
         if (type === 'start') {
@@ -344,7 +376,7 @@ export function useTreeDragAndDrop() {
       },
       targets: [
         {
-          element: treeElDom,
+          element: scrollElement,
           axis: 'y',
           padding: { top: Infinity, bottom: Infinity },
           threshold: 50,
@@ -352,7 +384,28 @@ export function useTreeDragAndDrop() {
       ],
     }))
 
-    return draggable
+    // Destroying a registration ends Dragdoll's session; cancellation must not move a node.
+    function dispose() {
+      if (disposed) {
+        return
+      }
+
+      disposed = true
+      draggable.destroy()
+      pointerSensor.destroy()
+      clone?.remove()
+      if (cancelActiveDrag === dispose) {
+        cancelActiveDrag = undefined
+      }
+    }
+
+    return (preserveActive = false) => {
+      if (preserveActive && draggable.drag && !draggable.drag.isEnded) {
+        released = true
+      } else {
+        dispose()
+      }
+    }
   }
 
   return {

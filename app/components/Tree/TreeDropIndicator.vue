@@ -16,17 +16,17 @@ function getCss(node: Pick<ITreeNode<T>, 'id'>) {
 
   const childrenPath = `${path}.${childrenKey.value}`
 
-  const treeElDom = unrefElement(treeEl) as HTMLElement
-  const els = treeElDom.querySelectorAll(`[data-path="${path}"], [data-path^="${childrenPath}"]`)
+  const treeElDom = treeEl.value
+  const els = treeElDom?.querySelectorAll<HTMLElement>(`[data-path="${path}"], [data-path^="${childrenPath}"]`)
 
-  if (!els.length) {
+  if (!els?.length) {
     return
   }
 
-  const firstEl = els[0] as HTMLElement
+  const firstEl = els[0]!
   const firstElTranslateY = +getComputedStyle(firstEl).getPropertyValue('--translateY')
 
-  const lastEl = els[els.length - 1] as HTMLElement
+  const lastEl = els[els.length - 1]!
   const lastElTranslateY = +getComputedStyle(lastEl).getPropertyValue('--translateY')
   const lastElHeight = +getComputedStyle(lastEl).getPropertyValue('--rowHeight')
 
@@ -53,9 +53,12 @@ const parentDropIndicatorCss = computed(() => {
     return parentCss
   }
 
-  const treeElDom = unrefElement(treeEl) as HTMLElement
-  const visibleNodeEls = treeElDom.querySelectorAll('.content-row') as NodeListOf<HTMLElement>
-  const lastVisibleEl = visibleNodeEls[visibleNodeEls.length - 1] as HTMLElement
+  const treeElDom = treeEl.value
+  const visibleNodeEls = treeElDom?.querySelectorAll<HTMLElement>('.content-row')
+  const lastVisibleEl = visibleNodeEls?.[visibleNodeEls.length - 1]
+  if (!lastVisibleEl) {
+    return
+  }
 
   const lastVisibleElTranslateY = +getComputedStyle(lastVisibleEl).getPropertyValue('--translateY')
   const lastVisibleElHeight = +getComputedStyle(lastVisibleEl).getPropertyValue('--rowHeight')
@@ -78,10 +81,10 @@ const parentDropIndicatorCss = computed(() => {
       class="tree-drop-indicator__icon"
       :class="{
         'rotate-y-180 -top-9px': dragMeta.placement === 'below',
-        'rotate-180 -top-6px': dragMeta.placement === 'above',
+        'rotate-180 -top-5px': dragMeta.placement === 'above',
       }"
     >
-      <div i-tabler:arrow-back />
+      <div class="tree-drop-indicator__arrow" />
     </div>
   </div>
 
@@ -103,6 +106,10 @@ const parentDropIndicatorCss = computed(() => {
 .tree-drop-indicator__icon {
   @apply w-4 h-4 relative left--3 rounded-custom
   color-primary bg-white dark:bg-darker;
+}
+
+.tree-drop-indicator__arrow {
+  @apply i-tabler:arrow-back w-full h-full;
 }
 
 .tree-drop-indicator__parent {

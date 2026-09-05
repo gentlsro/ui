@@ -20,7 +20,10 @@ const emits = defineEmits<{
   (e: 'update:comparator', comparator: ComparatorEnum): void
 }>()
 
+const element = useTemplateRef<HTMLLIElement>('element')
+
 defineExpose({
+  element,
   focusInput: (input?: 'field' | 'comparator' | 'value') => {
     switch (input) {
       case 'field':
@@ -157,6 +160,7 @@ const { validation } = useArk({
 
 <template>
   <li
+    ref="element"
     class="qb-row qb-item"
     :class="{
       'is-hovered': hoveredItem === item,

@@ -24,6 +24,18 @@ export function useMenu(payload: {
   // Utils
   const { getElement } = useFloatingUIUtils()
 
+  const resolvedTrigger = computed(() => {
+    const parentEl = getHost() ?? undefined
+
+    return getElement({ elRef: menuProps.target ?? parentEl, parentEl })
+  })
+
+  const resolvedReference = computed(() => {
+    const parentEl = getHost() ?? undefined
+
+    return getElement({ elRef: menuProps.referenceTarget ?? parentEl, parentEl })
+  })
+
   /**
    * Refreshes the `referenceEl` and `triggerEl`
    */
@@ -32,13 +44,12 @@ export function useMenu(payload: {
       return
     }
 
-    const parentEl = getHost() ?? undefined
     removeTriggerListener?.()
     removeTriggerListener = undefined
 
     // Assign the elements
-    triggerEl.value = getElement({ elRef: menuProps.target ?? parentEl, parentEl })
-    referenceEl.value = getElement({ elRef: menuProps.referenceTarget ?? parentEl, parentEl })
+    triggerEl.value = resolvedTrigger.value
+    referenceEl.value = resolvedReference.value
 
     if (referenceEl.value && referenceEl.value instanceof Element) {
       referenceEl.value.classList.add('has-menu')
@@ -59,8 +70,8 @@ export function useMenu(payload: {
 
   // Watch for element changes to refresh the anchors
   watch([
-    () => menuProps.target,
-    () => menuProps.referenceTarget,
+    resolvedTrigger,
+    resolvedReference,
     () => menuProps.trigger,
     () => menuProps.manual,
     getHost,

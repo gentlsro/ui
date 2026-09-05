@@ -1,5 +1,7 @@
 <script setup lang="ts">
 // Types
+import type { FloatingTarget } from '../../composables/useFloatingUIUtils'
+import type ListMoveHandle from './ListMoveHandle.vue'
 import type { IListItem } from './types/list-item.type'
 import type { IListProps } from './types/list-props.type'
 
@@ -8,7 +10,6 @@ import { isListItemSelected } from './functions/helpers/is-list-item-selected'
 
 // Store
 import { useListStore } from './stores/list.store'
-import { useListDragAndDrop } from './composables/useListDragAndDrop'
 
 // Constants
 import { LIST_DEFAULT_PROPS } from './constants/list-default-props.constant'
@@ -23,6 +24,7 @@ const props = defineProps<IProps>()
 // Store
 const {
   listEl,
+  createDraggable,
   addedItemById,
   itemFocused,
   rowComponent,
@@ -37,14 +39,13 @@ const {
 
 // Utils
 const { getElement } = useFloatingUIUtils()
-const { createDraggable } = useListDragAndDrop({
-  onDragEnd: () => requestAnimationFrame(() => isDragging.value = false),
-})
 
 // Layout
-const el = useTemplateRef('el')
+let dragEndFrame = 0
+let unmounting = false
+const el = useTemplateRef<FloatingTarget>('el')
 const isDragging = ref(false)
-const moveHandleEl = useTemplateRef('moveHandleEl')
+const moveHandleEl = useTemplateRef<InstanceType<typeof ListMoveHandle>>('moveHandleEl')
 const item = toRef(props, 'item')
 
 const isNew = computed(() => '_isNew' in item.value)
@@ -67,6 +68,52 @@ function handleClick() {
   handleSelect(item.value)
   emits.value.itemClick(item.value)
 }
+
+// Root and handle are stable for the row's lifetime. Wait for the parent scroller ref.
+let releaseDrag: ReturnType<typeof createDraggable> | undefined
+onMounted(async () => {
+  await nextTick()
+
+  if (unmounting || isNew.value) {
+    return
+  }
+
+  const row = getElement({ elRef: el.value })
+  const container = listEl.value?.element
+  const handle = moveHandleEl.value?.element
+    ?? (row instanceof HTMLElement ? getElement({ elRef: props.moveHandleTarget, parentEl: row }) : null)
+
+  if (!(row instanceof HTMLElement) || !(container instanceof HTMLElement) || !(handle instanceof HTMLElement)) {
+    return
+  }
+
+  releaseDrag = createDraggable({
+    el: row,
+    containerEl: container,
+    moveHandleEl: handle,
+    itemId: item.value.id,
+    canDrag: () => !isNew.value && !isDisabled.value && !!(typeof props.reorderable === 'function'
+      ? props.reorderable(item.value.ref)
+      : props.reorderable),
+    onDragStart: () => {
+      cancelAnimationFrame(dragEndFrame)
+      isDragging.value = true
+    },
+    onDragEnd: () => {
+      if (!unmounting) {
+        cancelAnimationFrame(dragEndFrame)
+        dragEndFrame = requestAnimationFrame(() => isDragging.value = false)
+      }
+    },
+  })
+})
+
+onBeforeUnmount(() => {
+  unmounting = true
+  cancelAnimationFrame(dragEndFrame)
+  // Virtualization may remove the row while the List still owns its active drag.
+  releaseDrag?.(!!dragMeta.value.isVirtualScroll)
+})
 
 // Styles - Row
 const rowClass = computed(() => {
@@ -126,27 +173,6 @@ const rowContentStyle = computed(() => {
     isLast: props.isLast,
   })
 })
-
-// D'n'D
-onMounted(() => {
-  requestAnimationFrame(() => {
-    if (isNew.value) {
-      return
-    }
-
-    const _el = unrefElement(el as any) as HTMLElement
-    const listElDom = unrefElement(listEl as any)
-    const moveHandleElDom = unrefElement(moveHandleEl as any)
-      ?? getElement({ elRef: props.moveHandleTarget, parentEl: _el })
-
-    createDraggable({
-      el: _el,
-      containerEl: listElDom,
-      itemId: item.value.id,
-      moveHandleEl: moveHandleElDom,
-    })
-  })
-})
 </script>
 
 <template>
@@ -166,7 +192,6 @@ onMounted(() => {
       ref="moveHandleEl"
       class="list-move-handle"
       :ui
-      @mousedown="isDragging = true"
     >
       <slot name="move-handle" />
     </ListMoveHandle>

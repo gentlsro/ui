@@ -1,5 +1,14 @@
 import type { Middleware } from '@floating-ui/dom'
-import type { MaybeElement, ReferenceElement } from '@floating-ui/vue'
+/** DOM target contract shared by overlay props and their resolver. */
+export type FloatingTarget
+  = | Element
+    | string
+    | { element: MaybeRefOrGetter<Element | null | undefined> }
+    | { $el: unknown }
+    | Ref<FloatingTarget>
+    | ((parentEl?: HTMLElement) => FloatingTarget)
+    | null
+    | undefined
 
 export const cover: Middleware = {
   name: 'cover',
@@ -48,15 +57,13 @@ export const matchWidth: Middleware = {
 
 export function useFloatingUIUtils() {
   function getElement(payload?: {
-    elRef?: MaybeRefOrGetter<
-      MaybeElement<ReferenceElement> | HTMLElement | string | ((parentEl?: HTMLElement | null) => MaybeElement<ReferenceElement> | HTMLElement | string) | null
-    >
+    elRef?: FloatingTarget
 
     /**
      * When `parentEl` is provided, the element will be searched within it
      */
     parentEl?: HTMLElement
-  }) {
+  }): Element | null {
     const { elRef, parentEl } = payload ?? {}
 
     if (!import.meta.client) {
@@ -64,31 +71,42 @@ export function useFloatingUIUtils() {
     }
 
     const el = unref(elRef)
-    if (el === null) {
-      return null
+
+    // Resolve getter results through the same contract as direct props.
+    if (typeof el === 'function') {
+      return getElement({ elRef: el(parentEl), parentEl })
     }
 
-    // When the string selector is provided, we need to find the element in the DOM
     if (typeof el === 'string') {
       return (parentEl ?? document).querySelector(el)
     }
 
-    // When the element is already a DOM element, we just use it
-    else if (el instanceof HTMLElement) {
+    if (el instanceof Element) {
       return el
     }
 
-    // When we provided a function to resolve the element, we call it
-    else if (typeof el === 'function') {
-      return el(parentEl) as HTMLElement
+    if (el && typeof el === 'object') {
+      // Explicit expose takes priority, including a temporarily missing element.
+      if ('element' in el) {
+        const element = toValue(el.element)
+
+        return element instanceof Element ? element : null
+      }
+
+      // Compatibility for existing VDOM callers; never inspect private instances.
+      if ('$el' in el && el.$el instanceof Element) {
+        return el.$el
+      }
     }
 
-    // Otherwise, we assume it's a reference element
-    // @ts-expect-error - We know it's a reference element
-    return unrefElement(el)
+    return null
   }
 
   function getLastFloatingUIZindex() {
+    if (!import.meta.client) {
+      return 2999
+    }
+
     const lastFloatingElement = Array.from(document.body.children)
       .toReversed()
       .find(child => child.classList.contains('floating-element')) as HTMLElement
@@ -104,6 +122,10 @@ export function useFloatingUIUtils() {
   }
 
   function getLastFloatingUI() {
+    if (!import.meta.client) {
+      return
+    }
+
     return Array.from(document.body.children)
       .toReversed()
       .find(child => child.classList.contains('floating-element')) as HTMLElement

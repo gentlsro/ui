@@ -21,7 +21,7 @@ const { items, draggedItem, queryBuilderEl } = useQueryBuilderStore()
 const ITEM_ROW_LEFT_MARGIN = 20
 
 // Layout
-const draggableEl = ref<InstanceType<typeof QueryBuilderGroup | typeof QueryBuilderItem>>()
+const draggableEl = useTemplateRef<InstanceType<typeof QueryBuilderGroup | typeof QueryBuilderItem>>('draggableEl')
 
 // Scrolling
 const scrollBy = ref({ speedX: 0, speedY: 0 })
@@ -40,12 +40,15 @@ let clonedElement: HTMLElement | null = null
 let mouseOffset = { x: 0, y: 0 }
 
 const draggableElement = computed(
-  () => unrefElement(draggableEl as any) as unknown as HTMLElement,
+  () => draggableEl.value?.element,
 )
 
 // Mouse
 function handleMouseDown(event: MouseEvent) {
-  const target = event.target as HTMLElement
+  const target = event.target
+  if (!(target instanceof Element) || !draggableElement.value) {
+    return
+  }
   const isDraggableEl
     = target.classList.contains('query-builder-move-handler')
       || target.classList.contains('query-builder-move-handler__icon')
@@ -97,7 +100,10 @@ function handleMouseMove(event: MouseEvent) {
 
 // Touch
 function handleTouchStart(event: TouchEvent) {
-  const target = event.target as HTMLElement
+  const target = event.target
+  if (!(target instanceof Element) || !draggableElement.value) {
+    return
+  }
   const isDraggableEl
     = target.classList.contains('query-builder-move-handler')
       || target.classList.contains('query-builder-move-handler__icon')
@@ -119,6 +125,7 @@ function handleTouchStart(event: TouchEvent) {
   cloneElement(event)
   document.addEventListener('touchmove', handleTouchMove)
   document.addEventListener('touchend', handleDragEnd)
+  document.addEventListener('touchcancel', cancelDrag)
 }
 
 function handleTouchMove(event: TouchEvent) {
@@ -151,10 +158,26 @@ function handleTouchMove(event: TouchEvent) {
 
 // Shared
 function handleDragEnd() {
+  finishDrag(true)
+}
+
+function cancelDrag() {
+  finishDrag(false)
+}
+
+// Removing a row or cancelling a touch must clean up without applying the pending drop.
+onBeforeUnmount(() => {
+  if (clonedElement) {
+    cancelDrag()
+  }
+})
+
+function finishDrag(commit: boolean) {
   document.removeEventListener('mousemove', handleMouseMove)
   document.removeEventListener('mouseup', handleDragEnd)
   document.removeEventListener('touchmove', handleTouchMove)
   document.removeEventListener('touchend', handleDragEnd)
+  document.removeEventListener('touchcancel', cancelDrag)
 
   if (clonedElement) {
     clonedElement.remove()
@@ -162,7 +185,7 @@ function handleDragEnd() {
   }
 
   // Handle the drag result
-  if (draggedItem.value) {
+  if (commit && draggedItem.value) {
     const { newPath, dropDirection, newPathIsGroup } = draggedItem.value
 
     if (newPath && dropDirection) {
@@ -214,11 +237,10 @@ function handleDragEnd() {
 
       // We update the paths for the structure
       updatePaths()
-
-      // We reset the dragged item
-      draggedItem.value = undefined
     }
   }
+
+  draggedItem.value = undefined
 
   // Reset scrolling
   scrollBy.value = { speedX: 0, speedY: 0 }
