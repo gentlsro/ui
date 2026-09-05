@@ -10,6 +10,7 @@ export function listGetExposed() {
   const { handleKey } = useListKeyboard({ registerKeyStroke: false })
 
   return {
+    element: store.containerEl,
     handleKey,
     refresh: () => refreshTrigger.value++,
     getListItems: () => listItems.value,

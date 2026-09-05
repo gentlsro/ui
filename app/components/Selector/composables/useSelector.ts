@@ -1,3 +1,4 @@
+// @vapor-ready
 // Types
 import type { ISelectorProps } from '../types/selector-props.type'
 import type { ISelectorEmits } from '../types/selector-emits.type'
@@ -10,11 +11,11 @@ import { useSelectorStore } from '../stores/selector.store'
 export type OnBeforeFocus = NonNullable<NonNullable<IFieldProps['eventHandlers']>['onBeforeFocus']>
 
 export function useSelector(payload: {
-  el: any
+  getElement: () => HTMLElement | undefined
   props: ISelectorProps
   emits: ISelectorEmits
 }) {
-  const { el, props, emits } = payload
+  const { getElement, props, emits } = payload
 
   // Store
   const { model, search, isPickerActive } = useSelectorStore()
@@ -37,7 +38,7 @@ export function useSelector(payload: {
 
   function handleBeforeHide() {
     isPreventNextFocus.value = true
-    unrefElement(el)?.closest('.control')?.focus?.()
+    getElement()?.focus()
 
     emits('picker-before-hide')
   }

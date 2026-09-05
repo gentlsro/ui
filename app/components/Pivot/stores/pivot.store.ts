@@ -52,7 +52,6 @@ type IConfig<T extends IItem = IItem> = {
 function createStore<T extends IItem = IItem>(injectionKey?: string) {
   const injectionState = createInjectionState((payload?: IConfig<T>) => {
     const { props } = payload ?? {}
-    const instance = getCurrentInstance()
 
     // Configs
     const loadData = ref(props?.loadData)
@@ -62,7 +61,6 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
 
     const config = initRef({
       propName: 'config',
-      instance,
       props,
       defaultValue: {},
     }) as Ref<IPivotProps<T>['config']>
@@ -82,7 +80,6 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
 
     const isLoadingSource = initRef({
       propName: 'loading',
-      instance,
       props,
       defaultValue: false,
     })
@@ -130,14 +127,12 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     // Pivot config
     const sourceData = initRef({
       propName: 'data',
-      instance,
       props,
       defaultValue: [],
     }) as Ref<T[]>
 
     const items = initRef({
       propName: 'items',
-      instance,
       props,
       defaultValue: [],
     }) as Ref<PivotItem<T>[]>

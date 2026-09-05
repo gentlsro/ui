@@ -7,6 +7,7 @@ import { MaskedNumber } from 'imask'
 import type { FactoryOpts } from 'imask'
 import { useInputUtils } from './useInputUtils'
 import NumberInput from '../NumberInput/NumberInput.vue'
+import TextArea from '../TextArea/TextArea.vue'
 import CurrencyInput from '../CurrencyInput/CurrencyInput.vue'
 import DateInput from '../DateInput/DateInput.vue'
 import DatePicker from '../../DatePicker/DatePicker.vue'
@@ -56,13 +57,28 @@ function inputFixture(initialValue: any = null, maskOptions: FactoryOpts = { mas
   const visible = ref(true)
   let input: ReturnType<typeof useInputUtils>
   const emitted = vi.fn()
-  const component = defineComponent({
-    emits: ['update:modelValue', 'blur', 'clear'],
-    setup() {
-      input = useInputUtils({ props, maskRef })
+  const owner = defineComponent({
+    props: Object.keys(props),
+    emits: ['update:modelValue', 'focus', 'blur', 'clear'],
+    setup(ownerProps, { emit }) {
+      input = useInputUtils({ props: ownerProps, emit, maskRef })
+
       return () => visible.value ? h('input', { ref: input.el, value: input.masked.value }) : null
     },
   })
+  const component = defineComponent({
+    emits: ['update:modelValue', 'focus', 'blur', 'clear'],
+    setup(_, { emit }) {
+      return () => h(owner, {
+        ...props,
+        'onUpdate:modelValue': value => emit('update:modelValue', value),
+        'onFocus': () => emit('focus'),
+        'onBlur': event => emit('blur', event),
+        'onClear': () => emit('clear'),
+      })
+    },
+  })
+
   return {
     props,
     maskRef,
@@ -79,6 +95,7 @@ function inputHarness(...args: Parameters<typeof inputFixture>) {
   const fixture = inputFixture(...args)
   const wrapper = mount(fixture.component, { attrs: { 'onUpdate:modelValue': fixture.emitted } })
   disposers.push(() => wrapper.unmount())
+
   return { ...fixture, wrapper }
 }
 
@@ -172,6 +189,19 @@ describe('input mask synchronization', () => {
     await wrapper.get('input').setValue('12:34')
     await settle()
     expect(emitted.mock.calls).toEqual([['1234']])
+  })
+
+  it('forwards focus, blur and clear through the explicit emitter', async () => {
+    vi.useFakeTimers()
+    const { input, wrapper } = inputHarness(12)
+    await settle()
+    input.handleFocusOrClick(new Event('click'))
+    input.handleBlur(new FocusEvent('blur'))
+    input.clear()
+    await vi.runAllTimersAsync()
+    expect(wrapper.emitted('focus')).toEqual([[]])
+    expect(wrapper.emitted('blur')?.[0]?.[0]).toBeInstanceOf(FocusEvent)
+    expect(wrapper.emitted('clear')).toEqual([[]])
   })
 
   it('defers model emissions until blur when requested', async () => {
@@ -319,6 +349,43 @@ describe('numeric input components', () => {
       },
     }),
   }
+
+  it.each([undefined, 12])('keeps edits local without v-model (initial %s)', async initial => {
+    const wrapper = mount(NumberInput, {
+      props: { ...(initial === undefined ? {} : { modelValue: initial }), emptyValue: null },
+      global: { stubs },
+    })
+    disposers.push(() => wrapper.unmount())
+    await settle()
+    await wrapper.get('input').setValue('34')
+    await settle()
+    expect(wrapper.get('input').element.value).toBe('34')
+    expect(wrapper.props('modelValue')).toBe(initial)
+    expect(wrapper.emitted('update:modelValue')).toEqual([[34]])
+    await wrapper.setProps({ modelValue: 56 })
+    await settle()
+    expect(wrapper.get('input').element.value).toBe('56')
+    await wrapper.setProps({ modelValue: undefined })
+    await settle()
+    expect(wrapper.get('input').element.value).toBe('')
+  })
+
+  it('declares TextArea model updates on the owning component', async () => {
+    const update = vi.fn()
+    const wrapper = mount(TextArea, {
+      props: { 'modelValue': 'before', 'onUpdate:modelValue': update, 'mask': { mask: /.*/ } },
+      global: { stubs },
+    })
+    disposers.push(() => wrapper.unmount())
+    await settle()
+    await wrapper.get('textarea').setValue('after')
+    await settle()
+    expect(update).toHaveBeenCalledExactlyOnceWith('after')
+    expect(wrapper.props('modelValue')).toBe('before')
+    await wrapper.setProps({ modelValue: 'accepted' })
+    await settle()
+    expect(wrapper.get('textarea').element.value).toBe('accepted')
+  })
 
   it('updates NumberInput from an external model and from paste', async () => {
     const wrapper = mount(NumberInput, { props: { modelValue: null, emptyValue: null }, global: { stubs } })
@@ -546,6 +613,7 @@ describe('date picker views', () => {
       },
     })
     disposers.push(() => wrapper.unmount())
+
     return wrapper
   }
 

@@ -66,8 +66,8 @@ function handleItemSelection(item: any) {
 }
 
 function handleHeightChange(height: number) {
-  const listDom = unrefElement(listEl as any) as HTMLElement
-  const nonContentEls = Array.from(listDom.children)
+  const listDom = listEl.value?.element
+  const nonContentEls = Array.from(listDom?.children ?? [])
     .filter(el => !el.classList.contains('list-content')) as HTMLElement[]
 
   const nonContentHeight = nonContentEls.reduce((agg, el) => {
@@ -96,7 +96,7 @@ watchThrottled(contentHeight, () => {
 whenever(isPickerActive, () => {
   if (props.noSearch) {
     setTimeout(() => {
-      const listElDom = unrefElement(listEl as any) as HTMLElement
+      const listElDom = listEl.value?.element
       const contentElDom = listElDom?.querySelector('.virtual-scroll') as HTMLElement
 
       contentElDom?.focus()
@@ -128,7 +128,7 @@ whenever(isPickerActive, () => {
       v-model:search="search"
       v-model:added-items="addedItems"
       v-model:items="options"
-      v-model:is-loading="isLoading"
+      v-model:loading="isLoading"
       :load-data
       :item-key="optionKey"
       :item-label="optionLabel"

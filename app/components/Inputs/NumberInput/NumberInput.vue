@@ -15,7 +15,7 @@ const props = withDefaults(defineProps<INumberInputProps>(), {
   ...getComponentProps('numberInput'),
 })
 
-defineEmits<{
+const emits = defineEmits<{
   (e: 'update:modelValue', val?: number | undefined | null): void
   (e: 'blur'): void
   (e: 'focus'): void
@@ -83,6 +83,7 @@ const {
   handleFocusOrClick,
   handleBlur,
 } = useInputUtils({
+  emit: emits,
   props,
   maskRef: mask,
 })

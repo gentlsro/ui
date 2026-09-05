@@ -25,40 +25,32 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     const { treeProps } = payload ?? {}
     const { searchData } = useSearching()
 
-    // Utils
-    const instance = getCurrentInstance()
-
     const idKey = initRef({
       propName: 'idKey',
-      instance,
       props: treeProps,
       defaultValue: 'id',
     }) as Ref<string>
 
     const labelKey = initRef({
       propName: 'labelKey',
-      instance,
       props: treeProps,
       defaultValue: 'label',
     }) as Ref<string>
 
     const childrenKey = initRef({
       propName: 'childrenKey',
-      instance,
       props: treeProps,
       defaultValue: 'children',
     }) as Ref<string>
 
     const parentKey = initRef({
       propName: 'parentKey',
-      instance,
       props: treeProps,
       defaultValue: 'parentId',
     }) as Ref<string>
 
     const maxLevel = initRef({
       propName: 'maxLevel',
-      instance,
       props: treeProps,
       defaultValue: undefined,
     }) as Ref<number | undefined>
@@ -81,7 +73,6 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     // Search
     const search = initRef({
       propName: 'search',
-      instance,
       props: treeProps,
       defaultValue: undefined,
     }) as Ref<string | undefined>
@@ -91,9 +82,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     // Selection
     const selection = initRef({
       propName: 'selection',
-      instance,
       props: treeProps,
-      defaultValue: treeProps?.selection,
     }) as Ref<ITreeProps<T>['selection']>
 
     // Focusing
@@ -128,16 +117,13 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
 
     const nodeMetaById = initRef({
       propName: 'meta',
-      instance,
       props: treeProps,
       defaultValue: {},
     }) as Ref<Record<ITreeNode['id'], ITreeNodeMeta>>
 
     const model = initRef({
       propName: 'modelValue',
-      instance,
       props: treeProps,
-      defaultValue: treeProps?.modelValue,
     }) as Ref<T[]>
 
     const nodeById = computed(() => {

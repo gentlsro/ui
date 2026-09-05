@@ -16,7 +16,7 @@ const props = withDefaults(defineProps<IDateInputProps>(), {
   ...getComponentProps('dateInput'),
 })
 
-defineEmits<{
+const emits = defineEmits<{
   (e: 'update:modelValue', val?: Datetime): void
   (e: 'focus'): void
   (e: 'blur'): void
@@ -162,6 +162,7 @@ const {
   clear,
   getInputElement,
 } = useInputUtils({
+  emit: emits,
   props,
   maskRef: mask,
   preserveValueOnMaskChange: true,

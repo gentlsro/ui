@@ -15,7 +15,8 @@ function setAliasPaths(nuxt: Nuxt, alias: string, tsPath: string) {
 }
 
 function generateUIConfigCode(configPaths: { path: string }[]) {
-  return `import { customDefu } from '#layers/utilities/app/utils/custom-defu'
+  return `import { cloneDeep } from 'lodash-es'
+import { customDefu } from '#layers/utilities/app/utils/custom-defu'
 ${configPaths.map(({ path }, idx) => `import config${idx} from '${path}'`).join('\n')}
 
 const uiConfigMerged = customDefu(${configPaths.map((_, idx) => `config${idx}`).join(', ')})
@@ -36,7 +37,7 @@ function wrapObjects<T extends Record<string, any>>(obj: T): WrapObjects<T> {
       const value = obj[key]
 
       if (Array.isArray(value) || (typeof value === 'object' && value !== null)) {
-        (result as any)[key] = () => value
+        (result as any)[key] = () => cloneDeep(value)
       } else {
         (result as any)[key] = value
       }
@@ -109,7 +110,7 @@ export default defineNuxtModule({
 
     setAliasPaths(nuxt, '$uiConfig', './uiConfig.ts')
 
-    nuxt.hook('vite:extendConfig', (config) => {
+    nuxt.hook('vite:extendConfig', config => {
       if (config.resolve) {
         config.resolve.alias = {
           ...config.resolve.alias,

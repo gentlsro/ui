@@ -16,7 +16,8 @@ const props = withDefaults(defineProps<ICurrencyInputProps>(), {
   ...getComponentProps('currencyInput'),
 })
 
-defineEmits<{
+const emits = defineEmits<{
+  (e: 'clear'): void
   (e: 'update:modelValue', val?: number | undefined | null): void
   (e: 'blur'): void
 }>()
@@ -85,6 +86,7 @@ const {
   handleBlur,
   isBlurred,
 } = useInputUtils({
+  emit: emits,
   props,
   maskRef: mask,
   maskEventHandlers: {

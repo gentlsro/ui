@@ -28,6 +28,8 @@ const mergedProps = computed(() => {
   return getComponentMergedProps('field', props)
 })
 
+const wrapperEl = useTemplateRef('wrapperEl')
+
 // Wrapper
 const wrapperProps = getInputWrapperProps(props)
 
@@ -44,6 +46,8 @@ const hasContent = computed(() => {
 })
 
 defineExpose({
+  element: computed(() => wrapperEl.value?.element),
+  controlElement: el,
   focus: () => el.value?.focus(),
   blur: () => el.value?.blur(),
 })
@@ -53,6 +57,7 @@ defineExpose({
   <InputWrapper
     v-bind="wrapperProps"
     :id="inputId"
+    ref="wrapperEl"
     :ui="mergedProps.ui"
     error-visible
     :has-content

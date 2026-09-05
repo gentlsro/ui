@@ -14,11 +14,12 @@ const props = withDefaults(defineProps<IFileInputProps>(), {
   ...getComponentProps('fileInputSimple'),
 })
 
-defineEmits<IFileInputEmits>()
+const emits = defineEmits<IFileInputEmits>()
 
 // Utils
 const { el, getFieldProps, handleFocusOrClick } = useFieldUtils({
   props,
+  emit: event => emits(event),
   onFocus: handleOpenDialog,
 })
 

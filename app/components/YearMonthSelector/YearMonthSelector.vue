@@ -16,7 +16,7 @@ const props = withDefaults(defineProps<IYearMonthSelectorProps>(), {
   ...getComponentProps('yearMonthSelector'),
 })
 
-defineEmits<{
+const emits = defineEmits<{
   (e: 'focus'): void
   (e: 'blur'): void
   (e: 'clear'): void
@@ -85,6 +85,7 @@ function handleMonthSelect() {
 // Field
 const { el, getFieldProps, handleFocusOrClick, isEditable } = useFieldUtils({
   props,
+  emit: event => emits(event),
   onBeforeFocus: ev => onBeforeFocus?.(ev, isPickerActive) ?? {},
   onFocus: ev => onFocus ? onFocus(ev, isPickerActive) : isPickerActive.value = true,
 })

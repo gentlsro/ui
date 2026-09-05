@@ -20,6 +20,10 @@ const props = withDefaults(defineProps<IFormProps>(), {
 })
 
 const emits = defineEmits<{
+  (e: 'update:isEditing', value: IFormProps['isEditing']): void
+  (e: 'update:loading', value: IFormProps['loading']): void
+  (e: 'update:submitDisabled', value: IFormProps['submitDisabled']): void
+  (e: 'update:submitConfirmation', value: IFormProps['submitConfirmation']): void
   (e: 'submit', payload?: any): void
   (e: 'cancel'): void
   (e: 'confirmation'): void

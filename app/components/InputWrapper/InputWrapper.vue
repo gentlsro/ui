@@ -175,6 +175,7 @@ const wrapperProps = computed(() => {
     ui: mergedProps.value.ui,
   }
 })
+defineExpose({ element: wrapperEl })
 </script>
 
 <template>

@@ -16,8 +16,10 @@ const props = withDefaults(defineProps<ITextAreaInputProps>(), {
   ...getComponentProps('textArea'),
 })
 
-defineEmits<{
-  (e: 'blur'): void
+const emits = defineEmits<{
+  (e: 'clear'): void
+  (e: 'update:modelValue', value: ITextAreaInputProps['modelValue']): void
+  (e: 'blur', event: FocusEvent): void
   (e: 'focus'): void
 }>()
 
@@ -49,6 +51,7 @@ const {
   handleFocusOrClick,
   elMask,
 } = useInputUtils({
+  emit: emits,
   props,
   maskRef: toRef(props, 'mask'),
 })

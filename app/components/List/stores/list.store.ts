@@ -31,7 +31,6 @@ type IConfig = {
 function createStore(injectionKey?: string) {
   const injectionState = createInjectionState((payload?: IConfig) => {
     const { listProps } = payload ?? {}
-    const instance = getCurrentInstance()
 
     // Store
     const { lastPointerDownType } = storeToRefs(useUIStore())
@@ -54,21 +53,18 @@ function createStore(injectionKey?: string) {
 
     const isLoadingSource = initRef({
       propName: 'loading',
-      instance,
       props: listProps,
       defaultValue: false,
     })
 
     const itemKey = initRef({
       propName: 'itemKey',
-      instance,
       props: listProps,
       defaultValue: 'id',
     }) as Ref<string>
 
     const itemLabel = initRef({
       propName: 'itemLabel',
-      instance,
       props: listProps,
       defaultValue: 'label',
     }) as Ref<string>
@@ -87,14 +83,12 @@ function createStore(injectionKey?: string) {
 
     const isClearable = initRef({
       propName: 'clearable',
-      instance,
       props: listProps,
       defaultValue: false,
     }) as Ref<boolean>
 
     const noFilter = initRef({
       propName: 'noFilter',
-      instance,
       props: listProps,
       defaultValue: false,
     }) as Ref<boolean>
@@ -105,7 +99,6 @@ function createStore(injectionKey?: string) {
 
     const search = initRef({
       propName: 'search',
-      instance,
       props: listProps,
       defaultValue: undefined,
     }) as Ref<string | undefined>
@@ -149,7 +142,6 @@ function createStore(injectionKey?: string) {
 
     const addedItems = initRef({
       propName: 'addedItems',
-      instance,
       props: listProps,
       defaultValue: [],
     }) as Ref<IListItemToAdd[]>
@@ -180,7 +172,6 @@ function createStore(injectionKey?: string) {
 
     const hiddenItems = initRef({
       propName: 'hiddenItems',
-      instance,
       props: listProps,
       defaultValue: undefined,
     }) as Ref<IListProps['hiddenItems']>
@@ -290,7 +281,6 @@ function createStore(injectionKey?: string) {
     // Selection
     const selection = initRef({
       propName: 'selection',
-      instance,
       props: listProps,
       defaultValue: undefined,
     }) as Ref<IListProps['selection']>

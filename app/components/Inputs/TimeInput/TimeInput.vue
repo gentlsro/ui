@@ -198,6 +198,7 @@ const {
   handlePointerDown,
   handleBlur,
 } = useInputUtils({
+  emit: emits,
   props: propsExtended,
   maskRef: maskFullTime,
   preventFocusOnTouch: true,

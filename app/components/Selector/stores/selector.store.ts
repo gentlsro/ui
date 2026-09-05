@@ -1,3 +1,4 @@
+// @vapor-ready
 import type { NonUndefined } from 'utility-types'
 import type MenuProxy from '../../MenuProxy/MenuProxy.vue'
 import type { ISelectorProps } from '../types/selector-props.type'
@@ -5,67 +6,26 @@ import type { ISelectorProps } from '../types/selector-props.type'
 export const SELECTOR_ID_KEY = Symbol('__selectorId')
 
 type IConfig = {
-  selectorProps?: ISelectorProps
+  props?: ISelectorProps
   injectionKey?: string
 }
 
 function createStore(injectionKey?: string) {
   const injectionState = createInjectionState((payload?: IConfig) => {
-    const { selectorProps } = payload ?? {}
-
-    // Utils
-    const instance = getCurrentInstance()
-
-    const initialMap = initRef({
-      propName: 'initialMap',
-      instance,
-      props: selectorProps,
-      defaultValue: {},
-    }) as Ref<NonUndefined<ISelectorProps['initialMap']>>
-
-    const optionKey = initRef({
-      propName: 'optionKey',
-      instance,
-      props: selectorProps,
-      defaultValue: 'id',
-    }) as Ref<string>
-
-    // Layout
+    // Create models synchronously in the owner's setup; descendants inject them.
+    const { props } = payload ?? {}
+    const initialMap = toRef(() => props?.initialMap ?? {})
+    const optionKey = toRef(() => props?.optionKey ?? 'id')
+    const model = initRef({ props, propName: 'modelValue' })
+    const search = initRef({ props, propName: 'search' })
+    const addedItems = initRef({ props, propName: 'addedItems', defaultValue: [] })
+    const isLoading = initRef({ props, propName: 'loading', defaultValue: false })
+    const optionsOriginal = initRef({ props, propName: 'options' })
     const menuEl = ref<InstanceType<typeof MenuProxy>>()
-
-    // State
-    const model = initRef({
-      propName: 'modelValue',
-      instance,
-      props: selectorProps,
-      defaultValue: undefined,
-    }) as Ref<ISelectorProps['modelValue']>
-
-    const search = initRef({
-      propName: 'search',
-      instance,
-      props: selectorProps,
-      defaultValue: undefined,
-    }) as Ref<ISelectorProps['search']>
-
-    const addedItems = initRef({
-      propName: 'addedItems',
-      instance,
-      props: selectorProps,
-      defaultValue: [],
-    }) as Ref<NonUndefined<ISelectorProps['addedItems']>>
-
-    const options = ref([]) as Ref<NonUndefined<ISelectorProps['options']>>
-
-    const isLoading = initRef({
-      propName: 'loading',
-      instance,
-      props: selectorProps,
-      defaultValue: false,
-    }) as Ref<boolean>
+    const options = ref<NonUndefined<ISelectorProps['options']>>([])
 
     const optionByKey = computed(() => {
-      return [...addedItems.value, ...options.value].reduce((agg, option) => {
+      return [...addedItems.value ?? [], ...options.value].reduce((agg, option) => {
         if ('_isCreate' in option) {
           const key = get(option.ref, optionKey.value)
           agg[key] = option.ref
@@ -75,7 +35,7 @@ function createStore(injectionKey?: string) {
         }
 
         return agg
-      }, initialMap.value)
+      }, { ...initialMap.value })
     })
 
     // Picker
@@ -94,6 +54,7 @@ function createStore(injectionKey?: string) {
       search,
       addedItems,
       options,
+      optionsOriginal,
       isLoading,
       optionByKey,
 

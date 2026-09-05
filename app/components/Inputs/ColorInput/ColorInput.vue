@@ -14,7 +14,8 @@ const props = withDefaults(defineProps<IColorInputProps>(), {
   ...getComponentProps('colorInput'),
 })
 
-defineEmits<{
+const emits = defineEmits<{
+  (e: 'clear'): void
   (e: 'update:modelValue', val?: string | undefined | null): void
   (e: 'focus'): void
   (e: 'blur', ev: FocusEvent): void
@@ -121,6 +122,7 @@ const {
   clear,
   getInputElement,
 } = useInputUtils({
+  emit: emits,
   props,
   maskRef: ref({ mask: /.*/ }),
   menuElRef: menuProxyEl,

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { ISelectorProps } from './types/selector-props.type'
 import type { ISelectorEmits } from './types/selector-emits.type'
@@ -35,6 +35,8 @@ const props = withDefaults(defineProps<ISelectorProps>(), {
 
 const emits = defineEmits<ISelectorEmits>()
 
+const fieldEl = useTemplateRef('fieldEl')
+
 defineExpose({
   focus: () => handleFocusOrClick(),
   select: () => handleFocusOrClick(),
@@ -56,14 +58,9 @@ const { path } = useInputValidationUtils(props)
 const { fn } = useFn({
   source: { type: 'component', name: 'Selector' },
 })
-const self = getCurrentInstance()
 
 const onFocus = props.eventHandlers?.onFocus
 const onBeforeFocus = props.eventHandlers?.onBeforeFocus
-
-const mergedProps = computed(() => {
-  return getComponentMergedProps('selector', props)
-})
 
 // Store
 const {
@@ -71,11 +68,13 @@ const {
   search,
   isPickerActive,
   options,
-} = useSelectorStore({ selectorProps: props })
+  optionsOriginal,
+} = useSelectorStore({ props })
+
+const mergedProps = computed(() => getComponentMergedProps('selector', props))
 
 // Field
 const {
-  el,
   inputId,
   isEditable,
   isBlurred,
@@ -85,10 +84,17 @@ const {
   handleClickWrapper,
 } = useFieldUtils({
   props,
+  emit: event => emits(event),
+  getElement: () => fieldEl.value?.controlElement,
   onBeforeFocus: ev => {
     if (isPreventNextFocus.value) {
       isPreventNextFocus.value = false
 
+      return { shouldFocus: false, shouldHideFloating: false }
+    }
+
+    // A click can finish after focus has already opened the menu and its search.
+    if (isPickerActive.value) {
       return { shouldFocus: false, shouldHideFloating: false }
     }
 
@@ -100,8 +106,6 @@ const {
 const fieldProps = getFieldProps(props)
 
 // Layout
-const optionsOriginal = defineModel<ISelectorProps['options']>('options')
-
 const {
   isPreventNextFocus,
   hasContent,
@@ -109,9 +113,8 @@ const {
   handleBeforeShow,
   handleHide,
   handleShow,
-} = useSelector({ props, emits, el })
+} = useSelector({ props, emits, getElement: () => fieldEl.value?.controlElement })
 
-const fieldEl = useTemplateRef('fieldEl')
 const referenceEl = ref<HTMLDivElement>()
 const size = toRef(props, 'size')
 const readonly = toRef(props, 'readonly')
@@ -204,24 +207,19 @@ const appendStyle = computed(() => {
   return mergedProps.value.ui?.appendStyle?.()
 })
 
-// Lifcecycle
-onMounted(() => {
-  referenceEl.value = unrefElement(fieldEl as any)?.querySelector('.input-wrapper-border') as HTMLDivElement
-})
-
-// When layout changes, we need to set new reference target for menu
+// Read the public Field contract after it mounts or changes layout.
 watch(
-  () => props.layout,
+  [fieldEl, () => props.layout],
   () => {
-    nextTick(() => {
-      referenceEl.value = self?.proxy?.$el.querySelector('.input-wrapper-border')
-    })
+    referenceEl.value = fieldEl.value?.element
+      ?.querySelector<HTMLDivElement>('.input-wrapper-border') ?? undefined
   },
+  { flush: 'post' },
 )
 
 // Initialize the options if `immediate` is set
 if (props.immediateFetch && mergedProps.value.loadData?.fnc) {
-  const mergedListPropsLoadData = getComponentMergedProps('list', props.listProps)
+  const mergedListPropsLoadData = getComponentMergedProps('list', mergedProps.value.listProps)
 
   listFetchData({
     search: search.value ?? '',
@@ -245,13 +243,15 @@ if (props.immediateFetch && mergedProps.value.loadData?.fnc) {
     :has-content
     :class="wrapperClass"
     data-onboarding="selector"
-    .focus="handleFocusOrClick"
     @focus="handleFocusOrClick"
     @blur="handleBlur"
     @click="handleClickWrapper"
   >
     <!-- Label -->
-    <template #label="labelProps">
+    <template
+      v-if="$slots.label"
+      #label="labelProps"
+    >
       <slot
         name="label"
         v-bind="labelProps"
@@ -269,7 +269,6 @@ if (props.immediateFetch && mergedProps.value.loadData?.fnc) {
     <!-- Content -->
     <slot>
       <SelectorInner
-        ref="el"
         :ui="mergedProps.ui"
         :use-scroller
         :max-chips-rows
@@ -283,7 +282,10 @@ if (props.immediateFetch && mergedProps.value.loadData?.fnc) {
         :name="name || path || placeholder"
         :chip-props="mergedProps.chipProps"
       >
-        <template #default="{ item, index, optionByKey, isLast, handleRemove }">
+        <template
+          v-if="$slots['selection-item']"
+          #default="{ item, index, optionByKey, isLast, handleRemove }"
+        >
           <slot
             name="selection-item"
             :item
@@ -349,12 +351,18 @@ if (props.immediateFetch && mergedProps.value.loadData?.fnc) {
         @show="handleShow"
       >
         <!-- Above -->
-        <template #above>
+        <template
+          v-if="$slots['menu-above']"
+          #above
+        >
           <slot name="menu-above" />
         </template>
 
         <!-- Option -->
-        <template #option="data">
+        <template
+          v-if="$slots.option"
+          #option="data"
+        >
           <slot
             name="option"
             v-bind="data"
@@ -362,7 +370,10 @@ if (props.immediateFetch && mergedProps.value.loadData?.fnc) {
         </template>
 
         <!-- Option group -->
-        <template #option-group="data">
+        <template
+          v-if="$slots['option-group']"
+          #option-group="data"
+        >
           <slot
             name="option-group"
             v-bind="data"
@@ -370,7 +381,10 @@ if (props.immediateFetch && mergedProps.value.loadData?.fnc) {
         </template>
 
         <!-- Below -->
-        <template #below>
+        <template
+          v-if="$slots['menu-below']"
+          #below
+        >
           <slot name="menu-below" />
         </template>
       </SelectorMenu>

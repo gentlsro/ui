@@ -3,16 +3,17 @@ import type { IFieldProps } from '../types/field-props.type'
 
 export function useFieldUtils(options?: {
   props?: IFieldProps
+  emit?: (event: 'focus' | 'blur', ev?: FocusEvent) => void
+  getElement?: () => HTMLElement | undefined
   onFocus?: (ev?: PointerEvent | FocusEvent) => void
   onBeforeFocus?: (ev?: PointerEvent | FocusEvent) => { shouldFocus?: boolean, shouldHideFloating?: boolean }
 }) {
-  const { props, onFocus, onBeforeFocus } = options || {}
+  const { props, onFocus, onBeforeFocus, emit, getElement } = options || {}
 
   // Store
   const uiStore = useUIStore()
 
   // Utils
-  const instance = getCurrentInstance()
 
   // Layout
   const el = ref<HTMLDivElement>()
@@ -21,7 +22,7 @@ export function useFieldUtils(options?: {
   const isTouched = ref(false)
 
   const inputElement = computed(() => {
-    return unrefElement(el) as HTMLElement | undefined
+    return getElement ? getElement() : unrefElement(el) as HTMLElement | undefined
   })
 
   const label = computed(() => {
@@ -86,16 +87,16 @@ export function useFieldUtils(options?: {
       })
     }
 
-    el.value?.focus?.()
+    inputElement.value?.focus()
     retainIosKeyboardFocus()
     isTouched.value = isEditable.value
     isBlurred.value = false
-    instance?.emit('focus')
+    emit?.('focus')
   }
 
   function handleBlur(ev: FocusEvent) {
     isBlurred.value = true
-    instance?.emit('blur', ev)
+    emit?.('blur', ev)
   }
 
   function getFieldProps(props: IFieldProps) {

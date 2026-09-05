@@ -18,9 +18,6 @@ function createStore(injectionKey?: string) {
   const injectionState = createInjectionState((payload?: IConfig) => {
     const { formProps } = payload ?? {}
 
-    // Utils
-    const instance = getCurrentInstance()
-
     // Store
     const { uiState } = storeToRefs(useUIStore())
 
@@ -31,28 +28,24 @@ function createStore(injectionKey?: string) {
 
     const isEditing = initRef({
       propName: 'isEditing',
-      instance,
       props: formProps,
       defaultValue: false,
     }) as Ref<boolean>
 
     const isLoading = initRef({
       propName: 'loading',
-      instance,
       props: formProps,
       defaultValue: false,
     }) as Ref<boolean>
 
     const isSubmitDisabled = initRef({
       propName: 'submitDisabled',
-      instance,
       props: formProps,
       defaultValue: false,
     }) as Ref<boolean>
 
     const isSubmitConfirmation = initRef({
       propName: 'submitConfirmation',
-      instance,
       props: formProps,
       defaultValue: false,
     }) as Ref<boolean>
@@ -67,7 +60,6 @@ function createStore(injectionKey?: string) {
     // Errors
     const errors = initRef({
       propName: 'errors',
-      instance,
       props: formProps,
       defaultValue: [],
     }) as Ref<IFormProps['errors']>

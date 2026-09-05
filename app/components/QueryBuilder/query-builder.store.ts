@@ -56,22 +56,12 @@ function createStore(injectionKey?: string) {
   const injectionState = createInjectionState((payload?: IConfig) => {
     const { queryBuilderProps } = payload ?? {}
 
-    // Utils
-    const instance = getCurrentInstance()
-
     // Data
     const columns = ref([]) as Ref<TableColumn<any>[]>
     const draggedItem = ref<IQueryBuilderDraggedItem | undefined>()
     const collapsedById = ref<Record<string | number, boolean>>({})
 
     const items = ref<IQueryBuilderRow[]>([])
-
-    // const items = initRef({
-    //   propName: 'items',
-    //   instance,
-    //   props: queryBuilderProps,
-    //   defaultValue: [],
-    // }) as Ref<IQueryBuilderRow[]>
 
     // Layout
     const queryBuilderEl = ref<HTMLElement>()
@@ -81,21 +71,18 @@ function createStore(injectionKey?: string) {
 
     const allowNegation = initRef({
       propName: 'allowNegation',
-      instance,
       props: queryBuilderProps,
       defaultValue: false,
     }) as Ref<boolean>
 
     const maxNestingLevel = initRef({
       propName: 'maxLevel',
-      instance,
       props: queryBuilderProps,
       defaultValue: 3,
     }) as Ref<number>
 
     const breakpoint = initRef({
       propName: 'breakpoint',
-      instance,
       props: queryBuilderProps,
       defaultValue: 1024,
     }) as Ref<number>

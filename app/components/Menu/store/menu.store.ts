@@ -1,31 +1,26 @@
-import type { ComponentInternalInstance } from 'vue'
-
 // Types
 import type { IMenuProps } from '../types/menu-props.type'
 
 type IPayload = {
   menuId?: string
   menuProps?: IMenuProps
-  instance?: ComponentInternalInstance | null
 }
 
 export const MENU_INJECTION_KEY: InjectionKey<string> = Symbol('menu')
 
 function createStore(injectionKey?: string) {
   const injectionState = createInjectionState((payload?: IPayload) => {
-    const { menuProps, instance } = payload ?? {}
+    const { menuProps } = payload ?? {}
 
     // Virtual
     const virtualEl = ref<any>()
 
     const virtualDimensions = initRef({
-      instance,
       propName: 'virtualDimensions',
       props: menuProps,
     })
 
     const virtualConfig = initRef({
-      instance,
       propName: 'virtualConfig',
       props: menuProps,
       defaultValue: {
@@ -61,7 +56,6 @@ function createStore(injectionKey?: string) {
     const isReferenceElTransparent = ref(false)
 
     const model = initRef({
-      instance,
       propName: 'modelValue',
       props: menuProps,
       defaultValue: false,

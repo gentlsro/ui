@@ -12,6 +12,11 @@ type MaskRefs = {
 
 export type IInputUtilsOptions = {
   props: Omit<IInputProps, 'mask' | 'name'>
+  emit: {
+    (event: 'focus'): void
+    (event: 'clear'): void
+    (event: 'blur', value: FocusEvent): void
+  }
   maskRef: Ref<FactoryOpts>
   /** Reformat the typed value instead of reinterpreting digits on mask changes. */
   preserveValueOnMaskChange?: boolean

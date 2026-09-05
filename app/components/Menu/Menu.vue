@@ -49,7 +49,7 @@ const {
   isVirtual,
   virtualConfig,
   virtualDimensions,
-} = useMenuStore({ menuProps: props, instance })
+} = useMenuStore({ menuProps: props })
 
 // Utils
 const { color } = useTheme()

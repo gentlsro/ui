@@ -8,6 +8,7 @@ import { useInputMask } from './useInputMask'
 export function useInputUtils(options: IInputUtilsOptions) {
   const {
     props,
+    emit,
     maskRef,
     eventHandlers = {},
     maskEventHandlers,
@@ -20,7 +21,6 @@ export function useInputUtils(options: IInputUtilsOptions) {
   const { getInputWrapperProps } = useInputWrapperUtils()
 
   const uiStore = useUIStore()
-  const instance = getCurrentInstance()
   const { onBlur, onFocus } = eventHandlers
   const isTouched = ref(false)
 
@@ -38,7 +38,8 @@ export function useInputUtils(options: IInputUtilsOptions) {
   const lastValidValue = ref<any>()
   const { emptyValue } = toRefs(props)
 
-  const originalModel = useVModel(props, 'modelValue', undefined, { defaultValue: props.emptyValue })
+  const originalModel = initRef({ props, propName: 'modelValue', defaultValue: props.emptyValue })
+  // Keep the editable draft separate until debounce/blur commits it to the owner.
   const model = ref(originalModel.value)
 
   const { el, mask, masked, unmasked, typed, setTypedValue, clear: clearMask } = useInputMask(maskRef, {
@@ -48,6 +49,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
           if (isInitialized.value && mask.value?.masked.isComplete === false) {
             model.value = lastValidValue.value
           }
+
           return model.value
         }
       : undefined,
@@ -144,7 +146,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
     }
 
     setTimeout(() => {
-      instance?.emit('clear')
+      emit('clear')
     }, 0)
   }
 
@@ -200,7 +202,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
       originalModel.value = model.value
     }
 
-    instance?.emit('blur', ev)
+    emit('blur', ev)
   }
 
   // In some cases, we click into the wrapper but not directly in the `.control`
@@ -285,7 +287,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
     isBlurred.value = false
     isTouched.value = !props.disabled && !props.readonly
 
-    instance?.emit('focus')
+    emit('focus')
     onFocus?.(isTouchEvent ? 'touch' : 'mouse', ev)
   }
 

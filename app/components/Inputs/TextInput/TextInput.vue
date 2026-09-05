@@ -13,7 +13,7 @@ const props = withDefaults(defineProps<ITextInputProps>(), {
   ...getComponentProps('textInput'),
 })
 
-defineEmits<{
+const emits = defineEmits<{
   (e: 'update:modelValue', val?: string | undefined | null): void
   (e: 'focus'): void
   (e: 'blur', ev: FocusEvent): void
@@ -55,6 +55,7 @@ const {
   clear,
   getInputElement,
 } = useInputUtils({
+  emit: emits,
   props,
   maskRef: toRef(props, 'mask'),
   maskEventHandlers: props.maskEventHandlers,
