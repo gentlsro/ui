@@ -1,6 +1,4 @@
-export function useScrollerScroll() {
-  const self = getCurrentInstance()
-
+export function useScrollerScroll(onScrolled: (position: number) => void) {
   // Layout
   const scrollEl = ref<HTMLDivElement>()
 
@@ -94,9 +92,9 @@ export function useScrollerScroll() {
     const yAxis = [directions.top, directions.bottom].some(Boolean)
 
     if (xAxis) {
-      self?.emit('scrolled', x.value)
+      onScrolled(x.value)
     } else if (yAxis) {
-      self?.emit('scrolled', y.value)
+      onScrolled(y.value)
     }
   })
 

@@ -1,14 +1,16 @@
 import { klona } from 'klona/full'
 
 // Types
+import type { IQueryBuilderEmits } from '../types/query-builder-emits.type'
 import type { IQueryBuilderProps } from '../types/query-builder-props.type'
 import type { IQueryBuilderRow } from '../types/query-builder-row-props.type'
 import type { IQueryBuilderItem } from '../types/query-builder-item-props.type'
 import type { IQueryBuilderGroup } from '../types/query-builder-group-props.type'
 
-export function useQueryBuilderColumnFilters(props: Pick<IQueryBuilderProps, 'columns'>) {
-  const self = getCurrentInstance()
-
+export function useQueryBuilderColumnFilters(
+  props: Pick<IQueryBuilderProps, 'columns'>,
+  emit: IQueryBuilderEmits,
+) {
   // These are the actual filters we're working with in the query builder
   const columnFilters = ref<IQueryBuilderRow[]>([])
 
@@ -125,7 +127,7 @@ export function useQueryBuilderColumnFilters(props: Pick<IQueryBuilderProps, 'co
       columnFilter.comparator = filter.comparator
       columnFilter.value = filter.value
 
-      self?.emit('update:columnFilter', columnFilter)
+      emit('update:columnFilter', columnFilter)
     }
   }
 
@@ -133,7 +135,7 @@ export function useQueryBuilderColumnFilters(props: Pick<IQueryBuilderProps, 'co
     const firstGroup = columnFilters.value[0] as IQueryBuilderGroup
     firstGroup.children = firstGroup.children.filter(f => f.id !== filter.id)
 
-    self?.emit('remove:columnFilter', filter)
+    emit('remove:columnFilter', filter)
 
     // const column = filter.misc?.column
 

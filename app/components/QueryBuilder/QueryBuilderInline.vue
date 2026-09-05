@@ -23,7 +23,7 @@ const props = withDefaults(defineProps<IQueryBuilderProps & {
   ...getComponentProps('queryBuilder'),
 })
 
-defineEmits<IQueryBuilderEmits>()
+const emits = defineEmits<IQueryBuilderEmits>()
 
 // Init
 const uuid = generateUUID()
@@ -96,7 +96,7 @@ const {
   removeColumnFilter,
   getModifiedColumnFilters,
   getModifiedColumnFilter,
-} = useQueryBuilderColumnFilters(props)
+} = useQueryBuilderColumnFilters(props, emits)
 
 // Init
 const columns = toRef(props, 'columns')

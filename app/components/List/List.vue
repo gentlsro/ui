@@ -146,7 +146,7 @@ onMounted(() => {
   }
 })
 
-defineExpose(listGetExposed())
+defineExpose(listGetExposed(() => emits('submit')))
 </script>
 
 <template>
@@ -198,6 +198,7 @@ defineExpose(listGetExposed())
         :move-handle-target
         :move-handle-takes-space
         :dense
+        @submit="emits('submit')"
         @change:content-size="$emit('change:contentSize', $event)"
       >
         <template #item="itemData">
@@ -224,6 +225,7 @@ defineExpose(listGetExposed())
     <slot name="noData">
       <ListNoData
         :ui="mergedProps.ui"
+        @submit="emits('submit')"
         @change:content-size="$emit('change:contentSize', $event)"
       />
     </slot>

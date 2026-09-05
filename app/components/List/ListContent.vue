@@ -14,7 +14,8 @@ import { LIST_DEFAULT_PROPS } from './constants/list-default-props.constant'
 type IProps = Pick<IListProps, 'ui' | 'noHover' | 'reorderable' | 'disabledFnc' | 'scrollerConfig' | 'moveHandleTarget' | 'moveHandleTakesSpace' | 'dense'>
 
 const props = defineProps<IProps>()
-defineEmits<{
+const emits = defineEmits<{
+  (e: 'submit'): void
   (e: 'change:contentSize', payload: { height: number }): void
 }>()
 
@@ -34,7 +35,7 @@ const {
   fetchAndSetData,
 } = useListStore()
 
-const { handleMouseEnter, handleMouseLeave } = useListKeyboard()
+const { handleMouseEnter, handleMouseLeave } = useListKeyboard({ onSubmit: () => emits('submit') })
 
 function handleVirtualScroll(ev: IVirtualScrollEvent) {
   if (isDragging.value) {

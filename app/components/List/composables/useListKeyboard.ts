@@ -4,8 +4,8 @@ import { useListStore } from '../stores/list.store'
 // Provide / Inject
 import { formSubmitKey } from '../../Form/provide/form.provide'
 
-export function useListKeyboard(config?: { registerKeyStroke?: boolean }) {
-  const { registerKeyStroke = true } = config ?? {}
+export function useListKeyboard(config: { onSubmit: () => void, registerKeyStroke?: boolean }) {
+  const { onSubmit, registerKeyStroke = true } = config
 
   // Injections
   const formSubmit = inject(formSubmitKey, () => {})
@@ -35,7 +35,6 @@ export function useListKeyboard(config?: { registerKeyStroke?: boolean }) {
   }
 
   // Utils
-  const self = getCurrentInstance()
   const modifier = ref(0)
 
   const { pause, resume } = useIntersectionObserver(
@@ -122,10 +121,10 @@ export function useListKeyboard(config?: { registerKeyStroke?: boolean }) {
         ev.preventDefault?.()
 
         if (isCtrl) {
-          self?.emit('submit')
+          onSubmit()
           formSubmit()
 
-          break
+          return
         }
 
         handleSelect(itemFocused.value)

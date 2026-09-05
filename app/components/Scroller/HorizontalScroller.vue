@@ -33,7 +33,7 @@ const {
   measure,
   handleWheel,
   handleScrollViaBtn,
-} = useScrollerScroll()
+} = useScrollerScroll(position => emits('scrolled', position))
 
 syncRef(sourceX, x, { direction: 'both', immediate: false })
 
