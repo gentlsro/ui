@@ -23,13 +23,31 @@ const isMounted = ref(false)
 // anchoring every label in column 1 would overlap the prepend in the empty state.
 const prependEl = useTemplateRef<HTMLDivElement>('prependEl')
 const prependWidth = ref(0)
+const isLabelTransitionReady = ref(false)
 let prependObserver: ResizeObserver | undefined
+let transitionFrame = 0
 
 onMounted(() => {
   const element = prependEl.value
 
   if (element) {
-    const measure = () => prependWidth.value = element.clientWidth
+    const measure = () => {
+      const width = element.clientWidth
+      if (isMounted.value && width === prependWidth.value) {
+        return
+      }
+
+      // Grid movement and its negative offset must take effect together. Only
+      // animate subsequent focus/value changes, never layout compensation.
+      isLabelTransitionReady.value = false
+      prependWidth.value = width
+      cancelAnimationFrame(transitionFrame)
+      transitionFrame = requestAnimationFrame(() => {
+        transitionFrame = requestAnimationFrame(() => {
+          isLabelTransitionReady.value = true
+        })
+      })
+    }
     measure()
     prependObserver = new ResizeObserver(measure)
     prependObserver.observe(element)
@@ -38,7 +56,10 @@ onMounted(() => {
   isMounted.value = true
 })
 
-onUnmounted(() => prependObserver?.disconnect())
+onUnmounted(() => {
+  prependObserver?.disconnect()
+  cancelAnimationFrame(transitionFrame)
+})
 
 const classes = computed(() => {
   return {
@@ -92,7 +113,10 @@ const inputInnerContainerStyle = computed(() => {
   <div
     class="input-wrapper__regular"
     :class="classes"
-    :style="{ '--prependWidth': `${-prependWidth}px` }"
+    :style="{
+      '--prependWidth': `${-prependWidth}px`,
+      '--labelLeftTransitionDuration': isLabelTransitionReady ? '0.15s' : '0s',
+    }"
   >
     <!-- Label -->
     <div

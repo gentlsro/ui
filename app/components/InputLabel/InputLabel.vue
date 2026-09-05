@@ -232,7 +232,7 @@ label.label.is-inline {
     transform 0.15s cubic-bezier(0.4, 0, 0.2, 1),
     padding 0.15s cubic-bezier(0.4, 0, 0.2, 1),
     font-size 0.15s cubic-bezier(0.4, 0, 0.2, 1),
-    left 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+    left var(--labelLeftTransitionDuration, 0.15s) cubic-bezier(0.4, 0, 0.2, 1),
     color 0.15s linear;
 }
 </style>
