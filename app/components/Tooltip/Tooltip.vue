@@ -1,134 +1,123 @@
 <script setup lang="ts">
-import { arrow, flip, offset, shift, useFloating } from '@floating-ui/vue'
-
 // Types
 import type { ITooltipProps } from './types/tooltip-props.type'
 
 // Constants
 import { TOOLTIP_DEFAULT_PROPS } from './constants/tooltip-default-props.constant'
 
-defineOptions({
-  inheritAttrs: false,
-})
+// Composables
+import { useTooltipHost } from './composables/useTooltipHost'
+
+defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(defineProps<ITooltipProps>(), {
   ...getComponentProps('tooltip'),
 })
 
-// Utils
-const instance = getCurrentInstance()
-const { getLastFloatingUIZindex, getElement } = useFloatingUIUtils()
-
-const zIndex = computed(() => {
-  return getLastFloatingUIZindex()
-})
+const model = defineModel<boolean>({ default: false })
 
 // Utils
+const shared = useTooltipHost()
+const { getElement } = useFloatingUIUtils()
+
 const mergedProps = computed(() => {
   return getComponentMergedProps('tooltip', props)
 })
 
 // Layout
-const referenceTarget = toRef(props, 'referenceTarget')
-const model = defineModel<boolean>({ default: false })
-const tooltipEl = ref<HTMLElement>()
-const referenceEl = ref<Element>() // Element that menu is attached to
-const arrowEl = ref<HTMLDivElement>()
-const middleware = ref([
-  offset(props.offset),
-  flip(),
-  shift(),
-  ...(props.noArrow ? [] : [arrow({ element: arrowEl, padding: 8 })]),
-])
+const hostAnchor = useTemplateRef<HTMLSpanElement>('hostAnchor')
+const referenceEl = shallowRef<Element>()
+const contentTarget = shared.contentTarget
+const isMounted = ref(false)
 
-const { floatingStyles, placement, middlewareData } = useFloating(
-  referenceEl,
-  tooltipEl,
-  {
-    placement: () => props.placement,
-    middleware,
-    strategy: 'fixed',
+// Forwarded attributes
+const attrs = useAttrs()
+const forwardedAttrs = shallowRef({ ...attrs })
+
+// Shared ownership
+const owner = {
+  target: referenceEl,
+  props: computed(() => props),
+  attrs: forwardedAttrs,
+  appearance: computed(() => ({
+    containerClass: containerClass.value,
+    containerStyle: containerStyle.value,
+    arrowClass: arrowClass.value,
+    arrowStyle: arrowStyle.value,
+  })),
+  setModel: (value: boolean) => {
+    model.value = value
   },
-)
+}
 
-const classes = computed(() => {
-  return {
-    'no-inherit-font-style': props.noInheritFontStyle,
-  }
-})
+const isActive = computed(() => shared.active.value === owner)
 
-function assignReferenceEl() {
-  const parentEl = instance?.vnode?.el?.parentNode
-  const target = getElement({ elRef: props.referenceTarget ?? parentEl, parentEl })
-
-  if (!target) {
+// Target listeners
+watchEffect(onCleanup => {
+  if (!isMounted.value) {
     return
   }
 
-  referenceEl.value = target
-  referenceEl.value?.classList.add('has-tooltip')
-}
+  const parentEl = hostAnchor.value?.parentElement
+  const target = getElement({ elRef: props.referenceTarget ?? parentEl, parentEl })
 
-function assignEvents() {
-  referenceEl.value?.addEventListener('mouseenter', () => {
-    if (props.manual) {
-      return
-    }
+  referenceEl.value = target instanceof Element ? target : undefined
 
-    referenceEl.value?.classList.add('tooltip-hovered')
+  if (!(target instanceof Element)) {
+    return
+  }
 
-    setTimeout(() => {
-      const isStillInside = referenceEl.value?.classList.contains('tooltip-hovered')
+  target.classList.add('has-tooltip')
+  const manual = props.manual
 
-      if (isStillInside) {
-        model.value = true
-      }
-    }, props.delay?.[0] || 0)
+  const enter = () => {
+    target.classList.add('tooltip-hovered')
+    shared.enter(owner)
+  }
+
+  const leave = () => {
+    target.classList.remove('tooltip-hovered')
+    shared.leave(owner)
+  }
+
+  if (!manual) {
+    target.addEventListener('mouseenter', enter)
+    target.addEventListener('mouseleave', leave)
+  }
+
+  onCleanup(() => {
+    target.removeEventListener('mouseenter', enter)
+    target.removeEventListener('mouseleave', leave)
+    target.classList.remove('has-tooltip', 'tooltip-hovered')
+
+    // Retarget an open bubble in place; only cancel work tied to the old target.
+    shared.cancelPending(owner)
   })
+}, { flush: 'post' })
 
-  referenceEl.value?.addEventListener('mouseleave', () => {
-    if (props.manual) {
-      return
+// Model synchronization
+watch([model, referenceEl], ([open, target]) => {
+  if (open && target) {
+    if (!isActive.value) {
+      shared.show(owner)
     }
+  } else {
+    shared.release(owner)
+  }
+}, { flush: 'post' })
 
-    referenceEl.value?.classList.remove('tooltip-hovered')
+// Lifecycle
+onMounted(() => {
+  isMounted.value = true
+})
 
-    setTimeout(() => {
-      const isStillInside = referenceEl.value?.classList.contains('tooltip-hovered')
-
-      if (!isStillInside) {
-        model.value = false
-      }
-    }, props.delay?.[1] || 0)
-  })
-}
-
-watch(middlewareData, middlewareData => {
-  if (middlewareData.arrow && arrowEl.value) {
-    const { x, y } = middlewareData.arrow
-
-    Object.assign(arrowEl.value.style, {
-      left: x != null ? `${x}px` : '',
-      top: y != null ? `${y}px` : '',
-    })
+onUpdated(() => {
+  if (!isEqual(forwardedAttrs.value, attrs)) {
+    forwardedAttrs.value = { ...attrs }
   }
 })
 
-watch(referenceTarget, () => {
-  assignReferenceEl()
-})
-
-onMounted(() => {
-  nextTick(() => {
-    assignReferenceEl()
-
-    if (props.manual) {
-      return
-    }
-
-    assignEvents()
-  })
-})
+onBeforeUnmount(() => shared.release(owner))
 
 // Styles - container
 const containerClass = computed(() => {
@@ -187,86 +176,48 @@ const arrowStyle = computed(() => {
 </script>
 
 <template>
-  <Teleport to="body">
-    <div
-      v-if="model"
-      ref="tooltipEl"
-      class="tooltip group/tooltip"
-      :class="[classes, containerClass]"
-      :style="{ ...floatingStyles, ...containerStyle, '--zIndex': zIndex }"
-      :placement
-      v-bind="$attrs"
+  <!-- The declaration keeps its own target and slot context; only the bubble is shared. -->
+  <span
+    ref="hostAnchor"
+    hidden
+  />
+
+  <Teleport
+    v-if="isActive && contentTarget"
+    :to="contentTarget"
+  >
+    <slot
+      :content-class
+      :content-style
+      :description-class
+      :description-style
+      :title-class
+      :title-style
     >
-      <!-- Arrow -->
       <div
-        v-if="!noArrow"
-        ref="arrowEl"
-        class="arrow"
-        :class="arrowClass"
-        :style="arrowStyle"
-      />
-
-      <slot
-        :content-class
-        :content-style
-        :description-class
-        :description-style
-        :title-class
-        :title-style
+        v-if="content"
+        class="tooltip__content"
+        :class="contentClass"
+        :style="contentStyle"
       >
-        <div
-          v-if="content"
-          class="tooltip__content"
-          :class="contentClass"
-          :style="contentStyle"
+        <span
+          v-if="content.title"
+          class="tooltip__content-title"
+          :class="titleClass"
+          :style="titleStyle"
         >
-          <span
-            v-if="content.title"
-            class="tooltip__content-title"
-            :class="titleClass"
-            :style="titleStyle"
-          >
-            {{ content.title }}
-          </span>
+          {{ content.title }}
+        </span>
 
-          <span
-            v-if="content.description"
-            class="tooltip__content-description"
-            :class="descriptionClass"
-            :style="descriptionStyle"
-          >
-            {{ content.description }}
-          </span>
-        </div>
-      </slot>
-    </div>
+        <span
+          v-if="content.description"
+          class="tooltip__content-description"
+          :class="descriptionClass"
+          :style="descriptionStyle"
+        >
+          {{ content.description }}
+        </span>
+      </div>
+    </slot>
   </Teleport>
 </template>
-
-<style lang="scss" scoped>
-.tooltip {
-  z-index: var(--zIndex);
-}
-
-.arrow {
-  &.has-header {
-    @apply bg-inherit;
-  }
-}
-
-.tooltip[placement^='top'] > .arrow {
-  @apply bottom--4px border-b-custom border-r-custom border-ca;
-}
-
-.tooltip[placement^='bottom'] > .arrow {
-  @apply top--4px border-t-custom border-l-custom border-ca;
-}
-
-.tooltip[placement^='left'] > .arrow {
-  @apply right--4px border-r-custom border-t-custom border-ca;
-}
-
-.tooltip[placement^='right'] > .arrow {
-  @apply left--4px border-l-custom border-b-custom border-ca;
-}
-</style>

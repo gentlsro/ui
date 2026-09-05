@@ -1,6 +1,5 @@
 // @unocss-include
 
-import type { ComponentInternalInstance } from 'vue'
 import { shift, useFloating } from '@floating-ui/vue'
 
 // Types
@@ -15,9 +14,12 @@ import { useMenuStore } from '../store/menu.store'
 
 export function useMenu(payload: {
   menuProps: IMenuProps
-  instance: ComponentInternalInstance | null
+  getHost: () => HTMLElement | null | undefined
+  onHide: () => void
 }) {
-  const { menuProps, instance } = payload
+  const { menuProps, getHost, onHide } = payload
+  let removeTriggerListener: (() => void) | undefined
+  const isMounted = ref(false)
 
   // Utils
   const { getElement } = useFloatingUIUtils()
@@ -26,11 +28,13 @@ export function useMenu(payload: {
    * Refreshes the `referenceEl` and `triggerEl`
    */
   function refreshAnchors() {
-    const parentEl = instance?.vnode?.el?.parentNode
-
-    if (triggerEl.value instanceof Element) {
-      triggerEl.value?.removeEventListener(menuProps.trigger ?? 'click', toggle)
+    if (!isMounted.value) {
+      return
     }
+
+    const parentEl = getHost() ?? undefined
+    removeTriggerListener?.()
+    removeTriggerListener = undefined
 
     // Assign the elements
     triggerEl.value = getElement({ elRef: menuProps.target ?? parentEl, parentEl })
@@ -46,7 +50,10 @@ export function useMenu(payload: {
 
     // Add event listeners when not using the `manual` mode
     if (!menuProps.manual && triggerEl.value instanceof Element) {
-      triggerEl.value?.addEventListener(menuProps.trigger ?? 'click', toggle)
+      const target = triggerEl.value
+      const event = menuProps.trigger ?? 'click'
+      target.addEventListener(event, toggle)
+      removeTriggerListener = () => target.removeEventListener(event, toggle)
     }
   }
 
@@ -54,7 +61,10 @@ export function useMenu(payload: {
   watch([
     () => menuProps.target,
     () => menuProps.referenceTarget,
-  ], () => refreshAnchors())
+    () => menuProps.trigger,
+    () => menuProps.manual,
+    getHost,
+  ], () => refreshAnchors(), { flush: 'post' })
 
   // Store
   const { lastPointerDownEvent } = storeToRefs(useUIStore())
@@ -132,7 +142,7 @@ export function useMenu(payload: {
       }
     }
 
-    instance?.emit('hide')
+    onHide()
   }
 
   // Create a virtual element on show
@@ -340,16 +350,12 @@ export function useMenu(payload: {
   }
 
   // Lifecycle
-  onMounted(async () => {
-    await nextTick()
+  onMounted(() => {
+    isMounted.value = true
     refreshAnchors()
   })
 
-  onBeforeUnmount(() => {
-    if (triggerEl.value instanceof Element) {
-      triggerEl.value?.removeEventListener(menuProps.trigger ?? 'click', toggle)
-    }
-  })
+  onBeforeUnmount(() => removeTriggerListener?.())
 
   return {
     // State

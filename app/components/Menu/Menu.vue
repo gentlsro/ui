@@ -24,7 +24,7 @@ const props = withDefaults(defineProps<IMenuProps>(), {
 const emits = defineEmits<IMenuEmits>()
 
 // Init
-const instance = getCurrentInstance()
+const hostAnchor = useTemplateRef<HTMLSpanElement>('hostAnchor')
 provideLocal(MENU_INJECTION_KEY, generateUUID())
 
 const mergedProps = computed(() => {
@@ -84,7 +84,11 @@ const {
 
   // Refresh
   refreshAnchors,
-} = useMenu({ menuProps: props, instance })
+} = useMenu({
+  menuProps: props,
+  getHost: () => hostAnchor.value?.parentElement,
+  onHide: () => emits('hide'),
+})
 
 // We sync the model with the debouncedModel immediately when the value is `true`
 // to show the content immediately to trigger the transition
@@ -183,6 +187,11 @@ const contentStyle = computed(() => {
 </script>
 
 <template>
+  <span
+    ref="hostAnchor"
+    hidden
+  />
+
   <Teleport
     v-if="debouncedModel"
     to="body"

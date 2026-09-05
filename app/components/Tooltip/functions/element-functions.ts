@@ -1,6 +1,4 @@
-const instance = getCurrentInstance()
-
-export function getTargetElement(target: any): any {
+export function getTargetElement(target: any, fallback?: Element): any {
   if (!import.meta.client) {
     return
   }
@@ -32,7 +30,8 @@ export function getTargetElement(target: any): any {
     }
   }
 
-  return instance?.vnode.el?.parentNode
+  // Module-level helpers have no owning component; callers supply any fallback.
+  return fallback
 }
 
 /**
@@ -61,6 +60,7 @@ export function isNestedElement(parent: HTMLElement | null, child?: HTMLElement 
   // If we've reached the top of the DOM without finding the parent, return false
   return false
 }
+
 function isElementInViewport(el: HTMLElement) {
   const target = getTargetElement(el)
   const rect = target.getBoundingClientRect()
@@ -134,6 +134,7 @@ export async function waitForElementVisibility(target: any, maxAttempts = 50): P
           resolve(false)
           stop()
         }
+
         return
       }
 
@@ -172,8 +173,7 @@ export function getValueFromNestedInput(target: any): string | string[] | null {
     element instanceof HTMLInputElement
     || element instanceof HTMLSelectElement
     || element instanceof HTMLTextAreaElement
-  )
-  {
+  ) {
     return element.value
   }
 
