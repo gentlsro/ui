@@ -162,6 +162,7 @@ async function handleDelete() {
 
 // Validation
 const { validation } = useArk({
+  name: 'TableLayoutSaveDialog',
   state: layout,
   schema: type({ name: 'string > 0' }),
   scope: '_layoutSaveDialog',

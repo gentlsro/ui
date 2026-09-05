@@ -40,8 +40,8 @@ const formattedValue = computed(() => {
   return formatValue(
     props.filter.value,
     undefined,
-	    {
-	      dataType: props.filter.dataType,
+    {
+      dataType: props.filter.dataType,
       format,
       localeIso: currentLocaleCode.value,
       source: { type: 'component', name: 'TableFilterChip' },
@@ -96,6 +96,7 @@ function handleMenuBeforeHide() {
 }
 
 const { validation } = useArk({
+  name: 'TableFilterChip',
   state: filterLocal,
   schema: type({
     'field': 'string',

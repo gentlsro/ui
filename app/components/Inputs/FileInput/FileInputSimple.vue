@@ -31,7 +31,7 @@ const {
   isOverDropZone,
   handleRemoveFile,
   openFileDialog,
-} = useFileInput({ model, props })
+} = useFileInput({ model, props, emit: emits })
 
 const mergedProps = computed(() => {
   return getComponentMergedProps('fileInputSimple', props)

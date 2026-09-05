@@ -136,6 +136,7 @@ function handleComparatorChange() {
 
 // Validation
 const { validation } = useArk({
+  name: 'QueryBuilderItem',
   state: item,
   schema: type({
     'field': 'string',

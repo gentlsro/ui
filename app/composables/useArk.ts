@@ -15,6 +15,8 @@ type IPayload<Validation extends Type> = {
   state?: MaybeRefOrGetter<Validation['infer']> | MaybeRefsOrGetters<Validation['infer']>
   schema?: Validation
   scope?: string
+  /** Optional diagnostic label; registrations always receive a unique suffix. */
+  name?: string
   immediate?: boolean
 }
 
@@ -32,11 +34,11 @@ export function useArk<Validation extends Type = any>(payload?: IPayload<Validat
     state,
     schema,
     scope = 'base',
+    name = 'ark',
     immediate = false,
   } = payload ?? {}
 
-  const self = getCurrentInstance()
-  const componentName = `${getComponentName(self)}_${generateUUID()}`
+  const componentName = `${name}_${generateUUID()}`
 
   const {
     isValidationVisibleByScope,
@@ -170,9 +172,10 @@ export function useArk<Validation extends Type = any>(payload?: IPayload<Validat
   }
 
   // Lifecycle
-  tryOnUnmounted(() => {
+  onUnmounted(() => {
     validationParts.value = validationParts.value
       ?.filter(part => part.componentName !== componentName) ?? []
+    delete isValidationVisibleByComponentName.value[componentName]
   })
 
   return {

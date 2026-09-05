@@ -158,6 +158,7 @@ function createStore(injectionKey?: string) {
     const schema = addConfig.value?.validationSchema as NonNullable<IListProps['addConfig']>['validationSchema'] as Type<any>
 
     const { validation } = useArk({
+      name: 'List',
       state: () => ({ search: search.value }),
       schema: type({
         search: schema ?? 'unknown.any',

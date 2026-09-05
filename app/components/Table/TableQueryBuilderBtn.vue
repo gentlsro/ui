@@ -66,7 +66,7 @@ onMounted(() => {
   nextTick(syncFromParent)
 })
 
-const { validation } = useArk({ scope: '_qb' })
+const { validation } = useArk({ name: 'TableQueryBuilderBtn', scope: '_qb' })
 </script>
 
 <template>

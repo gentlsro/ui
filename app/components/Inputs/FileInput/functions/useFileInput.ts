@@ -1,5 +1,6 @@
 // Types
 import type { IFileInputProps } from '../types/file-input-props.type'
+import type { IFileInputEmits } from '../types/file-input-emits.type'
 
 // Components
 import type Field from '../../../Field/Field.vue'
@@ -7,11 +8,9 @@ import type Field from '../../../Field/Field.vue'
 export function useFileInput(payload: {
   model: Ref<IFileInputProps['modelValue']>
   props: IFileInputProps
+  emit: IFileInputEmits
 }) {
-  const { model, props } = payload
-
-  // Utils
-  const self = getCurrentInstance()
+  const { model, props, emit } = payload
 
   // Layout
   const fileFieldEl = ref<InstanceType<typeof Field>>()
@@ -40,7 +39,7 @@ export function useFileInput(payload: {
       model.value = filesArray
     }
 
-    self?.emit('filesAdded', filesArray)
+    emit('filesAdded', filesArray)
 
     reset()
   }
@@ -50,7 +49,7 @@ export function useFileInput(payload: {
       return
     }
 
-    self?.emit('filesRemoved', [model.value[Number(idx)]])
+    emit('filesRemoved', [model.value[Number(idx)]])
     model.value = model.value.toSpliced(idx, 1)
   }
 

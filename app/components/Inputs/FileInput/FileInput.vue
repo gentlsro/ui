@@ -11,7 +11,7 @@ const props = withDefaults(defineProps<IFileInputProps>(), {
   ...getComponentProps('fileInput'),
 })
 
-defineEmits<IFileInputEmits>()
+const emits = defineEmits<IFileInputEmits>()
 
 // Utils
 const { getFieldProps } = useFieldUtils()
@@ -24,7 +24,7 @@ const {
   isOverDropZone,
   handleRemoveFile,
   openFileDialog,
-} = useFileInput({ model, props })
+} = useFileInput({ model, props, emit: emits })
 
 const mergedProps = computed(() => {
   return getComponentMergedProps('fileInput', props)

@@ -125,7 +125,7 @@ async function handleMenuBeforeHide() {
   }
 }
 
-const { validation } = useArk({ scope: '_qb' })
+const { validation } = useArk({ name: 'QueryBuilderItemInline', scope: '_qb' })
 </script>
 
 <template>

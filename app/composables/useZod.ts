@@ -16,6 +16,9 @@ type IPayload<Validation extends z.ZodType> = {
   schema?: Validation
   scope?: string
   immediate?: boolean
+
+  /** Optional diagnostic label; registrations always receive a unique suffix. */
+  name?: string
 }
 
 export type IZodNewResult = {
@@ -32,11 +35,11 @@ export function useZod<Validation extends z.ZodType = z.ZodType>(payload?: IPayl
     state,
     schema,
     scope = 'base',
+    name = 'zod',
     immediate = false,
   } = payload ?? {}
 
-  const self = getCurrentInstance()
-  const componentName = `${getComponentName(self)}_${generateUUID()}`
+  const componentName = `${name}_${generateUUID()}`
 
   const {
     isValidationVisibleByScope,
@@ -52,7 +55,8 @@ export function useZod<Validation extends z.ZodType = z.ZodType>(payload?: IPayl
     ...validationParts.value,
     {
       state,
-      schema,
+      // Zod schemas contain non-configurable internals and must not be proxied.
+      schema: schema ? markRaw(schema) : undefined,
       componentName,
       scope,
     },
@@ -169,9 +173,10 @@ export function useZod<Validation extends z.ZodType = z.ZodType>(payload?: IPayl
   }
 
   // Lifecycle
-  tryOnUnmounted(() => {
+  onUnmounted(() => {
     validationParts.value = validationParts.value
       ?.filter(part => part.componentName !== componentName) ?? []
+    delete isValidationVisibleByComponentName.value[componentName]
   })
 
   return {
