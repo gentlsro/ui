@@ -1492,7 +1492,7 @@ export const defaultComponentsConfig = {
   // Tooltip
   tooltip: {
     props: {
-      delay: undefined,
+      delay: () => [300, 0],
       noArrow: undefined,
       noInheritFontStyle: true,
       offset: 8,

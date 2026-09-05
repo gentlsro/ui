@@ -67,7 +67,7 @@ const searchStyle = computed(() => {
           color="negative"
           m="l-1"
           class="mobile-close-btn"
-          @click="$hide"
+          @click="$hide()"
         />
 
         <slot name="right" />

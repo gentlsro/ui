@@ -115,7 +115,7 @@ export function useTooltipHost() {
 
   if (!host) {
     throw new Error(
-      'Tooltip requires the UI tooltip-host plugin and one TooltipHost at the application root.',
+      'Tooltip requires the UI layer and its tooltip-host plugin.',
     )
   }
 

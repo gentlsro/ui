@@ -1,32 +1,34 @@
-import type { ComponentInternalInstance } from 'vue'
+type FloatingElement = Element & {
+  hide?: (force?: boolean) => void
+}
 
 /**
  * Closes the current dialog/menu
  *
- * If we provide `instance` argument, it will close the dialog/menu
- * of that instance, otherwise it will close the latest dialog/menu
+ * If we provide a DOM `target`, it will close its nearest dialog/menu.
+ * Otherwise it will close the latest dialog/menu.
  */
 export function $hide(options?: {
   /**
-   * When providing `instance`, the function will close the floating element that
-   * the `instance` is inside of
+   * A floating element or any DOM descendant within it.
+   * An explicitly missing target does nothing instead of closing another overlay.
    */
-  instance?: ComponentInternalInstance | null
+  target?: Element | null
 
   /**
    * When true, all the floating UIs will be hidden (with exception of `ignore`d elements)
    *
-   * NOTE: When `all` is true, the `instance` does nothing
+   * NOTE: When `all` is true, the `target` does nothing
    */
   all?: boolean
 
   /**
-   * A list of elements that should not be hidden
+   * Elements to skip when hiding all overlays or the latest overlay
    */
   ignore?: Element[]
 
   /**
-   * When provided, only the elements *after` (in DOM) will get hidden
+   * With `all`, only matching elements after this boundary in DOM order are hidden
    *
    * NOTE: Takes precedence over `ignore`
    */
@@ -42,7 +44,11 @@ export function $hide(options?: {
    */
   force?: boolean
 }) {
-  let { instance, all, ignore = [], ignoreUntilEl, type, force } = options ?? {}
+  if (!import.meta.client) {
+    return
+  }
+
+  let { target, all, ignore = [], ignoreUntilEl, type, force = false } = options ?? {}
   let selector = '.floating-element'
 
   if (type === 'menu') {
@@ -51,7 +57,7 @@ export function $hide(options?: {
     selector += '.dialog__wrapper'
   }
 
-  const floatingEls = Array.from(document.querySelectorAll(selector))
+  const floatingEls = Array.from(document.querySelectorAll<FloatingElement>(selector))
 
   if (all) {
     if (ignoreUntilEl) {
@@ -60,32 +66,30 @@ export function $hide(options?: {
       ignore = floatingEls.slice(0, idx + 1)
     }
 
-    floatingEls?.forEach(el => {
+    floatingEls.forEach(el => {
       const isIgnored = ignore.includes(el)
 
       if (!isIgnored) {
-        // @ts-expect-error DOM attribute
-        el?.hide(force)
+        el.hide?.(force)
       }
     })
 
     return
   }
 
-  if (instance) {
-    const floatingEl = instance?.vnode.el?.closest(selector)
+  if (options && 'target' in options) {
+    const floatingEl = target?.closest<FloatingElement>(selector)
 
-    floatingEl?.hide(force)
+    floatingEl?.hide?.(force)
+
+    return
   }
 
-  // Hides the last floating element
-  else {
-    const floatingEl = floatingEls[floatingEls.length - 1]
-    const isIgnored = floatingEl && ignore.includes(floatingEl)
+  // Ignoring the latest overlay does not fall through to an older one.
+  const floatingEl = floatingEls[floatingEls.length - 1]
+  const isIgnored = floatingEl && ignore.includes(floatingEl)
 
-    if (!isIgnored) {
-      // @ts-expect-error DOM attribute
-      floatingEl?.hide(force)
-    }
+  if (!isIgnored) {
+    floatingEl?.hide?.(force)
   }
 }
