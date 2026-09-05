@@ -160,13 +160,14 @@ defineExpose({ sync })
         v-model:view="view"
         :model-value="internalValue"
         :utc
-        p="x-1 t-1"
+        p="x-2 t-1"
         @navigate="navigate"
         @year="inputYear"
       />
 
       <div class="date-picker-body">
         <DatePickerCalendar
+          :month="navigationDate.format('YYYY-MM')"
           :days="daysInPeriod"
           :days-count="daysCount"
           :utc
@@ -179,6 +180,7 @@ defineExpose({ sync })
           :inert="view !== 'days'"
           :aria-hidden="view !== 'days'"
           @select="handleDaySelect"
+          @navigate="view === 'days' && navigate($event, 'month')"
         >
           <template
             v-if="$slots.day"
@@ -198,6 +200,7 @@ defineExpose({ sync })
           :years
           :utc
           @select="view === 'months' ? selectMonth($event) : selectYear($event)"
+          @navigate="navigate($event, 'year')"
         />
       </div>
     </div>
@@ -224,6 +227,12 @@ defineExpose({ sync })
 </template>
 
 <style lang="scss" scoped>
+.date-picker,
+.date-picker :deep(input),
+.date-picker :deep(button) {
+  font-variant-numeric: tabular-nums;
+}
+
 .date-picker {
   width: min(90vw, 400px);
   max-width: 100%;

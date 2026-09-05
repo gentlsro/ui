@@ -5,17 +5,18 @@ export function useDatePickerView(props: Pick<IDatePickerProps, 'utc'>, getLastV
   const internalValue = ref<Datetime>(getLastValue())
   const view = ref<'days' | 'months' | 'years'>('days')
   const navigationDate = computed(() => $date(internalValue.value, { utc: props.utc }).startOf('month'))
-  const yearPageStart = ref(Math.floor(navigationDate.value.year() / 12) * 12)
-  const years = computed(() => Array.from({ length: 12 }, (_, index) => yearPageStart.value + index))
+  const yearsPerPage = 24
+  const yearPageStart = ref(Math.floor(navigationDate.value.year() / yearsPerPage) * yearsPerPage)
+  const years = computed(() => Array.from({ length: yearsPerPage }, (_, index) => yearPageStart.value + index))
   watch(view, value => {
     if (value === 'years') {
-      yearPageStart.value = Math.floor(navigationDate.value.year() / 12) * 12
+      yearPageStart.value = Math.floor(navigationDate.value.year() / yearsPerPage) * yearsPerPage
     }
   })
 
   function navigate(direction: number, unit: 'month' | 'year') {
     if (view.value === 'years' && unit === 'year') {
-      yearPageStart.value += direction * 12
+      yearPageStart.value += direction * yearsPerPage
     } else {
       internalValue.value = navigationDate.value.add(direction, unit)
       if (unit === 'month') {
@@ -26,7 +27,7 @@ export function useDatePickerView(props: Pick<IDatePickerProps, 'utc'>, getLastV
 
   function inputYear(year: number) {
     internalValue.value = navigationDate.value.year(year)
-    yearPageStart.value = Math.floor(year / 12) * 12
+    yearPageStart.value = Math.floor(year / yearsPerPage) * yearsPerPage
   }
 
   function selectMonth(month: number) {

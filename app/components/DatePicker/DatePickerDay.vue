@@ -52,7 +52,7 @@ const eventsAdjusted = computed<Pick<DayEvent, 'color' | 'icon'>[]>(() => {
     </div>
 
     <!-- Top -->
-    <div flex="~">
+    <div flex="~ center">
       <div class="dayNo">
         {{ day.dayOfMonth }}
       </div>
@@ -86,48 +86,44 @@ const eventsAdjusted = computed<Pick<DayEvent, 'color' | 'icon'>[]>(() => {
 
 <style lang="scss" scoped>
 .dp-day {
-  @apply relative flex flex-col cursor-pointer font-thin relative select-none
-    outline-1 outline-dashed outline-ca;
-
-  &::after {
-    @apply content-empty absolute top-0 left-0 min-h-10;
-  }
+  @apply relative flex flex-col justify-center cursor-pointer font-medium select-none rounded-2;
 
   &:not(.is-disabled):hover {
-    @apply shadow-consistent shadow-primary dark:shadow-true-gray-700/50 shadow-true-gray-300/50 z-1
-      scale-110 transform-origin-center font-semibold;
-
     &:not(.is-selected) {
-      @apply bg-white dark:bg-dark-950;
+      @apply bg-slate-100 color-slate-900 dark:bg-true-gray-200/10 dark:color-white;
     }
   }
 
   .dayNo {
-    @apply flex flex-center p-1 m-t-1 m-l-1 relative rounded-full font-rem-12 leading-none w-5 h-5;
+    @apply flex flex-center relative rounded-full font-rem-13 leading-none w-7 h-7;
   }
 
   .edge {
-    @apply absolute top-.5 right-.5 whitespace-nowrap italic text-xs color-gray leading-none;
+    @apply absolute top-.5 right-1 whitespace-nowrap font-rem-9 color-slate-400 dark:color-true-gray-500 leading-none;
   }
 
   &.is-weekend {
-    @apply bg-slate-100 dark:bg-true-gray-200/3;
+    @apply bg-slate-50 dark:bg-true-gray-200/3;
   }
 
   &.is-not-current {
-    @apply bg-slate-200 dark:bg-true-gray-200/7;
+    @apply color-slate-400 dark:color-true-gray-500;
   }
 
   &.is-today .dayNo {
-    @apply rounded-full outline-1 outline-solid outline-ca;
+    @apply rounded-full outline-1 outline-solid outline-primary font-semibold;
   }
 
-  // &.is-selected .dayNo {
-  //   @apply dark:bg-primary color-white bg-primary;
-  // }
-
   &.is-selected {
-    @apply dark:bg-primary color-white bg-primary outline-white;
+    @apply color-white dark:color-white bg-primary font-semibold;
+
+    .edge {
+      @apply color-white/70;
+    }
+
+    .dayNo {
+      @apply outline-white;
+    }
   }
 
   &.is-disabled {

@@ -15,6 +15,10 @@ const { formatDate } = useDateUtils()
 const view = defineModel<'days' | 'months' | 'years'>('view', { default: 'days' })
 
 // Year
+const isTouch = useMediaQuery('(pointer: coarse)')
+const yearInput = useTemplateRef('yearInput')
+onClickOutside(yearInput, () => yearInput.value?.blur())
+
 const year = computed(() => $date(props.modelValue, { utc: props.utc }).year())
 const yearDraft = ref(String(year.value))
 
@@ -31,6 +35,7 @@ function inputYear(event: Event) {
 function finishYear() {
   yearDraft.value = String(year.value)
   view.value = 'days'
+  yearInput.value?.blur()
 }
 </script>
 
@@ -90,8 +95,23 @@ function finishYear() {
         @click="$emit('navigate', -1, 'year')"
       />
 
-      <!-- Input -->
+      <Btn
+        v-if="isTouch"
+        size="auto"
+        tabindex="-1"
+        :label="String(year)"
+        :aria-label="`${$t('general.year', 1)} ${year}`"
+        :aria-expanded="view === 'years'"
+        :ui="{ containerClass: ({ defaults }) => `${defaults.all} w-16 h-8 p-0` }"
+        data-picker-years
+        @mousedown.prevent
+        @click="view = view === 'years' ? 'days' : 'years'"
+      />
+
+      <!-- Desktop year input -->
       <input
+        v-else
+        ref="yearInput"
         :value="yearDraft"
         type="text"
         inputmode="numeric"
