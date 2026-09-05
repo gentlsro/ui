@@ -327,6 +327,13 @@ export const defaultComponentsConfig = {
       ui: {
         containerClass: ({ defaults }) => defaults.all,
         daysGridClass: ({ defaults }) => defaults.all,
+        dayClass: ({ defaults }) => defaults.all,
+        dayNumberClass: ({ defaults }) => defaults.all,
+        dayEdgeClass: ({ defaults }) => defaults.all,
+        dayNumberWrapperClass: ({ defaults }) => defaults.all,
+        dayEventsClass: ({ defaults }) => defaults.all,
+        dayEventsContainerClass: ({ defaults }) => defaults.all,
+        dayEventClass: ({ defaults }) => defaults.all,
         controlsClass: ({ defaults }) => defaults.all,
       },
     },
