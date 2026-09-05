@@ -16,7 +16,7 @@ function mountOwner() {
       loading: { type: Boolean, default: defaults.loading },
       options: Array,
     },
-    emits: ['update:modelValue', 'update:search', 'update:addedItems', 'update:loading', 'update:options'],
+    emits: ['update:modelValue', 'update:search', 'update:addedItems', 'update:options'],
     setup(props) {
       store = useSelectorStore({ props: props as ISelectorProps })
 

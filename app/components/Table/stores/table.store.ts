@@ -46,7 +46,9 @@ const [
   const { tableProps, storageKey } = config ?? {}
 
   // Init
-  const _storageKey = ref(toValue(storageKey) ?? useId())
+  // Internal identity is not a persistent storage key.
+  const localId = useId()
+  const _storageKey = ref(toValue(storageKey) ?? localId)
 
   function getStore() {
     return {
@@ -156,7 +158,7 @@ const [
   }
 
   watch(() => toValue(storageKey), storageKey => {
-    _storageKey.value = toValue(storageKey) ?? useId()
+    _storageKey.value = storageKey ?? localId
   })
 
   // Store

@@ -69,23 +69,11 @@ function createStore(injectionKey?: string) {
     const hoveredItem = ref<IQueryBuilderRow | undefined>()
     const queryBuilderElRect = ref<DOMRect>()
 
-    const allowNegation = initRef({
-      propName: 'allowNegation',
-      props: queryBuilderProps,
-      defaultValue: false,
-    }) as Ref<boolean>
+    const allowNegation = computed(() => queryBuilderProps?.allowNegation === undefined ? false : queryBuilderProps.allowNegation)
 
-    const maxNestingLevel = initRef({
-      propName: 'maxLevel',
-      props: queryBuilderProps,
-      defaultValue: 3,
-    }) as Ref<number>
+    const maxNestingLevel = computed(() => queryBuilderProps?.maxLevel === undefined ? 3 : queryBuilderProps.maxLevel)
 
-    const breakpoint = initRef({
-      propName: 'breakpoint',
-      props: queryBuilderProps,
-      defaultValue: 1024,
-    }) as Ref<number>
+    const breakpoint = computed(() => queryBuilderProps?.breakpoint === undefined ? 1024 : queryBuilderProps.breakpoint)
 
     const getFilterComponentFnc = ref<IQueryBuilderProps['getFilterComponent']>(queryBuilderProps?.getFilterComponent)
 

@@ -22,7 +22,6 @@ export type IPivotEmitFncs<T = IItem> = {
 
 export type IPivotEmits<T = IItem> = {
   (e: 'update:config', value: IPivotProps<T>['config']): void
-  (e: 'update:loading', value: IPivotProps<T>['loading']): void
   (e: 'update:data', value: IPivotProps<T>['data']): void
   (e: 'update:items', value: IPivotProps<T>['items']): void
   (e: 'click:row', payload: IPivotRowClickPayload<T>): void

@@ -9,7 +9,6 @@ import { tableSlotsKey } from './provide/table.provide'
 // Functions
 import { tableInitialize } from './functions/table-initialize'
 import { tableGetExposed } from './functions/table-get-exposed'
-import { tableGetStorageKey } from './functions/table-get-storage-key'
 
 // Constants
 import { TABLE_DEFAULT_PROPS } from './constants/table-default-props.constant'
@@ -28,8 +27,7 @@ const slots = useSlots()
 provideLocal(tableSlotsKey, slots)
 
 // Init
-const self = getCurrentInstance()
-const storageKey = computed(() => tableGetStorageKey(props.storageKey, self))
+const storageKey = computed(() => props.storageKey ?? null)
 
 const mergedProps = computed(() => {
   return getComponentMergedProps('table', props)

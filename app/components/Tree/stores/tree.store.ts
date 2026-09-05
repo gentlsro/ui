@@ -25,35 +25,15 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     const { treeProps } = payload ?? {}
     const { searchData } = useSearching()
 
-    const idKey = initRef({
-      propName: 'idKey',
-      props: treeProps,
-      defaultValue: 'id',
-    }) as Ref<string>
+    const idKey = computed(() => treeProps?.idKey === undefined ? 'id' : treeProps.idKey)
 
-    const labelKey = initRef({
-      propName: 'labelKey',
-      props: treeProps,
-      defaultValue: 'label',
-    }) as Ref<string>
+    const labelKey = computed(() => treeProps?.labelKey === undefined ? 'label' : treeProps.labelKey)
 
-    const childrenKey = initRef({
-      propName: 'childrenKey',
-      props: treeProps,
-      defaultValue: 'children',
-    }) as Ref<string>
+    const childrenKey = computed(() => treeProps?.childrenKey === undefined ? 'children' : treeProps.childrenKey)
 
-    const parentKey = initRef({
-      propName: 'parentKey',
-      props: treeProps,
-      defaultValue: 'parentId',
-    }) as Ref<string>
+    const parentKey = computed(() => treeProps?.parentKey === undefined ? 'parentId' : treeProps.parentKey)
 
-    const maxLevel = initRef({
-      propName: 'maxLevel',
-      props: treeProps,
-      defaultValue: undefined,
-    }) as Ref<number | undefined>
+    const maxLevel = computed(() => treeProps?.maxLevel)
 
     // Configs
     const actionsConfig = ref(treeProps?.actionsConfig) as Ref<ITreeProps<T>['actionsConfig']>
@@ -145,9 +125,9 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
         .join(',')
     })
 
-    const { trigger: flattenTrigger } = watchTriggerable(model, async nodes => {
+    const { trigger: flattenTrigger } = watchTriggerable([model, idKey, labelKey, childrenKey], async ([nodes]) => {
       nodesFlattened.value = await flattenTreeNodes<T>({
-        nodes,
+        nodes: nodes ?? [],
         nodeMetaById,
         idKey: idKey.value,
         childrenKey: childrenKey.value,

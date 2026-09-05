@@ -32,23 +32,11 @@ function createStore(injectionKey?: string) {
       defaultValue: false,
     }) as Ref<boolean>
 
-    const isLoading = initRef({
-      propName: 'loading',
-      props: formProps,
-      defaultValue: false,
-    }) as Ref<boolean>
+    const isLoading = computed(() => formProps?.loading === undefined ? false : formProps.loading)
 
-    const isSubmitDisabled = initRef({
-      propName: 'submitDisabled',
-      props: formProps,
-      defaultValue: false,
-    }) as Ref<boolean>
+    const isSubmitDisabled = computed(() => formProps?.submitDisabled === undefined ? false : formProps.submitDisabled)
 
-    const isSubmitConfirmation = initRef({
-      propName: 'submitConfirmation',
-      props: formProps,
-      defaultValue: false,
-    }) as Ref<boolean>
+    const isSubmitConfirmation = computed(() => formProps?.submitConfirmation === undefined ? false : formProps.submitConfirmation)
 
     const hasConfirmation = computed(() => {
       return formHasConfirmation(

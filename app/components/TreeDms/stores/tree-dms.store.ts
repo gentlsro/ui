@@ -13,23 +13,11 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
   const injectionState = createInjectionState((payload?: IConfig<T>) => {
     const { props } = payload ?? {}
 
-    const fileKey = initRef({
-      propName: 'fileKey',
-      props,
-      defaultValue: 'file',
-    }) as Ref<string>
+    const fileKey = computed(() => props?.fileKey === undefined ? 'file' : props.fileKey)
 
-    const folderKey = initRef({
-      propName: 'folderKey',
-      props,
-      defaultValue: 'folder',
-    }) as Ref<string>
+    const folderKey = computed(() => props?.folderKey === undefined ? 'folder' : props.folderKey)
 
-    const noNodeIcon = initRef({
-      propName: 'noNodeIcon',
-      props,
-      defaultValue: false,
-    }) as Ref<boolean | { file?: boolean, folder?: boolean }>
+    const noNodeIcon = computed(() => props?.noNodeIcon === undefined ? false : props.noNodeIcon)
 
     const modifiers = ref(props?.modifiers)
 

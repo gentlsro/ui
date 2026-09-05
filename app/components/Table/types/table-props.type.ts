@@ -588,9 +588,10 @@ export type ITableProps<
   splitRows?: Array<{ breakpoint: number, count: number }>
 
   /**
-   * Key for the local storage, if not provided, the key will be generated
-   * based on the parent component of the table
-   * use `null` to disable this functionality
+   * Stable, explicit localStorage key. Omit or use `null` for local state only.
+   * To retain settings from older versions, pass the former parent component
+   * name unchanged. Tables sharing a key intentionally share saved settings.
+   * Remount the table when enabling or disabling persistence.
    */
   storageKey?: string | null
 

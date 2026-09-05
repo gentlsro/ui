@@ -51,23 +51,11 @@ function createStore(injectionKey?: string) {
     })
     const refreshTrigger = ref(0)
 
-    const isLoadingSource = initRef({
-      propName: 'loading',
-      props: listProps,
-      defaultValue: false,
-    })
+    const isLoadingSource = computed(() => listProps?.loading === undefined ? false : listProps.loading)
 
-    const itemKey = initRef({
-      propName: 'itemKey',
-      props: listProps,
-      defaultValue: 'id',
-    }) as Ref<string>
+    const itemKey = computed(() => listProps?.itemKey === undefined ? 'id' : listProps.itemKey)
 
-    const itemLabel = initRef({
-      propName: 'itemLabel',
-      props: listProps,
-      defaultValue: 'label',
-    }) as Ref<string>
+    const itemLabel = computed(() => listProps?.itemLabel === undefined ? 'label' : listProps.itemLabel)
 
     const isLoading = computed(() => {
       return isRequestLoading.value || isLoadingSource.value
@@ -81,17 +69,9 @@ function createStore(injectionKey?: string) {
 
     const { focused: isFocusedWithin } = useFocusWithin(containerEl)
 
-    const isClearable = initRef({
-      propName: 'clearable',
-      props: listProps,
-      defaultValue: false,
-    }) as Ref<boolean>
+    const isClearable = computed(() => listProps?.clearable === undefined ? false : listProps.clearable)
 
-    const noFilter = initRef({
-      propName: 'noFilter',
-      props: listProps,
-      defaultValue: false,
-    }) as Ref<boolean>
+    const noFilter = computed(() => listProps?.noFilter === undefined ? false : listProps.noFilter)
 
     // Search
     const hasExactMatch = ref(false)
@@ -103,7 +83,7 @@ function createStore(injectionKey?: string) {
       defaultValue: undefined,
     }) as Ref<string | undefined>
 
-    const fuseOptions = ref<IFuseOptions>({
+    const fuseOptions = computed<IFuseOptions>(() => ({
       minMatchCharLength: 1,
       threshold: 0.4,
       isCaseSensitive: false,
@@ -112,8 +92,8 @@ function createStore(injectionKey?: string) {
       useExtendedSearch: true,
       keys: [itemLabel.value],
 
-      ...listProps?.searchConfig?.fuseOptions,
-    })
+      ...searchConfig.value?.fuseOptions,
+    }))
 
     // Grouping
     const groupBy = computed<GroupItem<any>[]>(() => {
@@ -124,17 +104,16 @@ function createStore(injectionKey?: string) {
     })
 
     // Sorting
-    // Make sure to have at least one sortBy item
-    if (sortingConfig.value && !sortingConfig.value.sortBy?.length) {
-      const defaultSortBy = getListDefaultSortBy(itemLabel.value)
-      sortingConfig.value.sortBy = defaultSortBy
-    }
-
     const sortBy = computed<SortItem<any>[]>(() => {
-      return (sortingConfig.value?.sortBy ?? []).map(s => ({
+      const configured = sortingConfig.value?.sortBy
+      const effective = sortingConfig.value && !configured?.length
+        ? getListDefaultSortBy(itemLabel.value)
+        : configured ?? []
+
+      return effective.map(s => ({
         ...s,
         format: ({ ref }) => s.format?.(ref) || get(ref, s.field),
-      })) ?? []
+      }))
     })
 
     // Adding
@@ -171,11 +150,7 @@ function createStore(injectionKey?: string) {
     const itemsGrouped = ref() as Ref<Array<IListItem | IGroupRow>>
     const useWorker = computed(() => listProps?.useWorker ?? items.value.length > 5e3)
 
-    const hiddenItems = initRef({
-      propName: 'hiddenItems',
-      props: listProps,
-      defaultValue: undefined,
-    }) as Ref<IListProps['hiddenItems']>
+    const hiddenItems = computed(() => listProps?.hiddenItems)
 
     const itemByKey = computed(() => {
       const allItems = [...items.value, ...addedItems.value.map(item => item.ref)]
@@ -230,7 +205,7 @@ function createStore(injectionKey?: string) {
     })
 
     watchDebounced(
-      ([items, addedItems, isHiddenByItemKey, refreshTrigger]),
+      ([items, addedItems, isHiddenByItemKey, refreshTrigger, itemKey, itemLabel, noFilter, fuseOptions, sortBy]),
       async ([items, addedItems]) => {
         const _items = [...items, ...addedItems.map(item => item.ref)]
           .filter(item => !isHiddenByItemKey.value[getListItemKey(item, itemKey.value)])

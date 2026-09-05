@@ -78,11 +78,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       source: { type: 'store', name: 'pivot' },
     })
 
-    const isLoadingSource = initRef({
-      propName: 'loading',
-      props,
-      defaultValue: false,
-    })
+    const isLoadingSource = computed(() => props?.loading === undefined ? false : props.loading)
 
     const isLoading = computed(() => {
       return isRequestLoading.value || isLoadingSource.value || isTransforming.value

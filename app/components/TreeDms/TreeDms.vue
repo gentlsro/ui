@@ -18,12 +18,6 @@ const props = withDefaults(
   { ...getComponentProps('treeDms') },
 )
 
-defineEmits<{
-  (e: 'update:fileKey', value: ITreeDmsProps<T>['fileKey']): void
-  (e: 'update:folderKey', value: ITreeDmsProps<T>['folderKey']): void
-  (e: 'update:noNodeIcon', value: ITreeDmsProps<T>['noNodeIcon']): void
-}>()
-
 defineExpose({
   getStore: () => useTreeDmsStore(),
   getTreeStore: () => {

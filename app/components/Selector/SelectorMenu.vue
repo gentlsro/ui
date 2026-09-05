@@ -128,7 +128,7 @@ whenever(isPickerActive, () => {
       v-model:search="search"
       v-model:added-items="addedItems"
       v-model:items="options"
-      v-model:loading="isLoading"
+      :loading="isLoading"
       :load-data
       :item-key="optionKey"
       :item-label="optionLabel"

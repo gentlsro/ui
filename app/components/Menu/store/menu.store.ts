@@ -20,16 +20,15 @@ function createStore(injectionKey?: string) {
       props: menuProps,
     })
 
-    const virtualConfig = initRef({
-      propName: 'virtualConfig',
-      props: menuProps,
-      defaultValue: {
-        enabled: false,
-        limits: { minW: 0, minH: 0, maxW: 0, maxH: 0 },
-        movable: false,
-        resizable: false,
-      },
-    })
+    const defaultVirtualConfig = {
+      enabled: false,
+      limits: { minW: 0, minH: 0, maxW: 0, maxH: 0 },
+      movable: false,
+      resizable: false,
+    }
+    const virtualConfig = computed(() => menuProps?.virtualConfig === undefined
+      ? defaultVirtualConfig
+      : menuProps.virtualConfig)
 
     // Template
     const floatingEl = ref<HTMLDivElement>()

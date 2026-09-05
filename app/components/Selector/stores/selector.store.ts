@@ -19,7 +19,7 @@ function createStore(injectionKey?: string) {
     const model = initRef({ props, propName: 'modelValue' })
     const search = initRef({ props, propName: 'search' })
     const addedItems = initRef({ props, propName: 'addedItems', defaultValue: [] })
-    const isLoading = initRef({ props, propName: 'loading', defaultValue: false })
+    const isLoading = computed(() => props?.loading === undefined ? false : props.loading)
     const optionsOriginal = initRef({ props, propName: 'options' })
     const menuEl = ref<InstanceType<typeof MenuProxy>>()
     const options = ref<NonUndefined<ISelectorProps['options']>>([])

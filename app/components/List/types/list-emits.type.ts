@@ -4,14 +4,8 @@ import type { IListItem } from './list-item.type'
 import type { IListItemToAdd } from './list-item-to-add.type'
 
 export type IListEmits = {
-  (e: 'update:loading', value: IListProps['loading']): void
-  (e: 'update:itemKey', value: IListProps['itemKey']): void
-  (e: 'update:itemLabel', value: IListProps['itemLabel']): void
-  (e: 'update:clearable', value: IListProps['clearable']): void
-  (e: 'update:noFilter', value: IListProps['noFilter']): void
   (e: 'update:search', value: IListProps['search']): void
   (e: 'update:addedItems', value: IListProps['addedItems']): void
-  (e: 'update:hiddenItems', value: IListProps['hiddenItems']): void
   (e: 'update:selection', value: IListProps['selection']): void
   (e: 'submit'): void
   (e: 'select:item', item: IListItem): void
