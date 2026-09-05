@@ -3,12 +3,16 @@
 import type { DayEvent } from './types/DayEvent.type'
 import type { IDatePickerDayProps } from './types/datepicker-day-props.type'
 
+// Constants
+import { DATE_PICKER_DEFAULT_PROPS } from './constants/datepicker-default-props.constant'
+
 const props = withDefaults(defineProps<IDatePickerDayProps>(), {
   edge: true,
 })
 
 // Utils
 const { formatDate } = useDateUtils()
+const mergedProps = computed(() => getComponentMergedProps('datePicker', { ui: props.ui }))
 
 // Layout
 const day = toRef(props, 'day')
@@ -34,12 +38,57 @@ const eventsAdjusted = computed<Pick<DayEvent, 'color' | 'icon'>[]>(() => {
     return typeof e === 'string' ? { color: e } : e
   })
 })
+
+const styleState = computed(() => ({
+  day: props.day,
+  isSelected: props.isSelected,
+  disabled: props.disabled,
+}))
+
+const dayClass = computed(() => mergedProps.value.ui?.dayClass?.({
+  defaults: DATE_PICKER_DEFAULT_PROPS.ui.dayClass(styleState.value),
+  ...styleState.value,
+}))
+const dayStyle = computed(() => mergedProps.value.ui?.dayStyle?.())
+
+const dayNumberClass = computed(() => mergedProps.value.ui?.dayNumberClass?.({
+  defaults: DATE_PICKER_DEFAULT_PROPS.ui.dayNumberClass(styleState.value),
+  ...styleState.value,
+}))
+const dayNumberStyle = computed(() => mergedProps.value.ui?.dayNumberStyle?.())
+
+const dayEdgeClass = computed(() => mergedProps.value.ui?.dayEdgeClass?.({
+  defaults: DATE_PICKER_DEFAULT_PROPS.ui.dayEdgeClass(styleState.value),
+  ...styleState.value,
+}))
+const dayEdgeStyle = computed(() => mergedProps.value.ui?.dayEdgeStyle?.())
+
+const dayNumberWrapperClass = computed(() => mergedProps.value.ui?.dayNumberWrapperClass?.({
+  defaults: DATE_PICKER_DEFAULT_PROPS.ui.dayNumberWrapperClass(),
+}))
+const dayNumberWrapperStyle = computed(() => mergedProps.value.ui?.dayNumberWrapperStyle?.())
+
+const dayEventsClass = computed(() => mergedProps.value.ui?.dayEventsClass?.({
+  defaults: DATE_PICKER_DEFAULT_PROPS.ui.dayEventsClass(),
+}))
+const dayEventsStyle = computed(() => mergedProps.value.ui?.dayEventsStyle?.())
+
+const dayEventsContainerClass = computed(() => mergedProps.value.ui?.dayEventsContainerClass?.({
+  defaults: DATE_PICKER_DEFAULT_PROPS.ui.dayEventsContainerClass(),
+}))
+const dayEventsContainerStyle = computed(() => mergedProps.value.ui?.dayEventsContainerStyle?.())
+
+const dayEventClass = computed(() => mergedProps.value.ui?.dayEventClass?.({
+  defaults: DATE_PICKER_DEFAULT_PROPS.ui.dayEventClass(),
+}))
+const dayEventStyle = computed(() => mergedProps.value.ui?.dayEventStyle?.())
 </script>
 
 <template>
   <div
     class="dp-day"
-    :class="classes"
+    :class="[classes, dayClass]"
+    :style="dayStyle"
   >
     <slot name="day" />
 
@@ -47,13 +96,22 @@ const eventsAdjusted = computed<Pick<DayEvent, 'color' | 'icon'>[]>(() => {
     <div
       v-if="edge && (day.isEdge.start.month || day.isEdge.end.month)"
       class="edge"
+      :class="dayEdgeClass"
+      :style="dayEdgeStyle"
     >
       {{ formatDate(day.dateValue, utc ? 'utcMonthShort' : 'monthShort') }}
     </div>
 
     <!-- Top -->
-    <div flex="~ center">
-      <div class="dayNo">
+    <div
+      :class="dayNumberWrapperClass"
+      :style="dayNumberWrapperStyle"
+    >
+      <div
+        class="dayNo"
+        :class="dayNumberClass"
+        :style="dayNumberStyle"
+      >
         {{ day.dayOfMonth }}
       </div>
     </div>
@@ -61,73 +119,20 @@ const eventsAdjusted = computed<Pick<DayEvent, 'color' | 'icon'>[]>(() => {
     <!-- Events -->
     <div
       v-if="eventsAdjusted.length"
-      flex="~ 1 center"
-      p="x-1 y-2px"
-      overflow="hidden"
+      :class="dayEventsClass"
+      :style="dayEventsStyle"
     >
       <div
-        flex="~ 1 wrap gap-px center"
-        bg="white/20 dark:dark-950/20"
-        rounded="custom"
+        :class="dayEventsContainerClass"
+        :style="dayEventsContainerStyle"
       >
         <div
           v-for="(event, idx) in eventsAdjusted"
           :key="idx"
-          w="3"
-          h="3"
-          :class="[event.color, event.icon || 'i-ic:round-lens']"
-          hover="scale-120"
-          transition="transform-300"
+          :class="[dayEventClass, event.color, event.icon || 'i-ic:round-lens']"
+          :style="dayEventStyle"
         />
       </div>
     </div>
   </div>
 </template>
-
-<style lang="scss" scoped>
-.dp-day {
-  @apply relative flex flex-col justify-center cursor-pointer font-medium select-none rounded-2;
-
-  &:not(.is-disabled):hover {
-    &:not(.is-selected) {
-      @apply bg-slate-100 color-slate-900 dark:bg-true-gray-200/10 dark:color-white;
-    }
-  }
-
-  .dayNo {
-    @apply flex flex-center relative rounded-full font-rem-13 leading-none w-7 h-7;
-  }
-
-  .edge {
-    @apply absolute top-.5 right-1 whitespace-nowrap font-rem-9 color-slate-400 dark:color-true-gray-500 leading-none;
-  }
-
-  &.is-weekend {
-    @apply bg-slate-50 dark:bg-true-gray-200/3;
-  }
-
-  &.is-not-current {
-    @apply color-slate-400 dark:color-true-gray-500;
-  }
-
-  &.is-today .dayNo {
-    @apply rounded-full outline-1 outline-solid outline-primary font-semibold;
-  }
-
-  &.is-selected {
-    @apply color-white dark:color-white bg-primary font-semibold;
-
-    .edge {
-      @apply color-white/70;
-    }
-
-    .dayNo {
-      @apply outline-white;
-    }
-  }
-
-  &.is-disabled {
-    @apply color-true-gray-400 dark:color-true-gray-600 cursor-not-allowed;
-  }
-}
-</style>

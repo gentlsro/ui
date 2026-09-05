@@ -2,12 +2,14 @@
 import type { CSSProperties } from 'vue'
 
 // Types
+import type { IDatePickerProps } from './types/datepicker-props.type'
 import type { DayEvent } from './types/DayEvent.type'
 
 // Models
 import type { Day } from '#layers/utilities/app/models/day.model'
 
 type IProps = {
+  ui?: IDatePickerProps['ui']
   month: string
   days: Day[]
   daysCount: number
@@ -96,6 +98,7 @@ function handleClick(event: MouseEvent) {
             v-for="day in days"
             :key="day.dateString"
             :day="day"
+            :ui
             :is-selected="isSelected(day)"
             :disabled="isDayDisabled(day)"
             :utc

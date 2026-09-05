@@ -167,6 +167,7 @@ defineExpose({ sync })
 
       <div class="date-picker-body">
         <DatePickerCalendar
+          :ui="mergedProps.ui"
           :month="navigationDate.format('YYYY-MM')"
           :days="daysInPeriod"
           :days-count="daysCount"

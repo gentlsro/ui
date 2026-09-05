@@ -1,3 +1,5 @@
+import type { IDatePickerProps } from './datepicker-props.type'
+
 // Types
 import type { Day } from '#layers/utilities/app/models/day.model'
 
@@ -5,6 +7,7 @@ import type { Day } from '#layers/utilities/app/models/day.model'
 import type { DayEvent } from './DayEvent.type'
 
 export type IDatePickerDayProps = {
+  ui?: IDatePickerProps['ui']
   day: Day
   isSelected?: boolean
   isBottomRow?: boolean

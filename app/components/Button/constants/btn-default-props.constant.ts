@@ -1,47 +1,41 @@
 // @unocss-include
 
+import type { IBtnProps } from '../types/btn-props.type'
+
+type ButtonStyleProps = Pick<IBtnProps, 'size' | 'align' | 'noUppercase' | 'noBold' | 'noDim' | 'round' | 'rounded'
+  | 'outlined' | 'stacked' | 'disabled' | 'disableStyle'> & { hasLabel: boolean }
+
 export const BTN_DEFAULT_PROPS = {
   ui: {
-    containerClass(payload: {
-      size: 'xs' | 'xm' | 'sm' | 'md' | 'lg' | 'auto'
-    }) {
-      const { size: sizeProp } = payload
+    containerClass(props: ButtonStyleProps) {
+      const { size: sizeProp = 'md', hasLabel } = props
 
-      const base = 'flex items-center tracking-wide relative cursor-pointer select-none'
+      const base = 'flex items-center tracking-wide relative select-none'
       const webkit = '[-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none]'
-
-      // State modifiers
-      const uppercase = '[&.is-uppercase]:uppercase'
-      const bold = '[&.is-bold]:font-semibold'
-      const dimmed = '[&.is-dimmed]:(opacity-80 hover:opacity-100)'
-      const round = '[&.is-round]:rounded-full'
-      const rounded = '[&.is-rounded]:rounded-custom'
-      const outlined = '[&.is-outlined]:(dark:bg-darker bg-white outline-solid outline-2 outline-current)'
-
-      // Alignment
-      const alignLeft = '[&.is-left]:justify-start'
-      const alignCenter = '[&.is-center]:justify-center'
-      const alignRight = '[&.is-right]:justify-end'
-
-      // Stacked
-      const stacked = '[&.is-stacked]:(flex-col flex-center p-y-1)'
-
-      // Disabled
-      const disabled = '[&.is-disabled]:cursor-not-allowed [&.is-disabled>*]:cursor-not-allowed'
-      const disabledFilled = '[&.is-disabled.is-disabled--filled]:(disabled border-none)'
-      const disabledFlat = '[&.is-disabled.is-disabled--flat]:!opacity-40'
-
-      // No label - remove horizontal padding
-      const noLabel = '[&:not(.has-label)]:p-x-0'
+      const interactive = 'cursor-pointer'
+      const uppercase = 'uppercase'
+      const bold = 'font-semibold'
+      const dimmed = 'opacity-80 hover:opacity-100'
+      const round = 'rounded-full'
+      const rounded = sizeProp === 'xs' ? 'rounded-1.5' : 'rounded-custom'
+      const outlined = 'dark:bg-darker bg-white outline-solid outline-2 outline-current'
+      const alignLeft = 'justify-start'
+      const alignCenter = 'justify-center'
+      const alignRight = 'justify-end'
+      const stacked = 'flex-col flex-center p-y-1'
+      const disabled = 'cursor-not-allowed [&>*]:cursor-not-allowed'
+      const disabledFilled = 'disabled border-none'
+      const disabledFlat = '!opacity-40'
+      const noLabel = 'p-x-0'
 
       // Size variants
       let size = ''
 
-      const xs = 'min-h-6 min-w-6 gap-x-2 p-x-2 [&.is-rounded]:rounded-1.5'
-      const xm = 'min-h-7 min-w-7 gap-x-2 p-x-2'
-      const sm = 'min-h-8 min-w-8 gap-x-2 gap-y-1 p-x-2.5'
-      const md = 'min-h-10 min-w-10 gap-x-2.5 gap-y-1 p-x-3'
-      const lg = 'min-h-12 min-w-12 gap-x-3 gap-y-1.5 p-x-3.5'
+      const xs = `min-h-6 min-w-6 gap-x-2 ${hasLabel ? 'p-x-2' : ''}`
+      const xm = `min-h-7 min-w-7 gap-x-2 ${hasLabel ? 'p-x-2' : ''}`
+      const sm = `min-h-8 min-w-8 gap-x-2 gap-y-1 ${hasLabel ? 'p-x-2.5' : ''}`
+      const md = `min-h-10 min-w-10 gap-x-2.5 gap-y-1 ${hasLabel ? 'p-x-3' : ''}`
+      const lg = `min-h-12 min-w-12 gap-x-3 gap-y-1.5 ${hasLabel ? 'p-x-3.5' : ''}`
       const auto = ''
 
       const sizes = {
@@ -58,6 +52,7 @@ export const BTN_DEFAULT_PROPS = {
       return {
         base,
         webkit,
+        interactive,
         uppercase,
         bold,
         dimmed,
@@ -73,7 +68,26 @@ export const BTN_DEFAULT_PROPS = {
         disabledFlat,
         noLabel,
         sizes,
-        all: `${base} ${webkit} ${uppercase} ${bold} ${dimmed} ${round} ${rounded} ${outlined} ${alignLeft} ${alignCenter} ${alignRight} ${stacked} ${disabled} ${disabledFilled} ${disabledFlat} ${noLabel} ${size}`,
+        all: [
+          base,
+          webkit,
+          size,
+          !props.disabled && interactive,
+          !props.noUppercase && uppercase,
+          !props.noBold && bold,
+          !props.noDim && dimmed,
+          props.round && round,
+          props.rounded && !props.round && rounded,
+          props.outlined && outlined,
+          props.align === 'left' && alignLeft,
+          props.align === 'center' && alignCenter,
+          props.align === 'right' && alignRight,
+          props.stacked && stacked,
+          props.disabled && disabled,
+          props.disabled && props.disableStyle === 'filled' && disabledFilled,
+          props.disabled && props.disableStyle === 'flat' && disabledFlat,
+          !hasLabel && noLabel,
+        ].filter(Boolean).join(' '),
       } as const
     },
 
@@ -112,17 +126,15 @@ export const BTN_DEFAULT_PROPS = {
       } as const
     },
 
-    labelClass(payload: {
-      size: 'xs' | 'xm' | 'sm' | 'md' | 'lg' | 'auto'
-    }) {
-      const { size: sizeProp } = payload
+    labelClass(payload: Pick<ButtonStyleProps, 'size' | 'align'>) {
+      const { size: sizeProp = 'md', align } = payload
 
       const base = 'tracking-wider max-w-full'
 
       // Alignment variants via parent
-      const alignLeft = '[.btn.is-left_&]:text-left'
-      const alignCenter = '[.btn.is-center_&]:text-center'
-      const alignRight = '[.btn.is-right_&]:text-right'
+      const alignLeft = 'text-left'
+      const alignCenter = 'text-center'
+      const alignRight = 'text-right'
 
       // Size variants
       let size = ''
@@ -151,7 +163,7 @@ export const BTN_DEFAULT_PROPS = {
         alignCenter,
         alignRight,
         sizes,
-        all: `${base} ${alignLeft} ${alignCenter} ${alignRight} ${size}`,
+        all: [base, size, align === 'left' && alignLeft, align === 'center' && alignCenter, align === 'right' && alignRight].filter(Boolean).join(' '),
       } as const
     },
 
