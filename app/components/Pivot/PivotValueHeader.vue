@@ -49,7 +49,7 @@ const placedCells = computed(() => {
 
   const rowCount = visibleValueHeaderRows.value.length
   const colCount = visibleValueColumns.value.length
-  const occupied = Array.from({ length: rowCount }, () => Array.from({ length: colCount }, () => false))
+  const occupied = Array.from({ length: rowCount }, () => Array.from({ length: colCount }).fill(false))
   const placed: IPlacedHeaderCell[] = []
 
   visibleValueHeaderRows.value.forEach((headerRow, rowIndex) => {
@@ -112,3 +112,9 @@ const placedCells = computed(() => {
     </div>
   </div>
 </template>
+
+<style scoped lang="scss">
+.pivot-value-header__grid {
+  @apply shrink-0;
+}
+</style>

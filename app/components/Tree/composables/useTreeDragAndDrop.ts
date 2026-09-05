@@ -232,6 +232,11 @@ export function useTreeDragAndDrop<T extends IItem>(config: IConfig<T>) {
   }
 
   function handleDragEnd(drag?: Draggable['drag']) {
+    // Dragdoll cancels queued movement on end; resolve the release position before committing.
+    if (drag?.endEvent?.type === 'end') {
+      handleDragMove(drag.endEvent as PointerSensorMoveEvent)
+    }
+
     clearHoverExpandTimer()
     cancelAnimationFrame(scrollFrame)
 
@@ -342,6 +347,7 @@ export function useTreeDragAndDrop<T extends IItem>(config: IConfig<T>) {
         activeDraggable.value = draggable
         handleDragStart({ item, el })
       },
+      // Dragdoll samples pointer events through its RAF ticker before calling onMove.
       onMove: drag => handleDragMove(drag.moveEvent as PointerSensorMoveEvent),
       onEnd: drag => {
         onEnd?.()

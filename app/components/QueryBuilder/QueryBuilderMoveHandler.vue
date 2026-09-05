@@ -6,7 +6,7 @@
 
 <style scoped lang="scss">
 .query-builder-move-handler {
-  @apply flex flex-center shrink-0;
+  @apply flex flex-center shrink-0 touch-none;
 }
 
 .query-builder-move-handler__icon {

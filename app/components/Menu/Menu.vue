@@ -53,7 +53,10 @@ const {
 
 // Utils
 const { color } = useTheme()
-const { onMoveMouseDown } = useElementMovement({
+const menuHeader = useTemplateRef<{ element: HTMLElement | null }>('menuHeader')
+useElementMovement({
+  moveHandle: () => menuHeader.value?.element,
+  canMove: () => !!isVirtual.value && !!virtualConfig.value?.movable,
   // @ts-expect-error Fuck this
   dimensions: virtualDimensions,
   referenceEl: floatingEl,
@@ -146,14 +149,6 @@ onClickOutside(
   { ignore: props.ignoreClickOutside },
 )
 
-function handleMoveMouseDown(ev: MouseEvent) {
-  if (!isVirtual.value || !virtualConfig?.value?.movable) {
-    return
-  }
-
-  onMoveMouseDown(ev)
-}
-
 defineExpose(menuGetExposed({
   modelHandler,
   isChangeForced,
@@ -238,9 +233,9 @@ const contentStyle = computed(() => {
           :hide
         >
           <MenuHeader
+            ref="menuHeader"
             :ui="mergedProps.ui"
             :hide
-            @mousedown="handleMoveMouseDown"
           >
             <!-- Title -->
             <template

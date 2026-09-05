@@ -13,6 +13,9 @@ type IProps = Pick<IMenuProps, 'ui' | 'noClose'>
 
 const props = defineProps<IProps>()
 
+const element = useTemplateRef<HTMLDivElement>('element')
+defineExpose({ element })
+
 // Store
 const { title, virtualConfig } = useMenuStore()
 
@@ -45,8 +48,9 @@ const titleStyle = computed(() => {
 
 <template>
   <div
+    ref="element"
     class="menu-header"
-    :class="[headerClass, { 'is-movable': isMovable }]"
+    :class="[headerClass, { 'is-movable': isMovable, 'touch-none': isMovable }]"
     :style="headerStyle"
   >
     <!-- Title -->

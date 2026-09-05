@@ -35,6 +35,8 @@ const {
   collapseConfig,
   performance,
   fetchAndSetData,
+  initialize,
+  initialization,
   isFirstFetch,
   visibleData,
   emits,
@@ -53,19 +55,31 @@ syncRef(toRef(mergedProps.value, 'performance'), performance, { direction: 'ltr'
 
 defineExpose(pivotGetExposed())
 
-// Immediate fetch
-const hasLoadData = !!mergedProps.value.loadData?.fnc
-const isImmediate = shouldFetchPivotData({
+// Keep the first-load overlay until both fetching and transformation finish.
+const isInitialLoad = ref(true)
+const fetchOnMount = shouldFetchPivotData({
   data: props.data,
   loadData: mergedProps.value.loadData,
-}, 'setup')
+}, 'mounted')
 
-if (isImmediate) {
-  await fetchAndSetData()
-  isFirstFetch.value = false
-} else if (props.data !== undefined || !hasLoadData) {
-  isFirstFetch.value = false
+async function initializePivot() {
+  try {
+    await initialization
+    if (shouldFetchPivotData({
+      data: props.data,
+      loadData: mergedProps.value.loadData,
+    }, 'setup')) {
+      await fetchAndSetData()
+      await initialize()
+    }
+  } finally {
+    if (!fetchOnMount) {
+      isFirstFetch.value = false
+    }
+  }
 }
+
+const initialLoad = initializePivot()
 
 // Styles - container
 const containerClass = computed(() => {
@@ -84,15 +98,26 @@ const containerStyle = computed(() => {
   }
 })
 
-onMounted(() => {
-  if (shouldFetchPivotData({
-    data: props.data,
-    loadData: mergedProps.value.loadData,
-  }, 'mounted')) {
-    fetchAndSetData()
-      .then(() => isFirstFetch.value = false)
+onMounted(async () => {
+  try {
+    await initialLoad
+    if (fetchOnMount) {
+      await fetchAndSetData()
+      await initialize()
+    }
+    // Keep the SSR overlay until the mounted scrollers have updated their DOM.
+    await nextTick()
+  } finally {
+    isFirstFetch.value = false
+    isInitialLoad.value = false
   }
 })
+
+// SSR and hydration must choose the same content branch. Client navigation can
+// render the shell immediately while initial data is being prepared.
+if (import.meta.server || useNuxtApp().isHydrating) {
+  await initialLoad
+}
 </script>
 
 <template>
@@ -112,11 +137,17 @@ onMounted(() => {
 
     <slot name="content">
       <PivotContent v-if="visibleData.length" />
-      <PivotEmpty v-else />
+      <PivotEmpty v-else-if="!isInitialLoad" />
     </slot>
 
-    <slot name="loading">
-      <PivotLoading :ui="mergedProps.ui" />
+    <slot
+      name="loading"
+      :is-initial-load="isInitialLoad"
+    >
+      <PivotLoading
+        :initial="isInitialLoad"
+        :ui="mergedProps.ui"
+      />
     </slot>
 
     <PivotPerformanceWarning />

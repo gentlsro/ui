@@ -10,6 +10,7 @@ import { usePivotStore } from './stores/pivot.store'
 
 type IProps = {
   row: PivotItem<T>
+  width?: string
   isMeasureColumn?: boolean
 }
 
@@ -33,7 +34,8 @@ const rowHeaderCellClass = computed(() => {
 
 const rowHeaderCellStyle = computed(() => {
   const rowHeaderCellStyle = ui.value?.rowHeaderCellStyle?.()
-  const width = props.row.widthResolved
+  // A resized PivotItem keeps its identity; the scalar prop carries width updates.
+  const width = props.width ?? props.row.widthResolved
 
   return Object.assign({}, rowHeaderCellStyle, { width })
 })

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 import type { NonUndefined } from 'utility-types'
 
 // Types
@@ -7,29 +7,25 @@ import type { IElementMovementProps } from './types/element-movement-props.type'
 // Functions
 import { useElementMovement } from './composables/useElementMovement'
 
-defineProps<IElementMovementProps & {
-  referenceEl?: any
-}>()
-
-// Template
-const el = ref<HTMLElement>()
+defineProps<IElementMovementProps>()
 
 const dimensions = defineModel<NonUndefined<IElementMovementProps['dimensions']>>(
   'dimensions',
   { default: () => ({ x: 0, y: 0, w: 0, h: 0 }) },
 )
 
-const { onMoveMouseDown } = useElementMovement({
+const moveHandle = useTemplateRef<HTMLDivElement>('moveHandle')
+
+useElementMovement({
+  moveHandle,
   dimensions,
-  referenceEl: el.value as unknown as HTMLElement,
 })
 </script>
 
 <template>
   <div
-    ref="el"
-    class="element-movement contents"
-    @mousedown="onMoveMouseDown"
+    ref="moveHandle"
+    class="element-movement contents touch-none"
   >
     <slot />
   </div>

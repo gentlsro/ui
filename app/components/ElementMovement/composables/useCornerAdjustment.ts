@@ -1,4 +1,6 @@
-import type { MaybeElementRef } from '@vueuse/core'
+import { Draggable, PointerSensor } from 'dragdoll'
+
+// @vapor-ready — native handles and scope-owned Dragdoll registration.
 
 // Types
 import type { ICornerResizeProps } from '../types/corner-resize-props.type'
@@ -13,52 +15,16 @@ type CornerStart = {
   originalValue: number
 }
 
-function getMouseFromEvent(event: MouseEvent | TouchEvent): { x: number, y: number } {
-  if (event instanceof MouseEvent) {
-    return { x: event.clientX, y: event.clientY }
-  }
-  return {
-    x: event.touches[0]?.clientX ?? 0,
-    y: event.touches[0]?.clientY ?? 0,
-  }
-}
-
-function disableTextSelection() {
-  if (typeof document === 'undefined') {
-    return
-  }
-  const style = document.body?.style
-  if (!style) {
-    return
-  }
-  style.setProperty('user-select', 'none')
-  style.setProperty('-webkit-user-select', 'none')
-  style.setProperty('-ms-user-select', 'none')
-}
-
-function enableTextSelection() {
-  if (typeof document === 'undefined') {
-    return
-  }
-  const style = document.body?.style
-  if (!style) {
-    return
-  }
-  style.removeProperty('user-select')
-  style.removeProperty('-webkit-user-select')
-  style.removeProperty('-ms-user-select')
-}
-
 export function useCornerAdjustment(payload: {
   corners: Ref<ICornerResizeProps['modelValue']>
-  referenceEl?: MaybeElementRef<any>
+  handles: Readonly<Ref<HTMLElement | null | undefined>>
   limits?: Partial<Record<Corner, CornerLimits>>
   step?: number | null
   inverted?: boolean | Partial<Record<Corner, boolean>>
 }) {
   const {
     corners,
-    referenceEl: _referenceEl,
+    handles,
     limits = {},
     step,
     inverted,
@@ -81,39 +47,73 @@ export function useCornerAdjustment(payload: {
     if (inverted && typeof inverted === 'object') {
       return inverted[corner] === true
     }
+
     return false
   }
 
-  function onCornerMouseDown(corner: Corner, event: MouseEvent | TouchEvent) {
-    const pos = getMouseFromEvent(event)
-
-    if (event instanceof MouseEvent && event.button !== 0) {
+  watch(handles, (element, _, onCleanup) => {
+    if (!element) {
       return
     }
+    let corner: Corner | undefined
+    let previousUserSelect = ''
+    const sensor = new PointerSensor(element, {
+      sourceEvents: 'pointer',
+      cancelOnEscape: true,
+      startPredicate: event => {
+        if (!(event instanceof PointerEvent) || event.button !== 0) {
+          return false
+        }
+        corner = event.target instanceof Element
+          ? event.target.closest<HTMLElement>('[data-adjust-corner]')?.dataset.adjustCorner as Corner | undefined
+          : undefined
+        if (!corner || !(corner in (corners.value ?? {}))) {
+          return false
+        }
+        event.preventDefault()
 
-    const originalValue = (corners.value as Record<Corner, number>)[corner]
+        return true
+      },
+    })
+    const draggable = new Draggable([sensor], {
+      // Vue updates the values; Dragdoll samples pointer movement in RAF.
+      elements: () => [],
+      startPredicate: () => true,
+      onStart: drag => {
+        previousUserSelect = document.body.style.userSelect
+        document.body.style.userSelect = 'none'
+        cornerStart.value = {
+          corner: corner!,
+          startMouse: { x: drag.startEvent.x, y: drag.startEvent.y },
+          originalValue: corners.value?.[corner!] ?? 0,
+        }
+        isAdjusting.value = true
+        activeCorner.value = corner!
+      },
+      onMove: drag => updateCorner(drag.moveEvent),
+      onEnd: drag => {
+        // Commit the release position even when its sampled frame has not run yet.
+        if (drag.endEvent?.type === 'end') {
+          updateCorner(drag.endEvent)
+        }
+        isAdjusting.value = false
+        activeCorner.value = null
+        cornerStart.value = null
+        document.body.style.userSelect = previousUserSelect
+      },
+    })
+    onCleanup(() => {
+      sensor.cancel()
+      draggable.destroy()
+      sensor.destroy()
+    })
+  }, { immediate: true, flush: 'post' })
 
-    cornerStart.value = {
-      corner,
-      startMouse: { x: pos.x, y: pos.y },
-      originalValue,
-    }
-    isAdjusting.value = true
-    activeCorner.value = corner
-    disableTextSelection()
-
-    window.addEventListener('mousemove', onCornerMouseMove)
-    window.addEventListener('mouseup', onCornerMouseUp)
-    window.addEventListener('touchmove', onCornerMouseMove)
-    window.addEventListener('touchend', onCornerMouseUp)
-  }
-
-  function onCornerMouseMove(event: MouseEvent | TouchEvent) {
+  function updateCorner(pos: { x: number, y: number }) {
     if (!isAdjusting.value || !cornerStart.value) {
       return
     }
 
-    const pos = getMouseFromEvent(event)
     const { corner, startMouse, originalValue = 0 } = cornerStart.value
 
     const dx = pos.x - startMouse.x
@@ -175,21 +175,5 @@ export function useCornerAdjustment(payload: {
     }
   }
 
-  function onCornerMouseUp() {
-    isAdjusting.value = false
-    activeCorner.value = null
-    cornerStart.value = null
-    enableTextSelection()
-
-    window.removeEventListener('mousemove', onCornerMouseMove)
-    window.removeEventListener('mouseup', onCornerMouseUp)
-    window.removeEventListener('touchmove', onCornerMouseMove)
-    window.removeEventListener('touchend', onCornerMouseUp)
-  }
-
-  return {
-    isAdjusting,
-    activeCorner,
-    onCornerMouseDown,
-  }
+  return { isAdjusting, activeCorner }
 }

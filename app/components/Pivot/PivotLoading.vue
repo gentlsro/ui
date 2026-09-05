@@ -8,7 +8,7 @@ import { usePivotStore } from './stores/pivot.store'
 // Constants
 import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
 
-type IProps = Pick<IPivotProps, 'ui'>
+type IProps = Pick<IPivotProps, 'ui'> & { initial?: boolean }
 
 const props = defineProps<IProps>()
 
@@ -27,11 +27,13 @@ const loadingClass = computed(() => {
 
 <template>
   <div
-    v-if="isLoading"
+    v-if="initial || isLoading"
     class="pivot-loading"
-    :class="loadingClass"
+    :class="[loadingClass, { 'is-initial': initial }]"
+    role="status"
+    :aria-busy="true"
     :style="loadingStyle"
   >
-    <LoaderBlock size="md" />
+    <LoaderBlock :size="initial ? 'xl' : 'md'" />
   </div>
 </template>

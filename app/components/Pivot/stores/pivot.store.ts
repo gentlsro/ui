@@ -90,8 +90,8 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     const pivotEl = ref<HTMLElement>()
     const rowHeaderEl = ref<HTMLElement>()
     const valueHeaderEl = ref<HTMLElement>()
-    const rowsVirtualScrollEl = ref<{ rerender: (noEmit?: boolean, resetHeights?: boolean) => void }>()
-    const valuesVirtualScrollEl = ref<{ rerender: (noEmit?: boolean, resetHeights?: boolean) => void }>()
+    const rowsVirtualScrollEl = ref<{ element?: HTMLElement | null, rerender: (noEmit?: boolean, resetHeights?: boolean) => void }>()
+    const valuesVirtualScrollEl = ref<{ element?: HTMLElement | null, rerender: (noEmit?: boolean, resetHeights?: boolean) => void }>()
     const rowsWrapperEl = ref<HTMLElement>()
     const isFirstRender = shallowRef(true)
     const isTransforming = ref(false)
@@ -527,10 +527,28 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
           recomputeData()
         }
       },
-      { immediate: true },
     )
 
+    // A paused transform must render its warning so the user can continue it.
+    function initialize() {
+      let stopWarningWatch = () => {}
+      const warning = new Promise<void>(resolve => {
+        stopWarningWatch = watch(performanceWarning, value => {
+          if (value) {
+            resolve()
+          }
+        }, { flush: 'sync' })
+      })
+
+      return Promise.race([recomputeData(), warning])
+        .finally(() => stopWarningWatch())
+    }
+
+    const initialization = initialize()
+
     const returnedData = {
+      initialization,
+      initialize,
       // Configs
       loadData,
       collapseConfig,

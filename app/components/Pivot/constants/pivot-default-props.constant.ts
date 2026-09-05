@@ -132,7 +132,7 @@ export const PIVOT_DEFAULT_PROPS = {
     },
 
     valueHeaderClass() {
-      const base = 'grow min-w-0 overflow-hidden p-r-$scrollbarWidth'
+      const base = 'flex grow min-w-0 overflow-hidden p-r-$scrollbarWidth'
       const bg = 'bg-slate-200 dark:bg-dark-950'
 
       return {

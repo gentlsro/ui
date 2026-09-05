@@ -1,3 +1,5 @@
+import { useRafTask } from '#layers/utilities/app/composables/useRafTask'
+
 import { klona } from 'klona/full'
 
 // Types
@@ -26,16 +28,12 @@ export function usePivotRowResizing<T extends IItem = IItem>() {
     return Number.isFinite(value) ? value : 80
   }
 
-  function getPivotRoot() {
-    return unrefElement(pivotEl) ?? undefined
-  }
-
   function getRowWidthPx(row: (typeof displayRowFields.value)[number]) {
     if (Number.isFinite(row._width) && row._width > 0) {
       return row._width
     }
 
-    return row.getWidthPx(getPivotRoot())
+    return row.getWidthPx(pivotEl.value)
   }
 
   const rowSplitters = computed(() => {
@@ -66,7 +64,7 @@ export function usePivotRowResizing<T extends IItem = IItem>() {
   })
 
   function measureRowWidths() {
-    const root = getPivotRoot()
+    const root = pivotEl.value
 
     if (!root) {
       return
@@ -94,14 +92,14 @@ export function usePivotRowResizing<T extends IItem = IItem>() {
     const rowWidth = getRowWidthPx(row)
     row._width = rowWidth
     const splitterCopy = klona(omit(splitter, ['row']))
-    const headerDom = unrefElement(rowHeaderEl)
+    const headerDom = rowHeaderEl.value
 
     if (!headerDom) {
       return
     }
 
     const { y: headerY, height: headerHeight } = headerDom.getBoundingClientRect()
-    const contentEl = getPivotRoot()?.querySelector('.virtual-scroll__content') as HTMLElement | null
+    const contentEl = pivotEl.value?.querySelector('.virtual-scroll__content') as HTMLElement | null
     const { height: contentHeight } = contentEl?.getBoundingClientRect() ?? { height: 0 }
 
     pageX = ev.pageX
@@ -128,16 +126,23 @@ export function usePivotRowResizing<T extends IItem = IItem>() {
       'pointerup',
       handleSplitterPointerUp,
     )
+    document.documentElement.addEventListener('pointercancel', cancelResize)
   }
 
+  const resizeFrame = useRafTask(updateSplitterPosition)
+
   function handleSplitterPointerMove(ev: PointerEvent) {
+    resizeFrame.schedule(ev.pageX)
+  }
+
+  function updateSplitterPosition(pointerX: number) {
     const current = activeSplitter.value
 
     if (!current) {
       return
     }
 
-    const left = Math.max(current.minLeft, ev.pageX)
+    const left = Math.max(current.minLeft, pointerX)
     const adjustedWidth = current.originalWidth + left - pageX
 
     activeSplitter.value = {
@@ -147,34 +152,40 @@ export function usePivotRowResizing<T extends IItem = IItem>() {
     }
   }
 
+  // Cancellation releases document listeners without committing the pending width.
+  function cancelResize() {
+    resizeFrame.cancel()
+    if (!activeSplitter.value) {
+      return
+    }
+
+    activeSplitter.value = undefined
+    document.documentElement.removeEventListener('pointermove', handleSplitterPointerMove)
+    document.documentElement.removeEventListener('pointerup', handleSplitterPointerUp)
+    document.documentElement.removeEventListener('pointercancel', cancelResize)
+    document.documentElement.style.cursor = ''
+    document.documentElement.style.userSelect = ''
+  }
+
+  onBeforeUnmount(cancelResize)
+  // The owner root can disappear across interop before this header is unmounted.
+  watch(pivotEl, element => {
+    if (!element) {
+      cancelResize()
+    }
+  }, { flush: 'sync' })
+
   function handleSplitterPointerUp() {
+    resizeFrame.flush()
     const current = activeSplitter.value
 
     if (!current) {
       return
     }
 
-    document.documentElement.removeEventListener(
-      'pointermove',
-      handleSplitterPointerMove,
-    )
-    document.documentElement.removeEventListener(
-      'pointerup',
-      handleSplitterPointerUp,
-    )
-
     const row = current.row
-    const adjustedWidth = Math.max(
-      current.adjustedWidth,
-      getMinRowWidth(row),
-    )
-
-    activeSplitter.value = undefined
-
-    nextTick(() => {
-      document.documentElement.style.cursor = ''
-      document.documentElement.style.userSelect = ''
-    })
+    const adjustedWidth = Math.max(current.adjustedWidth, getMinRowWidth(row))
+    cancelResize()
 
     if (!Number.isFinite(adjustedWidth)) {
       return

@@ -512,7 +512,7 @@ const [
   // !SECTION
 
   // SECTION Horizontal scroll syncing
-  const virtualScrollElDom = computed(() => unrefElement(virtualScrollEl.value))
+  const virtualScrollElDom = computed(() => virtualScrollEl.value?.element as HTMLElement | undefined)
 
   const headerX = ref(0)
   const totalsX = ref(0)
@@ -520,8 +520,12 @@ const [
   const isContentVerticallyScrollable = ref(false)
 
   useResizeObserver(virtualScrollElDom, () => {
-    const clientHeight = virtualScrollElDom.value.clientHeight
-    const scrollHeight = virtualScrollElDom.value.scrollHeight
+    const element = virtualScrollElDom.value
+    if (!element) {
+      return
+    }
+
+    const { clientHeight, scrollHeight } = element
 
     isContentVerticallyScrollable.value = clientHeight < scrollHeight
   })

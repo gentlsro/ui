@@ -1,5 +1,5 @@
 <!-- eslint-disable antfu/consistent-list-newline -->
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { Corner } from './types/corner.type'
 import type { ICornerResizeProps } from './types/corner-resize-props.type'
@@ -23,22 +23,15 @@ const corners = defineModel<ICornerResizeProps['modelValue']>({
   }),
 })
 
-const resizeHandlesEl = ref<HTMLElement>()
+const resizeHandlesEl = useTemplateRef<HTMLDivElement>('resizeHandlesEl')
 
-const { onCornerMouseDown } = useCornerAdjustment({
+useCornerAdjustment({
   corners,
-  referenceEl: resizeHandlesEl.value as unknown as HTMLElement,
+  handles: resizeHandlesEl,
   limits: props.limits,
   step: props.step,
   inverted: props.inverted,
 })
-
-function handleMouseDown(payload: {
-  ev: MouseEvent | TouchEvent
-  corner: Corner
-}) {
-  onCornerMouseDown(payload.corner, payload.ev)
-}
 
 // Helper to check if a corner exists in the model
 function hasCorner(corner: Corner): boolean {
@@ -59,17 +52,17 @@ function hasCorner(corner: Corner): boolean {
       <div
         v-if="hasCorner('nw')"
         class="resize-handles__top-left handle cursor-nw-resize"
-        @mousedown.stop.prevent="handleMouseDown({ ev: $event, corner: 'nw' })"
+        data-adjust-corner="nw"
       />
       <div
         v-if="hasCorner('n')"
         class="resize-handles__top-center grow handle cursor-n-resize"
-        @mousedown.stop.prevent="handleMouseDown({ ev: $event, corner: 'n' })"
+        data-adjust-corner="n"
       />
       <div
         v-if="hasCorner('ne')"
         class="resize-handles__top-right handle cursor-ne-resize"
-        @mousedown.stop.prevent="handleMouseDown({ ev: $event, corner: 'ne' })"
+        data-adjust-corner="ne"
       />
     </span>
 
@@ -81,12 +74,12 @@ function hasCorner(corner: Corner): boolean {
       <div
         v-if="hasCorner('w')"
         class="resize-handles__middle-left !h-full handle cursor-w-resize"
-        @mousedown.stop.prevent="handleMouseDown({ ev: $event, corner: 'w' })"
+        data-adjust-corner="w"
       />
       <div
         v-if="hasCorner('e')"
         class="resize-handles__middle-right !h-full handle cursor-e-resize"
-        @mousedown.stop.prevent="handleMouseDown({ ev: $event, corner: 'e' })"
+        data-adjust-corner="e"
       />
     </span>
 
@@ -98,17 +91,17 @@ function hasCorner(corner: Corner): boolean {
       <div
         v-if="hasCorner('sw')"
         class="resize-handles__bottom-left handle cursor-sw-resize"
-        @mousedown.stop.prevent="handleMouseDown({ ev: $event, corner: 'sw' })"
+        data-adjust-corner="sw"
       />
       <div
         v-if="hasCorner('s')"
         class="resize-handles__bottom-center grow handle cursor-s-resize"
-        @mousedown.stop.prevent="handleMouseDown({ ev: $event, corner: 's' })"
+        data-adjust-corner="s"
       />
       <div
         v-if="hasCorner('se')"
         class="resize-handles__bottom-right handle cursor-se-resize"
-        @mousedown.stop.prevent="handleMouseDown({ ev: $event, corner: 'se' })"
+        data-adjust-corner="se"
       />
     </span>
   </div>
@@ -139,7 +132,7 @@ function hasCorner(corner: Corner): boolean {
 }
 
 .handle {
-  @apply w-3 h-3 pointer-events-auto;
+  @apply w-3 h-3 pointer-events-auto touch-none;
 
   &:hover {
     @apply bg-primary/50;

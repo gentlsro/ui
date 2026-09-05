@@ -37,7 +37,7 @@ export function useTableAutoFit() {
       isJustify = !!(ev?.ctrlKey || ev?.metaKey)
     }
 
-    const scope = unrefElement(tableEl.value) ?? document
+    const scope = tableEl.value ?? document
 
     const resizableColumns = visibleColumns.value
       .filter(col => col.resizable && !col.isHelperCol)
@@ -61,7 +61,7 @@ export function useTableAutoFit() {
         return agg
       }, 0)
 
-      const virtualScrollWidth = (unrefElement(virtualScrollEl.value)?.clientWidth ?? 0) - helperColsWidth
+      const virtualScrollWidth = (virtualScrollEl.value?.element?.clientWidth ?? 0) - helperColsWidth
 
       colsTotalWidth = Math.max(colsTotalWidth, virtualScrollWidth)
       const columnWidth = colsTotalWidth / resizableColumns.length
@@ -95,7 +95,7 @@ export function useTableAutoFit() {
         return agg
       }, 0)
 
-      const virtualScrollWidth = (unrefElement(virtualScrollEl.value)?.clientWidth ?? 0) - helperColsWidth
+      const virtualScrollWidth = (virtualScrollEl.value?.element?.clientWidth ?? 0) - helperColsWidth
 
       // If the columns are already wider than the table, we don't do anything
       if (colsTotalWidth > virtualScrollWidth) {

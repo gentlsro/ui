@@ -1,4 +1,6 @@
-import type { MaybeElementRef } from '@vueuse/core'
+import { Draggable, PointerSensor } from 'dragdoll'
+
+// @vapor-ready — callers pass native DOM refs; active gestures are scoped to their owner.
 
 type Corner = 'nw' | 'n' | 'ne' | 'w' | 'e' | 'sw' | 's' | 'se'
 
@@ -22,47 +24,13 @@ type IDimensions = {
   h?: number | null
 }
 
-function getMouseFromEvent(event: MouseEvent | TouchEvent): { x: number, y: number } {
-  if (event instanceof MouseEvent) {
-    return { x: event.clientX, y: event.clientY }
-  }
-
-  return {
-    x: event.touches[0]?.clientX ?? 0,
-    y: event.touches[0]?.clientY ?? 0,
-  }
-}
-
-function disableTextSelection() {
-  if (typeof document === 'undefined') {
-    return
-  }
-  const style = document.body?.style
-  if (!style) {
-    return
-  }
-  style.setProperty('user-select', 'none')
-  style.setProperty('-webkit-user-select', 'none')
-  style.setProperty('-ms-user-select', 'none')
-}
-
-function enableTextSelection() {
-  if (typeof document === 'undefined') {
-    return
-  }
-  const style = document.body?.style
-  if (!style) {
-    return
-  }
-  style.removeProperty('user-select')
-  style.removeProperty('-webkit-user-select')
-  style.removeProperty('-ms-user-select')
-}
-
 export function useElementMovement(payload: {
   constrainToPage?: boolean
   dimensions?: Ref<IDimensions>
-  referenceEl?: MaybeElementRef<any>
+  referenceEl?: MaybeRefOrGetter<HTMLElement | null | undefined>
+  moveHandle?: MaybeRefOrGetter<HTMLElement | null | undefined>
+  resizeHandles?: MaybeRefOrGetter<HTMLElement | null | undefined>
+  canMove?: () => boolean
   limits?: {
     minW?: number
     minH?: number
@@ -84,103 +52,127 @@ export function useElementMovement(payload: {
   const moveStart = ref<MoveStart>({ x: 0, y: 0, originalX: 0, originalY: 0 })
   const resizeStart = ref<ResizeStart | null>(null)
 
-  // Movement
-  function onMoveMouseDown(event: MouseEvent | TouchEvent) {
-    const pos = getMouseFromEvent(event)
+  // The handle can mount later (for example when a Menu opens).
+  watch(
+    () => [toValue(payload.moveHandle), toValue(payload.resizeHandles)] as const,
+    ([moveHandle, resizeHandles], _, onCleanup) => {
+      const registrations: (() => void)[] = []
+      for (const [element, resizing] of [[moveHandle, false], [resizeHandles, true]] as const) {
+        if (!element) {
+          continue
+        }
+        let corner: Corner | undefined
+        let previousUserSelect = ''
+        const sensor = new PointerSensor(element, {
+          sourceEvents: 'pointer',
+          cancelOnEscape: true,
+          startPredicate: event => {
+            if (!(event instanceof PointerEvent) || event.button !== 0) {
+              return false
+            }
+            if (resizing) {
+              corner = event.target instanceof Element
+                ? event.target.closest<HTMLElement>('[data-resize-corner]')?.dataset.resizeCorner as Corner | undefined
+                : undefined
+              if (!corner) {
+                return false
+              }
+            } else if (payload.canMove && !payload.canMove()) {
+              return false
+            }
+            event.preventDefault()
 
-    if (event instanceof MouseEvent && event.button !== 0) {
-      return
-    }
+            return true
+          },
+        })
+        const draggable = new Draggable([sensor], {
+          // Vue owns the geometry; Dragdoll provides pointer lifecycle and RAF sampling.
+          elements: () => [],
+          startPredicate: () => true,
+          onStart: drag => {
+            previousUserSelect = document.body.style.userSelect
+            document.body.style.userSelect = 'none'
+            const pos = drag.startEvent
+            if (resizing && corner) {
+              const rect = toValue(referenceEl)?.getBoundingClientRect()
+              resizeStart.value = {
+                corner,
+                startMouse: { x: pos.x, y: pos.y },
+                original: {
+                  x: rect?.x ?? dimensions.value.x ?? 0,
+                  y: rect?.y ?? dimensions.value.y ?? 0,
+                  w: rect?.width ?? dimensions.value.w ?? 0,
+                  h: rect?.height ?? dimensions.value.h ?? 0,
+                },
+              }
+              isResizing.value = true
+              activeCorner.value = corner
+            } else {
+              moveStart.value = {
+                x: pos.x,
+                y: pos.y,
+                originalX: dimensions.value.x ?? 0,
+                originalY: dimensions.value.y ?? 0,
+              }
+              isMoving.value = true
+            }
+          },
+          onMove: drag => resizing ? updateResize(drag.moveEvent) : updateMove(drag.moveEvent),
+          onEnd: drag => {
+            // The release can arrive before Dragdoll's next sampled frame.
+            if (drag.endEvent?.type === 'end') {
+              if (resizing) {
+                updateResize(drag.endEvent)
+              } else {
+                updateMove(drag.endEvent)
+              }
+            }
+            document.body.style.userSelect = previousUserSelect
+            isMoving.value = false
+            isResizing.value = false
+            activeCorner.value = null
+          },
+        })
+        registrations.push(() => {
+          sensor.cancel()
+          draggable.destroy()
+          sensor.destroy()
+        })
+      }
+      onCleanup(() => registrations.forEach(dispose => dispose()))
+    },
+    { immediate: true, flush: 'post' },
+  )
 
-    moveStart.value = {
-      x: pos.x,
-      y: pos.y,
-      originalX: dimensions.value?.x ?? 0,
-      originalY: dimensions.value?.y ?? 0,
-    }
-    isMoving.value = true
-
-    disableTextSelection()
-
-    window.addEventListener('mousemove', onMoveMouseMove)
-    window.addEventListener('mouseup', onMoveMouseUp)
-    window.addEventListener('touchmove', onMoveMouseMove)
-    window.addEventListener('touchend', onMoveMouseUp)
-  }
-
-  function onMoveMouseMove(event: MouseEvent | TouchEvent) {
+  function updateMove(pos: { x: number, y: number }) {
     if (!isMoving.value) {
       return
     }
 
-    requestAnimationFrame(() => {
-      const pos = getMouseFromEvent(event)
-      const dx = pos.x - moveStart.value.x
-      const dy = pos.y - moveStart.value.y
+    const dx = pos.x - moveStart.value.x
+    const dy = pos.y - moveStart.value.y
 
-      const proposedX = moveStart.value.originalX + dx
-      const proposedY = moveStart.value.originalY + dy
+    const proposedX = moveStart.value.originalX + dx
+    const proposedY = moveStart.value.originalY + dy
 
-      const width = dimensions.value.w ?? 0
-      const height = dimensions.value.h ?? 0
+    const width = dimensions.value.w ?? 0
+    const height = dimensions.value.h ?? 0
 
-      const winWidth = typeof window !== 'undefined' ? window.innerWidth : width
-      const winHeight = typeof window !== 'undefined' ? window.innerHeight : height
+    const winWidth = typeof window !== 'undefined' ? window.innerWidth : width
+    const winHeight = typeof window !== 'undefined' ? window.innerHeight : height
 
-      const maxX = Math.max(0, winWidth - width)
-      const maxY = Math.max(0, winHeight - height)
+    const maxX = Math.max(0, winWidth - width)
+    const maxY = Math.max(0, winHeight - height)
 
-      dimensions.value.x = Math.min(Math.max(0, proposedX), maxX)
-      dimensions.value.y = Math.min(Math.max(0, proposedY), maxY)
-    })
+    dimensions.value.x = Math.min(Math.max(0, proposedX), maxX)
+    dimensions.value.y = Math.min(Math.max(0, proposedY), maxY)
   }
 
-  function onMoveMouseUp() {
-    requestAnimationFrame(() => {
-      isMoving.value = false
-      enableTextSelection()
-    })
-
-    window.removeEventListener('mousemove', onMoveMouseMove)
-    window.removeEventListener('mouseup', onMoveMouseUp)
-    window.removeEventListener('touchmove', onMoveMouseMove)
-    window.removeEventListener('touchend', onMoveMouseUp)
-  }
-
-  // Resizing
-  function onResizeMouseDown(corner: Corner, event: MouseEvent | TouchEvent) {
-    const pos = getMouseFromEvent(event)
-
-    // Use the reference element's current box as original
-    const rect = unrefElement(referenceEl)?.getBoundingClientRect?.()
-    const original = {
-      x: rect?.x ?? dimensions.value.x,
-      y: rect?.y ?? dimensions.value.y,
-      w: rect?.width ?? dimensions.value.w,
-      h: rect?.height ?? dimensions.value.h,
-    }
-
-    resizeStart.value = {
-      corner,
-      startMouse: { x: pos.x, y: pos.y },
-      original,
-    }
-    isResizing.value = true
-    activeCorner.value = corner
-    disableTextSelection()
-
-    window.addEventListener('mousemove', onResizeMouseMove)
-    window.addEventListener('mouseup', onResizeMouseUp)
-    window.addEventListener('touchmove', onResizeMouseMove)
-    window.addEventListener('touchend', onResizeMouseUp)
-  }
-
-  function onResizeMouseMove(event: MouseEvent | TouchEvent) {
+  function updateResize(pos: { x: number, y: number }) {
     if (!isResizing.value || !resizeStart.value) {
       return
     }
 
-    const pos = getMouseFromEvent(event)
     const { original, startMouse, corner } = resizeStart.value
 
     const dx = pos.x - startMouse.x
@@ -301,27 +293,5 @@ export function useElementMovement(payload: {
     dimensions.value.y = newY
   }
 
-  function onResizeMouseUp() {
-    isResizing.value = false
-    activeCorner.value = null
-    enableTextSelection()
-
-    window.removeEventListener('mousemove', onResizeMouseMove)
-    window.removeEventListener('mouseup', onResizeMouseUp)
-    window.removeEventListener('touchmove', onResizeMouseMove)
-    window.removeEventListener('touchend', onResizeMouseUp)
-  }
-
-  return {
-    // State
-    isMoving,
-    isResizing,
-    activeCorner,
-
-    // Movement
-    onMoveMouseDown,
-
-    // Resizing
-    onResizeMouseDown,
-  }
+  return { isMoving, isResizing, activeCorner }
 }

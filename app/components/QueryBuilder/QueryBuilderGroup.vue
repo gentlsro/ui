@@ -26,6 +26,10 @@ const {
   collapsedById,
 } = useQueryBuilderStore()
 
+// Only the previous and current row should redraw when shared drag/hover state changes.
+const isHovered = computed(() => hoveredItem.value === props.item)
+const isDragged = computed(() => draggedItem.value?.row === props.item)
+
 // Layout
 const group = toRef(props, 'item')
 
@@ -120,8 +124,8 @@ const collapseProps = computed(() => {
     ref="element"
     class="qb-row qb-group"
     :class="{
-      'is-hovered': hoveredItem === item,
-      'is-dragged': draggedItem?.row === item,
+      'is-hovered': isHovered,
+      'is-dragged': isDragged,
       'is-base': !level,
       'is-last-child': isLastChild,
       'no-drag': item.isNotDraggable,
@@ -243,7 +247,7 @@ const collapseProps = computed(() => {
     <template v-if="!collapsedById[item.id]">
       <QueryBuilderRow
         v-for="(child, idx) in item.children"
-        :key="child.path"
+        :key="child.id"
         :item="child"
         :parent="item"
         :remove-fnc

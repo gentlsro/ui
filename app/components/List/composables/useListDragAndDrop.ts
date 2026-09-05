@@ -204,6 +204,11 @@ export function useListDragAndDrop(config: IConfig) {
   }
 
   function handleDragEnd(drag?: Draggable['drag']) {
+    // Dragdoll cancels queued movement on end; resolve the release position before committing.
+    if (drag?.endEvent?.type === 'end') {
+      handleDragMove(drag.endEvent as PointerSensorMoveEvent)
+    }
+
     cancelAnimationFrame(moveFrame)
     cancelAnimationFrame(scrollFrame)
     const dragItem = drag?.items[0]
@@ -331,6 +336,7 @@ export function useListDragAndDrop(config: IConfig) {
 
         handleDragStart({ item, el })
       },
+      // Dragdoll samples pointer events through its RAF ticker before calling onMove.
       onMove: drag => handleDragMove(drag.moveEvent as PointerSensorMoveEvent, drag.moveEvent.y - lastY),
       onEnd: drag => {
         containerEl.removeEventListener('scroll', handleScroll)

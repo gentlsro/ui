@@ -1,3 +1,5 @@
+import { useRafTask } from '#layers/utilities/app/composables/useRafTask'
+
 // Store
 import { useQueryBuilderStore } from '../query-builder.store'
 
@@ -9,17 +11,19 @@ export function useQueryBuilderDragAndDrop() {
   // Store
   const {
     queryBuilderEl,
-    queryBuilderElRect,
     draggedItem,
   } = useQueryBuilderStore()
 
-  // const queryBuilderElRect = computed(() =>
-  //   queryBuilderEl.value?.getBoundingClientRect()
-  // )
+  const scrollFrame = useRafTask(handleDragging)
+  function schedulePosition() {
+    if (draggedItem.value) {
+      scrollFrame.schedule(undefined)
+    }
+  }
 
-  const { y: scrollY } = useScroll(queryBuilderEl, {
-    onScroll: () => handleDragging(),
-  })
+  // Fixed coordinates must follow both the inner viewport and scrolling ancestors.
+  useEventListener('scroll', schedulePosition, { capture: true, passive: true })
+  useEventListener('resize', schedulePosition)
 
   function handleDragging() {
     const pos = draggedItem.value?.pos
@@ -35,7 +39,7 @@ export function useQueryBuilderDragAndDrop() {
     // Get all elements from the point where we are dragging the item
     // and get the dragged-over query builder row
     const els = document.elementsFromPoint(posX, posY)
-    const qbRow = els.find(el => el.classList.contains('qb-row')) as HTMLElement
+    const qbRow = els.find(el => el.classList.contains('qb-row') && queryBuilderEl.value?.contains(el)) as HTMLElement
     const qbRowPath = qbRow?.dataset.path
 
     // When no query builder row is found, we don't really do anything
@@ -45,7 +49,7 @@ export function useQueryBuilderDragAndDrop() {
       !qbRow
       || qbRow.classList.contains('no-dragover')
       || qbRowPath === draggedItem.value?.row.path
-      || (qbRowPath?.includes('.') && qbRowPath?.startsWith(draggedItem.value?.row.path || ''))
+      || qbRowPath?.startsWith(`${draggedItem.value?.row.path}.children.`)
     ) {
       return
     }
@@ -61,47 +65,27 @@ export function useQueryBuilderDragAndDrop() {
       width: rowWidth,
     } = qbRow.getBoundingClientRect()
 
-    // const relativePositionX = (posX - rowX) / rowWidth
-    const relativePositionY = (posY - rowY) / rowHeight
+    const isAbove = (posY - rowY) / rowHeight < 0.5
+    const targetY = isAbove
+      ? rowY + (isGroup ? GROUP_ROW_TITLE_HEIGHT : 0)
+      : rowY + rowHeight + (isGroup ? GROUP_ROW_CONTROLS_HEIGHT : 0)
+    const scroller = queryBuilderEl.value!
+    const viewport = scroller.getBoundingClientRect()
+    const viewportLeft = viewport.left + scroller.clientLeft
+    const viewportTop = viewport.top + scroller.clientTop
 
-    // When we hover in top side of the item, we indicate that we want to
-    // drop the dragged item before the hovered item
-    if (relativePositionY < 0.5) {
-      const offset = {
-        x: 0,
-        y: isGroup ? GROUP_ROW_TITLE_HEIGHT : 0,
-      }
-
-      draggedItem.value!.dropIndicatorPos = {
-        x: rowX + offset.x - (queryBuilderElRect.value?.x ?? 0),
-        y: rowY + offset.y + scrollY.value - (queryBuilderElRect.value?.y ?? 0),
-        width: rowWidth,
-      }
-
-      draggedItem.value!.dropDirection = 'above'
+    // A root group can extend beyond the scroller. Keep its marker at the visible edge,
+    // while leaving space for the arrow outside the line and inside the browser viewport.
+    const left = Math.max(rowX, viewportLeft, 20)
+    const right = Math.min(rowX + rowWidth, viewportLeft + scroller.clientWidth, window.innerWidth)
+    const top = Math.max(viewportTop, 12)
+    const bottom = Math.min(viewportTop + scroller.clientHeight - 2, window.innerHeight - 12)
+    draggedItem.value!.dropIndicatorPos = {
+      x: left,
+      y: Math.max(top, Math.min(targetY, bottom)),
+      width: Math.max(0, right - left),
     }
-
-    // When we hover in bottom side of the item, we indicate that we want to
-    // drop the dragged item below the hovered item
-    else {
-      const offset = {
-        x: 0,
-        y: isGroup ? GROUP_ROW_CONTROLS_HEIGHT : 0,
-      }
-
-      draggedItem.value!.dropIndicatorPos = {
-        x: rowX + offset.x - (queryBuilderElRect.value?.x ?? 0),
-        y:
-          rowY
-          + offset.y
-          + scrollY.value
-          + rowHeight
-          - (queryBuilderElRect.value?.y ?? 0),
-        width: rowWidth,
-      }
-
-      draggedItem.value!.dropDirection = 'below'
-    }
+    draggedItem.value!.dropDirection = isAbove ? 'above' : 'below'
 
     draggedItem.value!.newPathIsGroup = isGroup
     draggedItem.value!.newPath = qbRow.dataset.path
@@ -109,6 +93,11 @@ export function useQueryBuilderDragAndDrop() {
 
   whenever(
     () => draggedItem.value?.pos,
-    () => handleDragging(),
+    () => {
+      scrollFrame.cancel()
+      handleDragging()
+    },
+    // The row already batches movement in RAF; resolve the drop before mouseup commits it.
+    { flush: 'sync' },
   )
 }

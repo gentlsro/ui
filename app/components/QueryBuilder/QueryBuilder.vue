@@ -110,7 +110,7 @@ defineExpose({
 
       <QueryBuilderRow
         v-for="item in columnFilters"
-        :key="item.path"
+        :key="item.id"
         :item
         :level
         :editable
@@ -126,7 +126,7 @@ defineExpose({
 
     <QueryBuilderRow
       v-for="item in storeItems"
-      :key="item.path"
+      :key="item.id"
       :item
       :level
       :editable
@@ -134,26 +134,29 @@ defineExpose({
       m="!l-0"
     />
 
-    <!-- Drop indicator -->
-    <div
-      v-if="draggedItem?.dropIndicatorPos"
-      class="drop-indicator"
-      :style="{
-        left: `${draggedItem.dropIndicatorPos.x ?? 0}px`,
-        top: `${draggedItem.dropIndicatorPos.y ?? 0}px`,
-        width: `${draggedItem.dropIndicatorPos.width ?? 0}px`,
-      }"
-    >
+    <!-- Render outside the scroll viewport so the root marker's arrow is not clipped. -->
+    <Teleport to="body">
       <div
-        class="drop-indicator__icon"
-        :class="{
-          'rotate-y-180 -top-3': draggedItem.dropDirection === 'below',
-          'rotate-180 -top-7px': draggedItem.dropDirection === 'above',
+        v-if="draggedItem?.dropIndicatorPos"
+        class="drop-indicator"
+        data-query-builder-drop-indicator
+        :style="{
+          left: `${draggedItem.dropIndicatorPos.x ?? 0}px`,
+          top: `${draggedItem.dropIndicatorPos.y ?? 0}px`,
+          width: `${draggedItem.dropIndicatorPos.width ?? 0}px`,
         }"
       >
-        <div i-tabler:arrow-back />
+        <div
+          class="drop-indicator__icon"
+          :class="{
+            'rotate-y-180 -top-3': draggedItem.dropDirection === 'below',
+            'rotate-180 -top-7px': draggedItem.dropDirection === 'above',
+          }"
+        >
+          <div i-tabler:arrow-back />
+        </div>
       </div>
-    </div>
+    </Teleport>
   </div>
 </template>
 
@@ -163,7 +166,7 @@ defineExpose({
 }
 
 .drop-indicator {
-  @apply absolute h-2px bg-primary w-full rounded-full pointer-events-none z-$zMax;
+  @apply fixed h-2px bg-primary w-full rounded-full pointer-events-none z-$zMax;
 }
 
 .drop-indicator__icon {

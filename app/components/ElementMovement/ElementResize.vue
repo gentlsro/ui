@@ -1,5 +1,6 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 import type { NonUndefined } from 'utility-types'
+import { useElementMovement } from './composables/useElementMovement'
 
 // Types
 import type { IElementMovementProps, IElementResizeHandle } from './types/element-movement-props.type'
@@ -15,11 +16,10 @@ const dimensions = defineModel<NonUndefined<IElementMovementProps['dimensions']>
   'dimensions',
   { default: () => ({ x: 0, y: 0, w: 0, h: 0 }) },
 )
-const resizeHandlesEl = ref<HTMLElement>()
+const resizeHandlesEl = useTemplateRef<HTMLDivElement>('resizeHandlesEl')
 
-const { useElementMovement } = await import('./composables/useElementMovement')
-
-const { onResizeMouseDown } = useElementMovement({
+useElementMovement({
+  resizeHandles: resizeHandlesEl,
   dimensions,
   referenceEl: resizeHandlesEl,
   constrainToPage: props.constrainToPage,
@@ -30,13 +30,6 @@ const { onResizeMouseDown } = useElementMovement({
     maxH: props.limits?.maxH,
   },
 })
-
-function handleMouseDown(payload: {
-  ev: MouseEvent | TouchEvent
-  corner: IElementResizeHandle
-}) {
-  onResizeMouseDown(payload.corner, payload.ev)
-}
 
 function hasHandle(handle: IElementResizeHandle) {
   return (props.handles ?? DEFAULT_HANDLES).includes(handle)
@@ -53,17 +46,17 @@ function hasHandle(handle: IElementResizeHandle) {
       <div
         v-if="hasHandle('nw')"
         class="resize-handles__top-left handle cursor-nw-resize rounded-br-1"
-        @mousedown.stop.prevent="handleMouseDown({ ev: $event, corner: 'nw' })"
+        data-resize-corner="nw"
       />
       <div
         v-if="hasHandle('n')"
         class="resize-handles__top-center grow handle cursor-n-resize rounded-b-1"
-        @mousedown.stop.prevent="handleMouseDown({ ev: $event, corner: 'n' })"
+        data-resize-corner="n"
       />
       <div
         v-if="hasHandle('ne')"
         class="resize-handles__top-right handle cursor-ne-resize rounded-bl-1"
-        @mousedown.stop.prevent="handleMouseDown({ ev: $event, corner: 'ne' })"
+        data-resize-corner="ne"
       />
     </span>
 
@@ -72,12 +65,12 @@ function hasHandle(handle: IElementResizeHandle) {
       <div
         v-if="hasHandle('w')"
         class="resize-handles__middle-left !h-full handle cursor-w-resize rounded-r-1"
-        @mousedown.stop.prevent="handleMouseDown({ ev: $event, corner: 'w' })"
+        data-resize-corner="w"
       />
       <div
         v-if="hasHandle('e')"
         class="resize-handles__middle-right ml-auto !h-full handle cursor-e-resize rounded-l-1"
-        @mousedown.stop.prevent="handleMouseDown({ ev: $event, corner: 'e' })"
+        data-resize-corner="e"
       />
     </span>
 
@@ -86,17 +79,17 @@ function hasHandle(handle: IElementResizeHandle) {
       <div
         v-if="hasHandle('sw')"
         class="resize-handles__bottom-left handle cursor-sw-resize rounded-tr-1"
-        @mousedown.stop.prevent="handleMouseDown({ ev: $event, corner: 'sw' })"
+        data-resize-corner="sw"
       />
       <div
         v-if="hasHandle('s')"
         class="resize-handles__bottom-center grow handle cursor-s-resize rounded-t-1"
-        @mousedown.stop.prevent="handleMouseDown({ ev: $event, corner: 's' })"
+        data-resize-corner="s"
       />
       <div
         v-if="hasHandle('se')"
         class="resize-handles__bottom-right handle cursor-se-resize rounded-tl-1"
-        @mousedown.stop.prevent="handleMouseDown({ ev: $event, corner: 'se' })"
+        data-resize-corner="se"
       />
     </span>
   </div>
@@ -127,7 +120,7 @@ function hasHandle(handle: IElementResizeHandle) {
 }
 
 .handle {
-  @apply w-1 h-1 min-w-1 min-h-1 pointer-events-auto;
+  @apply w-1 h-1 min-w-1 min-h-1 pointer-events-auto touch-none;
 
   &:hover {
     @apply bg-primary/50;

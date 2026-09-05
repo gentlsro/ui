@@ -60,6 +60,10 @@ const {
   getFilterComponentFnc,
 } = useQueryBuilderStore()
 
+// Only the previous and current row should redraw when shared drag/hover state changes.
+const isHovered = computed(() => hoveredItem.value === props.item)
+const isDragged = computed(() => draggedItem.value?.row === props.item)
+
 // Layout
 const fieldInputEl = useTemplateRef('fieldInputEl')
 const comparatorInputEl = useTemplateRef('comparatorInputEl')
@@ -163,8 +167,8 @@ const { validation } = useArk({
     ref="element"
     class="qb-row qb-item"
     :class="{
-      'is-hovered': hoveredItem === item,
-      'is-dragged': draggedItem?.row === item,
+      'is-hovered': isHovered,
+      'is-dragged': isDragged,
       'is-last-child': isLastChild,
       'no-drag': noDraggable || item.isNotDraggable,
       'no-dragover': item.isNotDragOverable,

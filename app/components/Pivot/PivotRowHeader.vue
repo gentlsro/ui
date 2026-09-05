@@ -53,6 +53,7 @@ onMounted(() => {
       v-for="row in displayRowFields"
       :key="String(row.field)"
       :row="row"
+      :width="row.widthResolved"
       :is-measure-column="showMeasureColumn && row.field === PIVOT_MEASURE_ROW_FIELD"
     />
 

@@ -1,3 +1,5 @@
+import { useRafTask } from '#layers/utilities/app/composables/useRafTask'
+
 import { klona } from 'klona/full'
 
 // Types
@@ -14,6 +16,7 @@ export function useTableColumnResizing() {
 
   // Store
   const {
+    tableEl,
     virtualScrollEl,
     autofitConfig,
     rows,
@@ -91,14 +94,15 @@ export function useTableColumnResizing() {
     }
 
     const splitterCopy = klona(omit(splitter, ['column']))
-    const headerDom = unrefElement(headerEl as any) as HTMLElement
+    const headerDom = headerEl.value?.element
+    if (!headerDom) {
+      return
+    }
     const { y: headerY, height: headerHeight } = headerDom.getBoundingClientRect()
 
     // The content can span thousands of offscreen rows. End the guide at the
     // scroll viewport instead, above the table footer.
-    const bodyRect = headerDom.parentElement
-      ?.querySelector('.virtual-scroll')
-      ?.getBoundingClientRect()
+    const bodyRect = virtualScrollEl.value?.element?.getBoundingClientRect()
 
     const guideHeight = bodyRect
       ? Math.max(headerHeight, bodyRect.bottom - headerY)
@@ -128,15 +132,22 @@ export function useTableColumnResizing() {
       'pointerup',
       handleSplitterPointerUp,
     )
+    document.documentElement.addEventListener('pointercancel', cancelResize)
 
     splitterJustClicked.value = true
   }
 
+  const resizeFrame = useRafTask(updateSplitterPosition)
+
   function handleSplitterPointerMove(ev: PointerEvent) {
+    resizeFrame.schedule(ev.pageX)
+  }
+
+  function updateSplitterPosition(pointerX: number) {
     if (activeSplitter.value) {
       activeSplitter.value.left = Math.max(
         activeSplitter.value.minLeft!,
-        ev.pageX,
+        pointerX,
       )
 
       activeSplitter.value.adjustedWidth
@@ -146,8 +157,36 @@ export function useTableColumnResizing() {
     }
   }
 
+  // Cancellation releases document listeners without committing the pending width.
+  function cancelResize() {
+    resizeFrame.cancel()
+    if (!activeSplitter.value) {
+      return
+    }
+
+    activeSplitter.value = undefined
+    document.documentElement.removeEventListener('pointermove', handleSplitterPointerMove)
+    document.documentElement.removeEventListener('pointerup', handleSplitterPointerUp)
+    document.documentElement.removeEventListener('pointercancel', cancelResize)
+    document.documentElement.style.cursor = ''
+    document.documentElement.style.userSelect = ''
+  }
+
+  onBeforeUnmount(cancelResize)
+  // The owner root can disappear across interop before this header is unmounted.
+  watch(tableEl, element => {
+    if (!element) {
+      cancelResize()
+    }
+  }, { flush: 'sync' })
+
   function handleSplitterPointerUp() {
-    const col = activeSplitter.value!.column
+    resizeFrame.flush()
+    if (!activeSplitter.value) {
+      return
+    }
+
+    const col = activeSplitter.value.column
     const colIdx = visibleColumns.value.findIndex(c => c.field === col.field)
 
     const diff
@@ -184,21 +223,9 @@ export function useTableColumnResizing() {
 
     // Reset the active splitter
     const width = activeSplitter.value!.adjustedWidth
-    activeSplitter.value = undefined
-
-    document.documentElement.removeEventListener(
-      'pointermove',
-      handleSplitterPointerMove,
-    )
-    document.documentElement.removeEventListener(
-      'pointerup',
-      handleSplitterPointerUp,
-    )
+    cancelResize()
 
     nextTick(() => {
-      document.documentElement.style.cursor = ''
-      document.documentElement.style.userSelect = ''
-
       // Trigger the reactivity on columns
       internalColumns.value = [...internalColumns.value]
 

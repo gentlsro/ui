@@ -86,6 +86,7 @@ const arrowStyle = computed(() => {
 })
 
 defineExpose({
+  element: scrollEl,
   scroll: (left: number, diff?: boolean) => {
     if (diff) {
       x.value = x.value + left
