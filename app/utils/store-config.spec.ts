@@ -22,7 +22,7 @@ const cases = [
 ]
 
 describe('parent-owned store configuration', () => {
-  it.each(cases)('$name follows parent changes and restores defaults without update events', async entry => {
+  it.each(cases)('$name follows parent changes and restores defaults without configuration update events', async entry => {
     let store: Record<string, { value: unknown }>
     const propNames = [...Object.keys(entry.changed), 'modelValue', 'search', 'selection', 'meta', 'isEditing', 'errors', 'addedItems', 'options', 'config', 'data', 'items', 'virtualDimensions']
     const owner = defineComponent({
@@ -52,7 +52,9 @@ describe('parent-owned store configuration', () => {
       }
       await wrapper.setProps(Object.fromEntries(Object.keys(entry.changed).map(key => [key, undefined])))
       expect(keys.map(([, field]) => store![field].value)).toEqual(defaults)
-      expect(Object.keys(wrapper.emitted()).filter(event => event.startsWith('update:'))).toEqual([])
+      // Tree also publishes derived metadata; only configuration remains parent-owned.
+      const configurationEvents = Object.keys(entry.changed).map(key => `update:${key}`)
+      expect(Object.keys(wrapper.emitted()).filter(event => configurationEvents.includes(event))).toEqual([])
     } finally {
       wrapper.unmount()
     }

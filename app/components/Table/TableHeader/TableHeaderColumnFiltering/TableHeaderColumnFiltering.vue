@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { VNode } from 'vue'
 import { ComparatorEnum } from '$comparatorEnum'
 
 // Types
@@ -14,6 +13,8 @@ import { getAvailableComparators } from '../../functions/get-available-comparato
 // Store
 import { useTableStore } from '../../stores/table.store'
 
+const props = defineProps<IProps>()
+
 // Constants
 const BOOLEANISH_COMPARATORS = getBooleanishComparators()
 
@@ -23,19 +24,43 @@ type IProps = {
   removeFnc?: (filter: ITableFilterItem) => void
 }
 
-const props = defineProps<IProps>()
-
 // Store
 const { internalColumns } = useTableStore()
 
 // Layout
 const isMounted = ref(false)
-const filteringItemEl = useTemplateRef('filteringItemEl')
+const filteringItems = new Map<string, { focus?: () => void }>()
+function setFilteringItem(id: string, target: unknown) {
+  if (target && typeof target === 'object' && 'focus' in target) {
+    filteringItems.set(id, target as { focus?: () => void })
+  } else {
+    filteringItems.delete(id)
+  }
+}
+
+onBeforeUnmount(() => {
+  isMounted.value = false
+  filteringItems.clear()
+})
 const column = toRef(props, 'column')
 
 const interactiveFilters = computed(() => {
   return column.value.filters.filter(filter => !filter.nonInteractive)
 })
+
+// Keyed refs avoid relying on ref-array order after adding/removing filters.
+watch(() => interactiveFilters.value.map(filter => filter.id), async (ids, previousIds) => {
+  if (!isMounted.value) {
+    return
+  }
+
+  const added = ids.find(id => !previousIds.includes(id))
+  await nextTick()
+
+  if (added && isMounted.value) {
+    filteringItems.get(added)?.focus?.()
+  }
+}, { flush: 'post' })
 
 const hasUnusedComparator = computed(() => {
   const availableComparators = getAvailableComparators(column.value.dataType, {
@@ -95,22 +120,13 @@ function handleClearFilter() {
   col?.clearFilters()
 }
 
-function handleMountedFilteringItem(node: VNode) {
-  if (isMounted.value) {
-    node.component?.exposed?.focus?.()
-  }
-}
-
-watchOnce(isMounted, () => {
+onMounted(() => {
+  isMounted.value = true
   // We automatically add the first filter when the column has no filters
   if (!interactiveFilters.value.length) {
     handleAddFilter()
-  }
-
-  // Or, in case we only have 1 filter, we focus it
-  else if (column.value.filters.length === 1) {
-    const el = filteringItemEl.value?.[0]
-    el?.focus()
+  } else if (interactiveFilters.value.length === 1) {
+    filteringItems.get(interactiveFilters.value[0]!.id)?.focus?.()
   }
 })
 </script>
@@ -118,7 +134,6 @@ watchOnce(isMounted, () => {
 <template>
   <div
     class="filtering"
-    @vue:mounted="isMounted = true"
   >
     <!-- Title -->
     <div class="filtering__title">
@@ -139,12 +154,11 @@ watchOnce(isMounted, () => {
     <div class="filtering__content">
       <TableHeaderColumnFilteringItem
         v-for="item in interactiveFilters"
-        ref="filteringItemEl"
+        :ref="target => setFilteringItem(item.id, target)"
         :key="item.id"
         :item
         :column
         :modify-fnc
-        @vue:mounted="handleMountedFilteringItem"
         @remove:item="handleRemoveFilter(item)"
       />
     </div>

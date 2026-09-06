@@ -1,7 +1,6 @@
 import type { Ref } from 'vue'
-import { useIMask } from 'vue-imask'
-import { createMask, Masked } from 'imask'
-import { computed, shallowRef, toRaw, watch } from 'vue'
+import IMask, { createMask, Masked } from 'imask'
+import { computed, onScopeDispose, shallowRef, toRaw, watch } from 'vue'
 import type { FactoryOpts, InputMask } from 'imask'
 
 type InputMaskOptions = {
@@ -12,7 +11,7 @@ type InputMaskOptions = {
   onComplete?: (event?: InputEvent) => void
 }
 
-/** SSR formatting and programmatic writes share IMask's typed-value semantics. */
+/** @vapor-ready DOM refs and effect scopes own the mask in either renderer. */
 export function useInputMask(maskRef: Ref<FactoryOpts>, options: InputMaskOptions) {
   // createMask(existingInstance) returns that instance. Wrap it in options to
   // create an owned copy, including when a caller shares a mask across inputs.
@@ -22,36 +21,21 @@ export function useInputMask(maskRef: Ref<FactoryOpts>, options: InputMaskOption
     return { mask: createMask(source instanceof Masked ? { mask: source } : source) }
   })
 
-  // Own option updates so replacement and typed-value restoration happen
-  // together, before any application accept/complete handlers can run.
-  const bindingOptions = shallowRef({ ...maskOptions.value })
+  const binding = {
+    el: shallowRef<HTMLInputElement | HTMLTextAreaElement>(),
+    mask: shallowRef<InputMask<FactoryOpts>>(),
+    masked: shallowRef(''),
+    unmasked: shallowRef(''),
+    typed: shallowRef<any>(),
+  }
   let reformatting = false
-  const binding = useIMask<HTMLInputElement | HTMLTextAreaElement, FactoryOpts>(bindingOptions, {
-    onAccept: event => {
-      if (!reformatting) {
-        options.onAccept?.(event)
-      }
-    },
-    onComplete: event => {
-      if (!reformatting) {
-        options.onComplete?.(event)
-      }
-    },
-  })
 
   let headless = createMask({ mask: maskOptions.value.mask })
-
-  function getLiveMask() {
-    // toRaw removes vue-imask's readonly proxy at runtime, but Vue retains
-    // the readonly type. Keep the mutable instance private to this adapter.
-    return toRaw(binding.mask.value) as InputMask<FactoryOpts> | undefined
-  }
 
   function publishHeadless() {
     binding.masked.value = headless.value
     binding.unmasked.value = headless.unmaskedValue
-    // Leave the typed default unset for empty masks: useIMask applies seeded
-    // typed refs on mount, and a numeric empty mask parses as zero.
+    // A numeric empty mask parses as zero; preserve its empty display.
     binding.typed.value = headless.unmaskedValue === '' ? undefined : headless.typedValue
   }
 
@@ -66,7 +50,7 @@ export function useInputMask(maskRef: Ref<FactoryOpts>, options: InputMaskOption
       return
     }
 
-    const live = getLiveMask()
+    const live = binding.mask.value
     if (live) {
       // Bypass ref equality: an empty number mask and a displayed zero both
       // have typedValue 0. IMask's setter understands the distinction.
@@ -78,7 +62,7 @@ export function useInputMask(maskRef: Ref<FactoryOpts>, options: InputMaskOption
   }
 
   function setUnmaskedValue(value: string) {
-    const live = getLiveMask()
+    const live = binding.mask.value
     if (live) {
       live.unmaskedValue = value
     } else {
@@ -88,7 +72,7 @@ export function useInputMask(maskRef: Ref<FactoryOpts>, options: InputMaskOption
   }
 
   function setMaskedValue(value: string) {
-    const live = getLiveMask()
+    const live = binding.mask.value
     if (live) {
       live.value = value
     } else {
@@ -99,15 +83,61 @@ export function useInputMask(maskRef: Ref<FactoryOpts>, options: InputMaskOption
 
   setTypedValue(options.initialValue)
 
+  function publishLive() {
+    const live = binding.mask.value
+    if (!live) {
+      return
+    }
+
+    binding.masked.value = live.value
+    binding.unmasked.value = live.unmaskedValue
+    binding.typed.value = live.typedValue
+  }
+
+  function destroy() {
+    const live = binding.mask.value
+    if (!live) {
+      return
+    }
+
+    // Keep edits while the DOM ref is absent so the same owner can remount.
+    headless = createMask({ mask: maskOptions.value.mask })
+    headless.value = live.value
+    live.destroy()
+    binding.mask.value = undefined
+    publishHeadless()
+  }
+
+  watch(binding.el, element => {
+    destroy()
+    if (!element) {
+      return
+    }
+
+    const live = IMask(element, maskOptions.value)
+    live.value = binding.masked.value
+    binding.mask.value = live
+    publishLive()
+    live.on('accept', event => {
+      publishLive()
+      if (!reformatting) {
+        options.onAccept?.(event)
+      }
+    })
+    live.on('complete', event => {
+      if (!reformatting) {
+        options.onComplete?.(event)
+      }
+    })
+  }, { flush: 'post' })
+  onScopeDispose(destroy)
+
   watch(maskOptions, nextOptions => {
-    const live = getLiveMask()
+    const live = binding.mask.value
     const preserve = !!options.getReformatValue
     const value = preserve ? options.getReformatValue!() : binding.typed.value
     const empty = preserve ? options.isEmptyValue(value) : binding.unmasked.value === ''
 
-    // Keep mount/remount options current without scheduling vue-imask's own
-    // update watcher. This shallow ref's object is deliberately not reactive.
-    bindingOptions.value.mask = nextOptions.mask
     reformatting = preserve
     try {
       if (live) {
@@ -139,7 +169,7 @@ export function useInputMask(maskRef: Ref<FactoryOpts>, options: InputMaskOption
 
   return {
     el: binding.el,
-    mask: binding.mask,
+    mask: computed(() => binding.mask.value),
     // Writable computed refs preserve the callback API without losing writes
     // of equal typed values. All setters go through the same adapter.
     typed: computed({ get: () => binding.typed.value, set: setTypedValue }),

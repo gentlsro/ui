@@ -1,5 +1,4 @@
 <script setup lang="ts" generic="T extends IItem = IItem">
-import type { VNode } from 'vue'
 import { ComparatorEnum } from '$comparatorEnum'
 
 // Types
@@ -28,13 +27,40 @@ const props = defineProps<IProps>()
 const { syncPivotItemFilters } = usePivotStore<T>()
 
 const isMounted = ref(false)
-const filteringItemEl = useTemplateRef('filteringItemEl')
+const filteringItems = new Map<string, { focus?: () => void }>()
+
+function setFilteringItem(id: string, target: unknown) {
+  if (target && typeof target === 'object' && 'focus' in target) {
+    filteringItems.set(id, target as { focus?: () => void })
+  } else {
+    filteringItems.delete(id)
+  }
+}
+
+onBeforeUnmount(() => {
+  isMounted.value = false
+  filteringItems.clear()
+})
+
 const item = toRef(props, 'item')
 const columnCopy = shallowRef(pivotItemToTableColumn(item.value))
 
 const interactiveFilters = computed(() => {
   return columnCopy.value.filters.filter(filter => !filter.nonInteractive)
 })
+
+// Keyed refs avoid relying on ref-array order after adding/removing filters.
+watch(() => interactiveFilters.value.map(filter => filter.id), async (ids, previousIds) => {
+  if (!isMounted.value) {
+    return
+  }
+  const added = ids.find(id => !previousIds.includes(id))
+  await nextTick()
+
+  if (added && isMounted.value) {
+    filteringItems.get(added)?.focus?.()
+  }
+}, { flush: 'post' })
 
 const hasUnusedComparator = computed(() => {
   const availableComparators = getAvailableComparators(columnCopy.value.dataType, {
@@ -106,12 +132,6 @@ function handleClearFilter() {
   syncFilters()
 }
 
-function handleMountedFilteringItem(node: VNode) {
-  if (isMounted.value) {
-    node.component?.exposed?.focus?.()
-  }
-}
-
 let timeout: ReturnType<typeof setTimeout> | undefined
 
 function modifyFnc(_filter: ITableFilterItem<T>, debounceMs?: number) {
@@ -150,11 +170,12 @@ watch(item, () => {
   refreshColumnCopy()
 }, { deep: true })
 
-watchOnce(isMounted, () => {
+onMounted(() => {
+  isMounted.value = true
   if (!columnCopy.value.filters.length) {
     handleAddFilter()
-  } else if (columnCopy.value.filters.length === 1) {
-    filteringItemEl.value?.[0]?.focus?.()
+  } else if (interactiveFilters.value.length === 1) {
+    filteringItems.get(interactiveFilters.value[0]!.id)?.focus?.()
   }
 })
 
@@ -168,7 +189,6 @@ defineExpose({
 <template>
   <div
     class="pivot-filter-menu"
-    @vue:mounted="isMounted = true"
   >
     <div class="pivot-filter-menu__title">
       <span class="pivot-filter-menu__title-label">
@@ -186,14 +206,13 @@ defineExpose({
     <div class="pivot-filter-menu__content">
       <template
         v-for="(filterItem, index) in interactiveFilters"
-        :key="index"
+        :key="filterItem.id"
       >
         <PivotFilterMenuItem
-          ref="filteringItemEl"
+          :ref="target => setFilteringItem(filterItem.id, target)"
           :item="filterItem"
           :column="columnCopy"
           :modify-fnc="modifyFnc"
-          @vue:mounted="handleMountedFilteringItem"
           @remove:item="handleRemoveFilter(filterItem)"
         />
 

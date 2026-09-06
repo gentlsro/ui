@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 import type { Required } from 'utility-types'
 
 // Constants
@@ -20,7 +20,9 @@ defineEmits<{
 
 // Utils
 const { formatBytes } = useNumber()
-const { createDialog } = useDialog()
+
+// Layout
+const isPreviewOpen = ref(false)
 
 const icon = computed(() => {
   const icon = ICON_BY_FILE_TYPE[props.file.type as keyof typeof ICON_BY_FILE_TYPE]
@@ -80,21 +82,6 @@ const downloadUrl = computedAsync(async () => {
     { returnUrlOnly: true },
   )
 })
-
-function handleImageClick(url: string) {
-  createDialog({ class: '!w-auto !h-auto' }, {
-    children: {
-      default: () => {
-        return h('img', {
-          src: url,
-          width: 'auto',
-          height: 'auto',
-          class: 'w-auto h-auto',
-        })
-      },
-    },
-  })
-}
 </script>
 
 <template>
@@ -149,11 +136,8 @@ function handleImageClick(url: string) {
         v-if="imageUrl"
         :src="imageUrl"
         :alt="file.name"
-        max-w="60"
-        aspect-ratio="16/9"
-        cursor="pointer"
-        object="contain"
-        @click.stop.prevent="handleImageClick(imageUrl)"
+        class="file-preview__thumbnail"
+        @click.stop.prevent="isPreviewOpen = true"
         @mousedown.stop.prevent
       >
 
@@ -240,6 +224,24 @@ function handleImageClick(url: string) {
         <div class="i-ph:eye-bold font-rem-24" />
       </div>
     </div>
+
+    <!-- Image preview dialog -->
+    <Dialog
+      v-model="isPreviewOpen"
+      manual
+      :ui="{
+        wrapperStyle: () => ({ alignItems: 'center', justifyContent: 'center' }),
+        dialogStyle: () => ({ width: 'auto', height: 'auto' }),
+      }"
+    >
+      <img
+        v-if="imageUrl"
+        :src="imageUrl"
+        :alt="file.name"
+        w="auto"
+        h="auto"
+      >
+    </Dialog>
   </div>
 </template>
 
@@ -269,6 +271,10 @@ function handleImageClick(url: string) {
     img {
       @apply rounded-3 object-cover object-center;
     }
+  }
+
+  &__thumbnail {
+    @apply max-w-60 aspect-ratio-16/9 cursor-pointer object-contain;
   }
 
   &__video {

@@ -1,6 +1,11 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
+import { mergeProps } from 'vue'
+
 // Types
+import type { ISearchInputExpose } from './types/search-input-expose.type'
 import type { ITextInputProps } from './types/text-input-props.type'
+
+defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(defineProps<ITextInputProps>(), {
   ...getComponentProps('searchInput'),
@@ -21,34 +26,36 @@ const mergedProps = computed(() => {
 
 // Layout
 const searchEl = useTemplateRef('searchEl')
-const model = ref<ITextInputProps['modelValue']>(props.modelValue)
+const model = defineModel<ITextInputProps['modelValue']>()
 
 defineExpose({
   clear: (shouldFocusAfterClear?: boolean) => searchEl.value?.clear(shouldFocusAfterClear),
   focus: () => searchEl.value?.focus(),
   blur: () => searchEl.value?.blur(),
   select: () => searchEl.value?.select(),
-})
+} satisfies ISearchInputExpose)
 </script>
 
 <template>
   <TextInput
     ref="searchEl"
-    v-bind="$props"
+    v-bind="mergeProps($props, $attrs)"
     v-model="model"
     class="control"
     name="_search"
     :ui="mergedProps.ui"
     :placeholder="placeholder || $t('general.search')"
     clearable
-    @update:model-value="$emit('update:modelValue', $event)"
     @blur="$emit('blur', $event)"
     @focus="$emit('focus')"
     @clear="$emit('clear')"
     @enter="$emit('enter', $event)"
   >
-    <template #prepend>
-      <slot name="prepend" />
+    <template #prepend="slotProps">
+      <slot
+        name="prepend"
+        v-bind="slotProps"
+      />
       <div
         v-if="!$slots.prepend"
         i-carbon:search
@@ -59,11 +66,11 @@ defineExpose({
 
     <template
       v-if="$slots.append"
-      #append="{ clear }"
+      #append="slotProps"
     >
       <slot
         name="append"
-        :clear
+        v-bind="slotProps"
       />
     </template>
 

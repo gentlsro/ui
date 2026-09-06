@@ -67,6 +67,9 @@ function handleItemSelection(item: any) {
 
 function handleHeightChange(height: number) {
   const listDom = listEl.value?.element
+  const contentDom = listDom?.querySelector<HTMLElement>('.list-content')
+  // The scroller reports its inner content size without the viewport padding.
+  const contentPadding = contentDom ? getElementSize(contentDom).padding.vertical : 0
   const nonContentEls = Array.from(listDom?.children ?? [])
     .filter(el => !el.classList.contains('list-content')) as HTMLElement[]
 
@@ -77,6 +80,7 @@ function handleHeightChange(height: number) {
   }, 0)
 
   contentHeight.value = Math.ceil(height
+    + contentPadding
     + nonContentHeight
     + 3) // It should technically be 2 (because of border top and bottom), but somehow that creates an overflow...
 }

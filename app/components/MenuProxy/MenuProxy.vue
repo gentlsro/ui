@@ -1,8 +1,9 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
+import { mergeProps } from 'vue'
 import type { Placement } from '@floating-ui/dom'
 
 // Types
-import type { IMenuProxyProps } from './types/menu-proxy-props.type'
+import type { IMenuProxyExpose, IMenuProxyProps } from './types/menu-proxy-props.type'
 
 // Constants
 import { $bp } from '../../constants/breakpoints'
@@ -10,6 +11,8 @@ import { $bp } from '../../constants/breakpoints'
 // Components
 import Menu from '../Menu/Menu.vue'
 import Dialog from '../Dialog/Dialog.vue'
+
+defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(defineProps<IMenuProxyProps>(), {
   ...getComponentProps('menuProxy'),
@@ -59,23 +62,18 @@ defineExpose({
     }
   },
   getFloatingEl: () => menuProxyEl.value?.getFloatingEl(),
-})
-
-// NOTE: The `v-model:no-overlay` should not really use the `v-model` part
-// but the order of props is important and eslint would try to auto-fix this for us
-// so this is a workaround to avoid that
+} satisfies IMenuProxyExpose)
 </script>
 
 <template>
   <Component
     :is="isMenu ? Menu : Dialog"
     ref="menuProxyEl"
-    v-bind="$props"
+    v-bind="mergeProps($props, $attrs)"
     v-model="model"
     v-model:virtual-dimensions="virtualDimensions"
     :ui="mergedProps.ui"
     :no-overlay
-    h="auto"
     @hide="emits('hide')"
     @show="emits('show')"
     @before-hide="emits('beforeHide')"
@@ -85,9 +83,12 @@ defineExpose({
   >
     <template
       v-if="$slots.title"
-      #title
+      #title="slotProps"
     >
-      <slot name="title" />
+      <slot
+        name="title"
+        v-bind="slotProps"
+      />
     </template>
 
     <template
@@ -104,7 +105,10 @@ defineExpose({
       <slot :hide="hide" />
     </template>
 
-    <template #header-right>
+    <template
+      v-if="$slots['header-right']"
+      #header-right
+    >
       <slot name="header-right" />
     </template>
   </Component>

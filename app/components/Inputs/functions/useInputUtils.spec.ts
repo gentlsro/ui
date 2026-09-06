@@ -198,7 +198,8 @@ describe('input mask synchronization', () => {
     input.handleFocusOrClick(new Event('click'))
     input.handleBlur(new FocusEvent('blur'))
     input.clear()
-    await vi.runAllTimersAsync()
+    // Flush this input's pending work without draining unrelated RAF tickers.
+    await vi.advanceTimersByTimeAsync(0)
     expect(wrapper.emitted('focus')).toEqual([[]])
     expect(wrapper.emitted('blur')?.[0]?.[0]).toBeInstanceOf(FocusEvent)
     expect(wrapper.emitted('clear')).toEqual([[]])
@@ -655,12 +656,13 @@ describe('date picker views', () => {
     expect(wrapper.find('[data-date="2036-06-20"]').exists()).toBe(true)
   })
 
-  it('pages years in groups of twelve without changing the selected date', async () => {
+  it('pages years in groups of twenty-four without changing the selected date', async () => {
     const wrapper = picker()
     await wrapper.get('[data-picker-years]').trigger('click')
+    expect(wrapper.findAll('[data-picker-year]')).toHaveLength(24)
     const first = Number(wrapper.get('[data-picker-year]').attributes('data-picker-year'))
     await wrapper.get('[data-picker-next]').trigger('click')
-    expect(Number(wrapper.get('[data-picker-year]').attributes('data-picker-year'))).toBe(first + 12)
+    expect(Number(wrapper.get('[data-picker-year]').attributes('data-picker-year'))).toBe(first + 24)
     await wrapper.get('[data-picker-previous]').trigger('click')
     expect(Number(wrapper.get('[data-picker-year]').attributes('data-picker-year'))).toBe(first)
     expect(wrapper.emitted('update:modelValue')).toBeUndefined()

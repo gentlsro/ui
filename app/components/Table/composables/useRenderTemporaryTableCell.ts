@@ -1,4 +1,5 @@
 // @unocss-include
+// VDOM-only measurement: slotRenderFnc must return VNodes, not native Vapor slots.
 
 import type { ITableProps } from '../types/table-props.type'
 
@@ -54,113 +55,110 @@ export function useRenderTemporaryTableCell() {
     const { row, col, slotRenderFnc, ui } = payload
 
     let maxContentWidth = 0
-    let cleanup: () => void = () => {}
+    let cleanup: ReturnType<typeof setTempComponent> | undefined
 
-    const value = col.valueGetter(row)
-    const formattedValue = formatValue(value, row, {
-      format: col.format,
-      dataType: col.dataType,
-    })
-
-    // @ts-expect-error
-    const { cellInnerClass, cellInnerStyle, cellClass, cellStyle } = ui ?? getComponentProps('table').ui?.() ?? {}
-
-    const _cellClass = [cellClass, 'flex', 'items-center']
-
-    // NOTE - When using a slot, we need to render the component that is being
-    //        used in the slot, so we can get the actual width of the cell
-    if (slotRenderFnc) {
-      const vnode = slotRenderFnc({
-        row,
-        index: 0,
-        refreshDataFnc: () => {},
+    try {
+      const value = col.valueGetter(row)
+      const formattedValue = formatValue(value, row, {
+        format: col.format,
+        dataType: col.dataType,
       })
 
-      cleanup = setTempComponent(
-        () => h(
-          'div',
-          { style: cellStyle, class: _cellClass },
-          [vnode],
-        ),
-      )
-      await nextTick()
+      // @ts-expect-error
+      const { cellInnerClass, cellInnerStyle, cellClass, cellStyle } = ui ?? getComponentProps('table').ui?.() ?? {}
 
-      const tempComponentDom = document.querySelector('#tempComponent')
-      maxContentWidth = tempComponentDom?.getBoundingClientRect().width || 0
+      const _cellClass = [cellClass, 'flex', 'items-center']
+
+      // NOTE - When using a slot, we need to render the component that is being
+      //        used in the slot, so we can get the actual width of the cell
+      if (slotRenderFnc) {
+        const vnode = slotRenderFnc({
+          row,
+          index: 0,
+          refreshDataFnc: () => {},
+        })
+
+        cleanup = setTempComponent(
+          () => h(
+            'div',
+            { style: cellStyle, class: _cellClass },
+            [vnode],
+          ),
+        )
+        await nextTick()
+
+        maxContentWidth = cleanup.element?.getBoundingClientRect().width || 0
+      } else {
+        cleanup = setTempComponent(() => {
+          return col.dataType === 'boolean'
+            ? h(
+                Checkbox,
+                { size: 'sm', modelValue: value, label: formattedValue },
+              )
+            : h(
+                'div',
+                { style: cellStyle, class: _cellClass },
+                [h('span', { class: cellInnerClass, style: cellInnerStyle }, [formattedValue])],
+              )
+        },
+        )
+        await nextTick()
+
+        maxContentWidth = cleanup.element?.getBoundingClientRect().width || 0
+      }
+
+      return maxContentWidth
+    } finally {
+      cleanup?.()
     }
-
-    // NOTE - When not using a slot, we just use the TableCell to render the
-    //        cell, and get the width of the cell
-    else {
-      cleanup = setTempComponent(() => {
-        return col.dataType === 'boolean'
-          ? h(
-              Checkbox,
-              { size: 'sm', modelValue: value, label: formattedValue },
-            )
-          : h(
-              'div',
-              { style: cellStyle, class: _cellClass },
-              [h('span', { class: cellInnerClass, style: cellInnerStyle }, [formattedValue])],
-            )
-      },
-      )
-      await nextTick()
-
-      const tempComponentDom = document.querySelector('#tempComponent')
-      maxContentWidth = tempComponentDom?.getBoundingClientRect().width || 0
-    }
-
-    cleanup()
-
-    return maxContentWidth
   }
 
   async function getHeaderWidth(
     col: TableColumn<any>,
     ui?: ITableProps['ui'],
   ) {
-    let cleanup: () => void = () => {}
+    let cleanup: ReturnType<typeof setTempComponent> | undefined
     let maxContentWidth = 0
 
-    // Split the label into two sections at a word boundary near the middle
-    // in case we have a longer label
-    const longerPart = col._label.length > 16
-      ? splitStringInMiddle(col._label)
-      : col._label
+    try {
+      // Split the label into two sections at a word boundary near the middle
+      // in case we have a longer label
+      const longerPart = col._label.length > 16
+        ? splitStringInMiddle(col._label)
+        : col._label
 
-    // @ts-expect-error
-    const { headerCellClass, headerCellInnerClass, headerCellStyle, headerCellInnerStyle } = ui ?? getComponentProps('table').ui?.() ?? {}
+      // @ts-expect-error
+      const { headerCellClass, headerCellInnerClass, headerCellStyle, headerCellInnerStyle } = ui ?? getComponentProps('table').ui?.() ?? {}
 
-    // UI
-    const _headerCellClass = ['flex items-center gap-2', headerCellClass, col.headerClass]
-    const _headerCellStyle = { ...headerCellStyle, ...col.headerStyle }
+      // UI
+      const _headerCellClass = ['flex items-center gap-2', headerCellClass, col.headerClass]
+      const _headerCellStyle = { ...headerCellStyle, ...col.headerStyle }
 
-    const _headerCellInnerClass = [headerCellInnerClass]
-    const _headerCellInnerStyle = headerCellInnerStyle
+      const _headerCellInnerClass = [headerCellInnerClass]
+      const _headerCellInnerStyle = headerCellInnerStyle
 
-    const isHelperCol = col.isHelperCol || col.nonInteractive
-    const hasFilterBtn = (col.filterable || col.sortable) && !isHelperCol
+      const isHelperCol = col.isHelperCol || col.nonInteractive
+      const hasFilterBtn = (col.filterable || col.sortable) && !isHelperCol
 
-    cleanup = setTempComponent(() => {
-      return h(
-        'div',
-        { class: _headerCellClass, style: _headerCellStyle },
-        [
-          h('span', { class: _headerCellInnerClass, style: _headerCellInnerStyle }, [longerPart]),
-          ...(hasFilterBtn ? [h('div', { style: { flexShrink: 0, width: '32px', height: '32px' } })] : []),
-        ],
+      cleanup = setTempComponent(() => {
+        return h(
+          'div',
+          { class: _headerCellClass, style: _headerCellStyle },
+          [
+            h('span', { class: _headerCellInnerClass, style: _headerCellInnerStyle }, [longerPart]),
+            ...(hasFilterBtn ? [h('div', { style: { flexShrink: 0, width: '32px', height: '32px' } })] : []),
+          ],
+        )
+      },
       )
-    },
-    )
-    await nextTick()
+      await nextTick()
 
-    const tempComponentDom = document.querySelector('#tempComponent')
-    maxContentWidth = tempComponentDom?.getBoundingClientRect().width || 0
+      maxContentWidth = cleanup.element?.getBoundingClientRect().width || 0
 
-    cleanup()
-
-    return maxContentWidth
+      return maxContentWidth
+    } finally {
+      cleanup?.()
+    }
   }
 
   return { getCellWidth, getHeaderWidth }

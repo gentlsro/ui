@@ -1,6 +1,6 @@
 // @vapor-ready
 import type { NonUndefined } from 'utility-types'
-import type MenuProxy from '../../MenuProxy/MenuProxy.vue'
+import type { IMenuProxyExpose } from '../../MenuProxy/types/menu-proxy-props.type'
 import type { ISelectorProps } from '../types/selector-props.type'
 
 export const SELECTOR_ID_KEY = Symbol('__selectorId')
@@ -21,7 +21,7 @@ function createStore(injectionKey?: string) {
     const addedItems = initRef({ props, propName: 'addedItems', defaultValue: [] })
     const isLoading = computed(() => props?.loading === undefined ? false : props.loading)
     const optionsOriginal = initRef({ props, propName: 'options' })
-    const menuEl = ref<InstanceType<typeof MenuProxy>>()
+    const menuEl = ref<IMenuProxyExpose>()
     const options = ref<NonUndefined<ISelectorProps['options']>>([])
 
     const optionByKey = computed(() => {

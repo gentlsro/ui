@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { ITabProps } from './types/tab-props.type'
 import type { ITabsProps } from './types/tabs-props.type'

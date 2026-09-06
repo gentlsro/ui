@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { IFileInputProps } from './types/file-input-props.type'
 
@@ -8,16 +8,19 @@ import { getFileLabel } from './functions/get-file-label'
 type IProps = Pick<IFileInputProps, 'disabled' | 'readonly' | 'downloadUrl' | 'noDownloadButton'>
   & { chip: File | IFile | FileModel }
 
-defineProps<IProps>()
+const props = defineProps<IProps>()
 
 defineEmits<{
   (e: 'remove'): void
 }>()
+
+const { formatBytes } = useNumber()
+const label = computed(() => getFileLabel(props.chip, formatBytes))
 </script>
 
 <template>
   <Chip
-    :label="getFileLabel(chip)"
+    :label="label"
     min-w="20"
     h="6.5"
     p="!y-0"
@@ -40,7 +43,7 @@ defineEmits<{
     />
 
     <span truncate>
-      {{ getFileLabel(chip) }}
+      {{ label }}
     </span>
   </Chip>
 </template>

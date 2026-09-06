@@ -1,85 +1,37 @@
-<script setup lang="ts">
-import { isVNode } from 'vue'
-
+<script setup lang="ts" vapor>
 // Types
-import type { ITabProps } from './types/tab-props.type'
 import type { ITabsProps } from './types/tabs-props.type'
 
 // Functions
-import { useTabsUtils } from './composables/useTabsUtils'
+import { tabsContextKey, useTabsUtils } from './composables/useTabsUtils'
 
 // Constants
 import { TABS_DEFAULT_PROPS } from './constants/tabs-default-props.constant'
 
-type ITabPropsPassthrough = {
-  id: string | number
-  name: string
-  props: ITabProps
-}
-
-const props = defineProps<ITabsProps>()
-
-defineSlots<{
-  navigation: (props: { ui: ITabsProps['ui'], tabs: ITabPropsPassthrough[] }) => any
-}>()
+const props = withDefaults(defineProps<ITabsProps>(), {
+  ...getComponentProps('tabs'),
+})
 
 // Utils
-const { vueApp } = useNuxtApp()
-const self = getCurrentInstance()
-const { createTab } = useTabsUtils()
-
 const mergedProps = computed(() => {
   return getComponentMergedProps('tabs', props)
 })
 
-function buildTabs() {
-  const defaultSlot = self?.slots.default?.() || []
-  const vueInstances = defaultSlot.flatMap(t => {
-    const children = t.children || []
-
-    return [
-      ...(isVNode(t) ? [t] : []),
-      ...(Array.isArray(children) ? children.filter(isVNode) : []),
-    ]
-  })
-
-  return vueInstances
-    .filter(instance => {
-      const name = getComponentName(instance as any)
-
-      return name === 'Tab'
-    })
-    .map((component: VNode) => createTab({
-      component,
-      name: `Tab_${(component.props as ITabProps).name}`,
-      props: component.props as ITabProps,
-      vueApp,
-    }))
-}
-
 // Layout
-const model = defineModel<string | number>()
-const tabs = ref(buildTabs())
+const sourceModel = defineModel<string | number>()
+const tabs = useTabsUtils(props, sourceModel)
+const { model, navigation, syncOrder } = tabs
+const panelsEl = ref<HTMLElement>()
 
-const tabsNavigationProps = computed<ITabPropsPassthrough[]>(() => {
-  return tabs.value.map(tab => {
-    const props = tab.props as ITabProps
-
-    // When recreating the tab, the props get param-cased, we need to fix that manually
-    if ('btn-props' in props) {
-      // @ts-expect-error
-      props.btnProps = props['btn-props']
-
-      delete props['btn-props']
-    }
-
-    return { ...pick(tab, ['id', 'name']), props }
-  })
+provide(tabsContextKey, {
+  registerTab: tabs.registerTab,
+  ui: computed(() => mergedProps.value.ui),
 })
 
-const activeTab = computed(() => {
-  return tabs.value.find(tab => tab.name === model.value)
-})
+// Keyed Vapor slot moves can happen without updating this owner. Follow the
+// declarations' DOM order so the navigation also handles moves through wrappers.
+useMutationObserver(panelsEl, syncOrder, { childList: true, subtree: true })
+onMounted(syncOrder)
 
 // Styles - container
 const containerClass = computed(() => {
@@ -91,19 +43,6 @@ const containerClass = computed(() => {
 const containerStyle = computed(() => {
   return mergedProps.value?.ui?.containerStyle?.()
 })
-
-// Styles - tab
-const tabClass = computed(() => {
-  return mergedProps.value?.ui?.tabClass?.({
-    defaults: TABS_DEFAULT_PROPS.ui.tabClass(),
-  })
-})
-
-const tabStyle = computed(() => {
-  return mergedProps.value?.ui?.tabStyle?.()
-})
-
-defineExpose({ buildTabs })
 </script>
 
 <template>
@@ -112,40 +51,32 @@ defineExpose({ buildTabs })
     :class="containerClass"
     :style="containerStyle"
   >
-    <slot
-      name="navigation"
-      :ui="mergedProps.ui"
-      :tabs="tabsNavigationProps"
+    <!-- Register declarations before rendering navigation, also during SSR. -->
+    <div
+      ref="panelsEl"
+      class="tabs__panels"
     >
-      <TabsNavigation
-        v-if="!noNav"
-        v-model="model"
-        :tabs="tabsNavigationProps"
+      <slot />
+    </div>
+    <div class="tabs__navigation">
+      <slot
+        name="navigation"
         :ui="mergedProps.ui"
-      />
-    </slot>
-
-    <KeepAlive
-      v-if="keepAliveProps"
-      v-bind="keepAliveProps"
-    >
-      <Component
-        :is="activeTab.component"
-        v-if="activeTab"
-        v-bind="activeTab.props"
-        :key="activeTab.id"
-        :class="tabClass"
-        :style="tabStyle"
-      />
-    </KeepAlive>
-
-    <Component
-      :is="activeTab.component"
-      v-else-if="activeTab"
-      v-bind="activeTab.props"
-      :key="activeTab.name"
-      :class="tabClass"
-      :style="tabStyle"
-    />
+        :tabs="navigation"
+      >
+        <TabsNavigation
+          v-if="!noNav"
+          v-model="model"
+          :tabs="navigation"
+          :ui="mergedProps.ui"
+        />
+      </slot>
+    </div>
   </div>
 </template>
+
+<style lang="scss" scoped>
+.tabs__navigation {
+  @apply order-first;
+}
+</style>

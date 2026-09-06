@@ -31,7 +31,6 @@ type SlotProps = {
 const FETCH_MORE_THRESHOLD = 10
 
 // Store
-const { activeElement } = storeToRefs(useUIStore())
 const tableStore = useTableStore()
 const {
   rowKey,
@@ -151,7 +150,10 @@ watch(cellEdit, (cellEdit, oldCellEdit) => {
 })
 
 onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter'], ev => {
-  const isInsideEditCell = !!activeElement.value?.closest('.active-edit-cell')
+  const target = ev.target
+  const isInsideEditCell = target instanceof Element
+    && !!target.closest('.active-edit-cell')
+    && !!tableEl.value?.contains(target)
   const isCtrlKey = ev.ctrlKey || ev.metaKey
 
   if (isInsideEditCell && tableEl.value && cellEdit.value) {

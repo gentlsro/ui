@@ -1,16 +1,19 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
+import { mergeProps } from 'vue'
 import { MODIFIER_BY_UNIT } from '#layers/utilities/app/composables/useDuration'
 import type { DurationUnit } from '#layers/utilities/app/composables/useDuration'
 
 // Types
 import type { IDurationInputProps } from './types/duration-input-props.type'
 
+defineOptions({ inheritAttrs: false })
+
 const props = withDefaults(defineProps<IDurationInputProps>(), {
   ...getComponentProps('durationInput'),
 })
 
 defineEmits<{
-  (e: 'update:modelValue', val?: any): void
+  (e: 'update:modelValue', val?: IDurationInputProps['modelValue']): void
   (e: 'focus'): void
   (e: 'blur'): void
 }>()
@@ -50,7 +53,7 @@ const model = computed({
       : modelByUnit.value[durationUnit.value]
   },
   set(val) {
-    let duration: any
+    let duration: IDurationInputProps['modelValue']
 
     if (typeof val === 'number') {
       duration = val * MODIFIER_BY_UNIT[durationUnit.value]
@@ -84,7 +87,7 @@ function handleDurationUnitChange(unit: DurationUnit) {
 }
 
 defineExpose({
-  isTouched: numberInputEl.value?.isTouched,
+  isTouched: () => numberInputEl.value?.isTouched() ?? false,
   focus: () => numberInputEl.value?.focus(),
   select: () => numberInputEl.value?.select(),
   blur: () => numberInputEl.value?.blur(),
@@ -94,12 +97,17 @@ defineExpose({
 <template>
   <NumberInput
     ref="numberInputEl"
-    v-bind="$props"
+    v-bind="mergeProps($props, $attrs)"
     v-model="model"
     :ui="mergedProps.ui"
+    @focus="$emit('focus')"
+    @blur="$emit('blur')"
   >
     <!-- Label -->
-    <template #label="labelProps">
+    <template
+      v-if="$slots.label"
+      #label="labelProps"
+    >
       <slot
         name="label"
         v-bind="labelProps"
@@ -107,13 +115,22 @@ defineExpose({
     </template>
 
     <!-- Prepend -->
-    <template #prepend>
-      <slot name="prepend" />
+    <template
+      v-if="$slots.prepend"
+      #prepend="slotProps"
+    >
+      <slot
+        name="prepend"
+        v-bind="slotProps"
+      />
     </template>
 
     <!-- Append -->
-    <template #append>
-      <slot name="append" />
+    <template #append="slotProps">
+      <slot
+        name="append"
+        v-bind="slotProps"
+      />
 
       <!-- Unit selection -->
       <Btn
@@ -133,7 +150,7 @@ defineExpose({
           cover
           no-transition
           :fit="false"
-          :ui="{ contentClass: ({ defaults }) => `${defaults.base} w-35` }"
+          :ui="{ contentClass: ({ defaults }) => `${defaults.base} p-1 w-35 gap-2px` }"
         >
           <template #default>
             <Btn

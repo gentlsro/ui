@@ -62,7 +62,6 @@ function isEditingCell(rowData: typeof rowDataArray.value[number], column: IRowC
 // Store
 const tableStore = useTableStore()
 const {
-  tableEl,
   rowKey,
   selection,
   selectionByKey,
@@ -113,8 +112,8 @@ const rowDataArray = computed(() => {
           const isEditable = isEditableRow.value && colEditable
 
           const cellValue = col.valueGetter(row)
-	          const cellFormattedValue = formatValue(cellValue, row, {
-	            format: col.format,
+          const cellFormattedValue = formatValue(cellValue, row, {
+            format: col.format,
             dataType: col.dataType,
             comparator: col.comparator,
             localeIso: currentLocaleCode.value,
@@ -276,14 +275,22 @@ function handleCancelEditCell() {
   cellEdit.value = undefined
 }
 
-function handleEditCellMounted() {
-  const el = tableEl.value?.querySelector('.active-edit-cell') as HTMLElement
-  const controlEl = el?.querySelector('.control') as any
-
-  if (controlEl) {
-    controlEl.select?.() ?? controlEl.focus?.()
-  }
+type CellEditor = { focus?: () => void, select?: () => void }
+const editInput = shallowRef<CellEditor | null>(null)
+function setEditInput(target: unknown) {
+  editInput.value = target as CellEditor | null
 }
+watch([editInput, cellEdit], async ([input]) => {
+  await nextTick()
+  if (!input || editInput.value !== input) {
+    return
+  }
+  if (input.select) {
+    input.select()
+  } else {
+    input.focus?.()
+  }
+}, { flush: 'post' })
 
 function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
   if (rowClickable.value) {
@@ -414,12 +421,12 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
           <template v-if="isEditingCell(rowData, column)">
             <Component
               :is="column.column._editComponent.component"
-              v-model="cellEditValue"
               v-bind="getEditComponentProps(rowData.row, column)"
+              :ref="setEditInput"
+              v-model="cellEditValue"
               size="sm"
               class="active-edit-cell"
               grow
-              @vue:mounted="handleEditCellMounted"
               @click.stop.prevent
             />
 
@@ -491,12 +498,12 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
       <template v-if="isEditingCell(rowDataArray[0], column)">
         <Component
           :is="column.column._editComponent.component"
-          v-model="cellEditValue"
           v-bind="getEditComponentProps(rowDataArray[0].row, column)"
+          :ref="setEditInput"
+          v-model="cellEditValue"
           size="sm"
           class="active-edit-cell"
           grow
-          @vue:mounted="handleEditCellMounted"
           @click.stop.prevent
         />
       </template>

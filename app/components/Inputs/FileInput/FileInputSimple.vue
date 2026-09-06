@@ -1,4 +1,6 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
+import { mergeProps } from 'vue'
+
 // Types
 import type { IFileInputProps } from './types/file-input-props.type'
 import type { IFileInputEmits } from './types/file-input-emits.type'
@@ -10,6 +12,8 @@ import { useFieldUtils } from '../../Field/functions/useFieldUtils'
 // Constants
 import { INPUT_WRAPPER_DEFAULT_PROPS } from '../../InputWrapper/constants/input-wrapper-default-props'
 
+defineOptions({ inheritAttrs: false })
+
 const props = withDefaults(defineProps<IFileInputProps>(), {
   ...getComponentProps('fileInputSimple'),
 })
@@ -17,10 +21,11 @@ const props = withDefaults(defineProps<IFileInputProps>(), {
 const emits = defineEmits<IFileInputEmits>()
 
 // Utils
-const { el, getFieldProps, handleFocusOrClick } = useFieldUtils({
+const { getFieldProps, handleFocusOrClick, handleBlur } = useFieldUtils({
   props,
   emit: event => emits(event),
   onFocus: handleOpenDialog,
+  getElement: () => fileFieldEl.value?.controlElement,
 })
 
 // Layout
@@ -62,7 +67,7 @@ const appendStyle = computed(() => {
 <template>
   <Field
     ref="fileFieldEl"
-    v-bind="fieldProps"
+    v-bind="mergeProps(fieldProps, $attrs)"
     :ui="mergedProps.ui"
     :model-value="model"
     :has-content="!!model?.length"
@@ -70,10 +75,10 @@ const appendStyle = computed(() => {
     :class="{ 'dragged-over': isOverDropZone }"
     .focus="handleFocusOrClick"
     @focus="handleFocusOrClick"
+    @blur="handleBlur"
     @click="handleFocusOrClick"
   >
     <FileInputSimpleInner
-      ref="el"
       v-bind="$props"
       :ui="mergedProps.ui"
       :model-value="model"
@@ -90,6 +95,8 @@ const appendStyle = computed(() => {
         <Btn
           icon="i-material-symbols:attachment"
           size="sm"
+          :disabled="readonly || disabled"
+          disable-style="flat"
           @click.stop.prevent="openFileDialog"
         />
       </div>

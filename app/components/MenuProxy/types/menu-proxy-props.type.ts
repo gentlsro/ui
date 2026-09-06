@@ -8,3 +8,11 @@ import type { MENU_PROXY_DEFAULT_PROPS } from '../constants/menu-proxy-default-p
 export type IMenuProxyProps = IFloatingUIProps & {
   breakpoint?: keyof typeof BREAKPOINTS
 }
+
+export type IMenuProxyExpose = {
+  show: () => void
+  hide: (force?: boolean) => void
+  toggle: () => void
+  recomputePosition: () => void
+  getFloatingEl: () => HTMLElement | undefined
+}

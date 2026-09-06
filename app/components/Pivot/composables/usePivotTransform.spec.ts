@@ -1,9 +1,8 @@
 import type * as PivotTransformComposable from './usePivotTransform'
-import { ref, toRaw } from 'vue'
+import { effectScope, ref, toRaw } from 'vue'
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
 const mocks = vi.hoisted(() => ({
-  disposers: [] as Array<() => void>,
   throwDataCloneOn: undefined as string | undefined,
   workers: [] as any[],
 }))
@@ -68,13 +67,11 @@ beforeAll(async () => {
   vi.stubGlobal('SummaryEnum', summary)
   vi.stubGlobal('Worker', class {})
   vi.stubGlobal('toRaw', toRaw)
-  vi.stubGlobal('tryOnScopeDispose', (dispose: () => void) => mocks.disposers.push(dispose))
   vi.stubGlobal('useRuntimeConfig', () => ({ public: { transliterate: false } }))
   usePivotTransform = (await import('./usePivotTransform')).usePivotTransform
 })
 
 beforeEach(() => {
-  mocks.disposers = []
   mocks.throwDataCloneOn = undefined
   mocks.workers = []
 })
@@ -169,11 +166,13 @@ describe('pivot transform job lifecycle', () => {
     mocks.workers.at(-1).fail(new Error('worker failed'))
     await expect(failed).rejects.toThrow('worker failed')
 
-    const disposedTransform = usePivotTransform()
+    const scope = effectScope()
+    const disposedTransform = scope.run(usePivotTransform)!
     const disposed = disposedTransform.transformPivotData(createPayload())
 
-    mocks.disposers.at(-1)!()
+    scope.stop()
     await expect(disposed).rejects.toMatchObject({ name: 'AbortError' })
+    expect(mocks.workers.at(-1).terminated).toBe(true)
   })
 
   it('sends the source snapshot once for configuration-only jobs', async () => {

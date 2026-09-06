@@ -6,6 +6,7 @@ import type { IListProps } from '../types/list-props.type'
 import type { IListEmitFncs } from '../types/list-emit-fncs.type'
 import type { IListDragMeta } from '../types/list-drag-meta.type'
 import type { IListItemToAdd } from '../types/list-item-to-add.type'
+import type { ISearchInputExpose } from '../../Inputs/TextInput/types/search-input-expose.type'
 
 // Functions
 import { useListDragAndDrop } from '../composables/useListDragAndDrop'
@@ -18,7 +19,6 @@ import { isListItemSelected } from '../functions/helpers/is-list-item-selected'
 import { getListDefaultSortBy } from '../functions/helpers/get-list-default-sort-by'
 
 // Components
-import type SearchInput from '../../Inputs/TextInput/SearchInput.vue'
 import type { Type } from 'arktype'
 import { type } from 'arktype'
 
@@ -76,7 +76,7 @@ function createStore(injectionKey?: string) {
 
     // Search
     const hasExactMatch = ref(false)
-    const searchEl = ref<InstanceType<typeof SearchInput>>()
+    const searchEl = ref<ISearchInputExpose>()
 
     const search = initRef({
       propName: 'search',

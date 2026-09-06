@@ -247,6 +247,12 @@ const contentStyle = computed(() => {
                 v-bind="titleProps"
               />
             </template>
+            <template
+              v-if="$slots['header-right']"
+              #header-right
+            >
+              <slot name="header-right" />
+            </template>
           </MenuHeader>
         </slot>
 

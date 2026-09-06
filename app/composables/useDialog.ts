@@ -1,54 +1,66 @@
-import { render } from 'vue'
-import type { MaybeElementRef } from '@vueuse/core'
-
-// Types
+import type { Component } from 'vue'
 import type { IDialogProps } from '../components/Dialog/types/dialog-props.type'
 
-// Components
-import Dialog from '../components/Dialog/Dialog.vue'
+export type DialogEntry = {
+  id: number
+  open: boolean
+  props: IDialogProps & IItem
+  children: Record<string, Component>
+  finish: () => void
+}
 
+/** @vapor-ready Render the returned dialogs in a DialogHost under this owner. */
 export function useDialog() {
-  const self = getCurrentInstance()
+  const dialogs = shallowRef<DialogEntry[]>([])
+  let nextId = 0
+  let disposed = false
+
+  onScopeDispose(() => {
+    disposed = true
+    dialogs.value = []
+  })
 
   function createDialog(
     props: IDialogProps & IItem,
     options?: {
-      children?: any
-      elRef?: MaybeElementRef
+      children?: Record<string, Component>
+      /** Explicit DOM target; component-root discovery is intentionally unsupported. */
+      elRef?: IDialogProps['target']
     },
   ) {
-    const { children, elRef } = options ?? {}
-
-    const el = unrefElement(elRef)
-
-    const { vueApp } = useNuxtApp()
-    let _el = el ?? (self!.vnode.el as HTMLElement | null)
-
-    if (!_el) {
+    if (import.meta.server || disposed) {
       return
     }
 
-    const dialogEl = h(
-      Dialog,
-      {
-        ...props,
-        modelValue: true,
-        manual: true,
-        onHide: () => {
-          props?.onHide?.()
+    const { onHide, ...dialogProps } = props
+    const entry: DialogEntry = shallowReactive({
+      id: nextId++,
+      open: true,
+      props: { ...dialogProps, target: options?.elRef ?? props.target },
+      children: options?.children ?? {},
+      finish: () => {
+        if (!dialogs.value.includes(entry)) {
+          return
+        }
 
-          setTimeout(() => {
-            render(null, _el!)
-            _el = null
-          }, 0)
-        },
+        dialogs.value = dialogs.value.filter(dialog => dialog !== entry)
+        onHide?.()
       },
-      children,
-    )
+    })
+    dialogs.value = [...dialogs.value, entry]
 
-    dialogEl.appContext = vueApp._context
-    render(dialogEl, _el!)
+    return {
+      close: async () => {
+        if (disposed || !entry.open) {
+          return
+        }
+
+        if ((await entry.props.beforeHideFnc?.()) ?? true) {
+          entry.open = false
+        }
+      },
+    }
   }
 
-  return { createDialog }
+  return { createDialog, dialogs: computed(() => dialogs.value) }
 }

@@ -1,4 +1,6 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
+import { mergeProps } from 'vue'
+
 // Types
 import type { IFileInputProps } from './types/file-input-props.type'
 import type { IFileInputEmits } from './types/file-input-emits.type'
@@ -6,6 +8,8 @@ import type { IFileInputEmits } from './types/file-input-emits.type'
 // Functions
 import { useFileInput } from './functions/useFileInput'
 import { useFieldUtils } from '../../Field/functions/useFieldUtils'
+
+defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(defineProps<IFileInputProps>(), {
   ...getComponentProps('fileInput'),
@@ -37,7 +41,7 @@ const fieldProps = getFieldProps(props)
 <template>
   <Field
     ref="fileFieldEl"
-    v-bind="fieldProps"
+    v-bind="mergeProps(fieldProps, $attrs)"
     :ui="mergedProps.ui"
     :model-value="model"
     has-content

@@ -1,13 +1,16 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 import type { IFileInputProps } from './types/file-input-props.type'
 
 type IProps = Pick<IFileInputProps, 'multi'>
+
+defineOptions({ inheritAttrs: false })
 
 defineProps<IProps>()
 </script>
 
 <template>
   <Btn
+    v-bind="$attrs"
     class="file-add"
     icon="i-eva:plus-fill h-8 w-8"
     size="auto"

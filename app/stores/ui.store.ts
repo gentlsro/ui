@@ -1,7 +1,7 @@
 import { createVNode, render } from 'vue'
 import { defu } from 'defu'
 import { skipHydrate } from 'pinia'
-import type { CSSProperties } from 'vue'
+import type { Component, CSSProperties } from 'vue'
 import { uiConfig } from '$uiConfig'
 
 // Types
@@ -9,6 +9,7 @@ import type { IUIState } from '../types/ui-state.type'
 
 export const useUIStore = defineStore('__ui', () => {
   const rC = useRuntimeConfig()
+  const { vueApp } = useNuxtApp()
   const { getLastFloatingUI } = useFloatingUIUtils()
 
   // State
@@ -48,29 +49,49 @@ export const useUIStore = defineStore('__ui', () => {
     width,
   } = useViewport()
 
-  // Temporary component
-  // Usage: When we need to render a component temporarily to calculate its
-  // dimensions (e.g. table cell), we can use this
-  function setTempComponent(component: any, style?: CSSProperties) {
-    const { vueApp } = useNuxtApp()
-
-    const el = document.createElement('div')
-    el.id = 'tempComponent'
-    el.style.position = 'fixed'
-    el.style.top = '80px'
-    el.style.right = '80px'
-
-    document.body.appendChild(el)
-
-    const vnode = createVNode(component, { style })
-    vnode.appContext = vueApp._context
-
-    render(vnode, el)
-
-    return () => {
-      render(null, el)
-      el.remove()
+  // VDOM interop boundary for Table's legacy render-function measurements.
+  // Detached roots inherit app providers, not providers from the calling owner.
+  function setTempComponent(component: Component, style?: CSSProperties) {
+    if (import.meta.server) {
+      return Object.assign(() => {}, { element: undefined })
     }
+
+    const element = document.createElement('div')
+    element.dataset.uiTempComponent = ''
+    Object.assign(element.style, {
+      position: 'fixed',
+      top: '80px',
+      right: '80px',
+      visibility: 'hidden',
+      pointerEvents: 'none',
+    })
+    element.inert = true
+    document.body.appendChild(element)
+
+    let removed = false
+    const cleanup = Object.assign(() => {
+      if (removed) {
+        return
+      }
+
+      removed = true
+      try {
+        render(null, element)
+      } finally {
+        element.remove()
+      }
+    }, { element })
+
+    try {
+      const vnode = createVNode(component, { style })
+      vnode.appContext = vueApp._context
+      render(vnode, element)
+    } catch (error) {
+      cleanup()
+      throw error
+    }
+
+    return cleanup
   }
 
   // Events history

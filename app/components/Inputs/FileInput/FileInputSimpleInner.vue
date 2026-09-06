@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { IFileInputProps } from './types/file-input-props.type'
 
@@ -19,7 +19,7 @@ const isEditable = computed(() => {
 })
 
 function handleClick() {
-  if (!props.multi) {
+  if (isEditable.value) {
     props.openFileDialog()
   }
 }
@@ -30,11 +30,14 @@ function handleClick() {
     v-if="useScroller"
     :class="ui?.innerClass"
     :style="ui?.innerStyle"
+    @click.stop="handleClick"
   >
     <FileChip
       v-for="(file, idx) in model"
       :key="idx"
       :chip="file"
+      :readonly
+      :disabled
       :class="ui?.chipClass"
       :style="ui?.chipStyle"
       :no-download-button
@@ -47,12 +50,14 @@ function handleClick() {
     class="file-input-simple__inner"
     :class="[ui?.innerClass, { 'is-editable': isEditable, 'is-multi': multi }]"
     :style="{ ...ui?.innerStyle, maxHeight }"
-    @click="handleClick"
+    @click.stop="handleClick"
   >
     <FileChip
       v-for="(file, idx) in model"
       :key="idx"
       :chip="file"
+      :readonly
+      :disabled
       :class="ui?.chipClass"
       :style="ui?.chipStyle"
       :no-download-button

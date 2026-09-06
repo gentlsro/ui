@@ -8,7 +8,7 @@ import { listHandleAdd } from './list-handle-add'
 import { getListItemEmitValue, getListItemKey } from './helpers'
 
 // Components
-import type SearchInput from '../../Inputs/TextInput/SearchInput.vue'
+import type { ISearchInputExpose } from '../../Inputs/TextInput/types/search-input-expose.type'
 
 export async function listItemSelect(payload: {
   selection: Ref<IListProps['selection']>
@@ -21,7 +21,7 @@ export async function listItemSelect(payload: {
   itemLabel?: string
   addedItems: Ref<IListItemToAdd[]>
   emits: IListEmitFncs
-  searchInput: InstanceType<typeof SearchInput> | undefined
+  searchInput: ISearchInputExpose | undefined
   isAddedItem?: boolean
   clearable?: boolean
   shouldFocusSearch?: boolean

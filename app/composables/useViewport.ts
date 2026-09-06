@@ -78,7 +78,9 @@ export function useViewport() {
     viewportHeightCookie.value = clientHintHeight
   }
 
-  onMounted(() => {
+  // The UI store starts in a Nuxt plugin, before any component owns a lifecycle.
+  // Keep the server guess through hydration, then measure the browser viewport.
+  onNuxtReady(() => {
     const width = parseViewportDimension(window.innerWidth)
     const height = parseViewportDimension(window.innerHeight)
 
