@@ -1,15 +1,13 @@
 <script setup lang="ts" generic="T extends CustomPresets = Record<string, never>">
 // Types
+import type { ObjectDirective } from 'vue'
 import type { CustomPresets, IBtnProps } from './types/btn-props.type'
-
-// Functions
-import { useBtnUtils } from './functions/useBtnUtils'
 
 // Constants
 import { BTN_DEFAULT_PROPS } from './constants/btn-default-props.constant'
 
 // Components
-import BtnOrNuxtLinkResolver from './BtnOrNuxtLinkResolver.vue'
+import { NuxtLink } from '#components'
 
 // Directives
 import { vRipple } from '../../directives/ripple.directive'
@@ -18,18 +16,54 @@ const props = withDefaults(defineProps<IBtnProps<T>>(), {
   ...getComponentProps('button'),
 })
 
-// Utils
-const { getBtnOrNuxtLinkResolverProps } = useBtnUtils()
-
-const btnProps = getBtnOrNuxtLinkResolverProps(props)
-
 const mergedProps = computed(() => {
   return getComponentMergedProps('button', props)
 })
 
 // Layout
 const slots = useSlots()
-const component = ref<InstanceType<typeof BtnOrNuxtLinkResolver>>()
+const element = shallowRef<HTMLButtonElement | HTMLAnchorElement>()
+
+// Directives receive the actual root DOM node, including NuxtLink's anchor.
+// Keep NuxtLink's normal renderer so its prefetch and router behavior stay intact.
+const vRoot: ObjectDirective<HTMLButtonElement | HTMLAnchorElement> = {
+  mounted(el) {
+    element.value = el
+  },
+  beforeUnmount(el) {
+    if (element.value === el) {
+      element.value = undefined
+    }
+  },
+}
+
+// Navigation belongs to the root; the content and styling are shared by both modes.
+const route = useRoute()
+const localePath = useLocalePath()
+const nuxtApp = useNuxtApp()
+
+const isLink = computed(() => !!props.to && !props.disabled)
+const rootProps = computed(() => {
+  if (!isLink.value) {
+    return { type: props.type, disabled: props.disabled }
+  }
+
+  const toPath = typeof props.to === 'string' ? props.to : props.to?.path ?? ''
+  const currentPath = localePath(route.path, nuxtApp.$i18n.locale.value)
+
+  return {
+    to: props.to,
+    external: props.external,
+    replace: props.replace,
+    target: props.external || props.download ? '_blank' : props.navigateToOptions?.open?.target,
+    download: props.download || undefined,
+    class: {
+      'router-link-active': !props.exact && toPath.startsWith(currentPath),
+      'no-active': props.noActiveLink,
+      'no-underline': props.noUnderline,
+    },
+  }
+})
 
 const label = computed(() => {
   if (typeof props.label === 'function') {
@@ -67,96 +101,46 @@ const classes = computed(() => {
 })
 
 defineExpose({
-  getElement: () => component.value,
+  element,
+  focus: (options?: FocusOptions) => element.value?.focus(options),
+  getElement: () => element.value,
 })
 
-// Styles - container
-const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
-    defaults: BTN_DEFAULT_PROPS.ui.containerClass({
-      align: props.align,
-      noUppercase: props.noUppercase,
-      noBold: props.noBold,
-      noDim: props.noDim,
-      round: props.round,
-      rounded: props.rounded,
-      outlined: props.outlined,
-      stacked: props.stacked,
-      disabled: props.disabled,
-      disableStyle: props.disableStyle,
-      hasLabel: !!(label.value || slots.label),
-      size: props.size ?? 'md',
-    }),
-  })
-})
+// Resolve each visual surface through the existing component configuration API.
+const appearance = computed(() => {
+  const ui = mergedProps.value.ui
+  const defaults = BTN_DEFAULT_PROPS.ui
+  const size = props.size ?? 'md'
 
-const containerStyle = computed(() => {
-  return mergedProps.value?.ui?.containerStyle?.()
-})
-
-// Styles - icon
-const iconClass = computed(() => {
-  return mergedProps.value?.ui?.iconClass?.({
-    defaults: BTN_DEFAULT_PROPS.ui.iconClass({
-      size: props.size ?? 'md',
-    }),
-  })
-})
-
-const iconStyle = computed(() => {
-  return mergedProps.value?.ui?.iconStyle?.()
-})
-
-// Styles - label
-const labelClass = computed(() => {
-  return mergedProps.value?.ui?.labelClass?.({
-    defaults: BTN_DEFAULT_PROPS.ui.labelClass({
-      align: props.align,
-      size: props.size ?? 'md',
-    }),
-  })
-})
-
-const labelStyle = computed(() => {
   return {
-    ...mergedProps.value?.ui?.labelStyleObj,
-    ...mergedProps.value?.ui?.labelStyle?.(),
-  }
-})
-
-// Styles - focus helper
-const focusHelperClass = computed(() => {
-  return mergedProps.value?.ui?.focusHelperClass?.({
-    defaults: BTN_DEFAULT_PROPS.ui.focusHelperClass(),
-  })
-})
-
-const focusHelperStyle = computed(() => {
-  return mergedProps.value?.ui?.focusHelperStyle?.()
-})
-
-// Styles - loading
-const loadingClass = computed(() => {
-  return mergedProps.value?.ui?.loadingClass?.({
-    defaults: BTN_DEFAULT_PROPS.ui.loadingClass(),
-  })
-})
-
-const loadingStyle = computed(() => {
-  return mergedProps.value?.ui?.loadingStyle?.()
-})
-
-// Styles - loader
-const loaderClass = computed(() => {
-  return mergedProps.value?.ui?.loaderClass?.({
-    defaults: BTN_DEFAULT_PROPS.ui.loaderClass({
-      size: props.size ?? 'md',
+    containerClass: ui?.containerClass?.({
+      defaults: defaults.containerClass({
+        align: props.align,
+        noUppercase: props.noUppercase,
+        noBold: props.noBold,
+        noDim: props.noDim,
+        round: props.round,
+        rounded: props.rounded,
+        outlined: props.outlined,
+        stacked: props.stacked,
+        disabled: props.disabled,
+        disableStyle: props.disableStyle,
+        hasLabel: !!(label.value || slots.label),
+        size,
+      }),
     }),
-  })
-})
-
-const loaderStyle = computed(() => {
-  return mergedProps.value?.ui?.loaderStyle?.()
+    containerStyle: ui?.containerStyle?.(),
+    iconClass: ui?.iconClass?.({ defaults: defaults.iconClass({ size }) }),
+    iconStyle: ui?.iconStyle?.(),
+    labelClass: ui?.labelClass?.({ defaults: defaults.labelClass({ align: props.align, size }) }),
+    labelStyle: { ...ui?.labelStyleObj, ...ui?.labelStyle?.() },
+    focusHelperClass: ui?.focusHelperClass?.({ defaults: defaults.focusHelperClass() }),
+    focusHelperStyle: ui?.focusHelperStyle?.(),
+    loadingClass: ui?.loadingClass?.({ defaults: defaults.loadingClass() }),
+    loadingStyle: ui?.loadingStyle?.(),
+    loaderClass: ui?.loaderClass?.({ defaults: defaults.loaderClass({ size }) }),
+    loaderStyle: ui?.loaderStyle?.(),
+  }
 })
 
 const isIconifyIcon = computed(() => {
@@ -168,43 +152,44 @@ const isIconifyIcon = computed(() => {
 </script>
 
 <template>
-  <BtnOrNuxtLinkResolver
-    ref="component"
+  <Component
+    :is="isLink ? NuxtLink : 'button'"
+    v-root
     v-ripple="!disabled && ripple"
-    v-bind="btnProps"
+    v-bind="rootProps"
     :name="name ?? (label || icon)"
     :aria-label="label ?? (name || icon)"
     class="btn group/btn"
-    :class="[classes, containerClass]"
-    :style="containerStyle"
+    :class="[classes, appearance.containerClass]"
+    :style="appearance.containerStyle"
   >
     <slot name="icon">
       <Icon
         v-if="icon && isIconifyIcon"
         :name="(icon as string)"
         class="btn-icon"
-        :class="iconClass"
-        :style="iconStyle"
+        :class="appearance.iconClass"
+        :style="appearance.iconStyle"
       />
 
       <div
         v-else-if="icon || preset?.icon"
         class="btn-icon"
-        :class="[icon || preset?.icon, iconClass]"
-        :style="iconStyle"
+        :class="[icon || preset?.icon, appearance.iconClass]"
+        :style="appearance.iconStyle"
       />
     </slot>
 
     <slot
       name="label"
       :ui="mergedProps.ui"
-      :style="labelStyle"
+      :style="appearance.labelStyle"
     >
       <div
         v-if="label"
         class="btn-label"
-        :class="[labelClass, noTruncate ? 'overflow-hidden' : 'truncate']"
-        :style="labelStyle"
+        :class="[appearance.labelClass, noTruncate ? 'overflow-hidden' : 'truncate']"
+        :style="appearance.labelStyle"
       >
         {{ label }}
       </div>
@@ -230,16 +215,16 @@ const isIconifyIcon = computed(() => {
     <div
       v-if="loading"
       class="btn-loading"
-      :class="loadingClass"
-      :style="loadingStyle"
+      :class="appearance.loadingClass"
+      :style="appearance.loadingStyle"
       @click.stop.prevent
     >
       <Loader
         :variant="loaderVariant"
         :color="loadingColor"
         class="btn-loader"
-        :class="loaderClass"
-        :style="loaderStyle"
+        :class="appearance.loaderClass"
+        :style="appearance.loaderStyle"
       />
     </div>
 
@@ -247,9 +232,19 @@ const isIconifyIcon = computed(() => {
     <span
       v-if="!noHoverEffect"
       class="btn-focus-helper"
-      :class="focusHelperClass"
-      :style="focusHelperStyle"
+      :class="appearance.focusHelperClass"
+      :style="appearance.focusHelperStyle"
       tabindex="-1"
     />
-  </BtnOrNuxtLinkResolver>
+  </Component>
 </template>
+
+<style lang="scss" scoped>
+a.btn:not(.no-underline):hover {
+  @apply underline;
+}
+
+.no-active {
+  @apply color-black dark:color-white;
+}
+</style>

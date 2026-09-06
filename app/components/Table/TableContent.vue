@@ -13,7 +13,6 @@ import { TABLE_DEFAULT_PROPS } from './constants/table-default-props.constant'
 
 // Components
 import VirtualScroller from '../VirtualScroller/VirtualScroller.vue'
-import VirtualScrollerGrid from '../VirtualScroller/VirtualScrollerGrid.vue'
 import VirtualScrollerVertical from '../VirtualScroller/VirtualScrollerVertical.vue'
 
 type IProps = Pick<ITableProps, 'editable' | 'ui' | 'to' | 'scrollerConfig' | 'showCopyBtn' | 'toLinkProps'>
@@ -54,7 +53,6 @@ const isVisibleByColumnField = ref<Record<string, boolean>>({})
 
 const SCROLLER_COMPONENTS = {
   VirtualScroller,
-  VirtualScrollerGrid,
   VirtualScrollerVertical,
 } as const
 
@@ -195,7 +193,7 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
     ref="virtualScrollEl"
     v-bind="scrollerProps"
     :rows="rowsSplit"
-    :columns="visibleColumns"
+    :columns="isCardView ? undefined : visibleColumns"
     class="table-content grow"
     :row-key
     :fetch-more="isFetchMore"

@@ -516,7 +516,18 @@ const [
 
   const headerX = ref(0)
   const totalsX = ref(0)
-  const { x: contentX } = useScroll(virtualScrollElDom)
+  const { x: observedContentX } = useScroll(virtualScrollElDom)
+  const contentX = computed({
+    get: () => observedContentX.value,
+    set: (left: number) => {
+      const element = virtualScrollElDom.value
+      // Synchronizing X must not replay VueUse's cached Y during a two-axis
+      // scroll; that would undo a simultaneous row jump or diagonal gesture.
+      if (element && element.scrollLeft !== left) {
+        element.scrollLeft = left
+      }
+    },
+  })
   const isContentVerticallyScrollable = ref(false)
 
   useResizeObserver(virtualScrollElDom, () => {

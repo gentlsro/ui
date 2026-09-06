@@ -1,9 +1,9 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { IChipProps } from './types/chip-props.type'
 
 // Directives
-import { vRipple } from '../../directives/ripple.directive'
+import { vRippleVapor as vRipple } from '../../directives/ripple.directive'
 
 // Constants
 import { CHIP_DEFAULT_PROPS } from './constants/chip-default-props.constant'

@@ -101,7 +101,7 @@ const bottomStyle = computed(() => {
     <!-- Limit reached -->
     <div
       v-if="isLimitReached"
-      class="limit-reached"
+      class="flex items-center gap-2"
     >
       <div class="color-warning i-bi:info-lg" />
       <span font="rem-14 semibold">{{ $t('table.limitRowsReached') }}</span>

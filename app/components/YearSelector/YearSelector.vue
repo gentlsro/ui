@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { IYearSelectorProps } from './types/year-selector-props.type'
 
@@ -20,9 +20,11 @@ const mergedProps = computed(() => {
 
 // Layout
 const model = defineModel<Datetime>()
-const yearInputEl = ref<InstanceType<typeof NumberInput>>()
+const yearInputEl = useTemplateRef<InstanceType<typeof NumberInput>>('yearInputEl')
 const isYearSelectorVisible = ref(false)
 const isRangeChanged = refAutoReset(false, 300)
+
+const inputElement = computed(() => yearInputEl.value?.getInputElement())
 
 /**
  * Internal value is used to navigate through years without changing the actual `model`
@@ -40,12 +42,11 @@ const yearOptions = computed(() => {
 })
 
 // Increment / Decrement
-const modifier = ref<-1 | 1>(1)
+let modifier: -1 | 1 = 1
 
-// We put a slight delay to the `handleRangeChange` so it doesn't trigger every
-// scroll event
+// Advance immediately, then one year every 120 ms while the pointer is held.
 const { pause, resume } = useIntervalFn(
-  () => handleRangeChange(),
+  handleRangeChange,
   120,
   { immediate: false, immediateCallback: true },
 )
@@ -62,23 +63,29 @@ function handleManualYearInputChange(year?: number | null | undefined) {
 
 function handleRangeChange() {
   isRangeChanged.value = true
-  internalValue.value += modifier.value
+  internalValue.value += modifier
 }
 
 function startChange(_: PointerEvent, increment = true) {
-  modifier.value = increment ? 1 : -1
+  modifier = increment ? 1 : -1
 
-  window.addEventListener('pointerup', stopChange)
   resume()
 }
 
-function stopChange() {
-  pause()
-  window.removeEventListener('pointerup', stopChange)
-}
+useEventListener('pointerup', pause)
+useEventListener('pointercancel', pause)
+useEventListener('blur', pause)
+onScopeDispose(pause)
+watch(isYearSelectorVisible, visible => {
+  if (!visible) {
+    pause()
+  }
+})
 
 function sync() {
-  return (internalValue.value = $date(props.modelValue).year())
+  pause()
+
+  return (internalValue.value = $date(model.value).year())
 }
 
 function handleYearSelect(year: number) {
@@ -106,11 +113,8 @@ watch(
 
 defineExpose({ sync })
 
-const menuEl = useTemplateRef('menuEl')
-
-function addEventListener() {
-  useEventListener(menuEl, 'wheel', handleMouseWheel, { passive: false })
-}
+const menuEl = useTemplateRef<HTMLDivElement>('menuEl')
+useEventListener(menuEl, 'wheel', handleMouseWheel, { passive: false })
 
 // Styles - container
 const containerClass = computed(() => {
@@ -214,13 +218,12 @@ const yearBtnStyle = computed(() => {
     <!-- Year select menu -->
     <Menu
       v-model="isYearSelectorVisible"
-      :target="yearInputEl"
+      :target="inputElement"
       :fit="false"
       w="60"
-      placement="bottom-end"
+      placement="bottom"
       :reference-target="$bp.isGreaterOrEqual('xm') ? referenceTarget : undefined"
       no-uplift
-      @vue:mounted="addEventListener"
       @before-hide="sync"
     >
       <div

@@ -156,7 +156,10 @@ const contentStyle = computed(() => {
           :ui="mergedProps.ui"
           :node-el
         >
-          <template #content>
+          <template
+            v-if="$slots.node"
+            #content
+          >
             <slot
               name="node"
               :node="(row as unknown as ITreeNode<T>)"

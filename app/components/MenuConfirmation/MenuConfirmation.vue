@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { IMenuConfirmationProps } from './types/menu-confirmation-props.type'
 
@@ -24,7 +24,7 @@ const mergedProps = computed(() => {
 })
 
 // Layout
-const confirmBtnEl = useTemplateRef<any>('confirmBtnEl')
+const confirmBtnEl = useTemplateRef<{ focus: () => void }>('confirmBtnEl')
 const isConfirmation = defineModel<boolean>({ default: false })
 
 function handleConfirm() {
@@ -52,13 +52,12 @@ function handleMenuHide() {
 
 function handleMenuShow() {
   if (props.focusConfirmButton) {
-    focusConfirmButton()
+    nextTick(focusConfirmButton)
   }
 }
 
 function focusConfirmButton() {
-  const confirmBtnDom = unrefElement(confirmBtnEl)
-  confirmBtnDom?.focus()
+  confirmBtnEl.value?.focus()
 }
 
 defineExpose({

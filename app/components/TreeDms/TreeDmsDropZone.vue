@@ -1,4 +1,6 @@
-<script setup lang="ts" generic="T extends IItem = IItem">
+<script setup lang="ts" vapor generic="T extends IItem = IItem">
+import { useRafTask } from '#layers/utilities/app/composables/useRafTask'
+
 // Types
 import type { ITreeDmsProps } from './types/tree-dms-props.type'
 import type { ITreeNode } from '../Tree/types/tree-node.type'
@@ -87,6 +89,7 @@ function resolveNodeAtPoint(x: number, y: number) {
 }
 
 function clearExternalDragMeta() {
+  dragFrame.cancel()
   dragMeta.value = {}
   clearHoverExpandTimer()
 }
@@ -144,9 +147,14 @@ function resolveParentNode(targetNode: ITreeNode<T>): ITreeNode<T> | undefined |
   return parent?.ref.type === props.folderKey ? parent : null
 }
 
+const dragFrame = useRafTask(updateExternalDragTarget)
+
 function handleExternalDragOver(e: DragEvent) {
   e.preventDefault()
+  dragFrame.schedule({ clientX: e.clientX, clientY: e.clientY })
+}
 
+function updateExternalDragTarget(e: { clientX: number, clientY: number }) {
   if (!dndConfig.value?.enabled) {
     return
   }
@@ -220,59 +228,32 @@ function handleExternalDragOver(e: DragEvent) {
 }
 
 function handleExternalDragLeave(e: DragEvent) {
-  const treeElDom = unrefElement(treeEl) as HTMLElement | undefined
+  const treeElDom = treeEl.value
 
   if (!treeElDom || !e.relatedTarget || !treeElDom.contains(e.relatedTarget as Node)) {
     clearExternalDragMeta()
   }
 }
 
-function handleExternalDrop() {
-  clearExternalDragMeta()
-}
-
-function bindExternalDropHandlers() {
-  const el = unrefElement(treeEl) as HTMLElement | undefined
-
-  if (!el) {
-    return
-  }
-
-  el.addEventListener('dragover', handleExternalDragOver)
-  el.addEventListener('dragleave', handleExternalDragLeave)
-  el.addEventListener('drop', handleExternalDrop)
-}
-
-function unbindExternalDropHandlers() {
-  const el = unrefElement(treeEl) as HTMLElement | undefined
-
-  if (!el) {
-    return
-  }
-
-  el.removeEventListener('dragover', handleExternalDragOver)
-  el.removeEventListener('dragleave', handleExternalDragLeave)
-  el.removeEventListener('drop', handleExternalDrop)
-}
-
-onMounted(() => {
-  nextTick(bindExternalDropHandlers)
-})
-
-onBeforeUnmount(() => {
-  unbindExternalDropHandlers()
-})
+// VueUse follows the native root ref and removes listeners when this owner disappears.
+onScopeDispose(clearExternalDragMeta)
 
 const { isOverDropZone: _isOverDropZone } = useDropZone(
-  () => unrefElement(treeEl) as HTMLElement,
+  treeEl,
   {
     multiple: true,
+    onOver: (_, event) => handleExternalDragOver(event),
+    onLeave: (_, event) => handleExternalDragLeave(event),
     onDrop: async (_, e) => {
+      dragFrame.cancel()
+      // Resolve from the release coordinates before clearing feedback or starting async file reads.
+      updateExternalDragTarget(e)
       // Resolve parent from dragMeta (same as internal DnD)
       const targetParent = dragMeta.value.targetParent
       const treeParent: T | null | undefined = targetParent && 'ref' in targetParent
         ? targetParent.ref as T
         : null
+      clearExternalDragMeta()
 
       const items = (e.dataTransfer?.items ?? []) as DataTransferItemList
 

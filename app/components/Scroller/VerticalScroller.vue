@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { IVerticalScrollerProps } from './types/scroller-props.type'
 
@@ -33,24 +33,21 @@ const {
   measure,
   handleWheel,
   handleScrollViaBtn,
-} = useScrollerScroll(position => emits('scrolled', position))
+} = useScrollerScroll(position => emits('scrolled', position), 'y')
 
 syncRef(sourceY, y, { direction: 'both', immediate: false })
 
-function addEventListener() {
-  useEventListener(scrollEl, 'wheel', handleWheel, { passive: false })
-}
+useEventListener(scrollEl, 'wheel', handleWheel, { passive: false })
 
 onMounted(() => {
   y.value = sourceY.value
 })
 
-useResizeObserver(scrollEl, () => {
-  requestAnimationFrame(() => {
-    emits('resized')
-    measure()
-  })
+const resizeTask = useRafTask(() => {
+  emits('resized')
+  measure()
 })
+useResizeObserver(scrollEl, resizeTask.schedule)
 
 // Styles
 const containerClass = computed(() => {
@@ -84,6 +81,7 @@ const arrowStyle = computed(() => {
 })
 
 defineExpose({
+  element: scrollEl,
   scroll: (top: number, diff?: boolean) => {
     if (diff) {
       y.value = y.value + top
@@ -129,7 +127,6 @@ defineExpose({
       class="content"
       :class="contentClass"
       :style="contentStyle"
-      @vue:mounted="addEventListener"
     >
       <slot />
     </div>

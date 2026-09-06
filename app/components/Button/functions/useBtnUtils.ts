@@ -1,10 +1,5 @@
 // Types
-import type { IBtnNavigationProps, IBtnProps } from '../types/btn-props.type'
-
-type IBtnOrNuxtLinkResolverPickSource = Pick<
-  IBtnProps,
-  keyof IBtnNavigationProps
->
+import type { IBtnProps } from '../types/btn-props.type'
 
 export function useBtnUtils() {
   function getBtnProps(props: IBtnProps) {
@@ -13,6 +8,7 @@ export function useBtnUtils() {
       'download',
       'exact',
       'external',
+      'replace',
       'navigateToOptions',
       'noActiveLink',
       'noUnderline',
@@ -37,22 +33,7 @@ export function useBtnUtils() {
     ])
   }
 
-  function getBtnOrNuxtLinkResolverProps(props: IBtnOrNuxtLinkResolverPickSource) {
-    return reactivePick(props, [
-      'disabled',
-      'download',
-      'exact',
-      'external',
-      'navigateToOptions',
-      'noActiveLink',
-      'noUnderline',
-      'to',
-      'type',
-    ])
-  }
-
   return {
     getBtnProps,
-    getBtnOrNuxtLinkResolverProps,
   }
 }
