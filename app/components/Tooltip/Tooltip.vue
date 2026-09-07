@@ -32,7 +32,7 @@ const mergedProps = computed(() => {
 const referenceTarget = toRef(props, 'referenceTarget')
 const model = defineModel<boolean>({ default: false })
 const tooltipEl = ref<HTMLElement>()
-const referenceEl = ref<Element>() // Element that menu is attached to
+const referenceEl = ref<Element>() // Element that tooltip is attached to
 const arrowEl = ref<HTMLDivElement>()
 const middleware = ref([
   offset(props.offset),
@@ -57,6 +57,58 @@ const classes = computed(() => {
   }
 })
 
+let hoverTimer: ReturnType<typeof setTimeout> | undefined
+
+function setOpen(open: boolean) {
+  clearTimeout(hoverTimer)
+
+  if (!props.manual) {
+    model.value = open
+  }
+}
+
+useEventListener(referenceEl, 'mouseenter', () => {
+  if (props.manual) {
+    return
+  }
+
+  clearTimeout(hoverTimer)
+  hoverTimer = setTimeout(() => setOpen(true), props.delay?.[0] ?? 0)
+})
+
+useEventListener(referenceEl, 'mouseleave', () => {
+  if (props.manual) {
+    return
+  }
+
+  clearTimeout(hoverTimer)
+  hoverTimer = setTimeout(() => {
+    if (!referenceEl.value?.contains(document.activeElement)) {
+      setOpen(false)
+    }
+  }, props.delay?.[1] ?? 0)
+})
+
+useEventListener(referenceEl, ['click', 'focus'], () => setOpen(true))
+useEventListener(referenceEl, 'blur', () => setOpen(false))
+useEventListener(referenceEl, 'keydown', (event: KeyboardEvent) => {
+  if (props.manual) {
+    return
+  }
+
+  if (event.key === 'Escape') {
+    if (model.value) {
+      event.stopPropagation()
+      event.preventDefault()
+    }
+    setOpen(false)
+  } else if (event.key === 'Enter' || event.key === ' ') {
+    setOpen(true)
+  }
+})
+
+onClickOutside(referenceEl, () => setOpen(false))
+
 function assignReferenceEl() {
   const parentEl = instance?.vnode?.el?.parentNode
   const target = getElement({ elRef: props.referenceTarget ?? parentEl, parentEl })
@@ -65,43 +117,10 @@ function assignReferenceEl() {
     return
   }
 
+  clearTimeout(hoverTimer)
+  referenceEl.value?.classList.remove('has-tooltip')
   referenceEl.value = target
   referenceEl.value?.classList.add('has-tooltip')
-}
-
-function assignEvents() {
-  referenceEl.value?.addEventListener('mouseenter', () => {
-    if (props.manual) {
-      return
-    }
-
-    referenceEl.value?.classList.add('tooltip-hovered')
-
-    setTimeout(() => {
-      const isStillInside = referenceEl.value?.classList.contains('tooltip-hovered')
-
-      if (isStillInside) {
-        model.value = true
-      }
-    }, props.delay?.[0] || 0)
-  })
-
-  referenceEl.value?.addEventListener('mouseleave', () => {
-    if (props.manual) {
-      return
-    }
-
-    referenceEl.value?.classList.remove('tooltip-hovered')
-
-    setTimeout(() => {
-      const isStillInside = referenceEl.value?.classList.contains('tooltip-hovered')
-      const stillHasFocus = referenceEl.value?.contains(document.activeElement)
-
-      if (!isStillInside && !stillHasFocus) {
-        model.value = false
-      }
-    }, props.delay?.[1] || 0)
-  })
 }
 
 watch(middlewareData, middlewareData => {
@@ -122,8 +141,12 @@ watch(referenceTarget, () => {
 onMounted(() => {
   nextTick(() => {
     assignReferenceEl()
-    assignEvents()
   })
+})
+
+onBeforeUnmount(() => {
+  clearTimeout(hoverTimer)
+  referenceEl.value?.classList.remove('has-tooltip')
 })
 
 // Styles - container

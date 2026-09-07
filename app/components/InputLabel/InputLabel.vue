@@ -32,7 +32,6 @@ const label = computed(() => {
 
 // Label hint
 const isLabelHintTooltipOpen = shallowRef(false)
-const labelHintEl = useTemplateRef<HTMLElement>('labelHintEl')
 const labelHintTooltipId = useId()
 const isMobileLabelHint = $bp.smaller('md')
 
@@ -42,38 +41,13 @@ const hasLabelHint = computed(() => {
   return Boolean(labelHint.value?.label)
 })
 
-const isLabelHintTooltipManual = computed(() => {
-  return Boolean(labelHint.value?.props?.manual)
-})
-
 const labelHintTooltipProps = computed(() => ({
   placement: isMobileLabelHint.value ? 'bottom-end' : 'right',
   ...labelHint.value?.props,
+// show label without delay when manual is true
+  ...(labelHint.value?.props?.manual && { delay: [0, 0] as [number, number] }),
+  manual: false,
 }))
-
-function setLabelHintTooltipOpen(open: boolean) {
-  isLabelHintTooltipOpen.value = open
-}
-
-function handleLabelHintMouseEnter() {
-  if (isLabelHintTooltipManual.value) {
-    setLabelHintTooltipOpen(true)
-  }
-}
-
-function handleLabelHintMouseLeave() {
-  if (!isLabelHintTooltipManual.value) {
-    return
-  }
-
-  const stillHasFocus = labelHintEl.value?.contains(document.activeElement)
-
-  if (!stillHasFocus) {
-    setLabelHintTooltipOpen(false)
-  }
-}
-
-onClickOutside(labelHintEl, () => setLabelHintTooltipOpen(false))
 
 // Styles - Label
 const labelClassLocal = computed(() => {
@@ -150,19 +124,13 @@ onMounted(() => {
       <!-- Label hint -->
       <span
         v-if="hasLabelHint"
-        ref="labelHintEl"
         class="label__hint"
         role="button"
         tabindex="0"
         :aria-label="labelHint?.label"
         :aria-describedby="isLabelHintTooltipOpen ? labelHintTooltipId : undefined"
-        @click.stop.prevent="setLabelHintTooltipOpen(true)"
-        @focus="setLabelHintTooltipOpen(true)"
-        @blur="setLabelHintTooltipOpen(false)"
-        @mouseenter="handleLabelHintMouseEnter"
-        @mouseleave="handleLabelHintMouseLeave"
-        @keydown.enter.space.stop.prevent="setLabelHintTooltipOpen(true)"
-        @keydown.esc.stop.prevent="setLabelHintTooltipOpen(false)"
+        @click.stop.prevent
+        @keydown.enter.space.stop.prevent
       >
         <span
           class="label__hint-icon"
