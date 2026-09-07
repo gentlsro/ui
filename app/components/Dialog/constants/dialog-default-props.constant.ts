@@ -25,11 +25,12 @@ export const DIALOG_DEFAULT_PROPS = {
         'h-[var(--visual-viewport-height,100dvh)]',
       ].join(' ')
 
-      const positionTop = '[&[position="top"]]:(justify-center items-start)'
-      const positionBottom = '[&[position="bottom"]]:(justify-center items-end)'
-      const positionLeft = '[&[position="left"]]:(justify-start items-center)'
-      const positionRight = '[&[position="right"]]:(justify-end items-center)'
-      const positionCenter = '[&[position="center"]]:(flex-center)'
+      // Variant groups cannot parse this nested attribute selector in UnoCSS 66.10.
+      const positionTop = '[&[position="top"]]:justify-center [&[position="top"]]:items-start'
+      const positionBottom = '[&[position="bottom"]]:justify-center [&[position="bottom"]]:items-end'
+      const positionLeft = '[&[position="left"]]:justify-start [&[position="left"]]:items-center'
+      const positionRight = '[&[position="right"]]:justify-end [&[position="right"]]:items-center'
+      const positionCenter = '[&[position="center"]]:flex-center'
 
       return {
         base,

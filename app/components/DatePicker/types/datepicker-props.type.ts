@@ -7,7 +7,14 @@ import type { DayEvent } from './DayEvent.type'
 import type { DATE_PICKER_DEFAULT_PROPS } from '../constants/datepicker-default-props.constant'
 
 // Models
+import type { Day } from '#layers/utilities/app/models/day.model'
 import type { DayEnum } from '#layers/utilities/app/enums/day.enum'
+
+export type DatePickerDayState = {
+  day: Day
+  isSelected?: boolean
+  disabled?: boolean
+}
 
 export type IDatePickerProps = {
   /**
@@ -61,6 +68,41 @@ export type IDatePickerProps = {
    * Visual configuration
    */
   ui?: {
+    dayClass?: (payload: DatePickerDayState & {
+      defaults: ReturnType<typeof DATE_PICKER_DEFAULT_PROPS['ui']['dayClass']>
+    }) => ClassType
+    dayStyle?: () => CSSProperties
+
+    dayNumberClass?: (payload: DatePickerDayState & {
+      defaults: ReturnType<typeof DATE_PICKER_DEFAULT_PROPS['ui']['dayNumberClass']>
+    }) => ClassType
+    dayNumberStyle?: () => CSSProperties
+
+    dayEdgeClass?: (payload: DatePickerDayState & {
+      defaults: ReturnType<typeof DATE_PICKER_DEFAULT_PROPS['ui']['dayEdgeClass']>
+    }) => ClassType
+    dayEdgeStyle?: () => CSSProperties
+
+    dayNumberWrapperClass?: (payload: {
+      defaults: ReturnType<typeof DATE_PICKER_DEFAULT_PROPS['ui']['dayNumberWrapperClass']>
+    }) => ClassType
+    dayNumberWrapperStyle?: () => CSSProperties
+
+    dayEventsClass?: (payload: {
+      defaults: ReturnType<typeof DATE_PICKER_DEFAULT_PROPS['ui']['dayEventsClass']>
+    }) => ClassType
+    dayEventsStyle?: () => CSSProperties
+
+    dayEventsContainerClass?: (payload: {
+      defaults: ReturnType<typeof DATE_PICKER_DEFAULT_PROPS['ui']['dayEventsContainerClass']>
+    }) => ClassType
+    dayEventsContainerStyle?: () => CSSProperties
+
+    dayEventClass?: (payload: {
+      defaults: ReturnType<typeof DATE_PICKER_DEFAULT_PROPS['ui']['dayEventClass']>
+    }) => ClassType
+    dayEventStyle?: () => CSSProperties
+
     /**
      * Class to apply to the container
      */

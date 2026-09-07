@@ -27,6 +27,7 @@
     "axios": "catalog:",
     "change-case": "catalog:",
     "dayjs": "catalog:",
+    "defu": "catalog:",
     "dragdoll": "catalog:",
     "eventti": "catalog:",
     "fuse.js": "catalog:",

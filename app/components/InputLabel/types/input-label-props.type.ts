@@ -1,4 +1,7 @@
-import type { CSSProperties } from 'vue'
+import type { AllowedComponentProps, CSSProperties } from 'vue'
+
+// Types
+import type { ITooltipProps } from '../../Tooltip/types/tooltip-props.type'
 
 // Constants
 import type { INPUT_LABEL_DEFAULT_PROPS } from '../constants/input-label-default-props'
@@ -27,6 +30,18 @@ export type IInputLabelProps = {
    * The input's label
    */
   label?: string | (() => string)
+
+  /**
+   * Label hint configuration
+   */
+  labelHint?: {
+    label?: string
+    icon?: string
+    props?: Omit<
+      Partial<ITooltipProps>,
+      'content' | 'modelValue' | 'referenceTarget'
+    > & AllowedComponentProps
+  }
 
   /**
    * The input's placeholder

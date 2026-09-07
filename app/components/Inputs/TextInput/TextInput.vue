@@ -39,7 +39,7 @@ const {
   el,
   inputId,
   masked,
-  typed,
+  setTypedValue,
   wrapperProps,
   hasContent,
   isBlurred,
@@ -128,7 +128,7 @@ defineExpose({
   blur,
   clear,
   getInputElement,
-  sync: (val: any) => typed.value = val,
+  sync: setTypedValue,
 })
 </script>
 

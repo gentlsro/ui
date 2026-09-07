@@ -56,7 +56,7 @@ const classes = computed(() => {
     { 'is-outlined': props.outlined },
     { 'is-bold': !props.noBold },
     { [`is-disabled is-disabled--${props.disableStyle}`]: props.disabled },
-    { 'has-label': props.label || slots.label },
+    { 'has-label': label.value || slots.label },
     { 'has-icon': props.icon || preset.value?.icon || slots.icon },
     { 'is-center': props.align === 'center' },
     { 'is-left': props.align === 'left' },
@@ -74,6 +74,17 @@ defineExpose({
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
     defaults: BTN_DEFAULT_PROPS.ui.containerClass({
+      align: props.align,
+      noUppercase: props.noUppercase,
+      noBold: props.noBold,
+      noDim: props.noDim,
+      round: props.round,
+      rounded: props.rounded,
+      outlined: props.outlined,
+      stacked: props.stacked,
+      disabled: props.disabled,
+      disableStyle: props.disableStyle,
+      hasLabel: !!(label.value || slots.label),
       size: props.size ?? 'md',
     }),
   })
@@ -100,6 +111,7 @@ const iconStyle = computed(() => {
 const labelClass = computed(() => {
   return mergedProps.value?.ui?.labelClass?.({
     defaults: BTN_DEFAULT_PROPS.ui.labelClass({
+      align: props.align,
       size: props.size ?? 'md',
     }),
   })

@@ -3,8 +3,13 @@
 import type { IDatePickerProps } from './types/datepicker-props.type'
 import type { DayEvent } from './types/DayEvent.type'
 
-// Models
-import type { Day } from '#layers/utilities/app/models/day.model'
+// Behavior
+import { useDatePickerSelection } from './functions/useDatePickerSelection'
+import { useDatePickerView } from './functions/useDatePickerView'
+
+// Views
+import DatePickerCalendar from './DatePickerCalendar.vue'
+import DatePickerPeriodGrid from './DatePickerPeriodGrid.vue'
 
 // Constants
 import { DATE_PICKER_DEFAULT_PROPS } from './constants/datepicker-default-props.constant'
@@ -17,7 +22,6 @@ const emits = defineEmits<{
 }>()
 
 // Utils
-const uiStore = useUIStore()
 const mergedProps = computed(() => getComponentMergedProps('datePicker', props))
 
 // Constants
@@ -25,7 +29,6 @@ const MIN_COUNT_OF_WEEKS = 6
 
 // Utils
 const {
-  formatDate,
   getPeriod,
   getExtendedPeriod,
   getDaysInPeriod,
@@ -33,7 +36,30 @@ const {
 
 // Layout
 const originalModel = defineModel<any>()
+const {
+  getLastValue,
+  isSelected,
+  isDayDisabled,
+  handleDaySelect,
+  selectToday,
+} = useDatePickerSelection(props, originalModel)
+
+const {
+  internalValue,
+  view,
+  navigationDate,
+  years,
+  navigate,
+  inputYear,
+  selectMonth,
+  selectYear,
+  sync,
+} = useDatePickerView(props, getLastValue)
+
+// Layout
+const excludedDays = toRef(props, 'excludedDays')
 const daysCount = computed(() => 7 - props.excludedDays.length)
+
 const daysInPeriod = computed(() => {
   return getDaysInPeriod(extendedPeriod, {
     excludedDays: excludedDays.value,
@@ -57,74 +83,10 @@ const eventsByDay = computed(() => {
 })
 
 function handleSelectToday() {
-  if (props.multi) {
-    model.value = [
-      ...(Array.isArray(model.value) ? model.value : model.value ? [model.value] : []),
-      $date().startOf('d'),
-    ]
-
-    return
-  }
-
-  model.value = $date().startOf('d')
+  view.value = 'days'
+  internalValue.value = $date().startOf('month')
+  selectToday()
 }
-
-function isSelected(day: Day) {
-  if (!hasValue.value) {
-    return false
-  }
-
-  return Array.isArray(model.value)
-    ? model.value.some(m => $date(m, { utc: props.utc }).isSame(day.dateObj, 'd'))
-    : $date(model.value, { utc: props.utc }).isSame(day.dateObj, 'd')
-}
-
-function isDayDisabled(day: Day) {
-  if (!props.disabledDays && !props.allowedDays) {
-    return false
-  }
-
-  if (typeof props.disabledDays === 'function') {
-    return props.disabledDays(day.dateObj)
-  } else if (props.disabledDays) {
-    return props.disabledDays.some(d => $date(d).isSame(day.dateObj, 'd'))
-  }
-
-  if (typeof props.allowedDays === 'function') {
-    return !props.allowedDays(day.dateObj)
-  } else if (props.allowedDays) {
-    return !props.allowedDays.some(d => $date(d).isSame(day.dateObj, 'd'))
-  }
-}
-
-// Data
-const model = computed<Datetime | Datetime[]>({
-  get() {
-    if (props.multi) {
-      if (Array.isArray(originalModel.value)) {
-        return originalModel.value.map(m => $date(m, { utc: props.utc }))
-      }
-
-      return originalModel.value ? [$date(originalModel.value, { utc: props.utc })] : []
-    }
-
-    if (isNil(originalModel.value) || originalModel.value === '') {
-      return null
-    }
-
-    return $date(originalModel.value, { utc: props.utc })
-  },
-  set(val) {
-    originalModel.value = val
-  },
-})
-
-/**
- * Internal value is used to navigate through months/years in the picker without
- * changing the actual `model`
- */
-const internalValue = ref<Datetime>(getLastValue())
-const excludedDays = toRef(props, 'excludedDays')
 
 const period = computed(() => {
   return getPeriod({ dateRef: internalValue, unit: 'month' })
@@ -137,94 +99,6 @@ const extendedPeriod = computed(() => {
     minCountOfWeeks: MIN_COUNT_OF_WEEKS,
   })
 })
-
-const hasValue = computed(() => {
-  if (Array.isArray(model.value)) {
-    return model.value.length > 0
-  }
-
-  return !isNil(model.value)
-})
-
-function handleDaySelect(day: Day, event: MouseEvent) {
-  if (isDayDisabled(day)) {
-    return
-  }
-
-  if (props.multi) {
-    const isTouch = uiStore.lastPointerDownEvent?.pointerType !== 'mouse'
-    const isCtrl = event.ctrlKey || event.metaKey || isTouch
-    const isShift = event.shiftKey
-    const _isSelected = isSelected(day)
-
-    // Ctrl click
-    if (isCtrl) {
-      if (_isSelected && Array.isArray(model.value)) {
-        model.value = model.value.filter(val => !$date(val).isSame(day.dateObj, 'd'))
-
-        return
-      }
-
-      model.value = [
-        ...(Array.isArray(model.value) ? model.value : model.value ? [model.value] : []),
-        $date(day.dateString, { utc: props.utc }),
-      ]
-    }
-
-    // Shift click
-    else if (isShift) {
-      event.preventDefault()
-      event.stopPropagation()
-      // Remove DOM selection
-      document.getSelection()?.removeAllRanges()
-
-      const isOneSelected = Array.isArray(model.value) && model.value.length === 1
-
-      if (isOneSelected) {
-        const selectedDate = (model.value as any[])[0] as Datetime
-        const isSame = $date(selectedDate, { utc: props.utc }).isSame(day.dateObj, 'd')
-
-        if (isSame) {
-          model.value = []
-        } else {
-          const datesSorted = [$date(selectedDate, { utc: props.utc }), day.dateObj].sort((a, b) => a.diff(b, 'd'))
-          let firstDate = datesSorted[0]!
-          const lastDate = datesSorted[1]!
-          const dates = [firstDate] as Datetime[]
-
-          while (firstDate.isBefore(lastDate, 'd')) {
-            dates.push(firstDate.add(1, 'd'))
-
-            firstDate = firstDate.add(1, 'd')
-          }
-
-          model.value = dates
-        }
-      } else {
-        model.value = [$date(day.dateString, { utc: props.utc })]
-      }
-    }
-
-    // Regular click
-    else {
-      model.value = [$date(day.dateString, { utc: props.utc })]
-    }
-
-    return
-  }
-
-  model.value = $date(day.dateString, { utc: props.utc })
-}
-
-// In case we are using `multi` mode, we sometimes need to get the last value to
-// set internal state or similar
-function getLastValue() {
-  if (Array.isArray(model.value)) {
-    return model.value[model.value.length - 1]
-  }
-
-  return model.value || $date()
-}
 
 watch(
   extendedPeriod,
@@ -263,9 +137,7 @@ const controlsStyle = computed(() => {
   return mergedProps.value?.ui?.controlsStyle?.()
 })
 
-defineExpose({
-  sync: () => internalValue.value = getLastValue(),
-})
+defineExpose({ sync })
 </script>
 
 <template>
@@ -285,57 +157,56 @@ defineExpose({
       overflow="hidden"
     >
       <DatePickerNavigation
-        v-model="internalValue"
+        v-model:view="view"
+        :model-value="internalValue"
         :utc
-        p="x-1 t-1"
+        p="x-2 t-1"
+        @navigate="navigate"
+        @year="inputYear"
       />
 
-      <!-- Days -->
-      <div
-        flex="~"
-        bg="white dark:darker"
-      >
-        <div
-          v-for="(day, dayIdx) in daysInPeriod.slice(0, daysCount)"
-          :key="dayIdx"
-          flex="~ center 1"
-          capitalize
-          font="semibold rem-12"
-          h="8"
-        >
-          {{ formatDate(day.dateValue, utc ? 'utcDayShort' : 'dayShort') }}
-        </div>
-      </div>
-
-      <div
-        data-onboarding="date-picker-days"
-        class="date-picker-days"
-        :class="daysGridClass"
-        :style="daysGridStyle"
-      >
-        <DatePickerDay
-          v-for="(day, idx) in daysInPeriod"
-          :key="idx"
-          :day="day"
-          :is-selected="isSelected(day)"
-          :disabled="isDayDisabled(day)"
+      <div class="date-picker-body">
+        <DatePickerCalendar
+          :ui="mergedProps.ui"
+          :month="navigationDate.format('YYYY-MM')"
+          :days="daysInPeriod"
+          :days-count="daysCount"
           :utc
-          :events="eventsByDay?.[day.dateString]"
-          @click="handleDaySelect(day, $event)"
+          :events-by-day="eventsByDay"
+          :is-selected="isSelected"
+          :is-day-disabled="isDayDisabled"
+          :grid-class="daysGridClass"
+          :grid-style="daysGridStyle"
+          :style="{ visibility: view === 'days' ? 'visible' : 'hidden' }"
+          :inert="view !== 'days'"
+          :aria-hidden="view !== 'days'"
+          @select="handleDaySelect"
+          @navigate="view === 'days' && navigate($event, 'month')"
         >
           <template
             v-if="$slots.day"
-            #day
+            #day="{ day }"
           >
             <slot
               name="day"
               :day
             />
           </template>
-        </DatePickerDay>
+        </DatePickerCalendar>
+
+        <DatePickerPeriodGrid
+          v-if="view !== 'days'"
+          :view
+          :date="navigationDate"
+          :years
+          :utc
+          @select="view === 'months' ? selectMonth($event) : selectYear($event)"
+          @navigate="navigate($event, 'year')"
+        />
       </div>
     </div>
 
+    <!-- Footer / Controls -->
     <div
       v-if="!noControls"
       class="date-picker-controls"
@@ -357,13 +228,22 @@ defineExpose({
 </template>
 
 <style lang="scss" scoped>
+.date-picker,
+.date-picker :deep(input),
+.date-picker :deep(button) {
+  font-variant-numeric: tabular-nums;
+}
+
 .date-picker {
   width: min(90vw, 400px);
   max-width: 100%;
 }
 
-.date-picker-days {
-  overflow: hidden;
-  grid-auto-rows: minmax(40px, auto);
+.date-picker-body {
+  display: grid;
+
+  > * {
+    grid-area: 1 / 1;
+  }
 }
 </style>

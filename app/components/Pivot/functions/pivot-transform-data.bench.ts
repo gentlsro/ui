@@ -1,4 +1,4 @@
-import { bench, vi } from 'vitest'
+import { test, vi } from 'vitest'
 
 const summary = {
   SUM: 'SUM' as SummaryEnum,
@@ -58,33 +58,41 @@ const pathologicalData = Array.from({ length: 10_000 }, (_, index) => ({
   amount: index,
 }))
 
-bench('100k source rows, moderate cardinality', () => {
-  pivotTransformDataCore({ data: moderateData, rows, columns, values })
-}, { iterations: 5, warmupIterations: 1 })
+test('100k source rows, moderate cardinality', async ({ bench }) => {
+  await bench('transform', () => {
+    pivotTransformDataCore({ data: moderateData, rows, columns, values })
+  }).run({ iterations: 5, warmupIterations: 1 })
+})
 
-bench('100k source rows, approximately 250k logical cells', () => {
-  pivotTransformDataCore({ data: highCardinalityData, rows, columns, values: [values[0]!] })
-}, { iterations: 5, warmupIterations: 1 })
+test('100k source rows, approximately 250k logical cells', async ({ bench }) => {
+  await bench('transform', () => {
+    pivotTransformDataCore({ data: highCardinalityData, rows, columns, values: [values[0]!] })
+  }).run({ iterations: 5, warmupIterations: 1 })
+})
 
-bench('100k source rows, values projected on rows', () => {
-  pivotTransformDataCore({
-    data: moderateData,
-    rows,
-    columns,
-    values,
-    valuesOnRows: true,
-  })
-}, { iterations: 5, warmupIterations: 1 })
+test('100k source rows, values projected on rows', async ({ bench }) => {
+  await bench('transform', () => {
+    pivotTransformDataCore({
+      data: moderateData,
+      rows,
+      columns,
+      values,
+      valuesOnRows: true,
+    })
+  }).run({ iterations: 5, warmupIterations: 1 })
+})
 
-bench('unique row by unique column warning preparation', () => {
-  const prepared = preparePivotTransformData({
-    data: pathologicalData,
-    rows,
-    columns,
-    values: [values[0]!],
-  })
+test('unique row by unique column warning preparation', async ({ bench }) => {
+  await bench('prepare', () => {
+    const prepared = preparePivotTransformData({
+      data: pathologicalData,
+      rows,
+      columns,
+      values: [values[0]!],
+    })
 
-  if (prepared.estimate.logicalCellCount < 100_000_000) {
-    throw new Error('Pathological case did not exceed its expected output cardinality.')
-  }
-}, { iterations: 5, warmupIterations: 1 })
+    if (prepared.estimate.logicalCellCount < 100_000_000) {
+      throw new Error('Pathological case did not exceed its expected output cardinality.')
+    }
+  }).run({ iterations: 5, warmupIterations: 1 })
+})

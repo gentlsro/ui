@@ -19,6 +19,12 @@ import DynamicInput from '../../Inputs/DynamicInput/DynamicInput.vue'
 const DATE_TYPES = getDateTypes()
 const NON_VALUE_COMPARATORS = getNonValueComparators()
 
+function normalizeColumnWidth(width?: string) {
+  // Font-relative ch widths resolve differently in header and body cells.
+  // Also normalize saved layouts and expressions such as calc(40ch + 8px).
+  return !width || /[\d.]ch\b/i.test(width) ? '320px' : width
+}
+
 export class TableColumn<T = IItem> {
   /**
    * The name of the column
@@ -41,7 +47,8 @@ export class TableColumn<T = IItem> {
   label?: string | (() => string)
 
   /**
-   * Initial width of the column
+   * Initial width of the column. Defaults to 320px.
+   * Unsupported ch widths fall back to the default during construction.
    */
   width: string
 
@@ -632,8 +639,8 @@ export class TableColumn<T = IItem> {
     this.label = col.label
     this.field = col.field
     this.filterField = col.filterField || this.field
-    this.width = col.width || '40ch'
-    this.originalWidth = col.originalWidth ?? this.width
+    this.width = normalizeColumnWidth(col.width)
+    this.originalWidth = normalizeColumnWidth(col.originalWidth ?? this.width)
     this.minWidth = col.minWidth
     this.hideLabel = col.hideLabel
     this.sortable = col.sortable ?? true

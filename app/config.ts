@@ -327,6 +327,13 @@ export const defaultComponentsConfig = {
       ui: {
         containerClass: ({ defaults }) => defaults.all,
         daysGridClass: ({ defaults }) => defaults.all,
+        dayClass: ({ defaults }) => defaults.all,
+        dayNumberClass: ({ defaults }) => defaults.all,
+        dayEdgeClass: ({ defaults }) => defaults.all,
+        dayNumberWrapperClass: ({ defaults }) => defaults.all,
+        dayEventsClass: ({ defaults }) => defaults.all,
+        dayEventsContainerClass: ({ defaults }) => defaults.all,
+        dayEventClass: ({ defaults }) => defaults.all,
         controlsClass: ({ defaults }) => defaults.all,
       },
     },
@@ -563,12 +570,15 @@ export const defaultComponentsConfig = {
     props: {
       required: undefined,
       activeLabelColor: 'var(--color-primary)',
+      labelHint: {
+        icon: 'i-lucide:info',
+      },
       ui: {
         labelClass: ({ defaults }) => defaults.all,
         labelInlineWidth: '200px',
       },
     },
-    merge: ['ui'],
+    merge: ['ui', 'labelHint'],
   },
 
   // InputWrapper
@@ -580,6 +590,7 @@ export const defaultComponentsConfig = {
       errors: undefined,
       errorVisible: undefined,
       hint: undefined,
+      labelHint: undefined,
       layout: 'regular',
       loading: undefined,
       marker: undefined,
@@ -1422,6 +1433,7 @@ export const defaultComponentsConfig = {
       emptyValue: undefined,
       errorTakesSpace: true,
       errorVisible: true,
+      labelHint: undefined,
       mask: { mask: /.*/ },
       required: undefined,
       size: 'md',

@@ -1,11 +1,9 @@
-import { useIMask } from 'vue-imask'
-import { createMask } from 'imask'
-
 // Types
 import type { IInputUtilsOptions } from '../types/input-utils-options.type'
 
 // Functions
 import { useInputWrapperUtils } from './useInputWrapperUtils'
+import { useInputMask } from './useInputMask'
 
 export function useInputUtils(options: IInputUtilsOptions) {
   const {
@@ -40,7 +38,20 @@ export function useInputUtils(options: IInputUtilsOptions) {
   const lastValidValue = ref<any>()
   const { emptyValue } = toRefs(props)
 
-  const { el, mask, masked, unmasked, typed } = useIMask(maskRef, {
+  const originalModel = useVModel(props, 'modelValue', undefined, { defaultValue: props.emptyValue })
+  const model = ref(originalModel.value)
+
+  const { el, mask, masked, unmasked, typed, setTypedValue, clear: clearMask } = useInputMask(maskRef, {
+    initialValue: model.value,
+    getReformatValue: options.preserveValueOnMaskChange
+      ? () => {
+          if (isInitialized.value && mask.value?.masked.isComplete === false) {
+            model.value = lastValidValue.value
+          }
+          return model.value
+        }
+      : undefined,
+    isEmptyValue: value => isNil(value) || isEqual(value, props.emptyValue),
     onAccept: ev => {
       nextTick(() => {
         const val = maskEventHandlers?.onAccept?.(
@@ -50,7 +61,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
         )
 
         if (!isNil(val)) {
-          typed.value = val
+          setTypedValue(val)
         }
 
         syncTypedWithModel()
@@ -60,23 +71,6 @@ export function useInputUtils(options: IInputUtilsOptions) {
       nextTick(() => maskEventHandlers?.onCompleted?.(lastValidValue.value, ev))
     },
   })
-
-  const originalModel = useVModel(props, 'modelValue', undefined, { defaultValue: props.emptyValue })
-  const model = ref(originalModel.value)
-
-  // We also need to create an instance of mask to get the `masked` value
-  // because `useIMask` initializes values in `onMounted` which would break SSR
-  const temporaryMask = createMask(toValue(maskRef.value))
-  temporaryMask.typedValue = model.value
-
-  // Init the values
-  const isModelEmpty = isNil(model.value) || model.value === props.emptyValue
-
-  if (!isModelEmpty) {
-    masked.value = temporaryMask.value
-    typed.value = temporaryMask.typedValue
-    unmasked.value = temporaryMask.unmaskedValue
-  }
 
   const isEmpty = computed(() => {
     return (
@@ -144,8 +138,6 @@ export function useInputUtils(options: IInputUtilsOptions) {
   const clear = (shouldFocusAfterClear?: boolean) => {
     model.value = props.emptyValue
     originalModel.value = props.emptyValue
-    // typed.value = ''
-    // masked.value = ''
 
     if (shouldFocusAfterClear || !isBlurred.value) {
       setTimeout(focus, 0)
@@ -195,7 +187,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
         || toValue(originalModel) === toValue(emptyValue)
 
       if (isModelEmpty) {
-        unmasked.value = ''
+        clearMask()
       } else {
         model.value = lastValidValue.value
       }
@@ -324,33 +316,8 @@ export function useInputUtils(options: IInputUtilsOptions) {
     model.value = value
   }
 
-  // We sync the `model` with the `typed` value from iMask
-  watch(model, val => {
-    const isEmptyValue = isEqual(val, props.emptyValue)
-    const isSame = isEqual(val, typed.value) || (typed.value === '' && isEmptyValue)
-
-    // Special case
-    // IMask parses Number('') as 0, so `typed` already equals 0 while the field is still
-    // visually empty. Setting `typed` to 0 then no-ops in Vue/vue-imask — push the display
-    // through `unmasked`/`masked` instead.
-    if (isSame && !isEmptyValue && unmasked.value === '') {
-      const displayValue = String(val)
-      unmasked.value = displayValue
-      masked.value = displayValue
-
-      return
-    }
-
-    if (!isSame) {
-      if (isEmptyValue) {
-        // typed.value = props.emptyValue
-        // masked.value = ''
-        unmasked.value = ''
-      } else {
-        typed.value = val
-      }
-    }
-  })
+  // IMask handles equality, formatting, and empty numeric values.
+  watch(model, setTypedValue)
 
   // We also need to sync the `model` when the `originalModel` changes
   watch(originalModel, val => {
@@ -389,6 +356,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
     unmasked,
     hasNoValue: isEmpty,
     lastValidValue,
+    setTypedValue,
 
     handleBlur,
     clear,
