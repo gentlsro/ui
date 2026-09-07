@@ -35,17 +35,11 @@ const isLabelHintTooltipOpen = shallowRef(false)
 const labelHintTooltipId = useId()
 const isMobileLabelHint = $bp.smaller('md')
 
-const labelHint = computed(() => mergedProps.value.labelHint)
-
-const hasLabelHint = computed(() => {
-  return Boolean(labelHint.value?.label)
-})
-
 const labelHintTooltipProps = computed(() => ({
   placement: isMobileLabelHint.value ? 'bottom-end' : 'right',
-  ...labelHint.value?.props,
+  ...mergedProps.value.labelHint?.props,
 // show label without delay when manual is true
-  ...(labelHint.value?.props?.manual && { delay: [0, 0] as [number, number] }),
+  ...(mergedProps.value.labelHint?.props?.manual && { delay: [0, 0] as [number, number] }),
   manual: false,
 }))
 
@@ -54,6 +48,7 @@ const labelClassLocal = computed(() => {
   const isInline = props.layout === 'inline'
   const isInside = props.layout === 'label-inside'
   const isRegular = props.layout === 'regular'
+  const hasLabelHint = Boolean(mergedProps.value.labelHint?.label)
 
   return [
     `label--${props.size}`,
@@ -65,8 +60,8 @@ const labelClassLocal = computed(() => {
       'is-floating': !isInline && (props.stackLabel || props.placeholder || props.hasContent),
       'is-mounted': isMounted.value,
       'is-focusable': props.ui?.focusInputOnLabelClick,
-      'has-hint': hasLabelHint.value,
-      'is-mobile-hint': hasLabelHint.value && isMobileLabelHint.value,
+      'has-hint': hasLabelHint,
+      'is-mobile-hint': hasLabelHint && isMobileLabelHint.value,
     },
   ]
 })
@@ -123,26 +118,25 @@ onMounted(() => {
 
       <!-- Label hint -->
       <span
-        v-if="hasLabelHint"
+        v-if="mergedProps.labelHint?.label"
         class="label__hint"
         role="button"
         tabindex="0"
-        :aria-label="labelHint?.label"
+        :aria-label="mergedProps.labelHint?.label"
         :aria-describedby="isLabelHintTooltipOpen ? labelHintTooltipId : undefined"
         @click.stop.prevent
         @keydown.enter.space.stop.prevent
       >
         <span
           class="label__hint-icon"
-          :class="labelHint?.icon"
+          :class="mergedProps.labelHint?.icon"
         />
 
         <Tooltip
-          v-if="labelHint?.label"
           :id="labelHintTooltipId"
           v-model="isLabelHintTooltipOpen"
           :offset="8"
-          :content="{ title: labelHint?.label }"
+          :content="{ title: mergedProps.labelHint?.label }"
           v-bind="labelHintTooltipProps"
         />
       </span>
