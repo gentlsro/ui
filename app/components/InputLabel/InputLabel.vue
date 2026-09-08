@@ -178,6 +178,12 @@ label.label {
   &.is-inline {
     @apply order--1 font-rem-13;
 
+    .label__text {
+      overflow: visible;
+      text-overflow: clip;
+      white-space: normal;
+    }
+
     @screen md {
       @apply text-right font-rem-14 p-y-0.5 p-x-0;
 
