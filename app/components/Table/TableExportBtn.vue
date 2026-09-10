@@ -19,13 +19,15 @@ const {
 async function handleExportData(exportDefinition: ITableExport) {
   isExporting.value = true
 
-  await tableExportData({
-    rows: rows.value,
-    columns: visibleColumns.value.filter(col => !col.isHelperCol),
-    exportDefinition,
-  })
-
-  isExporting.value = false
+  try {
+    await tableExportData({
+      rows: rows.value,
+      columns: visibleColumns.value.filter(col => !col.isHelperCol),
+      exportDefinition,
+    })
+  } finally {
+    isExporting.value = false
+  }
 }
 </script>
 

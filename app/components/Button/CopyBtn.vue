@@ -13,6 +13,7 @@ const props = withDefaults(defineProps<IBtnProps & {
 
 // Copy
 const { copy, copied, isSupported } = useClipboard({ copiedDuring: 2000 })
+const isMounted = useMounted()
 
 const copyBtnSize = computed(() => {
   switch (props.size) {
@@ -50,7 +51,7 @@ async function handleCopy() {
 
 <template>
   <Btn
-    v-if="isSupported"
+    v-if="isMounted && isSupported"
     :size="copyBtnSize"
     :tooltip
     :label
