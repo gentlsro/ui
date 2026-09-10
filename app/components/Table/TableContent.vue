@@ -6,7 +6,7 @@ import type { IVirtualScrollEvent } from '../VirtualScroller/types/virtual-scrol
 
 // Store
 import { useTableStore } from './stores/table.store'
-import { tableEditMoveCell } from './functions/table-edit-move-cell'
+import { useTableCellNavigation } from './composables/useTableCellNavigation'
 
 // Constants
 import { TABLE_DEFAULT_PROPS } from './constants/table-default-props.constant'
@@ -32,7 +32,6 @@ type SlotProps = {
 const FETCH_MORE_THRESHOLD = 10
 
 // Store
-const { activeElement } = storeToRefs(useUIStore())
 const tableStore = useTableStore()
 const {
   rowKey,
@@ -41,7 +40,6 @@ const {
   virtualScrollEl,
   visibleColumns,
   cellEdit,
-  isCardView,
   hasMore,
   isFetchMore,
   paginationConfig,
@@ -152,41 +150,7 @@ watch(cellEdit, (cellEdit, oldCellEdit) => {
   })
 })
 
-onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter'], ev => {
-  const isInsideEditCell = !!activeElement.value?.closest('.active-edit-cell')
-  const isCtrlKey = ev.ctrlKey || ev.metaKey
-
-  if (isInsideEditCell && tableEl.value && cellEdit.value) {
-    if (ev.key === 'Escape') {
-      cellEdit.value = undefined
-    } else if (ev.key === 'Enter') {
-      tableStore.saveCellEditValue()
-
-      if (!isCtrlKey) {
-        tableEditMoveCell({
-          tableEl: tableEl.value,
-          isCardView: isCardView.value,
-          cellEdit: cellEdit.value,
-          ev: { key: 'ArrowRight' },
-          virtualScrollEl: virtualScrollEl.value,
-        })
-      } else {
-        cellEdit.value = undefined
-      }
-
-      ev.preventDefault()
-      ev.stopPropagation()
-    } else if (isCtrlKey) {
-      tableEditMoveCell({
-        tableEl: tableEl.value,
-        isCardView: isCardView.value,
-        cellEdit: cellEdit.value,
-        ev,
-        virtualScrollEl: virtualScrollEl.value,
-      })
-    }
-  }
-})
+useTableCellNavigation(tableStore, toRef(props, 'editable'))
 </script>
 
 <template>
