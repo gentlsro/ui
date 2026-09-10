@@ -40,7 +40,7 @@ export function useTableCellNavigation(store: ReturnType<typeof useTableStore>, 
     const cells = Array.from(tableEl.value?.querySelectorAll<HTMLElement>('.td.is-editable[data-key][data-field]') ?? [])
 
     const selected = findSelectedCell()
-    const tabStop = selected && cells.includes(selected) ? selected : cells[0]
+    const tabStop = isCardView.value ? undefined : selected && cells.includes(selected) ? selected : cells[0]
 
     for (const cell of cells) {
       cell.tabIndex = cell === tabStop ? 0 : -1
@@ -48,7 +48,7 @@ export function useTableCellNavigation(store: ReturnType<typeof useTableStore>, 
   }
 
   function focusSelectedCell() {
-    if (!pendingFocus || cellEdit.value) {
+    if (isCardView.value || !pendingFocus || cellEdit.value) {
       return
     }
 
@@ -65,10 +65,14 @@ export function useTableCellNavigation(store: ReturnType<typeof useTableStore>, 
   }
 
   async function revealSelection() {
+    if (isCardView.value) {
+      return
+    }
+
     pendingFocus = true
     await nextTick()
 
-    if (!pendingFocus || cellEdit.value) {
+    if (isCardView.value || !pendingFocus || cellEdit.value) {
       return
     }
 
@@ -102,7 +106,7 @@ export function useTableCellNavigation(store: ReturnType<typeof useTableStore>, 
     attributeFilter: ['class', 'data-key', 'data-field'],
   })
   
-  watch([tableEl, selectedCell], updateTabStop, { flush: 'post' })
+  watch([tableEl, selectedCell, isCardView], updateTabStop, { flush: 'post' })
 
   watch(selectedCell, () => {
     if (selectedCell.value) {
@@ -136,7 +140,7 @@ export function useTableCellNavigation(store: ReturnType<typeof useTableStore>, 
   useEventListener(tableEl, 'focusin', (ev: FocusEvent) => {
     const el = ev.target
 
-    if (!(el instanceof HTMLElement) || !el.matches('.td.is-editable')) {
+    if (isCardView.value || !(el instanceof HTMLElement) || !el.matches('.td.is-editable')) {
       return
     }
 
@@ -215,7 +219,7 @@ export function useTableCellNavigation(store: ReturnType<typeof useTableStore>, 
   useEventListener(tableEl, 'keydown', (ev: KeyboardEvent) => {
     const target = ev.target
 
-    if (!(target instanceof HTMLElement) || ev.defaultPrevented || ev.isComposing || ev.altKey) {
+    if (isCardView.value || !(target instanceof HTMLElement) || ev.defaultPrevented || ev.isComposing || ev.altKey) {
       return
     }
     

@@ -12,11 +12,13 @@ export function tableToggleBooleanCell(store: ReturnType<typeof useTableStore>, 
     store.saveCellEditValue()
   }
 
-  store.selectedCell.value = { 
-    rowKey: row[store.rowKey.value],
-    field: column.field
+  if (!store.isCardView.value) {
+    store.selectedCell.value = { 
+      rowKey: row[store.rowKey.value],
+      field: column.field,
+    }
   }
-  
+
   store.cellEdit.value = { row, column }
 
   store.loadCellEditValue()

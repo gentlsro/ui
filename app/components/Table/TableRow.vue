@@ -318,7 +318,13 @@ function handleEditCell(
     return
   }
 
-  handleSelectCell(rowData, column)
+  if (isCardView.value) {
+    if (cellEdit.value) {
+      tableStore.saveCellEditValue()
+    }
+  } else {
+    handleSelectCell(rowData, column)
+  }
 
   cellEdit.value = { row: rowData.row, column: column.column }
   tableStore.loadCellEditValue()
@@ -445,12 +451,8 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
           column.cellClass, 
           {
             'is-editing': isEditingCell(rowData, column),
-            'is-cell-selected': isSelectedCell(rowData.row, column),
           },
         ]"
-        :tabindex="column.isEditable ? -1 : undefined"
-        @click="handleSelectCell(rowData, column, $event)"
-        @dblclick="handleEditCell(rowData, column, $event)"
         :data-field="column.column.field"
         :data-key="rowData.rowKey"
       >
@@ -463,7 +465,6 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
             v-if="column.isEditable"
             size="xs"
             class="edit-btn"
-            tabindex="-1"
             icon="i-material-symbols:edit-rounded"
             @click.stop.prevent="handleEditCell(rowData, column)"
           />
@@ -473,7 +474,6 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
             v-if="column.isEditable"
             size="xs"
             class="cancel-edit-btn"
-            tabindex="-1"
             preset="CLOSE"
             no-dim
             @click.stop.prevent="handleCancelEditCell"
@@ -490,6 +490,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
               v-bind="getEditComponentProps(rowData.row, column)"
               size="sm"
               class="active-edit-cell"
+              :no-border="false"
               grow
               @vue:mounted="handleEditCellMounted"
               @click.stop
@@ -572,6 +573,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
           v-bind="getEditComponentProps(rowDataArray[0].row, column)"
           size="sm"
           class="active-edit-cell"
+          no-border
           grow
           @vue:mounted="handleEditCellMounted"
           @click.stop
@@ -613,7 +615,16 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
 </template>
 
 <style scoped lang="scss">
-.is-cell-selected {
+.is-row .active-edit-cell {
+  --padding: 0 !important;
+  --margin: 0 !important;
+
+  :deep(.input-wrapper-border) {
+    background-color: transparent;
+  }
+}
+
+.is-row .is-cell-selected {
   @apply outline-2 outline-primary outline-offset--2;
   outline-style: solid;
 }
