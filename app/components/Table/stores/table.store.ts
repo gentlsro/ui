@@ -133,6 +133,7 @@ const [
       selectionByKey,
 
       // Editing
+      selectedCell,
       cellEdit,
       isEditingCell,
       cellEditValue,
@@ -548,11 +549,12 @@ const [
   // !SECTION
 
   // SECTION Editing
+  const selectedCell = ref<{ rowKey: unknown, field: string }>()
   const cellEdit = ref<{ row: IItem, column: TableColumn }>()
 
   const {
     model: cellEditValue,
-    syncFromParent: loadCellEditValue,
+    syncFromOrigin: loadCellEditValue,
   } = useRefReset(
     () => {
       const field = cellEdit.value?.column.field
@@ -910,6 +912,7 @@ const [
     selectionByKey,
 
     // Editing
+    selectedCell,
     cellEdit,
     isEditingCell,
     cellEditValue,
