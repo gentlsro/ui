@@ -369,11 +369,14 @@ export const defaultComponentsConfig = {
   drawer: {
     props: {
       absolute: undefined,
+      absoluteBreakpoint: undefined,
       closeOnClickOutside: false,
       breakpoint: 'md',
       fullHeight: undefined,
+      mode: 'fixed',
       modelValue: undefined,
       noTitle: undefined,
+      noTransition: undefined,
       side: 'right',
       title: undefined,
       width: 480,

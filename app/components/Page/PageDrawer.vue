@@ -100,8 +100,11 @@ const fillerStyle = computed(() => {
 // Click outside
 const drawerEl = ref<HTMLElement | null>(null)
 
+// The `click` ending a drag (panning, text selection…) must not close the drawer
+const { isDragRelease } = useDragRelease()
+
 function handleClickOutside(ev: Event) {
-  if (!model.value || !props.closeOnClickOutside) {
+  if (!model.value || !props.closeOnClickOutside || isDragRelease(ev)) {
     return
   }
 
