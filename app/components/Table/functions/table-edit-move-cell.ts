@@ -1,96 +1,67 @@
-// Models
 import type { TableColumn } from '../models/table-column.model'
+import { tableIsCellEditable } from './table-is-cell-editable'
 
+// Use data indices so navigation works beyond the rendered cells.
 export function tableEditMoveCell(payload: {
-  tableEl: HTMLElement
+  rows: IItem[]
+  columns: Pick<TableColumn, 'field' | 'isHelperCol' | 'noEdit'>[]
+  rowIndex: number
+  columnIndex: number
+  key: string
+  shiftKey?: boolean
   isCardView: boolean
-  cellEdit: { row: IItem, column: TableColumn }
-  ev: Partial<Pick<KeyboardEvent, 'key' | 'stopPropagation' | 'preventDefault'>>
-  virtualScrollEl?: any
 }) {
-  const { isCardView, cellEdit, tableEl, ev, virtualScrollEl } = payload
-  let currentCell = tableEl.querySelector('.active-edit-cell') as HTMLElement
-  currentCell = currentCell?.closest('.td') as HTMLElement
+  const { rows, columns, key, shiftKey, isCardView } = payload
+  let { rowIndex, columnIndex } = payload
 
-  let nextCell: HTMLElement | undefined
+  const step = shiftKey ? -1 : 1
+  const sequential = key === 'Tab'
+  let rowStep = 0
+  let columnStep = 0
 
-  // Card view
-  if (isCardView) {
-    if (ev.key === 'ArrowUp') {
-      const tableCells = tableEl.querySelectorAll('.td.is-editable') as NodeListOf<HTMLElement>
-      const currentCellIdx = Array.from(tableCells).findIndex(el => el === currentCell)
+  if (sequential) {
+    columnStep = step
+  } else if (key === 'Enter' || key === 'ArrowUp' || key === 'ArrowDown') {
+    const direction = key === 'Enter' ? step : key === 'ArrowUp' ? -1 : 1
 
-      if (currentCellIdx > 0) {
-        nextCell = tableCells[currentCellIdx - 1]
-      }
-    } else if (ev.key === 'ArrowDown') {
-      const tableCells = tableEl.querySelectorAll('.td.is-editable') as NodeListOf<HTMLElement>
-      const currentCellIdx = Array.from(tableCells).findIndex(el => el === currentCell)
-
-      if (currentCellIdx < tableCells.length - 1) {
-        nextCell = tableCells[currentCellIdx + 1]
-      }
-    } else if (ev.key === 'ArrowLeft') {
-      const tableCells = tableEl.querySelectorAll(`.td.is-editable[data-field="${cellEdit.column.field}"]`) as NodeListOf<HTMLElement>
-      const currentCellIdx = Array.from(tableCells).findIndex(el => el === currentCell)
-
-      if (currentCellIdx > 0) {
-        nextCell = tableCells[currentCellIdx - 1]
-      }
-    } else if (ev.key === 'ArrowRight') {
-      const tableCells = tableEl.querySelectorAll(`.td.is-editable[data-field="${cellEdit.column.field}"]`) as NodeListOf<HTMLElement>
-      const currentCellIdx = Array.from(tableCells).findIndex(el => el === currentCell)
-
-      if (currentCellIdx < tableCells.length - 1) {
-        nextCell = tableCells[currentCellIdx + 1]
-      }
+    if (isCardView) {
+      columnStep = direction
+    } else {
+      rowStep = direction
     }
+  } else if (key === 'ArrowLeft' || key === 'ArrowRight') {
+    const direction = key === 'ArrowLeft' ? -1 : 1
+
+    if (isCardView) {
+      rowStep = direction
+    } else {
+      columnStep = direction
+    }
+  } else {
+    return
   }
 
-  // Row view
-  else {
-    if (ev.key === 'ArrowUp') {
-      const tableCells = tableEl.querySelectorAll(`.td.is-editable[data-field="${cellEdit.column.field}"]`) as NodeListOf<HTMLElement>
-      const currentCellIdx = Array.from(tableCells).findIndex(el => el === currentCell)
-
-      if (currentCellIdx > 0) {
-        nextCell = tableCells[currentCellIdx - 1]
-      }
-    } else if (ev.key === 'ArrowDown') {
-      const tableCells = tableEl.querySelectorAll(`.td.is-editable[data-field="${cellEdit.column.field}"]`) as NodeListOf<HTMLElement>
-      const currentCellIdx = Array.from(tableCells).findIndex(el => el === currentCell)
-
-      if (currentCellIdx < tableCells.length - 1) {
-        nextCell = tableCells[currentCellIdx + 1]
-      }
-    } else if (ev.key === 'ArrowLeft') {
-      const tableCells = tableEl.querySelectorAll('.td.is-editable') as NodeListOf<HTMLElement>
-      const currentCellIdx = Array.from(tableCells).findIndex(el => el === currentCell)
-
-      if (currentCellIdx > 0) {
-        nextCell = tableCells[currentCellIdx - 1]
-      }
-    } else if (ev.key === 'ArrowRight') {
-      const tableCells = tableEl.querySelectorAll('.td.is-editable') as NodeListOf<HTMLElement>
-      const currentCellIdx = Array.from(tableCells).findIndex(el => el === currentCell)
-
-      if (currentCellIdx < tableCells.length - 1) {
-        nextCell = tableCells[currentCellIdx + 1]
-      }
-    }
+  if (rowIndex < 0 || columnIndex < 0 || !columns.length) {
+    return
   }
 
-  const nextCellEditBtn = isCardView
-    ? nextCell?.querySelector('.edit-btn') as HTMLElement
-    : nextCell as HTMLElement
+  while (true) {
+    rowIndex += rowStep
+    columnIndex += columnStep
 
-  if (nextCellEditBtn) {
-    nextCellEditBtn.click()
-    ;(nextCellEditBtn.parentNode as HTMLElement)?.scrollIntoView({ block: 'center' })
+    if (sequential && (columnIndex < 0 || columnIndex >= columns.length)) {
+      rowIndex += step
+      columnIndex = step > 0 ? 0 : columns.length - 1
+    }
 
-    virtualScrollEl?.triggerScrollEvent()
+    if (rowIndex < 0 || rowIndex >= rows.length || columnIndex < 0 || columnIndex >= columns.length) {
+      return
+    }
 
-    ev.preventDefault?.()
-    ev.stopPropagation?.()
+    const row = rows[rowIndex]!
+    const column = columns[columnIndex]!
+    if (tableIsCellEditable(row, column)) {
+      return { row, column, rowIndex, columnIndex }
+    }
   }
 }

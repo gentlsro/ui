@@ -1,10 +1,10 @@
 import type { TableColumn } from '../models/table-column.model'
 import type { useTableStore } from '../stores/table.store'
 
-export function tableToggleBooleanCell(store: ReturnType<typeof useTableStore>, row: IItem, column: TableColumn) {
-  const noEdit = column.noEdit ?? false
+import { tableIsCellEditable } from './table-is-cell-editable'
 
-  if (column.isHelperCol || noEdit === true || (noEdit !== false && noEdit(row))) {
+export function tableToggleBooleanCell(store: ReturnType<typeof useTableStore>, row: IItem, column: TableColumn) {
+  if (!tableIsCellEditable(row, column)) {
     return
   }
 

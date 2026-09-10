@@ -3,7 +3,7 @@
 // unnecessary creation of vue components for each cell and to keep consistency
 // between card and regular views
 
-import { NuxtLink } from '#components'
+import { Checkbox, NuxtLink } from '#components'
 
 // Types
 import type { ITableProps } from './types/table-props.type'
@@ -14,6 +14,8 @@ import type { TableColumn } from './models/table-column.model'
 
 // Functions
 import { tableSelectRow } from './functions/table-select-row'
+import { tableIsCellEditable } from './functions/table-is-cell-editable'
+import { isTableBooleanCheckbox, tableToggleBooleanCell } from './functions/table-toggle-boolean-cell'
 
 // Constants
 import { TABLE_DEFAULT_PROPS } from './constants/table-default-props.constant'
@@ -69,6 +71,7 @@ const {
   selectionConfig,
   rowsColumnCount,
   isCardView,
+  selectedCell,
   cellEdit,
   isEditingCell: isEditingCellStore,
   cellEditValue,
@@ -109,8 +112,7 @@ const rowDataArray = computed(() => {
             return undefined
           }
 
-          const colEditable = !col.isHelperCol && !(typeof col.noEdit === 'function' ? col.noEdit(row) : col.noEdit)
-          const isEditable = isEditableRow.value && colEditable
+          const isEditable = isEditableRow.value && tableIsCellEditable(row, col)
 
           const cellValue = col.valueGetter(row)
 	          const cellFormattedValue = formatValue(cellValue, row, {
@@ -260,13 +262,63 @@ function handleSelectToggle(row: IItem, ev?: MouseEvent) {
   }
 }
 
+function isSelectedCell(row: IItem, column: IRowColumn) {
+  return selectedCell.value?.rowKey === row[rowKey.value]
+    && selectedCell.value?.field === column.column.field
+}
+
+function isCellControlEvent(ev?: MouseEvent) {
+  if (!ev || !(ev.target instanceof Element) || !(ev.currentTarget instanceof Element)) {
+    return false
+  }
+
+  const control = ev.target.closest('a, button, input, textarea, select, [contenteditable="true"]')
+
+  return !!control && ev.currentTarget.contains(control)
+}
+
+function handleSelectCell(
+  rowData: typeof rowDataArray.value[number],
+  column: IRowColumn,
+  ev?: MouseEvent,
+) {
+  if (!column.isEditable || isCellControlEvent(ev)) {
+    return
+  }
+
+  if (cellEdit.value) {
+    tableStore.saveCellEditValue()
+    cellEdit.value = undefined
+  }
+
+  selectedCell.value = {
+    rowKey: rowData.row[rowKey.value], 
+    field: column.column.field 
+  }
+
+  ev?.preventDefault()
+  ev?.stopPropagation()
+}
+
 function handleEditCell(
   rowData: typeof rowDataArray.value[number],
   column: IRowColumn,
+  e?: MouseEvent,
 ) {
-  if (!column.isEditable) {
+  if (!column.isEditable || isEditingCell(rowData, column)
+    || isCellControlEvent(e)) {
     return
   }
+
+  e?.preventDefault()
+  e?.stopPropagation()
+
+  if (isTableBooleanCheckbox(column.column)) {
+    handleToggleBoolean(rowData.row, column)
+    return
+  }
+
+  handleSelectCell(rowData, column)
 
   cellEdit.value = { row: rowData.row, column: column.column }
   tableStore.loadCellEditValue()
@@ -277,17 +329,26 @@ function handleCancelEditCell() {
 }
 
 function handleEditCellMounted() {
-  const el = tableEl.value?.querySelector('.active-edit-cell') as HTMLElement
-  const controlEl = el?.querySelector('.control') as any
+  const el = tableEl.value?.querySelector<HTMLElement>('.active-edit-cell')
+  const controlEl = el?.querySelector<HTMLInputElement | HTMLTextAreaElement>('.control')
+  const focusEl = controlEl ?? (el?.matches('[tabindex]') ? el : el?.querySelector<HTMLElement>('[tabindex]:not([tabindex="-1"])'))
 
-  if (controlEl) {
-    controlEl.select?.() ?? controlEl.focus?.()
+  focusEl?.focus({ preventScroll: true })
+  
+  if (controlEl?.setSelectionRange && ['text', 'search', 'tel', 'url', 'password', 'textarea'].includes(controlEl.type)) {
+    controlEl.setSelectionRange(controlEl.value.length, controlEl.value.length)
   }
 }
 
 function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
   if (rowClickable.value) {
     emits.value.rowClick(payload)
+  }
+}
+
+function handleToggleBoolean(row: IItem, column: IRowColumn) {
+  if (column.isEditable && isTableBooleanCheckbox(column.column)) {
+    tableToggleBooleanCell(tableStore, row, column.column)
   }
 }
 
@@ -322,9 +383,11 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
       :model-value="column.value"
       size="sm"
       :label="column.valueFormatted"
-      readonly
+      :readonly="!column.isEditable || !isTableBooleanCheckbox(column.column)"
+      @update:model-value="handleToggleBoolean(slotRow, column)"
+      @dblclick.stop
       tabindex="-1"
-      no-hover-effect
+      :no-hover-effect="!column.isEditable || !isTableBooleanCheckbox(column.column)"
       :ui="{
         labelClass: ({ defaults }) => `${defaults.all} font-rem-13`,
         checkboxClass: ({ defaults }) => `${defaults.all} !border-primary !border-solid`,
@@ -378,7 +441,16 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
         :key="column.id"
         class="td"
         :style="column.cellStyle"
-        :class="[column.cellClass, { 'is-editing': isEditingCell(rowData, column) }]"
+        :class="[
+          column.cellClass, 
+          {
+            'is-editing': isEditingCell(rowData, column),
+            'is-cell-selected': isSelectedCell(rowData.row, column),
+          },
+        ]"
+        :tabindex="column.isEditable ? -1 : undefined"
+        @click="handleSelectCell(rowData, column, $event)"
+        @dblclick="handleEditCell(rowData, column, $event)"
         :data-field="column.column.field"
         :data-key="rowData.rowKey"
       >
@@ -420,7 +492,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
               class="active-edit-cell"
               grow
               @vue:mounted="handleEditCellMounted"
-              @click.stop.prevent
+              @click.stop
             />
 
             <!-- Save button -->
@@ -477,10 +549,15 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
       :key="column.id"
       class="td"
       :style="column.cellStyle"
-      :class="column.cellClass"
+      :class="[
+        column.cellClass,
+        { 'is-cell-selected': isSelectedCell(rowDataArray[0].row, column) },
+      ]"
+      :tabindex="column.isEditable ? -1 : undefined"
       :data-field="column.column.field"
       :data-key="rowDataArray[0].rowKey"
-      @click="handleEditCell(rowDataArray[0], column)"
+      @click="handleSelectCell(rowDataArray[0], column, $event)"
+      @dblclick="handleEditCell(rowDataArray[0], column, $event)"
     >
       <!-- <div
         v-if="!isVisibleByColumnField[column.column.field]"
@@ -497,7 +574,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
           class="active-edit-cell"
           grow
           @vue:mounted="handleEditCellMounted"
-          @click.stop.prevent
+          @click.stop
         />
       </template>
 
@@ -536,6 +613,11 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
 </template>
 
 <style scoped lang="scss">
+.is-cell-selected {
+  @apply outline-2 outline-primary outline-offset--2;
+  outline-style: solid;
+}
+
 .tr {
   &-split {
     @apply grid w-full;
