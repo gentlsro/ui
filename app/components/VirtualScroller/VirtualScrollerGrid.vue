@@ -167,6 +167,7 @@ watchThrottled(
 )
 
 defineExpose({
+  scrollToColumn: (idx: number) => columnVirtualizer.value.scrollToIndex(idx, { align: 'auto' }),
   scrollToTop: () => rowVirtualizer.value.scrollToOffset(0),
   scrollToBottom: () => rowVirtualizer.value.scrollToOffset(rowVirtualizer.value.getTotalSize()),
   scrollTo: (idx: number) => rowVirtualizer.value.scrollToIndex(idx),
