@@ -159,11 +159,13 @@ const loaderStyle = computed(() => {
   return mergedProps.value?.ui?.loaderStyle?.()
 })
 
-const isIconifyIcon = computed(() => {
-  const noSpacesRegex = /^\S+$/
+const iconValue = computed(() => {
+  return props.icon || preset.value?.icon
+})
 
-  return typeof props.icon === 'string'
-    && noSpacesRegex.test(props.icon)
+const resolvedIcon = computed(() => {
+  // Preset icons historically render as classes; canonical names still opt into Icon.
+  return resolveIconValue(props.icon || [preset.value?.icon])
 })
 </script>
 
@@ -180,17 +182,17 @@ const isIconifyIcon = computed(() => {
   >
     <slot name="icon">
       <Icon
-        v-if="icon && isIconifyIcon"
-        :name="(icon as string)"
+        v-if="resolvedIcon.name"
+        :name="resolvedIcon.name"
         class="btn-icon"
-        :class="iconClass"
+        :class="[resolvedIcon.classes, iconClass]"
         :style="iconStyle"
       />
 
       <div
-        v-else-if="icon || preset?.icon"
+        v-else-if="iconValue"
         class="btn-icon"
-        :class="[icon || preset?.icon, iconClass]"
+        :class="[resolvedIcon.classes, iconClass]"
         :style="iconStyle"
       />
     </slot>

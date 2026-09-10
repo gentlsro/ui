@@ -69,8 +69,8 @@ const currentView: IPivotCurrentViewExport = {
 }
 
 describe('buildPivotCurrentViewSheet', () => {
-  it('places hierarchical headers and preserves typed aggregate values', () => {
-    const sheet = buildPivotCurrentViewSheet(currentView)
+  it('places hierarchical headers and preserves typed aggregate values', async () => {
+    const sheet = await buildPivotCurrentViewSheet(currentView)
 
     expect(sheet.A1?.v).toBe('Center')
     expect(sheet.C1?.v).toBe('2026')
@@ -102,6 +102,17 @@ describe('exportPivotData', () => {
       data: rows,
     })
     expect(exportMocks.json.mock.calls[0]![0].data).toBe(rows)
+  })
+
+  it.each(['csv', 'xlsx'] as const)('propagates a failed raw %s export', async format => {
+    exportMocks[format].mockRejectedValueOnce(new Error('Spreadsheet load failed'))
+
+    await expect(exportPivotData({
+      fileName: 'raw-pivot',
+      format,
+      raw: true,
+      rawData: [{ amount: 12 }],
+    })).rejects.toThrow('Spreadsheet load failed')
   })
 
   it('requires materialized data for a current-view export', () => {

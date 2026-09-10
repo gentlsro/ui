@@ -13,6 +13,7 @@ type IProps = Pick<IPivotProps, 'ui'>
 const props = defineProps<IProps>()
 
 const { isLoading } = usePivotStore()
+const isMounted = useMounted()
 
 const loadingStyle = computed(() => {
   return props.ui?.loadingStyle?.()
@@ -27,7 +28,7 @@ const loadingClass = computed(() => {
 
 <template>
   <div
-    v-if="isLoading"
+    v-if="isMounted && isLoading"
     class="pivot-loading"
     :class="loadingClass"
     :style="loadingStyle"
