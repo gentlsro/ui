@@ -1,12 +1,11 @@
-import * as XLSX from 'xlsx'
+import { loadXlsx } from './load-xlsx'
 
-const { writeFileXLSX, utils } = XLSX
-
-export function tableExportXlsx(payload: {
+export async function tableExportXlsx(payload: {
   fileName: string
   data: IItem[]
 }) {
   const { fileName, data } = payload
+  const { writeFileXLSX, utils } = await loadXlsx()
 
   const wb = utils.book_new()
   const ws = utils.json_to_sheet(data)
