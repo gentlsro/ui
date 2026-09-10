@@ -133,6 +133,17 @@ function handleClear() {
   emits('clear')
 }
 
+function handleSpaceKey(ev: KeyboardEvent) {
+  if (!isEditable.value || isPickerActive.value) {
+    return
+  }
+
+  ev.preventDefault()
+  ev.stopPropagation()
+  isPreventNextFocus.value = false
+  handleFocusOrClick(ev)
+}
+
 // Options
 syncRef(
   optionsOriginal,
@@ -247,6 +258,7 @@ if (props.immediateFetch && mergedProps.value.loadData?.fnc) {
     data-onboarding="selector"
     .focus="handleFocusOrClick"
     @focus="handleFocusOrClick"
+    @keydown.space="handleSpaceKey"
     @blur="handleBlur"
     @click="handleClickWrapper"
   >
