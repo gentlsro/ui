@@ -8,7 +8,7 @@ export function tableToggleBooleanCell(store: ReturnType<typeof useTableStore>, 
     return
   }
 
-  if (store.cellEdit.value) {
+  if (store.cellEdit.value.length) {
     store.saveCellEditValue()
   }
 
@@ -19,12 +19,16 @@ export function tableToggleBooleanCell(store: ReturnType<typeof useTableStore>, 
     }
   }
 
-  store.cellEdit.value = { row, column }
+  store.startCellEdit(row, column)
+  const edit = store.cellEdit.value[0]
+  
+  if (!edit) {
+    return
+  }
 
-  store.loadCellEditValue()
-  store.cellEditValue.value = store.cellEditValue.value !== true
+  edit.value = edit.value !== true
   store.saveCellEditValue()
-  store.cellEdit.value = undefined
+  store.cancelCellEdit()
 }
 
 export function isTableBooleanCheckbox(column: TableColumn) {

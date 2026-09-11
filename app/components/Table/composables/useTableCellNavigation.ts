@@ -3,9 +3,11 @@ import type { TableColumn } from '../models/table-column.model'
 import type { useTableStore } from '../stores/table.store'
 import type { ITableProps } from '../types/table-props.type'
 import { useEventListener, useMutationObserver } from '@vueuse/core'
-import { nextTick, watch } from 'vue'
+import { isObject } from 'lodash-es'
+import { nextTick, toRaw, watch } from 'vue'
 import { tableEditMoveCell } from '../functions/table-edit-move-cell'
 import { tableIsCellEditable } from '../functions/table-is-cell-editable'
+import { tableIsEditorPopupOpen } from '../functions/table-is-editor-popup-open'
 import { isTableBooleanCheckbox, tableToggleBooleanCell } from '../functions/table-toggle-boolean-cell'
 
 export function useTableCellNavigation(store: ReturnType<typeof useTableStore>, editable: Ref<ITableProps['editable']>) {
@@ -48,7 +50,7 @@ export function useTableCellNavigation(store: ReturnType<typeof useTableStore>, 
   }
 
   function focusSelectedCell() {
-    if (isCardView.value || !pendingFocus || cellEdit.value) {
+    if (isCardView.value || !pendingFocus || cellEdit.value.length) {
       return
     }
 
@@ -72,7 +74,7 @@ export function useTableCellNavigation(store: ReturnType<typeof useTableStore>, 
     pendingFocus = true
     await nextTick()
 
-    if (isCardView.value || !pendingFocus || cellEdit.value) {
+    if (isCardView.value || !pendingFocus || cellEdit.value.length) {
       return
     }
 
@@ -99,13 +101,13 @@ export function useTableCellNavigation(store: ReturnType<typeof useTableStore>, 
   useMutationObserver(tableEl, () => {
     updateTabStop()
     focusSelectedCell()
-  }, { 
+  }, {
     childList: true,
     subtree: true,
     attributes: true,
     attributeFilter: ['class', 'data-key', 'data-field'],
   })
-  
+
   watch([tableEl, selectedCell, isCardView], updateTabStop, { flush: 'post' })
 
   watch(selectedCell, () => {
@@ -116,7 +118,7 @@ export function useTableCellNavigation(store: ReturnType<typeof useTableStore>, 
     }
   })
 
-  watch(cellEdit, (current, previous) => {
+  watch(() => cellEdit.value.length, (current, previous) => {
     if (current) {
       pendingFocus = false
     } else if (previous && selectedCell.value && !leavingGrid) {
@@ -126,28 +128,41 @@ export function useTableCellNavigation(store: ReturnType<typeof useTableStore>, 
     leavingGrid = false
   })
 
-  watch([rows, visibleColumns], () => {
+  watch([() => [...rows.value], () => [...visibleColumns.value]], () => {
     const selected = selectedCell.value
 
     if (selected && (!rows.value.some(row => row[rowKey.value] === selected.rowKey)
       || !visibleColumns.value.some(column => column.field === selected.field))
     ) {
       selectedCell.value = undefined
-      cellEdit.value = undefined
+      store.cancelCellEdit()
     }
-  })
+
+    // Keys can survive a refresh while the objects held by the editors do not.
+    if (cellEdit.value.some(edit => !rows.value.some(row => toRaw(row) === toRaw(edit.row))
+      || !visibleColumns.value.some(column => column.field === edit.column.field && tableIsCellEditable(edit.row, column)))) {
+      store.cancelCellEdit()
+    }
+    // Cancel edits immediately when their row or column disappears
+  }, { flush: 'sync' })
 
   useEventListener(tableEl, 'focusin', (ev: FocusEvent) => {
     const el = ev.target
 
-    if (isCardView.value || !(el instanceof HTMLElement) || !el.matches('.td.is-editable')) {
+    if (isCardView.value || !(el instanceof HTMLElement)) {
       return
     }
 
-    const row = rows.value.find(row => String(row[rowKey.value]) === el.dataset.key)
+    const cell = el.closest<HTMLElement>('.td.is-editable')
 
-    if (row && (selectedCell.value?.rowKey !== row[rowKey.value] || selectedCell.value?.field !== el.dataset.field)) {
-      selectedCell.value = { rowKey: row[rowKey.value], field: el.dataset.field! }
+    if (!cell) {
+      return
+    }
+
+    const row = rows.value.find(row => String(row[rowKey.value]) === cell.dataset.key)
+
+    if (row && (selectedCell.value?.rowKey !== row[rowKey.value] || selectedCell.value?.field !== cell.dataset.field)) {
+      selectedCell.value = { rowKey: row[rowKey.value], field: cell.dataset.field! }
     }
   })
 
@@ -172,8 +187,7 @@ export function useTableCellNavigation(store: ReturnType<typeof useTableStore>, 
       return false
     }
 
-    cellEdit.value = { row, column }
-    store.loadCellEditValue()
+    store.startCellEdit(row, column)
 
     if (text !== undefined) {
       replaceFocusedInput(text)
@@ -194,11 +208,28 @@ export function useTableCellNavigation(store: ReturnType<typeof useTableStore>, 
       isCardView: isCardView.value,
     })
 
+    if (
+      destination && cellEdit.value.length > 1 
+      && cellEdit.value.some(edit => edit.row === destination.row && edit.column.field === destination.column.field)
+    ) {
+      selectedCell.value = { 
+        rowKey: destination.row[rowKey.value], 
+        field: destination.column.field 
+      }
+
+      void nextTick(() => {
+        findSelectedCell()?.querySelector<HTMLElement>('.active-edit-cell .control, .active-edit-cell [tabindex]')
+          ?.focus({ preventScroll: true })
+      })
+
+      return true
+    }
+
     leavingGrid = !destination && ev.key === 'Tab'
 
-    if (cellEdit.value) {
+    if (cellEdit.value.length) {
       store.saveCellEditValue()
-      cellEdit.value = undefined
+      store.cancelCellEdit()
     }
 
     // Move to the next cell.
@@ -222,16 +253,17 @@ export function useTableCellNavigation(store: ReturnType<typeof useTableStore>, 
     if (isCardView.value || !(target instanceof HTMLElement) || ev.defaultPrevented || ev.isComposing || ev.altKey) {
       return
     }
-    
+
     const editMode = editable.value ?? false
     const enabled = editMode === true
-      || (editMode !== false && editMode.view === (isCardView.value ? 'card' : 'row'))
+      || (isObject(editMode) && (!editMode.view || editMode.view === 'row'))
 
-    if (!enabled || !selectedCell.value) {
+    const editing = cellEdit.value.length > 0
+    const isRowEdit = editing ? store.cellEditMode.value === 'row' : isObject(editMode) && editMode.mode === 'row'
+
+    if (!enabled || isRowEdit || !selectedCell.value) {
       return
     }
-
-    const editing = !!cellEdit.value
 
     if (editing) {
       const editor = target.closest('.active-edit-cell')
@@ -240,8 +272,11 @@ export function useTableCellNavigation(store: ReturnType<typeof useTableStore>, 
       }
 
       // Let open pickers handle their keys.
-      if (target.closest('[data-editor-popup-open], [aria-expanded="true"]')
-        || editor.querySelector('[aria-expanded="true"]')) {
+      if (tableIsEditorPopupOpen(target)) {
+        return
+      }
+
+      if (target instanceof HTMLTextAreaElement && ev.key === 'Enter' && !ev.ctrlKey && !ev.metaKey) {
         return
       }
     } else if (target !== findSelectedCell()) {
@@ -262,10 +297,10 @@ export function useTableCellNavigation(store: ReturnType<typeof useTableStore>, 
         tableToggleBooleanCell(store, row, column)
       }
     } else if (ev.key === 'Escape' && editing) {
-      cellEdit.value = undefined
+      store.cancelCellEdit()
     } else if (editing && ev.key === 'Enter' && (ev.ctrlKey || ev.metaKey)) {
       store.saveCellEditValue()
-      cellEdit.value = undefined
+      store.cancelCellEdit()
     } else if ((editing && ev.key === 'Enter') || ev.key === 'Tab' || (!editing && ev.key.startsWith('Arrow'))) {
       if (ev.ctrlKey || ev.metaKey) {
         return
@@ -283,7 +318,7 @@ export function useTableCellNavigation(store: ReturnType<typeof useTableStore>, 
     } else {
       return
     }
-    
+
     ev.preventDefault()
     ev.stopPropagation()
   })
