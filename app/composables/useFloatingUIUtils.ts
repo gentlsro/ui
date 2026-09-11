@@ -91,16 +91,25 @@ export function useFloatingUIUtils() {
   function getLastFloatingUIZindex() {
     const lastFloatingElement = Array.from(document.body.children)
       .toReversed()
-      .find(child => child.classList.contains('floating-element')) as HTMLElement
+      .find(child => {
+        if (!child.classList.contains('floating-element')) {
+          return false
+        }
+
+        const z = Number.parseFloat(
+          getComputedStyle(child).getPropertyValue('--zIndex'),
+        )
+
+        return Number.isFinite(z) && z > 0
+      }) as HTMLElement | undefined
 
     if (!lastFloatingElement) {
       return 2999
     }
 
-    const computedStyle = getComputedStyle(lastFloatingElement)
-    const zIndex = +computedStyle.getPropertyValue('--zIndex')
-
-    return Number(zIndex)
+    return Number.parseFloat(
+      getComputedStyle(lastFloatingElement).getPropertyValue('--zIndex'),
+    )
   }
 
   function getLastFloatingUI() {
