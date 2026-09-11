@@ -86,11 +86,7 @@ const {
   refreshAnchors,
 } = useMenu({ menuProps: props, instance })
 
-// We sync the model with the debouncedModel immediately when the value is `true`
-// to show the content immediately to trigger the transition
-whenever(model, isVisible => {
-  debouncedModel.value = isVisible
-
+function applyUplift() {
   menuUplift({
     zIndex,
     referenceElZIndex,
@@ -103,6 +99,23 @@ whenever(model, isVisible => {
       cover: props.cover,
     },
   })
+}
+
+// We sync the model with the debouncedModel immediately when the value is `true`
+// to show the content immediately to trigger the transition.
+// `immediate` covers menus that mount already open (manual + v-if + v-model).
+whenever(model, isVisible => {
+  debouncedModel.value = isVisible
+
+  applyUplift()
+}, { immediate: true })
+
+watch(referenceEl, () => {
+  if (!model.value) {
+    return
+  }
+
+  applyUplift()
 })
 
 useResizeObserver(contentEl, () => {

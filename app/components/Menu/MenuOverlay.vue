@@ -38,7 +38,7 @@ const overlayStyle = computed(() => {
   <div
     class="menu-overlay"
     :style="overlayStyle"
-    :class="overlayClass"
+    :class="[overlayClass, { 'is-active': model }]"
   />
 </template>
 
