@@ -1,0 +1,14 @@
+@mixin frozen-edge-shadow($direction) {
+  // Extend vertically, then clip to the column edge so rows share one fade.
+  box-shadow: ($direction * -12px) 0 12px 12px rgba(64, 64, 64, 0.2);
+
+  @if $direction == 1 {
+    clip-path: inset(0 -12px 0 0);
+  } @else {
+    clip-path: inset(0 0 0 -12px);
+  }
+
+  .dark & {
+    box-shadow: ($direction * -12px) 0 12px 12px rgba(64, 64, 64, 0.6);
+  }
+}
