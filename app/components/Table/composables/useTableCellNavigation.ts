@@ -128,7 +128,7 @@ export function useTableCellNavigation(store: ReturnType<typeof useTableStore>, 
     leavingGrid = false
   })
 
-  watch([() => [...rows.value], () => [...visibleColumns.value]], () => {
+  watch([() => [...rows.value], visibleColumns], () => {
     const selected = selectedCell.value
 
     if (selected && (!rows.value.some(row => row[rowKey.value] === selected.rowKey)
