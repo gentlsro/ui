@@ -1,10 +1,11 @@
-import type { Ref } from 'vue'
 import type { TableColumn } from '../models/table-column.model'
 import type { useTableStore } from '../stores/table.store'
 import type { ITableProps } from '../types/table-props.type'
+
+// Utils
 import { useEventListener, useMutationObserver } from '@vueuse/core'
-import { isObject } from 'lodash-es'
-import { nextTick, toRaw, watch } from 'vue'
+
+// Functions
 import { tableEditMoveCell } from '../functions/table-edit-move-cell'
 import { tableIsCellEditable } from '../functions/table-is-cell-editable'
 import { tableIsEditorPopupOpen } from '../functions/table-is-editor-popup-open'
