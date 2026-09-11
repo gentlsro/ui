@@ -1,11 +1,8 @@
-import type { Ref } from 'vue'
 import type { useTableStore } from '../stores/table.store'
 import type { ITableProps } from '../types/table-props.type'
 import type { IRowColumn } from '../types/table-row-column.type'
 
-import { isObject } from 'lodash-es'
-import { computed, nextTick } from 'vue'
-
+// Functions
 import { tableIsEditorPopupOpen } from '../functions/table-is-editor-popup-open'
 import { isTableBooleanCheckbox, tableToggleBooleanCell } from '../functions/table-toggle-boolean-cell'
 

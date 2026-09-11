@@ -1,7 +1,10 @@
 import type { TableColumn } from '../models/table-column.model'
+
+// Utils
 import { klona } from 'klona/full'
 import { get, set, toPath } from 'lodash-es'
-import { computed, shallowRef } from 'vue'
+
+// Functions
 import { tableIsCellEditable } from '../functions/table-is-cell-editable'
 
 export interface TableCellEdit { row: IItem, column: TableColumn, value: unknown }
@@ -71,7 +74,7 @@ export function useTableCellEditing() {
       }))
 
     loadCellEditValue()
-    
+
     return cellEdit.value.length > 0
   }
 
