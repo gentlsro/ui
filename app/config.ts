@@ -318,6 +318,31 @@ export const defaultComponentsConfig = {
     merge: ['ui'],
   },
 
+  // DateTimeFullInput
+  dateTimeFullInput: {
+    props: {
+      autoClose: undefined,
+      debounce: 0,
+      disabled: undefined,
+      emptyValue: undefined,
+      errorTakesSpace: true,
+      errorVisible: true,
+      immediate: true,
+      noPickerIcon: undefined,
+      readonly: undefined,
+      required: undefined,
+      size: 'md',
+      stackLabel: true,
+      ui: {
+        borderRadius: '0.5rem',
+        focusInputOnLabelClick: false,
+        appendClass: ({ defaults }) => defaults.all,
+      },
+      utc: useUtc,
+    },
+    merge: ['ui'],
+  },
+
   // DatePicker
   datePicker: {
     props: {
