@@ -426,7 +426,7 @@ defineExpose({
 
 <style lang="scss" scoped>
 .time-input-icon {
-  @apply cursor-pointer color-ca m-r-2 h-6 w-6;
+  @apply cursor-pointer color-ca h-6 w-6 group-[.wrapper--sm]/wrapper:(h-4 w-4);
 }
 
 .input-wrapper {
