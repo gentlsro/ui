@@ -15,7 +15,10 @@ import type { TableColumn } from './models/table-column.model'
 // Functions
 import { tableSelectRow } from './functions/table-select-row'
 import { tableIsCellEditable } from './functions/table-is-cell-editable'
-import { isTableBooleanCheckbox, tableToggleBooleanCell } from './functions/table-toggle-boolean-cell'
+import { isTableBooleanCheckbox } from './functions/table-toggle-boolean-cell'
+
+// Composables
+import { useTableRowEditing } from './composables/useTableRowEditing'
 
 // Constants
 import { TABLE_DEFAULT_PROPS } from './constants/table-default-props.constant'
@@ -23,7 +26,7 @@ import { TABLE_DEFAULT_PROPS } from './constants/table-default-props.constant'
 // Store
 import { useTableStore } from './stores/table.store'
 
-type IProps = Pick<ITableProps, 'ui' | 'editable' | 'to' | 'showCopyBtn' | 'toLinkProps'> & {
+type IProps = Pick<ITableProps, 'ui' | 'editable' | 'freeze' | 'to' | 'showCopyBtn' | 'toLinkProps'> & {
   row: any | any[]
   index: number
   isVisibleByColumnField: Record<string, boolean>
@@ -55,29 +58,36 @@ function isSelected(row: IItem) {
   return selectionByKey.value[get(row, key)]
 }
 
-function isEditingCell(rowData: typeof rowDataArray.value[number], column: IRowColumn) {
-  return isEditingCellStore.value
-    && cellEdit.value?.column === column.column
-    && cellEdit.value?.row === rowData.row
-}
-
 // Store
 const tableStore = useTableStore()
 const {
-  tableEl,
   rowKey,
   selection,
   selectionByKey,
   selectionConfig,
   rowsColumnCount,
   isCardView,
-  selectedCell,
   cellEdit,
-  isEditingCell: isEditingCellStore,
-  cellEditValue,
+  getCellEdit,
+  updateCellEditValue,
+  isEditingRow,
   emits,
   rowClickable,
 } = tableStore
+
+const {
+  isEditableRow,
+  isFullRowEdit,
+  isSelectedCell,
+  handleEditRow,
+  handleRowEditKeydown,
+  handleSelectCell,
+  handleEditCell,
+  handleSaveCellEditValue,
+  handleCancelEditCell,
+  handleEditCellMounted,
+  handleToggleBoolean,
+} = useTableRowEditing(tableStore, toRef(props, 'editable'))
 
 // Layout
 const [DefineValueTemplate, ReuseValueTemplate] = createReusableTemplate<{
@@ -90,11 +100,45 @@ const RowComponent = computed(() => {
   return props.to ? NuxtLink : 'div'
 })
 
-const isEditableRow = computed(() => {
-  return typeof props.editable === 'object'
-    ? (props.editable.view === 'card' && isCardView.value) || (props.editable.view === 'row' && !isCardView.value)
-    : !!props.editable
-})
+const [DefineRowActions, ReuseRowActions] = createReusableTemplate<{
+  actions: ReturnType<typeof getRowActions>
+}>()
+
+function handleRowActionsClick(ev: MouseEvent) {
+  if (ev.target instanceof Element && ev.currentTarget instanceof Node
+    && ev.target.closest('a[href]')?.contains(ev.currentTarget)) {
+    ev.preventDefault()
+  }
+}
+
+function getRowActionsClass(row: IItem) {
+  const defaults = TABLE_DEFAULT_PROPS.ui.rowActionsClass()
+  return props.ui?.rowActionsClass?.({ row, defaults }) ?? defaults.all
+}
+
+function getRowActions(rowData: typeof rowDataArray.value[number]) {
+  const isEditing = isEditingRow(rowData.row)
+  
+  return {
+    row: rowData.row,
+    mode: isCardView.value ? 'card' as const : 'row' as const,
+    isEditing,
+    isModified: isEditing && tableStore.isCellEditModified.value,
+    canEdit: isFullRowEdit.value && tableStore.visibleColumns.value.some(column => tableIsCellEditable(rowData.row, column)),
+    disabled: cellEdit.value.length > 0 && !isEditing,
+    edit: () => handleEditRow(rowData),
+    save: () => {
+      if (isEditingRow(rowData.row)) {
+        handleSaveCellEditValue()
+      }
+    },
+    cancel: () => {
+      if (isEditingRow(rowData.row)) {
+        handleCancelEditCell()
+      }
+    },
+  }
+}
 
 const rowDataArray = computed(() => {
   const rowArray = Array.isArray(props.row)
@@ -115,8 +159,8 @@ const rowDataArray = computed(() => {
           const isEditable = isEditableRow.value && tableIsCellEditable(row, col)
 
           const cellValue = col.valueGetter(row)
-	          const cellFormattedValue = formatValue(cellValue, row, {
-	            format: col.format,
+          const cellFormattedValue = formatValue(cellValue, row, {
+            format: col.format,
             dataType: col.dataType,
             comparator: col.comparator,
             localeIso: currentLocaleCode.value,
@@ -232,11 +276,6 @@ const rowStyleArray = computed(() => {
   ])
 })
 
-function handleSaveCellEditValue() {
-  tableStore.saveCellEditValue()
-  cellEdit.value = undefined
-}
-
 function handleSelectToggle(row: IItem, ev?: MouseEvent) {
   const isCtrl = ev && !(ev.ctrlKey || ev.metaKey)
   const isLink = ev && ev.target instanceof HTMLAnchorElement
@@ -262,99 +301,9 @@ function handleSelectToggle(row: IItem, ev?: MouseEvent) {
   }
 }
 
-function isSelectedCell(row: IItem, column: IRowColumn) {
-  return selectedCell.value?.rowKey === row[rowKey.value]
-    && selectedCell.value?.field === column.column.field
-}
-
-function isCellControlEvent(ev?: MouseEvent) {
-  if (!ev || !(ev.target instanceof Element) || !(ev.currentTarget instanceof Element)) {
-    return false
-  }
-
-  const control = ev.target.closest('a, button, input, textarea, select, [contenteditable="true"]')
-
-  return !!control && ev.currentTarget.contains(control)
-}
-
-function handleSelectCell(
-  rowData: typeof rowDataArray.value[number],
-  column: IRowColumn,
-  ev?: MouseEvent,
-) {
-  if (!column.isEditable || isCellControlEvent(ev)) {
-    return
-  }
-
-  if (cellEdit.value) {
-    tableStore.saveCellEditValue()
-    cellEdit.value = undefined
-  }
-
-  selectedCell.value = {
-    rowKey: rowData.row[rowKey.value], 
-    field: column.column.field 
-  }
-
-  ev?.preventDefault()
-  ev?.stopPropagation()
-}
-
-function handleEditCell(
-  rowData: typeof rowDataArray.value[number],
-  column: IRowColumn,
-  e?: MouseEvent,
-) {
-  if (!column.isEditable || isEditingCell(rowData, column)
-    || isCellControlEvent(e)) {
-    return
-  }
-
-  e?.preventDefault()
-  e?.stopPropagation()
-
-  if (isTableBooleanCheckbox(column.column)) {
-    handleToggleBoolean(rowData.row, column)
-    return
-  }
-
-  if (isCardView.value) {
-    if (cellEdit.value) {
-      tableStore.saveCellEditValue()
-    }
-  } else {
-    handleSelectCell(rowData, column)
-  }
-
-  cellEdit.value = { row: rowData.row, column: column.column }
-  tableStore.loadCellEditValue()
-}
-
-function handleCancelEditCell() {
-  cellEdit.value = undefined
-}
-
-function handleEditCellMounted() {
-  const el = tableEl.value?.querySelector<HTMLElement>('.active-edit-cell')
-  const controlEl = el?.querySelector<HTMLInputElement | HTMLTextAreaElement>('.control')
-  const focusEl = controlEl ?? (el?.matches('[tabindex]') ? el : el?.querySelector<HTMLElement>('[tabindex]:not([tabindex="-1"])'))
-
-  focusEl?.focus({ preventScroll: true })
-  
-  if (controlEl?.setSelectionRange && ['text', 'search', 'tel', 'url', 'password', 'textarea'].includes(controlEl.type)) {
-    controlEl.setSelectionRange(controlEl.value.length, controlEl.value.length)
-  }
-}
-
 function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
   if (rowClickable.value) {
     emits.value.rowClick(payload)
-  }
-}
-
-function handleToggleBoolean(row: IItem, column: IRowColumn) {
-  if (column.isEditable && isTableBooleanCheckbox(column.column)) {
-    tableToggleBooleanCell(tableStore, row, column.column)
   }
 }
 
@@ -363,6 +312,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
     ? column.column._editComponent.props({ row, column: column.column })
     : column.column._editComponent.props
 }
+
 </script>
 
 <template>
@@ -389,15 +339,15 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
       :model-value="column.value"
       size="sm"
       :label="column.valueFormatted"
-      :readonly="!column.isEditable || !isTableBooleanCheckbox(column.column)"
-      @update:model-value="handleToggleBoolean(slotRow, column)"
-      @dblclick.stop
+      :readonly="isFullRowEdit || !column.isEditable || !isTableBooleanCheckbox(column.column)"
       tabindex="-1"
-      :no-hover-effect="!column.isEditable || !isTableBooleanCheckbox(column.column)"
+      :no-hover-effect="isFullRowEdit || !column.isEditable || !isTableBooleanCheckbox(column.column)"
       :ui="{
         labelClass: ({ defaults }) => `${defaults.all} font-rem-13`,
         checkboxClass: ({ defaults }) => `${defaults.all} !border-primary !border-solid`,
       }"
+      @update:model-value="handleToggleBoolean(slotRow, column)"
+      @dblclick.stop
     />
 
     <!-- Link -->
@@ -421,11 +371,62 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
     </span>
   </DefineValueTemplate>
 
+  <DefineRowActions v-slot="{ actions }">
+    <div
+      v-if="$slots['row-actions'] || actions.canEdit || (!isCardView && isFullRowEdit)"
+      class="row-actions"
+      :class="[getRowActionsClass(actions.row), isCardView ? 'card-row-actions' : 'desktop-row-actions', { 'is-frozen': !isCardView && freeze?.rowActions }]"
+      @click.capture="handleRowActionsClick"
+      @click.stop
+      @dblclick.stop
+    >
+      <slot name="row-actions" v-bind="actions">
+        <template v-if="actions.isEditing">
+          <Btn
+            size="sm"
+            class="row-cancel-btn"
+            preset="CLOSE"
+            icon="i-material-symbols:close-rounded"
+            :name="$t('general.cancel')"
+            :title="$t('general.cancel')"
+            no-uppercase
+            no-bold
+            @click.stop.prevent="handleCancelEditCell"
+          />
+
+          <Btn
+            size="sm"
+            class="row-save-btn"
+            preset="SAVE"
+            icon="i-material-symbols:check-rounded"
+            :name="$t('general.save')"
+            :title="$t('general.save')"
+            no-uppercase
+            @click.stop.prevent="handleSaveCellEditValue"
+          />
+        </template>
+        <Btn
+          v-else-if="actions.canEdit"
+          size="sm"
+          class="row-edit-btn"
+          :data-key="actions.row[rowKey]"
+          icon="i-material-symbols:edit-rounded"
+          :name="$t('general.edit')"
+          :title="$t('general.edit')"
+          :disabled="actions.disabled"
+          no-uppercase
+          no-bold
+          @click.stop.prevent="actions.edit"
+        />
+      </slot>
+    </div>
+  </DefineRowActions>
+
   <!-- Card view -->
   <div
     v-if="isCardView"
     class="tr-split"
-    :class="{ 'is-card-editing': !!cellEdit }"
+    :class="{ 'is-card-editing': cellEdit.length > 0 }"
     :style="{ '--cols': rowsColumnCount }"
   >
     <Component
@@ -437,20 +438,22 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
       :class="[rowClassArray[idx], { 'is-selected': isSelected(rowData.row), 'is-clickable': rowClickable }]"
       :style="rowStyleArray[idx]"
       :to="to?.(rowData.row, { rowKey })"
+      @keydown="handleRowEditKeydown(rowData.row, $event)"
       @click="[
         handleSelectToggle(rowData.row, $event),
         handleRowClick({ row: rowData.row, ev: $event }),
       ]"
     >
+      <ReuseRowActions :actions="getRowActions(rowData)" />
       <div
         v-for="column in rowData.columns"
         :key="column.id"
         class="td"
         :style="column.cellStyle"
         :class="[
-          column.cellClass, 
+          column.cellClass,
           {
-            'is-editing': isEditingCell(rowData, column),
+            'is-editing': !!getCellEdit(rowData.row, column.column.field),
           },
         ]"
         :data-field="column.column.field"
@@ -462,7 +465,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
 
           <!-- Edit button -->
           <Btn
-            v-if="column.isEditable"
+            v-if="column.isEditable && !isFullRowEdit"
             size="xs"
             class="edit-btn"
             icon="i-material-symbols:edit-rounded"
@@ -471,7 +474,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
 
           <!-- Cancel edit -->
           <Btn
-            v-if="column.isEditable"
+            v-if="column.isEditable && !isFullRowEdit"
             size="xs"
             class="cancel-edit-btn"
             preset="CLOSE"
@@ -483,21 +486,23 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
         <!-- Value -->
         <div class="td-value">
           <!-- Editing -->
-          <template v-if="isEditingCell(rowData, column)">
+          <template v-if="!!getCellEdit(rowData.row, column.column.field)">
             <Component
               :is="column.column._editComponent.component"
-              v-model="cellEditValue"
+              :model-value="getCellEdit(rowData.row, column.column.field)?.value"
               v-bind="getEditComponentProps(rowData.row, column)"
               size="sm"
               class="active-edit-cell"
               :no-border="false"
               grow
-              @vue:mounted="handleEditCellMounted"
+              @update:model-value="updateCellEditValue(rowData.row, column.column.field, $event)"
+              @vue:mounted="handleEditCellMounted(rowData.row, column)"
               @click.stop
             />
 
             <!-- Save button -->
             <Btn
+              v-if="!isFullRowEdit"
               size="xs"
               preset="SAVE"
               bg="white dark:black"
@@ -544,6 +549,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
     :style="rowStyleArray[0]"
     :to="to?.(rowDataArray[0].row, { rowKey })"
     @click="handleRowClick({ row: rowDataArray[0].row, ev: $event })"
+    @keydown="handleRowEditKeydown(rowDataArray[0].row, $event)"
   >
     <div
       v-for="column in rowDataArray[0].columns"
@@ -552,7 +558,11 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
       :style="column.cellStyle"
       :class="[
         column.cellClass,
-        { 'is-cell-selected': isSelectedCell(rowDataArray[0].row, column) },
+        {
+          'is-cell-selected': isSelectedCell(rowDataArray[0].row, column),
+          'is-frozen': column.column.semiFrozen,
+          'is-frozen-edge': column.column.frozen,
+        },
       ]"
       :tabindex="column.isEditable ? -1 : undefined"
       :data-field="column.column.field"
@@ -560,22 +570,18 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
       @click="handleSelectCell(rowDataArray[0], column, $event)"
       @dblclick="handleEditCell(rowDataArray[0], column, $event)"
     >
-      <!-- <div
-        v-if="!isVisibleByColumnField[column.column.field]"
-        class="td__placeholder"
-      /> -->
-
       <!-- Editing -->
-      <template v-if="isEditingCell(rowDataArray[0], column)">
+      <template v-if="!!getCellEdit(rowDataArray[0].row, column.column.field)">
         <Component
           :is="column.column._editComponent.component"
-          v-model="cellEditValue"
+          :model-value="getCellEdit(rowDataArray[0].row, column.column.field)?.value"
           v-bind="getEditComponentProps(rowDataArray[0].row, column)"
           size="sm"
           class="active-edit-cell"
           no-border
           grow
-          @vue:mounted="handleEditCellMounted"
+          @update:model-value="updateCellEditValue(rowDataArray[0].row, column.column.field, $event)"
+          @vue:mounted="handleEditCellMounted(rowDataArray[0].row, column)"
           @click.stop
         />
       </template>
@@ -605,6 +611,8 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
       />
     </div>
 
+    <ReuseRowActions :actions="getRowActions(rowDataArray[0])" />
+
     <!-- Used for absolutely position info/element -->
     <slot
       name="inner"
@@ -615,6 +623,45 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
 </template>
 
 <style scoped lang="scss">
+@use './styles/frozen-edge-shadow' as *;
+
+.can-scroll-right .desktop-row-actions.is-frozen {
+  border-left-width: 1px;
+  @include frozen-edge-shadow(-1);
+}
+
+.can-scroll-left .is-row .td.is-frozen-edge {
+  border-right-width: 1px;
+  @include frozen-edge-shadow(1);
+}
+
+.desktop-row-actions {
+  flex: 0 0 var(--table-row-actions-width, 5.25rem);
+  min-width: 0;
+  margin-left: auto;
+
+  &.is-frozen {
+    position: sticky;
+    right: 0;
+    z-index: 1;
+  }
+}
+
+:where(.is-row .td.is-frozen) {
+  background-color: inherit;
+}
+
+.separator--vertical .desktop-row-actions,
+.separator--cell .desktop-row-actions,
+.is-bordered .desktop-row-actions {
+  border-right-width: 1px;
+}
+
+.separator--horizontal .desktop-row-actions,
+.separator--cell .desktop-row-actions {
+  border-bottom-width: 1px;
+}
+
 .is-row .active-edit-cell {
   --padding: 0 !important;
   --margin: 0 !important;
