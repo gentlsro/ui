@@ -7,6 +7,7 @@ import { shift, useFloating } from '@floating-ui/vue'
 import type { IMenuProps } from '../types/menu-props.type'
 
 // Functions
+import { menuResetUplift } from '../functions/menu-uplift'
 import { useMenuMiddleware } from './useMenuMiddleware'
 import { getElementSize } from '#layers/utilities/app/functions/get-element-size'
 
@@ -121,16 +122,12 @@ export function useMenu(payload: {
 
     debouncedModel.value = false
 
-    const _referenceEl = referenceEl.value as HTMLElement
-
-    if (_referenceEl instanceof Element) {
-      _referenceEl.classList.remove('is-menu-active')
-      _referenceEl.style.zIndex = referenceElZIndex.value!
-
-      if (isReferenceElTransparent.value && !menuProps.noUplift) {
-        _referenceEl.style.backgroundColor = ''
-      }
-    }
+    menuResetUplift({
+      referenceEl: referenceEl.value,
+      referenceElZIndex: referenceElZIndex.value,
+      isReferenceElTransparent: isReferenceElTransparent.value,
+      noUplift: menuProps.noUplift,
+    })
 
     instance?.emit('hide')
   }
@@ -349,6 +346,13 @@ export function useMenu(payload: {
     if (triggerEl.value instanceof Element) {
       triggerEl.value?.removeEventListener(menuProps.trigger ?? 'click', toggle)
     }
+
+    menuResetUplift({
+      referenceEl: referenceEl.value,
+      referenceElZIndex: referenceElZIndex.value,
+      isReferenceElTransparent: isReferenceElTransparent.value,
+      noUplift: menuProps.noUplift,
+    })
   })
 
   return {

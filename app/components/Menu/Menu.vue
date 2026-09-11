@@ -12,7 +12,7 @@ import { MENU_DEFAULT_PROPS } from './constants/menu-default-props.constant'
 
 // Store
 import { MENU_INJECTION_KEY, useMenuStore } from './store/menu.store'
-import { menuUplift } from './functions/menu-uplift'
+import { menuResetUplift, menuUplift } from './functions/menu-uplift'
 import { menuGetExposed } from './functions/menu-get-exposed'
 
 defineOptions({ inheritAttrs: false })
@@ -101,6 +101,15 @@ function applyUplift() {
   })
 }
 
+function resetUplift(el?: unknown) {
+  menuResetUplift({
+    referenceEl: el,
+    referenceElZIndex: referenceElZIndex.value,
+    isReferenceElTransparent: isReferenceElTransparent.value,
+    noUplift: props.noUplift,
+  })
+}
+
 // We sync the model with the debouncedModel immediately when the value is `true`
 // to show the content immediately to trigger the transition.
 // `immediate` covers menus that mount already open (manual + v-if + v-model).
@@ -110,11 +119,12 @@ whenever(model, isVisible => {
   applyUplift()
 }, { immediate: true })
 
-watch(referenceEl, () => {
+watch(referenceEl, (_nextEl, prevEl) => {
   if (!model.value) {
     return
   }
 
+  resetUplift(prevEl)
   applyUplift()
 })
 
