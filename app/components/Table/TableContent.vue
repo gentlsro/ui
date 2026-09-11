@@ -16,7 +16,7 @@ import VirtualScroller from '../VirtualScroller/VirtualScroller.vue'
 import VirtualScrollerGrid from '../VirtualScroller/VirtualScrollerGrid.vue'
 import VirtualScrollerVertical from '../VirtualScroller/VirtualScrollerVertical.vue'
 
-type IProps = Pick<ITableProps, 'editable' | 'ui' | 'to' | 'scrollerConfig' | 'showCopyBtn' | 'toLinkProps'>
+type IProps = Pick<ITableProps, 'editable' | 'freeze' | 'ui' | 'to' | 'scrollerConfig' | 'showCopyBtn' | 'toLinkProps'>
 
 const props = defineProps<IProps>()
 const scrollerConfig = toRef(props, 'scrollerConfig')
@@ -121,34 +121,26 @@ async function handleVirtualScroll(ev: IVirtualScrollEvent) {
 }
 
 /**
- * When the cell edit changes, we need to update heights of the rows affected
+/**
+ * Watch for cell edits and update the row height.
  */
-watch(cellEdit, (cellEdit, oldCellEdit) => {
-  nextTick(() => {
-    const columnField = cellEdit?.column?.field
-    const itemKey = cellEdit?.row?.[rowKey.value]
+watch(cellEdit, (current, previous) => {
+  const keys = new Set([...current, ...previous].map(edit => String(edit.row[rowKey.value])))
+  const affectedRows = new Set<HTMLElement>()
 
-    const el = tableEl.value
-      ?.querySelector(`[data-field="${columnField}"][data-key="${itemKey}"]`) as HTMLElement
-    const elRow = el?.closest('.content-row') as HTMLElement
-    const elRowIdx = Number(elRow?.dataset.idx ?? 9999)
-
-    const oldColumnField = oldCellEdit?.column?.field
-    const oldItemKey = oldCellEdit?.row?.[rowKey.value]
-    const oldEl = tableEl.value
-      ?.querySelector(`[data-field="${oldColumnField}"][data-key="${oldItemKey}"]`) as HTMLElement
-    const oldElRow = oldEl?.closest('.content-row') as HTMLElement
-    const oldElRowIdx = Number(oldElRow?.dataset.idx ?? 9999)
-
-    if (elRowIdx === oldElRowIdx) {
-      // Do nothing
-    } else if (elRowIdx > oldElRowIdx) {
-      virtualScrollEl.value?.updateRowHeight(oldElRow)
-    } else {
-      virtualScrollEl.value?.updateRowHeight(elRow)
+  for (const cell of tableEl.value?.querySelectorAll<HTMLElement>('[data-field][data-key]') ?? []) {
+    if (keys.has(cell.dataset.key!)) {
+      const row = cell.closest<HTMLElement>('.content-row')
+      if (row) {
+        affectedRows.add(row)
+      }
     }
-  })
-})
+  }
+
+  for (const row of affectedRows) {
+    virtualScrollEl.value?.updateRowHeight(row)
+  }
+}, { flush: 'post' })
 
 useTableCellNavigation(tableStore, toRef(props, 'editable'))
 </script>
@@ -179,6 +171,7 @@ useTableCellNavigation(tableStore, toRef(props, 'editable'))
           :ui
           :index="slotProps.index"
           :editable
+          :freeze
           :to
           :show-copy-btn
           :to-link-props
@@ -186,6 +179,10 @@ useTableCellNavigation(tableStore, toRef(props, 'editable'))
           :visible-columns="slotProps.columns ?? visibleColumns"
           :style="slotProps.style"
         >
+          <template v-if="$slots['row-actions']" #row-actions="actions">
+            <slot name="row-actions" v-bind="actions" />
+          </template>
+
           <!-- Field slots -->
           <template
             v-for="col in slotProps.columns ?? visibleColumns"
