@@ -600,6 +600,19 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
         />
       </slot>
 
+      <Btn
+        v-if="column.isEditable && !isFullRowEdit && !isTableBooleanCheckbox(column.column)
+          && !getCellEdit(rowDataArray[0].row, column.column.field)"
+        size="xs"
+        class="cell-edit-btn"
+        icon="i-material-symbols:edit-rounded"
+        :name="`${$t('general.edit')} ${column.column._label}`"
+        :title="$t('general.edit')"
+        tabindex="-1"
+        @click.stop.prevent="handleEditCell(rowDataArray[0], column)"
+        @dblclick.stop.prevent
+      />
+
       <CopyBtn
         v-if="showCopyBtn && !column.column.noCopyBtn && !column.column.isHelperCol"
         size="sm"
@@ -674,6 +687,34 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
 .is-row .is-cell-selected {
   @apply outline-2 outline-primary outline-offset--2;
   outline-style: solid;
+}
+
+.is-row .td:has(> .cell-edit-btn) {
+  padding-right: 2rem;
+}
+
+.is-row .td:has(> .cell-edit-btn + .copy-btn) {
+  padding-right: 4.25rem;
+}
+
+.is-row .cell-edit-btn {
+  position: absolute;
+  right: 0.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: none;
+  opacity: 0.5;
+}
+
+.is-row .td:hover > .cell-edit-btn,
+.is-row .td:focus-within > .cell-edit-btn {
+  display: flex;
+}
+
+.is-row .cell-edit-btn + .copy-btn {
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .tr {
