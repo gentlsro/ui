@@ -64,8 +64,8 @@ export function $hide(options?: {
       const isIgnored = ignore.includes(el)
 
       if (!isIgnored) {
-        // @ts-expect-error DOM attribute
-        el?.hide(force)
+        const hideFn = (el as { hide?: (force?: boolean) => void })?.hide
+        hideFn?.(force)
       }
     })
 
@@ -82,10 +82,10 @@ export function $hide(options?: {
   else {
     const floatingEl = floatingEls[floatingEls.length - 1]
     const isIgnored = floatingEl && ignore.includes(floatingEl)
+    const lastHide = (floatingEl as { hide?: (force?: boolean) => void } | undefined)?.hide
 
     if (!isIgnored) {
-      // @ts-expect-error DOM attribute
-      floatingEl?.hide(force)
+      lastHide?.(force)
     }
   }
 }
