@@ -275,23 +275,12 @@ defineExpose({
           :focus="focus"
         />
 
-        <Btn
+        <InputClearBtn
           v-if="hasClearableBtn"
-          icon="i-eva:close-fill h-6 w-6"
-          color="ca"
-          size="auto"
-          h="7"
-          w="7"
-          tabindex="-1"
+          :clear-confirmation
+          :size
           @click.stop.prevent="!clearConfirmation && clear()"
-        >
-          <MenuConfirmation
-            v-if="clearConfirmation"
-            @ok="clear"
-          >
-            {{ clearConfirmation }}
-          </MenuConfirmation>
-        </Btn>
+        />
 
         <div
           v-if="!noPickerIcon"
@@ -339,15 +328,6 @@ defineExpose({
 }
 
 .picker-icon {
-  @apply cursor-pointer color-ca h-6 w-6;
-}
-
-.input-wrapper {
-  &--xs,
-  &--sm {
-    .picker-icon {
-      @apply h-5 w-5;
-    }
-  }
+  @apply cursor-pointer color-ca h-6 w-6 group-[.wrapper--sm]/wrapper:(h-4 w-4);
 }
 </style>
