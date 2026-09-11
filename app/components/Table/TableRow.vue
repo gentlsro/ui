@@ -675,6 +675,10 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
   border-bottom-width: 1px;
 }
 
+.tr-split .active-edit-cell.checkbox__container {
+  flex-grow: 0;
+}
+
 .is-row .active-edit-cell {
   --padding: 0 !important;
   --margin: 0 !important;
