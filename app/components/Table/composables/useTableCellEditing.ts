@@ -22,7 +22,32 @@ export function useTableCellEditing() {
 
   const isEditingCell = computed(() => cellEdit.value.length > 0)
 
+  function getCellEdit(row: IItem, field: string) {
+    return cellEdit.value.find(edit => edit.row === row && edit.column.field === field)
+  }
+
+  function updateCellEditValue(row: IItem, field: string, value: TableCellEdit['value']) {
+    const edit = getCellEdit(row, field)
+
+    if (edit) {
+      edit.value = value
+    }
+  }
+
+  function isEditingRow(row: IItem) {
+    return cellEdit.value.some(edit => edit.row === row)
+  }
+
+  function startRowEdit(row: IItem, columns: TableColumn[]) {
+    return startCellEdit(row, columns, 'row')
+  }
+
   function startCellEdit(row: IItem, columns: TableColumn | TableColumn[], mode: 'cell' | 'row' = 'cell') {
+    // A full-row draft must be saved or cancelled before another edit can start.
+    if (cellEdit.value.length && (cellEditMode.value === 'row' || mode === 'row')) {
+      return false
+    }
+
     cellEditMode.value = mode
     const fields = new Set<string>()
 
@@ -46,6 +71,8 @@ export function useTableCellEditing() {
       }))
 
     loadCellEditValue()
+    
+    return cellEdit.value.length > 0
   }
 
   function saveCellEditValue() {
@@ -95,12 +122,22 @@ export function useTableCellEditing() {
     loadCellEditValue()
   }
 
+  function finishCellEdit() {
+    saveCellEditValue()
+    cancelCellEdit()
+  }
+
   return {
     cellEdit,
     cellEditMode,
     cellEditValue,
     isEditingCell,
     isCellEditModified,
+    getCellEdit,
+    updateCellEditValue,
+    isEditingRow,
+    startRowEdit,
+    finishCellEdit,
     startCellEdit,
     loadCellEditValue,
     resetCellEditValue,

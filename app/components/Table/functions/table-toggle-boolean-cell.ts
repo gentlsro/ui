@@ -4,7 +4,7 @@ import type { useTableStore } from '../stores/table.store'
 import { tableIsCellEditable } from './table-is-cell-editable'
 
 export function tableToggleBooleanCell(store: ReturnType<typeof useTableStore>, row: IItem, column: TableColumn) {
-  if (!tableIsCellEditable(row, column)) {
+  if (!tableIsCellEditable(row, column) || (store.cellEdit.value.length && store.cellEditMode.value === 'row')) {
     return
   }
 
@@ -21,7 +21,7 @@ export function tableToggleBooleanCell(store: ReturnType<typeof useTableStore>, 
 
   store.startCellEdit(row, column)
   const edit = store.cellEdit.value[0]
-  
+
   if (!edit) {
     return
   }
