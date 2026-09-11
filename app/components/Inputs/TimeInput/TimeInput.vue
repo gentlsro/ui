@@ -8,6 +8,7 @@ import type { ITimeInputProps } from './types/time-input-props.type'
 // Functions
 import { useInputUtils } from '../functions/useInputUtils'
 import { useInputValidationUtils } from '../functions/useInputValidationUtils'
+import { parseTimeParts, toDisplayHour as toDisplayHourValue, toStoredHour as toStoredHourValue } from '../functions/time-format'
 
 // Constants
 import { INPUT_WRAPPER_DEFAULT_PROPS } from '../../InputWrapper/constants/input-wrapper-default-props'
@@ -45,44 +46,12 @@ function isMaskString(val?: string) {
   return val === PATTERN
 }
 
-const TIME_RE = /^\d{2}:\d{2}$/
-
-function parseTimeParts(time?: string | undefined | null) {
-  if (!TIME_RE.test(time ?? '')) {
-    return undefined
-  }
-
-  const [hh = '12', mm = '00'] = time!.split(':')
-
-  return { hh, mm }
-}
-
 function toPickerHour(hh: string) {
-  const hour = Number(hh)
-
-  if (!is12h.value || Number.isNaN(hour)) {
-    return padStart(hh, 2, '0')
-  }
-
-  if (hour === 0 || hour === 12) {
-    return '12'
-  }
-
-  return padStart(String(hour > 12 ? hour - 12 : hour), 2, '0')
+  return toDisplayHourValue(hh, is12h.value)
 }
 
 function toStoredHour(pickerHour: string, am = isAm.value) {
-  const hour = Number(pickerHour)
-
-  if (!is12h.value || Number.isNaN(hour)) {
-    return padStart(pickerHour, 2, '0')
-  }
-
-  if (am) {
-    return hour === 12 ? '00' : padStart(String(hour), 2, '0')
-  }
-
-  return hour === 12 ? '12' : padStart(String(hour + 12), 2, '0')
+  return toStoredHourValue(pickerHour, is12h.value, am)
 }
 
 function localizeTime(time?: string | undefined) {
