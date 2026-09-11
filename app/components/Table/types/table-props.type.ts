@@ -27,7 +27,6 @@ import type { tableSerializeFilters } from '../functions/table-serialize-filters
 import type { tableSerializeSelect } from '../functions/table-serialize-select'
 import type { tableBuildFetchPayload } from '../functions/table-build-fetch-payload'
 import type { tableBuildQueryParams } from '../functions/table-build-query-params'
-import type { tableExportData } from '../functions/table-export-data'
 import type { tableSaveLayout } from '../functions/table-save-layout'
 import type { tableDeleteLayout } from '../functions/table-delete-layout'
 import type { getStateColumnData } from '../functions/get-state-column-data'
@@ -68,12 +67,24 @@ export type ITableProps<
   columns?: TableColumn<any>[]
 
   /**
-   * Whether the table is editable
+   * Enable editing in both views, or use `view` to limit it to one.
    *
-   * You can also provide the `view` property to specify in which view the table
-   * should be editable
+   * Cards edit all editable fields with shared Save/Cancel actions by default.
+   * Desktop rows edit one cell at a time. Set `mode` to override either default:
+   * `cell` edits one field; `row` edits all editable fields together.
    */
-  editable?: boolean | { view: 'card' | 'row' }
+  editable?: boolean | { view?: 'card' | 'row', mode?: 'cell' | 'row' }
+
+  /**
+   * Pin table elements. The separate `freeze` feature enables column freeze controls.
+   */
+  freeze?: {
+    /**
+     * Pin desktop row actions to the right during horizontal scrolling. Default: false.
+     * Actions wrap within 5.25rem. Set `--table-row-actions-width` to change the width.
+     */
+    rowActions?: boolean
+  }
 
   /**
    * A value that is used for comparators like `ComparatorEnum.IS_EMPTY`
@@ -622,6 +633,17 @@ export type ITableProps<
    * Visual configuration
    */
   ui?: {
+    /** Class applied to the action area in card and desktop rows. */
+    rowActionsClass?: (payload: {
+      row: IItem
+      defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['rowActionsClass']>
+    }) => ClassType
+
+    /** Class applied to the desktop action-column header. */
+    rowActionsHeaderClass?: (payload: {
+      defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['rowActionsHeaderClass']>
+    }) => ClassType
+
     /**
      * Class applied to the alternate row
      */

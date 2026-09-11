@@ -10,7 +10,7 @@ import { useTableColumnResizing } from './composables/useTableColumnResizing'
 // Constants
 import { TABLE_DEFAULT_PROPS } from './constants/table-default-props.constant'
 
-type IProps = Pick<ITableProps, 'ui'>
+type IProps = Pick<ITableProps, 'ui' | 'freeze'> & { hasRowActions?: boolean }
 
 const props = defineProps<IProps>()
 
@@ -39,6 +39,11 @@ const headerClass = computed(() => {
 
 const headerStyle = computed(() => {
   return props.ui?.headerStyle?.()
+})
+
+const rowActionsHeaderClass = computed(() => {
+  const defaults = TABLE_DEFAULT_PROPS.ui.rowActionsHeaderClass()
+  return props.ui?.rowActionsHeaderClass?.({ defaults }) ?? defaults.all
 })
 
 function getSplitterLeft(splitter: ITableSplitter) {
@@ -72,13 +77,20 @@ function getSplitterLeft(splitter: ITableSplitter) {
         :column="col"
         :ui
         :class="{
-          'is-last': idx === visibleColumns.length - 1,
+          'is-last': idx === visibleColumns.length - 1 && (isCardView || !hasRowActions),
           'rounded-custom border-1': isCardView,
         }"
       />
     </slot>
 
     <template v-if="!isCardView">
+      <!-- Match the body's action area so both scrollers have the same range. -->
+      <div
+        v-if="hasRowActions"
+        aria-hidden="true"
+        class="row-actions-header"
+        :class="[rowActionsHeaderClass, { 'is-frozen': freeze?.rowActions }]"
+      />
       <!-- Filler -->
       <div
         v-if="isContentVerticallyScrollable"
@@ -113,6 +125,37 @@ function getSplitterLeft(splitter: ITableSplitter) {
 </template>
 
 <style scoped lang="scss">
+@use './styles/frozen-edge-shadow' as *;
+
+.can-scroll-right .row-actions-header.is-frozen {
+  border-left-width: 1px;
+  @include frozen-edge-shadow(-1);
+}
+
+.row-actions-header {
+  flex: 0 0 var(--table-row-actions-width, 5.25rem);
+}
+
+.separator--vertical .row-actions-header,
+.separator--cell .row-actions-header {
+  border-right-width: 1px;
+}
+
+.separator--horizontal .row-actions-header,
+.separator--cell .row-actions-header {
+  border-bottom-width: 1px;
+}
+
+.is-bordered .row-actions-header {
+  border-width: 1px 1px 1px 0;
+}
+
+.row-actions-header.is-frozen {
+  position: sticky;
+  right: 0;
+  z-index: 1;
+}
+
 .splitter {
   @apply absolute top-0 bottom-0 w-7px z-5;
 

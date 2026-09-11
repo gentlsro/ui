@@ -4,11 +4,11 @@ import type { useTableStore } from '../stores/table.store'
 import { tableIsCellEditable } from './table-is-cell-editable'
 
 export function tableToggleBooleanCell(store: ReturnType<typeof useTableStore>, row: IItem, column: TableColumn) {
-  if (!tableIsCellEditable(row, column)) {
+  if (!tableIsCellEditable(row, column) || (store.cellEdit.value.length && store.cellEditMode.value === 'row')) {
     return
   }
 
-  if (store.cellEdit.value) {
+  if (store.cellEdit.value.length) {
     store.saveCellEditValue()
   }
 
@@ -19,12 +19,16 @@ export function tableToggleBooleanCell(store: ReturnType<typeof useTableStore>, 
     }
   }
 
-  store.cellEdit.value = { row, column }
+  store.startCellEdit(row, column)
+  const edit = store.cellEdit.value[0]
 
-  store.loadCellEditValue()
-  store.cellEditValue.value = store.cellEditValue.value !== true
+  if (!edit) {
+    return
+  }
+
+  edit.value = edit.value !== true
   store.saveCellEditValue()
-  store.cellEdit.value = undefined
+  store.cancelCellEdit()
 }
 
 export function isTableBooleanCheckbox(column: TableColumn) {

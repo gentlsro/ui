@@ -1367,6 +1367,8 @@ export const defaultComponentsConfig = {
         cellInnerClass: ({ defaults }) => defaults.all,
         alternateRowClass: ({ defaults }) => defaults.all,
         rowClass: ({ defaults }) => defaults.all,
+        rowActionsClass: ({ defaults }) => defaults.all,
+        rowActionsHeaderClass: ({ defaults }) => defaults.all,
         totalsCellClass: ({ defaults }) => defaults.all,
         bottomClass: ({ defaults }) => defaults.all,
       },
