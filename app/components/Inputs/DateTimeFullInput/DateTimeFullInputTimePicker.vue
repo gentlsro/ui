@@ -8,6 +8,16 @@ import { getTimePeriod, parseTimeParts, toDisplayHour, toStoredHour } from '../f
 const props = withDefaults(defineProps<{
   is12h?: boolean
   modelValue?: string
+
+  /**
+   * Whether to hide the `Now` / `Remove` actions
+   */
+  noControls?: boolean
+
+  /**
+   * Whether the wheels use the sizing of the calendar day cells – more, smaller items
+   */
+  denseWheels?: boolean
 }>(), {
   is12h: false,
 })
@@ -78,6 +88,12 @@ const maskMinutes = computed<FactoryOpts>(() => {
 const hourEl = useTemplateRef('hourEl')
 const minuteEl = useTemplateRef('minuteEl')
 
+// The wheels can match the size of the calendar day cells – 28px rows with a 14px font
+const DENSE_WHEELS = { itemHeight: 28, maxVisible: 7 } as const
+
+const wheelItemHeight = computed(() => props.denseWheels ? DENSE_WHEELS.itemHeight : undefined)
+const wheelMaxVisible = computed(() => props.denseWheels ? DENSE_WHEELS.maxVisible : undefined)
+
 const storedParts = computed(() => parseTimeParts(props.modelValue) ?? { hh: '00', mm: '00' })
 
 const displayParts = computed(() => {
@@ -127,12 +143,12 @@ defineExpose({ sync })
     <div
       v-if="usedTouch"
       flex="~ gap-x-2 wrap"
-      p="x-1 t-1"
+      p="t-1 b-2"
     >
       <TextInput
         layout="regular"
         :model-value="displayParts.hh"
-        class="w-[calc(50%-8px)]"
+        flex="1"
         :mask="maskHours"
         :label="$t('general.hour', 1)"
         inputmode="decimal"
@@ -142,7 +158,7 @@ defineExpose({ sync })
       <TextInput
         layout="regular"
         :model-value="displayParts.mm"
-        class="w-[calc(50%-8px)]"
+        flex="1"
         :mask="maskMinutes"
         :label="$t('general.minute', 1)"
         inputmode="decimal"
@@ -153,6 +169,7 @@ defineExpose({ sync })
 
     <div
       flex="~ gap-x-2 center"
+      :class="[denseWheels && 'font-rem-14', !denseWheels && 'relative']"
       @mousedown.stop.prevent
     >
       <VerticalScrollPicker
@@ -160,6 +177,8 @@ defineExpose({ sync })
         :model-value="displayParts.hh"
         flex="1"
         :items="hourOptions"
+        :item-height="wheelItemHeight"
+        :max-visible="wheelMaxVisible"
         @update:model-value="setValue($event, 'h')"
       />
       <VerticalScrollPicker
@@ -167,15 +186,17 @@ defineExpose({ sync })
         :model-value="displayParts.mm"
         flex="1"
         :items="minuteOptions"
+        :item-height="wheelItemHeight"
+        :max-visible="wheelMaxVisible"
         @update:model-value="setValue($event, 'm')"
       />
 
-      <!-- AM / PM -->
+      <!-- AM / PM – the wheel pair stays centered on its own, the period sits next to it -->
       <div
         v-if="is12h"
         flex="~ col"
         w="12"
-        p="t-8"
+        :class="[!denseWheels && 'absolute left-full top-1/2 -translate-y-1/2 ml-2']"
       >
         <Btn
           size="sm"
@@ -216,24 +237,25 @@ defineExpose({ sync })
 
     <!-- Actions -->
     <div
+      v-if="!noControls"
       flex="~ gap-x-1 center"
       p="x-1 t-2"
     >
       <Btn
-        icon="i-mdi:clock-outline"
+        icon="mdi:eraser"
+        :label="$t('general.remove')"
+        size="sm"
+        color="negative"
+        no-uppercase
+        @click="emits('clear')"
+      />
+
+      <Btn
+        icon="mdi:clock-outline"
         :label="$t('general.now')"
         size="sm"
         no-uppercase
         @click="emits('now')"
-      />
-
-      <Btn
-        icon="i-mdi:eraser"
-        :label="$t('general.remove')"
-        size="sm"
-        color="ca"
-        no-uppercase
-        @click="emits('clear')"
       />
     </div>
   </div>

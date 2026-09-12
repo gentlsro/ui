@@ -85,7 +85,6 @@ const labelStyle = computed(() => {
   }
 
   return {
-    '--activeColor': props.activeLabelColor,
     '--prependWidth': `${-1 * prependWidth.value}px`,
     '--labelInlineWidth': props.ui?.labelInlineWidth ?? '200px',
     ...labelStyle,
@@ -286,8 +285,6 @@ label.label {
 
 .wrapper__body:not(.selector-wrapper):focus-within > div {
   > label.label {
-    color: var(--activeColor, var(--color-primary));
-
     &:not(.is-inline) {
       @apply font-rem-12;
     }

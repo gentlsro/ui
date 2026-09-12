@@ -35,8 +35,10 @@ const overlayStyle = computed(() => {
 </script>
 
 <template>
+  <!-- The `floating-overlay` class marks the overlay as a part of the floating
+  UI layer, which consumes the clicks in the layers below -->
   <div
-    class="menu-overlay"
+    class="menu-overlay floating-overlay"
     :style="overlayStyle"
     :class="[overlayClass, { 'is-active': model }]"
   />

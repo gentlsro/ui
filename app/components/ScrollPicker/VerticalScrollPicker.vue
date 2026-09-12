@@ -19,6 +19,12 @@ const items = computed(() => props.items ?? [])
 const scrollEl = ref<HTMLElement>()
 const isJumping = ref(false)
 
+// Dragging – the scrollbar is hidden, so the wheel is also dragged with the mouse
+const DRAG_THRESHOLD = 4
+const isDragging = ref(false)
+let dragState: { startY: number, startTop: number, moved: boolean } | null = null
+let suppressClick = false
+
 const overscan = computed(() => Math.floor(props.maxVisible / 2))
 
 const containerStyle = computed<CSSProperties>(() => {
@@ -71,9 +77,80 @@ function settle() {
 }
 
 function handleItemClick(index: number) {
+  // A drag ends with the pointer over an item – that is not a click
+  if (suppressClick) {
+    suppressClick = false
+
+    return
+  }
+
   scrollToIndex(index)
   emitIndex(index)
 }
+
+function handlePointerDown(ev: PointerEvent) {
+  // Touch and pen scroll natively
+  if (ev.pointerType !== 'mouse' || ev.button !== 0 || !scrollEl.value) {
+    return
+  }
+
+  suppressClick = false
+  dragState = { startY: ev.clientY, startTop: scrollEl.value.scrollTop, moved: false }
+
+  window.addEventListener('pointermove', handlePointerMove)
+  window.addEventListener('pointerup', handlePointerUp)
+  window.addEventListener('pointercancel', handlePointerUp)
+}
+
+function handlePointerMove(ev: PointerEvent) {
+  const el = scrollEl.value
+
+  if (!el || !dragState) {
+    return
+  }
+
+  const deltaY = ev.clientY - dragState.startY
+
+  if (!dragState.moved) {
+    if (Math.abs(deltaY) < DRAG_THRESHOLD) {
+      return
+    }
+
+    dragState.moved = true
+    isDragging.value = true
+  }
+
+  el.scrollTop = dragState.startTop - deltaY
+}
+
+function handlePointerUp() {
+  removeDragListeners()
+
+  const el = scrollEl.value
+  const wasDragging = dragState?.moved ?? false
+
+  dragState = null
+  isDragging.value = false
+
+  if (!el || !wasDragging) {
+    return
+  }
+
+  suppressClick = true
+
+  const index = indexFromScrollTop(el.scrollTop)
+
+  scrollToIndex(index)
+  emitIndex(index)
+}
+
+function removeDragListeners() {
+  window.removeEventListener('pointermove', handlePointerMove)
+  window.removeEventListener('pointerup', handlePointerUp)
+  window.removeEventListener('pointercancel', handlePointerUp)
+}
+
+onBeforeUnmount(removeDragListeners)
 
 function sync() {
   scrollToIndex(indexForValue(props.modelValue))
@@ -110,6 +187,7 @@ defineExpose({
 <template>
   <div
     class="scroll-picker"
+    :class="{ 'is-dragging': isDragging }"
     :style="containerStyle"
   >
     <div
@@ -123,6 +201,7 @@ defineExpose({
       <div
         ref="scrollEl"
         class="scroll-picker__scroller hide-scrollbar"
+        @pointerdown="handlePointerDown"
       >
         <div
           class="scroll-picker__spacer"
@@ -166,9 +245,15 @@ defineExpose({
   &__scroller {
     @apply h-full overflow-y-auto select-none;
 
+    cursor: grab;
     scroll-snap-type: y proximity;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
+  }
+
+  &.is-dragging &__scroller {
+    cursor: grabbing;
+    scroll-snap-type: none;
   }
 
   &__item {

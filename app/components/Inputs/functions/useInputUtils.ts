@@ -48,6 +48,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
           if (isInitialized.value && mask.value?.masked.isComplete === false) {
             model.value = lastValidValue.value
           }
+
           return model.value
         }
       : undefined,
