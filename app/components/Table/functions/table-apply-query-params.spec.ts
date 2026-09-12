@@ -58,7 +58,7 @@ describe('tableApplyQueryParams', () => {
       pagination: {},
       queryBuilder: [],
       search: 'replaced',
-    } as ReturnType<typeof tableTransformColumns>)
+    } as unknown as ReturnType<typeof tableTransformColumns>)
 
     tableApplyQueryParams({
       params,

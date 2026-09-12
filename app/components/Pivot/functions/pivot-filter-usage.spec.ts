@@ -1,5 +1,7 @@
 import { beforeAll, describe, expect, it, vi } from 'vitest'
 
+import type { buildPivotValueColumns as BuildPivotValueColumns } from './pivot-build-value-columns'
+import type { pivotItemToTableColumn as PivotItemToTableColumn } from './pivot-filter-usage'
 import { PivotItem } from '../models/pivot-item.model'
 
 const ComparatorEnum = {
@@ -32,8 +34,8 @@ const summary = {
   MEDIAN: 'MEDIAN' as SummaryEnum,
 }
 
-let pivotItemToTableColumn: any
-let buildPivotValueColumns: any
+let pivotItemToTableColumn: typeof PivotItemToTableColumn
+let buildPivotValueColumns: typeof BuildPivotValueColumns
 
 beforeAll(async () => {
   vi.stubGlobal('SummaryEnum', summary)
