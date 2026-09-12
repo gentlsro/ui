@@ -202,6 +202,10 @@ function handleNow() {
   }
 }
 
+function handleApply() {
+  menuProxyEl.value?.hide()
+}
+
 function handleClear() {
   clear()
 }
@@ -361,6 +365,7 @@ defineExpose({
           :is-12h
           :is-compact
           :utc
+          @apply="handleApply"
           @clear="handleClear"
           @now="handleNow"
           @update:date-value="handleDateSelect"

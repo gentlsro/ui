@@ -478,7 +478,6 @@ export const defaultComponentsConfig = {
       noDownloadButton: undefined,
       noPreview: undefined,
       noBorder: true,
-      activeLabelColor: 'unset',
       ui: {
         focusInputOnLabelClick: false,
         borderRadius: '0.5rem',
@@ -493,7 +492,6 @@ export const defaultComponentsConfig = {
   fileInputSimple: {
     props: {
       accept: undefined,
-      activeLabelColor: 'unset',
       downloadUrl: undefined,
       errorTakesSpace: true,
       multi: undefined,
@@ -597,7 +595,6 @@ export const defaultComponentsConfig = {
   inputLabel: {
     props: {
       required: undefined,
-      activeLabelColor: 'var(--color-primary)',
       labelHint: {
         icon: 'i-lucide:info',
       },

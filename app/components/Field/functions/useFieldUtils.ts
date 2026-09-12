@@ -100,7 +100,6 @@ export function useFieldUtils(options?: {
 
   function getFieldProps(props: IFieldProps) {
     return reactivePick(props, [
-      'activeLabelColor',
       'cursor',
       'disabled',
       'errorTakesSpace',
