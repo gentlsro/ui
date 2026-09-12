@@ -30,7 +30,7 @@ export const TABLE_DEFAULT_PROPS = {
     },
 
     rowClass() {
-      const base = 'flex relative hover:(bg-slate-200 dark:bg-slate-800)'
+      const base = 'flex relative [:where(&)]:(bg-white dark:bg-darker) hover:(bg-slate-200 dark:bg-slate-800)'
       const clickable = '[&.is-clickable:hover]:(cursor-pointer)'
       const card = '[&.is-card]:(flex-col gap-y-2px rounded-custom p-2 m-1 dark:bg-black overflow-auto light:(outline-1 outline-ca outline-solid bg-white))'
       const cardSelectable = '[&.is-card.is-selectable]:(cursor-pointer)'
@@ -38,7 +38,6 @@ export const TABLE_DEFAULT_PROPS = {
       const cardCell = '[&.is-card_.td]:(grid w-full items-start rounded-custom min-h-6 [grid-template-columns:80px_3fr])'
       const cardCellLabel = '[&.is-card_.td-label]:(relative text-caption text-xs text-right min-h-6 p-t-1 truncate)'
       const cardCellValue = '[&.is-card_.td-value]:(flex items-center gap-1 leading-tight self-center overflow-auto p-x-2)'
-      const cardEditableHover = '[&.is-card.is-editable_.td.is-editable:hover]:(shadow-ca shadow-consistent-xs)'
       const cardEditableHoverEditBtn = '[&.is-card.is-editable_.td.is-editable:hover_.edit-btn]:(flex)'
       const cardEditBtn = '[&.is-card.is-editable_.edit-btn]:(!absolute top-1/2 right-0 -translate-y-1/2 bg-white dark:bg-black hidden)'
       const cardCancelEditBtn = '[&.is-card.is-editable_.cancel-edit-btn]:(!absolute top-1/2 right-0 -translate-y-1/2 bg-white dark:bg-black hidden)'
@@ -54,14 +53,31 @@ export const TABLE_DEFAULT_PROPS = {
         cardCell,
         cardCellLabel,
         cardCellValue,
-        cardEditableHover,
         cardEditableHoverEditBtn,
         cardEditBtn,
         cardCancelEditBtn,
         cardEditingCancel,
         cardEditingLabel,
         // all: `${base} ${cardCell} ${cardCellLabel} ${cardCellValue}`,
-        all: `${base} ${clickable} ${card} ${cardSelectable} ${cardSelected} ${cardCell} ${cardCellLabel} ${cardCellValue} ${cardEditableHover} ${cardEditableHoverEditBtn} ${cardEditBtn} ${cardCancelEditBtn} ${cardEditingCancel} ${cardEditingLabel}`,
+        all: `${base} ${clickable} ${card} ${cardSelectable} ${cardSelected} ${cardCell} ${cardCellLabel} ${cardCellValue} ${cardEditableHoverEditBtn} ${cardEditBtn} ${cardCancelEditBtn} ${cardEditingCancel} ${cardEditingLabel}`,
+      } as const
+    },
+
+    rowActionsClass() {
+      const base = 'flex justify-end items-center flex-wrap gap-2 p-x-1 bg-inherit border-ca'
+
+      return { 
+        base, 
+        all: base,
+      } as const
+    },
+
+    rowActionsHeaderClass() {
+      const base = 'p-x-1 p-y-2px bg-white dark:bg-black border-ca'
+
+      return { 
+        base, 
+        all: base,
       } as const
     },
 

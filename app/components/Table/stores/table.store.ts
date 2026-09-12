@@ -1,4 +1,4 @@
-import { klona } from 'klona/full'
+import { useTableCellEditing } from '../composables/useTableCellEditing'
 
 // Types
 import type { ITableProps } from '../types/table-props.type'
@@ -126,6 +126,7 @@ const [
       headerX,
       totalsX,
       contentX,
+      scrollArrivedState,
       isContentVerticallyScrollable,
 
       // Selection
@@ -135,9 +136,18 @@ const [
       // Editing
       selectedCell,
       cellEdit,
-      isEditingCell,
+      cellEditMode,
       cellEditValue,
+      isCellEditModified,
       loadCellEditValue,
+      resetCellEditValue,
+      isEditingCell,
+      getCellEdit,
+      updateCellEditValue,
+      isEditingRow,
+      startRowEdit,
+      finishCellEdit,
+      startCellEdit,
       saveCellEditValue,
       cancelCellEdit,
 
@@ -515,15 +525,22 @@ const [
 
   const headerX = ref(0)
   const totalsX = ref(0)
-  const { x: contentX } = useScroll(virtualScrollElDom)
-  const isContentVerticallyScrollable = ref(false)
+  const { 
+    x: contentX,
+    arrivedState: scrollArrivedState,
+    measure: measureScroll 
+  } = useScroll(virtualScrollElDom)
 
+  const isContentVerticallyScrollable = ref(false)
   useResizeObserver(virtualScrollElDom, () => {
     const clientHeight = virtualScrollElDom.value.clientHeight
     const scrollHeight = virtualScrollElDom.value.scrollHeight
 
     isContentVerticallyScrollable.value = clientHeight < scrollHeight
+    measureScroll()
   })
+
+  watch([() => visibleColumns.value.map(column => column.width), () => rows.value.length], measureScroll, { flush: 'post' })
 
   syncRefs(headerX, [contentX, totalsX])
   syncRefs(contentX, [headerX, totalsX])
@@ -550,47 +567,23 @@ const [
 
   // SECTION Editing
   const selectedCell = ref<{ rowKey: unknown, field: string }>()
-  const cellEdit = ref<{ row: IItem, column: TableColumn }>()
-
   const {
-    model: cellEditValue,
-    syncFromOrigin: loadCellEditValue,
-  } = useRefReset(
-    () => {
-      const field = cellEdit.value?.column.field
-      const row = cellEdit.value?.row
-
-      if (!field || !row) {
-        return
-      }
-
-      return get(row, field)
-    },
-  )
-
-  const isEditingCell = computed(() => !!cellEdit.value)
-
-  function saveCellEditValue() {
-    if (!cellEdit.value) {
-      return
-    }
-
-    const originalRow = klona(cellEdit.value.row)
-    const _row = { ...cellEdit.value.row, [cellEdit.value.column.field]: cellEditValue.value }
-
-    const { row, column } = cellEdit.value
-    const onSave = cellEdit.value.column.editComponent?.onSave
-
-    if (onSave) {
-      Object.assign(row, onSave(_row, cellEdit.value.column, originalRow))
-    } else {
-      set(row, column.field, cellEditValue.value)
-    }
-  }
-
-  function cancelCellEdit() {
-    cellEdit.value = undefined
-  }
+    cellEdit,
+    cellEditMode,
+    cellEditValue,
+    isCellEditModified,
+    loadCellEditValue,
+    resetCellEditValue,
+    isEditingCell,
+    getCellEdit,
+    updateCellEditValue,
+    isEditingRow,
+    startRowEdit,
+    finishCellEdit,
+    startCellEdit,
+    saveCellEditValue,
+    cancelCellEdit,
+  } = useTableCellEditing()
 
   // !SECTION
 
@@ -905,6 +898,7 @@ const [
     headerX,
     totalsX,
     contentX,
+    scrollArrivedState,
     isContentVerticallyScrollable,
 
     // Selection
@@ -914,9 +908,18 @@ const [
     // Editing
     selectedCell,
     cellEdit,
-    isEditingCell,
+    cellEditMode,
     cellEditValue,
+    isCellEditModified,
     loadCellEditValue,
+    resetCellEditValue,
+    isEditingCell,
+    getCellEdit,
+    updateCellEditValue,
+    isEditingRow,
+    startRowEdit,
+    finishCellEdit,
+    startCellEdit,
     saveCellEditValue,
     cancelCellEdit,
 

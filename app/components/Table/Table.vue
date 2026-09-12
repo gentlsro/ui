@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// Utils
+import { isObject } from 'lodash-es'
+
 // Types
 import type { ITableProps } from './types/table-props.type'
 import type { ITableEmits } from './types/table-emits.type'
@@ -25,6 +28,24 @@ const emits = defineEmits<ITableEmits>()
 
 const slots = useSlots()
 
+function hasRowActions() {
+  if (store.isCardView.value) {
+    return false
+  } 
+
+  if (slots['row-actions']) {
+    return true
+  }
+
+  if (store.isEditingCell.value) {
+    return store.cellEditMode.value === 'row'
+  }
+
+  const editable = props.editable
+
+  return isObject(editable) && editable.mode === 'row' && editable.view !== 'card'
+}
+
 provideLocal(tableSlotsKey, slots)
 
 // Init
@@ -48,7 +69,11 @@ const tableClass = computed(() => {
       defaults: TABLE_DEFAULT_PROPS.ui.containerClass(),
     }),
     `separator--${props.separator}`,
-    { 'is-bordered': props.bordered },
+    {
+      'is-bordered': props.bordered,
+      'can-scroll-left': !store.scrollArrivedState.left,
+      'can-scroll-right': !store.scrollArrivedState.right,
+    },
   ]
 })
 
@@ -235,6 +260,8 @@ onMounted(() => {
       <TableHeader
         v-if="!noHeader"
         :ui="mergedProps.ui"
+        :freeze
+        :has-row-actions="hasRowActions()"
       />
     </slot>
 
@@ -243,11 +270,19 @@ onMounted(() => {
       v-if="rows?.length && !isMetaLoading"
       :ui="mergedProps.ui"
       :editable
+      :freeze
       :to
       :to-link-props="mergedProps.toLinkProps"
       :show-copy-btn
       :scroller-config="mergedProps.scrollerConfig"
     >
+      <template
+        v-if="$slots['row-actions']"
+        #row-actions="actions"
+      >
+        <slot name="row-actions" v-bind="actions" />
+      </template>
+
       <!-- Cell slots -->
       <template
         v-for="col in visibleColumns"
@@ -294,6 +329,7 @@ onMounted(() => {
     >
       <TableTotals
         :totals
+        :has-row-actions="hasRowActions()"
         :ui="mergedProps.ui"
       />
     </slot>

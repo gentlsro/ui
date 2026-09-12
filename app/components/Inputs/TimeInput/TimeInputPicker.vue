@@ -5,6 +5,9 @@ import type { FactoryOpts } from 'imask'
 // Types
 import type { ITimeInputPickerProps } from './types/time-input-picker-props.type'
 
+// Functions
+import { toDisplayHour } from '../functions/time-format'
+
 const props = defineProps<ITimeInputPickerProps>()
 const emits = defineEmits<{
   (e: 'update:used-touch', val: boolean): void
@@ -86,17 +89,7 @@ const storedTime = computed(() => {
 })
 
 function toPickerHour(hh: string) {
-  const hour = Number(hh)
-
-  if (!props.is12h || Number.isNaN(hour)) {
-    return padStart(hh, 2, '0')
-  }
-
-  if (hour === 0 || hour === 12) {
-    return '12'
-  }
-
-  return padStart(String(hour > 12 ? hour - 12 : hour), 2, '0')
+  return toDisplayHour(hh, props.is12h)
 }
 
 const localizedTimeParts = computed(() => {
