@@ -1,4 +1,3 @@
-import * as XLSX from 'xlsx'
 import type { Range } from 'xlsx'
 
 import type {
@@ -8,10 +7,10 @@ import type {
 import { tableExportCsv } from '../../Table/functions/table-export-csv'
 import { tableExportJson } from '../../Table/functions/table-export-json'
 import { tableExportXlsx } from '../../Table/functions/table-export-xlsx'
+import { loadXlsx } from '../../Table/functions/load-xlsx'
 
-const { utils, writeFile } = XLSX
-
-export function buildPivotCurrentViewSheet(payload: IPivotCurrentViewExport) {
+export async function buildPivotCurrentViewSheet(payload: IPivotCurrentViewExport) {
+  const { utils } = await loadXlsx()
   const headerRowCount = Math.max(payload.valueHeaders.length, 1)
   const rowHeaderCount = payload.rowHeaders.length
   const sheetRows: unknown[][] = Array.from(
@@ -77,21 +76,23 @@ export function buildPivotCurrentViewSheet(payload: IPivotCurrentViewExport) {
   return sheet
 }
 
-function exportPivotCurrentViewXlsx(payload: {
+async function exportPivotCurrentViewXlsx(payload: {
   fileName: string
   data: IPivotCurrentViewExport
 }) {
+  const { utils, writeFile } = await loadXlsx()
   const workbook = utils.book_new()
-  const sheet = buildPivotCurrentViewSheet(payload.data)
+  const sheet = await buildPivotCurrentViewSheet(payload.data)
 
   utils.book_append_sheet(workbook, sheet, 'Generated')
   writeFile(workbook, `${payload.fileName}.xlsx`)
 }
 
-function exportPivotCurrentViewCsv(payload: {
+async function exportPivotCurrentViewCsv(payload: {
   fileName: string
   data: IPivotCurrentViewExport
 }) {
+  const { utils, writeFile } = await loadXlsx()
   const header = [
     ...payload.data.rowHeaders.map(item => item.label),
     ...payload.data.columns.map(column => column.label),
