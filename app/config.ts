@@ -1523,6 +1523,7 @@ export const defaultComponentsConfig = {
   tooltip: {
     props: {
       delay: undefined,
+      mode: 'hover',
       noArrow: undefined,
       noInheritFontStyle: true,
       offset: 8,

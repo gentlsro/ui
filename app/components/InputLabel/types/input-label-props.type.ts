@@ -30,7 +30,7 @@ export type IInputLabelProps = {
     icon?: string
     props?: Omit<
       Partial<ITooltipProps>,
-      'content' | 'modelValue' | 'referenceTarget'
+      'modelValue' | 'referenceTarget'
     > & AllowedComponentProps
   }
 

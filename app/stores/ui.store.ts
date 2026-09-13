@@ -8,7 +8,6 @@ import { uiConfig } from '$uiConfig'
 import type { IUIState } from '../types/ui-state.type'
 
 export const useUIStore = defineStore('__ui', () => {
-  const rC = useRuntimeConfig()
   const { getLastFloatingUI } = useFloatingUIUtils()
 
   // State
@@ -26,7 +25,7 @@ export const useUIStore = defineStore('__ui', () => {
         },
       },
     }),
-    domain: rC.public.domain || undefined,
+    domain: usePreferenceCookieDomain(),
     watch: true,
   })
 
