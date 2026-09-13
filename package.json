@@ -15,7 +15,13 @@
     "nuxt:prepare": "nuxt prepare",
     "typecheck": "nuxt typecheck",
     "update": "npx npm-check-updates -t latest --interactive",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "e2e:dev": "cd e2e/fixtures/app && nuxt dev",
+    "e2e:build": "cd e2e/fixtures/app && NODE_OPTIONS=--max-old-space-size=16384 nuxt build",
+    "e2e:start": "node e2e/fixtures/app/.output/server/index.mjs",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed --project=chromium"
   },
   "dependencies": {
     "@floating-ui/dom": "catalog:",

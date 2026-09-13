@@ -135,6 +135,10 @@ const {
   preventFocusOnTouch: true,
 })
 
+const ignoredEls = computed(() => [
+  `#${inputId}-wrapper .input-wrapper__focusable`,
+])
+
 const { path } = useInputValidationUtils(props)
 
 // Value
@@ -200,6 +204,10 @@ function handleNow() {
   if (props.autoClose ?? !isCompact.value) {
     menuProxyEl.value?.hide()
   }
+}
+
+function handleApply() {
+  menuProxyEl.value?.hide()
 }
 
 function handleClear() {
@@ -310,7 +318,6 @@ defineExpose({
         v-if="$slots.append || (!readonly && !disabled)"
         :class="appendClass"
         :style="appendStyle"
-        @click="handleFocusOrClick"
       >
         <slot
           name="append"
@@ -344,6 +351,7 @@ defineExpose({
         no-uplift
         :fit="false"
         :reference-target="el"
+        :ignore-click-outside="ignoredEls"
         h="!auto"
         w="!auto"
         :max-w="isCompact ? '!92vw' : '!90vw'"
@@ -361,6 +369,7 @@ defineExpose({
           :is-12h
           :is-compact
           :utc
+          @apply="handleApply"
           @clear="handleClear"
           @now="handleNow"
           @update:date-value="handleDateSelect"

@@ -20,6 +20,7 @@ const emits = defineEmits<{
 }>()
 
 defineExpose({
+  isOpen: computed(() => model.value),
   show: () => (modelHandler.value = true),
   hide: (force?: boolean) => {
     isChangeForced.value = !!force
@@ -275,10 +276,11 @@ const contentClasses = computed(() => {
     v-if="debouncedModel"
     to="body"
   >
-    <!-- Overlay -->
+    <!-- Overlay ~ the `floating-overlay` class marks it as a part of the
+    floating UI layer, which consumes the clicks in the layers below -->
     <div
       v-if="!noOverlay"
-      class="backdrop"
+      class="backdrop floating-overlay"
       :style="{
         ...backdropStyle,
         '--transitionDuration': `${transitionDuration}ms`,

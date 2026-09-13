@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // Types
 import type { IInputLabelProps } from './types/input-label-props.type'
+import type { ITooltipProps } from '../Tooltip/types/tooltip-props.type'
 
 // Constants
 import { INPUT_LABEL_DEFAULT_PROPS } from './constants/input-label-default-props'
@@ -35,10 +36,10 @@ const isLabelHintTooltipOpen = shallowRef(false)
 const labelHintTooltipId = useId()
 const isMobileLabelHint = $bp.smaller('md')
 
-const labelHintTooltipProps = computed(() => ({
+const labelHintTooltipProps = computed<ITooltipProps>(() => ({
   placement: isMobileLabelHint.value ? 'bottom-end' : 'right',
   ...mergedProps.value.labelHint?.props,
-// show label without delay when manual is true
+  // Show label without delay when manual is true
   ...(mergedProps.value.labelHint?.props?.manual && { delay: [0, 0] as [number, number] }),
   manual: false,
 }))
@@ -85,7 +86,6 @@ const labelStyle = computed(() => {
   }
 
   return {
-    '--activeColor': props.activeLabelColor,
     '--prependWidth': `${-1 * prependWidth.value}px`,
     '--labelInlineWidth': props.ui?.labelInlineWidth ?? '200px',
     ...labelStyle,
@@ -286,8 +286,6 @@ label.label {
 
 .wrapper__body:not(.selector-wrapper):focus-within > div {
   > label.label {
-    color: var(--activeColor, var(--color-primary));
-
     &:not(.is-inline) {
       @apply font-rem-12;
     }

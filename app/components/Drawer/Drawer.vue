@@ -122,10 +122,13 @@ function handleClickOutside(ev: Event) {
   }
 
   const targetEl = ev.target as HTMLElement
-  const isPartOfFloatingElement = !!targetEl.closest('.floating-element')
+
+  // A floating UI (menu/dialog) opened on top of the drawer consumes the click,
+  // be it its content or the overlay rendered behind it
+  const isPartOfFloatingUI = !!targetEl.closest('.floating-element, .floating-overlay')
   const isNotifications = !!targetEl.closest('.notifications')
 
-  if (isPartOfFloatingElement || isNotifications) {
+  if (isPartOfFloatingUI || isNotifications) {
     return
   }
 

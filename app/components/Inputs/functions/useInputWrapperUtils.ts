@@ -7,7 +7,6 @@ export function useInputWrapperUtils() {
   function getInputWrapperProps(props: IInputWrapperProps) {
     return reactivePick(
       props,
-      'activeLabelColor',
       'disabled',
       'errorTakesSpace',
       'errors',

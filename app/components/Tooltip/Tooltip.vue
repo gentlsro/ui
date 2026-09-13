@@ -33,6 +33,12 @@ const referenceTarget = toRef(props, 'referenceTarget')
 const model = defineModel<boolean>({ default: false })
 const tooltipEl = ref<HTMLElement>()
 const referenceEl = ref<Element>() // Element that tooltip is attached to
+const clickOutsideTarget = computed<HTMLElement | SVGElement | undefined>(() => {
+  return referenceEl.value instanceof HTMLElement
+    || referenceEl.value instanceof SVGElement
+    ? referenceEl.value
+    : undefined
+})
 const arrowEl = ref<HTMLDivElement>()
 const middleware = ref([
   offset(props.offset),
@@ -73,7 +79,7 @@ useEventListener(referenceEl, 'mouseenter', () => {
   }
 
   clearTimeout(hoverTimer)
-  hoverTimer = setTimeout(() => setOpen(true), props.delay?.[0] ?? 0)
+  hoverTimer = setTimeout(setOpen, props.delay?.[0] ?? 0, true)
 })
 
 useEventListener(referenceEl, 'mouseleave', () => {
@@ -107,7 +113,7 @@ useEventListener(referenceEl, 'keydown', (event: KeyboardEvent) => {
   }
 })
 
-onClickOutside(referenceEl, () => setOpen(false))
+onClickOutside(clickOutsideTarget, () => setOpen(false))
 
 function assignReferenceEl() {
   const parentEl = instance?.vnode?.el?.parentNode

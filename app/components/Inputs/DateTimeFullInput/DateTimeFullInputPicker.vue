@@ -17,17 +17,12 @@ const props = withDefaults(defineProps<{
 })
 
 const emits = defineEmits<{
+  (e: 'apply'): void
   (e: 'clear'): void
   (e: 'now'): void
   (e: 'update:dateValue', val?: string): void
   (e: 'update:timeValue', val?: string): void
 }>()
-
-// Constants
-const PANES = [
-  { name: 'date', label: 'dataType.date' },
-  { name: 'time', label: 'dataType.time' },
-]
 
 // Layout
 const activePane = ref('date')
@@ -52,8 +47,25 @@ watch(activePane, pane => {
   }
 })
 
+// The calendar is the tallest pane – the time pane keeps its height, so the dialog does not resize
+const calendarEl = useTemplateRef<HTMLElement>('calendarEl')
+const calendarHeight = ref<number>()
+
+useResizeObserver(calendarEl, ([entry]) => {
+  // The observer reports a zero height while the calendar is unmounted, which would drop the min-height
+  const height = entry?.borderBoxSize?.[0]?.blockSize ?? entry?.contentRect.height
+
+  if (height) {
+    calendarHeight.value = height
+  }
+})
+
+const timePaneStyle = computed(() => {
+  return calendarHeight.value ? { minHeight: `${calendarHeight.value}px` } : undefined
+})
+
 const tabsUi: ITabsProps['ui'] = {
-  containerClass: ({ defaults }) => `${defaults.base} p-2`,
+  containerClass: ({ defaults }) => `${defaults.base} p-x-1 p-t-2 p-b-1`,
   navigationContentClass: ({ defaults }) => `${defaults.base} p-x-1`,
 }
 
@@ -67,36 +79,85 @@ defineExpose({
 
 <template>
   <!-- The picker is a dialog on a narrow viewport, so the panes become tabs -->
-  <Tabs
+  <div
     v-if="isCompact"
-    v-model="activePane"
-    :keep-alive-props="{}"
-    :ui="tabsUi"
+    class="datetime-full-picker__compact"
   >
-    <Tab
-      v-for="pane in PANES"
-      :key="pane.name"
-      :name="pane.name"
-      :label="$t(pane.label)"
-    >
-      <div class="datetime-full-picker__pane">
-        <DatePicker
-          v-if="pane.name === 'date'"
-          ref="datePickerEl"
-          v-bind="datePickerProps"
-          @update:model-value="emits('update:dateValue', $event)"
-        />
+    <!-- The dialog is closed explicitly – unlike on a desktop the picking continues in the other pane -->
+    <Btn
+      class="datetime-full-picker__apply bg-primary color-white"
+      :label="$t('general.apply')"
+      size="sm"
+      no-uppercase
+      no-dim
+      @click="emits('apply')"
+    />
 
-        <DateTimeFullInputTimePicker
-          v-else
-          v-bind="timePickerProps"
-          @clear="emits('clear')"
-          @now="emits('now')"
-          @update:model-value="emits('update:timeValue', $event)"
-        />
-      </div>
-    </Tab>
-  </Tabs>
+    <Tabs
+      v-model="activePane"
+      :keep-alive-props="{}"
+      :ui="tabsUi"
+    >
+      <Tab
+        name="date"
+        icon="i-system-uicons:calendar-date"
+        :label="$t('dataType.date')"
+      >
+        <div
+          ref="calendarEl"
+          class="datetime-full-picker__pane is-compact"
+        >
+          <DatePicker
+            ref="datePickerEl"
+            v-bind="datePickerProps"
+            no-controls
+            class="rounded-custom"
+            @update:model-value="emits('update:dateValue', $event)"
+          />
+        </div>
+      </Tab>
+
+      <Tab
+        name="time"
+        icon="i-mdi:clock-outline"
+        :label="$t('dataType.time')"
+      >
+        <div
+          class="datetime-full-picker__pane is-compact justify-center"
+          :style="timePaneStyle"
+        >
+          <DateTimeFullInputTimePicker
+            v-bind="timePickerProps"
+            no-controls
+            class="w-50 m-x-auto"
+            @clear="emits('clear')"
+            @now="emits('now')"
+            @update:model-value="emits('update:timeValue', $event)"
+          />
+        </div>
+      </Tab>
+    </Tabs>
+
+    <!-- The actions are shared by both panes -->
+    <div class="datetime-full-picker__footer">
+      <Btn
+        icon="mdi:eraser"
+        :label="$t('general.remove')"
+        size="sm"
+        color="negative"
+        no-uppercase
+        @click="emits('clear')"
+      />
+
+      <Btn
+        icon="mdi:clock-outline"
+        :label="$t('general.now')"
+        size="sm"
+        no-uppercase
+        @click="emits('now')"
+      />
+    </div>
+  </div>
 
   <!-- Desktop: both panes next to each other -->
   <div
@@ -111,8 +172,34 @@ defineExpose({
       <DatePicker
         ref="datePickerEl"
         v-bind="datePickerProps"
+        no-controls
         @update:model-value="emits('update:dateValue', $event)"
-      />
+      >
+        <!-- The actions replace the `Today` button of the date picker -->
+        <template #controls>
+          <div
+            flex="~ items-center gap-x-1"
+            m="l-auto"
+          >
+            <Btn
+              icon="mdi:eraser"
+              :label="$t('general.remove')"
+              size="sm"
+              color="negative"
+              no-uppercase
+              @click="emits('clear')"
+            />
+
+            <Btn
+              icon="mdi:clock-outline"
+              :label="$t('general.now')"
+              size="sm"
+              no-uppercase
+              @click="emits('now')"
+            />
+          </div>
+        </template>
+      </DatePicker>
     </section>
 
     <section class="datetime-full-picker__pane is-time">
@@ -122,6 +209,9 @@ defineExpose({
 
       <DateTimeFullInputTimePicker
         v-bind="timePickerProps"
+        no-controls
+        dense-wheels
+        class="p-2"
         @clear="emits('clear')"
         @now="emits('now')"
         @update:model-value="emits('update:timeValue', $event)"
@@ -135,15 +225,33 @@ defineExpose({
   @apply flex items-stretch;
 }
 
+.datetime-full-picker__compact {
+  @apply relative;
+}
+
 .datetime-full-picker__pane {
-  @apply flex flex-col p-2;
+  @apply flex flex-col p-t-2;
 
   &.is-time {
-    @apply border-l border-ca;
+    @apply border-l border-ca w-45;
+  }
+
+  // Both tabs keep the width of the calendar, so the dialog does not resize between them
+  &.is-compact {
+    width: min(90vw, 400px);
+    max-width: 100%;
   }
 }
 
+.datetime-full-picker__apply {
+  @apply absolute right-2 top-2 z-1;
+}
+
+.datetime-full-picker__footer {
+  @apply flex items-center justify-end gap-x-1 p-x-2 p-y-1 border-t-1 border-slate-100 dark:border-dark-700;
+}
+
 .datetime-full-picker__title {
-  @apply font-bold p-x-2 p-b-1;
+  @apply font-bold p-x-3 p-b-1 p-t-2;
 }
 </style>

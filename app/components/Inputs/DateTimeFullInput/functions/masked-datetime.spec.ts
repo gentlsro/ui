@@ -1,5 +1,6 @@
 // @vitest-environment happy-dom
-import IMask, { createMask } from 'imask'
+import IMask, { createMask, DIRECTION } from 'imask'
+import type { Masked } from 'imask'
 import { describe, expect, it } from 'vitest'
 
 // Functions
@@ -30,6 +31,11 @@ function createTestMaskOptions(datePattern: string, is12h: boolean) {
     fromValue: value => (value as TestValue | undefined),
     toValue: ({ date, time }) => ({ date, time }) satisfies TestValue,
   })
+}
+
+/** Types `char` over the `[start, end)` range, the way a single keystroke does. */
+function replaceInMask(mask: Masked, start: number, end: number, char: string) {
+  mask.splice(start, end - start, char, DIRECTION.NONE, { input: true, raw: true })
 }
 
 /** Types into a mask the way IMask does for every single keystroke. */
@@ -190,6 +196,73 @@ describe('date time mask input', () => {
     mask.typedValue = undefined
 
     expect((options.format as any)(undefined, mask)).toBe('DD.MM.YYYY HH:mm')
+  })
+})
+
+describe('date time mask editing', () => {
+  /** A 12h mask holding a complete value, eg. `06/20/2026 01:45 PM`. */
+  function createFilledMask(time: string, date = '06/20/2026') {
+    const mask = createMask(createTestMaskOptions(US, true))
+
+    mask.typedValue = { date, time } satisfies TestValue
+
+    return mask
+  }
+
+  it('keeps the period when the date is edited', () => {
+    const mask = createFilledMask('13:45')
+
+    replaceInMask(mask, 3, 5, '21')
+
+    expect(mask.value).toBe('06/21/2026 01:45 PM')
+    expect(mask.isComplete).toBe(true)
+    expect(mask.typedValue).toEqual({ date: '06/21/2026', time: '13:45' })
+  })
+
+  it('keeps the period when the hour is edited', () => {
+    const mask = createFilledMask('13:45')
+
+    replaceInMask(mask, 11, 13, '09')
+
+    expect(mask.value).toBe('06/20/2026 09:45 PM')
+    expect(mask.typedValue).toEqual({ date: '06/20/2026', time: '21:45' })
+  })
+
+  it('keeps the period when the minutes are edited', () => {
+    const mask = createFilledMask('13:45')
+
+    replaceInMask(mask, 14, 16, '30')
+
+    expect(mask.value).toBe('06/20/2026 01:30 PM')
+  })
+
+  it('keeps an AM period', () => {
+    const mask = createFilledMask('00:05')
+
+    expect(mask.value).toBe('06/20/2026 12:05 AM')
+
+    replaceInMask(mask, 3, 5, '21')
+
+    expect(mask.value).toBe('06/21/2026 12:05 AM')
+    expect(mask.typedValue).toEqual({ date: '06/21/2026', time: '00:05' })
+  })
+
+  it('switches the period when it is typed over', () => {
+    const mask = createFilledMask('13:45')
+
+    replaceInMask(mask, 17, 19, 'a')
+
+    expect(mask.value).toBe('06/20/2026 01:45 AM')
+    expect(mask.typedValue).toEqual({ date: '06/20/2026', time: '01:45' })
+  })
+
+  it('clears the period when it is removed', () => {
+    const mask = createFilledMask('13:45')
+
+    replaceInMask(mask, 17, 19, '')
+
+    expect(mask.value).toBe('06/20/2026 01:45 AA')
+    expect(mask.isComplete).toBe(false)
   })
 })
 

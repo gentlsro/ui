@@ -1,9 +1,10 @@
-import { MaskedEnum, MaskedRange } from 'imask'
+import { MaskedRange } from 'imask'
 import type { FactoryOpts } from 'imask'
 
 // Functions
 import { MaskedDateRange } from '../../DateInput/functions/masked-date-range'
 import { getTimePeriod, parseTimeParts, TIME_PERIODS, toDisplayHour, toStoredHour } from '../../functions/time-format'
+import { MaskedTimePeriod } from './masked-time-period'
 
 /**
  * Tokens the date part of the mask is built from. They are the tokens
@@ -67,7 +68,7 @@ export function getDateTimeMaskBlocks(is12h: boolean): Record<string, FactoryOpt
     mm: { mask: MaskedRange, placeholderChar: 'm', autofix: 'pad', from: 0, to: 59, maxLength: 2 },
 
     ...(is12h
-      ? { AA: { mask: MaskedEnum, placeholderChar: 'A', enum: TIME_PERIODS, matchValue: matchPeriod } }
+      ? { AA: { mask: MaskedTimePeriod, placeholderChar: 'A', enum: TIME_PERIODS, matchValue: matchPeriod } }
       : {}),
   }
 }

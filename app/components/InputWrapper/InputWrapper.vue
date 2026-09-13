@@ -44,7 +44,6 @@ const isModified = computed(() => {
 
 const labelProps = computed(() => {
   return {
-    activeLabelColor: props.activeLabelColor,
     focusInputOnLabelClick: mergedProps.value.ui?.focusInputOnLabelClick,
     hasContent: props.hasContent,
     hasError: !!issues.value.length,
@@ -180,6 +179,7 @@ const wrapperProps = computed(() => {
 
 <template>
   <div
+    :id="id ? `${id}-wrapper` : undefined"
     ref="wrapperEl"
     class="wrapper group/wrapper"
     :class="wrapperClass"

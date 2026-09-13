@@ -35,6 +35,10 @@ const isPickerActive = ref(false)
 const size = toRef(props, 'size')
 const readonly = toRef(props, 'readonly')
 
+const ignoredEls = computed(() => [
+  `#${inputId}-wrapper .input-wrapper__focusable`,
+])
+
 const colorSelected = computed(() => {
   if (!model.value) {
     return undefined
@@ -223,6 +227,7 @@ defineExpose({
         :fit="false"
         placement="bottom-start"
         :reference-target="referenceEl"
+        :ignore-click-outside="ignoredEls"
         no-uplift
       >
         <ColorPicker
