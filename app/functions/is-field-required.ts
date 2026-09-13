@@ -1,5 +1,5 @@
 import type { Type } from 'arktype'
-import { z } from 'zod'
+import type { z } from 'zod'
 import { toRaw } from 'vue'
 
 export type SchemaType = Type | z.ZodType
@@ -26,6 +26,14 @@ export function isArkTypeSchema(schema: SchemaType): schema is Type {
 // Zod helpers
 // ============================================================================
 
+// Zod 4 schemas expose their kind as `type`; wrappers expose `unwrap()`.
+// Reading those instead of `instanceof` keeps Zod out of pages without schemas.
+const ZOD_WRAPPER_TYPES = new Set(['optional', 'nullable', 'default'])
+
+function zodKind(schema: z.ZodType) {
+  return (schema as { type?: string }).type
+}
+
 /**
  * Unwrap a Zod schema from Vue proxy and any Zod wrappers (Optional, Nullable, Default)
  * Returns the innermost non-wrapper schema
@@ -35,11 +43,7 @@ function unwrapZodSchema(schema: z.ZodType): z.ZodType {
   let unwrapped = toRaw(schema)
 
   // Then unwrap Zod wrappers (Optional, Nullable, Default)
-  while (
-    unwrapped instanceof z.ZodOptional
-    || unwrapped instanceof z.ZodNullable
-    || unwrapped instanceof z.ZodDefault
-  ) {
+  while (ZOD_WRAPPER_TYPES.has(zodKind(unwrapped) ?? '')) {
     // Access the unwrapped property which exists on these wrapper types
     unwrapped = toRaw((unwrapped as z.ZodOptional<z.ZodType>).unwrap())
   }
@@ -64,13 +68,13 @@ function getZodSchemaAtPath(schema: z.ZodType, path: string): z.ZodType | undefi
     const unwrapped = unwrapZodSchema(currentSchema)
 
     // Handle ZodObject - get field from shape
-    if (unwrapped instanceof z.ZodObject) {
-      const fieldSchema = unwrapped.shape[part]
+    if (zodKind(unwrapped) === 'object') {
+      const fieldSchema = (unwrapped as z.ZodObject).shape[part]
       currentSchema = fieldSchema ? toRaw(fieldSchema) : undefined
     }
     // Handle ZodArray - for numeric indices, get the element schema
-    else if (unwrapped instanceof z.ZodArray && !Number.isNaN(Number(part))) {
-      currentSchema = toRaw(unwrapped.element) as z.ZodType
+    else if (zodKind(unwrapped) === 'array' && !Number.isNaN(Number(part))) {
+      currentSchema = toRaw((unwrapped as z.ZodArray).element) as z.ZodType
     }
     else {
       return undefined
