@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { ICircleProgressProps } from './types/circle-progress-props.type'
 

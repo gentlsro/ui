@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends IItem = IItem">
+<script setup lang="ts" vapor generic="T extends IItem = IItem">
 // Models
 import type { PivotItem } from './models/pivot-item.model'
 

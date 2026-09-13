@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { IToggleProps } from './types/toggle-props.type'
 
@@ -82,7 +82,7 @@ function handleStateChange() {
 }
 
 // Layout
-const containerEl = ref<HTMLElement>()
+const containerEl = useTemplateRef<HTMLElement>('containerEl')
 
 const label = computed(() => {
   if (typeof props.label === 'function') {

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Parent component should handle `dismiss` event and remove Banner from the DOM
 
 // Types
@@ -6,6 +6,8 @@ import type { IBannerProps } from './types/banner-props.type'
 
 // Constants
 import { BANNER_DEFAULT_PROPS } from './constants/banner-default-props.constant'
+
+defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(defineProps<IBannerProps>(), {
   ...getComponentProps('banner'),
@@ -45,15 +47,17 @@ function dismiss() {
 }
 
 // Counter
-const counterEl = useTemplateRef('counterEl')
+const counterEl = useTemplateRef<{
+  getRootElement: () => HTMLElement | null
+}>('counterEl')
 
 function bounce() {
-  const _counterEl = unref(counterEl) as unknown as HTMLElement
+  const element = counterEl.value?.getRootElement()
 
-  _counterEl?.addEventListener('animationend', () => {
-    _counterEl.classList.remove('bounce')
-  })
-  _counterEl?.classList.add('bounce')
+  element?.addEventListener('animationend', () => {
+    element.classList.remove('bounce')
+  }, { once: true })
+  element?.classList.add('bounce')
 }
 
 watch(counter, bounce)
@@ -112,12 +116,12 @@ const badgeStyle = computed(() => {
 
 <template>
   <Transition
-    appear
     :css="!noTransition"
     @after-leave="$emit('dismiss')"
   >
     <div
       v-if="model"
+      v-bind="$attrs"
       class="banner group/banner"
       :class="[classes, containerClass]"
       :style="containerStyle"

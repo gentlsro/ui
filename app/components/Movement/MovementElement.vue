@@ -1,11 +1,13 @@
-<script setup lang="ts">
-const delay = ref(Math.random() * 2000)
-const containerEl = ref<HTMLDivElement>()
+<script setup lang="ts" vapor>
+const delay = ref(0)
+
+onMounted(() => {
+  delay.value = Math.random() * 2000
+})
 </script>
 
 <template>
   <div
-    ref="containerEl"
     class="attention-element"
     :style="{ ['--delay']: `${delay}ms` }"
   >

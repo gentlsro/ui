@@ -1,15 +1,11 @@
-<script setup lang="ts">
-import { autoScrollPlugin, Draggable, PointerSensor } from 'dragdoll'
+<script setup lang="ts" vapor>
+import { Draggable, PointerSensor } from 'dragdoll'
 // Types
 import type { IQueryBuilderGroup } from './types/query-builder-group-props.type'
 import type { IQueryBuilderRowProps } from './types/query-builder-row-props.type'
 
 // Store
 import { useQueryBuilderStore } from './query-builder.store'
-
-// Components
-import type QueryBuilderItem from './QueryBuilderItem.vue'
-import type QueryBuilderGroup from './QueryBuilderGroup.vue'
 
 defineOptions({ inheritAttrs: false })
 
@@ -22,11 +18,13 @@ const { items, draggedItem, queryBuilderEl } = useQueryBuilderStore()
 const ITEM_ROW_LEFT_MARGIN = 20
 
 // Layout
-const draggableEl = useTemplateRef<InstanceType<typeof QueryBuilderGroup | typeof QueryBuilderItem>>('draggableEl')
+const draggableEl = useTemplateRef<{ element?: HTMLElement }>('draggableEl')
 
 // D'n'D
 let clonedElement: HTMLElement | null = null
 let mouseOffset = { x: 0, y: 0 }
+let pointerPosition: { x: number, y: number } | undefined
+let autoScrollFrame: number | undefined
 
 const draggableElement = computed(
   () => draggableEl.value?.element,
@@ -72,25 +70,9 @@ watch(draggableElement, (element, _, onCleanup) => {
       }
       finishDrag(commit)
     },
-  }).use(autoScrollPlugin({
-    targets: () => queryBuilderEl.value
-      ? [{ element: queryBuilderEl.value, axis: 'xy', threshold: 40 }]
-      : [],
-    // This draggable has no managed DOM items; follow the pointer, not the clone edges.
-    getPosition: draggable => ({
-      x: draggable.drag?.moveEvent.x ?? 0,
-      y: draggable.drag?.moveEvent.y ?? 0,
-    }),
-    getClientRect: draggable => ({
-      x: draggable.drag?.moveEvent.x ?? 0,
-      y: draggable.drag?.moveEvent.y ?? 0,
-      width: 1,
-      height: 1,
-    }),
-    speed: (_, { distance, threshold }) => Math.max(0, (threshold - distance) / threshold) * 800,
-    smoothStop: false,
-  }))
+  })
   onCleanup(() => {
+    stopAutoScroll()
     sensor.cancel()
     draggable.destroy()
     sensor.destroy()
@@ -108,10 +90,55 @@ function updateDragPosition(pos: { x: number, y: number }) {
   clonedElement.style.top = `${Math.max(0, Math.min(pos.y + mouseOffset.y, maxTop))}px`
   // Dragdoll reuses its event object; snapshot coordinates so each frame notifies the target watcher.
   draggedItem.value.pos = { x: pos.x, y: pos.y }
+  pointerPosition = pos
+  startAutoScroll()
+}
+
+function startAutoScroll() {
+  if (autoScrollFrame === undefined) {
+    autoScrollFrame = requestAnimationFrame(handleAutoScroll)
+  }
+}
+
+function stopAutoScroll() {
+  if (autoScrollFrame !== undefined) {
+    cancelAnimationFrame(autoScrollFrame)
+    autoScrollFrame = undefined
+  }
+  pointerPosition = undefined
+}
+
+function handleAutoScroll() {
+  autoScrollFrame = undefined
+  const scroller = queryBuilderEl.value
+  const pos = pointerPosition
+
+  if (!clonedElement || !draggedItem.value || !scroller || !pos) {
+    return
+  }
+
+  const threshold = 40
+  const bounds = scroller.getBoundingClientRect()
+  const getDelta = (position: number, start: number, end: number) => {
+    if (position < start + threshold) {
+      return -Math.ceil((start + threshold - position) / 3)
+    }
+    if (position > end - threshold) {
+      return Math.ceil((position - (end - threshold)) / 3)
+    }
+
+    return 0
+  }
+  const left = scroller.scrollLeft + getDelta(pos.x, bounds.left, bounds.right)
+  const top = scroller.scrollTop + getDelta(pos.y, bounds.top, bounds.bottom)
+
+  scroller.scrollTo(left, top)
+  autoScrollFrame = requestAnimationFrame(handleAutoScroll)
 }
 
 // Cancellation removes the clone without committing a pending drop.
 function finishDrag(commit: boolean) {
+  stopAutoScroll()
   if (clonedElement) {
     clonedElement.remove()
     clonedElement = null

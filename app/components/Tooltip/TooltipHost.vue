@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 import { autoUpdate } from '@floating-ui/dom'
 import { arrow, flip, offset, shift, useFloating } from '@floating-ui/vue'
 

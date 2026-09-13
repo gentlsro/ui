@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 type IProps = {
   /**
    * Whether the radio button is checked

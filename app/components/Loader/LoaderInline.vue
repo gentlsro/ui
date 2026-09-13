@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 type IProps = {
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | number
   color?: string

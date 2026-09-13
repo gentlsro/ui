@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends IItem = IItem">
+<script setup lang="ts" vapor generic="T extends IItem = IItem">
 import type { NonUndefined } from 'utility-types'
 
 // Types

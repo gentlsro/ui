@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 import type { IBtnProps } from '../Button/types/btn-props.type'
 
 // Store

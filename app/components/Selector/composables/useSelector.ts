@@ -37,8 +37,10 @@ export function useSelector(payload: {
   const isPreventNextFocus = ref(false)
 
   function handleBeforeHide() {
-    isPreventNextFocus.value = true
-    getElement()?.focus()
+    const element = getElement()
+    isPreventNextFocus.value = !!element && document.activeElement !== element
+    element?.focus()
+    isPreventNextFocus.value = false
 
     emits('picker-before-hide')
   }

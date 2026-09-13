@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { ILoaderProps } from './types/loader-props.type'
 
@@ -10,9 +10,9 @@ const props = withDefaults(defineProps<ILoaderProps>(), {
   ...getComponentProps('loader'),
 })
 
-const LoaderComponent = props.variant === 'inline'
+const LoaderComponent = computed(() => props.variant === 'inline'
   ? LoaderInline
-  : LoaderBlock
+  : LoaderBlock)
 </script>
 
 <template>

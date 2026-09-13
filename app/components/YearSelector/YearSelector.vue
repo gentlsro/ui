@@ -7,7 +7,7 @@ import { $bp } from '../../constants/breakpoints'
 import { YEAR_SELECTOR_DEFAULT_PROPS } from './constants/year-selector-default-props.constant'
 
 // Components
-import type NumberInput from '../Inputs/NumberInput/NumberInput.vue'
+import type { INumberInputExpose } from '../Inputs/NumberInput/types/number-input-expose.type'
 
 const props = withDefaults(defineProps<IYearSelectorProps>(), {
   ...getComponentProps('yearSelector'),
@@ -20,7 +20,7 @@ const mergedProps = computed(() => {
 
 // Layout
 const model = defineModel<Datetime>()
-const yearInputEl = useTemplateRef<InstanceType<typeof NumberInput>>('yearInputEl')
+const yearInputEl = useTemplateRef<INumberInputExpose>('yearInputEl')
 const isYearSelectorVisible = ref(false)
 const isRangeChanged = refAutoReset(false, 300)
 

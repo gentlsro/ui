@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Constants
 import { BUTTON_PRESET } from '../Button/constants/button-preset.constant'
 

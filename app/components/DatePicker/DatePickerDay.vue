@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { DayEvent } from './types/DayEvent.type'
 import type { IDatePickerDayProps } from './types/datepicker-day-props.type'

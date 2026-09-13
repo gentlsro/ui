@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Constants
 import { IMAGE_TYPES } from './constants/image-types'
 import { ICON_BY_FILE_TYPE } from './constants/icon-by-file-type'
@@ -31,22 +31,28 @@ const icon = computed(() => {
   return icon
 })
 
+const isMounted = ref(false)
+onMounted(() => isMounted.value = true)
+
+const localImageUrl = useObjectUrl(() => {
+  if (
+    isMounted.value
+    && !props.noPreview
+    && props.file instanceof FileModel
+    && IMAGE_TYPES.includes(props.file.type ?? '')
+  ) {
+    return props.file.file
+  }
+})
+
 const imageUrl = computed(() => {
-  if (props.noPreview) {
+  if (props.noPreview || !IMAGE_TYPES.includes(props.file.type ?? '')) {
     return
   }
 
-  const isImageFile = IMAGE_TYPES.includes(props.file.type ?? '')
-
-  if (!isImageFile) {
-    return null
-  }
-
-  if (props.file instanceof FileModel) {
-    return URL.createObjectURL(props.file.file)
-  } else {
-    return getLocalImageUrl(props.file.path)
-  }
+  return props.file instanceof FileModel
+    ? localImageUrl.value
+    : getLocalImageUrl(props.file.path)
 })
 </script>
 
@@ -82,7 +88,10 @@ const imageUrl = computed(() => {
       />
     </div>
 
-    <div class="file-preview__download rounded-b-2 overflow-hidden">
+    <div
+      v-if="file instanceof FileModel || !noDownloadButton"
+      class="file-preview__download rounded-b-2 overflow-hidden"
+    >
       <!-- Download button - simple File instance -->
       <Btn
         v-if="!(file instanceof FileModel)"

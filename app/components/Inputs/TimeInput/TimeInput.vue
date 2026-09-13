@@ -1,8 +1,10 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
+import { mergeProps } from 'vue'
 import { MaskedRange } from 'imask'
 import type { FactoryOpts } from 'imask'
 
 // Types
+import type { ITimeInputExpose } from './types/time-input-expose.type'
 import type { ITimeInputProps } from './types/time-input-props.type'
 
 // Functions
@@ -11,6 +13,8 @@ import { useInputValidationUtils } from '../functions/useInputValidationUtils'
 
 // Constants
 import { INPUT_WRAPPER_DEFAULT_PROPS } from '../../InputWrapper/constants/input-wrapper-default-props'
+
+defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(defineProps<ITimeInputProps>(), {
   ...getComponentProps('timeInput'),
@@ -195,7 +199,7 @@ const {
   getInputElement,
   handleClickWrapper,
   handleFocusOrClick,
-  handlePointerDown,
+  handleMouseDown,
   handleBlur,
 } = useInputUtils({
   emit: emits,
@@ -290,13 +294,13 @@ defineExpose({
   blur,
   clear,
   getInputElement,
-})
+} satisfies ITimeInputExpose)
 </script>
 
 <template>
   <InputWrapper
     :id="inputId"
-    v-bind="wrapperProps"
+    v-bind="mergeProps(wrapperProps, $attrs)"
     :class="wrapperClass"
     :has-content
     :ui="mergedProps.ui"
@@ -304,7 +308,10 @@ defineExpose({
     @click="handleClickWrapper"
   >
     <!-- Label -->
-    <template #label="labelProps">
+    <template
+      v-if="$slots.label"
+      #label="labelProps"
+    >
       <slot
         name="label"
         v-bind="labelProps"
@@ -343,7 +350,7 @@ defineExpose({
           ...(hasNoValue && { color: 'var(--placeholder-color)' }),
         }"
         v-bind="inputProps"
-        @pointerdown="handlePointerDown"
+        @mousedown="handleMouseDown"
         @focus="handleFocusOrClick"
         @input="handleInput"
         @blur="handleBlur"
@@ -351,12 +358,13 @@ defineExpose({
     </template>
 
     <!-- Append -->
-    <template #append>
+    <template
+      v-if="$slots.append || hasClearableBtn || (!readonly && !disabled)"
+      #append
+    >
       <div
-        v-if="$slots.append || hasClearableBtn || (!readonly && !disabled)"
         :class="appendClass"
         :style="appendStyle"
-        @click="handleFocusOrClick"
       >
         <slot
           name="append"
@@ -417,7 +425,10 @@ defineExpose({
         :model-value-localized="modelValueLocalized"
         :shortcuts="shortcuts"
       >
-        <template #shortcuts>
+        <template
+          v-if="$slots.shortcuts"
+          #shortcuts
+        >
           <slot name="shortcuts" />
         </template>
       </TimeInputPicker>

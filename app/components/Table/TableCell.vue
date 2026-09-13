@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Models
 import type { ITableProps } from './types/table-props.type'
 import type { TableColumn } from './models/table-column.model'

@@ -1,7 +1,9 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
+import { mergeProps } from 'vue'
 import { MaskedNumber } from 'imask'
 
 // Types
+import type { ICurrencyInputExpose } from './types/currency-input-expose.type'
 import type { ICurrencyInputProps } from './types/currency-input-props.type'
 
 // Functions
@@ -11,6 +13,8 @@ import { useInputValidationUtils } from '../functions/useInputValidationUtils'
 // Constants
 import { CURRENCY_DEFAULT } from '#layers/utilities/app/i18n'
 import { INPUT_WRAPPER_DEFAULT_PROPS } from '../../InputWrapper/constants/input-wrapper-default-props'
+
+defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(defineProps<ICurrencyInputProps>(), {
   ...getComponentProps('currencyInput'),
@@ -267,12 +271,12 @@ defineExpose({
   blur,
   clear,
   getInputElement,
-})
+} satisfies ICurrencyInputExpose)
 </script>
 
 <template>
   <InputWrapper
-    v-bind="wrapperProps"
+    v-bind="mergeProps(wrapperProps, $attrs)"
     :id="inputId"
     :class="wrapperClass"
     :has-content="!hasNoValue"
@@ -280,7 +284,10 @@ defineExpose({
     @click="handleClickWrapper"
   >
     <!-- Label -->
-    <template #label="labelProps">
+    <template
+      v-if="$slots.label"
+      #label="labelProps"
+    >
       <slot
         name="label"
         v-bind="labelProps"
@@ -331,7 +338,7 @@ defineExpose({
 
     <!-- Append -->
     <template
-      v-if="$slots.append || hasClearableBtn || step || currencyVisibility === 'append'"
+      v-if="$slots.append || hasClearableBtn || (step && isEditable) || currencyVisibility === 'append'"
       #append
     >
       <div

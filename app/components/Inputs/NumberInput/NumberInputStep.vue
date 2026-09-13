@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { INumberInputProps } from './types/number-input-props.type'
 
@@ -6,8 +6,6 @@ const props = defineProps<INumberInputProps>()
 
 // Layout
 const model = defineModel<INumberInputProps['modelValue']>()
-const increment = useTemplateRef('increment')
-const decrement = useTemplateRef('decrement')
 const modifier = ref<-1 | 1>(1)
 
 const stepAdjusted = computed(() => {
@@ -56,6 +54,7 @@ function handleStep() {
 function startStep(_: PointerEvent, increment = true) {
   modifier.value = increment ? 1 : -1
 
+  window.addEventListener('pointercancel', stopStep)
   window.addEventListener('pointerup', stopStep)
   window.addEventListener('mouseup', stopStep)
   window.addEventListener('touchend', stopStep)
@@ -66,12 +65,19 @@ function startStep(_: PointerEvent, increment = true) {
 
 function stopStep() {
   pause()
+  if (import.meta.server) {
+    return
+  }
+
+  window.removeEventListener('pointercancel', stopStep)
   window.removeEventListener('pointerup', stopStep)
   window.removeEventListener('mouseup', stopStep)
   window.removeEventListener('touchend', stopStep)
   window.removeEventListener('touchmove', stopStep)
   window.removeEventListener('touchcancel', stopStep)
 }
+// A held button can disappear before a release event reaches the window.
+onScopeDispose(stopStep)
 </script>
 
 <template>
@@ -80,7 +86,6 @@ function stopStep() {
     :class="`is--${size}`"
   >
     <Btn
-      ref="increment"
       tabindex="-1"
       size="auto"
       icon="step-icon i-bi:caret-up-fill"
@@ -92,7 +97,6 @@ function stopStep() {
       @click.stop.prevent
     />
     <Btn
-      ref="decrement"
       tabindex="-1"
       size="auto"
       icon="step-icon i-bi:caret-up-fill rotate-180"

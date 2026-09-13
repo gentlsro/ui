@@ -119,6 +119,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       collapsedGroupIds: new Set<string>(),
       collapsedColumnGroupIds: new Set<string>(),
     })
+    const rowLayoutWidths = ref<Record<string, string>>({})
 
     // Pivot config
     const sourceData = initRef({
@@ -218,12 +219,16 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
 
     const displayRowFieldCount = computed(() => displayRowFields.value.length)
 
+    function getRowLayoutWidth(row: PivotItem<T>) {
+      return rowLayoutWidths.value[String(row.field)] ?? row.widthResolved
+    }
+
     function getRowFieldWidthPx(row: PivotItem<T>) {
       if (Number.isFinite(row._width) && row._width > 0) {
         return row._width
       }
 
-      const resolved = Number.parseFloat(row.widthResolved)
+      const resolved = Number.parseFloat(getRowLayoutWidth(row))
 
       return Number.isFinite(resolved) && resolved > 0 ? resolved : row.minWidth
     }
@@ -573,6 +578,8 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       rowsWrapperEl,
       minimumColumnWidth,
       state,
+      rowLayoutWidths,
+      getRowLayoutWidth,
       hoveredIdx,
       rowClickable,
       cellClickable,

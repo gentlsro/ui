@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 import type { CSSProperties } from 'vue'
 
 // Types
@@ -16,7 +16,7 @@ const emits = defineEmits<{
 }>()
 
 const items = computed(() => props.items ?? [])
-const scrollEl = ref<HTMLElement>()
+const scrollEl = useTemplateRef<HTMLElement>('scrollEl')
 const isJumping = ref(false)
 
 const overscan = computed(() => Math.floor(props.maxVisible / 2))

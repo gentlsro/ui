@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { IMiniCardProps } from '../Card/types/mini-card-props.type'
 import type { IInputWrapperProps } from '../InputWrapper/types/input-wrapper-props.type'

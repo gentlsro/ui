@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // NOTE: This is intentionally done in a single component to prevent spamming
 // unnecessary creation of vue components for each cell and to keep consistency
 // between card and regular views
@@ -74,13 +74,6 @@ const {
   emits,
   rowClickable,
 } = tableStore
-
-// Layout
-const [DefineValueTemplate, ReuseValueTemplate] = createReusableTemplate<{
-  column: IRowColumn
-  row: any
-  isSelectable: boolean
-}>()
 
 const RowComponent = computed(() => {
   return props.to ? NuxtLink : 'div'
@@ -306,59 +299,6 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
 </script>
 
 <template>
-  <DefineValueTemplate v-slot="{ column, row: slotRow, isSelectable }">
-    <Component
-      :is="column.displayComponent?.component"
-      v-if="column.displayComponent"
-      v-bind="column.displayComponent?.props"
-    />
-
-    <Checkbox
-      v-else-if="column.id === '_selectable'"
-      :model-value="isSelected(slotRow)"
-      size="sm"
-      :readonly="!isSelectable"
-      no-hover-effect
-      :ui="{ labelClass: ({ defaults }) => `${defaults.all} font-rem-13` }"
-      @update:model-value="handleSelectToggle(slotRow)"
-    />
-
-    <!-- Boolean -->
-    <Checkbox
-      v-else-if="column.column.dataType === 'boolean'"
-      :model-value="column.value"
-      size="sm"
-      :label="column.valueFormatted"
-      readonly
-      tabindex="-1"
-      no-hover-effect
-      :ui="{
-        labelClass: ({ defaults }) => `${defaults.all} font-rem-13`,
-        checkboxClass: ({ defaults }) => `${defaults.all} !border-primary !border-solid`,
-      }"
-    />
-
-    <!-- Link -->
-    <NuxtLink
-      v-else-if="column.link?.to"
-      v-bind="column.link"
-      class="link"
-      :style="column.cellInnerStyle"
-      :class="column.cellInnerClass"
-      @click.stop
-    >
-      {{ column.valueFormatted }}
-    </NuxtLink>
-
-    <span
-      v-else
-      :style="column.cellInnerStyle"
-      :class="column.cellInnerClass"
-    >
-      {{ column.valueFormatted }}
-    </span>
-  </DefineValueTemplate>
-
   <!-- Card view -->
   <div
     v-if="isCardView"
@@ -447,11 +387,50 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
             :column="column.column"
             :value="column.value"
           >
-            <ReuseValueTemplate
-              :column
-              :row="rowData.row"
-              :is-selectable="rowData.isSelectable"
+            <Component
+              :is="column.displayComponent?.component"
+              v-if="column.displayComponent"
+              v-bind="column.displayComponent?.props"
             />
+            <Checkbox
+              v-else-if="column.id === '_selectable'"
+              :model-value="isSelected(rowData.row)"
+              size="sm"
+              :readonly="!rowData.isSelectable"
+              no-hover-effect
+              :ui="{ labelClass: ({ defaults }) => `${defaults.all} font-rem-13` }"
+              @update:model-value="handleSelectToggle(rowData.row)"
+            />
+            <Checkbox
+              v-else-if="column.column.dataType === 'boolean'"
+              :model-value="column.value"
+              size="sm"
+              :label="column.valueFormatted"
+              readonly
+              tabindex="-1"
+              no-hover-effect
+              :ui="{
+                labelClass: ({ defaults }) => `${defaults.all} font-rem-13`,
+                checkboxClass: ({ defaults }) => `${defaults.all} !border-primary !border-solid`,
+              }"
+            />
+            <NuxtLink
+              v-else-if="column.link?.to"
+              v-bind="column.link"
+              class="link"
+              :style="column.cellInnerStyle"
+              :class="column.cellInnerClass"
+              @click.stop
+            >
+              {{ column.valueFormatted }}
+            </NuxtLink>
+            <span
+              v-else
+              :style="column.cellInnerStyle"
+              :class="column.cellInnerClass"
+            >
+              {{ column.valueFormatted }}
+            </span>
           </slot>
         </div>
       </div>
@@ -515,11 +494,50 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
         :column="column.column"
         :value="column.value"
       >
-        <ReuseValueTemplate
-          :column
-          :row="rowDataArray[0].row"
-          :is-selectable="rowDataArray[0].isSelectable"
+        <Component
+          :is="column.displayComponent?.component"
+          v-if="column.displayComponent"
+          v-bind="column.displayComponent?.props"
         />
+        <Checkbox
+          v-else-if="column.id === '_selectable'"
+          :model-value="isSelected(rowDataArray[0].row)"
+          size="sm"
+          :readonly="!rowDataArray[0].isSelectable"
+          no-hover-effect
+          :ui="{ labelClass: ({ defaults }) => `${defaults.all} font-rem-13` }"
+          @update:model-value="handleSelectToggle(rowDataArray[0].row)"
+        />
+        <Checkbox
+          v-else-if="column.column.dataType === 'boolean'"
+          :model-value="column.value"
+          size="sm"
+          :label="column.valueFormatted"
+          readonly
+          tabindex="-1"
+          no-hover-effect
+          :ui="{
+            labelClass: ({ defaults }) => `${defaults.all} font-rem-13`,
+            checkboxClass: ({ defaults }) => `${defaults.all} !border-primary !border-solid`,
+          }"
+        />
+        <NuxtLink
+          v-else-if="column.link?.to"
+          v-bind="column.link"
+          class="link"
+          :style="column.cellInnerStyle"
+          :class="column.cellInnerClass"
+          @click.stop
+        >
+          {{ column.valueFormatted }}
+        </NuxtLink>
+        <span
+          v-else
+          :style="column.cellInnerStyle"
+          :class="column.cellInnerClass"
+        >
+          {{ column.valueFormatted }}
+        </span>
       </slot>
 
       <CopyBtn

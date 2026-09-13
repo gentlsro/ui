@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends IItem = IItem">
+<script setup lang="ts" vapor generic="T extends IItem = IItem">
 import Sortable from 'sortablejs'
 import type { SortableEvent } from 'sortablejs'
 import { klona } from 'klona/full'

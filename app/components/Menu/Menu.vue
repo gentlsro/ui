@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { IMenuProps } from './types/menu-props.type'
 import type { IMenuEmits } from './types/menu-emits.type'
@@ -92,6 +92,12 @@ const {
   getHost: () => hostAnchor.value?.parentElement,
   onHide: () => emits('hide'),
 })
+
+watch(floatingEl, element => {
+  if (element) {
+    Object.assign(element, { hide })
+  }
+}, { flush: 'post' })
 
 // We sync the model with the debouncedModel immediately when the value is `true`
 // to show the content immediately to trigger the transition
@@ -203,7 +209,6 @@ const contentStyle = computed(() => {
       :css="!noTransition"
       :enter-from-class="transitionClass"
       :leave-to-class="transitionClass"
-      :style="transitionStyle"
       @before-enter="$emit('beforeShow')"
       @before-leave="$emit('beforeHide')"
       @after-leave="commitHide"
@@ -215,9 +220,8 @@ const contentStyle = computed(() => {
         class="floating-element menu group/menu"
         :data-open="model"
         :class="[menuClassComputed, menuClass]"
-        :style="{ ...menuStyleComputed, ...menuStyle, ...floatingStyles }"
+        :style="{ ...transitionStyle, ...menuStyleComputed, ...menuStyle, ...floatingStyles }"
         :placement="menuPlacement"
-        .hide="hide"
         v-bind="$attrs"
       >
         <!-- Arrow -->

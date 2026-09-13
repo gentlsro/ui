@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { IPageDrawerProps } from './types/page-drawer-props.type'
 
@@ -98,7 +98,7 @@ const fillerStyle = computed(() => {
 })
 
 // Click outside
-const drawerEl = ref<HTMLElement | null>(null)
+const drawerEl = useTemplateRef<HTMLElement>('drawerEl')
 
 function handleClickOutside(ev: Event) {
   if (!model.value || !props.closeOnClickOutside) {

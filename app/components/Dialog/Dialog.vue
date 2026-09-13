@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { IDialogProps } from './types/dialog-props.type'
 
@@ -111,6 +111,12 @@ function hide(ignorePersistent = true) {
 
   modelHandler.value = false
 }
+
+watch(dialogWrapperEl, element => {
+  if (element) {
+    Object.assign(element, { hide })
+  }
+}, { flush: 'post' })
 
 function commitHide() {
   if (model.value) {
@@ -298,7 +304,6 @@ const contentClasses = computed(() => {
       :enter-from-class="transitionClass"
       :leave-to-class="transitionClass"
       :duration="transitionDuration"
-      :style="{ '--transitionDuration': `${transitionDuration}ms` }"
       @before-enter="$emit('beforeShow')"
       @before-leave="$emit('beforeHide')"
       @after-leave="commitHide"
@@ -316,7 +321,6 @@ const contentClasses = computed(() => {
           '--dialogMaxHeight': dialogMaxHeight,
           '--zIndex': zIndex,
         }"
-        .hide="hide"
       >
         <!-- Dialog -->
         <div

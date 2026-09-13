@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { IMiniCardProps } from './types/mini-card-props.type'
 
@@ -21,7 +21,6 @@ const mergedProps = computed(() => {
 
 // Layout
 const valueFormatterProps = getValueFormatterProps(props)
-const [DefineTemplate, OriginalValueBtn] = createReusableTemplate()
 
 const label = computed(() => {
   return typeof props.label === 'function'
@@ -177,7 +176,41 @@ const previousValueStyle = computed(() => {
             >
               {{ getShownValue(val) }}
 
-              <OriginalValueBtn v-if="isModified" />
+              <span
+                v-if="isModified"
+                inline-block
+                bg="purple-500 dark:purple-600"
+                rounded="full"
+              >
+                <Btn
+                  size="xs"
+                  round
+                  icon="i-solar:history-outline !h-5 !w-5"
+                  color="white"
+                  no-dim
+                >
+                  <Menu
+                    no-uplift
+                    w="80"
+                  >
+                    <span
+                      font="bold"
+                      text="caption"
+                    >
+                      {{ $t('general.currentValue') }}
+                    </span>
+
+                    <ValueFormatter
+                      v-bind="valueFormatterProps"
+                      :value="originalValue"
+                    >
+                      <template #default="{ val: originalVal }">
+                        {{ getShownValue(originalVal) }}
+                      </template>
+                    </ValueFormatter>
+                  </Menu>
+                </Btn>
+              </span>
             </span>
 
             <NuxtLink
@@ -197,7 +230,41 @@ const previousValueStyle = computed(() => {
                 <span class="link__label-icon" />
                 <span class="link__label-text p-l-1">{{ getShownValue(val) }}</span>
 
-                <OriginalValueBtn v-if="isModified" />
+                <span
+                  v-if="isModified"
+                  inline-block
+                  bg="purple-500 dark:purple-600"
+                  rounded="full"
+                >
+                  <Btn
+                    size="xs"
+                    round
+                    icon="i-solar:history-outline !h-5 !w-5"
+                    color="white"
+                    no-dim
+                  >
+                    <Menu
+                      no-uplift
+                      w="80"
+                    >
+                      <span
+                        font="bold"
+                        text="caption"
+                      >
+                        {{ $t('general.currentValue') }}
+                      </span>
+
+                      <ValueFormatter
+                        v-bind="valueFormatterProps"
+                        :value="originalValue"
+                      >
+                        <template #default="{ val: originalVal }">
+                          {{ getShownValue(originalVal) }}
+                        </template>
+                      </ValueFormatter>
+                    </Menu>
+                  </Btn>
+                </span>
               </span>
             </NuxtLink>
 
@@ -236,43 +303,6 @@ const previousValueStyle = computed(() => {
         </template>
       </ValueFormatter>
     </div>
-
-    <DefineTemplate>
-      <span
-        inline-block
-        bg="purple-500 dark:purple-600"
-        rounded="full"
-      >
-        <Btn
-          size="xs"
-          round
-          icon="i-solar:history-outline !h-5 !w-5"
-          color="white"
-          no-dim
-        >
-          <Menu
-            no-uplift
-            w="80"
-          >
-            <span
-              font="bold"
-              text="caption"
-            >
-              {{ $t('general.currentValue') }}
-            </span>
-
-            <ValueFormatter
-              v-bind="valueFormatterProps"
-              :value="originalValue"
-            >
-              <template #default="{ val }">
-                {{ getShownValue(val) }}
-              </template>
-            </ValueFormatter>
-          </Menu>
-        </Btn>
-      </span>
-    </DefineTemplate>
   </div>
 </template>
 

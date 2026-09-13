@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { IListItem } from './types/list-item.type'
 import type { IListEmits } from './types/list-emits.type'

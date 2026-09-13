@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends IItem = IItem">
+<script setup lang="ts" vapor generic="T extends IItem = IItem">
 // Types
 import type { IPivotValueItemCell } from './types/pivot-value-item-cell.type'
 import type { IPivotValueColumnItem } from './types/pivot-value-column-item.type'

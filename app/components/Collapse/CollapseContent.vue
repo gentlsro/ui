@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { ICollapseProps } from './types/collapse-props.type'
 
@@ -17,7 +17,7 @@ const emits = defineEmits<{
 }>()
 
 // Layout
-const contentEl = ref<HTMLDivElement>()
+const contentEl = useTemplateRef<HTMLDivElement>('contentEl')
 const inTransition = ref(false)
 
 function handleTransition(when: 'before' | 'after') {

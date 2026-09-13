@@ -1,16 +1,15 @@
-<script setup lang="ts" generic="T extends CustomPresets = Record<string, never>">
+<script setup lang="ts" vapor generic="T extends CustomPresets = Record<string, never>">
 // Types
-import type { ObjectDirective } from 'vue'
+import type { VaporDirective } from 'vue'
 import type { CustomPresets, IBtnProps } from './types/btn-props.type'
 
 // Constants
 import { BTN_DEFAULT_PROPS } from './constants/btn-default-props.constant'
 
-// Components
-import { NuxtLink } from '#components'
+import IconRenderer from '../Icon/IconRenderer.vue'
 
 // Directives
-import { vRipple } from '../../directives/ripple.directive'
+import { vRippleVapor as vRipple } from '../../directives/ripple.directive'
 
 const props = withDefaults(defineProps<IBtnProps<T>>(), {
   ...getComponentProps('button'),
@@ -24,25 +23,42 @@ const mergedProps = computed(() => {
 const slots = useSlots()
 const element = shallowRef<HTMLButtonElement | HTMLAnchorElement>()
 
-// Directives receive the actual root DOM node, including NuxtLink's anchor.
-// Keep NuxtLink's normal renderer so its prefetch and router behavior stay intact.
-const vRoot: ObjectDirective<HTMLButtonElement | HTMLAnchorElement> = {
-  mounted(el) {
-    element.value = el
-  },
-  beforeUnmount(el) {
+// Both explicit roots expose the actual DOM node through the same public contract.
+const vRoot: VaporDirective<HTMLButtonElement | HTMLAnchorElement> = el => {
+  element.value = el
+
+  return () => {
     if (element.value === el) {
       element.value = undefined
     }
-  },
+  }
 }
 
 // Navigation belongs to the root; the content and styling are shared by both modes.
 const route = useRoute()
 const localePath = useLocalePath()
 const nuxtApp = useNuxtApp()
+const router = useRouter()
 
 const isLink = computed(() => !!props.to && !props.disabled)
+const linkTarget = computed(() => {
+  return props.external || props.download
+    ? '_blank'
+    : props.navigateToOptions?.open?.target
+})
+
+const linkHref = computed(() => {
+  if (!props.to) {
+    return
+  }
+
+  if (props.external && typeof props.to === 'string') {
+    return props.to
+  }
+
+  return router.resolve(props.to).href
+})
+
 const rootProps = computed(() => {
   if (!isLink.value) {
     return { type: props.type, disabled: props.disabled }
@@ -52,10 +68,9 @@ const rootProps = computed(() => {
   const currentPath = localePath(route.path, nuxtApp.$i18n.locale.value)
 
   return {
-    to: props.to,
-    external: props.external,
-    replace: props.replace,
-    target: props.external || props.download ? '_blank' : props.navigateToOptions?.open?.target,
+    href: linkHref.value,
+    target: linkTarget.value,
+    rel: linkTarget.value === '_blank' ? 'noopener noreferrer' : undefined,
     download: props.download || undefined,
     class: {
       'router-link-active': !props.exact && toPath.startsWith(currentPath),
@@ -64,6 +79,31 @@ const rootProps = computed(() => {
     },
   }
 })
+
+function handleRootClick(ev: MouseEvent) {
+  if (
+    !isLink.value
+    || props.external
+    || props.download
+    || linkTarget.value
+    || ev.defaultPrevented
+    || ev.button !== 0
+    || ev.metaKey
+    || ev.ctrlKey
+    || ev.shiftKey
+    || ev.altKey
+  ) {
+    return
+  }
+
+  ev.preventDefault()
+
+  if (props.replace) {
+    router.replace(props.to)
+  } else {
+    router.push(props.to)
+  }
+}
 
 const label = computed(() => {
   if (typeof props.label === 'function') {
@@ -152,8 +192,8 @@ const isIconifyIcon = computed(() => {
 </script>
 
 <template>
-  <Component
-    :is="isLink ? NuxtLink : 'button'"
+  <a
+    v-if="isLink"
     v-root
     v-ripple="!disabled && ripple"
     v-bind="rootProps"
@@ -162,9 +202,10 @@ const isIconifyIcon = computed(() => {
     class="btn group/btn"
     :class="[classes, appearance.containerClass]"
     :style="appearance.containerStyle"
+    @click="handleRootClick"
   >
     <slot name="icon">
-      <Icon
+      <IconRenderer
         v-if="icon && isIconifyIcon"
         :name="(icon as string)"
         class="btn-icon"
@@ -236,7 +277,94 @@ const isIconifyIcon = computed(() => {
       :style="appearance.focusHelperStyle"
       tabindex="-1"
     />
-  </Component>
+  </a>
+
+  <button
+    v-else
+    v-root
+    v-ripple="!disabled && ripple"
+    v-bind="rootProps"
+    :name="name ?? (label || icon)"
+    :aria-label="label ?? (name || icon)"
+    class="btn group/btn"
+    :class="[classes, appearance.containerClass]"
+    :style="appearance.containerStyle"
+    @click="handleRootClick"
+  >
+    <slot name="icon">
+      <IconRenderer
+        v-if="icon && isIconifyIcon"
+        :name="(icon as string)"
+        class="btn-icon"
+        :class="appearance.iconClass"
+        :style="appearance.iconStyle"
+      />
+
+      <div
+        v-else-if="icon || preset?.icon"
+        class="btn-icon"
+        :class="[icon || preset?.icon, appearance.iconClass]"
+        :style="appearance.iconStyle"
+      />
+    </slot>
+
+    <slot
+      name="label"
+      :ui="mergedProps.ui"
+      :style="appearance.labelStyle"
+    >
+      <div
+        v-if="label"
+        class="btn-label"
+        :class="[appearance.labelClass, noTruncate ? 'overflow-hidden' : 'truncate']"
+        :style="appearance.labelStyle"
+      >
+        {{ label }}
+      </div>
+    </slot>
+
+    <slot />
+
+    <!-- Tooltip -->
+    <Tooltip
+      v-if="tooltip || $slots.tooltip"
+      :offset="8"
+      v-bind="tooltip?.props"
+    >
+      <slot
+        v-if="tooltip?.label || $slots.tooltip"
+        name="tooltip"
+      >
+        {{ tooltip?.label }}
+      </slot>
+    </Tooltip>
+
+    <!-- Loading -->
+    <div
+      v-if="loading"
+      class="btn-loading"
+      :class="appearance.loadingClass"
+      :style="appearance.loadingStyle"
+      @click.stop.prevent
+    >
+      <Loader
+        :variant="loaderVariant"
+        :color="loadingColor"
+        class="btn-loader"
+        :class="appearance.loaderClass"
+        :style="appearance.loaderStyle"
+      />
+    </div>
+
+    <!-- Hover focus helper -->
+    <span
+      v-if="!noHoverEffect"
+      class="btn-focus-helper"
+      :class="appearance.focusHelperClass"
+      :style="appearance.focusHelperStyle"
+      tabindex="-1"
+    />
+  </button>
 </template>
 
 <style lang="scss" scoped>

@@ -1,8 +1,8 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 import type { CSSProperties } from 'vue'
 
 // Types
-import type { ICrudBtnProps } from './types/crud-btn-props.type'
+import type { ICrudBtnProps, ICrudBtnsProps } from './types/crud-btn-props.type'
 import type { IMenuConfirmationProps } from '../MenuConfirmation/types/menu-confirmation-props.type'
 
 type IProps = ICrudBtnProps & {
@@ -12,7 +12,7 @@ type IProps = ICrudBtnProps & {
 }
 
 const props = withDefaults(defineProps<IProps>(), {
-  ...getComponentProps('crudBtns'),
+  loading: (getComponentProps('crudBtns') as ICrudBtnsProps).loading,
 })
 
 defineEmits<{
@@ -34,12 +34,18 @@ const label = computed(() => {
     return
   }
 
-  return props.label
+  return props.label === false || props.label == null
+    ? $t('general.delete')
+    : props.label
 })
+
+const btnEl = useTemplateRef<{ element?: HTMLElement }>('btnEl')
+const menuTarget = () => btnEl.value?.element
 </script>
 
 <template>
   <Btn
+    ref="btnEl"
     preset="TRASH"
     :label
     :loading
@@ -49,23 +55,25 @@ const label = computed(() => {
     data-cy="delete-button"
     @click="noConfirm && $emit('delete')"
   >
-    <MenuConfirmation
-      v-if="!noConfirm"
-      :title="$t('general.delete')"
-      placement="bottom-start"
-      focus-confirm-button
-      :confirmation-text
-      h="auto"
-      v-bind="menuProps"
-      @show="$emit('show')"
-      @before-show="$emit('before-show')"
-      @hide="$emit('hide')"
-      @before-hide="$emit('before-hide')"
-      @ok="$emit('delete')"
-    >
-      <slot name="confirmation" />
-    </MenuConfirmation>
-
     <slot />
   </Btn>
+
+  <MenuConfirmation
+    v-if="!noConfirm"
+    :target="menuTarget"
+    :reference-target="menuTarget"
+    :title="$t('general.delete')"
+    placement="bottom-start"
+    focus-confirm-button
+    :confirmation-text
+    h="auto"
+    v-bind="menuProps"
+    @show="$emit('show')"
+    @before-show="$emit('before-show')"
+    @hide="$emit('hide')"
+    @before-hide="$emit('before-hide')"
+    @ok="$emit('delete')"
+  >
+    <slot name="confirmation" />
+  </MenuConfirmation>
 </template>

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 import type { CSSProperties } from 'vue'
 import colors from '../../../constants/colors.json'
 
@@ -23,6 +23,10 @@ const { getColor, hexToRgb, rgbaToHex, isRgba, isHex } = useColors()
 // Layout
 const model = defineModel<string>()
 const { isSupported, open: openEyeDropper, sRGBHex } = useEyeDropper()
+const isMounted = ref(false)
+
+// Keep the browser-only capability out of the initial hydration tree.
+onMounted(() => isMounted.value = true)
 
 const themeColors = computed(() => {
   const hasWhite = !props.disallowedColors?.includes('white')
@@ -45,8 +49,8 @@ const themeColors = computed(() => {
           },
         }]
       : []),
-    ...(hasWhite ? [{ tw: 'white', hex: '#FFFFFF', rgba: 'rgb(255, 255, 255, 1)', style: { border: '1px solid #000' } }] : []),
-    ...(hasBlack ? [{ tw: 'black', hex: '#000000', rgba: 'rgb(0, 0, 0, 1)' }] : []),
+    ...(hasWhite ? [{ tw: 'white', hex: '#FFFFFF', rgba: 'rgba(255, 255, 255, 1)', style: { border: '1px solid #000' } }] : []),
+    ...(hasBlack ? [{ tw: 'black', hex: '#000000', rgba: 'rgba(0, 0, 0, 1)' }] : []),
     ...THEME_COLORS.map(color => ({
       tw: color,
       hex: getColor(color, undefined, true),
@@ -177,13 +181,7 @@ function setColor(color: { tw: string, hex: string, rgba: string }) {
       <div flex="~ justify-between">
         <div grid="~ flow-col gap-x-px">
           <div
-            class="color-block"
-            p="x-2"
-            w="!fit"
-            border="1 ca"
-            text="center"
-            leading="none"
-            flex="~ center"
+            class="color-block color-block--auto"
             @click="model = undefined"
           >
             {{ $t('color.auto') }}
@@ -192,6 +190,7 @@ function setColor(color: { tw: string, hex: string, rgba: string }) {
           <div
             v-for="themeColor in themeColors"
             :key="themeColor.tw"
+            :data-color="themeColor.tw"
             :style="{ backgroundColor: themeColor.hex, ...themeColor.style }"
             class="color-block"
             :class="{ 'is-selected': lowerCase(colorSelected) === lowerCase(themeColor.hex) }"
@@ -201,9 +200,8 @@ function setColor(color: { tw: string, hex: string, rgba: string }) {
 
         <div grid="~ flow-col gap-x-px">
           <button
-            v-if="isSupported"
-            class="color-block"
-            flex="~ center"
+            v-if="isMounted && isSupported"
+            class="color-block color-block--eyedropper"
             @click="openEyeDropper()"
           >
             <div class="i-mdi:eyedropper" />
@@ -230,6 +228,7 @@ function setColor(color: { tw: string, hex: string, rgba: string }) {
           <div
             v-for="columnColor in columnColors"
             :key="columnColor.tw"
+            :data-color="columnColor.tw"
             :style="{ backgroundColor: columnColor.hex }"
             :class="{ 'is-selected': colorSelected === columnColor.hex }"
             class="color-block"
@@ -272,5 +271,13 @@ function setColor(color: { tw: string, hex: string, rgba: string }) {
   &.is-selected {
     @apply outline outline-1 outlined-solid outline-offset-1 z-1;
   }
+}
+
+.color-block--auto {
+  @apply p-x-2 !w-fit border-1 border-ca text-center leading-none flex flex-center;
+}
+
+.color-block--eyedropper {
+  @apply flex flex-center;
 }
 </style>

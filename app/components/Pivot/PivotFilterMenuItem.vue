@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends IItem = IItem">
+<script setup lang="ts" vapor generic="T extends IItem = IItem">
 // Types
 import type { ITableFilterItem } from '../Table/types/table-filter-item.type'
 

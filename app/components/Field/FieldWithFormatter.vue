@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { IFieldWithFormatterProps } from './types/field-with-formatter.type'
 

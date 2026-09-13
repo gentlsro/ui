@@ -1,8 +1,8 @@
-<script setup lang="ts">
-import type { InputMask } from 'imask'
-import type { MaybeElementRef } from '@vueuse/core'
+<script setup lang="ts" vapor>
+import { mergeProps } from 'vue'
 
 // Types
+import type { ITextAreaExpose } from './types/text-area-expose.type'
 import type { ITextAreaInputProps } from './types/text-area-props.type'
 
 // Functions
@@ -11,6 +11,8 @@ import { useInputValidationUtils } from '../functions/useInputValidationUtils'
 
 // Constants
 import { INPUT_WRAPPER_DEFAULT_PROPS } from '../../InputWrapper/constants/input-wrapper-default-props'
+
+defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(defineProps<ITextAreaInputProps>(), {
   ...getComponentProps('textArea'),
@@ -58,7 +60,7 @@ const {
 
 if (props.autogrow) {
   useTextareaAutosize({
-    element: el as MaybeElementRef<HTMLTextAreaElement>,
+    element: computed(() => el.value as HTMLTextAreaElement | undefined),
     input: masked,
   })
 }
@@ -94,15 +96,17 @@ defineExpose({
   blur,
   clear,
   getInputElement,
-  updateMask: (fnc: (mask: InputMask<any>) => void) => {
-    fnc(elMask.value as InputMask<any>)
+  updateMask: fnc => {
+    if (elMask.value) {
+      fnc(elMask.value)
+    }
   },
-})
+} satisfies ITextAreaExpose)
 </script>
 
 <template>
   <InputWrapper
-    v-bind="wrapperProps"
+    v-bind="mergeProps(wrapperProps, $attrs)"
     :id="inputId"
     :class="wrapperClass"
     :has-content
@@ -111,7 +115,10 @@ defineExpose({
     @click="handleClickWrapper"
   >
     <!-- Label -->
-    <template #label="labelProps">
+    <template
+      v-if="$slots.label"
+      #label="labelProps"
+    >
       <slot
         name="label"
         v-bind="labelProps"
@@ -154,23 +161,6 @@ defineExpose({
       />
 
       <slot name="inner" />
-
-      <!-- Tooltip -->
-      <Menu
-        v-if="tooltip || !!$slots.tooltip"
-        :model-value="!isBlurred"
-        manual
-        placement="right"
-        :fallback-placements="['bottom']"
-        :reference-target="el"
-        :no-arrow="false"
-        no-uplift
-        v-bind="tooltipProps"
-      >
-        <slot name="tooltip">
-          {{ tooltip }}
-        </slot>
-      </Menu>
     </template>
 
     <template
@@ -192,7 +182,7 @@ defineExpose({
           :clear-confirmation
           :size
           class="self-start m-t-1.5"
-          @click.stop.prevent="!clearConfirmation && clear()"
+          @clear="clear()"
         />
       </div>
     </template>
@@ -204,7 +194,27 @@ defineExpose({
       <slot name="hint" />
     </template>
 
-    <template #menu>
+    <!-- Keep the tooltip outside the replaceable layout subtree. -->
+    <template
+      v-if="tooltip || $slots.tooltip || $slots.menu"
+      #menu
+    >
+      <!-- Tooltip -->
+      <Menu
+        v-if="tooltip || !!$slots.tooltip"
+        :model-value="!isBlurred"
+        manual
+        placement="right"
+        :fallback-placements="['bottom']"
+        :reference-target="el"
+        :no-arrow="false"
+        no-uplift
+        v-bind="tooltipProps"
+      >
+        <slot name="tooltip">
+          {{ tooltip }}
+        </slot>
+      </Menu>
       <slot name="menu" />
     </template>
   </InputWrapper>

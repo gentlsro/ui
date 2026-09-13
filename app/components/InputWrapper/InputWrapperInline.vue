@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { IInputWrapperProps } from './types/input-wrapper-props.type'
 

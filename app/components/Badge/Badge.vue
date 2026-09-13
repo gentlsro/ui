@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { IBadgeProps } from './types/badge-props.type'
 
@@ -8,6 +8,10 @@ import { BADGE_DEFAULT_PROPS } from './constants/badge-default-props.constant'
 const props = withDefaults(defineProps<IBadgeProps>(), {
   ...getComponentProps('badge'),
 })
+
+const rootEl = useTemplateRef<HTMLDivElement>('rootEl')
+
+defineExpose({ getRootElement: () => rootEl.value })
 
 // Utils
 const mergedProps = computed(() => {
@@ -28,6 +32,7 @@ const containerStyle = computed(() => {
 
 <template>
   <div
+    ref="rootEl"
     class="badge"
     :class="containerClass"
     :style="containerStyle"

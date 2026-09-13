@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Constants
 import { ICON_BY_FILE_EXTENSION } from './constants/icon-by-file-extension'
 
@@ -17,9 +17,6 @@ defineEmits<{
   (e: 'remove'): void
 }>()
 
-// Utils
-const rC = useRuntimeConfig()
-
 function getFileExtension(filename: string) {
   return filename.split('.').reverse()[0]
 }
@@ -34,9 +31,6 @@ const actions = computed(() => ({
   ...actionsDefault.value,
   ...props.actions,
 }))
-
-// Layout
-const fileUrl = `${rC.public.FILES_HOST}/files${props.file.path}`
 
 const icon = computed(() => {
   const ext = getFileExtension(props.file.name ?? '')
@@ -88,11 +82,7 @@ const imageUrl = computed(() => {
     </div>
 
     <!-- Body -->
-    <div
-      class="file-preview--image"
-      external
-      :to="fileUrl"
-    >
+    <div class="file-preview--image">
       <img
         v-if="imageUrl"
         :src="imageUrl"

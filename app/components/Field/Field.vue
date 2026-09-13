@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { IFieldProps } from './types/field-props.type'
 
@@ -17,6 +17,7 @@ const props = withDefaults(defineProps<IFieldProps>(), {
 defineEmits<{
   (e: 'focus', ev: FocusEvent | MouseEvent): void
   (e: 'blur', ev: FocusEvent | MouseEvent): void
+  (e: 'click', ev: MouseEvent): void
 }>()
 
 // Utils
@@ -28,7 +29,7 @@ const mergedProps = computed(() => {
   return getComponentMergedProps('field', props)
 })
 
-const wrapperEl = useTemplateRef('wrapperEl')
+const wrapperEl = useTemplateRef<{ element: HTMLDivElement }>('wrapperEl')
 
 // Wrapper
 const wrapperProps = getInputWrapperProps(props)
@@ -61,9 +62,13 @@ defineExpose({
     :ui="mergedProps.ui"
     error-visible
     :has-content
+    @click="$emit('click', $event)"
   >
     <!-- Label -->
-    <template #label="labelProps">
+    <template
+      v-if="$slots.label"
+      #label="labelProps"
+    >
       <slot
         name="label"
         v-bind="labelProps"

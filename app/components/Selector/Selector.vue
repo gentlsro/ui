@@ -87,11 +87,12 @@ const {
   emit: event => emits(event),
   getElement: () => fieldEl.value?.controlElement,
   onBeforeFocus: ev => {
-    if (isPreventNextFocus.value) {
+    if (isPreventNextFocus.value && ev instanceof FocusEvent) {
       isPreventNextFocus.value = false
 
       return { shouldFocus: false, shouldHideFloating: false }
     }
+    isPreventNextFocus.value = false
 
     // A click can finish after focus has already opened the menu and its search.
     if (isPickerActive.value) {
@@ -130,6 +131,16 @@ const wrapperClass = computed(() => {
     },
   ]
 })
+
+function handleSelectorClick(ev: MouseEvent) {
+  if (ev.target instanceof Element && ev.target.closest('.control')) {
+    handleFocusOrClick(ev)
+
+    return
+  }
+
+  handleClickWrapper(ev)
+}
 
 function handleClear() {
   model.value = props.emptyValue
@@ -245,7 +256,7 @@ if (props.immediateFetch && mergedProps.value.loadData?.fnc) {
     data-onboarding="selector"
     @focus="handleFocusOrClick"
     @blur="handleBlur"
-    @click="handleClickWrapper"
+    @click="handleSelectorClick"
   >
     <!-- Label -->
     <template

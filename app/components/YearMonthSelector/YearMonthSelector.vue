@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // TODO: MIN & MAX
 
 // Types
@@ -62,7 +62,7 @@ const modelFormatted = computed(() => {
 })
 
 // Picker
-const referenceEl = ref<HTMLElement>()
+const referenceEl = shallowRef<HTMLElement>()
 const isPickerActive = ref(false)
 const pickerState = ref('hide')
 

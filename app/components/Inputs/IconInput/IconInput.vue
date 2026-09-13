@@ -1,4 +1,5 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
+import { mergeProps } from 'vue'
 import type { NonUndefined } from 'utility-types'
 
 // Functions
@@ -10,6 +11,8 @@ import type { IIconInputProps } from './types/icon-input-props.type'
 
 // Constants
 import { INPUT_WRAPPER_DEFAULT_PROPS } from '../../InputWrapper/constants/input-wrapper-default-props'
+
+defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(defineProps<IIconInputProps>(), {
   ...getComponentProps('iconInput'),
@@ -111,7 +114,7 @@ defineExpose({
 
 <template>
   <InputWrapper
-    v-bind="wrapperProps"
+    v-bind="mergeProps(wrapperProps, $attrs)"
     :id="inputId"
     ref="wrapperEl"
     :class="wrapperClass"
@@ -122,7 +125,7 @@ defineExpose({
   >
     <template #prepend>
       <div class="flex flex-center w-6 h-6 m-l-2">
-        <Icon
+        <IconPickerIcon
           v-if="model"
           :name="model"
           :size="iconSize.size"
@@ -189,7 +192,7 @@ defineExpose({
           v-if="hasClearableBtn && model && model !== emptyValue"
           :clear-confirmation
           :size
-          @click.stop.prevent="model = emptyValue"
+          @clear="clear()"
         />
       </div>
     </template>

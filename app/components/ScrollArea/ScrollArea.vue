@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 import PerfectScrollbar from 'perfect-scrollbar'
 
 // Types
@@ -17,7 +17,7 @@ const mergedProps = computed(() => {
 })
 
 // Layout
-const scrollArea = ref<HTMLDivElement>()
+const scrollArea = useTemplateRef<HTMLDivElement>('scrollArea')
 const ps = shallowRef<PerfectScrollbar>()
 
 let initTimer: ReturnType<typeof setTimeout> | undefined

@@ -1,3 +1,6 @@
+<script setup lang="ts" vapor>
+</script>
+
 <template>
   <div class="query-builder-move-handler">
     <div class="i-akar-icons:drag-vertical query-builder-move-handler__icon" />

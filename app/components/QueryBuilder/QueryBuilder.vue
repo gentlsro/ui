@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { IQueryBuilderProps } from './types/query-builder-props.type'
 import type { IQueryBuilderEmits } from './types/query-builder-emits.type'
@@ -76,13 +76,23 @@ if (!props.items.length && !props.noInitialization) {
   })
 }
 
-useResizeObserver(queryBuilderEl, entries => {
-  requestAnimationFrame(() => {
-    const { contentRect } = entries?.[0] ?? {}
+function updateQueryBuilderLayout(width: number) {
+  isSmallerScreen.value = width < breakpoint.value
+  queryBuilderElRect.value = queryBuilderEl.value?.getBoundingClientRect()
+}
 
-    isSmallerScreen.value = contentRect!.width < breakpoint.value
-    queryBuilderElRect.value = queryBuilderEl.value?.getBoundingClientRect()
-  })
+onMounted(() => {
+  if (queryBuilderEl.value) {
+    updateQueryBuilderLayout(queryBuilderEl.value.clientWidth)
+  }
+})
+
+useResizeObserver(queryBuilderEl, entries => {
+  const { contentRect } = entries?.[0] ?? {}
+
+  if (contentRect) {
+    updateQueryBuilderLayout(contentRect.width)
+  }
 })
 
 defineExpose({

@@ -47,3 +47,5 @@ export function tableGetExposed() {
     cancelEdit: () => tableStore.cancelCellEdit(),
   }
 }
+
+export type TableExpose = ReturnType<typeof tableGetExposed>

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { INotificationsProps } from './types/notifications-props.type'
 
@@ -20,7 +20,12 @@ const notificationStore = useNotificationStore()
 const { notifications } = storeToRefs(notificationStore)
 
 // Layout
-const notificationsEl = ref<HTMLDivElement>()
+const notificationsEl = useTemplateRef<HTMLDivElement>('notificationsEl')
+watch(notificationsEl, element => {
+  if (element) {
+    Object.assign(element, { hide: notificationStore.removeAllNotifications })
+  }
+}, { flush: 'post' })
 const placementClass = computed(() => {
   switch (props.placement) {
     case 'top-left':
@@ -65,22 +70,21 @@ const containerStyle = computed(() => {
 </script>
 
 <template>
-  <TransitionGroup
+  <div
     ref="notificationsEl"
-    name="list"
-    tag="div"
     class="notifications"
     :class="[placementClass, containerClass]"
     :style="containerStyle"
-    .hide="notificationStore.removeAllNotifications"
   >
-    <NotificationRow
-      v-for="notification in notifications"
-      :key="notification.id"
-      :notification
-      @hide="notificationStore.removeNotification(notification.id)"
-    />
-  </TransitionGroup>
+    <TransitionGroup name="list">
+      <NotificationRow
+        v-for="notification in notifications"
+        :key="notification.id"
+        :notification
+        @hide="notificationStore.removeNotification(notification.id)"
+      />
+    </TransitionGroup>
+  </div>
 </template>
 
 <style lang="scss">

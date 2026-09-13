@@ -1,7 +1,6 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { FloatingTarget } from '../../composables/useFloatingUIUtils'
-import type ListMoveHandle from './ListMoveHandle.vue'
 import type { IListItem } from './types/list-item.type'
 import type { IListProps } from './types/list-props.type'
 
@@ -13,6 +12,10 @@ import { useListStore } from './stores/list.store'
 
 // Constants
 import { LIST_DEFAULT_PROPS } from './constants/list-default-props.constant'
+
+type ListMoveHandleExpose = {
+  element: HTMLDivElement | null
+}
 
 type IProps = Pick<IListProps, 'ui' | 'noHover' | 'reorderable' | 'disabledFnc' | 'moveHandleTarget' | 'moveHandleTakesSpace'> & {
   item: IListItem
@@ -45,7 +48,7 @@ let dragEndFrame = 0
 let unmounting = false
 const el = useTemplateRef<FloatingTarget>('el')
 const isDragging = ref(false)
-const moveHandleEl = useTemplateRef<InstanceType<typeof ListMoveHandle>>('moveHandleEl')
+const moveHandleEl = useTemplateRef<ListMoveHandleExpose>('moveHandleEl')
 const item = toRef(props, 'item')
 
 const isNew = computed(() => '_isNew' in item.value)

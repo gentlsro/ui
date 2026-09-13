@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 import { getElementSize } from '#layers/utilities/app/functions/get-element-size'
 
 // Types

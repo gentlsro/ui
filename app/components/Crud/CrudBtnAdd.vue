@@ -1,15 +1,15 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 import type { RouteLocationRaw } from '#vue-router'
 
 // Types
-import type { ICrudBtnProps } from './types/crud-btn-props.type'
+import type { ICrudBtnProps, ICrudBtnsProps } from './types/crud-btn-props.type'
 
 type IProps = ICrudBtnProps & {
   to?: RouteLocationRaw
 }
 
 const props = withDefaults(defineProps<IProps>(), {
-  ...getComponentProps('crudBtns'),
+  loading: (getComponentProps('crudBtns') as ICrudBtnsProps).loading,
 })
 
 // Utils
@@ -23,7 +23,9 @@ const label = computed(() => {
     return
   }
 
-  return props.label ?? $t('general.add')
+  return props.label === false || props.label == null
+    ? $t('general.add')
+    : props.label
 })
 </script>
 

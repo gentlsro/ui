@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { ICheckboxProps } from './types/checkbox-props.type'
 
@@ -20,7 +20,7 @@ const mergedProps = computed(() => {
 
 // Layout
 const model = defineModel()
-const labelEl = ref<HTMLElement>()
+const labelEl = useTemplateRef<HTMLElement>('labelEl')
 
 const label = computed(() => {
   if (typeof props.label === 'function') {
@@ -177,8 +177,8 @@ const focusHelperStyle = computed(() => {
       hidden
       tabindex="-1"
       :name="name"
-      :checked="isChecked"
-      :indeterminate="isIndeterminate"
+      .checked="isChecked"
+      .indeterminate="isIndeterminate"
     >
 
     <div

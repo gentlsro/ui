@@ -5,6 +5,9 @@ import type { IChipProps } from './types/chip-props.type'
 // Directives
 import { vRippleVapor as vRipple } from '../../directives/ripple.directive'
 
+// Components
+import IconRenderer from '../Icon/IconRenderer.vue'
+
 // Constants
 import { CHIP_DEFAULT_PROPS } from './constants/chip-default-props.constant'
 
@@ -78,7 +81,7 @@ const isIconifyIcon = computed(() => {
     :class="[classes, containerClass]"
     :style="containerStyle"
   >
-    <Icon
+    <IconRenderer
       v-if="icon && isIconifyIcon"
       :name="(icon as string)"
     />

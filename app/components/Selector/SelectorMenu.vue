@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 import type { Placement } from '@floating-ui/dom'
 
 // Types

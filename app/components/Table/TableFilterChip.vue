@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 import { type } from 'arktype'
 import type { ComparatorEnum } from '$comparatorEnum'
 

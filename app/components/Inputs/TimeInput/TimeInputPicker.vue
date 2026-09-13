@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 import { MaskedRange } from 'imask'
 import type { FactoryOpts } from 'imask'
 
@@ -9,7 +9,7 @@ const props = defineProps<ITimeInputPickerProps>()
 const emits = defineEmits<{
   (e: 'update:used-touch', val: boolean): void
   (e: 'update:is-am', val: boolean): void
-  (e: 'update:update:prevent-next-is-am-change', val: boolean): void
+  (e: 'update:prevent-next-is-am-change', val: boolean): void
 }>()
 
 // Utils
@@ -68,9 +68,15 @@ const menuProxyEl = useTemplateRef('menuProxyEl')
 const hourEl = useTemplateRef('hourEl')
 const minuteEl = useTemplateRef('minuteEl')
 const isPickerActive = ref(false)
-const isAm = useVModel(props, 'isAm', emits, { eventName: 'update:is-am' })
-const preventNextIsAmChange = useVModel(props, 'preventNextIsAmChange', emits, {
-  eventName: 'update:prevent-next-is-am-change',
+
+const isAm = computed({
+  get: () => props.isAm,
+  set: value => emits('update:is-am', value),
+})
+
+const preventNextIsAmChange = computed({
+  get: () => props.preventNextIsAmChange,
+  set: value => emits('update:prevent-next-is-am-change', value),
 })
 
 const usedTouch = computed(() => {

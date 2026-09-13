@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { IBurgerProps } from './types/burger-props.type'
 
@@ -38,8 +38,7 @@ watch(model, isOpen => {
   nextTick(() => {
     if (isOpen) {
       pathToX.value?.beginElement()
-    }
-    else {
+    } else {
       pathToBurger.value?.beginElement()
     }
   })

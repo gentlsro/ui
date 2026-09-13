@@ -139,7 +139,10 @@ export function useInputUtils(options: IInputUtilsOptions) {
     model.value = props.emptyValue
     originalModel.value = props.emptyValue
 
-    if (shouldFocusAfterClear || !isBlurred.value) {
+    const restoreFocus = shouldFocusAfterClear
+      ?? (!isBlurred.value && !(preventFocusOnTouch && isTouchInteraction()))
+
+    if (restoreFocus) {
       setTimeout(focus, 0)
     }
 
@@ -169,6 +172,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
       && isSameWrapper
       && isRelatedTargetFocusable
       && !isProgrammatic
+      && !(preventFocusOnTouch && isTouchInteraction())
     ) {
       ev.preventDefault()
       focus()
@@ -207,26 +211,41 @@ export function useInputUtils(options: IInputUtilsOptions) {
   // element, so the `focus` does not get triggered. We need to handle this case manually
   function handleClickWrapper(ev: MouseEvent) {
     const target = ev.target as HTMLElement
-    const isFocusable = target.classList.contains('.input-wrapper__focusable')
-      || !!target.closest('.input-wrapper__focusable')
+    const isFocusable = !!target.closest('.input-wrapper__focusable')
+    const isTouchLabel = preventFocusOnTouch
+      && isTouchPointer(ev)
+      && target.closest('label')?.control === inputElement.value
 
-    if (isFocusable) {
+    // A label's default click action focuses its associated input separately
+    // from mousedown. Handle this field's label without forwarding that focus.
+    if (isTouchLabel) {
+      ev.preventDefault()
+    }
+
+    if (isFocusable || isTouchLabel) {
       handleFocusOrClick(ev)
     }
   }
 
   function isTouchPointer(ev?: Event) {
-    const pointerType = ev instanceof PointerEvent
-      ? ev.pointerType
-      : uiStore.lastPointerDownType
-
-    return pointerType === 'touch' || pointerType === 'pen'
+    // WebKit can report pointerType="mouse" for a touch-generated click.
+    // Use the preceding pointerdown, but never classify focus or keyboard
+    // activation (detail=0) from that potentially stale pointer history.
+    return ev instanceof MouseEvent && ev.detail > 0 && isTouchInteraction()
   }
 
-  // Block focus (and the keyboard) on touch. Do not open the picker here:
-  // the same tap's leftover click would land on the overlay. The wrapper
-  // click handler opens it after that click hits the still-closed input.
-  function handlePointerDown(ev: PointerEvent) {
+  function isTouchInteraction() {
+    const { lastPointerDownType, lastPointerDownEvent, lastKeydownEvent } = uiStore
+    const isTouch = lastPointerDownType === 'touch' || lastPointerDownType === 'pen'
+    const isKeyboardNewer = lastKeydownEvent
+      && lastKeydownEvent.timeStamp > (lastPointerDownEvent?.timeStamp ?? 0)
+
+    return isTouch && !isKeyboardNewer
+  }
+
+  // Cancel only the default mouse focus, preserving click in WebKit too.
+  // Opening on click also lets the browser distinguish a tap from a scroll.
+  function handleMouseDown(ev: MouseEvent) {
     if (preventFocusOnTouch && isTouchPointer(ev)) {
       ev.preventDefault()
     }
@@ -275,10 +294,6 @@ export function useInputUtils(options: IInputUtilsOptions) {
     }
 
     if (isFocusPrevented) {
-      if (isFocusEvent) {
-        blur()
-      }
-
       return
     }
 
@@ -365,7 +380,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
     blur,
     getInputElement,
     handleFocusOrClick,
-    handlePointerDown,
+    handleMouseDown,
     handleClickWrapper,
   }
 }

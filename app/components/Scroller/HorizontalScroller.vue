@@ -8,6 +8,8 @@ import { useScrollerScroll } from './composables/useScrollerScroll'
 // Constants
 import { SCROLLER_DEFAULT_PROPS } from './constants/scroller-default-props.constant'
 
+import './styles/scroll-fade.css'
+
 const props = withDefaults(defineProps<IHorizontalScrollerProps>(), {
   ...getComponentProps('horizontalScroller'),
 })
@@ -181,14 +183,6 @@ defineExpose({
     }
 
     &.is-active {
-      &.arrow--left {
-        background: linear-gradient(to right, rgba(64, 64, 64, 0.2) 0%, rgba(64, 64, 64, 0.2) 8px, transparent);
-      }
-
-      &.arrow--right {
-        background: linear-gradient(to left, rgba(64, 64, 64, 0.2) 0%, rgba(64, 64, 64, 0.2) 8px, transparent);
-      }
-
       > .btn {
         @apply opacity-85 hover:bg-white dark:hover:bg-black/50;
       }
@@ -200,20 +194,6 @@ defineExpose({
 
     &--left {
       @apply left-0 justify-start;
-    }
-  }
-}
-
-.dark {
-  .arrows--inside {
-    .is-active.arrow {
-      &--left {
-        background: linear-gradient(to right, rgba(64, 64, 64, 0.6) 0%, rgba(64, 64, 64, 0.6) 8px, transparent);
-      }
-
-      &--right {
-        background: linear-gradient(to left, rgba(64, 64, 64, 0.6) 0%, rgba(64, 64, 64, 0.6) 8px, transparent);
-      }
     }
   }
 }

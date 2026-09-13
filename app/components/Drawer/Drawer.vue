@@ -1,9 +1,11 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { IDrawerProps } from './types/drawer-props.type'
 
 // Constants
 import { DRAWER_DEFAULT_PROPS } from './constants/drawer-default-props.constant'
+
+defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(defineProps<IDrawerProps>(), {
   ...getComponentProps('drawer'),
@@ -59,7 +61,7 @@ function handleTransition(
 }
 
 // Click outside
-const drawerEl = ref<HTMLElement | null>(null)
+const drawerEl = useTemplateRef<HTMLElement>('drawerEl')
 
 function handleClickOutside(ev: Event) {
   if (!model.value || !props.closeOnClickOutside) {
@@ -89,6 +91,7 @@ onClickOutside(drawerEl, handleClickOutside, {
   >
     <aside
       ref="drawerEl"
+      v-bind="$attrs"
       class="drawer"
       :class="[
         `drawer--${side}`,

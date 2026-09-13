@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { IBtnProps } from './types/btn-props.type'
 
@@ -13,6 +13,9 @@ const props = withDefaults(defineProps<IBtnProps & {
 
 // Copy
 const { copy, copied, isSupported } = useClipboard({ copiedDuring: 2000 })
+const isMounted = ref(false)
+
+onMounted(() => isMounted.value = true)
 
 const copyBtnSize = computed(() => {
   switch (props.size) {
@@ -50,7 +53,7 @@ async function handleCopy() {
 
 <template>
   <Btn
-    v-if="isSupported"
+    v-if="isMounted && isSupported"
     :size="copyBtnSize"
     :tooltip
     :label

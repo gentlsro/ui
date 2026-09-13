@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { IListItem } from './types/list-item.type'
 import type { IListProps } from './types/list-props.type'
@@ -65,6 +65,14 @@ const contentStyle = computed(() => {
     hasSearch: searchConfig.value?.enabled,
   })
 })
+
+function isGroupRow(row?: IListItem | IGroupRow): row is IGroupRow {
+  return !!row && 'isGroup' in row
+}
+
+function isAddedRow(row?: IListItem | IGroupRow) {
+  return !!row && !!addedItemById.value[row.id]
+}
 </script>
 
 <template>
@@ -80,58 +88,60 @@ const contentStyle = computed(() => {
     @virtual-scroll="handleVirtualScroll"
     @change:content-size="$emit('change:contentSize', $event)"
   >
-    <template #default="{ row, index }">
-      <slot
-        name="item-row"
-        :row
-        :index
-        :ui
-        :is-group="'isGroup' in row"
-        :is-last="index === listItems.length - 1"
-      >
-        <!-- Group -->
-        <ListRowGroup
-          v-if="'isGroup' in row"
-          :item="row"
+    <template #default="slotProps">
+      <template v-if="slotProps.row">
+        <slot
+          name="item-row"
+          :row="slotProps.row"
+          :index="slotProps.index"
           :ui
+          :is-group="isGroupRow(slotProps.row)"
+          :is-last="slotProps.index === listItems.length - 1"
         >
-          <slot
-            name="item-group"
-            :row
-            :index
-          />
-        </ListRowGroup>
-
-        <!-- Item -->
-        <ListRowItem
-          v-else
-          :item="row"
-          :no-hover
-          :reorderable
-          :ui
-          :is-last="index === listItems.length - 1"
-          :disabled-fnc
-          :move-handle-target
-          :move-handle-takes-space
-          @mouseenter="handleMouseEnter(row, index)"
-          @mouseleave="handleMouseLeave(row, index)"
-        >
-          <template #default="{ isDisabled, isSelected }">
+          <!-- Group -->
+          <ListRowGroup
+            v-if="isGroupRow(slotProps.row)"
+            :item="slotProps.row"
+            :ui
+          >
             <slot
-              name="item"
-              :row
-              :index
-              :is-disabled
-              :is-selected
-              :is-added="!!addedItemById[row.id]"
+              name="item-group"
+              :row="slotProps.row"
+              :index="slotProps.index"
             />
-          </template>
+          </ListRowGroup>
 
-          <template #move-handle>
-            <slot name="move-handle" />
-          </template>
-        </ListRowItem>
-      </slot>
+          <!-- Item -->
+          <ListRowItem
+            v-else
+            :item="slotProps.row"
+            :no-hover
+            :reorderable
+            :ui
+            :is-last="slotProps.index === listItems.length - 1"
+            :disabled-fnc
+            :move-handle-target
+            :move-handle-takes-space
+            @mouseenter="handleMouseEnter(slotProps.row, slotProps.index)"
+            @mouseleave="handleMouseLeave(slotProps.row, slotProps.index)"
+          >
+            <template #default="{ isDisabled, isSelected }">
+              <slot
+                name="item"
+                :row="slotProps.row"
+                :index="slotProps.index"
+                :is-disabled
+                :is-selected
+                :is-added="isAddedRow(slotProps.row)"
+              />
+            </template>
+
+            <template #move-handle>
+              <slot name="move-handle" />
+            </template>
+          </ListRowItem>
+        </slot>
+      </template>
     </template>
 
     <!-- Drop indicator -->

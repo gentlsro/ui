@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { INotificationRowProps } from './types/notification-row-props.type'
 
@@ -21,7 +21,7 @@ const DEFAULT_TIMEOUT = 2500
 const TIMEOUT = (props.notification.timeout ?? DEFAULT_TIMEOUT) / STEP
 
 // Layout
-const notificationEl = ref<HTMLDivElement>()
+const notificationEl = useTemplateRef<HTMLDivElement>('notificationEl')
 const isPausedByForce = ref(false)
 
 const icon = computed(() => {
@@ -81,7 +81,7 @@ function handleHide() {
 }
 
 // Counter
-const counterEl = ref<HTMLSpanElement>()
+const counterEl = useTemplateRef<HTMLSpanElement>('counterEl')
 
 // Animations
 function removeAnimation() {

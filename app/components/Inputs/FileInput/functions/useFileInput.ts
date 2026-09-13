@@ -2,9 +2,6 @@
 import type { IFileInputProps } from '../types/file-input-props.type'
 import type { IFileInputEmits } from '../types/file-input-emits.type'
 
-// Components
-import type Field from '../../../Field/Field.vue'
-
 export function useFileInput(payload: {
   model: Ref<IFileInputProps['modelValue']>
   props: IFileInputProps
@@ -13,7 +10,10 @@ export function useFileInput(payload: {
   const { model, props, emit } = payload
 
   // Layout
-  const fileFieldEl = ref<InstanceType<typeof Field>>()
+  const fileFieldEl = ref<{
+    element: HTMLDivElement | undefined
+    controlElement: HTMLElement | undefined
+  }>()
 
   // File dialog
   const { open, onChange, reset } = useFileDialog({

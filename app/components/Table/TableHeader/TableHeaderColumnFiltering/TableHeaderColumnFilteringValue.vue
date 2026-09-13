@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { IInputProps } from '../../../Inputs/types/input-props.type'
 import type { ITableFilterItem } from '../../types/table-filter-item.type'
@@ -28,7 +28,7 @@ defineExpose({
 const { getFilterComponent } = useTableStore()
 
 // Layout
-const valueInputEl = ref<any>()
+const valueInputEl = useTemplateRef<any>('valueInputEl')
 const item = toRef(props, 'item')
 const column = toRef(props, 'column')
 
@@ -227,6 +227,7 @@ const filterComponentProps = computed(() => {
     v-else-if="component?.component"
     ref="valueInputEl"
     v-model="filterValue"
+    :name="column.name"
     size="sm"
     :class="{ 'qb-item__content-value': column.dataType !== 'boolean' }"
     :readonly="!editable"

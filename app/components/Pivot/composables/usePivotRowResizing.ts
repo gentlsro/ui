@@ -16,6 +16,7 @@ export function usePivotRowResizing<T extends IItem = IItem>() {
     rowHeaderEl,
     rowsVirtualScrollEl,
     minimumColumnWidth,
+    rowLayoutWidths,
   } = usePivotStore<T>()
 
   let pageX = 0
@@ -192,6 +193,10 @@ export function usePivotRowResizing<T extends IItem = IItem>() {
     }
 
     row.setResizedWidth(adjustedWidth)
+    rowLayoutWidths.value = {
+      ...rowLayoutWidths.value,
+      [String(row.field)]: row.widthResolved,
+    }
 
     nextTick(() => {
       items.value = [...items.value]

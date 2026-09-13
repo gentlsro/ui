@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { ITableProps } from './types/table-props.type'
 
@@ -54,13 +54,9 @@ async function getTotals() {
     })
 
     totals.value = res
-  }
-
-  else if (props.totals) {
+  } else if (props.totals) {
     totals.value = props.totals
-  }
-
-  else {
+  } else {
     totals.value = undefined
   }
 }

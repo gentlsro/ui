@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { ISkeletonProps } from './types/skeleton-props.type'
 

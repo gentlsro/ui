@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { CrudAction } from './types/crud-action.type'
 import type { ICrudBtnProps, ICrudBtnsProps } from './types/crud-btn-props.type'
@@ -45,15 +45,16 @@ const isDeleted = autoResetRef(false, 2000)
 const route = useRoute()
 
 // Layout
+const isMounted = ref(false)
 const loaderType = computed(() => {
-  return $bp.lg.value && props.labels ? 'inline' : 'block'
+  return isMounted.value && $bp.lg.value && props.labels ? 'inline' : 'block'
 })
 
+onMounted(() => isMounted.value = true)
+
 const crudBtnProps = computed<ICrudBtnProps>(() => ({
-  btnConfirmationnPosition: props.btnConfirmationPosition,
-  labels: props.labels,
-  loaderType: loaderType.value,
   loading: props.loading,
+  noLabel: !props.labels,
 }))
 
 // Actions
@@ -128,9 +129,10 @@ defineExpose({
     </CrudBtnDelete>
 
     <CrudBtnArchive
-      v-if="availableActions.archive && !availableActions.restore"
+      v-if="availableActions.archive || availableActions.restore"
       v-bind="crudBtnProps"
-      @delete="$emit('delete')"
+      :is-archived="availableActions.restore"
+      @archive="availableActions.restore ? $emit('restore') : $emit('delete')"
     />
 
     <slot

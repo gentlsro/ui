@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { IQueryBuilderGroup } from './types/query-builder-group-props.type'
 import type { IQueryBuilderRowProps } from './types/query-builder-row-props.type'

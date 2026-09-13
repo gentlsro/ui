@@ -1,10 +1,16 @@
-<script setup lang="ts" generic="T extends IItem">
+<script setup lang="ts" vapor generic="T extends IItem">
 type IProps = {
   item: T
   tag?: string
 }
 
 const props = defineProps<IProps>()
+
+type DraggableElement = HTMLElement & {
+  'get-item'?: () => T
+}
+
+const itemEl = useTemplateRef<DraggableElement>('itemEl')
 
 // Layout
 const componentTag = computed(() => {
@@ -14,12 +20,18 @@ const componentTag = computed(() => {
 function getItem() {
   return props.item
 }
+
+onMounted(() => {
+  if (itemEl.value) {
+    itemEl.value['get-item'] = getItem
+  }
+})
 </script>
 
 <template>
   <Component
     :is="componentTag"
-    .get-item="getItem"
+    ref="itemEl"
     data-draggable-item
   >
     <slot />

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 import { uiConfig } from '$uiConfig'
 
 // Types

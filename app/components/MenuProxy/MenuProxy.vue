@@ -35,7 +35,7 @@ const mergedProps = computed(() => {
 // Layout
 const model = defineModel<boolean>({ default: false })
 const virtualDimensions = defineModel<IMenuProxyProps['virtualDimensions']>('virtualDimensions')
-const menuProxyEl = ref<InstanceType<typeof Menu | typeof Dialog>>()
+const menuProxyEl = ref<IMenuProxyExpose>()
 
 const isMounted = ref(false)
 
@@ -66,8 +66,8 @@ defineExpose({
 </script>
 
 <template>
-  <Component
-    :is="isMenu ? Menu : Dialog"
+  <Menu
+    v-if="isMenu"
     ref="menuProxyEl"
     v-bind="mergeProps($props, $attrs)"
     v-model="model"
@@ -111,5 +111,52 @@ defineExpose({
     >
       <slot name="header-right" />
     </template>
-  </Component>
+  </Menu>
+
+  <Dialog
+    v-else
+    ref="menuProxyEl"
+    v-bind="mergeProps($props, $attrs)"
+    v-model="model"
+    v-model:virtual-dimensions="virtualDimensions"
+    :ui="mergedProps.ui"
+    :no-overlay
+    @hide="emits('hide')"
+    @show="emits('show')"
+    @before-hide="emits('beforeHide')"
+    @before-show="emits('beforeShow')"
+    @update:model-value="emits('update:modelValue', $event)"
+    @update:placement="emits('update:placement', $event)"
+  >
+    <template
+      v-if="$slots.title"
+      #title="slotProps"
+    >
+      <slot
+        name="title"
+        v-bind="slotProps"
+      />
+    </template>
+
+    <template
+      v-if="$slots.header"
+      #header="{ hide }"
+    >
+      <slot
+        name="header"
+        :hide="hide"
+      />
+    </template>
+
+    <template #default="{ hide }">
+      <slot :hide="hide" />
+    </template>
+
+    <template
+      v-if="$slots['header-right']"
+      #header-right
+    >
+      <slot name="header-right" />
+    </template>
+  </Dialog>
 </template>

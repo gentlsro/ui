@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 type IProps = {
   label?: string
   modelValue?: boolean
@@ -15,19 +15,32 @@ withDefaults(defineProps<IProps>(), {
 
 const model = defineModel<boolean>()
 const hidden = ref(false)
-let timeout: any
+let hideTimeout: ReturnType<typeof setTimeout> | undefined
+let resetTimeout: ReturnType<typeof setTimeout> | undefined
+
+function clearTimers() {
+  clearTimeout(hideTimeout)
+  clearTimeout(resetTimeout)
+  hideTimeout = undefined
+  resetTimeout = undefined
+}
+
+onScopeDispose(() => {
+  clearTimers()
+  hidden.value = false
+  model.value = false
+})
 
 defineExpose({
   showTemporarily: (onCleanup?: () => void) => {
-    clearTimeout(timeout)
-    timeout = null
+    clearTimers()
     model.value = true
     hidden.value = false
 
-    timeout = setTimeout(() => {
+    hideTimeout = setTimeout(() => {
       hidden.value = true
 
-      setTimeout(() => {
+      resetTimeout = setTimeout(() => {
         model.value = false
         onCleanup?.()
       }, 250)

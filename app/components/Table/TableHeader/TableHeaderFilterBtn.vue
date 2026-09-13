@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 import { klona } from 'klona/full'
 // Types
 import type { ITableFilterItem } from '../types/table-filter-item.type'
@@ -26,7 +26,7 @@ const { modifiers, internalColumns } = useTableStore()
 const { filterValueChangeDebounce = tableFilterValueChangeDebounce } = modifiers.value ?? {}
 
 // Layout
-const filteringEl = useTemplateRef('filteringEl')
+const filteringEl = useTemplateRef<HTMLElement>('filteringEl')
 const column = toRef(props, 'column')
 const columnCopy = ref(klona(column.value))
 const isMenuOpen = ref(false)
@@ -196,13 +196,17 @@ onKeyStroke('Enter', ev => {
         :column
       />
 
-      <TableHeaderColumnFiltering
+      <div
         v-if="column.filterable"
         ref="filteringEl"
-        :column="columnCopy"
-        :modify-fnc
-        :remove-fnc
-      />
+        display="contents"
+      >
+        <TableHeaderColumnFiltering
+          :column="columnCopy"
+          :modify-fnc
+          :remove-fnc
+        />
+      </div>
 
       <Banner
         v-else-if="column.filterDbQuery?.length"

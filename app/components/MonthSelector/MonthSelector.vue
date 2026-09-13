@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { IMonthSelectorProps } from './types/month-selector-props.type'
 

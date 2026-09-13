@@ -1,5 +1,7 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
+import { mergeProps } from 'vue'
 // Types
+import type { IColorInputExpose } from './types/color-input-expose.type'
 import type { IColorInputProps } from './types/color-props.type'
 
 // Functions
@@ -9,6 +11,8 @@ import { useInputValidationUtils } from '../functions/useInputValidationUtils'
 
 // Constants
 import { INPUT_WRAPPER_DEFAULT_PROPS } from '../../InputWrapper/constants/input-wrapper-default-props'
+
+defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(defineProps<IColorInputProps>(), {
   ...getComponentProps('colorInput'),
@@ -115,7 +119,7 @@ const {
   handleBlur,
   handleClickWrapper,
   handleFocusOrClick,
-  handlePointerDown,
+  handleMouseDown,
   focus,
   select,
   blur,
@@ -162,12 +166,12 @@ defineExpose({
   blur,
   clear,
   getInputElement,
-})
+} satisfies IColorInputExpose)
 </script>
 
 <template>
   <InputWrapper
-    v-bind="wrapperProps"
+    v-bind="mergeProps(wrapperProps, $attrs)"
     :id="inputId"
     ref="wrapperEl"
     :class="wrapperClass"
@@ -184,7 +188,10 @@ defineExpose({
       />
     </template>
 
-    <template #label="{ labelProps, required }">
+    <template
+      v-if="$slots.label"
+      #label="{ labelProps, required }"
+    >
       <slot
         name="label"
         :label-props
@@ -212,7 +219,7 @@ defineExpose({
         :class="inputClass"
         :style="inputStyle"
         v-bind="inputProps"
-        @pointerdown="handlePointerDown"
+        @mousedown="handleMouseDown"
         @focus="handleFocusOrClick"
         @blur="handleInputBlur"
       >
@@ -263,7 +270,7 @@ defineExpose({
           v-if="hasClearableBtn"
           :clear-confirmation
           :size
-          @click.stop.prevent="!clearConfirmation && clear()"
+          @clear="clear()"
         />
       </div>
     </template>

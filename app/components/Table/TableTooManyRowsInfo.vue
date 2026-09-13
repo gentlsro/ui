@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 const tooManyRowsWarningVisible = ref(true)
 </script>
 
@@ -19,7 +19,6 @@ const tooManyRowsWarningVisible = ref(true)
     />
   </div>
 </template>
-¨
 
 <style lang="scss" scoped>
 .too-many-rows-warning {

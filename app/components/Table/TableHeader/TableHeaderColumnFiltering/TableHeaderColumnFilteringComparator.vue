@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 import type { ComparatorEnum } from '$comparatorEnum'
 
 // Types
@@ -144,14 +144,14 @@ function handleComparatorChange(comparator: ComparatorEnum) {
     data-cy="comparator"
     @update:model-value="handleComparatorChange"
   >
-    <template #option="{ item }">
-      {{ item.label }}
+    <template #option="{ item: option }">
+      {{ option.label }}
 
       <Tooltip
         placement="right"
         :content="{
-          title: item.label,
-          description: $t(`comparator.${item.id.replaceAll('.', '|')}Description`),
+          title: option.label,
+          description: $t(`comparator.${option.id.replaceAll('.', '|')}Description`),
         }"
       />
     </template>

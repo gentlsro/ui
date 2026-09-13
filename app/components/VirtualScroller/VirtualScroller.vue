@@ -23,17 +23,20 @@ defineSlots<{
   'default': (props: { row: T, index: number, columns?: TableColumn<T>[], style: CSSProperties }) => any
 }>()
 
+// Viewport and data
 const virtualScrollEl = useTemplateRef<HTMLDivElement>('virtualScrollEl')
 const contentEl = useTemplateRef<HTMLDivElement>('contentEl')
 const viewport = useElementSize(virtualScrollEl)
 const contentSize = useElementSize(contentEl)
-const mounted = ref(false)
-const cleared = ref(false)
-const estimateOverride = ref<number>()
-const rangeOverride = ref<{ first: number, last: number }>()
+const isMounted = ref(false)
 const rows = computed(() => props.rows ?? [])
 const isVirtual = computed(() => rows.value.length > props.threshold)
 const mergedProps = computed(() => getComponentMergedProps('virtualScroller', props))
+
+// Row virtualization
+const cleared = ref(false)
+const estimateOverride = ref<number>()
+const rangeOverride = ref<{ first: number, last: number }>()
 const initialCount = props.initialRowsRenderCount ?? Math.ceil(2160 / props.rowHeight)
 
 function getItemKey(index: number) {
@@ -42,24 +45,34 @@ function getItemKey(index: number) {
   return get(Array.isArray(row) ? row[0] : row, props.rowKey) ?? index
 }
 
-const extractRange = computed(() => {
-  const hidden = cleared.value
-  const fixed = rangeOverride.value ?? (!isVirtual.value
-    ? { first: 0, last: rows.value.length - 1 }
-    : undefined)
+const rowRangeExtractor = computed(() => {
+  if (cleared.value) {
+    return () => []
+  }
+
+  const fixedRange = rangeOverride.value ?? (isVirtual.value
+    ? undefined
+    : { first: 0, last: rows.value.length - 1 })
+
+  if (!fixedRange) {
+    return defaultRangeExtractor
+  }
 
   return (range: Range) => {
-    if (hidden) {
-      return []
-    }
-    if (fixed) {
-      const last = Math.min(fixed.last, range.count - 1)
+    const last = Math.min(fixedRange.last, range.count - 1)
+    const count = Math.max(0, last - fixedRange.first + 1)
 
-      return Array.from({ length: Math.max(0, last - fixed.first + 1) }, (_, index) => fixed.first + index)
-    }
-
-    return defaultRangeExtractor(range)
+    return Array.from({ length: count }, (_, index) => fixedRange.first + index)
   }
+})
+const rowOverscan = computed(() => {
+  if (!isMounted.value) {
+    return 0
+  }
+
+  const pixels = Math.max(props.overscan?.top ?? 400, props.overscan?.bottom ?? 800)
+
+  return Math.ceil(pixels / props.rowHeight)
 })
 
 const rowVirtualizer = useVirtualizer<HTMLDivElement, HTMLDivElement>(computed(() => ({
@@ -67,36 +80,39 @@ const rowVirtualizer = useVirtualizer<HTMLDivElement, HTMLDivElement>(computed((
   getScrollElement: () => virtualScrollEl.value,
   estimateSize: () => estimateOverride.value ?? props.rowHeight,
   getItemKey,
-  rangeExtractor: extractRange.value,
+  rangeExtractor: rowRangeExtractor.value,
   initialRect: { width: 0, height: initialCount * props.rowHeight },
-  overscan: mounted.value ? Math.ceil(Math.max(props.overscan?.top ?? 400, props.overscan?.bottom ?? 800) / props.rowHeight) : 0,
+  overscan: rowOverscan.value,
 })))
-const virtualRows = computed(() => rowVirtualizer.value.getVirtualItems())
+const virtualRows = computed(() => rowVirtualizer.value
+  .getVirtualItems()
+  .map(item => ({ ...item, row: rows.value[item.index] }))
+  .filter((item): item is VirtualItem & { row: T } => item.row !== undefined))
 const totalHeight = computed(() => rowVirtualizer.value.getTotalSize())
 
-// Reuse the grid's two-axis design: TanStack owns column ranges and offsets,
-// while the slot receives only the columns between its virtual edges.
+// Column virtualization
 const columns = computed(() => props.columns ?? [])
-const hasColumns = computed(() => !!columns.value.length && props.virtualizeColumns !== false)
+const hasVirtualColumns = computed(() => props.virtualizeColumns && columns.value.length > 0)
+
+// Before header DOM exists, explicit px widths give SSR a useful estimate.
 const columnWidths = computed(() => columns.value.map(column => {
-  // Before header DOM exists, explicit px widths give SSR a useful estimate.
   return column._width || (column.width.endsWith('px') ? Number.parseFloat(column.width) : 200)
 }))
 const columnVirtualizer = useVirtualizer<HTMLDivElement, HTMLDivElement>(computed(() => ({
-  count: hasColumns.value ? columns.value.length : 0,
+  count: hasVirtualColumns.value ? columns.value.length : 0,
   horizontal: true,
-  enabled: hasColumns.value,
+  enabled: hasVirtualColumns.value,
   getScrollElement: () => virtualScrollEl.value,
   getItemKey: (index: number) => String(columns.value[index].field),
   estimateSize: (index: number) => columnWidths.value[index],
   initialRect: { width: 1280, height: 0 },
-  overscan: mounted.value ? 1 : 0,
+  overscan: isMounted.value ? 1 : 0,
 })))
 const virtualColumns = computed(() => columnVirtualizer.value.getVirtualItems())
-const visibleColumns = computed(() => hasColumns.value
+const visibleColumns = computed(() => hasVirtualColumns.value
   ? virtualColumns.value.map(item => columns.value[item.index])
   : props.columns)
-const totalWidth = computed(() => hasColumns.value ? columnVirtualizer.value.getTotalSize() : undefined)
+const totalWidth = computed(() => hasVirtualColumns.value ? columnVirtualizer.value.getTotalSize() : undefined)
 const columnPadding = computed(() => ({
   paddingLeft: `${virtualColumns.value[0]?.start ?? 0}px`,
   paddingRight: `${(totalWidth.value ?? 0) - (virtualColumns.value.at(-1)?.end ?? 0)}px`,
@@ -105,10 +121,7 @@ watch(columnWidths, () => {
   columnVirtualizer.value.measure()
 })
 
-function scrollToColumn(index: number) {
-  columnVirtualizer.value.scrollToIndex(index, { align: 'start' })
-}
-
+// Row measurement and scroll events
 function measureRow(el: HTMLDivElement | null) {
   // Vapor assigns function refs before insertion. Measuring that detached row
   // as zero would make TanStack compensate the scroll offset when it grows.
@@ -119,26 +132,32 @@ function measureRow(el: HTMLDivElement | null) {
   })
 }
 
-function eventItem(item: VirtualItem) {
+function toScrollEventItem(item: VirtualItem) {
   return { index: item.index, key: String(item.key), size: item.size }
 }
 
 function emitVirtualScroll() {
-  if (!mounted.value || props.noScrollEmit || !rows.value.length || !viewport.height.value) {
+  if (!isMounted.value || props.noScrollEmit || !rows.value.length || !viewport.height.value) {
     return
   }
+
   const virtualizer = rowVirtualizer.value
   const offset = virtualScrollEl.value?.scrollTop ?? virtualizer.scrollOffset ?? 0
   const first = virtualizer.getVirtualItemForOffset(offset)
   const last = virtualizer.getVirtualItemForOffset(offset + viewport.height.value - 1)
+
   if (!first || !last) {
     return
   }
+
+  const virtualStart = virtualRows.value[0]
+  const virtualEnd = virtualRows.value.at(-1)
+
   emits('virtualScroll', {
-    visibleStartItem: eventItem(first),
-    visibleEndItem: eventItem(last),
-    virtualStartItem: virtualRows.value[0] && eventItem(virtualRows.value[0]),
-    virtualEndItem: virtualRows.value.at(-1) && eventItem(virtualRows.value.at(-1)!),
+    visibleStartItem: toScrollEventItem(first),
+    visibleEndItem: toScrollEventItem(last),
+    virtualStartItem: virtualStart && toScrollEventItem(virtualStart),
+    virtualEndItem: virtualEnd && toScrollEventItem(virtualEnd),
   })
 }
 
@@ -172,11 +191,12 @@ watch(rows, () => {
   }
 })
 watch(viewport.width, () => {
-  if (mounted.value && props.watchWidth !== false) {
+  if (isMounted.value && props.watchWidth !== false) {
     rerender(true)
   }
 })
 
+// Rendering and navigation
 function rerender(noEmit = false, resetHeights = true) {
   cleared.value = false
   rangeOverride.value = undefined
@@ -191,6 +211,10 @@ function rerender(noEmit = false, resetHeights = true) {
   })
 }
 
+function scrollToColumn(index: number) {
+  columnVirtualizer.value.scrollToIndex(index, { align: 'start' })
+}
+
 function scrollTo(index: number) {
   rangeOverride.value = undefined
   rowVirtualizer.value.scrollToIndex(index, { align: 'start' })
@@ -201,18 +225,28 @@ function scrollToBottom(_payload?: { makeSure?: boolean }) {
   rowVirtualizer.value.scrollToIndex(rows.value.length - 1, { align: 'end' })
 }
 
-function renderOnlyVisible(alsoRerender?: boolean, options?: { firstIdx?: number, lastIdx?: number, rowHeight?: number }) {
+type VisibleRangeOptions = {
+  firstIdx?: number
+  lastIdx?: number
+  rowHeight?: number
+}
+
+function renderOnlyVisible(alsoRerender?: boolean, options: VisibleRangeOptions = {}) {
   const virtualizer = rowVirtualizer.value
   const range = virtualizer.calculateRange()
-  const first = options?.firstIdx ?? range?.startIndex ?? 0
-  const last = options?.lastIdx ?? (options?.rowHeight
+  const first = options.firstIdx ?? range?.startIndex ?? 0
+  const visibleEnd = options.rowHeight
     ? first + Math.ceil(viewport.height.value / options.rowHeight)
-    : range?.endIndex ?? first)
+    : range?.endIndex ?? first
+  const last = options.lastIdx ?? visibleEnd
+
   rangeOverride.value = { first, last }
+
   if (alsoRerender) {
     virtualizer.measure()
     virtualizer.calculateRange()
   }
+
   // calculateRange refreshes the public cache, including offscreen estimates.
   const rendered = virtualizer.measurementsCache.slice(first, last + 1).map(item => ({
     ref: rows.value[item.index],
@@ -224,37 +258,46 @@ function renderOnlyVisible(alsoRerender?: boolean, options?: { firstIdx?: number
   return { rows: rendered, firstRow: rendered[0] ?? null, lastRow: rendered.at(-1) ?? null }
 }
 
+function clear(payload?: { rowHeight?: number }) {
+  estimateOverride.value = payload?.rowHeight
+  cleared.value = true
+  rowVirtualizer.value.measure()
+}
+
+function scrollToCell(position: { rowIndex: number, columnIndex: number }) {
+  scrollTo(position.rowIndex)
+  scrollToColumn(position.columnIndex)
+}
+
+function updateRowHeight(el: HTMLDivElement) {
+  if (el?.parentElement === contentEl.value) {
+    measureRow(el)
+  }
+}
+
+// Public API
 defineExpose({
   element: virtualScrollEl,
   scrollToTop: () => scrollTo(0),
   scrollToBottom,
   scrollTo,
   scrollToColumn,
-  scrollToCell: (position: { rowIndex: number, columnIndex: number }) => {
-    scrollTo(position.rowIndex)
-    scrollToColumn(position.columnIndex)
-  },
+  scrollToCell,
   focus: () => virtualScrollEl.value?.focus(),
   rerender,
-  clear: (payload?: { rowHeight?: number }) => {
-    estimateOverride.value = payload?.rowHeight
-    cleared.value = true
-    rowVirtualizer.value.measure()
-  },
+  clear,
   triggerScrollEvent: emitVirtualScroll,
   renderOnlyVisible,
-  updateRowHeight: (el: HTMLDivElement) => {
-    if (el?.parentElement === contentEl.value) {
-      measureRow(el)
-    }
-  },
+  updateRowHeight,
   getDimensions: () => ({ virtualScroll: viewport, container: contentSize }),
 })
+
 onMounted(() => {
-  mounted.value = true
+  isMounted.value = true
   scrollTask.schedule()
 })
 
+// Styles
 const containerClass = computed(() => mergedProps.value.ui?.containerClass?.({
   defaults: VIRTUAL_SCROLLER_DEFAULT_PROPS.ui.containerClass(),
 }))
@@ -270,7 +313,19 @@ const contentStyle = computed(() => ({
 const rowClass = computed(() => mergedProps.value.ui?.rowClass?.({
   defaults: VIRTUAL_SCROLLER_DEFAULT_PROPS.ui.rowClass(),
 }))
-const rowStyle = computed(() => mergedProps.value.ui?.rowStyle?.())
+const rowStyle = computed(() => ({
+  ...mergedProps.value.ui?.rowStyle?.(),
+  ...(hasVirtualColumns.value ? columnPadding.value : {}),
+  minHeight: `${props.rowHeight}px`,
+}))
+
+function getRowStyle(item: VirtualItem) {
+  return {
+    ...rowStyle.value,
+    '--rowHeight': item.size,
+    '--translateY': item.start,
+  }
+}
 </script>
 
 <template>
@@ -279,7 +334,7 @@ const rowStyle = computed(() => mergedProps.value.ui?.rowStyle?.())
       ref="virtualScrollEl"
       v-bind="$attrs"
       class="virtual-scroll"
-      :class="[containerClass, { 'is-virtual': mounted && isVirtual }]"
+      :class="[containerClass, { 'is-virtual': isMounted && isVirtual }]"
       :style="containerStyle"
       tabindex="0"
     >
@@ -298,21 +353,15 @@ const rowStyle = computed(() => mergedProps.value.ui?.rowStyle?.())
           :data-key="item.key"
           class="virtual-scroll__row content-row"
           :class="rowClass"
-          :style="{
-            ...rowStyle,
-            ...(hasColumns ? columnPadding : {}),
-            'minHeight': `${rowHeight}px`,
-            '--rowHeight': item.size,
-            '--translateY': item.start,
-          }"
+          :style="getRowStyle(item)"
         >
           <slot
-            :row="rows[item.index]!"
+            :row="item.row"
             :index="item.index"
             :columns="visibleColumns"
             :style="{ minHeight: `${rowHeight}px` }"
           >
-            {{ rows[item.index] }}
+            {{ item.row }}
           </slot>
         </div>
         <slot name="inner-content" />

@@ -1,3 +1,6 @@
+<script setup lang="ts" vapor>
+</script>
+
 <template>
   <div class="pivot-empty">
     <Banner

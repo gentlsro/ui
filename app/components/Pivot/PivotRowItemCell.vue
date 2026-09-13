@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends IItem = IItem">
+<script setup lang="ts" vapor generic="T extends IItem = IItem">
 // Types
 import type { IPivotRowItemCell } from './types/pivot-row-item-cell.type'
 
@@ -24,7 +24,7 @@ const props = defineProps<IProps>()
 const { currentLocaleCode } = useLocale()
 
 // Store
-const { rows, measureRowColumn, showMeasureColumn, ui, state } = usePivotStore<T>()
+const { rows, measureRowColumn, showMeasureColumn, ui, state, getRowLayoutWidth } = usePivotStore<T>()
 
 const resolved = computed(() => {
   return resolvePivotRowItemCell({
@@ -62,7 +62,7 @@ const rowItemCellClass = computed(() => {
 
 const rowItemCellStyle = computed(() => {
   const rowItemCellStyle = ui.value?.rowItemCellStyle?.()
-  let width = props.item.row?.widthResolved
+  let width = props.item.row && getRowLayoutWidth(props.item.row)
 
   if (props.item.kind === 'valueLabel' && showMeasureColumn.value) {
     width = measureRowColumn.value.widthResolved

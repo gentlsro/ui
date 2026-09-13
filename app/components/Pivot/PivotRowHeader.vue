@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends IItem = IItem">
+<script setup lang="ts" vapor generic="T extends IItem = IItem">
 // Store
 import { usePivotStore } from './stores/pivot.store'
 
@@ -9,7 +9,14 @@ import { usePivotRowResizing } from './composables/usePivotRowResizing'
 import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
 import { PIVOT_MEASURE_ROW_FIELD } from './constants/pivot-measure-row.constant'
 
-const { displayRowFields, showMeasureColumn, rowHeaderEl, ui, resolvedLeftPanelWidth } = usePivotStore<T>()
+const {
+  displayRowFields,
+  showMeasureColumn,
+  rowHeaderEl,
+  ui,
+  resolvedLeftPanelWidth,
+  getRowLayoutWidth,
+} = usePivotStore<T>()
 
 const {
   activeSplitter,
@@ -53,7 +60,7 @@ onMounted(() => {
       v-for="row in displayRowFields"
       :key="String(row.field)"
       :row="row"
-      :width="row.widthResolved"
+      :width="getRowLayoutWidth(row)"
       :is-measure-column="showMeasureColumn && row.field === PIVOT_MEASURE_ROW_FIELD"
     />
 

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { ITableProps } from './types/table-props.type'
 import type { TableColumn } from './models/table-column.model'
@@ -196,7 +196,7 @@ onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter
     v-bind="scrollerProps"
     :rows="rowsSplit"
     :columns="isCardView ? undefined : visibleColumns"
-    class="table-content grow"
+    class="table-content grow min-h-0"
     :row-key
     :fetch-more="isFetchMore"
     :class="contentClass"

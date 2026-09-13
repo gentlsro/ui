@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends IItem">
+<script setup lang="ts" vapor generic="T extends IItem">
 // Types
 import type { IDragAndDropProps } from './types/drag-and-drop-props.type'
 
@@ -32,7 +32,7 @@ const classes = computed(() => {
 })
 
 // Scrolling
-const scrollEl = ref<HTMLDivElement>()
+const scrollEl = useTemplateRef<HTMLDivElement>('scrollEl')
 const { arrivedState } = useScroll(scrollEl)
 
 function handleWheel(ev: WheelEvent) {
@@ -85,6 +85,28 @@ function disableDrop() {
 function enableDrop() {
   isNoDrop.value = false
 }
+
+type DraggableContainerElement = HTMLDivElement & {
+  getItems?: typeof getItems
+  removeItem?: typeof removeItem
+  insertItem?: typeof insertItem
+  moveItem?: typeof handleMoveItem
+  getParent?: typeof getParent
+  disableDrop?: typeof disableDrop
+  enableDrop?: typeof enableDrop
+}
+
+onMounted(() => {
+  Object.assign(scrollEl.value ?? {}, {
+    getItems,
+    removeItem,
+    insertItem,
+    moveItem: handleMoveItem,
+    getParent,
+    disableDrop,
+    enableDrop,
+  })
+})
 </script>
 
 <template>
@@ -93,13 +115,6 @@ function enableDrop() {
     class="draggable-container"
     data-draggable-container="true"
     :class="classes"
-    .getItems="getItems"
-    .removeItem="removeItem"
-    .insertItem="insertItem"
-    .moveItem="handleMoveItem"
-    .getParent="getParent"
-    .disableDrop="disableDrop"
-    .enableDrop="enableDrop"
     @mousedown="handleMouseDown"
     @touchstart="handleTouchStart"
     @wheel="handleWheel"

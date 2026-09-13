@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 import type { ComparatorEnum } from '$comparatorEnum'
 
 // Types
@@ -67,7 +67,7 @@ const isDragged = computed(() => draggedItem.value?.row === props.item)
 // Layout
 const fieldInputEl = useTemplateRef('fieldInputEl')
 const comparatorInputEl = useTemplateRef('comparatorInputEl')
-const valueInputEl = ref<any>()
+const valueInputEl = useTemplateRef<any>('valueInputEl')
 const item = toRef(props, 'item') as Ref<IQueryBuilderItem>
 
 const { isNonValueComparator, canUseSelectorComparator } = useQueryBuilderItemUtils(item)
@@ -202,16 +202,16 @@ const { validation } = useArk({
         data-cy="qb-item__content-field"
         @update:model-value="handleFieldChange"
       >
-        <template #option="{ item }">
+        <template #option="{ item: option }">
           <QueryBuilderItemDataTypeShortcut
-            :data-type="item.ref.dataType"
+            :data-type="option.ref.dataType"
             class="relative top-2"
             self-start
             shrink-0
           />
 
           <span>
-            {{ item.ref._label }}
+            {{ option.ref._label }}
           </span>
         </template>
 

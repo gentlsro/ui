@@ -1,9 +1,9 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
-import type { ICrudBtnProps } from './types/crud-btn-props.type'
+import type { ICrudBtnProps, ICrudBtnsProps } from './types/crud-btn-props.type'
 
 const props = withDefaults(defineProps<ICrudBtnProps>(), {
-  ...getComponentProps('crudBtns'),
+  loading: (getComponentProps('crudBtns') as ICrudBtnsProps).loading,
 })
 
 defineEmits<{
@@ -21,7 +21,9 @@ const label = computed(() => {
     return
   }
 
-  return props.label ?? $t('general.add')
+  return props.label === false || props.label == null
+    ? $t('general.save')
+    : props.label
 })
 </script>
 

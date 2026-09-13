@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { IPivotValueHeaderCell } from './types/pivot-value-column-item.type'
 
@@ -17,6 +17,11 @@ type IPlacedHeaderCell = {
 }
 
 const { visibleValueHeaderRows, visibleValueColumns, valueHeaderEl, ui } = usePivotStore()
+const element = useTemplateRef<HTMLElement>('element')
+
+watch(element, value => {
+  valueHeaderEl.value = value ?? undefined
+})
 
 const valueHeaderClass = computed(() => {
   return ui.value?.valueHeaderClass?.({
@@ -85,7 +90,7 @@ const placedCells = computed(() => {
 <template>
   <div
     v-if="visibleValueColumns.length"
-    ref="valueHeaderEl"
+    ref="element"
     class="pivot-value-header"
     :class="valueHeaderClass"
     :style="valueHeaderStyle"

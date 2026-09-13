@@ -1,7 +1,9 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
+import { mergeProps } from 'vue'
 import { MaskedNumber } from 'imask'
 
 // Types
+import type { INumberInputExpose } from './types/number-input-expose.type'
 import type { INumberInputProps } from './types/number-input-props.type'
 
 // Functions
@@ -10,6 +12,8 @@ import { useInputValidationUtils } from '../functions/useInputValidationUtils'
 
 // Constants
 import { INPUT_WRAPPER_DEFAULT_PROPS } from '../../InputWrapper/constants/input-wrapper-default-props'
+
+defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(defineProps<INumberInputProps>(), {
   ...getComponentProps('numberInput'),
@@ -127,12 +131,12 @@ defineExpose({
   blur,
   clear,
   getInputElement,
-})
+} satisfies INumberInputExpose)
 </script>
 
 <template>
   <InputWrapper
-    v-bind="wrapperProps"
+    v-bind="mergeProps(wrapperProps, $attrs)"
     :id="inputId"
     :class="wrapperClass"
     :has-content="!hasNoValue"
@@ -141,7 +145,10 @@ defineExpose({
     @click="handleClickWrapper"
   >
     <!-- Label -->
-    <template #label="labelProps">
+    <template
+      v-if="$slots.label"
+      #label="labelProps"
+    >
       <slot
         name="label"
         v-bind="labelProps"
@@ -185,17 +192,19 @@ defineExpose({
     </template>
 
     <!-- Hint -->
-    <template #hint>
+    <template
+      v-if="$slots.hint"
+      #hint
+    >
       <slot name="hint" />
     </template>
 
     <!-- Append -->
     <template
-      v-if="$slots.append || hasClearableBtn || (!readonly && !disabled)"
+      v-if="$slots.append || hasClearableBtn || (step && !readonly && !disabled)"
       #append
     >
       <div
-        v-if="step || hasClearableBtn || $slots.append"
         :class="appendClass"
         :style="appendStyle"
         data-cy="offset-buttons"
@@ -211,7 +220,7 @@ defineExpose({
           v-if="hasClearableBtn"
           :clear-confirmation
           :size
-          @click.stop.prevent="!clearConfirmation && clear()"
+          @clear="clear()"
         />
 
         <!-- Step -->

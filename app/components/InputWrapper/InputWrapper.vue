@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { IInputWrapperProps } from './types/input-wrapper-props.type'
 
@@ -183,15 +183,15 @@ defineExpose({ element: wrapperEl })
     ref="wrapperEl"
     class="wrapper group/wrapper"
     :class="wrapperClass"
-    :style="wrapperStyleVariables"
     data-cy="input-field"
   >
+    <!-- TODO(I02): Restore these variables to .wrapper after the Vapor migration. -->
     <Component
       :is="WrapperComponent"
       v-bind="wrapperProps"
       class="wrapper__body"
       :class="[contentClassLocal, contentClass]"
-      :style="contentStyle"
+      :style="[wrapperStyleVariables, contentStyle]"
     >
       <!-- Label -->
       <template
@@ -310,7 +310,8 @@ defineExpose({ element: wrapperEl })
     }
 
     :slotted(.control) {
-      @apply bg-inherit outline-none rounded-$borderRadius min-h-inherit;
+      // WebKit's native control cursor must inherit the wrapper's editable state.
+      @apply bg-inherit outline-none rounded-$borderRadius min-h-inherit cursor-inherit;
 
       font-size: var(--fontSize);
       line-height: var(--lineHeight);

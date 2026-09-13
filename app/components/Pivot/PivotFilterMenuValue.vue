@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends IItem = IItem">
+<script setup lang="ts" vapor generic="T extends IItem = IItem">
 import utilsConfig from '$utilsConfig'
 
 // Types
@@ -23,7 +23,7 @@ defineExpose({
   focus: () => requestAnimationFrame(() => valueInputEl.value?.focus?.()),
 })
 
-const valueInputEl = ref<any>()
+const valueInputEl = useTemplateRef<any>('valueInputEl')
 const item = toRef(props, 'item')
 const column = toRef(props, 'column')
 

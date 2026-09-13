@@ -57,7 +57,7 @@ export function useFieldUtils(options?: {
 
   // Click & focus handling
   function handleFocusOrClick(ev?: Event) {
-    if (uiStore.hasUserLeftPage) {
+    if (uiStore.hasUserLeftPage && (!ev || ev instanceof FocusEvent)) {
       return
     }
 

@@ -1,11 +1,25 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 type IProps = {
   clearConfirmation?: string
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'auto'
 }
 
+defineOptions({ inheritAttrs: false })
+
 const props = withDefaults(defineProps<IProps>(), { size: 'md' })
-defineEmits<{ (e: 'clear'): void }>()
+const emits = defineEmits<{ (e: 'clear'): void }>()
+const button = useTemplateRef<{ getElement: () => HTMLElement | undefined }>('button')
+const confirmation = useTemplateRef('confirmation')
+
+const buttonElement = computed(() => button.value?.getElement())
+
+function handleClick() {
+  if (props.clearConfirmation) {
+    confirmation.value?.show()
+  } else {
+    emits('clear')
+  }
+}
 
 const iconClass = computed(() => {
   const classes = ['i-eva:close-fill']
@@ -31,18 +45,23 @@ const iconClass = computed(() => {
 
 <template>
   <Btn
+    ref="button"
+    v-bind="$attrs"
     :icon="iconClass"
     color="ca"
     size="auto"
     tabindex="-1"
     :class="`size--${size}`"
-    @click.stop.prevent="!clearConfirmation && $emit('clear')"
-  >
-    <MenuConfirmation
-      v-if="clearConfirmation"
-      @ok="$emit('clear')"
-    >
-      {{ clearConfirmation }}
-    </MenuConfirmation>
-  </Btn>
+    @click.stop.prevent="handleClick"
+  />
+  <!-- Keep the Vapor overlay outside the VDOM button's default slot. -->
+  <MenuConfirmation
+    v-if="clearConfirmation"
+    ref="confirmation"
+    manual
+    :target="buttonElement"
+    :reference-target="buttonElement"
+    :confirmation-text="clearConfirmation"
+    @ok="emits('clear')"
+  />
 </template>

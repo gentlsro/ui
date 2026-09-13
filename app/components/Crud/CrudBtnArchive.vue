@@ -1,11 +1,11 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
-import type { ICrudBtnProps } from './types/crud-btn-props.type'
+import type { ICrudBtnProps, ICrudBtnsProps } from './types/crud-btn-props.type'
 
 type IProps = ICrudBtnProps & { isArchived?: boolean }
 
 const props = withDefaults(defineProps<IProps>(), {
-  ...getComponentProps('crudBtns'),
+  loading: (getComponentProps('crudBtns') as ICrudBtnsProps).loading,
 })
 
 defineEmits<{
@@ -31,22 +31,28 @@ const label = computed(() => {
     ? $t('general.restore')
     : $t('general.archive')
 })
+
+const btnEl = useTemplateRef<{ element?: HTMLElement }>('btnEl')
+const menuTarget = () => btnEl.value?.element
 </script>
 
 <template>
   <Btn
+    ref="btnEl"
     :preset="isArchived ? 'RESTORE' : 'ARCHIVE'"
     :label
     :loading
     :disabled
     v-bind="mergedProps.btnProps"
+  />
+
+  <MenuConfirmation
+    :target="menuTarget"
+    :reference-target="menuTarget"
+    placement="bottom"
+    :title="label"
+    @ok="$emit('archive')"
   >
-    <MenuConfirmation
-      placement="bottom"
-      :title="label"
-      @ok="$emit('archive')"
-    >
-      <slot name="confirmation" />
-    </MenuConfirmation>
-  </Btn>
+    <slot name="confirmation" />
+  </MenuConfirmation>
 </template>

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { IMenuProps } from './types/menu-props.type'
 
@@ -16,7 +16,7 @@ type IProps = {
 const props = defineProps<IProps>()
 
 // Store
-const { zIndex, model } = useMenuStore()
+const { zIndex } = useMenuStore()
 
 // Styles - overlay
 const overlayClass = computed(() => {

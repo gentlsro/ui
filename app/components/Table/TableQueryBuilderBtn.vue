@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { ITableProps } from './types/table-props.type'
 import type { IQueryBuilderItem } from '../QueryBuilder/types/query-builder-item-props.type'

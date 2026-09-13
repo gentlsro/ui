@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends IItem = IItem">
+<script setup lang="ts" vapor generic="T extends IItem = IItem">
 import type { PivotExportFormat } from './types/pivot-export.type'
 import { TABLE_EXPORTS_DEFAULT } from '../Table/constants/table-exports-default.constant'
 import { usePivotStore } from './stores/pivot.store'

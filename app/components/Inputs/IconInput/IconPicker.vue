@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 import type { CSSProperties } from 'vue'
 
 // Types
@@ -45,18 +45,30 @@ function getIcons() {
     throw new Error('Search string is empty')
   }
 
-  return $fetch('https://api.iconify.design/search', {
+  return $fetch<{ icons: string[] }>('https://api.iconify.design/search', {
     query: { query: encodeURIComponent(searchStr) },
   })
 }
 
 async function fetchAndSetIcons() {
   if (!search.value || search.value.length < props.minSearchLength) {
+    icons.value = []
+
     return
   }
 
-  const res = await fn<any>(getIcons)
-  icons.value = res.icons
+  const requestedSearch = search.value
+  const res = await fn(getIcons)
+
+  if (search.value === requestedSearch) {
+    icons.value = res.icons
+  }
+}
+
+function selectIcon(icon: string) {
+  if (!props.readonly) {
+    model.value = icon
+  }
 }
 
 watchThrottled(search, fetchAndSetIcons, {
@@ -99,12 +111,9 @@ watchThrottled(search, fetchAndSetIcons, {
           :key="icon"
           class="icon-picker__content-item"
           :class="{ 'is-readonly': readonly, 'is-selected': model === icon }"
-          @click="model = icon"
+          @click="selectIcon(icon)"
         >
-          <Icon
-            :name="icon"
-            :size="28"
-          />
+          <IconPickerIcon :name="icon" />
         </div>
       </ScrollArea>
 

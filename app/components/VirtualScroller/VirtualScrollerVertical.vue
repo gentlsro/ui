@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends IItem = IItem">
+<script setup lang="ts" vapor generic="T extends IItem = IItem">
 import { getRect } from 'mezr'
 import { defaultRangeExtractor, useVirtualizer } from '@tanstack/vue-virtual'
 

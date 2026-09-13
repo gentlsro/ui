@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Store
 import { usePivotStore } from './stores/pivot.store'
 

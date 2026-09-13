@@ -39,7 +39,33 @@ export function useQueryBuilderDragAndDrop() {
     // Get all elements from the point where we are dragging the item
     // and get the dragged-over query builder row
     const els = document.elementsFromPoint(posX, posY)
-    const qbRow = els.find(el => el.classList.contains('qb-row') && queryBuilderEl.value?.contains(el)) as HTMLElement
+    let qbRow = els.find(el => el.classList.contains('qb-row') && queryBuilderEl.value?.contains(el)) as HTMLElement | undefined
+
+    // The browser can scroll an ancestor while the pointer is held at a viewport
+    // edge. Keep the drop target attached to the nearest row instead of leaving
+    // an indicator at its pre-scroll coordinates.
+    if (!qbRow && queryBuilderEl.value) {
+      const rows = Array.from(queryBuilderEl.value.querySelectorAll<HTMLElement>('.qb-row'))
+      const itemRows = rows.filter(row => row.classList.contains('qb-item'))
+
+      const nearestRows = (itemRows.length ? itemRows : rows)
+        .filter(row => {
+          const rect = row.getBoundingClientRect()
+
+          return posX >= rect.left && posX <= rect.right
+        })
+        .map(row => {
+          const rect = row.getBoundingClientRect()
+          const distance = posY < rect.top
+            ? rect.top - posY
+            : posY > rect.bottom ? posY - rect.bottom : 0
+
+          return { row, distance, height: rect.height }
+        })
+        .sort((a, b) => a.distance - b.distance || a.height - b.height)
+
+      qbRow = nearestRows[0]?.row
+    }
     const qbRowPath = qbRow?.dataset.path
 
     // When no query builder row is found, we don't really do anything

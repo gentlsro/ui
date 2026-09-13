@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 import { useFormStore } from './stores/form.store'
 
 // Types
@@ -111,7 +111,7 @@ const cancelStyle = computed(() => {
       data-cy="save-button"
       data-onboarding="form-save-btn"
     >
-      <slot name="confirmation">
+      <span class="contents">
         <MenuConfirmation
           v-if="hasConfirmation"
           ref="confirmationEl"
@@ -119,21 +119,17 @@ const cancelStyle = computed(() => {
           :confirmation-text="submitConfirmationText"
           placement="top"
           @ok="handleSubmit(true, $event)"
-        >
-          <template #append>
-            <slot name="confirmation" />
-          </template>
-        </MenuConfirmation>
-      </slot>
+        />
 
-      <slot name="submit-btn-inner" />
+        <slot name="submit-btn-inner" />
 
-      <KeyboardShortcut
-        v-if="hasKeyboardShortcuts"
-        with-ctrl
-        char="&#9166;"
-        class="!absolute top--1 right-1"
-      />
+        <KeyboardShortcut
+          v-if="hasKeyboardShortcuts"
+          with-ctrl
+          char="&#9166;"
+          class="!absolute top--1 right-1"
+        />
+      </span>
     </Btn>
 
     <slot name="append" />

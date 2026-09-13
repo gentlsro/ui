@@ -1,7 +1,9 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
+import { mergeProps } from 'vue'
 import type { FactoryOpts } from 'imask'
 
 // Types
+import type { IDateInputExpose } from './types/date-input-expose.type'
 import type { IDateInputProps } from './types/date-input-props.type'
 
 // Functions
@@ -11,6 +13,8 @@ import { MaskedDateRange } from './functions/masked-date-range'
 
 // Constants
 import { INPUT_WRAPPER_DEFAULT_PROPS } from '../../InputWrapper/constants/input-wrapper-default-props'
+
+defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(defineProps<IDateInputProps>(), {
   ...getComponentProps('dateInput'),
@@ -153,7 +157,7 @@ const {
   isBlurred,
   isTouched,
   handleFocusOrClick,
-  handlePointerDown,
+  handleMouseDown,
   handleClickWrapper,
   focus,
   select,
@@ -203,12 +207,12 @@ defineExpose({
   blur,
   clear,
   getInputElement,
-})
+} satisfies IDateInputExpose)
 </script>
 
 <template>
   <InputWrapper
-    v-bind="wrapperProps"
+    v-bind="mergeProps(wrapperProps, $attrs)"
     :id="inputId"
     :class="wrapperClass"
     :has-content
@@ -217,7 +221,10 @@ defineExpose({
     @click="handleClickWrapper"
   >
     <!-- Label -->
-    <template #label="labelProps">
+    <template
+      v-if="$slots.label"
+      #label="labelProps"
+    >
       <slot
         name="label"
         v-bind="labelProps"
@@ -256,19 +263,20 @@ defineExpose({
           ...(hasNoValue && { color: 'var(--placeholder-color)' }),
         }"
         v-bind="inputProps"
-        @pointerdown="handlePointerDown"
+        @mousedown="handleMouseDown"
         @focus="handleFocusOrClick"
         @blur="handleBlur"
       >
     </template>
 
     <!-- Append -->
-    <template #append>
+    <template
+      v-if="$slots.append || hasClearableBtn || (!readonly && !disabled)"
+      #append
+    >
       <div
-        v-if="$slots.append || (!readonly && !disabled)"
         :class="appendClass"
         :style="appendStyle"
-        @click="handleFocusOrClick"
       >
         <slot
           name="append"
@@ -295,10 +303,9 @@ defineExpose({
         </Btn>
 
         <div
-          v-if="!noPickerIcon"
+          v-if="!noPickerIcon && !readonly && !disabled"
           class="picker-icon i-system-uicons:calendar-date"
-          @mousedown="handlePickerIconClick"
-          @click.stop.prevent
+          @click.stop.prevent="handlePickerIconClick"
         />
       </div>
     </template>

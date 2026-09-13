@@ -1,9 +1,6 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Functions
 import { useTableAutoFit } from './composables/useTableAutoFit'
-
-// Store
-const { uiState } = storeToRefs(useUIStore())
 
 // Utils
 const { fitColumns } = useTableAutoFit()
