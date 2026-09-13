@@ -71,6 +71,7 @@ const {
   search,
   isPickerActive,
   options,
+  menuEl,
 } = useSelectorStore({ selectorProps: props })
 
 // Field
@@ -83,8 +84,10 @@ const {
   handleBlur,
   handleFocusOrClick,
   handleClickWrapper,
+  handlePointerDown,
 } = useFieldUtils({
   props,
+  menuElRef: menuEl,
   onBeforeFocus: ev => {
     if (isPreventNextFocus.value) {
       isPreventNextFocus.value = false
@@ -164,8 +167,19 @@ const hasClearButton = computed(() => {
 // Picker
 const placement = ref(mergedProps.value?.menuProps?.placement ?? 'bottom')
 
+const ignoredEls = computed(() => [
+  `#${inputId}-wrapper .input-wrapper__focusable`,
+])
+
 const menuProps = computed(() => {
-  const _menuProps = mergedProps.value.menuProps ?? {}
+  const configuredMenuProps = mergedProps.value.menuProps ?? {}
+  const _menuProps = {
+    ...configuredMenuProps,
+    ignoreClickOutside: [
+      ...configuredMenuProps.ignoreClickOutside ?? [],
+      ...ignoredEls.value,
+    ],
+  }
   const matchWidth = !props.noMenuMatchWidth
 
   if (!isNil(props.noMenuMatchWidth)) {
@@ -259,6 +273,7 @@ if (props.immediateFetch && mergedProps.value.loadData?.fnc) {
     .focus="handleFocusOrClick"
     @focus="handleFocusOrClick"
     @keydown.space="handleSpaceKey"
+    @pointerdown="handlePointerDown"
     @blur="handleBlur"
     @click="handleClickWrapper"
   >

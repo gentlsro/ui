@@ -23,6 +23,8 @@ export function useInputUtils(options: IInputUtilsOptions) {
   const instance = getCurrentInstance()
   const { onBlur, onFocus } = eventHandlers
   const isTouched = ref(false)
+  let isInternalFocus = false
+  let skipNextInputClick = false
 
   const debouncedChange = useDebounceFn((val: any) => {
     if (!props.emitOnBlur) {
@@ -172,12 +174,12 @@ export function useInputUtils(options: IInputUtilsOptions) {
       && !isProgrammatic
     ) {
       ev.preventDefault()
+      isInternalFocus = true
       focus()
+      isInternalFocus = false
 
       return
     }
-
-    isBlurred.value = true
 
     // Reset the `model` to its `lastValidValue` if it differs
     const isSame = isEqual(model.value, lastValidValue.value)
@@ -208,10 +210,22 @@ export function useInputUtils(options: IInputUtilsOptions) {
   // element, so the `focus` does not get triggered. We need to handle this case manually
   function handleClickWrapper(ev: MouseEvent) {
     const target = ev.target as HTMLElement
-    const isFocusable = target.classList.contains('.input-wrapper__focusable')
+    const isFocusable = target.classList.contains('input-wrapper__focusable')
       || !!target.closest('.input-wrapper__focusable')
 
-    if (isFocusable) {
+    const isInputTarget = target === inputElement.value
+
+    if (skipNextInputClick && isInputTarget) {
+      skipNextInputClick = false
+
+      return
+    }
+
+    skipNextInputClick = false
+
+    if (menuEl.value?.isOpen) {
+      menuEl.value?.hide()
+    } else if (isFocusable) {
       handleFocusOrClick(ev)
     }
   }
@@ -228,14 +242,21 @@ export function useInputUtils(options: IInputUtilsOptions) {
   // the same tap's leftover click would land on the overlay. The wrapper
   // click handler opens it after that click hits the still-closed input.
   function handlePointerDown(ev: PointerEvent) {
-    if (preventFocusOnTouch && isTouchPointer(ev)) {
+    const isFocusPrevented = preventFocusOnTouch && isTouchPointer(ev)
+
+    skipNextInputClick = !isFocusPrevented
+      && !menuEl.value?.isOpen
+      && ev.target === inputElement.value
+      && document.activeElement !== inputElement.value
+
+    if (isFocusPrevented) {
       ev.preventDefault()
     }
   }
 
   // Click & focus handling
   function handleFocusOrClick(ev?: Event) {
-    if (uiStore.hasUserLeftPage) {
+    if (uiStore.hasUserLeftPage || isInternalFocus) {
       return
     }
 
@@ -272,7 +293,9 @@ export function useInputUtils(options: IInputUtilsOptions) {
       && !isInputFocused
       && !isFocusPrevented
     ) {
+      isInternalFocus = true
       focus(true)
+      isInternalFocus = false
     }
 
     if (isFocusPrevented) {

@@ -35,6 +35,7 @@ const mergedProps = computed(() => {
 // Layout
 const fieldEl = useTemplateRef('fieldEl')
 const model = defineModel<Datetime>()
+
 const pickerModel = computed<Datetime>({
   get() {
     return model.value
@@ -65,17 +66,7 @@ const modelFormatted = computed(() => {
 const referenceEl = ref<HTMLElement>()
 const isPickerActive = ref(false)
 const pickerState = ref('hide')
-
-function handlePickerIconClick(ev: MouseEvent) {
-  if (!isEditable.value) {
-    return
-  }
-
-  ev.preventDefault()
-  ev.stopPropagation()
-
-  isPickerActive.value = !isPickerActive.value
-}
+const menuProxyEl = useTemplateRef('menuProxyEl')
 
 function handleMonthSelect() {
   isPickerActive.value = false
@@ -83,28 +74,26 @@ function handleMonthSelect() {
 }
 
 // Field
-const { el, getFieldProps, handleFocusOrClick, isEditable } = useFieldUtils({
+const {
+  el,
+  inputId,
+  getFieldProps,
+  handleFocusOrClick,
+  handleClickWrapper,
+  handlePointerDown,
+  handleBlur,
+} = useFieldUtils({
   props,
+  menuElRef: menuProxyEl,
   onBeforeFocus: ev => onBeforeFocus?.(ev, isPickerActive) ?? {},
   onFocus: ev => onFocus ? onFocus(ev, isPickerActive) : isPickerActive.value = true,
 })
 
 const fieldProps = getFieldProps(props)
 
-function handleWrapperMouseDown(ev: MouseEvent) {
-  const target = ev.target as HTMLElement
-  const isFocusable = !!target.closest('.input-wrapper__focusable')
-
-  if (!isEditable.value || !isFocusable || target.closest('button')) {
-    return
-  }
-
-  if (isPickerActive.value) {
-    ev.preventDefault()
-  }
-
-  isPickerActive.value = !isPickerActive.value
-}
+const ignoredEls = computed(() => [
+  `#${inputId}-wrapper .input-wrapper__focusable`,
+])
 
 // Styles - append
 const appendClass = computed(() => {
@@ -140,6 +129,7 @@ onMounted(() => {
 
 <template>
   <Field
+    :id="inputId"
     ref="fieldEl"
     v-bind="fieldProps"
     class="year-month-selector group/year-month-selector"
@@ -147,18 +137,22 @@ onMounted(() => {
     :ui="mergedProps.ui"
     :has-content="!!model"
     .focus="handleFocusOrClick"
-    @focus="!readonly && handleFocusOrClick($event)"
-    @mousedown="handleWrapperMouseDown"
+    @pointerdown="handlePointerDown"
+    @click="handleClickWrapper"
+    @focus="handleFocusOrClick"
+    @blur="handleBlur"
   >
     <span ref="el">
       {{ modelFormatted }}
     </span>
 
     <MenuProxy
+      ref="menuProxyEl"
       v-model="isPickerActive"
       manual
       :reference-target="referenceEl"
       :fit="false"
+      :ignore-click-outside="ignoredEls"
       position="top"
       placement="bottom-start"
       h="!auto"
@@ -201,8 +195,6 @@ onMounted(() => {
           class="picker-icon"
           :class="pickerIconClass"
           :style="pickerIconStyle"
-          @mousedown="handlePickerIconClick"
-          @click.stop.prevent
         />
       </div>
     </template>

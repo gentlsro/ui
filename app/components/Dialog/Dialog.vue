@@ -20,6 +20,7 @@ const emits = defineEmits<{
 }>()
 
 defineExpose({
+  isOpen: computed(() => model.value),
   show: () => (modelHandler.value = true),
   hide: (force?: boolean) => {
     isChangeForced.value = !!force

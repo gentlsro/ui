@@ -115,6 +115,10 @@ function isMaskString(val?: string) {
 const readonly = toRef(props, 'readonly')
 const preventSync = autoResetRef(false, 50)
 
+const ignoredEls = computed(() => [
+  `#${inputId}-wrapper .input-wrapper__focusable`,
+])
+
 function handleDateSelect(val: Dayjs) {
   preventSync.value = true
   model.value = props.format ? val.format(props.format) : val
@@ -125,20 +129,9 @@ function handleDateSelect(val: Dayjs) {
 }
 
 // Picker
+const isPickerActive = ref(false)
 const menuProxyEl = useTemplateRef('menuProxyEl')
 const datePickerEl = useTemplateRef('datePickerEl')
-const isPickerActive = ref(false)
-
-function handlePickerIconClick(ev: MouseEvent) {
-  if (isPickerActive.value) {
-    ev.preventDefault()
-    ev.stopPropagation()
-
-    return
-  }
-
-  isPickerActive.value = true
-}
 
 const {
   el,
@@ -242,7 +235,7 @@ defineExpose({
         flex="1"
         type="text"
         :value="masked"
-        :placeholder="placeholder"
+        :placeholder
         :readonly
         :disabled
         autocomplete="off"
@@ -267,7 +260,6 @@ defineExpose({
         v-if="$slots.append || (!readonly && !disabled)"
         :class="appendClass"
         :style="appendStyle"
-        @click="handleFocusOrClick"
       >
         <slot
           name="append"
@@ -285,8 +277,6 @@ defineExpose({
         <div
           v-if="!noPickerIcon"
           class="picker-icon i-system-uicons:calendar-date"
-          @mousedown="handlePickerIconClick"
-          @click.stop.prevent
         />
       </div>
     </template>
@@ -301,6 +291,7 @@ defineExpose({
         no-uplift
         :fit="false"
         :reference-target="el"
+        :ignore-click-outside="ignoredEls"
         h="!auto"
         w="!auto"
         min-w="!280px"

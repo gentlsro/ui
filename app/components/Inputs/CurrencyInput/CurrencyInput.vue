@@ -335,7 +335,6 @@ defineExpose({
       <div
         :class="appendClass"
         :style="appendStyle"
-        @click="handleFocusOrClick"
       >
         <span
           v-if="currencyVisibility === 'append'"

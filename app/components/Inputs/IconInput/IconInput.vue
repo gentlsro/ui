@@ -57,6 +57,10 @@ const {
   menuElRef: menuProxyEl,
 })
 
+const ignoredEls = computed(() => [
+  `#${inputId}-wrapper .input-wrapper__focusable`,
+])
+
 // Wrapper class
 const wrapperClass = computed(() => {
   return !isBlurred.value ? 'is-focused' : ''
@@ -163,6 +167,7 @@ defineExpose({
         manual
         tabindex="-1"
         :reference-target="referenceEl"
+        :ignore-click-outside="ignoredEls"
         no-uplift
         placement="bottom-start"
       >

@@ -179,6 +179,7 @@ const wrapperProps = computed(() => {
 
 <template>
   <div
+    :id="id ? `${id}-wrapper` : undefined"
     ref="wrapperEl"
     class="wrapper group/wrapper"
     :class="wrapperClass"

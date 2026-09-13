@@ -311,6 +311,72 @@ describe('input mask synchronization', () => {
   })
 })
 
+describe('input menu interactions', () => {
+  it('toggles the menu once from the input and focusable wrapper parts', async () => {
+    const menu = {
+      isOpen: false,
+      show: vi.fn(() => (menu.isOpen = true)),
+      hide: vi.fn(() => (menu.isOpen = false)),
+    }
+    const props = reactive({
+      modelValue: null,
+      emptyValue: null,
+      id: 'menu-input',
+      noHideFloating: true,
+    })
+    const maskRef = shallowRef<FactoryOpts>({ mask: Number })
+    let input: ReturnType<typeof useInputUtils>
+    const component = defineComponent({
+      setup() {
+        input = useInputUtils({ props, maskRef, menuElRef: ref(menu) })
+
+        return () => h('div', {
+          class: 'wrapper__body',
+          onClick: input.handleClickWrapper,
+        }, [
+          h('input', {
+            ref: input.el,
+            class: 'input-wrapper__focusable',
+            onFocus: input.handleFocusOrClick,
+            onPointerdown: input.handlePointerDown,
+          }),
+          h('div', { class: 'input-wrapper__focusable' }, [
+            h('span', { class: 'picker-icon' }),
+          ]),
+        ])
+      },
+    })
+    const wrapper = mount(component)
+    disposers.push(() => wrapper.unmount())
+    await settle()
+
+    const inputElement = wrapper.get('input')
+    await inputElement.trigger('pointerdown', { pointerType: 'mouse' })
+    await inputElement.trigger('focus')
+    await settle()
+    await inputElement.trigger('click')
+    expect(menu.show).toHaveBeenCalledTimes(1)
+    expect(menu.hide).not.toHaveBeenCalled()
+    expect(menu.isOpen).toBe(true)
+
+    await inputElement.trigger('pointerdown', { pointerType: 'mouse' })
+    await inputElement.trigger('click')
+    expect(menu.hide).toHaveBeenCalledTimes(1)
+    expect(menu.isOpen).toBe(false)
+
+    menu.show.mockClear()
+    menu.hide.mockClear()
+    await wrapper.get('.picker-icon').trigger('click')
+    await settle()
+    expect(menu.show).toHaveBeenCalledTimes(1)
+    expect(menu.isOpen).toBe(true)
+
+    await wrapper.get('.picker-icon').trigger('click')
+    expect(menu.hide).toHaveBeenCalledTimes(1)
+    expect(menu.isOpen).toBe(false)
+  })
+})
+
 describe('numeric input components', () => {
   const stubs = {
     InputWrapper: defineComponent({
