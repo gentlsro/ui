@@ -27,7 +27,6 @@ import { tableSerializeSorting } from '../functions/table-serialize-sorting'
 import { tableBuildFetchPayload } from '../functions/table-build-fetch-payload'
 import { tableSerializePagination } from '../functions/table-serialize-pagination'
 import { queryBuilderInitializeItems } from '../../QueryBuilder/functions/query-builder-initialize-items'
-import { tableResolveExportData } from '../functions/table-resolve-export-data'
 
 // Components
 import type HorizontalScroller from '../../Scroller/HorizontalScroller.vue'
@@ -177,7 +176,7 @@ const [
 
   // Exporting
   const isExporting = ref(false)
-  const exportData = ref<ITableExport[]>(tableResolveExportData(tableProps?.exportData))
+  const exportData = ref<ITableExport[]>([])
 
   /**
    * By default, reacts to changes in the filter, query builder, search, etc.
