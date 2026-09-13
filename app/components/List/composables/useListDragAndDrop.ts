@@ -1,6 +1,7 @@
 // @unocss-include
 
 import { autoScrollPlugin, Draggable, PointerSensor } from 'dragdoll'
+import '../../../functions/dragdoll-ticker'
 import type { PointerSensorMoveEvent } from 'dragdoll'
 
 // Types
