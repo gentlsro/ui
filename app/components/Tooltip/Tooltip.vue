@@ -64,6 +64,7 @@ const classes = computed(() => {
 })
 
 let hoverTimer: ReturnType<typeof setTimeout> | undefined
+let wasOpenOnPointerDown = false
 
 function setOpen(open: boolean) {
   clearTimeout(hoverTimer)
@@ -74,7 +75,7 @@ function setOpen(open: boolean) {
 }
 
 useEventListener(referenceEl, 'mouseenter', () => {
-  if (props.manual) {
+  if (props.manual || props.mode !== 'hover') {
     return
   }
 
@@ -83,19 +84,29 @@ useEventListener(referenceEl, 'mouseenter', () => {
 })
 
 useEventListener(referenceEl, 'mouseleave', () => {
-  if (props.manual) {
+  if (props.manual || props.mode !== 'hover') {
     return
   }
 
   clearTimeout(hoverTimer)
   hoverTimer = setTimeout(() => {
-    if (!referenceEl.value?.contains(document.activeElement)) {
+    if (!referenceEl.value?.matches(':focus-visible')) {
       setOpen(false)
     }
   }, props.delay?.[1] ?? 0)
 })
 
-useEventListener(referenceEl, ['click', 'focus'], () => setOpen(true))
+useEventListener(referenceEl, 'pointerdown', () => {
+  wasOpenOnPointerDown = model.value
+})
+useEventListener(referenceEl, 'focus', () => setOpen(true))
+useEventListener(referenceEl, 'click', (event: MouseEvent) => {
+  if (props.manual || props.mode !== 'click' || event.detail === 0) {
+    return
+  }
+
+  setOpen(!wasOpenOnPointerDown)
+})
 useEventListener(referenceEl, 'blur', () => setOpen(false))
 useEventListener(referenceEl, 'keydown', (event: KeyboardEvent) => {
   if (props.manual) {
