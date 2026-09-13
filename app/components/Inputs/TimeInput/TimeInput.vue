@@ -173,6 +173,10 @@ const {
   menuElRef: () => timeInputPickerEl.value?.getMenuEl(),
 })
 
+const ignoredEls = computed(() => [
+  `#${inputId}-wrapper .input-wrapper__focusable`,
+])
+
 function handleInput(ev: Event) {
   const { data } = ev as InputEvent
 
@@ -324,7 +328,6 @@ defineExpose({
         v-if="$slots.append || hasClearableBtn || (!readonly && !disabled)"
         :class="appendClass"
         :style="appendStyle"
-        @click="handleFocusOrClick"
       >
         <slot
           name="append"
@@ -381,6 +384,7 @@ defineExpose({
         v-model:is-am="isAm"
         v-model:prevent-next-is-am-change="preventNextIsAmChange"
         :reference-target="el"
+        :ignore-click-outside="ignoredEls"
         :is12h="is12h"
         :model-value-localized="modelValueLocalized"
         :shortcuts="shortcuts"

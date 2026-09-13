@@ -45,6 +45,7 @@ const noOverlay = computed(() => {
 })
 
 defineExpose({
+  isOpen: computed(() => model.value),
   show: () => menuProxyEl.value?.show(),
   hide: (force?: boolean) => menuProxyEl.value?.hide(force),
   toggle: () => menuProxyEl.value?.toggle(),

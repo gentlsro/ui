@@ -22,6 +22,7 @@ export function menuGetExposed(payload: {
   const { floatingEl } = store
 
   return {
+    isOpen: computed(() => modelHandler.value),
     show: () => (modelHandler.value = true),
     hide: (force?: boolean) => {
       isChangeForced.value = !!force

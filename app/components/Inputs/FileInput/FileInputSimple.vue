@@ -17,7 +17,13 @@ const props = withDefaults(defineProps<IFileInputProps>(), {
 defineEmits<IFileInputEmits>()
 
 // Utils
-const { el, getFieldProps, handleFocusOrClick } = useFieldUtils({
+const {
+  el,
+  getFieldProps,
+  handleFocusOrClick,
+  handleClickWrapper,
+  handlePointerDown,
+} = useFieldUtils({
   props,
   onFocus: handleOpenDialog,
 })
@@ -69,7 +75,8 @@ const appendStyle = computed(() => {
     :class="{ 'dragged-over': isOverDropZone }"
     .focus="handleFocusOrClick"
     @focus="handleFocusOrClick"
-    @click="handleFocusOrClick"
+    @pointerdown="handlePointerDown"
+    @click="handleClickWrapper"
   >
     <FileInputSimpleInner
       ref="el"

@@ -3,10 +3,11 @@ import type { IFieldProps } from '../types/field-props.type'
 
 export function useFieldUtils(options?: {
   props?: IFieldProps
+  menuElRef?: MaybeRefOrGetter
   onFocus?: (ev?: PointerEvent | FocusEvent) => void
   onBeforeFocus?: (ev?: PointerEvent | FocusEvent) => { shouldFocus?: boolean, shouldHideFloating?: boolean }
 }) {
-  const { props, onFocus, onBeforeFocus } = options || {}
+  const { props, menuElRef, onFocus, onBeforeFocus } = options || {}
 
   // Store
   const uiStore = useUIStore()
@@ -19,9 +20,18 @@ export function useFieldUtils(options?: {
   const inputId = props?.id ?? useId()
   const isBlurred = ref(true)
   const isTouched = ref(false)
+  const menuEl = computed(() => toValue(menuElRef))
+  let pointerDownTarget: EventTarget | null
+  let skipNextControlClick = false
+  let isInternalFocus = false
 
   const inputElement = computed(() => {
     return unrefElement(el) as HTMLElement | undefined
+  })
+
+  const controlElement = computed(() => {
+    return inputElement.value?.closest('.control') as HTMLElement | undefined
+      ?? inputElement.value
   })
 
   const label = computed(() => {
@@ -44,19 +54,39 @@ export function useFieldUtils(options?: {
 
   // In some cases, we click into the wrapper but not directly in the `.control`
   // element, so the `focus` does not get triggered. We need to handle this case manually
+  function handlePointerDown(ev: PointerEvent) {
+    const target = ev.target as HTMLElement
+
+    pointerDownTarget = target
+    skipNextControlClick = !menuEl.value?.isOpen
+      && !!controlElement.value?.contains(target)
+      && document.activeElement !== controlElement.value
+  }
+
   function handleClickWrapper(ev: MouseEvent) {
     const target = ev.target as HTMLElement
-    const isFocusable = target.classList.contains('.input-wrapper__focusable')
+    const isFocusable = target.classList.contains('input-wrapper__focusable')
       || !!target.closest('.input-wrapper__focusable')
+    const isInitialControlClick = skipNextControlClick
+      && pointerDownTarget === target
 
-    if (isFocusable) {
+    pointerDownTarget = null
+    skipNextControlClick = false
+
+    if (isInitialControlClick) {
+      return
+    }
+
+    if (menuEl.value?.isOpen) {
+      menuEl.value.hide()
+    } else if (isFocusable) {
       handleFocusOrClick(ev)
     }
   }
 
   // Click & focus handling
   function handleFocusOrClick(ev?: Event) {
-    if (uiStore.hasUserLeftPage) {
+    if (uiStore.hasUserLeftPage || isInternalFocus) {
       return
     }
 
@@ -86,10 +116,14 @@ export function useFieldUtils(options?: {
       })
     }
 
+    isInternalFocus = true
     el.value?.focus?.()
+    isInternalFocus = false
     retainIosKeyboardFocus()
+
     isTouched.value = isEditable.value
     isBlurred.value = false
+
     instance?.emit('focus')
   }
 
@@ -135,6 +169,7 @@ export function useFieldUtils(options?: {
     isBlurred,
     getFieldProps,
     handleClickWrapper,
+    handlePointerDown,
     handleFocusOrClick,
     handleBlur,
   }

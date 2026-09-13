@@ -21,3 +21,8 @@ generated
 errors
 .nuxtrc
 app/constants/colors.json
+# Playwright
+test-results
+playwright-report
+blob-report
+playwright/.cache

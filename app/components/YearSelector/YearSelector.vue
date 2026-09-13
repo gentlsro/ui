@@ -217,7 +217,7 @@ const yearBtnStyle = computed(() => {
       :target="yearInputEl"
       :fit="false"
       w="60"
-      placement="bottom-end"
+      placement="bottom"
       :reference-target="$bp.isGreaterOrEqual('xm') ? referenceTarget : undefined"
       no-uplift
       @vue:mounted="addEventListener"

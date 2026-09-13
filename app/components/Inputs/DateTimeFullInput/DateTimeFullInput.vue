@@ -135,6 +135,10 @@ const {
   preventFocusOnTouch: true,
 })
 
+const ignoredEls = computed(() => [
+  `#${inputId}-wrapper .input-wrapper__focusable`,
+])
+
 const { path } = useInputValidationUtils(props)
 
 // Value
@@ -314,7 +318,6 @@ defineExpose({
         v-if="$slots.append || (!readonly && !disabled)"
         :class="appendClass"
         :style="appendStyle"
-        @click="handleFocusOrClick"
       >
         <slot
           name="append"
@@ -348,6 +351,7 @@ defineExpose({
         no-uplift
         :fit="false"
         :reference-target="el"
+        :ignore-click-outside="ignoredEls"
         h="!auto"
         w="!auto"
         :max-w="isCompact ? '!92vw' : '!90vw'"

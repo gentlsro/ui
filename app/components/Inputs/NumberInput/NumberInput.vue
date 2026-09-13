@@ -198,7 +198,6 @@ defineExpose({
         :class="appendClass"
         :style="appendStyle"
         data-cy="offset-buttons"
-        @click="handleFocusOrClick"
       >
         <slot
           name="append"
