@@ -14,7 +14,13 @@
   "scripts": {
     "typecheck": "nuxt typecheck",
     "update": "npx npm-check-updates -t latest --interactive",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "e2e:dev": "cd e2e/fixtures/app && nuxt dev",
+    "e2e:build": "cd e2e/fixtures/app && NODE_OPTIONS=--max-old-space-size=16384 nuxt build",
+    "e2e:start": "node e2e/fixtures/app/.output/server/index.mjs",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed --project=chromium"
   },
   "dependencies": {
     "arktype": "2.2.1",
@@ -55,6 +61,7 @@
     "@nuxt/scripts": "1.2.1",
     "@nuxt/test-utils": "4.0.3",
     "@nuxtjs/i18n": "10.4.1",
+    "@playwright/test": "1.62.1",
     "@types/jsonwebtoken": "9.0.10",
     "@types/lodash-es": "4.17.12",
     "@types/sortablejs": "1.15.9",
@@ -68,7 +75,7 @@
     "eslint": "10.6.0",
     "eslint-plugin-format": "2.0.1",
     "happy-dom": "20.10.6",
-    "playwright-core": "1.61.1",
+    "playwright-core": "1.62.1",
     "sass-embedded": "1.100.0",
     "typescript": "npm:typescript-native-bridge@6.0.3-bridge.16.tsgo.7.0.2",
     "utility-types": "3.11.0",

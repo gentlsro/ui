@@ -22,7 +22,10 @@ function handleClick() {
 }
 
 const iconClass = computed(() => {
-  const classes = ['i-eva:close-fill']
+  const classes = [
+    'i-eva:close-fill',
+    'group-[.wrapper--sm]/wrapper:(h-4 w-4)',
+  ]
 
   switch (props.size) {
     case 'xs':

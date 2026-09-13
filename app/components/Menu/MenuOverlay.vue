@@ -16,7 +16,7 @@ type IProps = {
 const props = defineProps<IProps>()
 
 // Store
-const { zIndex } = useMenuStore()
+const { zIndex, model } = useMenuStore()
 
 // Styles - overlay
 const overlayClass = computed(() => {
@@ -35,10 +35,12 @@ const overlayStyle = computed(() => {
 </script>
 
 <template>
+  <!-- The `floating-overlay` class marks the overlay as a part of the floating
+  UI layer, which consumes the clicks in the layers below -->
   <div
-    class="menu-overlay"
+    class="menu-overlay floating-overlay"
     :style="overlayStyle"
-    :class="overlayClass"
+    :class="[overlayClass, { 'is-active': model }]"
   />
 </template>
 

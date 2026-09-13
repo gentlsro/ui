@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'vue'
+import type { CSSProperties, HTMLAttributes } from 'vue'
 import type { ITooltipProps } from '../types/tooltip-props.type'
 
 type TooltipOwner = {
@@ -6,9 +6,9 @@ type TooltipOwner = {
   props: Readonly<Ref<ITooltipProps>>
   attrs: Readonly<Ref<Record<string, unknown>>>
   appearance: Readonly<Ref<{
-    containerClass: unknown
+    containerClass: HTMLAttributes['class']
     containerStyle: CSSProperties | undefined
-    arrowClass: unknown
+    arrowClass: HTMLAttributes['class']
     arrowStyle: CSSProperties | undefined
   }>>
   setModel: (value: boolean) => void

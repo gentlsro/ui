@@ -36,6 +36,11 @@ export type ITooltipProps = {
   manual?: boolean
 
   /**
+   * The pointer interaction used to open and close the tooltip
+   */
+  mode?: 'hover' | 'click'
+
+  /**
    * The tooltip model value
    */
   modelValue?: boolean

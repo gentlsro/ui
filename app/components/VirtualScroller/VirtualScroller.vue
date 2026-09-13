@@ -42,7 +42,7 @@ const initialCount = props.initialRowsRenderCount ?? Math.ceil(2160 / props.rowH
 function getItemKey(index: number) {
   const row = rows.value[index]
 
-  return get(Array.isArray(row) ? row[0] : row, props.rowKey) ?? index
+  return String(get(Array.isArray(row) ? row[0] : row, props.rowKey) ?? index)
 }
 
 const rowRangeExtractor = computed(() => {
@@ -78,7 +78,7 @@ const rowOverscan = computed(() => {
 const rowVirtualizer = useVirtualizer<HTMLDivElement, HTMLDivElement>(computed(() => ({
   count: rows.value.length,
   getScrollElement: () => virtualScrollEl.value,
-  estimateSize: () => estimateOverride.value ?? props.rowHeight,
+  estimateSize: () => estimateOverride.value ?? props.rowHeight ?? 0,
   getItemKey,
   rangeExtractor: rowRangeExtractor.value,
   initialRect: { width: 0, height: initialCount * props.rowHeight },
@@ -103,14 +103,16 @@ const columnVirtualizer = useVirtualizer<HTMLDivElement, HTMLDivElement>(compute
   horizontal: true,
   enabled: hasVirtualColumns.value,
   getScrollElement: () => virtualScrollEl.value,
-  getItemKey: (index: number) => String(columns.value[index].field),
-  estimateSize: (index: number) => columnWidths.value[index],
+  getItemKey: (index: number) => String(columns.value[index]?.field ?? index),
+  estimateSize: (index: number) => columnWidths.value[index] ?? 0,
   initialRect: { width: 1280, height: 0 },
   overscan: isMounted.value ? 1 : 0,
 })))
 const virtualColumns = computed(() => columnVirtualizer.value.getVirtualItems())
 const visibleColumns = computed(() => hasVirtualColumns.value
-  ? virtualColumns.value.map(item => columns.value[item.index])
+  ? virtualColumns.value
+      .map(item => columns.value[item.index])
+      .filter((column): column is TableColumn<T> => column !== undefined)
   : props.columns)
 const totalWidth = computed(() => hasVirtualColumns.value ? columnVirtualizer.value.getTotalSize() : undefined)
 const columnPadding = computed(() => ({
@@ -122,7 +124,9 @@ watch(columnWidths, () => {
 })
 
 // Row measurement and scroll events
-function measureRow(el: HTMLDivElement | null) {
+function measureRow(target: unknown) {
+  const el = target instanceof HTMLDivElement ? target : null
+
   // Vapor assigns function refs before insertion. Measuring that detached row
   // as zero would make TanStack compensate the scroll offset when it grows.
   nextTick(() => {
@@ -346,11 +350,11 @@ function getRowStyle(item: VirtualItem) {
       >
         <div
           v-for="item in virtualRows"
-          :key="item.key"
+          :key="String(item.key)"
           :ref="measureRow"
           :data-index="item.index"
           :data-idx="item.index"
-          :data-key="item.key"
+          :data-key="String(item.key)"
           class="virtual-scroll__row content-row"
           :class="rowClass"
           :style="getRowStyle(item)"

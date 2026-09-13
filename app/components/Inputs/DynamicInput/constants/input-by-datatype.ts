@@ -4,7 +4,7 @@ import utilsConfig from '$utilsConfig'
 import type { ExtendedDataType } from '$dataType'
 
 // Components
-import Toggle from '../../../Toggle/Toggle.vue'
+import Checkbox from '../../../Checkbox/Checkbox.vue'
 import TextInput from '../../TextInput/TextInput.vue'
 import DateInput from '../../DateInput/DateInput.vue'
 import TimeInput from '../../TimeInput/TimeInput.vue'
@@ -68,7 +68,7 @@ export function getInputByDataType(
     case 'bool':
     case 'boolSimple':
       return createComponent({
-        component: Toggle,
+        component: Checkbox,
         props,
         icon: 'i-carbon:boolean',
       })

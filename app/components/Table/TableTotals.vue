@@ -5,7 +5,7 @@ import type { ITableProps } from './types/table-props.type'
 // Store
 import { useTableStore } from './stores/table.store'
 
-type IProps = Pick<ITableProps, 'totals' | 'ui'>
+type IProps = Pick<ITableProps, 'totals' | 'ui'> & { hasRowActions?: boolean }
 
 const props = defineProps<IProps>()
 
@@ -75,6 +75,12 @@ async function getTotals() {
       :column="col"
       :ui
       :total="totalsByField?.[col.field]"
+    />
+
+    <div
+      v-if="hasRowActions"
+      aria-hidden="true"
+      style="flex: 0 0 var(--table-row-actions-width, 5.25rem)"
     />
   </HorizontalScroller>
 </template>

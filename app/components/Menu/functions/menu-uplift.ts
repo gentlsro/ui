@@ -1,6 +1,28 @@
 // Functions
 const { getLastFloatingUIZindex } = useFloatingUIUtils()
 
+export function menuResetUplift(payload: {
+  referenceEl?: unknown
+  referenceElZIndex?: string
+  isReferenceElTransparent?: boolean
+  noUplift?: boolean
+}) {
+  const el = payload.referenceEl
+
+  if (!(el instanceof Element)) {
+    return
+  }
+
+  const htmlEl = el as HTMLElement
+
+  htmlEl.classList.remove('is-menu-active')
+  htmlEl.style.zIndex = payload.referenceElZIndex ?? ''
+
+  if (payload.isReferenceElTransparent && !payload.noUplift) {
+    htmlEl.style.backgroundColor = ''
+  }
+}
+
 export function menuUplift(payload: {
   zIndex: Ref<number>
   referenceElZIndex: Ref<string | undefined>

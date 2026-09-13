@@ -21,7 +21,7 @@ export const RADIO_DEFAULT_PROPS = {
       const sizeClass = sizes[size]
 
       // States (via CSS selectors)
-      const checked = '[&.is-checked]:()'
+      const checked = ''
       const disabled = '[&.is-disabled]:(cursor-not-allowed op-50)'
 
       return {

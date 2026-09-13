@@ -17,6 +17,7 @@ import type { ICrudBtnsProps, ICrudEditBtnProps } from '../components/Crud/types
 import type { ICurrencyInputProps } from '../components/Inputs/CurrencyInput/types/currency-input-props.type'
 import type { IDateInputProps } from '../components/Inputs/DateInput/types/date-input-props.type'
 import type { IDatePickerProps } from '../components/DatePicker/types/datepicker-props.type'
+import type { IDateTimeFullInputProps } from '../components/Inputs/DateTimeFullInput/types/date-time-full-input-props.type'
 import type { IDialogProps } from '../components/Dialog/types/dialog-props.type'
 import type { IDrawerProps } from '../components/Drawer/types/drawer-props.type'
 import type { IDurationInputProps } from '../components/Inputs/DurationInput/types/duration-input-props.type'
@@ -110,6 +111,7 @@ export type IUIConfig = {
   currencyInput: IConfigItem<ICurrencyInputProps>
   dateInput: IConfigItem<IDateInputProps>
   datePicker: IConfigItem<IDatePickerProps>
+  dateTimeFullInput: IConfigItem<IDateTimeFullInputProps>
   drawer: IConfigItem<IDrawerProps>
   durationInput: IConfigItem<IDurationInputProps>
   field: IConfigItem<IFieldProps>

@@ -208,7 +208,7 @@ defineExpose({ sync })
 
     <!-- Footer / Controls -->
     <div
-      v-if="!noControls"
+      v-if="!noControls || $slots.controls"
       class="date-picker-controls"
       :class="controlsClass"
       :style="controlsStyle"
@@ -216,6 +216,7 @@ defineExpose({ sync })
       <slot name="controls" />
 
       <Btn
+        v-if="!noControls"
         data-onboarding="date-picker-today"
         size="sm"
         m="l-auto"

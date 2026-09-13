@@ -318,6 +318,31 @@ export const defaultComponentsConfig = {
     merge: ['ui'],
   },
 
+  // DateTimeFullInput
+  dateTimeFullInput: {
+    props: {
+      autoClose: undefined,
+      debounce: 0,
+      disabled: undefined,
+      emptyValue: undefined,
+      errorTakesSpace: true,
+      errorVisible: true,
+      immediate: true,
+      noPickerIcon: undefined,
+      readonly: undefined,
+      required: undefined,
+      size: 'md',
+      stackLabel: true,
+      ui: {
+        borderRadius: '0.5rem',
+        focusInputOnLabelClick: false,
+        appendClass: ({ defaults }) => defaults.all,
+      },
+      utc: useUtc,
+    },
+    merge: ['ui'],
+  },
+
   // DatePicker
   datePicker: {
     props: {
@@ -369,11 +394,14 @@ export const defaultComponentsConfig = {
   drawer: {
     props: {
       absolute: undefined,
+      absoluteBreakpoint: undefined,
       closeOnClickOutside: false,
       breakpoint: 'md',
       fullHeight: undefined,
+      mode: 'fixed',
       modelValue: undefined,
       noTitle: undefined,
+      noTransition: undefined,
       side: 'right',
       title: undefined,
       width: 480,
@@ -450,7 +478,6 @@ export const defaultComponentsConfig = {
       noDownloadButton: undefined,
       noPreview: undefined,
       noBorder: true,
-      activeLabelColor: 'unset',
       ui: {
         focusInputOnLabelClick: false,
         borderRadius: '0.5rem',
@@ -465,7 +492,6 @@ export const defaultComponentsConfig = {
   fileInputSimple: {
     props: {
       accept: undefined,
-      activeLabelColor: 'unset',
       downloadUrl: undefined,
       errorTakesSpace: true,
       multi: undefined,
@@ -569,13 +595,15 @@ export const defaultComponentsConfig = {
   inputLabel: {
     props: {
       required: undefined,
-      activeLabelColor: 'var(--color-primary)',
+      labelHint: {
+        icon: 'i-lucide:info',
+      },
       ui: {
         labelClass: ({ defaults }) => defaults.all,
         labelInlineWidth: '200px',
       },
     },
-    merge: ['ui'],
+    merge: ['ui', 'labelHint'],
   },
 
   // InputWrapper
@@ -587,6 +615,7 @@ export const defaultComponentsConfig = {
       errors: undefined,
       errorVisible: undefined,
       hint: undefined,
+      labelHint: undefined,
       layout: 'regular',
       loading: undefined,
       marker: undefined,
@@ -1362,6 +1391,8 @@ export const defaultComponentsConfig = {
         cellInnerClass: ({ defaults }) => defaults.all,
         alternateRowClass: ({ defaults }) => defaults.all,
         rowClass: ({ defaults }) => defaults.all,
+        rowActionsClass: ({ defaults }) => defaults.all,
+        rowActionsHeaderClass: ({ defaults }) => defaults.all,
         totalsCellClass: ({ defaults }) => defaults.all,
         bottomClass: ({ defaults }) => defaults.all,
       },
@@ -1431,6 +1462,7 @@ export const defaultComponentsConfig = {
       emptyValue: undefined,
       errorTakesSpace: true,
       errorVisible: true,
+      labelHint: undefined,
       mask: { mask: /.*/ },
       required: undefined,
       size: 'md',
@@ -1492,7 +1524,8 @@ export const defaultComponentsConfig = {
   // Tooltip
   tooltip: {
     props: {
-      delay: () => [300, 0],
+      delay: undefined,
+      mode: 'hover',
       noArrow: undefined,
       noInheritFontStyle: true,
       offset: 8,

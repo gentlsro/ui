@@ -3,6 +3,7 @@
 import type { IDrawerProps } from './types/drawer-props.type'
 
 // Constants
+import { BREAKPOINTS } from '../../constants/breakpoints'
 import { DRAWER_DEFAULT_PROPS } from './constants/drawer-default-props.constant'
 
 defineOptions({ inheritAttrs: false })
@@ -34,6 +35,39 @@ const title = computed(() => {
   return props.title
 })
 
+// Positioning
+const isBelowAbsoluteBreakpoint = useMediaQuery(() => {
+  return props.absoluteBreakpoint
+    ? `(max-width: ${BREAKPOINTS[props.absoluteBreakpoint] - 1}px)`
+    : 'not all'
+})
+
+const isAbsolute = computed(() => !!props.absolute || isBelowAbsoluteBreakpoint.value)
+const isRelative = computed(() => props.mode === 'relative' && !isAbsolute.value)
+
+const classes = computed(() => {
+  return [
+    `drawer--${props.side}`,
+    {
+      'is-open': model.value,
+      'is-full-height': props.fullHeight,
+      'is-absolute': isAbsolute.value,
+      'is-relative': isRelative.value,
+      'is-no-transition': props.noTransition,
+    },
+  ]
+})
+
+const styles = computed(() => {
+  // In the `relative` mode the drawer collapses its width when closed
+  const isCollapsed = isRelative.value && !model.value
+
+  return {
+    '--drawerWidth': `${props.width}px`,
+    'width': isCollapsed ? '0px' : `${props.width}px`,
+  }
+})
+
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
@@ -49,7 +83,9 @@ function handleTransition(
   ev: TransitionEvent,
   state: 'start' | 'end',
 ) {
-  if (ev.propertyName === 'transform') {
+  const animatedProperty = isRelative.value ? 'width' : 'transform'
+
+  if (ev.propertyName === animatedProperty) {
     const toEmit = [
       state === 'start' ? 'before-' : '',
       model.value ? 'show' : 'hide',
@@ -60,19 +96,41 @@ function handleTransition(
   }
 }
 
+// Without a transition there are no transition events to derive the
+// `show`/`hide` emits from, so emit them around the model change instead
+watch(model, isOpen => {
+  if (!props.noTransition) {
+    return
+  }
+
+  if (isOpen) {
+    emits('before-show')
+    nextTick(() => emits('show'))
+  } else {
+    emits('before-hide')
+    nextTick(() => emits('hide'))
+  }
+})
+
 // Click outside
 const drawerEl = useTemplateRef<HTMLElement>('drawerEl')
 
+// The `click` ending a drag (panning, text selection…) must not close the drawer
+const { isDragRelease } = useDragRelease()
+
 function handleClickOutside(ev: Event) {
-  if (!model.value || !props.closeOnClickOutside) {
+  if (!model.value || !props.closeOnClickOutside || isDragRelease(ev)) {
     return
   }
 
   const targetEl = ev.target as HTMLElement
-  const isPartOfFloatingElement = !!targetEl.closest('.floating-element')
+
+  // A floating UI (menu/dialog) opened on top of the drawer consumes the click,
+  // be it its content or the overlay rendered behind it
+  const isPartOfFloatingUI = !!targetEl.closest('.floating-element, .floating-overlay')
   const isNotifications = !!targetEl.closest('.notifications')
 
-  if (isPartOfFloatingElement || isNotifications) {
+  if (isPartOfFloatingUI || isNotifications) {
     return
   }
 
@@ -93,16 +151,8 @@ onClickOutside(drawerEl, handleClickOutside, {
       ref="drawerEl"
       v-bind="$attrs"
       class="drawer"
-      :class="[
-        `drawer--${side}`,
-        {
-          'is-open': model,
-          'is-full-height': fullHeight,
-          'is-absolute': absolute,
-        },
-        containerClass,
-      ]"
-      :style="[{ width: `${width}px` }, containerStyle]"
+      :class="[classes, containerClass]"
+      :style="[styles, containerStyle]"
       @transitionstart="handleTransition($event, 'start')"
       @transitionend="handleTransition($event, 'end')"
     >
@@ -125,9 +175,14 @@ onClickOutside(drawerEl, handleClickOutside, {
 .drawer {
   transition:
     opacity ease-out 200ms,
-    transform ease-out 200ms;
+    transform ease-out 200ms,
+    width ease-out 200ms;
 
-  &:not(.is-full-height):not(.is-absolute) {
+  &.is-no-transition {
+    transition: none;
+  }
+
+  &:not(.is-full-height):not(.is-absolute):not(.is-relative) {
     height: calc(100% - var(--navHeight, 0px));
   }
 }

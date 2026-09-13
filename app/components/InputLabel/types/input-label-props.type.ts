@@ -1,18 +1,12 @@
-import type { CSSProperties } from 'vue'
+import type { AllowedComponentProps, CSSProperties } from 'vue'
+
+// Types
+import type { ITooltipProps } from '../../Tooltip/types/tooltip-props.type'
 
 // Constants
 import type { INPUT_LABEL_DEFAULT_PROPS } from '../constants/input-label-default-props'
 
 export type IInputLabelProps = {
-  /**
-   * The color of the label when it's active
-   *
-   * NOTE: This needs to be a HEX, RGBA or CSS variable like var(--primary-color)
-   * It cannot be an unocss variable or anything alike
-   */
-
-  activeLabelColor?: string
-
   /**
    * Whether the input has content or not
    */
@@ -27,6 +21,18 @@ export type IInputLabelProps = {
    * The input's label
    */
   label?: string | (() => string)
+
+  /**
+   * Label hint configuration
+   */
+  labelHint?: {
+    label?: string
+    icon?: string
+    props?: Omit<
+      Partial<ITooltipProps>,
+      'modelValue' | 'referenceTarget'
+    > & AllowedComponentProps
+  }
 
   /**
    * The input's placeholder

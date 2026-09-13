@@ -131,7 +131,7 @@ const inputInnerContainerStyle = computed(() => {
   }
 
   &-input {
-    @apply grid items-center;
+    @apply grid items-center shrink-1;
 
     grid-template-areas:
       'prepend input loading append'
@@ -169,11 +169,11 @@ const inputInnerContainerStyle = computed(() => {
     @apply flex-row items-start gap-2;
 
     &-label {
-      @apply flex items-center;
+      @apply flex items-center overflow-hidden;
     }
 
     &-input {
-      @apply grow;
+      @apply grow overflow-hidden;
     }
 
     // Label must be have at least the same height as the input to be positioned properly

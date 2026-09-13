@@ -35,6 +35,7 @@ const mergedProps = computed(() => {
 // Layout
 const fieldEl = useTemplateRef('fieldEl')
 const model = defineModel<Datetime>()
+
 const pickerModel = computed<Datetime>({
   get() {
     return model.value
@@ -65,17 +66,7 @@ const modelFormatted = computed(() => {
 const referenceEl = shallowRef<HTMLElement>()
 const isPickerActive = ref(false)
 const pickerState = ref('hide')
-
-function handlePickerIconClick(ev: MouseEvent) {
-  if (!isEditable.value) {
-    return
-  }
-
-  ev.preventDefault()
-  ev.stopPropagation()
-
-  isPickerActive.value = !isPickerActive.value
-}
+const menuProxyEl = useTemplateRef('menuProxyEl')
 
 function handleMonthSelect() {
   isPickerActive.value = false
@@ -83,29 +74,27 @@ function handleMonthSelect() {
 }
 
 // Field
-const { el, getFieldProps, handleFocusOrClick, isEditable } = useFieldUtils({
+const {
+  inputId,
+  getFieldProps,
+  handleFocusOrClick,
+  handleClickWrapper,
+  handlePointerDown,
+  handleBlur,
+} = useFieldUtils({
   props,
-  emit: event => emits(event),
+  emit: event => event === 'focus' ? emits('focus') : emits('blur'),
+  menuElRef: menuProxyEl,
+  getElement: () => fieldEl.value?.controlElement,
   onBeforeFocus: ev => onBeforeFocus?.(ev, isPickerActive) ?? {},
   onFocus: ev => onFocus ? onFocus(ev, isPickerActive) : isPickerActive.value = true,
 })
 
 const fieldProps = getFieldProps(props)
 
-function handleWrapperMouseDown(ev: MouseEvent) {
-  const target = ev.target as HTMLElement
-  const isFocusable = !!target.closest('.input-wrapper__focusable')
-
-  if (!isEditable.value || !isFocusable || target.closest('button')) {
-    return
-  }
-
-  if (isPickerActive.value) {
-    ev.preventDefault()
-  }
-
-  isPickerActive.value = !isPickerActive.value
-}
+const ignoredEls = computed(() => [
+  `#${inputId}-wrapper .input-wrapper__focusable`,
+])
 
 // Styles - append
 const appendClass = computed(() => {
@@ -129,16 +118,19 @@ const pickerIconStyle = computed(() => {
   return mergedProps.value.ui?.pickerIconStyle?.()
 })
 
-onMounted(() => {
-  nextTick(() => {
+watch(
+  [fieldEl, () => props.layout],
+  () => {
     referenceEl.value = fieldEl.value?.element
       ?.querySelector<HTMLElement>('.input-wrapper-border') ?? undefined
-  })
-})
+  },
+  { flush: 'post' },
+)
 </script>
 
 <template>
   <Field
+    :id="inputId"
     ref="fieldEl"
     v-bind="fieldProps"
     class="year-month-selector group/year-month-selector"
@@ -146,18 +138,22 @@ onMounted(() => {
     :ui="mergedProps.ui"
     :has-content="!!model"
     .focus="handleFocusOrClick"
-    @focus="!readonly && handleFocusOrClick($event)"
-    @mousedown="handleWrapperMouseDown"
+    @pointerdown="handlePointerDown"
+    @click="handleClickWrapper"
+    @focus="handleFocusOrClick"
+    @blur="handleBlur"
   >
-    <span ref="el">
+    <span>
       {{ modelFormatted }}
     </span>
 
     <MenuProxy
+      ref="menuProxyEl"
       v-model="isPickerActive"
       manual
       :reference-target="referenceEl"
       :fit="false"
+      :ignore-click-outside="ignoredEls"
       position="top"
       placement="bottom-start"
       h="!auto"
@@ -200,8 +196,6 @@ onMounted(() => {
           class="picker-icon"
           :class="pickerIconClass"
           :style="pickerIconStyle"
-          @mousedown="handlePickerIconClick"
-          @click.stop.prevent
         />
       </div>
     </template>

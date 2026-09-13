@@ -6,11 +6,31 @@ import type { DRAWER_DEFAULT_PROPS } from '../constants/drawer-default-props.con
 
 export type IDrawerProps = {
   /**
-   * Whether the drawer should be absolute positioned
+   * Forces the drawer to be absolutely positioned (overlaying its `referenceEl`
+   * or its offset parent) regardless of the `mode` and `absoluteBreakpoint`
    *
-   * @default false => the position is fixed
+   * @default false => the position is given by the `mode`
    */
   absolute?: boolean
+
+  /**
+   * Below this breakpoint the drawer becomes absolutely positioned (overlays
+   * its parent) regardless of the `mode`
+   *
+   * Note: When not provided, the drawer never switches to the absolute mode
+   * by itself (see `absolute`)
+   */
+  absoluteBreakpoint?: keyof typeof BREAKPOINTS
+
+  /**
+   * How the drawer is positioned
+   * - `fixed` ~ overlays the page (position: fixed)
+   * - `relative` ~ takes up space in the document flow next to its siblings,
+   *   collapsing its width when closed
+   *
+   * @default 'fixed'
+   */
+  mode?: 'fixed' | 'relative'
 
   /**
    * When true, clicking outside the drawer will close it
@@ -41,6 +61,11 @@ export type IDrawerProps = {
    * When true, title will be hidden
    */
   noTitle?: boolean
+
+  /**
+   * When true, the drawer opens/closes without the slide (or width) animation
+   */
+  noTransition?: boolean
 
   /**
    * On which side the drawer should be

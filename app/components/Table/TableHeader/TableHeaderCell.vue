@@ -60,7 +60,11 @@ const headerClass = computed(() => {
       defaults: TABLE_DEFAULT_PROPS.ui.headerCellClass(),
     }),
     props.column.headerClass,
-    { 'is-helper-col': props.column.isHelperCol },
+    {
+      'is-helper-col': props.column.isHelperCol,
+      'is-frozen': !isCardView.value && props.column.semiFrozen,
+      'is-frozen-edge': !isCardView.value && props.column.frozen,
+    },
   ]
 })
 
@@ -182,6 +186,13 @@ function handleSelect() {
 </template>
 
 <style scoped lang="scss">
+@use '../styles/frozen-edge-shadow' as *;
+
+.can-scroll-left .th.is-frozen-edge {
+  border-right-width: 1px;
+  @include frozen-edge-shadow(1);
+}
+
 .th {
   @apply flex items-center gap-2 shrink-0 border-ca w-$colWidth;
 

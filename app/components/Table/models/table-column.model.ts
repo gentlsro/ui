@@ -582,8 +582,8 @@ export class TableColumn<T = IItem> {
     columns.forEach(col => {
       col.frozen = false
       col.semiFrozen = false
-      col.headerStyle = omit(this.headerStyle, ['left', 'position', 'backgroundColor', 'zIndex'])
-      col.cellStyle = omit(this.cellStyle, ['left', 'position', 'backgroundColor', 'zIndex'])
+      col.headerStyle = omit(col.headerStyle, ['left', 'position', 'zIndex'])
+      col.cellStyle = omit(col.cellStyle, ['left', 'position', 'zIndex'])
     })
 
     if (!isFrozen) {
@@ -605,14 +605,12 @@ export class TableColumn<T = IItem> {
           ...col.headerStyle,
           left: `${left}px`,
           position: 'sticky',
-          backgroundColor: 'var(--color-theme)',
           zIndex: 1,
         }
         col.cellStyle = {
           ...col.cellStyle,
           left: `${left}px`,
           position: 'sticky',
-          backgroundColor: 'var(--color-theme)',
           zIndex: 1,
         }
 

@@ -25,6 +25,7 @@ export const DIALOG_DEFAULT_PROPS = {
         'h-[var(--visual-viewport-height,100dvh)]',
       ].join(' ')
 
+      // Variant groups cannot parse this nested attribute selector in UnoCSS 66.10.
       const positionTop = '[&[position="top"]]:justify-center [&[position="top"]]:items-start'
       const positionBottom = '[&[position="bottom"]]:justify-center [&[position="bottom"]]:items-end'
       const positionLeft = '[&[position="left"]]:justify-start [&[position="left"]]:items-center'

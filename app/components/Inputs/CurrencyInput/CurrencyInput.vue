@@ -23,7 +23,8 @@ const props = withDefaults(defineProps<ICurrencyInputProps>(), {
 const emits = defineEmits<{
   (e: 'clear'): void
   (e: 'update:modelValue', val?: number | undefined | null): void
-  (e: 'blur'): void
+  (e: 'focus'): void
+  (e: 'blur', ev: FocusEvent): void
 }>()
 
 // Utils
@@ -344,7 +345,6 @@ defineExpose({
       <div
         :class="appendClass"
         :style="appendStyle"
-        @click="handleFocusOrClick"
       >
         <span
           v-if="currencyVisibility === 'append'"

@@ -39,7 +39,7 @@ export const TREE_DEFAULT_PROPS = {
       const selectionNoCheckbox = '[&.is-selected:not(.uses-checkbox)]:(bg-slate-200 color-primary dark:(bg-slate-800 color-blue-400))'
 
       // Selection - multi (with checkbox)
-      const selectionMultiCheckbox = '[&.is-selected.is-multi.uses-checkbox]:())'
+      const selectionMultiCheckbox = ''
 
       // Focus while selected
       const focusSelected = '[&.is-focused.is-selected:not(.uses-checkbox)]:(outline-1 outline-dashed outline-offset--1 outline-primary dark:(outline-blue-400))'
@@ -69,7 +69,7 @@ export const TREE_DEFAULT_PROPS = {
       // const selectionNoCheckbox = '[&.is-selected:not(.uses-checkbox)]:(bg-slate-200 color-primary dark:(bg-slate-800 color-blue-400))'
 
       // // Selection - multi (with checkbox)
-      // const selectionMultiCheckbox = '[&.is-selected.is-multi.uses-checkbox]:())'
+      // const selectionMultiCheckbox = ''
 
       // // Focus while selected
       // const focusSelected = '[&.is-focused.is-selected:not(.uses-checkbox)]:(outline-1 outline-dashed outline-offset--1 outline-primary dark:(outline-blue-400))'

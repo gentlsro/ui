@@ -119,6 +119,10 @@ function isMaskString(val?: string) {
 const readonly = toRef(props, 'readonly')
 const preventSync = autoResetRef(false, 50)
 
+const ignoredEls = computed(() => [
+  `#${inputId}-wrapper .input-wrapper__focusable`,
+])
+
 function handleDateSelect(val: Dayjs) {
   preventSync.value = true
   model.value = props.format ? val.format(props.format) : val
@@ -129,20 +133,9 @@ function handleDateSelect(val: Dayjs) {
 }
 
 // Picker
+const isPickerActive = ref(false)
 const menuProxyEl = useTemplateRef('menuProxyEl')
 const datePickerEl = useTemplateRef('datePickerEl')
-const isPickerActive = ref(false)
-
-function handlePickerIconClick(ev: MouseEvent) {
-  if (isPickerActive.value) {
-    ev.preventDefault()
-    ev.stopPropagation()
-
-    return
-  }
-
-  isPickerActive.value = true
-}
 
 const {
   el,
@@ -250,7 +243,7 @@ defineExpose({
         flex="1"
         type="text"
         :value="masked"
-        :placeholder="placeholder"
+        :placeholder
         :readonly
         :disabled
         autocomplete="off"
@@ -284,28 +277,16 @@ defineExpose({
           :focus="focus"
         />
 
-        <Btn
+        <InputClearBtn
           v-if="hasClearableBtn"
-          icon="i-eva:close-fill h-6 w-6"
-          color="ca"
-          size="auto"
-          h="7"
-          w="7"
-          tabindex="-1"
+          :clear-confirmation
+          :size
           @click.stop.prevent="!clearConfirmation && clear()"
-        >
-          <MenuConfirmation
-            v-if="clearConfirmation"
-            @ok="clear"
-          >
-            {{ clearConfirmation }}
-          </MenuConfirmation>
-        </Btn>
+        />
 
         <div
           v-if="!noPickerIcon && !readonly && !disabled"
           class="picker-icon i-system-uicons:calendar-date"
-          @click.stop.prevent="handlePickerIconClick"
         />
       </div>
     </template>
@@ -315,11 +296,12 @@ defineExpose({
         ref="menuProxyEl"
         v-model="isPickerActive"
         manual
-        position="top"
+        position="center"
         placement="bottom-start"
         no-uplift
         :fit="false"
         :reference-target="el"
+        :ignore-click-outside="ignoredEls"
         h="!auto"
         w="!auto"
         min-w="!280px"
@@ -342,16 +324,11 @@ defineExpose({
 </template>
 
 <style lang="scss" scoped>
-.picker-icon {
-  @apply cursor-pointer color-ca h-6 w-6;
+.control {
+  font-variant-numeric: tabular-nums;
 }
 
-.input-wrapper {
-  &--xs,
-  &--sm {
-    .picker-icon {
-      @apply h-5 w-5;
-    }
-  }
+.picker-icon {
+  @apply cursor-pointer color-ca h-6 w-6 group-[.wrapper--sm]/wrapper:(h-4 w-4);
 }
 </style>

@@ -69,6 +69,7 @@ const {
   isPickerActive,
   options,
   optionsOriginal,
+  menuEl,
 } = useSelectorStore({ props })
 
 const mergedProps = computed(() => getComponentMergedProps('selector', props))
@@ -82,10 +83,12 @@ const {
   handleBlur,
   handleFocusOrClick,
   handleClickWrapper,
+  handlePointerDown,
 } = useFieldUtils({
   props,
-  emit: event => emits(event),
+  emit: event => event === 'focus' ? emits('focus') : emits('blur'),
   getElement: () => fieldEl.value?.controlElement,
+  menuElRef: menuEl,
   onBeforeFocus: ev => {
     if (isPreventNextFocus.value && ev instanceof FocusEvent) {
       isPreventNextFocus.value = false
@@ -147,6 +150,17 @@ function handleClear() {
   emits('clear')
 }
 
+function handleSpaceKey(ev: KeyboardEvent) {
+  if (!isEditable.value || isPickerActive.value) {
+    return
+  }
+
+  ev.preventDefault()
+  ev.stopPropagation()
+  isPreventNextFocus.value = false
+  handleFocusOrClick(ev)
+}
+
 // Options
 syncRef(
   optionsOriginal,
@@ -167,8 +181,19 @@ const hasClearButton = computed(() => {
 // Picker
 const placement = ref(mergedProps.value?.menuProps?.placement ?? 'bottom')
 
+const ignoredEls = computed(() => [
+  `#${inputId}-wrapper .input-wrapper__focusable`,
+])
+
 const menuProps = computed(() => {
-  const _menuProps = mergedProps.value.menuProps ?? {}
+  const configuredMenuProps = mergedProps.value.menuProps ?? {}
+  const _menuProps = {
+    ...configuredMenuProps,
+    ignoreClickOutside: [
+      ...configuredMenuProps.ignoreClickOutside ?? [],
+      ...ignoredEls.value,
+    ],
+  }
   const matchWidth = !props.noMenuMatchWidth
 
   if (!isNil(props.noMenuMatchWidth)) {
@@ -230,7 +255,7 @@ watch(
 
 // Initialize the options if `immediate` is set
 if (props.immediateFetch && mergedProps.value.loadData?.fnc) {
-  const mergedListPropsLoadData = getComponentMergedProps('list', mergedProps.value.listProps)
+  const mergedListPropsLoadData = getComponentMergedProps('list', mergedProps.value.listProps ?? {})
 
   listFetchData({
     search: search.value ?? '',
@@ -255,6 +280,8 @@ if (props.immediateFetch && mergedProps.value.loadData?.fnc) {
     :class="wrapperClass"
     data-onboarding="selector"
     @focus="handleFocusOrClick"
+    @keydown.space="handleSpaceKey"
+    @pointerdown="handlePointerDown"
     @blur="handleBlur"
     @click="handleSelectorClick"
   >

@@ -100,16 +100,22 @@ const fillerStyle = computed(() => {
 // Click outside
 const drawerEl = useTemplateRef<HTMLElement>('drawerEl')
 
+// The `click` ending a drag (panning, text selection…) must not close the drawer
+const { isDragRelease } = useDragRelease()
+
 function handleClickOutside(ev: Event) {
-  if (!model.value || !props.closeOnClickOutside) {
+  if (!model.value || !props.closeOnClickOutside || isDragRelease(ev)) {
     return
   }
 
   const targetEl = ev.target as HTMLElement
-  const isPartOfFloatingElement = !!targetEl.closest('.floating-element')
+
+  // A floating UI (menu/dialog) opened on top of the drawer consumes the click,
+  // be it its content or the overlay rendered behind it
+  const isPartOfFloatingUI = !!targetEl.closest('.floating-element, .floating-overlay')
   const isNotifications = !!targetEl.closest('.notifications')
 
-  if (isPartOfFloatingElement || isNotifications) {
+  if (isPartOfFloatingUI || isNotifications) {
     return
   }
 

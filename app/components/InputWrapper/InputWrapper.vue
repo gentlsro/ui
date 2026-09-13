@@ -44,12 +44,12 @@ const isModified = computed(() => {
 
 const labelProps = computed(() => {
   return {
-    activeLabelColor: props.activeLabelColor,
     focusInputOnLabelClick: mergedProps.value.ui?.focusInputOnLabelClick,
     hasContent: props.hasContent,
     hasError: !!issues.value.length,
     id: props.id,
     label: props.label,
+    labelHint: props.labelHint,
     layout: props.layout,
     placeholder: props.placeholder,
     required: props.required,
@@ -180,6 +180,7 @@ defineExpose({ element: wrapperEl })
 
 <template>
   <div
+    :id="id ? `${id}-wrapper` : undefined"
     ref="wrapperEl"
     class="wrapper group/wrapper"
     :class="wrapperClass"

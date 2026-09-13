@@ -10,6 +10,7 @@ export type IMenuProxyProps = IFloatingUIProps & {
 }
 
 export type IMenuProxyExpose = {
+  isOpen: Readonly<Ref<boolean>>
   show: () => void
   hide: (force?: boolean) => void
   toggle: () => void

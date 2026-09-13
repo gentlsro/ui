@@ -60,11 +60,13 @@ export const MENU_DEFAULT_PROPS = {
     },
 
     overlayClass() {
-      const base = 'fixed inset-0 transition-background-color ease bg-transparent bg-darker-70'
+      const base = 'fixed inset-0 transition-background-color ease bg-transparent'
+      const active = '[&.is-active]:(bg-darker/70)'
 
       return {
         base,
-        all: `${base}`,
+        active,
+        all: `${base} ${active}`,
       } as const
     },
   },

@@ -21,9 +21,15 @@ const props = withDefaults(defineProps<IFileInputProps>(), {
 const emits = defineEmits<IFileInputEmits>()
 
 // Utils
-const { getFieldProps, handleFocusOrClick, handleBlur } = useFieldUtils({
+const {
+  getFieldProps,
+  handleFocusOrClick,
+  handleBlur,
+  handleClickWrapper,
+  handlePointerDown,
+} = useFieldUtils({
   props,
-  emit: event => emits(event),
+  emit: event => event === 'focus' ? emits('focus') : emits('blur'),
   onFocus: handleOpenDialog,
   getElement: () => fileFieldEl.value?.controlElement,
 })
@@ -76,7 +82,8 @@ const appendStyle = computed(() => {
     .focus="handleFocusOrClick"
     @focus="handleFocusOrClick"
     @blur="handleBlur"
-    @click="handleFocusOrClick"
+    @pointerdown="handlePointerDown"
+    @click="handleClickWrapper"
   >
     <FileInputSimpleInner
       v-bind="$props"

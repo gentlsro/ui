@@ -21,7 +21,7 @@ defineEmits<{
 }>()
 
 // Utils
-const { el, inputId } = useFieldUtils()
+const { el, inputId } = useFieldUtils({ props })
 const { path } = useInputValidationUtils(props)
 const { getInputWrapperProps } = useInputWrapperUtils()
 

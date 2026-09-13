@@ -58,7 +58,7 @@ watchEffect(onCleanup => {
     return
   }
 
-  const parentEl = hostAnchor.value?.parentElement
+  const parentEl = hostAnchor.value?.parentElement ?? undefined
   const target = getElement({ elRef: props.referenceTarget ?? parentEl, parentEl })
 
   referenceEl.value = target instanceof Element ? target : undefined
@@ -69,25 +69,87 @@ watchEffect(onCleanup => {
 
   target.classList.add('has-tooltip')
   const manual = props.manual
+  let wasOpenOnPointerDown = false
 
   const enter = () => {
+    if (props.mode !== 'hover') {
+      return
+    }
+
     target.classList.add('tooltip-hovered')
     shared.enter(owner)
   }
 
   const leave = () => {
+    if (props.mode !== 'hover') {
+      return
+    }
+
     target.classList.remove('tooltip-hovered')
-    shared.leave(owner)
+
+    if (!target.matches(':focus-visible')) {
+      shared.leave(owner)
+    }
+  }
+
+  const pointerDown = () => {
+    wasOpenOnPointerDown = model.value
+  }
+
+  const focus = () => shared.show(owner)
+  const click = (event: Event) => {
+    if (!(event instanceof MouseEvent) || props.mode !== 'click' || event.detail === 0) {
+      return
+    }
+
+    if (wasOpenOnPointerDown) {
+      shared.release(owner)
+    } else {
+      shared.show(owner)
+    }
+  }
+  const blur = () => shared.release(owner)
+  const keydown = (event: Event) => {
+    if (!(event instanceof KeyboardEvent)) {
+      return
+    }
+
+    if (event.key === 'Escape') {
+      if (model.value) {
+        event.stopPropagation()
+        event.preventDefault()
+      }
+      shared.release(owner)
+    } else if (event.key === 'Enter' || event.key === ' ') {
+      shared.show(owner)
+    }
+  }
+  const clickOutside = (event: Event) => {
+    if (event.target instanceof Node && !target.contains(event.target)) {
+      shared.release(owner)
+    }
   }
 
   if (!manual) {
     target.addEventListener('mouseenter', enter)
     target.addEventListener('mouseleave', leave)
+    target.addEventListener('pointerdown', pointerDown)
+    target.addEventListener('focus', focus)
+    target.addEventListener('click', click)
+    target.addEventListener('blur', blur)
+    target.addEventListener('keydown', keydown)
+    document.addEventListener('pointerdown', clickOutside)
   }
 
   onCleanup(() => {
     target.removeEventListener('mouseenter', enter)
     target.removeEventListener('mouseleave', leave)
+    target.removeEventListener('pointerdown', pointerDown)
+    target.removeEventListener('focus', focus)
+    target.removeEventListener('click', click)
+    target.removeEventListener('blur', blur)
+    target.removeEventListener('keydown', keydown)
+    document.removeEventListener('pointerdown', clickOutside)
     target.classList.remove('has-tooltip', 'tooltip-hovered')
 
     // Retarget an open bubble in place; only cancel work tied to the old target.

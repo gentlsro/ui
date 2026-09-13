@@ -70,7 +70,8 @@ export function $hide(options?: {
       const isIgnored = ignore.includes(el)
 
       if (!isIgnored) {
-        el.hide?.(force)
+        const hideFn = (el as { hide?: (force?: boolean) => void })?.hide
+        hideFn?.(force)
       }
     })
 

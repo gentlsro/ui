@@ -1,9 +1,11 @@
 <script setup lang="ts" vapor>
 // Types
 import type { IInputLabelProps } from './types/input-label-props.type'
+import type { ITooltipProps } from '../Tooltip/types/tooltip-props.type'
 
 // Constants
 import { INPUT_LABEL_DEFAULT_PROPS } from './constants/input-label-default-props'
+import { $bp } from '../../constants/breakpoints'
 
 const props = withDefaults(defineProps<IInputLabelProps>(), {
   ...getComponentProps('inputLabel'),
@@ -25,11 +27,25 @@ const label = computed(() => {
   return props.label
 })
 
+// Label hint
+const isLabelHintTooltipOpen = shallowRef(false)
+const labelHintTooltipId = useId()
+const isMobileLabelHint = $bp.smaller('md')
+
+const labelHintTooltipProps = computed<ITooltipProps>(() => ({
+  placement: isMobileLabelHint.value ? 'bottom-end' : 'right',
+  ...mergedProps.value.labelHint?.props,
+  // Show label without delay when manual is true
+  ...(mergedProps.value.labelHint?.props?.manual && { delay: [0, 0] as [number, number] }),
+  manual: false,
+}))
+
 // Styles - Label
 const labelClassLocal = computed(() => {
   const isInline = props.layout === 'inline'
   const isInside = props.layout === 'label-inside'
   const isRegular = props.layout === 'regular'
+  const hasLabelHint = Boolean(mergedProps.value.labelHint?.label)
 
   return [
     `label--${props.size}`,
@@ -41,6 +57,8 @@ const labelClassLocal = computed(() => {
       'is-floating': !isInline && (props.stackLabel || props.placeholder || props.hasContent),
       'is-mounted': isMounted.value,
       'is-focusable': props.ui?.focusInputOnLabelClick,
+      'has-hint': hasLabelHint,
+      'is-mobile-hint': hasLabelHint && isMobileLabelHint.value,
     },
   ]
 })
@@ -64,7 +82,6 @@ const labelStyle = computed(() => {
   }
 
   return {
-    '--activeColor': props.activeLabelColor,
     '--labelInlineWidth': props.ui?.labelInlineWidth ?? '200px',
     ...labelStyle,
   }
@@ -84,7 +101,36 @@ onMounted(() => {
     :class="[labelClassLocal, labelClass]"
     :style="labelStyle"
   >
-    {{ label }}
+    <span class="label__content">
+      <span class="label__text">
+        {{ label }}
+      </span>
+
+      <!-- Label hint -->
+      <span
+        v-if="mergedProps.labelHint?.label"
+        class="label__hint"
+        role="button"
+        tabindex="0"
+        :aria-label="mergedProps.labelHint?.label"
+        :aria-describedby="isLabelHintTooltipOpen ? labelHintTooltipId : undefined"
+        @click.stop.prevent
+        @keydown.enter.space.stop.prevent
+      >
+        <span
+          class="label__hint-icon"
+          :class="mergedProps.labelHint?.icon"
+        />
+
+        <Tooltip
+          :id="labelHintTooltipId"
+          v-model="isLabelHintTooltipOpen"
+          :offset="8"
+          :content="{ title: mergedProps.labelHint?.label }"
+          v-bind="labelHintTooltipProps"
+        />
+      </span>
+    </span>
 
     <slot />
   </label>
@@ -97,15 +143,47 @@ label.label {
 
   // @apply z-10; // Is this needed? It fucks up a lot of things...
 
+  .label__content {
+    @apply flex items-start gap-0.5 w-full max-w-full;
+  }
+
+  .label__text {
+    @apply truncate;
+  }
+
+  .label__hint {
+    @apply relative inline-flex flex-none items-start pointer-events-auto
+      cursor-help top--2px;
+  }
+
+  &.is-mobile-hint .label__hint {
+    @apply cursor-pointer p-1 m--1;
+  }
+
+  .label__hint-icon {
+    @apply w-3 h-3 color-blue-300;
+  }
+
   // Layout ~ Inline
   &.is-inline {
     @apply order--1 font-rem-13;
+
+    .label__text {
+      overflow: visible;
+      text-overflow: clip;
+      white-space: normal;
+    }
 
     @screen md {
       @apply text-right font-rem-14 p-y-0.5 p-x-0;
 
       width: var(--labelInlineWidth);
       min-width: var(--labelInlineWidth);
+      max-width: var(--labelInlineWidth);
+
+      .label__content {
+        @apply justify-end;
+      }
     }
 
     &:not(.is-focusable) {
@@ -121,6 +199,18 @@ label.label {
   // Layout ~ not Inline
   &:not(.is-inline) {
     @apply origin-top-left left-0 top-0 truncate w-full overflow-hidden;
+  }
+
+  &.has-hint:not(.is-inline) {
+    overflow: visible;
+  }
+
+  &.is-inside {
+    @apply absolute;
+
+    .label__hint {
+      @apply top--8px;
+    }
   }
 
   // Size: Small
@@ -181,7 +271,7 @@ label.label {
     left: var(--prependWidth, 0px);
   }
 
-  &.is-required::after {
+  &.is-required .label__text::after {
     content: ' *';
     @apply color-negative;
   }
@@ -189,8 +279,6 @@ label.label {
 
 .wrapper__body:not(.selector-wrapper):focus-within > div {
   > label.label {
-    color: var(--activeColor, var(--color-primary));
-
     &:not(.is-inline) {
       @apply font-rem-12;
     }

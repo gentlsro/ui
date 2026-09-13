@@ -55,6 +55,7 @@ onBeforeUnmount(shared.dispose)
       v-if="active"
       ref="tooltipEl"
       class="tooltip group/tooltip"
+      role="tooltip"
       :class="[
         appearance?.containerClass,
         { 'no-inherit-font-style': props?.noInheritFontStyle },
