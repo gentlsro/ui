@@ -13,10 +13,10 @@ import { tableSlotsKey } from './provide/table.provide'
 import { tableInitialize } from './functions/table-initialize'
 import { tableGetExposed } from './functions/table-get-exposed'
 import { tableGetStorageKey } from './functions/table-get-storage-key'
-import { tableResolveExportData } from './functions/table-resolve-export-data'
 
 // Constants
 import { TABLE_DEFAULT_PROPS } from './constants/table-default-props.constant'
+import { TABLE_EXPORTS_DEFAULT } from './constants/table-exports-default.constant'
 
 // Stores
 import { useTableStore } from './stores/table.store'
@@ -133,7 +133,6 @@ const modifiersRef = computed(() => mergedProps.value.modifiers)
 const queryBuilderPropsRef = computed(() => mergedProps.value.queryBuilderProps)
 const selectionConfigRef = computed(() => mergedProps.value.selectionConfig)
 const autofitConfigRef = computed(() => mergedProps.value.autoFit)
-const exportDataRef = computed(() => tableResolveExportData(mergedProps.value.exportData))
 
 syncRef(toRef(props, 'rowKey'), rowKey, { direction: 'ltr' })
 syncRef(toRef(props, 'columns', []), propsColumns, { direction: 'ltr' })
@@ -141,7 +140,7 @@ syncRef(toRef(props, 'emptyValue'), emptyValue, { direction: 'ltr' })
 syncRef(loadMetaDataRef, loadMetaData, { direction: 'ltr' })
 syncRef(loadDataRef, loadData, { direction: 'ltr' })
 syncRef(modifiersRef, modifiers, { direction: 'ltr', immediate: false })
-syncRef(exportDataRef, exportData, { direction: 'ltr' })
+syncRef(toRef(props, 'exportData', TABLE_EXPORTS_DEFAULT), exportData, { direction: 'ltr' })
 syncRef(queryBuilderPropsRef, queryBuilderProps, { direction: 'ltr' })
 syncRef(toRef(props, 'allowComparatorsOfSameType'), allowComparatorsOfSameType, { direction: 'ltr' })
 syncRef(rows, rowsStore, { direction: 'both' })
