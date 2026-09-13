@@ -13,6 +13,7 @@ import { tableSlotsKey } from './provide/table.provide'
 import { tableInitialize } from './functions/table-initialize'
 import { tableGetExposed } from './functions/table-get-exposed'
 import { tableGetStorageKey } from './functions/table-get-storage-key'
+import { tableResolveExportData } from './functions/table-resolve-export-data'
 
 // Constants
 import { TABLE_DEFAULT_PROPS } from './constants/table-default-props.constant'
@@ -31,7 +32,7 @@ const slots = useSlots()
 function hasRowActions() {
   if (store.isCardView.value) {
     return false
-  } 
+  }
 
   if (slots['row-actions']) {
     return true
@@ -132,6 +133,7 @@ const modifiersRef = computed(() => mergedProps.value.modifiers)
 const queryBuilderPropsRef = computed(() => mergedProps.value.queryBuilderProps)
 const selectionConfigRef = computed(() => mergedProps.value.selectionConfig)
 const autofitConfigRef = computed(() => mergedProps.value.autoFit)
+const exportDataRef = computed(() => tableResolveExportData(mergedProps.value.exportData))
 
 syncRef(toRef(props, 'rowKey'), rowKey, { direction: 'ltr' })
 syncRef(toRef(props, 'columns', []), propsColumns, { direction: 'ltr' })
@@ -139,7 +141,7 @@ syncRef(toRef(props, 'emptyValue'), emptyValue, { direction: 'ltr' })
 syncRef(loadMetaDataRef, loadMetaData, { direction: 'ltr' })
 syncRef(loadDataRef, loadData, { direction: 'ltr' })
 syncRef(modifiersRef, modifiers, { direction: 'ltr', immediate: false })
-syncRef(toRef(props, 'exportData', []), exportData, { direction: 'ltr' })
+syncRef(exportDataRef, exportData, { direction: 'ltr' })
 syncRef(queryBuilderPropsRef, queryBuilderProps, { direction: 'ltr' })
 syncRef(toRef(props, 'allowComparatorsOfSameType'), allowComparatorsOfSameType, { direction: 'ltr' })
 syncRef(rows, rowsStore, { direction: 'both' })
@@ -280,7 +282,10 @@ onMounted(() => {
         v-if="$slots['row-actions']"
         #row-actions="actions"
       >
-        <slot name="row-actions" v-bind="actions" />
+        <slot
+          name="row-actions"
+          v-bind="actions"
+        />
       </template>
 
       <!-- Cell slots -->
