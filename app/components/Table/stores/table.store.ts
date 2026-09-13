@@ -27,9 +27,7 @@ import { tableSerializeSorting } from '../functions/table-serialize-sorting'
 import { tableBuildFetchPayload } from '../functions/table-build-fetch-payload'
 import { tableSerializePagination } from '../functions/table-serialize-pagination'
 import { queryBuilderInitializeItems } from '../../QueryBuilder/functions/query-builder-initialize-items'
-
-// Constants
-import { TABLE_EXPORTS_DEFAULT } from '../constants/table-exports-default.constant'
+import { tableResolveExportData } from '../functions/table-resolve-export-data'
 
 // Components
 import type HorizontalScroller from '../../Scroller/HorizontalScroller.vue'
@@ -179,7 +177,7 @@ const [
 
   // Exporting
   const isExporting = ref(false)
-  const exportData = ref<ITableExport[]>(tableProps?.exportData ?? TABLE_EXPORTS_DEFAULT)
+  const exportData = ref<ITableExport[]>(tableResolveExportData(tableProps?.exportData))
 
   /**
    * By default, reacts to changes in the filter, query builder, search, etc.
@@ -525,10 +523,10 @@ const [
 
   const headerX = ref(0)
   const totalsX = ref(0)
-  const { 
+  const {
     x: contentX,
     arrivedState: scrollArrivedState,
-    measure: measureScroll 
+    measure: measureScroll,
   } = useScroll(virtualScrollElDom)
 
   const isContentVerticallyScrollable = ref(false)

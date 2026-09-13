@@ -16,6 +16,7 @@ import { tableGetStorageKey } from './functions/table-get-storage-key'
 
 // Constants
 import { TABLE_DEFAULT_PROPS } from './constants/table-default-props.constant'
+import { TABLE_EXPORTS_DEFAULT } from './constants/table-exports-default.constant'
 
 // Stores
 import { useTableStore } from './stores/table.store'
@@ -31,7 +32,7 @@ const slots = useSlots()
 function hasRowActions() {
   if (store.isCardView.value) {
     return false
-  } 
+  }
 
   if (slots['row-actions']) {
     return true
@@ -139,7 +140,7 @@ syncRef(toRef(props, 'emptyValue'), emptyValue, { direction: 'ltr' })
 syncRef(loadMetaDataRef, loadMetaData, { direction: 'ltr' })
 syncRef(loadDataRef, loadData, { direction: 'ltr' })
 syncRef(modifiersRef, modifiers, { direction: 'ltr', immediate: false })
-syncRef(toRef(props, 'exportData', []), exportData, { direction: 'ltr' })
+syncRef(toRef(props, 'exportData', TABLE_EXPORTS_DEFAULT), exportData, { direction: 'ltr' })
 syncRef(queryBuilderPropsRef, queryBuilderProps, { direction: 'ltr' })
 syncRef(toRef(props, 'allowComparatorsOfSameType'), allowComparatorsOfSameType, { direction: 'ltr' })
 syncRef(rows, rowsStore, { direction: 'both' })
@@ -280,7 +281,10 @@ onMounted(() => {
         v-if="$slots['row-actions']"
         #row-actions="actions"
       >
-        <slot name="row-actions" v-bind="actions" />
+        <slot
+          name="row-actions"
+          v-bind="actions"
+        />
       </template>
 
       <!-- Cell slots -->
