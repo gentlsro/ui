@@ -5,6 +5,8 @@ import type { Day } from '#layers/utilities/app/models/day.model'
 /** Committed values, disabled-day rules, and single/multiple selection. */
 export function useDatePickerSelection(props: IDatePickerProps, originalModel: Ref<any>) {
   const uiStore = useUIStore()
+  const { getCalendarDateValue } = useDateUtils()
+
   function isSelected(day: Day) {
     if (!hasValue.value) {
       return false
@@ -144,16 +146,18 @@ export function useDatePickerSelection(props: IDatePickerProps, originalModel: R
   }
 
   function selectToday() {
+    const today = getCalendarDateValue($date(), { utc: props.utc })
+
     if (props.multi) {
       model.value = [
         ...(Array.isArray(model.value) ? model.value : model.value ? [model.value] : []),
-        $date().startOf('d'),
+        today,
       ]
 
       return
     }
 
-    model.value = $date().startOf('d')
+    model.value = today
   }
 
   return { getLastValue, isSelected, isDayDisabled, handleDaySelect, selectToday }
