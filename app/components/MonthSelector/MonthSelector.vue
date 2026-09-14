@@ -25,24 +25,21 @@ const mergedProps = computed(() => {
 const model = defineModel<Datetime>()
 
 const now = useNow({ interval: $duration(15, 'minute').as('ms') })
-const nowMonth = computed(() => {
-  const dateObj = $date(now.value)
-
-  return `${dateObj.year()}-${dateObj.month()}`
-})
+const nowValue = computed(() => $date(now.value))
+const nowMonth = computed(() => `${nowValue.value.year()}-${nowValue.value.month()}`)
 
 const monthBtn = useTemplateRef('monthBtn')
 const isMonthSelectorVisible = ref(false)
 
-const month = computed(() => $date(model.value).month())
+const dateObj = computed(() => $date(model.value, { utc: !!props.utc }))
+const month = computed(() => dateObj.value.month())
 
 const months = computed(() => {
-  const dateObj = $date(now.value)
-
   return Array.from({ length: 12 }, (_, idx) => {
     const idxString = padStart(String(idx), 2, '0')
     const date = $date(
-      `${dateObj.year()}-${padStart(String(idx + 1), 2, '0')}-01`,
+      `${nowValue.value.year()}-${padStart(String(idx + 1), 2, '0')}-01`,
+      { utc: !!props.utc },
     )
 
     return {
@@ -55,7 +52,7 @@ const months = computed(() => {
 })
 
 function handleMonthSelect(month: Pick<Month, 'idx'>, callback?: () => void) {
-  model.value = $date(model.value).month(month.idx).valueOf()
+  model.value = dateObj.value.month(month.idx).valueOf()
   callback?.()
 }
 

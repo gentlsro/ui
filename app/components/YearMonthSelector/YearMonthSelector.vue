@@ -48,7 +48,7 @@ const pickerModel = computed<Datetime>({
     }
 
     model.value = getYearMonthModelValue({
-      date: $date(value),
+      date: $date(value, { utc: !!props.utc }),
       valueFormat: props.valueFormat ?? 'timestamp',
     })
   },
@@ -59,7 +59,14 @@ const modelFormatted = computed(() => {
     return ''
   }
 
-  return capitalize(formatDate(model.value, 'yearMonth'))
+  /**
+   * `year-month` values are plain date strings ~ they carry no time zone, so they
+   * are read as-is. Only instants are read in the picker's own frame.
+   */
+  const isYearMonthString = typeof model.value === 'string' && /^\d{4}-\d{2}$/.test(model.value)
+  const format = props.utc && !isYearMonthString ? 'utcYearMonth' : 'yearMonth'
+
+  return capitalize(formatDate(model.value, format))
 })
 
 // Picker
@@ -164,7 +171,10 @@ onMounted(() => {
       @before-show="pickerState = 'show'"
       @before-hide="pickerState = 'hide'"
     >
-      <YearSelector v-model="pickerModel" />
+      <YearSelector
+        v-model="pickerModel"
+        :utc
+      />
 
       <Separator />
 
