@@ -110,9 +110,12 @@ defineExpose({
   @apply relative;
 
   &::after {
-    @apply absolute top-0 bottom-0 color-[#9ca3af] flex items-center;
+    @apply absolute inset-0 pointer-events-none color-[#9ca3af];
 
     content: attr(data-placeholder);
+    font-size: inherit;
+    line-height: inherit;
+    padding: inherit;
   }
 }
 
