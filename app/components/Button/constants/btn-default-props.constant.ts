@@ -197,11 +197,11 @@ export const BTN_DEFAULT_PROPS = {
       // Size variants
       let size = ''
 
-      const xs = 'h-3.5'
-      const xm = 'h-4'
-      const sm = 'h-4.5'
-      const md = 'h-5.5'
-      const lg = 'h-6.5'
+      const xs = 'h-3.5 w-3.5'
+      const xm = 'h-4 w-4'
+      const sm = 'h-4.5 w-4.5'
+      const md = 'h-5.5 w-5.5'
+      const lg = 'h-6.5 w-6.5'
       const auto = ''
 
       const sizes = {

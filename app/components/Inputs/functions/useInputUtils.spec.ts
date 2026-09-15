@@ -2,7 +2,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { computed, createSSRApp, defineComponent, h, nextTick, reactive, ref, shallowRef } from 'vue'
-import { renderToString } from '@vue/server-renderer'
+import { renderToString } from 'vue/server-renderer'
 import { MaskedNumber } from 'imask'
 import type { FactoryOpts } from 'imask'
 import { useInputUtils } from './useInputUtils'
@@ -672,7 +672,8 @@ describe('date picker views', () => {
     await wrapper.get('[data-picker-next]').trigger('click')
     expect((wrapper.get('[data-picker-years]').element as HTMLInputElement).value).toBe('2027')
     await wrapper.get('[data-picker-month="5"]').trigger('click')
-    await wrapper.setProps({ disabledDays: ['2027-06-20'] })
+    const { $date } = await import('../../../../../Utilities/shared/utils/$date')
+    await wrapper.setProps({ disabledDays: [$date('2027-06-20')] })
     expect(wrapper.get('[data-date="2027-06-20"]').attributes('disabled')).toBeDefined()
     expect(wrapper.emitted('update:modelValue')).toBeUndefined()
   })

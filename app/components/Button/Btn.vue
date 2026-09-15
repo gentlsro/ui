@@ -159,6 +159,12 @@ const loaderStyle = computed(() => {
   return mergedProps.value?.ui?.loaderStyle?.()
 })
 
+const loaderSize = computed(() => {
+  const size = props.size ?? 'md'
+
+  return BTN_DEFAULT_PROPS.ui.loaderClass({ size }).sizes[size] || undefined
+})
+
 const iconValue = computed(() => {
   return props.icon || preset.value?.icon
 })
@@ -239,6 +245,7 @@ const resolvedIcon = computed(() => {
       <Loader
         :variant="loaderVariant"
         :color="loadingColor"
+        :size="loaderSize"
         class="btn-loader"
         :class="loaderClass"
         :style="loaderStyle"

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 type IProps = {
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | number
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | number | string
   color?: string
 }
 
@@ -17,6 +17,9 @@ const loaderClass = computed(() => {
     case 'sm':
       return 'h-10 w-20'
 
+    case 'xm':
+      return 'h-8 w-16'
+
     case 'md':
       return 'h-12 w-24'
 
@@ -27,6 +30,10 @@ const loaderClass = computed(() => {
       return 'h-20 w-40'
 
     default:
+      if (typeof props.size === 'string' && !/^\d+(?:\.\d+)?$/.test(props.size)) {
+        return props.size
+      }
+
       return `h-${props.size} w-${props.size}`
   }
 })
