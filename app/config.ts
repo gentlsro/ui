@@ -283,6 +283,7 @@ export const defaultComponentsConfig = {
       errorTakesSpace: true,
       errorVisible: true,
       size: 'md',
+      stackLabel: true,
       fractionDigits: 2,
       currencyPosition: 'prepend',
       ui: {
