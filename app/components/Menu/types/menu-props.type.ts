@@ -55,6 +55,12 @@ export type IMenuProps = {
   manual?: boolean
 
   /**
+   * When true, the `Menu` will try to match the height of the
+   * reference element exactly
+   */
+  matchHeight?: boolean
+
+  /**
    * When true, the `Menu` will try to match the width of the reference element exactly
    *
    * NOTE: Difference between `fit` and `matchWidth` is that `fit` will try to fit the

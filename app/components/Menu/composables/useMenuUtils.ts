@@ -10,6 +10,7 @@ export function useMenuUtils() {
       'fallbackPlacements',
       'fit',
       'manual',
+      'matchHeight',
       'matchWidth',
       'maxHeight',
       'modelValue',
