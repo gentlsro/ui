@@ -278,6 +278,7 @@ export function useMenu(payload: {
         'is-cover': menuProps.cover,
         'is-fit': menuProps.fit,
         'is-match-width': menuProps.matchWidth,
+        'is-match-height': menuProps.matchHeight,
         'has-transition': !menuProps.noTransition,
       },
     ]

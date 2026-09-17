@@ -46,6 +46,23 @@ export const matchWidth: Middleware = {
   },
 }
 
+export const matchHeight: Middleware = {
+  name: 'matchHeight',
+  fn: ({ elements, rects }) => {
+    const height = rects.reference.height
+    const floatingElStyle = getComputedStyle(elements.floating)
+    const marginTop = floatingElStyle.marginTop
+    const marginBottom = floatingElStyle.marginBottom
+
+    elements.floating.style.height = `calc(${height}px - ${marginTop} - ${marginBottom})`
+    elements.floating.style.maxHeight = `calc(${height}px - ${marginTop} - ${marginBottom})`
+
+    return {
+      y: rects.reference.y,
+    }
+  },
+}
+
 export function useFloatingUIUtils() {
   function getElement(payload?: {
     elRef?: MaybeRefOrGetter<
