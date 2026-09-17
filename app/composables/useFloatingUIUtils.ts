@@ -46,7 +46,7 @@ export const matchWidth: Middleware = {
   },
 }
 
-export const matchHeight: Middleware = {
+export const matchHeightMiddleware: Middleware = {
   name: 'matchHeight',
   fn: ({ elements, rects }) => {
     const height = rects.reference.height

@@ -5,6 +5,14 @@ import { arrow, flip, offset, shift, size } from '@floating-ui/vue'
 // Types
 import type { IMenuProps } from '../types/menu-props.type'
 
+// Functions
+import {
+  cover,
+  fitWidth,
+  matchHeightMiddleware,
+  matchWidth,
+} from '../../../composables/useFloatingUIUtils'
+
 export function useMenuMiddleware(
   props: IMenuProps,
   options: { arrowEl: MaybeElementRef },
@@ -15,7 +23,7 @@ export function useMenuMiddleware(
     const middleware: Middleware[] = [
       ...(props.fit ? [fitWidth] : []),
       ...(props.matchWidth ? [matchWidth] : []),
-      ...(props.matchHeight ? [matchHeight] : []),
+      ...(props.matchHeight ? [matchHeightMiddleware] : []),
       ...(props.cover ? [cover] : []),
       shift({ padding: 0 }),
       size({
