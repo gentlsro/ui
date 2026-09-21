@@ -1,0 +1,82 @@
+/* https://ui.shadcn.com/docs/utils/scroll-fade — masks follow the scroll timeline. */
+@property --scroller-fade-start {
+  syntax: '<length-percentage>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --scroller-fade-end {
+  syntax: '<length-percentage>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@keyframes scroller-fade-in {
+  from {
+    --scroller-fade-start: 0px;
+  }
+  to {
+    --scroller-fade-start: var(--scroller-fade-start-size);
+  }
+}
+
+@keyframes scroller-fade-out {
+  from {
+    --scroller-fade-end: var(--scroller-fade-end-size);
+  }
+  to {
+    --scroller-fade-end: 0px;
+  }
+}
+
+.scroller-horizontal > .content {
+  --scroller-fade-direction: to right;
+  --scroller-fade-axis: inline;
+  --scroller-fade-start-size: var(--scroll-fade-s-size, var(--scroll-fade-size, min(12%, 40px)));
+  --scroller-fade-end-size: var(--scroll-fade-e-size, var(--scroll-fade-size, min(12%, 40px)));
+}
+
+.scroller-horizontal > .content:dir(rtl) {
+  --scroller-fade-direction: to left;
+}
+
+.scroller-vertical > .content {
+  --scroller-fade-direction: to bottom;
+  --scroller-fade-axis: y;
+  --scroller-fade-start-size: var(--scroll-fade-t-size, var(--scroll-fade-size, min(12%, 40px)));
+  --scroller-fade-end-size: var(--scroll-fade-b-size, var(--scroll-fade-size, min(12%, 40px)));
+}
+
+.scroller-horizontal > .content,
+.scroller-vertical > .content {
+  mask-image: var(
+    --scroll-fade-mask,
+    linear-gradient(
+      var(--scroller-fade-direction),
+      transparent,
+      #000 var(--scroller-fade-start),
+      #000 calc(100% - var(--scroller-fade-end)),
+      transparent
+    )
+  );
+  mask-repeat: no-repeat;
+
+  @supports (animation-timeline: scroll()) {
+    animation:
+      scroller-fade-in 1ms ease-in-out both,
+      scroller-fade-out 1ms ease-in-out both;
+    animation-timeline: scroll(self var(--scroller-fade-axis)), scroll(self var(--scroller-fade-axis));
+    animation-range:
+      0 var(--scroll-fade-reveal, 96px),
+      calc(100% - var(--scroll-fade-reveal, 96px)) 100%;
+  }
+}
+
+/* Existing overflow measurement keeps the static fallback clear for short content. */
+@supports not (animation-timeline: scroll()) {
+  .scroller-horizontal.is-overflown > .content,
+  .scroller-vertical.is-overflown > .content {
+    --scroller-fade-start: var(--scroller-fade-start-size);
+    --scroller-fade-end: var(--scroller-fade-end-size);
+  }
+}

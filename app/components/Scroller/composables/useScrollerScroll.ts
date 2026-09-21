@@ -7,12 +7,10 @@ export function useScrollerScroll() {
   const { arrivedState, directions, x, y, measure } = useScroll(scrollEl)
 
   const isOverflown = computed(() => {
-    return [
-      arrivedState.left,
-      arrivedState.right,
-      arrivedState.top,
-      arrivedState.bottom,
-    ].some(Boolean)
+    return !arrivedState.left
+      || !arrivedState.right
+      || !arrivedState.top
+      || !arrivedState.bottom
   })
 
   // Scrolling

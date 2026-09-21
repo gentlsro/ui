@@ -39,10 +39,6 @@ export function useMenu(payload: {
 
     if (referenceEl.value && referenceEl.value instanceof Element) {
       referenceEl.value.classList.add('has-menu')
-
-      const referenceElStyle = getComputedStyle(referenceEl.value)
-      referenceElZIndex.value = referenceElStyle.zIndex
-      isReferenceElTransparent.value = referenceElStyle.backgroundColor === 'rgba(0, 0, 0, 0)'
     }
 
     // Add event listeners when not using the `manual` mode
@@ -63,8 +59,6 @@ export function useMenu(payload: {
     model,
     referenceEl,
     triggerEl,
-    referenceElZIndex,
-    isReferenceElTransparent,
     floatingReferenceEl,
     floatingEl,
     arrowEl,
@@ -122,12 +116,7 @@ export function useMenu(payload: {
 
     debouncedModel.value = false
 
-    menuResetUplift({
-      referenceEl: referenceEl.value,
-      referenceElZIndex: referenceElZIndex.value,
-      isReferenceElTransparent: isReferenceElTransparent.value,
-      noUplift: menuProps.noUplift,
-    })
+    menuResetUplift({ referenceEl: referenceEl.value })
 
     instance?.emit('hide')
   }
@@ -348,12 +337,7 @@ export function useMenu(payload: {
       triggerEl.value?.removeEventListener(menuProps.trigger ?? 'click', toggle)
     }
 
-    menuResetUplift({
-      referenceEl: referenceEl.value,
-      referenceElZIndex: referenceElZIndex.value,
-      isReferenceElTransparent: isReferenceElTransparent.value,
-      noUplift: menuProps.noUplift,
-    })
+    menuResetUplift({ referenceEl: referenceEl.value })
   })
 
   return {
