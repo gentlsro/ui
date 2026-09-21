@@ -88,6 +88,7 @@ const bottomStyle = computed(() => {
         size="sm"
         emit-key
         layout="inline"
+        :clearable="false"
         m="l-auto"
         :list-props="{
           ui: {
