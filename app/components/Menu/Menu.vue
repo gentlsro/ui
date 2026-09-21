@@ -102,12 +102,7 @@ function applyUplift() {
 }
 
 function resetUplift(el?: unknown) {
-  menuResetUplift({
-    referenceEl: el,
-    referenceElZIndex: referenceElZIndex.value,
-    isReferenceElTransparent: isReferenceElTransparent.value,
-    noUplift: props.noUplift,
-  })
+  menuResetUplift({ referenceEl: el })
 }
 
 // We sync the model with the debouncedModel immediately when the value is `true`

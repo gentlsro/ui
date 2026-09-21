@@ -36,7 +36,9 @@ export type IHorizontalScrollerProps = IScrollerBaseProps & {
     }) => ClassType
 
     /**
-     * Style to apply to the content
+     * Style to apply to the content. Customize the mask with `--scroll-fade-size`,
+     * `--scroll-fade-s-size`, `--scroll-fade-e-size`, and `--scroll-fade-reveal`.
+     * Set `--scroll-fade-mask: none` to disable the fade.
      */
     contentStyle?: () => CSSProperties
 
@@ -70,7 +72,9 @@ export type IVerticalScrollerProps = IScrollerBaseProps & {
     }) => ClassType
 
     /**
-     * Style to apply to the content
+     * Style to apply to the content. Customize the mask with `--scroll-fade-size`,
+     * `--scroll-fade-t-size`, `--scroll-fade-b-size`, and `--scroll-fade-reveal`.
+     * Set `--scroll-fade-mask: none` to disable the fade.
      */
     contentStyle?: () => CSSProperties
 

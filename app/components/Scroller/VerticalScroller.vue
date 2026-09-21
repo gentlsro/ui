@@ -8,6 +8,8 @@ import { useScrollerScroll } from './composables/useScrollerScroll'
 // Constants
 import { SCROLLER_DEFAULT_PROPS } from './constants/scroller-default-props.constant'
 
+import './styles/scroll-fade.css'
+
 const props = withDefaults(defineProps<IVerticalScrollerProps>(), {
   ...getComponentProps('verticalScroller'),
 })
@@ -182,14 +184,6 @@ defineExpose({
     }
 
     &.is-active {
-      &.arrow--top {
-        background: linear-gradient(to bottom, theme('colors.truegray.200') 0%, transparent);
-      }
-
-      &.arrow--bottom {
-        background: linear-gradient(to top, theme('colors.truegray.200') 0%, transparent);
-      }
-
       > .btn {
         @apply opacity-85 hover:bg-white dark:hover:bg-black/50;
       }
@@ -201,20 +195,6 @@ defineExpose({
 
     &--top {
       @apply top-0 justify-center;
-    }
-  }
-}
-
-.dark {
-  .arrows--inside {
-    .is-active.arrow {
-      &--top {
-        background: linear-gradient(to bottom, theme('colors.truegray.800') 0%, transparent);
-      }
-
-      &--bottom {
-        background: linear-gradient(to top, theme('colors.truegray.800') 0%, transparent);
-      }
     }
   }
 }
