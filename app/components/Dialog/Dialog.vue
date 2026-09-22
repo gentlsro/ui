@@ -327,6 +327,8 @@ const contentClasses = computed(() => {
             dialogClass,
             { 'has-transition': !noTransition },
           ]"
+          h="120"
+          w="100"
           v-bind="$attrs"
         >
           <!-- Header -->

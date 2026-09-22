@@ -4,6 +4,7 @@ import type { BREAKPOINTS } from '../../../constants/breakpoints'
 
 // Constants
 import type { PAGE_DRAWER_DEFAULT_PROPS } from '../constants/page-drawer-default-props.constant'
+import type { IResizableConfig } from '../../Drawer/types/resizable-config.type'
 
 export type IPageDrawerProps = {
   /**
@@ -53,6 +54,11 @@ export type IPageDrawerProps = {
    * Whether to show the bottom part of the drawer
    */
   noBottom?: boolean
+
+  /**
+   * Whether the drawer can be resized by dragging the handle on its inner edge
+   */
+  resizableConfig?: IResizableConfig
 
   /**
    * The side on the page for the drawer

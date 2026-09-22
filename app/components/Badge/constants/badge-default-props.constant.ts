@@ -22,6 +22,7 @@ export const BADGE_DEFAULT_PROPS = {
         border,
         inline,
         topRight,
+        noPosition: `${base} ${font} ${border} min-w-5 p-x-1.5 p-y-2px`,
         all: `${base} ${font} ${position} ${border}`,
       } as const
     },

@@ -403,6 +403,7 @@ export const defaultComponentsConfig = {
       modelValue: undefined,
       noTitle: undefined,
       noTransition: undefined,
+      resizableConfig: { enabled: false },
       side: 'right',
       title: undefined,
       width: 480,
@@ -998,6 +999,7 @@ export const defaultComponentsConfig = {
       miniWidth: 64,
       modelValue: undefined,
       noBottom: undefined,
+      resizableConfig: { enabled: false },
       side: 'left',
       width: 280,
       ui: {
