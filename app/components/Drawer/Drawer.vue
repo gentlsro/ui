@@ -43,6 +43,19 @@ const isBelowAbsoluteBreakpoint = useMediaQuery(() => {
 const isAbsolute = computed(() => !!props.absolute || isBelowAbsoluteBreakpoint.value)
 const isRelative = computed(() => props.mode === 'relative' && !isAbsolute.value)
 
+// In the `relative` mode the drawer collapses its width when closed
+const isCollapsed = computed(() => isRelative.value && !model.value)
+
+// Resizing
+const width = defineModel<number>('width', { default: 480 })
+
+const { handleMouseDown, isResizing } = useDrawerResize({
+  width,
+  side: () => props.side,
+})
+
+const isResizable = computed(() => !!props.resizableConfig?.enabled)
+
 const classes = computed(() => {
   return [
     `drawer--${props.side}`,
@@ -52,17 +65,15 @@ const classes = computed(() => {
       'is-absolute': isAbsolute.value,
       'is-relative': isRelative.value,
       'is-no-transition': props.noTransition,
+      'is-resizing': isResizing.value,
     },
   ]
 })
 
 const styles = computed(() => {
-  // In the `relative` mode the drawer collapses its width when closed
-  const isCollapsed = isRelative.value && !model.value
-
   return {
-    '--drawerWidth': `${props.width}px`,
-    'width': isCollapsed ? '0px' : `${props.width}px`,
+    '--drawerWidth': `${width.value}px`,
+    'width': isCollapsed.value ? '0px' : `${width.value}px`,
   }
 })
 
@@ -164,6 +175,14 @@ onClickOutside(drawerEl, handleClickOutside, {
       </slot>
 
       <slot />
+
+      <!-- Resizer -->
+      <DrawerResizer
+        v-if="isResizable && !isCollapsed"
+        :side="props.side"
+        :is-resizing
+        @mousedown="handleMouseDown"
+      />
     </aside>
   </Teleport>
 </template>
@@ -177,6 +196,13 @@ onClickOutside(drawerEl, handleClickOutside, {
 
   &.is-no-transition {
     transition: none;
+  }
+
+  // The width follows the pointer while resizing, so it must not transition
+  &.is-resizing {
+    transition:
+      opacity ease-out 200ms,
+      transform ease-out 200ms;
   }
 
   &:not(.is-full-height):not(.is-absolute):not(.is-relative) {

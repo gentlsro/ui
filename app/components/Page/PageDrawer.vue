@@ -21,12 +21,29 @@ const mergedProps = computed(() => {
 // Store
 const { drawerWidth, navigationHeight } = storeToRefs(useLayoutStore())
 
-drawerWidth.value[props.side] = props.width
-drawerWidth.value[`${props.side}Mini`] = props.miniWidth
-
 // Layout
 const model = defineModel<boolean>({ default: false })
 const isMini = defineModel<boolean>('mini', { default: false })
+
+// Resizing
+const width = defineModel<number>('width', { default: 400 })
+
+// The page wrapper positions itself from the store, so it follows the resize
+const drawerWidthRef = computed({
+  get: () => drawerWidth.value[props.side],
+  set: value => {
+    drawerWidth.value[props.side] = value
+  },
+})
+
+syncRef(width, drawerWidthRef)
+
+const { handleMouseDown, isResizing } = useDrawerResize({
+  width,
+  side: () => props.side,
+})
+
+const isResizable = computed(() => !!props.resizableConfig?.enabled)
 
 const classes = computed(() => {
   return [
@@ -35,6 +52,7 @@ const classes = computed(() => {
     {
       'is-mini': isMini.value,
       'is-open': model.value,
+      'is-resizing': isResizing.value,
     },
   ]
 })
@@ -42,7 +60,7 @@ const classes = computed(() => {
 const styles = computed(() => {
   return {
     container: {
-      '--drawerWidth': `${props.width}px`,
+      '--drawerWidth': `${width.value}px`,
       '--drawerMiniWidth': `${props.miniWidth}px`,
       '--navHeight': `${navigationHeight.value}px`,
     },
@@ -200,6 +218,14 @@ useHead(() => {
         />
       </slot>
     </div>
+
+    <!-- Resizer -->
+    <DrawerResizer
+      v-if="isResizable && !isMini"
+      :side="props.side"
+      :is-resizing
+      @mousedown="handleMouseDown"
+    />
   </aside>
 </template>
 
@@ -214,6 +240,11 @@ header.is-hidden ~ .page-drawer {
   transition-property: width transform;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
+
+  // The width follows the pointer while resizing, so it must not transition
+  &.is-resizing {
+    transition-property: transform;
+  }
 
   &-filler {
     height: min(52px, var(--navHeight));

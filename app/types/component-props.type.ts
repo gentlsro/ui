@@ -58,6 +58,7 @@ export * from '../components/DragAndDrop/types/dragged-item.type'
 
 // Drawer
 export * from '../components/Drawer/types/drawer-props.type'
+export * from '../components/Drawer/types/resizable-config.type'
 
 // ElementMovement
 export * from '../components/ElementMovement/types/corner-resize-props.type'
