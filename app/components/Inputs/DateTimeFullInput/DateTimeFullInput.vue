@@ -111,6 +111,7 @@ const {
   label,
   isBlurred,
   isTouched,
+  elMask,
   handleFocusOrClick,
   handlePointerDown,
   handleClickWrapper,
@@ -177,11 +178,46 @@ function setDateTime(payload: { value?: Datetime, valueType: 'date' | 'time' }) 
   model.value = buildValue(isoDate, String(value))
 }
 
+/** Index of the first `HH` digit in the masked value (`DD.MM.YYYY HH:mm`). */
+function getTimeCursorPosition() {
+  return datePattern.value.length + 1
+}
+
+/**
+ * The shared focus handler closes every open menu. Focusing the field to show
+ * the caret has to stay local, otherwise the picker would close.
+ */
+function focusInputWithoutClosingPicker(input: HTMLInputElement) {
+  input.addEventListener('focus', event => {
+    event.stopImmediatePropagation()
+  }, { capture: true, once: true })
+
+  input.focus({ preventScroll: true })
+  isBlurred.value = false
+  isTouched.value = !props.disabled && !props.readonly
+}
+
+function placeCursorOnTime() {
+  const input = getInputElement()
+  const mask = elMask.value
+
+  if (!input || !mask) {
+    return
+  }
+
+  if (document.activeElement !== input) {
+    focusInputWithoutClosingPicker(input)
+  }
+
+  // vue-imask exposes a readonly proxy; cursor writes on it are ignored.
+  toRaw(mask).updateCursor(getTimeCursorPosition())
+}
+
 function handleDateSelect(val?: Datetime) {
   preventSync.value = true
   setDateTime({ value: val, valueType: 'date' })
 
-  if (props.autoClose ?? !isCompact.value) {
+  if (props.autoClose) {
     menuProxyEl.value?.hide()
 
     return
@@ -190,6 +226,12 @@ function handleDateSelect(val?: Datetime) {
   // On a narrow viewport the time is picked in its own tab – move the user on
   if (isCompact.value) {
     pickerEl.value?.showPane('time')
+
+    return
+  }
+
+  if (val) {
+    nextTick(placeCursorOnTime)
   }
 }
 
