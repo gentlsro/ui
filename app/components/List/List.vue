@@ -46,6 +46,7 @@ const {
   groupBySource: groupBySourceStore,
 
   // Layout
+  isLoading,
   listEl,
   search,
   selection,
@@ -221,7 +222,10 @@ defineExpose(listGetExposed())
     </slot>
 
     <!-- No data -->
-    <slot name="noData">
+    <slot
+      v-if="!isLoading && !listItems?.length"
+      name="noData"
+    >
       <ListNoData
         :ui="mergedProps.ui"
         @change:content-size="$emit('change:contentSize', $event)"
