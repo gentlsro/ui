@@ -9,6 +9,7 @@ import type { ITableLayout } from './table-layout.type'
 import type { TableFeature } from './table-feature.type'
 import type { ISelection } from '../../../types/selection.type'
 import type { ITableFetchPayload } from './table-fetch-payload.type'
+import type { IDialogProps } from '../../Dialog/types/dialog-props.type'
 import type { IQueryBuilderProps } from '../../QueryBuilder/types/query-builder-props.type'
 import type { IVirtualScrollEvent } from '../../VirtualScroller/types/virtual-scroll-event.type'
 import type { IVirtualScrollerProps } from '../../VirtualScroller/types/virtual-scroller-props.type'
@@ -60,6 +61,11 @@ export type ITableProps<
    * The breakpoint at which the table should switch to mobile view
    */
   breakpoint?: number
+
+  /**
+   * The props that should be passed to the column selection `Dialog`
+   */
+  columnSelectionDialogProps?: Partial<IDialogProps>
 
   /**
    * Definition of the table columns

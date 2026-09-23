@@ -20,6 +20,7 @@ const {
   visibleColumns: visibleColumnsStore,
   nonHelperColumns,
   onDataFetchQueue,
+  columnSelectionDialogProps,
 } = useTableStore()
 
 // Utils
@@ -140,8 +141,8 @@ function handleRemove(idx: number) {
       min-h="1/2"
       max-h="6/10"
       h="auto"
-      position="top"
       dense
+      v-bind="columnSelectionDialogProps"
       @before-show="initVisibleColumns"
     >
       <template #title>
