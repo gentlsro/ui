@@ -497,7 +497,7 @@ export type ITableProps<
   /**
    * Scroller configuration
    */
-  scrollerConfig?: Pick<IVirtualScrollerProps<any>, 'rowHeight' | 'overscan' | 'threshold' | 'watchWidth'> & {
+  scrollerConfig?: Pick<IVirtualScrollerProps<any>, 'rowHeight' | 'overscan' | 'threshold' | 'watchWidth' | 'initialRowsRenderCount' | 'virtualizeColumns'> & {
     /**
      * Optional custom scroller component used by `TableContent`
      */

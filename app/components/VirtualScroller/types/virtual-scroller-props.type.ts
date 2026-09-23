@@ -1,11 +1,19 @@
 import type { CSSProperties } from 'vue'
+import type { TableColumn } from '../../Table/models/table-column.model'
 
 // Constants
 import type { VIRTUAL_SCROLLER_DEFAULT_PROPS } from '../constants/virtual-scroller-default-props'
 
 export type IVirtualScrollerProps<T> = {
+  /** Columns available to the row slot and optional horizontal virtualization. */
+  columns?: TableColumn<T>[]
+
+  /** Virtualize columns as well as rows. Defaults to false. */
+  virtualizeColumns?: boolean
+
   /**
-   * The number of rows to render initially
+   * The number of rows to render during SSR, using TanStack initialRect.
+   * The actual viewport is observed after mount.
    */
   initialRowsRenderCount?: number
 
