@@ -15,19 +15,31 @@ export const useUIStore = defineStore('__ui', () => {
   const lastKeydownEvent = ref<KeyboardEvent>()
   const hasUserLeftPage = usePageLeave()
 
-  const uiState = useCookie<IUIState>('__ui', {
-    default: () => defu(uiConfig.misc.uiState, {
-      form: {
-        confirmation: {
-          enabled: uiConfig.form.confirmationInit.enabled,
-          required: uiConfig.form.confirmationInit.required,
-          editable: uiConfig.form.confirmationInit.editable,
-        },
+  const getDefaultUIState = () => defu(uiConfig.misc.uiState, {
+    form: {
+      confirmation: {
+        enabled: uiConfig.form.confirmationInit.enabled,
+        required: uiConfig.form.confirmationInit.required,
+        editable: uiConfig.form.confirmationInit.editable,
       },
-    }),
+    },
+  })
+
+  const uiState = useCookie<IUIState>('__ui', {
+    default: getDefaultUIState,
     domain: usePreferenceCookieDomain(),
     watch: true,
   })
+
+  // NOTE: `default` only covers the initial read; the cookie ref still becomes
+  // `null`/`undefined` when the cookie is deleted or changed elsewhere (cookieStore
+  // / BroadcastChannel sync, `refreshCookie`), so we restore the default synchronously
+  // to keep `uiState.value` safe to dereference for every reader
+  watch(uiState, state => {
+    if (state == null) {
+      uiState.value = getDefaultUIState()
+    }
+  }, { flush: 'sync' })
 
   function setState(state: Partial<IUIState>, extend = true) {
     if (extend) {
