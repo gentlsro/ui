@@ -27,6 +27,7 @@ const {
   selectionByKey,
   features,
   isCardView,
+  getColumnWidth,
 } = useTableStore()
 
 // Layout
@@ -74,7 +75,7 @@ const headerStyle = computed(() => {
       column: props.column,
     }),
     ...props.column.headerStyle,
-    '--colWidth': isCardView.value ? 'auto' : props.column.width,
+    '--colWidth': isCardView.value ? 'auto' : getColumnWidth(props.column),
   }
 })
 

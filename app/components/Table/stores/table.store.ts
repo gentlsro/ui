@@ -126,6 +126,9 @@ const [
       scrollArrivedState,
       isContentVerticallyScrollable,
 
+      // Relative column widths
+      getColumnWidth,
+
       // Selection
       selection,
       selectionByKey,
@@ -535,6 +538,7 @@ const [
 
     isContentVerticallyScrollable.value = clientHeight < scrollHeight
     measureScroll()
+    measureRelativeWidthBasis()
   })
 
   watch([() => visibleColumns.value.map(column => column.width), () => rows.value.length], measureScroll, { flush: 'post' })
@@ -542,6 +546,43 @@ const [
   syncRefs(headerX, [contentX, totalsX])
   syncRefs(contentX, [headerX, totalsX])
   syncRefs(totalsX, [headerX, contentX])
+  // !SECTION
+
+  // SECTION Relative column widths
+  // Percentages share the visible body width left after helper columns and row
+  // actions. Header, body and totals rows size to different things, so they all
+  // use this one resolved px value rather than resolving `%` against themselves.
+  const relativeWidthBasis = ref(0)
+
+  function measureRelativeWidthBasis() {
+    const scrollEl = virtualScrollElDom.value as HTMLElement | undefined
+
+    if (!scrollEl) {
+      return
+    }
+
+    const helperColsWidth = visibleColumns.value
+      .filter(col => col.isHelperCol)
+      .reduce((agg, col) => agg + Number(stringToFloat(col.width) || 0), 0)
+    const rowActionsEl = unrefElement(tableEl.value)?.querySelector<HTMLElement>('.row-actions-header')
+
+    relativeWidthBasis.value = Math.max(0, scrollEl.clientWidth - helperColsWidth - (rowActionsEl?.offsetWidth ?? 0))
+  }
+
+  watch(visibleColumns, measureRelativeWidthBasis, { flush: 'post' })
+
+  /**
+   * The column width with percentages resolved to px (see `relativeWidthBasis`)
+   */
+  function getColumnWidth(column: TableColumn) {
+    const basis = relativeWidthBasis.value
+
+    if (!basis || !column.width.includes('%')) {
+      return column.width
+    }
+
+    return column.width.replace(/(-?[\d.]+)%/g, (_, value) => `${(basis * Number(value)) / 100}px`)
+  }
   // !SECTION
 
   // SECTION Selection
@@ -897,6 +938,9 @@ const [
     contentX,
     scrollArrivedState,
     isContentVerticallyScrollable,
+
+    // Relative column widths
+    getColumnWidth,
 
     // Selection
     selection,
