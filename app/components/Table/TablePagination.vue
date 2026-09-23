@@ -4,6 +4,7 @@ import { useTableStore } from './stores/table.store'
 
 // Store
 const {
+  isInitialLoad,
   isDataLoading,
   isMetaLoading,
   totalPages,
@@ -117,9 +118,9 @@ const pages = computed(() => {
       @click="currentPage = totalPages"
     />
 
-    <!-- Loading -->
+    <!-- Loading (the initial load has its own overlay) -->
     <div
-      v-if="isDataLoading || isMetaLoading"
+      v-if="!isInitialLoad && (isDataLoading || isMetaLoading)"
       class="is-loading"
     >
       <LoaderInline

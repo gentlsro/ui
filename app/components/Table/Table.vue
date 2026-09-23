@@ -323,6 +323,12 @@ onMounted(() => {
       </template>
     </TableContent>
 
+    <!-- Initial load placeholder (the loading overlay is rendered below) -->
+    <div
+      v-else-if="isInitialLoad"
+      class="grow"
+    />
+
     <!-- Empty -->
     <TableEmpty v-else />
 
