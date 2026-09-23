@@ -220,7 +220,7 @@ const rowDataArray = computed(() => {
             valueFormatted: cellFormattedValue,
             column: col,
             isEditable,
-            cellStyle: Object.assign({}, columnCellStyle, uiCellStyle, { '--colWidth': col.width }),
+            cellStyle: Object.assign({}, columnCellStyle, uiCellStyle, { '--colWidth': tableStore.getColumnWidth(col) }),
             cellInnerStyle: uiCellInnerStyle,
             cellClass: [columnCellClass, uiCellClass, { 'is-editable': isEditable }],
             cellInnerClass: uiCellInnerClass,
@@ -719,6 +719,11 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
   right: 2rem;
   top: 50%;
   transform: translateY(-50%);
+}
+
+// Keep cells at their width like header cells do
+.tr.is-row > .td {
+  flex-shrink: 0;
 }
 
 .tr {

@@ -160,8 +160,8 @@ syncRef(toRef(props, 'rowClickable'), rowClickable, { direction: 'ltr' })
 syncRef(toRef(() => mergedProps.value.initialSchemaConfig), initialSchemaConfig, { direction: 'ltr' })
 syncRef(toRef(() => mergedProps.value.ui), uiConfig, { direction: 'ltr', immediate: false })
 
-// When columns change, make sure to get their real widths
-watch(visibleColumns, cols => {
+// When columns or their resolved widths change, make sure to get their real widths
+watch([visibleColumns, () => visibleColumns.value.map(store.getColumnWidth)], ([cols]) => {
   nextTick(() => {
     cols.forEach(col => col._width = col.getWidth(unrefElement(tableEl.value) ?? document))
 
