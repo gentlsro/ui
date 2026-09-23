@@ -13,6 +13,7 @@ import { tableSlotsKey } from './provide/table.provide'
 import { tableInitialize } from './functions/table-initialize'
 import { tableGetExposed } from './functions/table-get-exposed'
 import { tableGetStorageKey } from './functions/table-get-storage-key'
+import { tableGetRemovedModifierWarnings } from './functions/table-get-removed-modifier-warnings'
 
 // Constants
 import { TABLE_DEFAULT_PROPS } from './constants/table-default-props.constant'
@@ -159,6 +160,20 @@ syncRef(isLoading, isDataLoading, { direction: 'both' })
 syncRef(toRef(props, 'rowClickable'), rowClickable, { direction: 'ltr' })
 syncRef(toRef(() => mergedProps.value.initialSchemaConfig), initialSchemaConfig, { direction: 'ltr' })
 syncRef(toRef(() => mergedProps.value.ui), uiConfig, { direction: 'ltr', immediate: false })
+
+// Removed modifiers are silently ignored, so warn about them in dev mode
+if (import.meta.dev) {
+  const warnedMessages = new Set<string>()
+
+  watch(modifiersRef, modifiers => {
+    tableGetRemovedModifierWarnings(modifiers).forEach(message => {
+      if (!warnedMessages.has(message)) {
+        warnedMessages.add(message)
+        console.warn(message)
+      }
+    })
+  }, { immediate: true })
+}
 
 // When columns change, make sure to get their real widths
 watch(visibleColumns, cols => {
