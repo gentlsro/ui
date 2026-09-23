@@ -14,6 +14,7 @@ import type { TableColumn } from '../models/table-column.model'
 
 // Functions
 import { tableNavigate } from '../functions/table-navigate'
+import { tableTrackNavigation } from '../functions/table-track-navigation'
 import { getListItemKey } from '../../List/functions/helpers'
 import type { ITableExport } from '../types/table-export.type'
 import { extendColumns } from '../functions/table-extend-columns'
@@ -188,12 +189,35 @@ const [
     source: { type: 'store', name: 'table' },
   })
 
+  // The route the table is rendered on (frozen for a page that is being left)
+  const tableRoute = useRoute()
+  const router = useRouter()
+  const navigationTracker = import.meta.client
+    ? tableTrackNavigation(router, useNuxtApp().hooks)
+    : undefined
+
+  function canNavigate() {
+    return !!modifiers.value?.useUrl
+      && !!tableEl.value
+      && tableRoute.path === router.currentRoute.value.path
+  }
+
   /**
    * Navigates to a URL corresponding to the current state of the table
    */
   function navigate() {
     // When using URL, we navigate to the new URL
-    if (modifiers.value?.useUrl && tableEl.value) {
+    if (!navigationTracker || !canNavigate()) {
+      return
+    }
+
+    // Writing the URL while another navigation is in flight would cancel it,
+    // so we wait for it to settle and check we are still on the table's route
+    navigationTracker.waitForIdle().then(() => {
+      if (!canNavigate()) {
+        return
+      }
+
       const { navigate = tableNavigate } = modifiers.value ?? {}
 
       navigate({
@@ -202,7 +226,7 @@ const [
         isInfiniteScroll: !paginationConfig.value?.enabled,
         customData: customData.value,
       })
-    }
+    })
   }
 
   // SECTION State
