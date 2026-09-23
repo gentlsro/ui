@@ -5,7 +5,7 @@ import type { ICrudBtnProps } from './types/crud-btn-props.type'
 type IProps = ICrudBtnProps & { isArchived?: boolean }
 
 const props = withDefaults(defineProps<IProps>(), {
-  ...getComponentProps('crudBtns'),
+  ...getComponentProps('crudBtns', ['btnProps', 'loading']),
 })
 
 defineEmits<{
