@@ -1,4 +1,5 @@
 // Types
+import type { InjectionKey, Ref } from 'vue'
 import type { IQueryBuilderRow } from './types/query-builder-row-props.type'
 import type { IQueryBuilderDraggedItem } from './types/query-builder-dragged-item.type'
 
@@ -7,6 +8,12 @@ import type { TableColumn } from '../Table/models/table-column.model'
 import type { IQueryBuilderProps } from './types/query-builder-props.type'
 
 export const QUERY_BUILDER_ID_KEY = Symbol('__queryBuilderId')
+
+/**
+ * Color used to highlight all rows (including nested groups) of a hovered inline group
+ */
+export const QUERY_BUILDER_HIGHLIGHT_COLOR_KEY: InjectionKey<Ref<string | undefined>>
+  = Symbol('__queryBuilderHighlightColor')
 
 type IConfig = {
   queryBuilderProps?: IQueryBuilderProps
