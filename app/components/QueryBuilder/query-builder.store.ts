@@ -127,7 +127,7 @@ function createStore(injectionKey?: string) {
 }
 
 export function useQueryBuilderStore(payload?: IConfig) {
-  let injectionKey = payload?.injectionKey ?? injectLocal(QUERY_BUILDER_ID_KEY)
+  let injectionKey = payload?.injectionKey ?? injectLocal(QUERY_BUILDER_ID_KEY, undefined)
 
   if (!injectionKey) {
     const uuid = generateUUID()
