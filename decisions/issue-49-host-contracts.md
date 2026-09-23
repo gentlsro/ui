@@ -104,7 +104,7 @@ monorepo. However, LC does **not** set `strategy`, so it relies on this layer's 
 
 - Is a no-op `DocumentationBtn` as a documented override point acceptable, or should the `<DocumentationBtn>`
   usage in `TableColumnSelectionBtn` be removed or put behind config instead?
-- Should the UI layer (and Utilities) keep setting `strategy: 'prefix_and_default'` and `detectBrowserLanguage`, or
+- Should the UI layer keep setting `strategy: 'prefix_and_default'` and `detectBrowserLanguage`, or
   leave routing options to the host?
 - Should the layer keep registering `en-US` / `cs-CZ` locales, or contribute messages only to host-declared locales?
 - Should the `custom` icon collection be removed from the layer, pointed at `<host srcDir>/assets/icons`, or kept and
