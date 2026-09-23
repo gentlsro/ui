@@ -4,7 +4,7 @@ import type { IQueryBuilderItem, IQueryBuilderItemProps } from './types/query-bu
 
 // Functions
 import { useColors } from '../../composables/useColors'
-import { useQueryBuilderStore } from './query-builder.store'
+import { QUERY_BUILDER_HIGHLIGHT_COLOR_KEY, useQueryBuilderStore } from './query-builder.store'
 
 // Constants
 import { QUERY_BUILDER_LEVEL_COLORS } from './constants/query-builder-level-colors.constant'
@@ -33,6 +33,7 @@ const { getColor } = useColors()
 
 // Injections
 const noItemOverlay = inject('noItemOverlay', ref(false))
+const highlightColor = inject(QUERY_BUILDER_HIGHLIGHT_COLOR_KEY, undefined)
 
 // Layout
 const menuEl = useTemplateRef('menuEl')
@@ -132,7 +133,13 @@ const { validation } = useArk({ scope: '_qb' })
   <li
     class="qb-row qb-item"
     :class="{ 'is-first-child': isFirstChild }"
-    :style="{ '--bracketColor': levelColor }"
+    :style="{
+      '--bracketColor': levelColor,
+      ...(highlightColor?.value && {
+        borderColor: highlightColor.value,
+        borderStyle: 'solid',
+      }),
+    }"
     v-bind="$attrs"
     :data-path="itemLocal.path"
   >
