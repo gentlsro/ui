@@ -8,7 +8,7 @@ export const MENU_DEFAULT_PROPS = {
     menuClass() {
       const base = 'flex flex-col grow rounded-custom'
       const background = 'dark:bg-dark-950/90 bg-white/90 backdrop-blur-2px'
-      const border = 'rounded-custom border-1 border-ca'
+      const border = 'rounded-custom border-1 border-slate-300 dark:border-black'
       const limits = 'max-w-95vw max-h-95%'
       const shadow = 'light:(shadow-consistent-xs shadow-darker/12)'
 
