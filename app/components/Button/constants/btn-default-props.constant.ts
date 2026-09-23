@@ -168,7 +168,7 @@ export const BTN_DEFAULT_PROPS = {
     },
 
     focusHelperClass() {
-      const base = 'absolute fit z-3 cursor-pointer rounded-inherit inset-0 pointer-events-none'
+      const base = 'absolute z-3 cursor-pointer rounded-inherit inset-0 pointer-events-none'
       const hover = 'group-hover/btn:bg-current group-hover/btn:opacity-10'
 
       return {

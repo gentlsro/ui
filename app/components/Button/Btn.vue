@@ -1,5 +1,6 @@
 <script setup lang="ts" generic="T extends CustomPresets = Record<string, never>">
 // Types
+import type { CSSProperties } from 'vue'
 import type { CustomPresets, IBtnProps } from './types/btn-props.type'
 
 // Functions
@@ -131,8 +132,35 @@ const focusHelperClass = computed(() => {
   })
 })
 
+// The helper inherits the button's outer border radius, so it must cover the
+// border box too; `inset-0` would place it inside the border where that radius
+// is too large and leaves gaps in the corners. CSS cannot read the border width
+// (it often comes from consumer classes), so measure it once after mount.
+const focusHelperInset = ref<CSSProperties>()
+
+function syncFocusHelperInset() {
+  const el = component.value?.$el as HTMLElement | undefined
+
+  if (props.noHoverEffect || !(el instanceof HTMLElement)) {
+    return
+  }
+
+  const style = getComputedStyle(el)
+
+  focusHelperInset.value = {
+    top: `-${style.borderTopWidth}`,
+    right: `-${style.borderRightWidth}`,
+    bottom: `-${style.borderBottomWidth}`,
+    left: `-${style.borderLeftWidth}`,
+  }
+}
+
+onMounted(() => {
+  nextTick(syncFocusHelperInset)
+})
+
 const focusHelperStyle = computed(() => {
-  return mergedProps.value?.ui?.focusHelperStyle?.()
+  return [focusHelperInset.value, mergedProps.value?.ui?.focusHelperStyle?.()]
 })
 
 // Styles - loading
