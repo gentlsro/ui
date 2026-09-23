@@ -13,7 +13,6 @@ import { TABLE_DEFAULT_PROPS } from './constants/table-default-props.constant'
 
 // Components
 import VirtualScroller from '../VirtualScroller/VirtualScroller.vue'
-import VirtualScrollerGrid from '../VirtualScroller/VirtualScrollerGrid.vue'
 import VirtualScrollerVertical from '../VirtualScroller/VirtualScrollerVertical.vue'
 
 type IProps = Pick<ITableProps, 'editable' | 'freeze' | 'ui' | 'to' | 'scrollerConfig' | 'showCopyBtn' | 'toLinkProps'>
@@ -40,6 +39,7 @@ const {
   virtualScrollEl,
   visibleColumns,
   cellEdit,
+  isCardView,
   hasMore,
   isFetchMore,
   paginationConfig,
@@ -52,7 +52,6 @@ const isVisibleByColumnField = ref<Record<string, boolean>>({})
 
 const SCROLLER_COMPONENTS = {
   VirtualScroller,
-  VirtualScrollerGrid,
   VirtualScrollerVertical,
 } as const
 
@@ -151,8 +150,8 @@ useTableCellNavigation(tableStore, toRef(props, 'editable'))
     ref="virtualScrollEl"
     v-bind="scrollerProps"
     :rows="rowsSplit"
-    :columns="visibleColumns"
-    class="table-content grow"
+    :columns="isCardView ? undefined : visibleColumns"
+    class="table-content grow min-h-0"
     :row-key
     :fetch-more="isFetchMore"
     :class="contentClass"
