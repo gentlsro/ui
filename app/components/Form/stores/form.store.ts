@@ -140,7 +140,7 @@ function createStore(injectionKey?: string) {
 }
 
 export function useFormStore(payload?: IConfig) {
-  let injectionKey = payload?.injectionKey ?? injectLocal(FORM_ID_KEY)
+  let injectionKey = payload?.injectionKey ?? injectLocal(FORM_ID_KEY, undefined)
 
   if (!injectionKey) {
     const uuid = generateUUID()
