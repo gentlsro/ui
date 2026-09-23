@@ -17,7 +17,7 @@ type IProps<T extends IItem> = {
 
 const props = withDefaults(
   defineProps<IProps<T>>(),
-  { ...getComponentProps('virtualScroller') },
+  { ...getComponentProps('virtualScroller', ['rows', 'rowHeight', 'rowKey']) },
 )
 const emits = defineEmits<{
   (e: 'virtualScroll', payload: IVirtualScrollEvent): void
