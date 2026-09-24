@@ -40,7 +40,7 @@ const label = computed(() => {
 
 <template>
   <Btn
-    preset="TRASH"
+    icon="i-iconamoon:trash"
     :label
     :loading
     :disabled
