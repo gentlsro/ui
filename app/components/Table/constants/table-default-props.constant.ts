@@ -149,10 +149,10 @@ export const TABLE_DEFAULT_PROPS = {
       const base = 'relative grid p-x-2 items-center min-h-10 grid-cols-[1fr_auto_1fr] border-t-1 border-ca'
 
       // Loading
-      const loading = '[.is-loading_&]:(absolute flex flex-center left-1/2 -translate-x-1/2 top-0 w-80 rounded-full bg-white/68 dark:bg-dark-950/87 backdrop-blur-sm)'
+      const loading = '[&>.is-loading]:(absolute flex flex-center left-1/2 -translate-x-1/2 top-0 w-80 rounded-full bg-white/68 dark:bg-dark-950/87 backdrop-blur-sm)'
 
       // Limit reached
-      const limitReached = '[.limit-reached_&]:(absolute flex flex-center gap-2 bg-white dark:bg-dark-950 rounded-custom left-1/2 -translate-x-1/2 p-l-1 p-r-3)'
+      const limitReached = '[&>.limit-reached]:(absolute flex flex-center gap-2 bg-white dark:bg-dark-950 rounded-custom left-1/2 -translate-x-1/2 p-l-1 p-r-3)'
 
       return {
         base,
