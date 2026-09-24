@@ -283,7 +283,12 @@ onMounted(() => {
     </TableContent>
 
     <!-- Empty -->
-    <TableEmpty v-else />
+    <slot
+      v-else
+      name="empty"
+    >
+      <TableEmpty />
+    </slot>
 
     <!-- Totals -->
     <slot
