@@ -803,7 +803,6 @@ const [
       return
     }
 
-    isInitialLoad.value = false
     isFetchMore.value = hasMore.value && !!payload?.isFetchMore
 
     if (isOverLimit && isFetchMore.value) {
@@ -813,16 +812,25 @@ const [
     const fetchPayload = getFetchPayload()
 
     isDataLoading.value = true
-    const res = await fn(
-      () => loadData.value?.fnc?.(fetchPayload),
-      {
-        onComplete: () => isDataLoading.value = false,
-        onError: ({ error, response }) => {
-          isDataLoading.value = false
-          loadData.value?.onError?.(error, response, getStore)
+    let res: any
+
+    // We only clear the `isInitialLoad` flag once the request settles (even on error),
+    // otherwise the loading overlay disappears and the table shows "No data"
+    // for the whole duration of the initial fetch
+    try {
+      res = await fn(
+        () => loadData.value?.fnc?.(fetchPayload),
+        {
+          onComplete: () => isDataLoading.value = false,
+          onError: ({ error, response }) => {
+            isDataLoading.value = false
+            loadData.value?.onError?.(error, response, getStore)
+          },
         },
-      },
-    )
+      )
+    } finally {
+      isInitialLoad.value = false
+    }
 
     const resModified = loadData.value?.onFetch?.({ res, getStore }) ?? res
     const { payloadKey, countKey = 'count' } = loadData.value ?? {}
