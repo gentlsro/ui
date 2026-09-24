@@ -48,12 +48,17 @@ function dismiss() {
 const counterEl = useTemplateRef('counterEl')
 
 function bounce() {
-  const _counterEl = unref(counterEl) as unknown as HTMLElement
+  const _counterEl = (unref(counterEl) as { $el?: HTMLElement } | null)?.$el
 
-  _counterEl?.addEventListener('animationend', () => {
+  if (!_counterEl) {
+    return
+  }
+
+  _counterEl.addEventListener('animationend', () => {
     _counterEl.classList.remove('bounce')
-  })
-  _counterEl?.classList.add('bounce')
+  }, { once: true })
+  _counterEl.classList.remove('bounce')
+  _counterEl.classList.add('bounce')
 }
 
 watch(counter, bounce)
@@ -108,6 +113,17 @@ const badgeClass = computed(() => {
 const badgeStyle = computed(() => {
   return mergedProps.value?.ui?.badgeStyle?.()
 })
+
+// Styles - dismiss
+const dismissClass = computed(() => {
+  return mergedProps.value?.ui?.dismissClass?.({
+    defaults: BANNER_DEFAULT_PROPS.ui.dismissClass(),
+  })
+})
+
+const dismissStyle = computed(() => {
+  return mergedProps.value?.ui?.dismissStyle?.()
+})
 </script>
 
 <template>
@@ -149,6 +165,13 @@ const badgeStyle = computed(() => {
         :class="badgeClass"
         :style="badgeStyle"
       />
+
+      <!-- Dismiss -->
+      <div
+        v-if="dismissable"
+        :class="dismissClass"
+        :style="dismissStyle"
+      />
     </div>
   </Transition>
 </template>
@@ -157,29 +180,31 @@ const badgeStyle = computed(() => {
 // Transition
 .v-enter-active,
 .v-leave-active {
-  transition: all 0.25s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s cubic-bezier(0.2, 0, 0, 1);
 }
 
 .v-enter-from {
-  @apply opacity-0 scale-0;
+  @apply opacity-0 translate-y--1 scale-98;
 }
 
 .v-leave-to {
-  @apply opacity-0 translate-x--100%;
+  @apply opacity-0 scale-98;
 }
 
 // Bounce
 .bounce {
-  animation: myBounce 100ms ease-in-out 0s 2 alternate forwards;
+  animation: bannerBounce 150ms ease-out 0s 2 alternate;
 }
 
-@keyframes myBounce {
+@keyframes bannerBounce {
   0% {
     transform: scale(1);
   }
 
   100% {
-    transform: scale(1.25);
+    transform: scale(1.2);
   }
 }
 </style>

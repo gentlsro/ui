@@ -50,14 +50,14 @@ export type IBannerProps = {
   ui?: {
 
     /**
-     * Base class for the `Banner`
+     * Class for the counter badge
      */
     badgeClass?: (payload: {
       defaults: ReturnType<typeof BANNER_DEFAULT_PROPS['ui']['badgeClass']>
     }) => ClassType
 
     /**
-     * Style for the base
+     * Style for the counter badge
      */
     badgeStyle?: () => CSSProperties
 
@@ -96,5 +96,17 @@ export type IBannerProps = {
      * Style for the icon
      */
     iconStyle?: () => CSSProperties
+
+    /**
+     * Class for the dismiss indicator (shown when `dismissable`)
+     */
+    dismissClass?: (payload: {
+      defaults: ReturnType<typeof BANNER_DEFAULT_PROPS['ui']['dismissClass']>
+    }) => ClassType
+
+    /**
+     * Style for the dismiss indicator
+     */
+    dismissStyle?: () => CSSProperties
   }
 }
