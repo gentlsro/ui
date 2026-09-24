@@ -14,6 +14,8 @@
     "uploadFailed": "Nahrání souboru se nezdařilo"
   },
   "table": {
+    "noSavedLayouts": "Zatím žádná uložená rozložení",
+    "totalsLabel": "Celkem",
     "tooManyData": "Tabulka je optimalizována pro ~100 000 řádků dat. Vyšší počet dat může způsobovat problémy. ",
     "searchPossibleInColumns": "Vyhledávat lze ve sloupcích",
     "nonSearchableColumnsInfo": "Pro filtraci ostatních sloupců prosím využijte filtr tabulky",
@@ -41,7 +43,7 @@
     "fitColumns": "Přizpůsobit sloupce",
     "customizeColumns": "Upravit sloupce",
     "applyColumns": "Použít",
-    "availableMetrics": "Dostupné metriky",
+    "availableMetrics": "Dostupné sloupce",
     "columnFilters": "Filtry sloupců",
     "columnFiltersHint": "Filtry vytvořené pomocí filtrování sloupců",
     "columnsSelected": "Zvolené sloupce",
@@ -73,6 +75,8 @@
     "autoFitColumnsWithHeaderExplain": "Podobné jako \"Šířka sloupců podle jejich obsahu\" s tím rozdílem, že bude do výpočtu zahrnuta velikost také nadpisu sloupce"
   },
   "queryBuilder": {
+    "condition": "Podmínka",
+    "emptyGroup": "Zatím žádné podmínky",
     "self": "Pokročilé filtrování",
     "and": "A",
     "or": "Nebo",

@@ -333,6 +333,10 @@ const rowStyle = computed(() => ({
   minHeight: `${props.rowHeight}px`,
 }))
 
+// One object for all rows: a new one per render would change every row's props,
+// re-rendering all of them whenever the virtualizer updates
+const slotStyle = computed(() => ({ minHeight: `${props.rowHeight}px` }))
+
 function getRowStyle(item: VirtualItem) {
   return {
     ...rowStyle.value,
@@ -371,7 +375,7 @@ function getRowStyle(item: VirtualItem) {
           :row="item.row"
           :index="item.index"
           :columns="visibleColumns"
-          :style="{ minHeight: `${rowHeight}px` }"
+          :style="slotStyle"
         >
           {{ item.row }}
         </slot>

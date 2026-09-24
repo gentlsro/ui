@@ -36,6 +36,7 @@ export const defaultComponentsConfig = {
         iconClass: ({ defaults }) => defaults.all,
         labelClass: ({ defaults }) => defaults.all,
         badgeClass: ({ defaults }) => defaults.all,
+        dismissClass: ({ defaults }) => defaults.all,
       },
     },
     merge: ['ui'],

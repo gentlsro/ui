@@ -12,17 +12,17 @@ type IProps = {
 const props = defineProps<IProps>()
 
 // Store
-const { internalColumns, tableEl } = useTableStore()
+const { internalColumns } = useTableStore()
 
 // Layout
 const btnProps = computed(() => {
   return props.column.frozen
-    ? { class: 'bg-white dark:bg-darker color-primary is-active', icon: 'i-basil:lock-solid' }
-    : { class: 'color-ca', icon: 'i-basil:unlock-outline' }
+    ? { class: 'is-active', icon: 'i-lucide:lock' }
+    : { icon: 'i-lucide:lock-open' }
 })
 
 function handleFreezeColumn() {
-  props.column.freeze(internalColumns.value, unrefElement(tableEl.value) ?? document)
+  props.column.freeze(internalColumns.value)
 }
 </script>
 
@@ -30,19 +30,27 @@ function handleFreezeColumn() {
   <Btn
     v-bind="btnProps"
     class="column-lock"
-    size="sm"
+    size="xs"
+    no-dim
     @click="handleFreezeColumn"
   />
 </template>
 
 <style scoped lang="scss">
 .column-lock {
-  @apply backdrop-blur-sm;
+  @apply rounded-md color-true-gray-500 dark:color-true-gray-400 bg-white dark:bg-true-gray-900;
 
   display: none !important;
   position: absolute !important;
+  right: calc(100% + 2px);
+
+  &:hover {
+    @apply bg-true-gray-200 dark:bg-true-gray-700 color-true-gray-800 dark:color-true-gray-100;
+  }
 
   &.is-active {
+    @apply color-primary bg-primary/10 dark:color-true-gray-100 dark:bg-primary/45;
+
     display: flex !important;
   }
 }

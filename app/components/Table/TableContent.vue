@@ -48,8 +48,6 @@ const {
 } = tableStore
 
 // Layout
-const isVisibleByColumnField = ref<Record<string, boolean>>({})
-
 const SCROLLER_COMPONENTS = {
   VirtualScroller,
   VirtualScrollerVertical,
@@ -165,6 +163,8 @@ useTableCellNavigation(tableStore, toRef(props, 'editable'))
         :index="slotProps.index"
         :columns="slotProps.columns ?? visibleColumns"
       >
+        <!-- No slots: the row renders the table's cell slots itself (see `TableRow`),
+             so it only re-renders when its own props or data change -->
         <TableRow
           :row="slotProps.row"
           :ui
@@ -174,38 +174,9 @@ useTableCellNavigation(tableStore, toRef(props, 'editable'))
           :to
           :show-copy-btn
           :to-link-props
-          :is-visible-by-column-field
           :visible-columns="slotProps.columns ?? visibleColumns"
           :style="slotProps.style"
-        >
-          <template v-if="$slots['row-actions']" #row-actions="actions">
-            <slot name="row-actions" v-bind="actions" />
-          </template>
-
-          <!-- Field slots -->
-          <template
-            v-for="col in slotProps.columns ?? visibleColumns"
-            :key="col.name"
-            #[col.name]="{ row, column, value }"
-          >
-            <slot
-              :name="col.name"
-              :row
-              :index="slotProps.index"
-              :column
-              :value
-            />
-          </template>
-
-          <!-- Row inside slot -->
-          <template #inner="rowInsideProps">
-            <slot
-              name="row-inside"
-              v-bind="rowInsideProps"
-              :index="slotProps.index"
-            />
-          </template>
-        </TableRow>
+        />
       </slot>
     </template>
   </Component>

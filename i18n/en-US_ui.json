@@ -14,6 +14,8 @@
     "uploadFailed": "File upload failed"
   },
   "table": {
+    "noSavedLayouts": "No saved layouts yet",
+    "totalsLabel": "Total",
     "export": "Export | Exporty",
     "tooManyData": "The table is optimized for ~100,000 rows of data. A higher number of data may cause issues.",
     "searchPossibleInColumns": "Search is possible in columns",
@@ -38,7 +40,7 @@
     "removeQueryBuilderFilter": "Remove advanced filters",
     "removeColumnsFilter": "Remove column filters",
     "customizeColumns": "Customize columns",
-    "availableMetrics": "Available metrics",
+    "availableMetrics": "Available columns",
     "selectVisibleColumns": "Select visible columns",
     "applyColumns": "Apply columns",
     "exactFilter": "exact",
@@ -73,6 +75,8 @@
     "autoFitColumnsWithHeaderExplain": "Similar to the \"Auto-fit\" option, but the header's width is also considered"
   },
   "queryBuilder": {
+    "condition": "Condition",
+    "emptyGroup": "No conditions yet",
     "and": "And",
     "or": "Or",
     "not_and": "not and",

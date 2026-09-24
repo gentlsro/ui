@@ -3,7 +3,7 @@
 export const TABLE_DEFAULT_PROPS = {
   ui: {
     alternateRowClass() {
-      const base = 'bg-slate-100 dark:bg-dark-950'
+      const base = ''
 
       return {
         base,
@@ -12,7 +12,7 @@ export const TABLE_DEFAULT_PROPS = {
     },
 
     headerCellClass() {
-      const base = 'p-x-1 p-y-2px bg-white dark:bg-black'
+      const base = 'p-l-2 p-r-1 min-h-9 bg-white dark:bg-true-gray-900 color-true-gray-500 dark:color-true-gray-300'
 
       return {
         base,
@@ -21,7 +21,7 @@ export const TABLE_DEFAULT_PROPS = {
     },
 
     headerCellInnerClass() {
-      const base = 'font-rem-13 font-semibold tracking-wide leading-tight line-clamp-2'
+      const base = 'font-rem-12 font-medium leading-tight line-clamp-2'
 
       return {
         base,
@@ -30,11 +30,11 @@ export const TABLE_DEFAULT_PROPS = {
     },
 
     rowClass() {
-      const base = 'flex relative [:where(&)]:(bg-white dark:bg-darker) hover:(bg-slate-200 dark:bg-slate-800)'
+      const base = 'flex relative [:where(&)]:(bg-white dark:bg-darker) hover:(bg-true-gray-50 dark:bg-true-gray-900)'
       const clickable = '[&.is-clickable:hover]:(cursor-pointer)'
-      const card = '[&.is-card]:(flex-col gap-y-2px rounded-custom p-2 m-1 dark:bg-black overflow-auto light:(outline-1 outline-ca outline-solid bg-white))'
+      const card = '[&.is-card]:(flex-col gap-y-1 rounded-xl p-3 m-1.5 overflow-auto outline-1 outline-solid outline-true-gray-200 dark:(outline-true-gray-800 bg-true-gray-900) light:(bg-white shadow-sm))'
       const cardSelectable = '[&.is-card.is-selectable]:(cursor-pointer)'
-      const cardSelected = '[&.is-card.is-selected]:(outline-1 outline-primary outline-solid bg-primary/15)'
+      const cardSelected = '[&.is-card.is-selected]:(outline-2 outline-primary outline-solid bg-primary/8)'
       const cardCell = '[&.is-card_.td]:(grid w-full items-start rounded-custom min-h-6 [grid-template-columns:80px_3fr])'
       const cardCellLabel = '[&.is-card_.td-label]:(relative text-caption text-xs text-right min-h-6 p-t-1 truncate)'
       const cardCellValue = '[&.is-card_.td-value]:(flex items-center gap-1 leading-tight self-center overflow-auto p-x-2)'
@@ -64,7 +64,7 @@ export const TABLE_DEFAULT_PROPS = {
     },
 
     rowActionsClass() {
-      const base = 'flex justify-end items-center flex-wrap gap-2 p-x-1 bg-inherit border-ca'
+      const base = 'flex justify-end items-center flex-wrap gap-2 p-x-1 bg-inherit border-true-gray-200 dark:border-true-gray-800'
 
       return { 
         base, 
@@ -73,7 +73,7 @@ export const TABLE_DEFAULT_PROPS = {
     },
 
     rowActionsHeaderClass() {
-      const base = 'p-x-1 p-y-2px bg-white dark:bg-black border-ca'
+      const base = 'p-x-1 bg-white dark:bg-true-gray-900 border-true-gray-200 dark:border-true-gray-800'
 
       return { 
         base, 
@@ -82,15 +82,13 @@ export const TABLE_DEFAULT_PROPS = {
     },
 
     cellClass() {
-      const base = 'relative flex items-center border-ca w-$colWidth overflow-hidden p-x-2'
-      const link = '[&_.link]:(truncate font-rem-13)'
-      const copyBtn = '[&_.copy-btn]:(absolute right-2 top-2 hidden)'
+      const base = 'relative flex items-center border-true-gray-200 dark:border-true-gray-800 w-$colWidth overflow-hidden p-x-2'
+      const link = '[&_.link]:(truncate font-rem-13 underline decoration-true-gray-300 dark:decoration-true-gray-600 underline-offset-3 hover:decoration-current)'
+      const copyBtn = '[&_.copy-btn]:(absolute right-1 top-1/2 -translate-y-1/2 hidden rounded-md bg-white dark:bg-true-gray-900 shadow-sm)'
       const copyBtnHover = '[&:hover_.copy-btn]:(flex)'
       const rowSeparatorVertical = '[.separator--vertical_.is-row_&]:(border-r-1)'
       const rowSeparatorHorizontal = '[.separator--horizontal_.is-row_&]:(border-b-1)'
       const rowSeparatorCell = '[.separator--cell_.is-row_&]:(border-r-1 border-b-1)'
-      const rowBorderedFirst = '[.table.is-bordered_.is-row_&:first-child]:(border-l-1)'
-      const rowBorderedLast = '[.table.is-bordered_.is-row_&:last-child]:(border-r-1)'
 
       return {
         base,
@@ -100,9 +98,7 @@ export const TABLE_DEFAULT_PROPS = {
         rowSeparatorVertical,
         rowSeparatorHorizontal,
         rowSeparatorCell,
-        rowBorderedFirst,
-        rowBorderedLast,
-        all: `${base} ${link} ${copyBtn} ${copyBtnHover} ${rowSeparatorVertical} ${rowSeparatorHorizontal} ${rowSeparatorCell} ${rowBorderedFirst} ${rowBorderedLast}`,
+        all: `${base} ${link} ${copyBtn} ${copyBtnHover} ${rowSeparatorVertical} ${rowSeparatorHorizontal} ${rowSeparatorCell}`,
       } as const
     },
 
@@ -137,7 +133,7 @@ export const TABLE_DEFAULT_PROPS = {
     },
 
     topClass() {
-      const base = 'flex items-start p-x-2 p-y-1 gap-1'
+      const base = 'flex items-start p-x-3 p-y-2 gap-1'
 
       return {
         base,
@@ -146,13 +142,11 @@ export const TABLE_DEFAULT_PROPS = {
     },
 
     bottomClass() {
-      const base = 'relative grid p-x-2 items-center min-h-10 grid-cols-[1fr_auto_1fr] border-t-1 border-ca'
+      const base = 'relative grid p-x-3 gap-2 items-center min-h-10 grid-cols-[1fr_auto_1fr] border-t-1 border-true-gray-200 dark:border-true-gray-800 text-xs color-ca'
 
-      // Loading
-      const loading = '[.is-loading_&]:(absolute flex flex-center left-1/2 -translate-x-1/2 top-0 w-80 rounded-full bg-white/68 dark:bg-dark-950/87 backdrop-blur-sm)'
-
-      // Limit reached
-      const limitReached = '[.limit-reached_&]:(absolute flex flex-center gap-2 bg-white dark:bg-dark-950 rounded-custom left-1/2 -translate-x-1/2 p-l-1 p-r-3)'
+      // Loading and limit-reached states are styled inside `TableBottom`
+      const loading = ''
+      const limitReached = ''
 
       return {
         base,
@@ -163,7 +157,7 @@ export const TABLE_DEFAULT_PROPS = {
     },
 
     containerClass() {
-      const base = 'relative flex flex-col overflow-auto grow @container'
+      const base = 'relative flex flex-col overflow-auto grow @container bg-white dark:bg-transparent'
 
       return {
         base,
@@ -172,7 +166,7 @@ export const TABLE_DEFAULT_PROPS = {
     },
 
     totalsCellClass() {
-      const base = 'font-rem-13 font-semibold tracking-wide p-y-2 border-t-1 border-black dark:border-white'
+      const base = 'font-rem-13 font-semibold p-x-2 p-y-2 border-t-1 border-true-gray-200 dark:border-true-gray-700 bg-white dark:bg-true-gray-900'
 
       return {
         base,

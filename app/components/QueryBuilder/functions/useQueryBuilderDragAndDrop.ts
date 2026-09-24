@@ -9,17 +9,42 @@ export function useQueryBuilderDragAndDrop() {
   // Store
   const {
     queryBuilderEl,
-    queryBuilderElRect,
     draggedItem,
   } = useQueryBuilderStore()
-
-  // const queryBuilderElRect = computed(() =>
-  //   queryBuilderEl.value?.getBoundingClientRect()
-  // )
 
   const { y: scrollY } = useScroll(queryBuilderEl, {
     onScroll: () => handleDragging(),
   })
+
+  /**
+   * In the gaps between rows the pointer is over the group itself; below the
+   * group's own header that means "between its children", so the closest child
+   * row is the target (otherwise the indicator jumps to the group's edge)
+   */
+  function resolveHoveredRow(row: HTMLElement | undefined, posY: number) {
+    if (!row?.classList.contains('qb-group')) {
+      return row
+    }
+
+    const headerBottom = row.querySelector(':scope > .qb-group-row')?.getBoundingClientRect().bottom ?? 0
+    const children = [...row.querySelectorAll<HTMLElement>(':scope > .qb-row')]
+
+    // Over the root's header there is nothing to drop next to, so it means
+    // "at the top", i.e. above its first child
+    if (posY <= headerBottom) {
+      return row.classList.contains('is-base') ? (children[0] ?? row) : row
+    }
+
+    return children.reduce<HTMLElement | undefined>((closest, child) => {
+      const distance = (el: HTMLElement) => {
+        const { top, bottom } = el.getBoundingClientRect()
+
+        return posY < top ? top - posY : Math.max(0, posY - bottom)
+      }
+
+      return !closest || distance(child) < distance(closest) ? child : closest
+    }, undefined) ?? row
+  }
 
   function handleDragging() {
     const pos = draggedItem.value?.pos
@@ -35,7 +60,10 @@ export function useQueryBuilderDragAndDrop() {
     // Get all elements from the point where we are dragging the item
     // and get the dragged-over query builder row
     const els = document.elementsFromPoint(posX, posY)
-    const qbRow = els.find(el => el.classList.contains('qb-row')) as HTMLElement
+    const qbRow = resolveHoveredRow(
+      els.find(el => el.classList.contains('qb-row')) as HTMLElement | undefined,
+      posY,
+    )
     const qbRowPath = qbRow?.dataset.path
 
     // When no query builder row is found, we don't really do anything
@@ -49,6 +77,12 @@ export function useQueryBuilderDragAndDrop() {
     ) {
       return
     }
+
+    // Measured on every move: a cached rect goes stale (e.g. taken while the
+    // dialog was still animating in), which offsets the drop indicator
+    const containerRect = queryBuilderEl.value?.getBoundingClientRect()
+    const containerX = containerRect?.x ?? 0
+    const containerY = containerRect?.y ?? 0
 
     // When hovering over group, we need to adjust the position of drop
     // indicator a bit because the group also has a controls row and the title row
@@ -73,8 +107,8 @@ export function useQueryBuilderDragAndDrop() {
       }
 
       draggedItem.value!.dropIndicatorPos = {
-        x: rowX + offset.x - (queryBuilderElRect.value?.x ?? 0),
-        y: rowY + offset.y + scrollY.value - (queryBuilderElRect.value?.y ?? 0),
+        x: rowX + offset.x - containerX,
+        y: rowY + offset.y + scrollY.value - containerY,
         width: rowWidth,
       }
 
@@ -90,13 +124,13 @@ export function useQueryBuilderDragAndDrop() {
       }
 
       draggedItem.value!.dropIndicatorPos = {
-        x: rowX + offset.x - (queryBuilderElRect.value?.x ?? 0),
+        x: rowX + offset.x - containerX,
         y:
           rowY
           + offset.y
           + scrollY.value
           + rowHeight
-          - (queryBuilderElRect.value?.y ?? 0),
+          - containerY,
         width: rowWidth,
       }
 

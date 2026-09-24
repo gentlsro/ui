@@ -26,7 +26,6 @@ const {
   queryBuilderEl,
   breakpoint,
   isSmallerScreen,
-  queryBuilderElRect,
   draggedItem,
   columns: storeColumns,
   items: storeItems,
@@ -81,7 +80,6 @@ useResizeObserver(queryBuilderEl, entries => {
     const { contentRect } = entries?.[0] ?? {}
 
     isSmallerScreen.value = contentRect!.width < breakpoint.value
-    queryBuilderElRect.value = queryBuilderEl.value?.getBoundingClientRect()
   })
 })
 
@@ -159,7 +157,7 @@ defineExpose({
 
 <style scoped lang="scss">
 .query-builder {
-  @apply relative bg-white dark-bg-dark-950 p-1 p-y-2 rounded-custom overflow-auto;
+  @apply relative p-1 p-y-2 rounded-custom overflow-auto;
 }
 
 .drop-indicator {

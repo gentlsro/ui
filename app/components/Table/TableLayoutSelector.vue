@@ -64,10 +64,10 @@ function handleLayoutApply(layout?: ITableLayout) {
 
 <template>
   <Btn
-    icon="i-solar:eye-linear @2xl:m-r-1"
+    icon="i-lucide:layout-template"
     p="!x-2"
     size="sm"
-    color="ca"
+    class="table-toolbar-btn"
     no-uppercase
   >
     <!-- Label -->
@@ -77,13 +77,13 @@ function handleLayoutApply(layout?: ITableLayout) {
       </span>
     </div>
 
-    <div class="i-flowbite:chevron-right-outline h-4 w-4 rotate-90 chevron-icon" />
+    <div class="i-lucide:chevron-down w-3.5 h-3.5 opacity-60 shrink-0 chevron-icon" />
 
     <!-- Layout selector menu -->
     <Menu
       placement="bottom-end"
       w="100"
-      :no-arrow="false"
+      :offset="4"
       no-uplift
     >
       <List
@@ -92,7 +92,7 @@ function handleLayoutApply(layout?: ITableLayout) {
         item-label="name"
         data-cy="scheme-search"
         :search-config="{ inputProps: { size: 'sm' } }"
-        :ui="{ rowClass: ({ defaults }) => `${defaults.all} flex-col cursor-pointer items-start! p-y-1.5 light:(border-1 border-ca) dark:bg-black` }"
+        :ui="{ rowClass: ({ defaults }) => `${defaults.all} flex-col cursor-pointer items-start! p-y-1.5 rounded-lg border-1 border-true-gray-200 dark:border-true-gray-800` }"
         p="y-1"
         @click:item="handleLayoutApply($event.ref as any)"
       >
@@ -100,9 +100,9 @@ function handleLayoutApply(layout?: ITableLayout) {
           <div class="actions">
             <!-- Save -->
             <Btn
-              icon="i-material-symbols:save"
+              icon="i-lucide:save"
               size="xs"
-              color="positive"
+              class="actions__btn"
               no-uppercase
               :label="$t('general.save')"
               data-cy="settings"
@@ -112,9 +112,9 @@ function handleLayoutApply(layout?: ITableLayout) {
             <div flex="~ gap-2">
               <!-- Layout options -->
               <Btn
-                icon="i-solar:settings-linear"
+                icon="i-lucide:settings-2"
                 size="xs"
-                color="ca"
+                class="actions__btn"
                 no-uppercase
                 :label="$t('general.option', 2)"
                 @click="[$hide(), isOptionsDialogOpen = true]"
@@ -123,13 +123,20 @@ function handleLayoutApply(layout?: ITableLayout) {
               <!-- Reset -->
               <Btn
                 size="xs"
-                color="negative"
+                class="actions__btn actions__btn--negative"
                 no-uppercase
-                icon="i-carbon:reset"
+                icon="i-lucide:rotate-ccw"
                 :label="$t('table.layoutStateReset')"
                 @click="handleLayoutApply()"
               />
             </div>
+          </div>
+        </template>
+
+        <template #noData>
+          <div class="layouts-empty">
+            <div class="i-lucide:layout-template w-5 h-5" />
+            {{ $t('table.noSavedLayouts') }}
           </div>
         </template>
 
@@ -190,7 +197,23 @@ function handleLayoutApply(layout?: ITableLayout) {
 
 <style scoped lang="scss">
 .actions {
-  @apply flex items-center gap-1 justify-between p-x-2 m-b-1 m-t--2;
+  @apply flex items-center gap-1 justify-between p-x-1 m-b-1 m-t--1;
+
+  &__btn {
+    @apply rounded-md font-medium color-true-gray-600 dark:color-true-gray-300;
+
+    &:hover {
+      @apply bg-true-gray-100 dark:bg-true-gray-800 color-true-gray-900 dark:color-white;
+    }
+
+    &--negative:hover {
+      @apply color-negative bg-negative/8;
+    }
+  }
+}
+
+.layouts-empty {
+  @apply flex flex-col items-center gap-2 p-y-6 text-sm color-true-gray-500 dark:color-true-gray-400;
 }
 
 .layout-item-actions {

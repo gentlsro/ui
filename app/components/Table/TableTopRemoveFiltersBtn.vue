@@ -59,13 +59,14 @@ onKeyStroke(['d', 'D'], (ev: KeyboardEvent) => {
 
 <template>
   <Btn
-    size="xs"
+    v-if="hasAnyFilters"
+    size="sm"
     :label="$t('table.removeQueryBuilderFilters')"
+    icon="i-lucide:x"
     no-uppercase
-    no-truncate
-    stacked
+    no-dim
     class="remove-filters"
-    :class="hasAnyFilters ? 'color-negative' : 'color-ca'"
+    p="!x-2"
     data-cy="remove-filters"
   >
     <Menu
@@ -114,14 +115,11 @@ onKeyStroke(['d', 'D'], (ev: KeyboardEvent) => {
 
 <style scoped lang="scss">
 .remove-filters {
-  @apply shrink-0 w-20 min-h-9 dark:bg-black bg-white border-2
-    border-transparent m-t-1;
-
-  padding-block: 0 !important;
+  @apply shrink-0 rounded-lg color-true-gray-500 dark:color-true-gray-400 font-medium;
 
   &:hover,
   &.is-menu-active {
-    @apply border-negative color-negative;
+    @apply bg-negative/8 color-negative;
   }
 }
 </style>

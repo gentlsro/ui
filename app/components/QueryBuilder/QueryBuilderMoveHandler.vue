@@ -1,6 +1,6 @@
 <template>
   <div class="query-builder-move-handler">
-    <div class="i-akar-icons:drag-vertical query-builder-move-handler__icon" />
+    <div class="i-lucide:grip-vertical query-builder-move-handler__icon" />
   </div>
 </template>
 
@@ -10,6 +10,6 @@
 }
 
 .query-builder-move-handler__icon {
-  @apply color-ca w5 h-5 cursor-move;
+  @apply color-true-gray-400 w-4 h-4 cursor-move;
 }
 </style>

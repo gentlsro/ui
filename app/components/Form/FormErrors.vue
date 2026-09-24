@@ -24,7 +24,7 @@ const { errorsExtended, handleDismissError } = useFormErrors(errors)
       :key="error.idx"
       variant="error"
       dismissable
-      icon-class="!self-center"
+      icon-center
       :counter="error.count"
       :label="$t(error.errorText)"
       @dismiss="handleDismissError(error)"

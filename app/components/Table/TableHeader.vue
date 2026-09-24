@@ -21,6 +21,7 @@ const {
   isContentVerticallyScrollable,
   visibleColumns,
   isCardView,
+  frozenOffsets,
 } = useTableStore()
 
 // Utils
@@ -50,7 +51,7 @@ function getSplitterLeft(splitter: ITableSplitter) {
   const { column } = splitter
 
   // We move the splitter by the scrollX value when the column is frozen
-  const offsetX = column.semiFrozen ? headerX.value : 0
+  const offsetX = column.field in frozenOffsets.value ? headerX.value : 0
 
   // The 1px center stripe must sit inside the column's right edge, like its border.
   return `${splitter.left + offsetX - 4}px`
@@ -99,15 +100,20 @@ function getSplitterLeft(splitter: ITableSplitter) {
 
       <!-- Splitters -->
       <!-- Active splitter -->
-      <span
+      <!-- Teleported, as the table's container query makes it the fixed guide's containing block, which clips it to the header -->
+      <Teleport
         v-if="activeSplitter"
-        class="splitter splitter--active"
-        :style="{
-          left: `${activeSplitter.left - 4}px`,
-          top: `${activeSplitter.top}px`,
-          height: `${activeSplitter.height}px`,
-        }"
-      />
+        to="body"
+      >
+        <span
+          class="splitter splitter--active"
+          :style="{
+            left: `${activeSplitter.left - 4}px`,
+            top: `${activeSplitter.top}px`,
+            height: `${activeSplitter.height}px`,
+          }"
+        />
+      </Teleport>
 
       <!-- Columns splitters -->
       <template v-else>
@@ -146,10 +152,6 @@ function getSplitterLeft(splitter: ITableSplitter) {
   border-bottom-width: 1px;
 }
 
-.is-bordered .row-actions-header {
-  border-width: 1px 1px 1px 0;
-}
-
 .row-actions-header.is-frozen {
   position: sticky;
   right: 0;
@@ -160,12 +162,12 @@ function getSplitterLeft(splitter: ITableSplitter) {
   @apply absolute top-0 bottom-0 w-7px z-5;
 
   &--active {
-    @apply fixed z-$zMax border-x-3px border-ca bg-black dark:bg-white
+    @apply fixed z-$zMax border-x-2px border-transparent bg-primary bg-clip-padding
       cursor-col-resize;
   }
 
   &:hover {
-    @apply border-x-3px border-ca bg-black dark:bg-white cursor-col-resize;
+    @apply border-x-2px border-transparent bg-primary bg-clip-padding cursor-col-resize;
   }
 
   // Keep the final hit area inside the table without moving its visible stripe.

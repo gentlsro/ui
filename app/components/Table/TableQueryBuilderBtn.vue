@@ -73,11 +73,10 @@ const { validation } = useArk({ scope: '_qb' })
   <Btn
     size="sm"
     no-uppercase
-    outlined
-    bg="!white !dark:black"
     no-dim
-    :class="queryBuilderHasChildren ? 'color-primary' : 'color-ca'"
-    icon="i-basil:filter-solid"
+    class="qb-dialog-btn"
+    :class="{ 'is-active': queryBuilderHasChildren }"
+    icon="i-lucide:list-filter"
   >
     <Tooltip
       placement="top"
@@ -102,7 +101,10 @@ const { validation } = useArk({ scope: '_qb' })
         :submit-confirmation="false"
         :focus-first-input="false"
         no-edit-controls
-        :ui="{ controlsClass: ({ defaults }) => `${defaults.all} !p-t-1` }"
+        :ui="{
+          controlsClass: ({ defaults }) => `${defaults.all} !p-t-1`,
+          contentClass: () => `relative flex flex-col grow overflow-auto gap-2`,
+        }"
         :submit-btn-props="{ size: 'sm' }"
         @submit="handleSubmit"
       >
@@ -118,3 +120,18 @@ const { validation } = useArk({ scope: '_qb' })
     </Dialog>
   </Btn>
 </template>
+
+<style scoped lang="scss">
+.qb-dialog-btn {
+  @apply border-1 border-true-gray-200 dark:border-true-gray-700 bg-white dark:bg-true-gray-900
+    color-true-gray-600 dark:color-true-gray-300 rounded-lg;
+
+  &:hover {
+    @apply bg-true-gray-50 dark:bg-true-gray-800 color-true-gray-900 dark:color-white;
+  }
+
+  &.is-active {
+    @apply border-primary/40 bg-primary/8 color-primary dark:bg-primary/30 dark:color-white;
+  }
+}
+</style>

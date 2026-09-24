@@ -135,12 +135,10 @@ const { validation } = useArk({
 
     <!-- Remove btn -->
     <Btn
-      size="auto"
-      icon="i-ion:close !w-3.5 !h-3.5"
-      color="negative"
-      w="5"
-      h="5"
-      @click="handleRemoveFilter"
+      size="xs"
+      icon="i-lucide:x"
+      class="table-filter-chip__remove"
+      @click.stop="handleRemoveFilter"
     />
 
     <MenuProxy
@@ -171,24 +169,33 @@ const { validation } = useArk({
 </template>
 
 <style scoped lang="scss">
+@use '#layers/ui/app/css/subtle-remove-btn-mixin.scss' as *;
+
 .table-filter-chip {
-  @apply relative flex items-center gap-1.5 p-r-1 p-l-3 p-y-1 rounded-custom font-rem-12
-  border-1 border-ca cursor-pointer;
+  @apply relative flex items-center gap-1 shrink-0 min-h-7 p-l-2 p-r-0.5 rounded-lg font-rem-12
+    border-1 border-true-gray-200 dark:border-true-gray-700 bg-white dark:bg-true-gray-900
+    cursor-pointer transition-colors;
+
+  &:hover {
+    @apply border-true-gray-300 dark:border-true-gray-600 bg-true-gray-50 dark:bg-true-gray-800;
+  }
 
   &__label {
-    @apply font-semibold truncate max-w-30;
+    @apply font-medium truncate max-w-30 color-true-gray-800 dark:color-true-gray-100;
   }
 
   &__comparator {
-    @apply text-caption whitespace-nowrap lowercase font-rem-12;
+    @apply whitespace-nowrap lowercase color-true-gray-500 dark:color-true-gray-400;
   }
 
   &__value {
-    @apply font-semibold;
+    // Even 20px height (see the inline query builder value), so it sits on whole pixels
+    @apply rounded-md p-x-1.5 p-y-2px leading-4 font-medium min-w-5 text-center max-w-60 truncate
+      bg-primary/10 color-primary dark:bg-primary/40 dark:color-white;
   }
 
-  &::before {
-    @apply content-empty absolute top--1px bottom--1px left--1px w-6px bg-primary rounded-l-custom;
+  &__remove {
+    @include subtle-remove-btn;
   }
 }
 </style>

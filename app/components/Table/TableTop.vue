@@ -58,7 +58,6 @@ const topStyle = computed(() => {
           v-if="featuresEnabledByName.queryBuilderDialog"
           v-model:query-builder="queryBuilder"
           :query-builder-props
-          m="r-2 t-1"
         />
       </slot>
     </div>
@@ -107,19 +106,37 @@ const topStyle = computed(() => {
 <style scoped lang="scss">
 .table-top {
   &__left {
-    @apply flex flex-col shrink-0 order-10;
+    @apply flex items-center shrink-0 order-10 min-h-9;
   }
 
+  // Search and the inline conditions share one row, chips wrap below
   &__center {
-    @apply grow flex flex-col gap-1 self-center order-20;
+    @apply grow min-w-0 flex flex-wrap items-start gap-x-2 gap-y-1 order-20 min-h-9;
+
+    > :deep(*) {
+      @apply min-w-0;
+    }
+
+    // Stays on the first line when the conditions wrap to more lines
+    > :deep(.table-search) {
+      @apply m-t-0.5;
+    }
+
+    > :deep(.scroller-vertical) {
+      @apply grow basis-48;
+    }
+
+    > :deep(.table-filter-chips) {
+      @apply basis-full;
+    }
   }
 
   &__remove-filters {
-    @apply order-30;
+    @apply order-30 m-t-0.5 shrink-0;
   }
 
   &__export {
-    @apply order-40 m-t-1;
+    @apply order-40 m-t-0.5 shrink-0;
   }
 }
 </style>

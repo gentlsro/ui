@@ -7,7 +7,7 @@ import type { ITableProps } from './types/table-props.type'
 import type { ITableEmits } from './types/table-emits.type'
 
 // Provide / Inject
-import { tableSlotsKey } from './provide/table.provide'
+import { tableSlotNamesKey, tableSlotsKey } from './provide/table.provide'
 
 // Functions
 import { tableInitialize } from './functions/table-initialize'
@@ -48,6 +48,21 @@ function hasRowActions() {
 }
 
 provideLocal(tableSlotsKey, slots)
+
+// Rows render the cell / row slots straight from `slots`: forwarding them through
+// `TableContent` made them dynamic slots, which forced every mounted row to re-render
+// on each scroll. `slots` is not reactive, so its names are, for slots added later.
+const slotNames = shallowRef(Object.keys(slots))
+
+onBeforeUpdate(() => {
+  const names = Object.keys(slots)
+
+  if (names.join() !== slotNames.value.join()) {
+    slotNames.value = names
+  }
+})
+
+provideLocal(tableSlotNamesKey, slotNames)
 
 // Init
 const self = getCurrentInstance()
@@ -277,32 +292,6 @@ onMounted(() => {
       :show-copy-btn
       :scroller-config="mergedProps.scrollerConfig"
     >
-      <template
-        v-if="$slots['row-actions']"
-        #row-actions="actions"
-      >
-        <slot
-          name="row-actions"
-          v-bind="actions"
-        />
-      </template>
-
-      <!-- Cell slots -->
-      <template
-        v-for="col in visibleColumns"
-        :key="col.name"
-        #[col.name]="{ row, column, index, value }"
-      >
-        <slot
-          :name="col.name"
-          :row
-          :index
-          :custom-data
-          :column
-          :value
-        />
-      </template>
-
       <!-- Row slot -->
       <template #row="{ row, index }">
         <slot
@@ -313,14 +302,7 @@ onMounted(() => {
         />
       </template>
 
-      <!-- Row inside slot -->
-      <template #row-inside="rowInsideProps">
-        <slot
-          name="row-inside"
-          v-bind="rowInsideProps"
-          :custom-data
-        />
-      </template>
+      <!-- Cell, `row-actions` and `row-inside` slots are rendered by the rows themselves -->
     </TableContent>
 
     <!-- Empty -->
@@ -363,3 +345,36 @@ onMounted(() => {
     <slot />
   </div>
 </template>
+
+<style scoped lang="scss">
+// Bordered tables frame the header, rows and totals as one rounded block
+.is-bordered {
+  --table-frame-border: #e5e5e5;
+
+  > :deep(.table-header),
+  > :deep(.table-content),
+  > :deep(.table-empty),
+  > :deep(.table-totals) {
+    @apply m-x-3 border-x-1 border-solid;
+
+    border-color: var(--table-frame-border);
+  }
+
+  > :deep(.table-header) {
+    @apply border-t-1 rounded-t-lg;
+  }
+
+  // Whichever block comes last closes the frame
+  > :deep(:is(.table-content, .table-empty, .table-totals):not(:has(+ .table-totals))) {
+    @apply border-b-1 rounded-b-lg m-b-2;
+  }
+
+  > :deep(.table-bottom) {
+    @apply border-t-0;
+  }
+}
+
+.dark .is-bordered {
+  --table-frame-border: #262626;
+}
+</style>

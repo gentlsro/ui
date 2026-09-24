@@ -89,8 +89,8 @@ export function useRenderTemporaryTableCell() {
       maxContentWidth = tempComponentDom?.getBoundingClientRect().width || 0
     }
 
-    // NOTE - When not using a slot, we just use the TableCell to render the
-    //        cell, and get the width of the cell
+    // NOTE - When not using a slot, we render the formatted value the way a
+    //        cell does, and get the width of the cell
     else {
       cleanup = setTempComponent(() => {
         return col.dataType === 'boolean'

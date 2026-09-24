@@ -1,20 +1,23 @@
 // @unocss-include
 
+type IBannerVariant = 'none' | 'info' | 'warning' | 'error' | 'success'
+
 export const BANNER_DEFAULT_PROPS = {
   ui: {
     badgeClass(payload: {
-      variant: 'none' | 'info' | 'warning' | 'error' | 'success'
+      variant: IBannerVariant
     }) {
       const { variant: variantProp } = payload
 
-      const base = 'rounded-2 flex flex-center p-1 border-2'
-      const font = 'font-normal font-rem-12 font-mono leading-3 min-w-5 text-center color-white'
-      const position = 'absolute right--2 top--2'
+      const base = 'flex flex-center h-5 min-w-5 p-x-1.5 rounded-custom shadow-sm'
+      const ring = 'ring-2 ring-white dark:ring-darker'
+      const font = 'font-semibold font-rem-10 font-mono leading-none tabular-nums color-white'
+      const position = 'absolute right--1.5 top--2'
 
       // Variants
       let variant = ''
 
-      const none = 'bg-truegray'
+      const none = 'bg-true-gray-500'
       const info = 'bg-info'
       const warning = 'bg-warning'
       const error = 'bg-negative'
@@ -32,40 +35,42 @@ export const BANNER_DEFAULT_PROPS = {
 
       return {
         base,
+        ring,
         font,
         position,
         variants,
-        all: `${base} ${font} ${position} ${variant}`,
+        all: `${base} ${ring} ${font} ${position} ${variant}`,
       } as const
     },
 
     containerClass(payload: {
-      variant: 'none' | 'info' | 'warning' | 'error' | 'success'
+      variant: IBannerVariant
       outlined: boolean
     }) {
       const { variant: variantProp, outlined: outlinedProp } = payload
 
-      const base = 'flex gap-x-2 items-center rounded-custom p-2 relative'
-      const outlined = '[&.is-outlined]:(border-2)'
-      const dismissable = '[&.is-dismissable]:(cursor-pointer)'
+      const base = 'relative flex gap-x-2.5 items-start rounded-lg p-x-3 p-y-2.5 text-sm'
+      const font = 'color-true-gray-800 dark:color-true-gray-100'
+      const outlined = '[&.is-outlined]:(border-1 border-solid bg-white dark:bg-darker shadow-sm)'
+      const dismissable = '[&.is-dismissable]:(cursor-pointer p-r-9 transition-colors)'
 
       // Variants
       let variant = ''
 
-      const noVariantContainer = 'color-true-gray'
-      const noVariantOutlinedContainer = 'bg-inherit border-true-gray color-true-gray border-2'
+      const noVariantContainer = 'bg-true-gray-500/8 ring-1 ring-inset ring-true-gray-500/15 dark:bg-true-gray-400/10 dark:ring-true-gray-400/15 [&.is-dismissable]:hover:bg-true-gray-500/12'
+      const noVariantOutlinedContainer = 'border-true-gray-500/25 dark:border-true-gray-400/25'
 
-      const infoContainer = 'bg-info color-white'
-      const infoContainerOutlined = 'color-info border-info bg-info/15'
+      const infoContainer = 'bg-info/10 ring-1 ring-inset ring-info/25 dark:bg-info/15 dark:ring-info/30 [&.is-dismissable]:hover:bg-info/20'
+      const infoContainerOutlined = 'border-info/55 [&.is-dismissable]:hover:bg-info/5'
 
-      const warningContainer = 'bg-warning color-white'
-      const warningContainerOutlined = 'color-warning border-warning bg-warning/15'
+      const warningContainer = 'bg-warning/10 ring-1 ring-inset ring-warning/25 dark:bg-warning/15 dark:ring-warning/30 [&.is-dismissable]:hover:bg-warning/20'
+      const warningContainerOutlined = 'border-warning/55 [&.is-dismissable]:hover:bg-warning/5'
 
-      const errorContainer = 'bg-negative color-white'
-      const errorContainerOutlined = 'color-negative border-negative bg-negative/15'
+      const errorContainer = 'bg-negative/10 ring-1 ring-inset ring-negative/25 dark:bg-negative/15 dark:ring-negative/30 [&.is-dismissable]:hover:bg-negative/20'
+      const errorContainerOutlined = 'border-negative/55 [&.is-dismissable]:hover:bg-negative/5'
 
-      const successContainer = 'bg-positive color-white'
-      const successContainerOutlined = 'color-positive border-positive bg-positive/15'
+      const successContainer = 'bg-positive/12 ring-1 ring-inset ring-positive/30 dark:bg-positive/15 [&.is-dismissable]:hover:bg-positive/22'
+      const successContainerOutlined = 'border-positive/65 [&.is-dismissable]:hover:bg-positive/5'
 
       const variants = {
         none: noVariantContainer,
@@ -84,28 +89,29 @@ export const BANNER_DEFAULT_PROPS = {
 
       return {
         base,
+        font,
         outlined,
         dismissable,
         variants,
-        all: `${base} ${outlined} ${dismissable} ${variant}`,
+        all: `${base} ${font} ${outlined} ${dismissable} ${variant}`,
       } as const
     },
 
     iconClass(payload: {
-      variant: 'none' | 'info' | 'warning' | 'error' | 'success'
+      variant: IBannerVariant
     }) {
       const { variant: variantProp } = payload
 
-      const base = 'h-6 w-6 shrink-0 self-start m-t-1'
+      const base = 'h-5 w-5 shrink-0 self-start m-t-0.5'
 
       // Icon
       let icon = ''
 
-      const noneIcon = 'i-lucide:info'
-      const infoIcon = 'i-proicons:info'
-      const warningIcon = 'i-fluent:warning-16-filled'
-      const errorIcon = 'i-ci:error'
-      const successIcon = 'i-akar-icons:circle-check-fill'
+      const noneIcon = 'i-tabler:info-circle color-true-gray-500 dark:color-true-gray-400'
+      const infoIcon = 'i-tabler:info-circle color-info'
+      const warningIcon = 'i-tabler:alert-triangle color-warning'
+      const errorIcon = 'i-tabler:circle-x color-negative'
+      const successIcon = 'i-tabler:circle-check color-positive'
 
       const icons = {
         none: noneIcon,
@@ -128,11 +134,24 @@ export const BANNER_DEFAULT_PROPS = {
     },
 
     labelClass() {
-      const base = 'p-y-1'
+      const base = 'flex-1 min-w-0 p-y-0.5 leading-5 break-words'
 
       return {
         base,
         all: `${base}`,
+      } as const
+    },
+
+    dismissClass() {
+      const base = 'i-lucide:x absolute right-3 top-3.5 h-4 w-4 color-true-gray-400 transition-colors'
+      const hover = 'group-hover/banner:color-true-gray-700 dark:group-hover/banner:color-true-gray-200'
+      const centered = '[.banner.is-icon-center_&]:(top-50% translate-y--50%)'
+
+      return {
+        base,
+        hover,
+        centered,
+        all: `${base} ${hover} ${centered}`,
       } as const
     },
   },

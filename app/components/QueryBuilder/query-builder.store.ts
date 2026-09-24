@@ -13,45 +13,6 @@ type IConfig = {
   injectionKey?: string
 }
 
-// export function useQueryBuilderStore(payload?: {
-//   queryBuilderId?: string
-//   queryBuilderProps?: IQueryBuilderProps
-// }) {
-//   return defineStore(`queryBuilder.${_queryBuilderId}`, () => {
-
-//     // Layout
-
-//     const getFilterComponentFnc = ref<IQueryBuilderProps['getFilterComponent']>(queryBuilderProps?.getFilterComponent)
-
-//     useResizeObserver(queryBuilderEl, entries => {
-//       requestAnimationFrame(() => {
-//         const { contentRect } = entries?.[0] ?? {}
-
-//         isSmallerScreen.value = contentRect!.width < breakpoint.value
-//         queryBuilderElRect.value = queryBuilderEl.value?.getBoundingClientRect()
-//       })
-//     })
-
-//     return {
-//       // Data
-//       columns,
-//       items,
-//       draggedItem,
-//       collapsedById,
-
-//       // Layout
-//       allowNegation,
-//       queryBuilderEl,
-//       queryBuilderElRect,
-//       hoveredItem,
-//       maxNestingLevel,
-//       isSmallerScreen,
-//       breakpoint,
-//       getFilterComponentFnc,
-//     }
-//   })()
-// }
-
 function createStore(injectionKey?: string) {
   const injectionState = createInjectionState((payload?: IConfig) => {
     const { queryBuilderProps } = payload ?? {}
@@ -66,18 +27,13 @@ function createStore(injectionKey?: string) {
 
     const items = ref<IQueryBuilderRow[]>([])
 
-    // const items = initRef({
-    //   propName: 'items',
-    //   instance,
-    //   props: queryBuilderProps,
-    //   defaultValue: [],
-    // }) as Ref<IQueryBuilderRow[]>
-
     // Layout
     const queryBuilderEl = ref<HTMLElement>()
     const isSmallerScreen = ref(false)
     const hoveredItem = ref<IQueryBuilderRow | undefined>()
-    const queryBuilderElRect = ref<DOMRect>()
+
+    // A newly added condition focuses its field once it mounts
+    const itemIdToFocus = ref<string>()
 
     const allowNegation = initRef({
       propName: 'allowNegation',
@@ -115,9 +71,9 @@ function createStore(injectionKey?: string) {
       queryBuilderEl,
       isSmallerScreen,
       hoveredItem,
-      queryBuilderElRect,
       breakpoint,
       getFilterComponentFnc,
+      itemIdToFocus,
     }
 
     return returnedData
