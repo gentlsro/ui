@@ -16,34 +16,35 @@ const { arrowEl } = useMenuStore()
 <style scoped lang="scss">
 .menu-arrow {
   @apply absolute w-2 h-2 rotate-45 bg-white dark:bg-dark-950 z--1
-  light:(shadow-darker/6);
+  light:(shadow-darker/6)
+  light:border-slate-300 dark:border-dark-700;
 }
 
 // Arrow placement
 .menu[placement^='top'] > .menu-arrow {
   @apply bottom--4px
-    border-b-custom border-r-custom border-ca;
+    border-b-custom border-r-custom;
 
   box-shadow: 1px 1px 1px 1px var(--un-shadow-color);
 }
 
 .menu[placement^='bottom'] > .menu-arrow {
   @apply top--4px
-    border-t-custom border-l-custom border-ca;
+    border-t-custom border-l-custom;
 
   box-shadow: -1px -1px 1px 1px var(--un-shadow-color);
 }
 
 .menu[placement^='left'] > .menu-arrow {
   @apply right--4px
-    border-r-custom border-t-custom border-ca;
+    border-r-custom border-t-custom;
 
   box-shadow: 1px -1px 1px 1px var(--un-shadow-color);
 }
 
 .menu[placement^='right'] > .menu-arrow {
   @apply left--4px
-    border-l-custom border-b-custom border-ca;
+    border-l-custom border-b-custom;
 
   box-shadow: -1px 1px 1px 1px var(--un-shadow-color);
 }
