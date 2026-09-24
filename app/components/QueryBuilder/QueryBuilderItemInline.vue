@@ -52,6 +52,9 @@ const isNonValueComparator = computed(() => {
   return NON_VALUE_COMPARATORS.includes(itemLocal.value.comparator)
 })
 
+// Root conditions are not wrapped in brackets, the table top already groups them
+const isRootLevel = computed(() => props.level <= 1)
+
 const levelColor = computed(() => {
   const color = QUERY_BUILDER_LEVEL_COLORS[props.level % QUERY_BUILDER_LEVEL_COLORS.length] as string
 
@@ -131,16 +134,16 @@ const { validation } = useArk({ scope: '_qb' })
 <template>
   <li
     class="qb-row qb-item"
-    :class="{ 'is-first-child': isFirstChild }"
+    :class="{ 'is-first-child': isFirstChild, 'is-root': isRootLevel }"
     :style="{ '--bracketColor': levelColor }"
     v-bind="$attrs"
     :data-path="itemLocal.path"
   >
     <!-- Field -->
     <span
-      font="semibold"
-      text="caption xs"
-      color="black dark:white"
+      font="medium"
+      text="xs"
+      color="true-gray-800 dark:true-gray-100"
       truncate
       max-w="40"
     >
@@ -149,8 +152,8 @@ const { validation } = useArk({ scope: '_qb' })
 
     <!-- Comparator -->
     <span
-      p="x-2px"
-      text="caption xs"
+      text="xs"
+      color="true-gray-500 dark:true-gray-400"
       shrink-0
     >
       {{ $t(`comparator.${item.comparator?.replaceAll('.', '|')}`).toLocaleLowerCase() }}
@@ -170,7 +173,8 @@ const { validation } = useArk({ scope: '_qb' })
     <Btn
       v-if="editable"
       size="xs"
-      preset="TRASH"
+      icon="i-lucide:x"
+      class="qb-item__remove"
       @click.stop.prevent="handleRemoveCondition"
       @mousedown.stop.prevent
     />
@@ -184,6 +188,7 @@ const { validation } = useArk({ scope: '_qb' })
       :fit="false"
       placement="bottom-start"
       min-w="min"
+      :ui="{ contentClass: ({ defaults }) => `${defaults.all} !p-0` }"
       @show="itemEditEl?.focusInput()"
       @before-show="syncFromParent"
       @before-hide="handleMenuBeforeHide"
@@ -194,21 +199,32 @@ const { validation } = useArk({ scope: '_qb' })
         :focus-first-input="false"
         :prevent-submit-on-enter="false"
         :submit-confirmation="false"
+        :ui="{ contentClass: ({ defaults }) => `${defaults.all} !p-0` }"
         @submit="handleSubmit"
       >
-        <QueryBuilderItem
-          ref="itemEditEl"
-          :item="itemLocal"
-          :level
-          :parent
-          :editable
-          no-draggable
-          no-remove
-          m="!0"
-          p="!x-1"
-          min-w="70"
-          @update:comparator="menuEl?.recomputePosition()"
-        />
+        <!-- The popover is the container: one even inset, a slim header and no card -->
+        <div class="qb-item-editor">
+          <div class="qb-item-editor__header">
+            <span>{{ $t('queryBuilder.condition') }}</span>
+
+            <span class="qb-item-editor__hint">
+              <kbd>↵</kbd> {{ $t('general.apply') }}
+            </span>
+          </div>
+
+          <QueryBuilderItem
+            ref="itemEditEl"
+            :item="itemLocal"
+            :level
+            :parent
+            :editable
+            no-draggable
+            no-remove
+            class="qb-item-editor__item"
+            min-w="70"
+            @update:comparator="menuEl?.recomputePosition()"
+          />
+        </div>
       </Form>
     </Menu>
   </li>
@@ -219,8 +235,8 @@ const { validation } = useArk({ scope: '_qb' })
     size="xs"
     preset="ADD"
     class="close-bracket"
-    :class="{ 'is-last-child': isLastChild }"
-    :style="{ '--bracketColor': levelColor, 'color': levelColor }"
+    :class="{ 'is-last-child': isLastChild, 'is-root': isRootLevel }"
+    :style="{ '--bracketColor': levelColor, 'color': isRootLevel ? undefined : levelColor }"
     @click="$emit('add:row')"
   />
 
@@ -228,7 +244,7 @@ const { validation } = useArk({ scope: '_qb' })
   <div
     v-else-if="isLastChild"
     class="close-bracket"
-    :class="{ 'is-last-child': isLastChild }"
+    :class="{ 'is-last-child': isLastChild, 'is-root': isRootLevel }"
     :style="{ '--bracketColor': levelColor, 'color': levelColor }"
   >
     &ZeroWidthSpace;
@@ -236,13 +252,38 @@ const { validation } = useArk({ scope: '_qb' })
 </template>
 
 <style scoped lang="scss">
+@use '#layers/ui/app/css/subtle-remove-btn-mixin.scss' as *;
+
+.qb-item-editor {
+  @apply flex flex-col gap-2 p-3;
+
+  &__header {
+    @apply flex items-center justify-between gap-4 text-xs font-medium
+      color-true-gray-500 dark:color-true-gray-400;
+  }
+
+  &__hint {
+    @apply flex items-center gap-1 font-normal;
+
+    kbd {
+      @apply inline-flex items-center h-4.5 p-x-1 rounded border-1 font-sans text-10px leading-none
+        border-true-gray-200 dark:border-true-gray-700 bg-true-gray-50 dark:bg-true-gray-800;
+    }
+  }
+}
+
+// The row is laid out by the popover here, not drawn as its own card
+.qb-item.qb-item-editor__item {
+  @apply m-0 p-0 min-h-0 bg-transparent border-0;
+}
+
 .qb-item {
-  @apply relative flex gap-1 border-1 border-dashed border-ca
-    rounded-custom p-l-1.5 items-center cursor-pointer bg-white dark:bg-black
-    min-h-26px; // Arbitrary number that looks good...
+  @apply relative flex gap-1 border-1 border-true-gray-200 dark:border-true-gray-700
+    rounded-lg p-l-2 p-r-0.5 items-center cursor-pointer bg-white dark:bg-true-gray-900
+    min-h-7 transition-colors;
 
   &:hover {
-    @apply shadow-consistent-xs shadow-ca;
+    @apply border-true-gray-300 dark:border-true-gray-600 bg-true-gray-50 dark:bg-true-gray-800;
   }
 
   &.is-first-child {
@@ -252,15 +293,31 @@ const { validation } = useArk({ scope: '_qb' })
   &.is-last-child {
     @apply m-r-3;
   }
+
+  &.is-root {
+    @apply m-x-0;
+  }
+
+  &__remove {
+    @include subtle-remove-btn;
+  }
 }
 
 :deep(.qb-item__value) {
-  @apply rounded-custom p-x-1 p-y-2px leading-tight min-w-5 text-xs text-center
-    font-semibold max-w-70 truncate self-center
-    bg-primary color-white;
+  // 16px line + 2px padding = an even 20px, so it lands on whole pixels and shares
+  // the label's baseline (an odd height sat half a pixel off)
+  @apply rounded-md p-x-1.5 p-y-2px leading-4 min-w-5 text-xs text-center
+    font-medium max-w-70 truncate self-center
+    bg-primary/10 color-primary;
 }
 
-.qb-item.is-first-child {
+// `dark:` variants inside `:deep` do not apply, so dark mode gets its own rule
+// (same coloring as the filter chips)
+.dark .qb-item :deep(.qb-item__value) {
+  @apply bg-primary/40 color-white;
+}
+
+.qb-item.is-first-child:not(.is-root) {
   &::before {
     @apply absolute -left-2.5 text-6 leading-none;
 
@@ -269,7 +326,7 @@ const { validation } = useArk({ scope: '_qb' })
   }
 }
 
-.is-last-child {
+.is-last-child:not(.is-root) {
   @apply relative;
 
   &::after {
@@ -282,5 +339,9 @@ const { validation } = useArk({ scope: '_qb' })
 
 .close-bracket {
   @apply m-r-2 self-center;
+
+  &.is-root {
+    @apply m-x-0 color-true-gray-500 dark:color-true-gray-400 rounded-lg;
+  }
 }
 </style>

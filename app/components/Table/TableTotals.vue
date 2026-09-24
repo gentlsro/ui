@@ -33,6 +33,18 @@ const totalsByField = computed(() => {
   }, {} as Record<string, any>)
 })
 
+// The row is only worth showing when a visible column has a total
+const hasVisibleTotals = computed(() => {
+  return visibleColumns.value.some(col => totalsByField.value?.[col.field])
+})
+
+// The first data column (not the selection one) names the row, unless it has a total itself
+const labelField = computed(() => {
+  const field = visibleColumns.value.find(col => !col.isHelperCol)?.field
+
+  return field && !totalsByField.value?.[field] ? field : undefined
+})
+
 // Data fetching
 watch(
   [rows, () => props.totals],
@@ -54,13 +66,9 @@ async function getTotals() {
     })
 
     totals.value = res
-  }
-
-  else if (props.totals) {
+  } else if (props.totals) {
     totals.value = props.totals
-  }
-
-  else {
+  } else {
     totals.value = undefined
   }
 }
@@ -68,7 +76,7 @@ async function getTotals() {
 
 <template>
   <HorizontalScroller
-    v-if="totals?.length"
+    v-if="hasVisibleTotals"
     ref="totalsEl"
     v-model:scroll-position="totalsX"
     class="table-totals shrink-0"
@@ -79,8 +87,26 @@ async function getTotals() {
       :column="col"
       :ui
       :total="totalsByField?.[col.field]"
+      :class="{ 'is-label': col.field === labelField }"
+    >
+      <span
+        v-if="col.field === labelField"
+        class="table-totals__label"
+      >
+        {{ $t('table.totalsLabel') }}
+      </span>
+    </TableTotalsCell>
+
+    <div
+      v-if="hasRowActions"
+      aria-hidden="true"
+      style="flex: 0 0 var(--table-row-actions-width, 5.25rem)"
     />
-    
-    <div v-if="hasRowActions" aria-hidden="true" style="flex: 0 0 var(--table-row-actions-width, 5.25rem)" />
   </HorizontalScroller>
 </template>
+
+<style scoped lang="scss">
+.table-totals__label {
+  @apply font-medium color-true-gray-500 dark:color-true-gray-400;
+}
+</style>

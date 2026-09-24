@@ -8,6 +8,7 @@ import type { TableColumn } from '../models/table-column.model'
 
 // Functions
 import { tableFilterValueChangeDebounce } from '../functions/table-filter-value-change-debounce'
+import { tableSetColumnSort } from '../functions/table-set-column-sort'
 
 // Store
 import { useTableStore } from '../stores/table.store'
@@ -41,8 +42,14 @@ const isTooltipAccessible = computed(() => {
 const btnClass = computed(() => {
   return {
     'is-filtered': !!column.value.filterDbQuery.length,
-    'is-sorted': column.value.sort,
+    'is-sorted': !!column.value.sort,
+    'is-open': isMenuOpen.value,
   }
+})
+
+// The sort order only matters when more than one column is sorted
+const isMultiSort = computed(() => {
+  return internalColumns.value.filter(col => col.sort).length > 1
 })
 
 function handleClick(ev: PointerEvent) {
@@ -72,21 +79,7 @@ function handleClick(ev: PointerEvent) {
     newSort = 'asc'
   }
 
-  column.value.sort = newSort
-  if (!newSort) {
-    // These are the columns that have higher sortOrder than the current column
-    // We need to adjust their number accordingly, so that the order is not broken
-    const sortedColumnsAfter = internalColumns.value.filter(col => {
-      return col.sortOrder !== undefined && col.sortOrder > column.value.sortOrder!
-    })
-
-    sortedColumnsAfter.forEach(col => col.sortOrder! -= 1)
-    column.value.sortOrder = undefined
-  } else if (!column.value.sortOrder) {
-    column.value.sortOrder = internalColumns.value
-      .filter(col => col.sortOrder !== undefined)
-      .length + 1
-  }
+  tableSetColumnSort(internalColumns.value, column.value, newSort)
 }
 
 function handleMenuBeforeShow() {
@@ -145,30 +138,44 @@ onKeyStroke('Enter', ev => {
 <template>
   <Btn
     class="filter-btn"
-    size="sm"
+    size="xs"
+    no-dim
     :class="btnClass"
     @click="handleClick"
   >
     <!-- Icon -->
     <template #icon>
-      <div class="w-7 h-7 relative">
+      <div class="filter-btn__icons">
+        <!-- Sort direction -->
         <div
-          class="icon top-.25 left-.25 i-ic:round-filter-alt"
-          :class="{ 'color-white': column.filterDbQuery.length }"
-        />
-        <div
-          class="icon bottom-.25 right-.25 i-basil:sort-outline"
-          :class="{ 'color-white': column.sort }"
-          z-1
+          v-if="column.sort"
+          class="filter-btn__sort"
           data-cy="sort-outline"
+        >
+          <div
+            class="icon"
+            :class="column.sort === 'asc' ? 'i-lucide:arrow-up' : 'i-lucide:arrow-down'"
+          />
+
+          <span
+            v-if="isMultiSort"
+            class="filter-btn__sort-order"
+          >
+            {{ column.sortOrder }}
+          </span>
+        </div>
+
+        <!-- Filter -->
+        <div
+          v-if="column.filterDbQuery.length"
+          class="icon i-lucide:list-filter"
         />
 
+        <!-- Idle -->
         <div
-          v-if="column.sortOrder"
-          class="icon-badge"
-        >
-          {{ column.sortOrder }}
-        </div>
+          v-if="!column.sort && !column.filterDbQuery.length"
+          class="icon i-lucide:chevron-down"
+        />
       </div>
     </template>
 
@@ -185,9 +192,10 @@ onKeyStroke('Enter', ev => {
       manual
       h="!auto"
       max-h="!2/3"
-      :ui="{ contentClass: ({ defaults }) => `${defaults.all} gap-2` }"
+      :ui="{ contentClass: ({ defaults }) => `${defaults.all} gap-3` }"
       :no-arrow="false"
       no-transition
+      dense
       @before-show="handleMenuBeforeShow"
       @before-hide="handleMenuBeforeHide"
     >
@@ -217,26 +225,38 @@ onKeyStroke('Enter', ev => {
 </template>
 
 <style scoped lang="scss">
-.icon {
-  @apply w-4 h-4 absolute;
+.filter-btn {
+  @apply color-true-gray-500 dark:color-true-gray-400 rounded-md p-x-1 transition-opacity;
 
-  &-badge {
-    @apply flex flex-center absolute -bottom-.5 -right-.5 w-3 h-3 bg-white
-      color-black text-9px rounded-full leading-none z-1;
+  &:hover,
+  &.is-open {
+    @apply bg-true-gray-200/70 dark:bg-white/10 color-true-gray-800 dark:color-true-gray-100;
+  }
+
+  &.is-sorted,
+  &.is-filtered {
+    @apply color-primary bg-primary/10 dark:color-true-gray-100 dark:bg-primary/45;
+  }
+
+  &__icons {
+    @apply flex items-center gap-0.5;
+  }
+
+  &__sort {
+    @apply flex items-center;
+
+    &-order {
+      @apply text-10px font-semibold leading-none tabular-nums;
+    }
+  }
+
+  .icon {
+    @apply w-3.5 h-3.5 shrink-0;
   }
 }
 
-.filter-btn {
-  @apply overflow-hidden;
-
-  &.is-filtered::before {
-    @apply absolute content-empty rotate-45 bg-primary -top-24.5px -left-24.5px
-      w-1 h-3/2 w-3/2;
-  }
-
-  &.is-sorted::after {
-    @apply absolute content-empty rotate-45 bg-secondary -bottom-24.5px -right-24.5px
-      w-1 h-3/2 w-3/2;
-  }
+// Idle columns only reveal the menu button on hover, like the freeze button
+.th:not(:hover, :focus-within) .filter-btn:not(.is-sorted, .is-filtered, .is-open) {
+  opacity: 0;
 }
 </style>

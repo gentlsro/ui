@@ -182,12 +182,6 @@ export class TableColumn<T = IItem> {
    */
   frozen?: boolean
 
-  /**
-   * If column is `semiFrozen` it means that it is not directly frozen but
-   * it is part of a group of columns that are "before" the frozen column
-   */
-  semiFrozen?: boolean
-
   // Filtering
   /**
    * Currently used filters
@@ -575,50 +569,16 @@ export class TableColumn<T = IItem> {
     this.width = `${Math.ceil(colMinWidth)}px`
   }
 
-  freeze(columns: TableColumn[], scope: ParentNode = document) {
+  /**
+   * Toggles freezing at this column; only one column is frozen at a time.
+   * The sticky offsets of it and the columns before it are derived by the table
+   * store (`frozenOffsets`) from their current widths
+   */
+  freeze(columns: TableColumn[]) {
     const isFrozen = this.frozen
 
-    // We unfreeze any other frozen column
-    columns.forEach(col => {
-      col.frozen = false
-      col.semiFrozen = false
-      col.headerStyle = omit(col.headerStyle, ['left', 'position', 'zIndex'])
-      col.cellStyle = omit(col.cellStyle, ['left', 'position', 'zIndex'])
-    })
-
-    if (!isFrozen) {
-      // And we freeze the current column
-      const colIdx = columns.findIndex(col => col.field === this.field)
-
-      let left = 0
-      columns.slice(0, colIdx + 1).forEach(col => {
-        const colEl = scope.querySelector(`[data-column="${col.field}"]`)
-        const colWidthPx = colEl
-          ? getComputedStyle(colEl).getPropertyValue('width')
-          : '0px'
-
-        col.width = colWidthPx
-        const adjustedWidth = Number(stringToFloat(colWidthPx) ?? 0)
-
-        col.semiFrozen = true
-        col.headerStyle = {
-          ...col.headerStyle,
-          left: `${left}px`,
-          position: 'sticky',
-          zIndex: 1,
-        }
-        col.cellStyle = {
-          ...col.cellStyle,
-          left: `${left}px`,
-          position: 'sticky',
-          zIndex: 1,
-        }
-
-        left += adjustedWidth
-      })
-
-      this.frozen = true
-    }
+    columns.forEach(col => col.frozen = false)
+    this.frozen = !isFrozen
   }
 
   /**

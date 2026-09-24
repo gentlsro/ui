@@ -55,6 +55,7 @@ const {
   hoveredItem,
   isSmallerScreen,
   getFilterComponentFnc,
+  itemIdToFocus,
 } = useQueryBuilderStore()
 
 // Layout
@@ -85,6 +86,14 @@ const customFilterComponent = computed(() => {
 
   // Otherwise, we don't return anything
   return undefined
+})
+
+// A condition that was just added gets its field focused
+onMounted(() => {
+  if (itemIdToFocus.value === item.value.id) {
+    itemIdToFocus.value = undefined
+    nextTick(() => fieldInputEl.value?.focus?.())
+  }
 })
 
 function handleRemoveCondition() {
@@ -171,10 +180,12 @@ const { validation } = useArk({
     @mouseleave="hoveredItem = undefined"
   >
     <!-- Move handler -->
+    <!-- Same height as the first input, so the handle sits at its middle -->
     <QueryBuilderMoveHandler
       v-if="!noDraggable && !item.isNotDraggable && editable"
       self-start
-      m="t-2.5"
+      h="8"
+      m="t-1"
     />
 
     <div class="qb-item__content">
@@ -250,9 +261,10 @@ const { validation } = useArk({
     <!-- Remove condition -->
     <Btn
       v-if="!noRemove && editable"
-      size="xs"
-      preset="TRASH"
-      m="t-2 r-2"
+      size="sm"
+      icon="i-lucide:x"
+      class="qb-item__remove"
+      m="t-1 r-1"
       self="start"
       tabindex="-1"
       @click="handleRemoveCondition"
@@ -263,20 +275,24 @@ const { validation } = useArk({
 </template>
 
 <style scoped lang="scss">
-.qb-item {
-  @apply relative flex gap-2 rounded-custom p-l-2 min-h-10 m-r-2 m-l-5
-    items-center bg-slate-100 dark:bg-dark-950 border-1 border-transparent;
+@use '#layers/ui/app/css/subtle-remove-btn-mixin.scss' as *;
 
-  transition:
-    background-color 0.15s ease-in-out,
-    shadow 0.15s ease-in-out;
+.qb-item {
+  @apply relative flex gap-2 rounded-lg p-l-2 min-h-10 m-r-2 m-l-5
+    items-center bg-white dark:bg-darker border-1 border-true-gray-200 dark:border-true-gray-800;
+
+  transition: border-color 0.15s ease-in-out;
 
   &.is-hovered {
-    @apply bg-white dark:bg-black z-1;
+    @apply border-true-gray-300 dark:border-true-gray-700 z-1;
   }
 
   &.is-dragged {
-    @apply bg-primary/15 dark:bg-primary/15;
+    @apply bg-primary/8 dark:bg-primary/20;
+  }
+
+  &__remove {
+    @include subtle-remove-btn;
   }
 
   &.is-smaller-screen .qb-item__content {
@@ -312,12 +328,12 @@ const { validation } = useArk({
 .qb-item:not(.no-drag) {
   &::before {
     @apply absolute content-empty -left-3 top-0 h-full
-      border-l-1 border-dark dark:border-ca border-dashed;
+      border-l-1 border-true-gray-300 dark:border-true-gray-700;
   }
 
   &::after {
     @apply absolute content-empty -left-3 w-3
-      border-b-1 border-dark dark:border-ca border-dashed;
+      border-b-1 border-true-gray-300 dark:border-true-gray-700;
 
     // This is kinda specificut it shouldn't really cause issues if we
     // don't mess with int sizes

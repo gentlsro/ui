@@ -6,6 +6,9 @@ import type { TableFeature } from './types/table-feature.type'
 // Store
 import { useTableStore } from './stores/table.store'
 
+// Functions
+import { tableSetColumnSort } from './functions/table-set-column-sort'
+
 // Constants
 import { TABLE_DEFAULT_PROPS } from './constants/table-default-props.constant'
 
@@ -57,21 +60,14 @@ const tableSorting = computed(() => {
       sortOrder: col.sortOrder,
     }))
     .toSorted((a, b) => (a!.sortOrder || 0) - (b!.sortOrder || 0))
-    .map(col =>
-      `<span class="max-w-40 truncate inline-block">
-        (${col.direction === 'asc' ? '&#8593;' : '&#8595;'}) ${col.label}
-      </span>`,
-    )
-    .join(', ')
 })
 
-function handleClearSorting() {
-  internalColumns.value = internalColumns.value.map(col => {
-    col.sort = undefined
-    col.sortOrder = undefined
+function handleRemoveSort(field: string) {
+  const column = internalColumns.value.find(col => col.field === field)
 
-    return col
-  })
+  if (column) {
+    tableSetColumnSort(internalColumns.value, column)
+  }
 }
 </script>
 
@@ -95,13 +91,13 @@ function handleClearSorting() {
         <Btn
           v-if="selectionConfig?.enabled"
           size="sm"
-          icon="i-fluent:select-all-on-20-regular !w-5 !h-5"
-          m="l--1"
+          icon="i-lucide:list-checks"
+          class="table-toolbar-btn"
           no-uppercase
           :label="`${$t('general.selected')}: ${selectionCount}`"
           :ui="{ labelClass: ({ defaults }) => `${defaults.all} hidden md:flex` }"
         >
-          <div class="i-flowbite:chevron-right-outline rotate-90 h-4 w-4" />
+          <div class="i-lucide:chevron-down w-3.5 h-3.5 opacity-60 shrink-0" />
 
           <slot
             name="selection-menu"
@@ -114,35 +110,41 @@ function handleClearSorting() {
       <slot name="sorting">
         <HorizontalScroller
           v-if="featuresEnabledByName.sorting && tableSorting.length"
-          :ui="{ contentClass: ({ defaults }) => `${defaults.all} items-center gap-1` }"
+          :ui="{ contentClass: ({ defaults }) => `${defaults.all} items-center gap-1 p-y-1.5 p-r-2` }"
           grow
         >
-          <div class="flex items-center p-r-1 color-ca">
-            <Icon
-              name="i-hugeicons:sorting-a-z-02"
-              class="w-5 h-5 shrink-0 "
-            />
-            :
-          </div>
+          <span class="table-toolbar__sorting-label">
+            {{ $t('general.sorting.self') }}
+          </span>
 
           <div
-            flex="~ items-center gap-1"
-            text="xs"
+            class="table-toolbar__sorting"
             data-cy="sort-active-fields"
-            v-html="tableSorting"
-          />
+          >
+            <!-- Removable like tags: hover shows the remove badge, click removes the sort -->
+            <button
+              v-for="sort in tableSorting"
+              :key="sort.field"
+              type="button"
+              class="table-toolbar__sorting-chip"
+              :title="$t('general.remove')"
+              data-cy="remove-sorting"
+              @click="handleRemoveSort(sort.field)"
+            >
+              <span
+                class="w-3.5 h-3.5 shrink-0"
+                :class="sort.direction === 'asc' ? 'i-lucide:arrow-up' : 'i-lucide:arrow-down'"
+              />
 
-          <Btn
-            preset="CLOSE"
-            size="xs"
-            :label="$t('general.sorting.clear')"
-            :ui="{ labelClass: ({ defaults }) => `${defaults.all} hidden @xl:flex` }"
-            data-cy="clear-sorting"
-            :tooltip="{
-              label: $t('general.sorting.clear'),
-            }"
-            @click="handleClearSorting"
-          />
+              <span class="max-w-40 truncate">
+                {{ sort.label }}
+              </span>
+
+              <span class="table-toolbar__sorting-remove">
+                <span class="i-lucide:x w-3 h-3" />
+              </span>
+            </button>
+          </div>
         </HorizontalScroller>
       </slot>
     </div>
@@ -181,14 +183,43 @@ function handleClearSorting() {
 </template>
 
 <style scoped lang="scss">
+@use '#layers/ui/app/css/hover-on-desktop-mixin.scss' as hover;
+
 .table-toolbar {
-  @apply flex items-center gap-2 p-t-1 p-b-2px p-x-2;
+  @apply flex items-center gap-2 p-b-1 p-x-3;
+
+  // Labels never wrap; the sorting chips scroll instead
+  :deep(.table-toolbar-btn) {
+    @apply color-true-gray-600 dark:color-true-gray-300 rounded-lg font-medium shrink-0 whitespace-nowrap;
+
+    &:hover {
+      @apply bg-true-gray-100 dark:bg-true-gray-800 color-true-gray-900 dark:color-white;
+    }
+  }
 
   &__sorting {
     @apply flex gap-1 items-center;
 
     &-label {
-      @apply font-semibold text-caption text-xs;
+      @apply font-medium text-xs color-true-gray-500 dark:color-true-gray-400 p-r-1 shrink-0;
+    }
+
+    &-chip {
+      @apply relative flex items-center gap-1 h-6 p-x-2 rounded-md text-xs font-medium cursor-pointer
+        bg-primary/10 color-primary dark:bg-primary/40 dark:color-white;
+
+      @include hover.on-desktop {
+        @apply outline-1 outline-offset-1 outline-solid outline-negative z-1;
+
+        .table-toolbar__sorting-remove {
+          @apply flex;
+        }
+      }
+    }
+
+    &-remove {
+      @apply absolute hidden flex-center top--1.25 right--2 w-4 h-4 rounded-1.5
+        bg-negative color-white;
     }
   }
 }

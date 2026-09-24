@@ -215,7 +215,7 @@ const { validation } = useArk({
           :label="$t('table.saveColumns')"
         >
           <template #prepend>
-            <div class="i-tabler:columns-2 h-5 w-5 color-blue-500" />
+            <div class="i-lucide:columns-3 h-4.5 w-4.5 color-true-gray-500 dark:color-true-gray-400" />
           </template>
         </Toggle>
 
@@ -226,12 +226,12 @@ const { validation } = useArk({
           :label="$t('table.saveFilters')"
         >
           <template #prepend>
-            <div class="i-ic:round-filter-alt h-5 w-5 color-blue-500" />
+            <div class="i-lucide:list-filter h-4.5 w-4.5 color-true-gray-500 dark:color-true-gray-400" />
           </template>
 
           <template #append>
             <div v-if="!urlSchema.filters && !urlSchema.queryBuilder && toSave.filters">
-              <div class="i-clarity:warning-solid w-5 h-5 color-amber-500" />
+              <div class="i-lucide:triangle-alert w-4.5 h-4.5 color-amber-500" />
 
               <Tooltip>
                 <span color="amber-500">
@@ -249,12 +249,12 @@ const { validation } = useArk({
           :label="$t('table.saveSort')"
         >
           <template #prepend>
-            <div class="i-basil:sort-outline w-5 h-5 color-blue-500" />
+            <div class="i-lucide:arrow-up-down h-4.5 w-4.5 color-true-gray-500 dark:color-true-gray-400" />
           </template>
 
           <template #append>
             <div v-if="!urlSchema.sorting && toSave.sorting">
-              <div class="i-clarity:warning-solid w-5 h-5 color-amber-500" />
+              <div class="i-lucide:triangle-alert w-4.5 h-4.5 color-amber-500" />
 
               <Tooltip>
                 <span color="amber-500">
@@ -279,7 +279,7 @@ const { validation } = useArk({
           :label="$t('table.savePublic')"
         >
           <template #prepend>
-            <div class="i-ic:round-public h-5 w-5 color-blue-500" />
+            <div class="i-lucide:globe h-4.5 w-4.5 color-true-gray-500 dark:color-true-gray-400" />
           </template>
         </Toggle>
 
@@ -289,7 +289,7 @@ const { validation } = useArk({
           :label="$t('table.saveDefault')"
         >
           <template #prepend>
-            <div class="i-fluent:book-default-28-filled h-5 w-5 color-blue-500" />
+            <div class="i-lucide:star h-4.5 w-4.5 color-true-gray-500 dark:color-true-gray-400" />
           </template>
         </Toggle>
       </div>
@@ -331,7 +331,7 @@ const { validation } = useArk({
   @apply flex flex-col gap-2 md:h-60;
 
   &__header {
-    @apply font-semibold text-caption p-b-1;
+    @apply text-xs font-medium color-true-gray-500 dark:color-true-gray-400 p-b-1;
   }
 }
 
@@ -339,7 +339,7 @@ const { validation } = useArk({
   @apply flex flex-col gap-2 md:h-60 lt-md:p-t-6;
 
   &__header {
-    @apply font-semibold text-caption p-b-1;
+    @apply text-xs font-medium color-true-gray-500 dark:color-true-gray-400 p-b-1;
   }
 }
 </style>

@@ -148,38 +148,9 @@ export function useTableColumnResizing() {
 
   function handleSplitterPointerUp() {
     const col = activeSplitter.value!.column
-    const colIdx = visibleColumns.value.findIndex(c => c.field === col.field)
 
-    const diff
-      = activeSplitter.value!.adjustedWidth
-        - activeSplitter.value!.originalWidth
-
-    // If the currently resized column is `semiFrozen` but not `frozen`,
-    // we need to adjust the widths of all the `semiFrozen` columns that come
-    // after it
-    if (
-      activeSplitter.value!.column.semiFrozen
-      && !activeSplitter.value!.column.frozen
-    ) {
-      const lastSemiFrozenColIdx = visibleColumns.value
-        .slice(colIdx)
-        .findIndex(col => !col.semiFrozen)
-
-      const semiFrozenColumns = visibleColumns.value.slice(
-        colIdx + 1,
-        colIdx + lastSemiFrozenColIdx,
-      )
-
-      semiFrozenColumns.forEach(col => {
-        if (typeof col.headerStyle.left === 'string') {
-          const left = Number(stringToFloat(col.headerStyle.left) || 0)
-
-          col.headerStyle.left = `${left + diff}px`
-        }
-      })
-    }
-
-    // Set the width of the column we're resizing to the new width
+    // Set the width of the column we're resizing to the new width.
+    // Frozen offsets follow it on their own (see `frozenOffsets` in the store)
     col.width = `${activeSplitter.value!.adjustedWidth}px`
 
     // Reset the active splitter

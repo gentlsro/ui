@@ -5,6 +5,9 @@ import type { TableColumn } from '../models/table-column.model'
 // Store
 import { useTableStore } from '../stores/table.store'
 
+// Functions
+import { tableSetColumnSort } from '../functions/table-set-column-sort'
+
 type IProps = {
   column: TableColumn
 }
@@ -18,28 +21,12 @@ const { internalColumns } = useTableStore()
 const column = toRef(props, 'column')
 
 function handleSort(sort?: 'asc' | 'desc', ev?: PointerEvent) {
-  const isShift = ev?.shiftKey
-  column.value.sort = sort
-
-  if (isShift) {
-    if (!sort) {
-    // These are the columns that have higher sortOrder than the current column
-    // We need to adjust their number accordingly, so that the order is not broken
-      const sortedColumnsAfter = internalColumns.value.filter(col => {
-        return col.sortOrder !== undefined && col.sortOrder > column.value.sortOrder!
-      })
-
-      sortedColumnsAfter.forEach(col => {
-        col.sortOrder! -= 1
-      })
-
-      column.value.sortOrder = undefined
-    } else if (!column.value.sortOrder) {
-      column.value.sortOrder = internalColumns.value
-        .filter(col => col.sortOrder !== undefined)
-        .length + 1
-    }
+  // With shift, the column joins (or leaves) the multi-sort
+  if (ev?.shiftKey) {
+    tableSetColumnSort(internalColumns.value, column.value, sort)
   } else {
+    column.value.sort = sort
+
     internalColumns.value.forEach(col => {
       if (col !== column.value || sort === undefined) {
         col.sort = undefined
@@ -61,9 +48,11 @@ function handleSort(sort?: 'asc' | 'desc', ev?: PointerEvent) {
       </span>
 
       <Btn
+        v-if="column.sort"
         :label="$t('general.sorting.clear')"
         size="xs"
-        color="negative"
+        no-uppercase
+        class="sorting__clear"
         @click="handleSort(undefined, $event)"
       />
     </div>
@@ -75,10 +64,8 @@ function handleSort(sort?: 'asc' | 'desc', ev?: PointerEvent) {
         :label="$t('general.sorting.asc')"
         size="sm"
         no-uppercase
-        color="ca"
-        icon="i-ph:sort-descending-bold"
-        class="!rounded-r-0"
-        border="r-1 ca"
+        icon="i-lucide:arrow-up-narrow-wide"
+        class="sorting__option"
         :class="{ 'is-active': column.sort === 'asc' }"
         data-cy="sort-asc"
         @click="handleSort('asc', $event)"
@@ -89,9 +76,8 @@ function handleSort(sort?: 'asc' | 'desc', ev?: PointerEvent) {
         :label="$t('general.sorting.desc')"
         size="sm"
         no-uppercase
-        color="ca"
-        class="!rounded-l-0"
-        icon="i-ph:sort-ascending-bold"
+        class="sorting__option"
+        icon="i-lucide:arrow-down-wide-narrow"
         :class="{ 'is-active': column.sort === 'desc' }"
         data-cy="sort-desc"
         @click="handleSort('desc', $event)"
@@ -102,22 +88,40 @@ function handleSort(sort?: 'asc' | 'desc', ev?: PointerEvent) {
 
 <style scoped lang="scss">
 .sorting {
-  @apply flex flex-col gap-1 p-2;
+  @apply flex flex-col gap-2 p-3 p-b-2;
 
   &__title {
-    @apply flex items-center gap-2;
+    @apply flex items-center gap-2 min-h-6;
 
     &-label {
-      @apply grow font-semibold font-rem-14;
+      @apply grow text-xs font-medium color-true-gray-500 dark:color-true-gray-400;
     }
   }
 
-  &__content {
-    @apply grid grid-cols-2 border-1 border-ca rounded-custom dark:bg-black;
+  &__clear {
+    @apply color-true-gray-500 dark:color-true-gray-400 rounded-md font-medium;
+
+    &:hover {
+      @apply color-negative bg-negative/8;
+    }
   }
 
-  .is-active {
-    @apply bg-primary color-white;
+  // The two directions side by side, the active one tinted
+  &__content {
+    @apply grid grid-cols-2 gap-1;
+  }
+
+  &__option {
+    @apply rounded-md color-true-gray-600 dark:color-true-gray-300 font-medium
+    border-1 border-true-gray-200 dark:border-true-gray-800;
+
+    &:hover {
+      @apply bg-true-gray-100 dark:bg-true-gray-800;
+    }
+
+    &.is-active {
+      @apply bg-primary/10 color-primary dark:bg-primary/40 dark:color-white;
+    }
   }
 }
 </style>

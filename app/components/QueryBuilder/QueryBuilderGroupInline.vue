@@ -118,14 +118,17 @@ function handleRemoveGroup() {
 
 <template>
   <!-- Condition -->
+  <!-- The root condition is meaningless until it joins at least two conditions -->
   <Btn
+    v-if="level !== 0 || item.children.length > 1"
     :label="$t(`queryBuilder.${item.condition.toLowerCase()}`)"
     size="xs"
     class="condition-btn color-blue-500 self-center"
     :class="{
       'is-first-child': isFirstChild,
+      'is-root': level === 0,
       'is-negated': item.condition === 'NOT_AND' || item.condition === 'NOT_OR',
-      '!color-blue-500': noConditionChange || !editable,
+      '!color-blue-500': level !== 0 && (noConditionChange || !editable),
     }"
     :style="{ '--bracketColor': levelColor }"
     no-dim
@@ -245,6 +248,16 @@ function handleRemoveGroup() {
 
 <style scoped lang="scss">
 .condition-btn {
+  &.is-root {
+    @apply color-true-gray-500 dark:color-true-gray-400 uppercase tracking-wider font-semibold rounded-md;
+
+    font-size: 0.625rem;
+
+    &:hover {
+      @apply bg-true-gray-100 dark:bg-true-gray-800;
+    }
+  }
+
   &.is-negated {
     @apply color-negative;
   }

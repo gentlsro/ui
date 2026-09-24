@@ -17,9 +17,6 @@ const props = defineProps<IQueryBuilderRowProps>()
 // Store
 const { items, draggedItem, queryBuilderEl } = useQueryBuilderStore()
 
-// Constants
-const ITEM_ROW_LEFT_MARGIN = 20
-
 // Layout
 const draggableEl = ref<InstanceType<typeof QueryBuilderGroup | typeof QueryBuilderItem>>()
 
@@ -37,116 +34,78 @@ const { pause, resume, isActive } = useIntervalFn(
 
 // D'n'D
 let clonedElement: HTMLElement | null = null
-let mouseOffset = { x: 0, y: 0 }
+
+// Distance from the pointer to the row's top, kept while dragging
+let pointerOffsetY = 0
 
 const draggableElement = computed(
   () => unrefElement(draggableEl as any) as unknown as HTMLElement,
 )
 
-// Mouse
-function handleMouseDown(event: MouseEvent) {
+function getPoint(event: MouseEvent | TouchEvent) {
+  return 'touches' in event ? event.touches[0]! : event
+}
+
+/**
+ * Starts dragging when the move handle was grabbed; returns whether it did
+ */
+function startDrag(event: MouseEvent | TouchEvent) {
   const target = event.target as HTMLElement
-  const isDraggableEl
+  const isMoveHandle
     = target.classList.contains('query-builder-move-handler')
       || target.classList.contains('query-builder-move-handler__icon')
 
-  if (!isDraggableEl) {
-    return
+  if (!isMoveHandle) {
+    return false
   }
 
   event.preventDefault()
   event.stopPropagation()
 
-  const rect = draggableElement.value!.getBoundingClientRect()
-
-  mouseOffset = {
-    x: rect.left - event.clientX - ITEM_ROW_LEFT_MARGIN,
-    y: rect.top - event.clientY,
-  }
-
+  pointerOffsetY = draggableElement.value!.getBoundingClientRect().top - getPoint(event).clientY
   cloneElement(event)
-  document.addEventListener('mousemove', handleMouseMove)
-  document.addEventListener('mouseup', handleDragEnd)
+
+  return true
 }
 
-function handleMouseMove(event: MouseEvent) {
+function moveDrag(event: MouseEvent | TouchEvent) {
+  const { clientX, clientY } = getPoint(event)
+
   if (clonedElement) {
-    let newLeft = event.clientX + mouseOffset.x
-    let newTop = event.clientY + mouseOffset.y
+    // Reordering only depends on the hovered row, so the ghost keeps its column
+    // and follows the pointer vertically (a wide row has no room to move sideways)
+    const maxTop = window.innerHeight - clonedElement.offsetHeight
+    clonedElement.style.top = `${Math.max(0, Math.min(clientY + pointerOffsetY, maxTop))}px`
 
-    // Constrain to viewport
-    newLeft = Math.min(
-      newLeft,
-      window.innerWidth - clonedElement.offsetWidth - ITEM_ROW_LEFT_MARGIN,
-    )
-    newTop = Math.min(newTop, window.innerHeight - clonedElement.offsetHeight)
-    newLeft = Math.max(newLeft, 0)
-    newTop = Math.max(newTop, 0)
-
-    clonedElement.style.left = `${newLeft}px`
-    clonedElement.style.top = `${newTop}px`
-
-    draggedItem.value!.pos = {
-      x: event.clientX,
-      y: event.clientY,
-    }
+    draggedItem.value!.pos = { x: clientX, y: clientY }
   }
 
   calculateScroll(event)
+}
+
+// Mouse
+function handleMouseDown(event: MouseEvent) {
+  if (startDrag(event)) {
+    document.addEventListener('mousemove', handleMouseMove)
+    document.addEventListener('mouseup', handleDragEnd)
+  }
+}
+
+function handleMouseMove(event: MouseEvent) {
+  moveDrag(event)
 }
 
 // Touch
 function handleTouchStart(event: TouchEvent) {
-  const target = event.target as HTMLElement
-  const isDraggableEl
-    = target.classList.contains('query-builder-move-handler')
-      || target.classList.contains('query-builder-move-handler__icon')
-
-  if (!isDraggableEl) {
-    return
+  if (startDrag(event)) {
+    document.addEventListener('touchmove', handleTouchMove)
+    document.addEventListener('touchend', handleDragEnd)
   }
-
-  event.preventDefault()
-  event.stopPropagation()
-
-  const rect = draggableElement.value!.getBoundingClientRect()
-
-  mouseOffset = {
-    x: rect.left - event.touches[0]!.clientX - ITEM_ROW_LEFT_MARGIN,
-    y: rect.top - event.touches[0]!.clientY,
-  }
-
-  cloneElement(event)
-  document.addEventListener('touchmove', handleTouchMove)
-  document.addEventListener('touchend', handleDragEnd)
 }
 
 function handleTouchMove(event: TouchEvent) {
   event.preventDefault()
-
-  if (clonedElement) {
-    let newLeft = event.touches[0]!.clientX + mouseOffset.x
-    let newTop = event.touches[0]!.clientY + mouseOffset.y
-
-    // Constrain to viewport
-    newLeft = Math.min(
-      newLeft,
-      window.innerWidth - clonedElement.offsetWidth - ITEM_ROW_LEFT_MARGIN,
-    )
-    newTop = Math.min(newTop, window.innerHeight - clonedElement.offsetHeight)
-    newLeft = Math.max(newLeft, 0)
-    newTop = Math.max(newTop, 0)
-
-    clonedElement.style.left = `${newLeft}px`
-    clonedElement.style.top = `${newTop}px`
-
-    draggedItem.value!.pos = {
-      x: event.touches[0]!.clientX,
-      y: event.touches[0]!.clientY,
-    }
-  }
-
-  calculateScroll(event)
+  moveDrag(event)
 }
 
 // Shared
@@ -229,33 +188,36 @@ function handleDragEnd() {
  * Clones an element and positions it on the mouse cursor
  */
 function cloneElement(event: MouseEvent | TouchEvent) {
-  clonedElement = draggableElement.value?.cloneNode(true) as HTMLElement
+  const source = draggableElement.value
+  clonedElement = source?.cloneNode(true) as HTMLElement
 
-  if (clonedElement) {
-    let clientX: number, clientY: number
+  if (!clonedElement) {
+    return
+  }
 
-    if (event instanceof MouseEvent) {
-      clientX = event.clientX
-      clientY = event.clientY
-    } else {
-      clientX = event.touches[0]!.clientX
-      clientY = event.touches[0]!.clientY
-    }
+  const { clientX, clientY } = getPoint(event)
+  const rect = source!.getBoundingClientRect()
 
-    clonedElement.style.position = 'absolute'
-    clonedElement.style.left = `${clientX + mouseOffset.x}px`
-    clonedElement.style.top = `${clientY + mouseOffset.y}px`
-    clonedElement.style.width = `${draggableElement.value!.offsetWidth}px`
-    clonedElement.style.height = `${draggableElement.value!.offsetHeight}px`
-    clonedElement.style.zIndex = '9999'
-    clonedElement.style.opacity = '0.5'
-    clonedElement.style.pointerEvents = 'none'
-    document.body.appendChild(clonedElement)
+  // Fixed to the viewport (like the Tree's ghost), so page or dialog scroll
+  // cannot offset it; its margin is dropped so it sits exactly over the row
+  Object.assign(clonedElement.style, {
+    position: 'fixed',
+    margin: '0',
+    left: `${rect.left}px`,
+    top: `${rect.top}px`,
+    width: `${rect.width}px`,
+    height: `${rect.height}px`,
+    zIndex: '9999',
+    pointerEvents: 'none',
+  })
 
-    draggedItem.value = {
-      row: props.item,
-      pos: { x: clientX, y: clientY },
-    }
+  // Floating card look (no tree lines), see the unscoped style below
+  clonedElement.classList.add('is-ghost')
+  document.body.appendChild(clonedElement)
+
+  draggedItem.value = {
+    row: props.item,
+    pos: { x: clientX, y: clientY },
   }
 }
 
@@ -272,14 +234,7 @@ function calculateScroll(event: MouseEvent | TouchEvent) {
   let speedX = 0
   let speedY = 0
 
-  let clientX: number, clientY: number
-  if (event instanceof MouseEvent) {
-    clientX = event.clientX
-    clientY = event.clientY
-  } else {
-    clientX = event.touches[0]!.clientX
-    clientY = event.touches[0]!.clientY
-  }
+  const { clientX, clientY } = getPoint(event)
 
   if (clientX < containerRect.left + threshold) {
     // Scroll left
@@ -357,3 +312,15 @@ function updatePaths(parent?: IQueryBuilderGroup) {
     @touchstart="handleTouchStart"
   />
 </template>
+
+<style lang="scss">
+// The floating copy while dragging: a lifted card without the tree lines
+.qb-row.is-ghost {
+  @apply opacity-90 shadow-lg bg-white dark:bg-darker;
+
+  &::before,
+  &::after {
+    display: none;
+  }
+}
+</style>

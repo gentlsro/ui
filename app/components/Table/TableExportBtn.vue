@@ -33,18 +33,22 @@ async function handleExportData(exportDefinition: ITableExport) {
 
 <template>
   <Btn
-    icon="i-material-symbols:download"
-    color="ca"
+    icon="i-lucide:download"
+    class="table-export-btn"
+    p="!x-2"
     no-uppercase
-    bg="!white !dark:black"
+    no-dim
     size="sm"
     :label="$t('table.export', 1)"
-    outlined
     :loading="isExporting"
   >
-    <div class="i-flowbite:chevron-right-outline rotate-90" />
+    <div class="i-lucide:chevron-down w-3.5 h-3.5 opacity-60" />
 
-    <Menu>
+    <Menu
+      placement="bottom-end"
+      :offset="4"
+      min-w="40"
+    >
       <Btn
         v-for="exportDefinition in exportData"
         :key="exportDefinition.id"
@@ -53,8 +57,21 @@ async function handleExportData(exportDefinition: ITableExport) {
         :loading="isExporting"
         align="left"
         no-uppercase
+        no-bold
+        class="rounded-md"
         @click="handleExportData(exportDefinition)"
       />
     </Menu>
   </Btn>
 </template>
+
+<style scoped lang="scss">
+.table-export-btn {
+  @apply rounded-lg font-medium color-true-gray-600 dark:color-true-gray-300;
+
+  &:hover,
+  &.is-menu-active {
+    @apply bg-true-gray-100 dark:bg-true-gray-800 color-true-gray-900 dark:color-white;
+  }
+}
+</style>

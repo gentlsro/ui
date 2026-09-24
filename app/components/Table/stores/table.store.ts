@@ -128,6 +128,8 @@ const [
 
       // Relative column widths
       getColumnWidth,
+      frozenOffsets,
+      getFrozenStyle,
 
       // Selection
       selection,
@@ -575,13 +577,49 @@ const [
    * The column width with percentages resolved to px (see `relativeWidthBasis`)
    */
   function getColumnWidth(column: TableColumn) {
+    // Checked before reading the basis: fixed widths then do not depend on it, so resizing
+    // the table does not re-render (and re-format) every row
+    if (!column.width.includes('%')) {
+      return column.width
+    }
+
     const basis = relativeWidthBasis.value
 
-    if (!basis || !column.width.includes('%')) {
+    if (!basis) {
       return column.width
     }
 
     return column.width.replace(/(-?[\d.]+)%/g, (_, value) => `${(basis * Number(value)) / 100}px`)
+  }
+  // !SECTION
+
+  // SECTION Frozen columns
+  /**
+   * Sticky `left` offset of every column up to (and including) the frozen one.
+   * Derived from the current widths, so resizing, autofit or the selection column
+   * appearing never leave stale offsets behind
+   */
+  const frozenOffsets = computed<Record<string, string>>(() => {
+    const frozenIdx = visibleColumns.value.findIndex(col => col.frozen)
+
+    if (frozenIdx === -1 || isCardView.value) {
+      return {}
+    }
+
+    const widths: string[] = []
+
+    return visibleColumns.value.slice(0, frozenIdx + 1).reduce((agg, col) => {
+      agg[col.field] = widths.length ? `calc(${widths.join(' + ')})` : '0px'
+      widths.push(getColumnWidth(col))
+
+      return agg
+    }, {} as Record<string, string>)
+  })
+
+  function getFrozenStyle(column: TableColumn) {
+    const left = frozenOffsets.value[column.field]
+
+    return left ? { left, position: 'sticky' as const, zIndex: 1 } : undefined
   }
   // !SECTION
 
@@ -941,6 +979,8 @@ const [
 
     // Relative column widths
     getColumnWidth,
+    frozenOffsets,
+    getFrozenStyle,
 
     // Selection
     selection,

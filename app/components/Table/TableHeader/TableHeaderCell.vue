@@ -9,6 +9,9 @@ import type { TableColumn } from '../models/table-column.model'
 import { useTableStore } from '../stores/table.store'
 import { getListItemKey } from '../../List/functions/helpers'
 
+// Functions
+import { tableIsNumericColumn } from '../functions/table-is-numeric-column'
+
 // Constants
 import { TABLE_DEFAULT_PROPS } from '../constants/table-default-props.constant'
 
@@ -28,6 +31,8 @@ const {
   features,
   isCardView,
   getColumnWidth,
+  frozenOffsets,
+  getFrozenStyle,
 } = useTableStore()
 
 // Layout
@@ -49,10 +54,6 @@ const hasFreezeBtn = computed(() => {
     && !col.noFreeze
 })
 
-const freezeBtnClass = computed(() => {
-  return hasFilterBtn.value ? 'left--9' : 'left--7'
-})
-
 // Visuals
 const headerClass = computed(() => {
   return [
@@ -63,7 +64,8 @@ const headerClass = computed(() => {
     props.column.headerClass,
     {
       'is-helper-col': props.column.isHelperCol,
-      'is-frozen': !isCardView.value && props.column.semiFrozen,
+      'is-numeric': !isCardView.value && tableIsNumericColumn(props.column),
+      'is-frozen': props.column.field in frozenOffsets.value,
       'is-frozen-edge': !isCardView.value && props.column.frozen,
     },
   ]
@@ -75,6 +77,7 @@ const headerStyle = computed(() => {
       column: props.column,
     }),
     ...props.column.headerStyle,
+    ...getFrozenStyle(props.column),
     '--colWidth': isCardView.value ? 'auto' : getColumnWidth(props.column),
   }
 })
@@ -175,7 +178,6 @@ function handleSelect() {
       <TableHeaderFreezeBtn
         v-if="hasFreezeBtn"
         :column
-        :class="freezeBtnClass"
       />
 
       <TableHeaderFilterBtn
@@ -195,7 +197,7 @@ function handleSelect() {
 }
 
 .th {
-  @apply flex items-center gap-2 shrink-0 border-ca w-$colWidth;
+  @apply flex items-center gap-1 shrink-0 border-true-gray-200 dark:border-true-gray-800 w-$colWidth;
 
   &__inner {
     @apply grow;
@@ -203,6 +205,31 @@ function handleSelect() {
 
   &__actions {
     @apply relative flex items-center;
+  }
+
+  // Numeric labels sit above their right-aligned values
+  &.is-numeric {
+    @apply flex-row-reverse p-l-1 p-r-2;
+
+    .th__inner {
+      @apply text-right;
+    }
+
+    // The freeze button opens towards the (usually empty) left side of the label
+    :deep(.column-lock) {
+      right: auto;
+      left: calc(100% + 2px);
+    }
+  }
+}
+
+// Ties the revealed menu / freeze buttons to their column; stays while its menu is open
+.th:not(.is-helper-col) {
+  transition: background-color 0.15s ease-in-out;
+
+  &:hover,
+  &:has(.filter-btn.is-open) {
+    @apply bg-true-gray-100 dark:bg-true-gray-800;
   }
 }
 
@@ -217,20 +244,6 @@ function handleSelect() {
 .separator--cell {
   .th {
     @apply border-b-1;
-  }
-}
-
-.table.is-bordered {
-  .th {
-    @apply border-y-1;
-  }
-
-  .th:first-child {
-    @apply border-l-1;
-  }
-
-  .th.is-last {
-    @apply border-r-1;
   }
 }
 </style>

@@ -20,6 +20,8 @@ const {
   hoveredItem,
   maxNestingLevel,
   collapsedById,
+  columns,
+  itemIdToFocus,
 } = useQueryBuilderStore()
 
 // Layout
@@ -59,17 +61,24 @@ function handleSetNegation() {
 }
 
 function handleAddCondition() {
+  // Prefilled with the first column, like the inline query builder
+  const firstColumn = toValue(columns)[0]
+  const id = generateUUID()
+
   group.value.children = [
     ...group.value.children,
     {
-      id: generateUUID(),
-      field: undefined as unknown as string,
-      filterField: undefined as unknown as string,
-      comparator: undefined as unknown as ComparatorEnum,
+      id,
+      field: firstColumn?.field as string,
+      filterField: firstColumn?.filterField as string,
+      comparator: firstColumn?.comparator as ComparatorEnum,
+      dataType: firstColumn?.dataType,
       value: undefined as unknown as string,
       path: `${group.value.path}.children.${group.value.children.length}`,
     },
   ]
+
+  itemIdToFocus.value = id
 }
 
 function handleAddGroup() {
@@ -136,9 +145,8 @@ const collapseProps = computed(() => {
         <Btn
           v-if="!noConditionChange && allowNegation"
           size="xs"
-          icon="i-material-symbols:exclamation-rounded !w-5 !h-5"
-          color="ca"
-          bg="white dark:black"
+          icon="i-lucide:circle-slash"
+          class="qb-group-negation"
           :class="{ 'is-negated': isNegated }"
           no-dim
           :tooltip="{ label: $t('queryBuilder.negation2') }"
@@ -147,9 +155,11 @@ const collapseProps = computed(() => {
 
         <!-- And -->
         <Btn
+          class="qb-group-condition__option"
           :class="{ 'is-active': item.condition === 'AND' || item.condition === 'NOT_AND' }"
           :label="$t('queryBuilder.and')"
           size="xs"
+          no-uppercase
           :disabled="!editable"
           @click="handleSetCondition('AND')"
         />
@@ -157,18 +167,15 @@ const collapseProps = computed(() => {
         <!-- Or -->
         <Btn
           v-if="!noConditionChange"
+          class="qb-group-condition__option"
           :class="{ 'is-active': item.condition === 'OR' || item.condition === 'NOT_OR' }"
           :label="$t('queryBuilder.or')"
           size="xs"
+          no-uppercase
           :disabled="!editable"
           @click="handleSetCondition('OR')"
         />
       </div>
-
-      <Separator
-        v-if="editable && !noAdd"
-        vertical
-      />
 
       <!-- Controls -->
       <div
@@ -177,42 +184,36 @@ const collapseProps = computed(() => {
       >
         <!-- Add condition -->
         <Btn
-          icon="i-eva:plus-fill"
-          color="ca"
-          bg="white dark:darker"
+          icon="i-lucide:plus"
+          :label="$t('queryBuilder.addCondition')"
+          class="qb-group-controls__btn"
           no-uppercase
-          size="sm"
+          no-dim
+          size="xs"
           @click="handleAddCondition"
-        >
-          <Tooltip>
-            {{ $t('queryBuilder.addCondition') }}
-          </Tooltip>
-        </Btn>
+        />
 
         <!-- Add group -->
         <Btn
           v-if="maxNestingLevel > level"
-          icon="i-formkit:add"
-          bg="white dark:darker"
-          color="ca"
+          icon="i-lucide:list-plus"
+          :label="$t('queryBuilder.addGroup')"
+          class="qb-group-controls__btn"
           no-uppercase
-          size="sm"
+          no-dim
+          size="xs"
           @click="handleAddGroup"
-        >
-          <Tooltip>
-            {{ $t('queryBuilder.addGroup') }}
-          </Tooltip>
-        </Btn>
+        />
       </div>
 
       <!-- Actions -->
       <div class="qb-group-actions">
         <!-- Collapse -->
         <Btn
-          size="auto"
+          size="xs"
           no-uppercase
           :icon="collapseProps.icon"
-          border="1 ca"
+          class="qb-group-actions__btn"
           @click="collapsedById[item.id] = !collapsedById[item.id]"
         >
           <Tooltip>
@@ -223,11 +224,9 @@ const collapseProps = computed(() => {
         <!-- Remove group -->
         <Btn
           v-if="editable"
-          class="on-hover"
-          icon="i-material-symbols:delete-sweep-rounded !w-5 !h-5"
-          color="negative"
+          class="on-hover qb-group-actions__btn qb-group-actions__remove"
+          icon="i-lucide:trash-2"
           size="xs"
-          m="l-2"
           :disabled="!level"
           @click="handleRemoveGroup"
         />
@@ -247,29 +246,27 @@ const collapseProps = computed(() => {
         :editable
         :is-last-child="idx === item.children.length - 1"
       />
+
+      <!-- Empty group -->
+      <li
+        v-if="!item.children.length"
+        class="qb-group-empty"
+      >
+        {{ $t('queryBuilder.emptyGroup') }}
+      </li>
     </template>
   </ul>
 </template>
 
 <style scoped lang="scss">
 .qb-group {
-  @apply relative flex flex-col gap-1px rounded-custom p-r-0 p-l-2 m-l-5 border-1
+  @apply relative flex flex-col gap-1 rounded-lg p-r-0 p-l-2 m-l-5 border-1
     border-transparent;
 
-  transition:
-    background-color 0.15s ease-in-out,
-    shadow 0.15s ease-in-out;
-
-  &.is-hovered {
-    @apply bg-white dark:bg-black;
-
-    & > li {
-      @apply border-1 border-ca border-dashed;
-    }
-  }
+  transition: background-color 0.15s ease-in-out;
 
   &.is-dragged {
-    @apply bg-primary/15 dark:bg-primary/15;
+    @apply bg-primary/8 dark:bg-primary/20;
   }
 
   &-row {
@@ -279,33 +276,74 @@ const collapseProps = computed(() => {
   &-condition {
     @apply flex gap-1 items-center;
 
-    .is-active {
-      @apply bg-primary color-white;
-    }
+    &__option {
+      @apply rounded-md border-1 border-true-gray-200 dark:border-true-gray-700
+        color-true-gray-600 dark:color-true-gray-300 font-medium min-w-9;
 
-    .is-negated {
-      @apply bg-negative color-white;
+      &:hover {
+        @apply bg-true-gray-50 dark:bg-true-gray-800;
+      }
+
+      &.is-active {
+        @apply border-primary/50 bg-primary/8 color-primary
+          dark:border-primary dark:bg-primary/35 dark:color-white;
+      }
+    }
+  }
+
+  &-negation {
+    @apply rounded-md border-1 border-true-gray-200 dark:border-true-gray-700
+      color-true-gray-500 dark:color-true-gray-400;
+
+    &.is-negated {
+      @apply border-negative/50 bg-negative/8 color-negative;
+    }
+  }
+
+  &-controls {
+    @apply flex gap-1;
+
+    &__btn {
+      @apply rounded-md color-true-gray-600 dark:color-true-gray-300 font-medium;
+
+      &:hover {
+        @apply bg-true-gray-100 dark:bg-true-gray-800 color-true-gray-900 dark:color-white;
+      }
     }
   }
 
   &-actions {
-    @apply flex gap-1 items-center p-r-4 m-l-auto;
+    @apply flex gap-1 items-center p-r-2 m-l-auto;
+
+    &__btn {
+      @apply rounded-md color-true-gray-500 dark:color-true-gray-400;
+
+      &:hover {
+        @apply bg-true-gray-100 dark:bg-true-gray-800;
+      }
+    }
+
+    &__remove:hover {
+      @apply color-negative bg-negative/10;
+    }
   }
 
-  &-controls {
-    @apply flex gap-px;
+  &-empty {
+    @apply flex items-center min-h-10 m-l-5 m-r-2 p-x-3 rounded-lg text-sm
+      border-1 border-dashed border-true-gray-200 dark:border-true-gray-700
+      color-true-gray-500 dark:color-true-gray-400;
   }
 }
 
 .qb-group:not(.is-base) {
   &::before {
     @apply absolute content-empty -left-3 top-0 h-full
-      border-l-1 border-dark dark:border-ca border-dashed;
+      border-l-1 border-true-gray-300 dark:border-true-gray-700;
   }
 
   &::after {
     @apply absolute content-empty -left-3 w-3
-      border-b-1 border-dark dark:border-ca border-dashed;
+      border-b-1 border-true-gray-300 dark:border-true-gray-700;
 
     // This is kinda specific but it shouldn't really cause issues if we
     // don't mess with input sizes

@@ -2,9 +2,6 @@
 // Functions
 import { useTableAutoFit } from './composables/useTableAutoFit'
 
-// Store
-const { uiState } = storeToRefs(useUIStore())
-
 // Utils
 const { fitColumns } = useTableAutoFit()
 </script>
@@ -13,9 +10,9 @@ const { fitColumns } = useTableAutoFit()
   <Btn
     size="sm"
     no-uppercase
-    icon="i-material-symbols:fit-width"
+    icon="i-lucide:move-horizontal"
     p="!x-2"
-    color="ca"
+    class="table-toolbar-btn"
     @click="fitColumns"
   >
     <!-- Label -->
