@@ -724,7 +724,7 @@ const [
    * When filter or query builder changes, we need to reset the pagination
    */
   watch([filtersSerialized, queryBuilderSerialized], () => {
-    if (currentPage.value > 1) {
+    if (currentPage.value !== 1) {
       currentPage.value = 1
     }
   })

@@ -2,6 +2,9 @@
 // Store
 import { useTableStore } from './stores/table.store'
 
+// Functions
+import { tableGetPageRange } from './functions/table-get-page-range'
+
 // Utils
 const { formatNumber } = useNumber()
 
@@ -14,6 +17,14 @@ const {
 } = useTableStore()
 
 const pageSize = computed(() => paginationConfig.value?.pageSize ?? 1)
+
+const pageRange = computed(() => {
+  return tableGetPageRange({
+    currentPage: currentPage.value,
+    pageSize: pageSize.value,
+    rowsCount: rows.value.length,
+  })
+})
 </script>
 
 <template>
@@ -22,8 +33,8 @@ const pageSize = computed(() => paginationConfig.value?.pageSize ?? 1)
     class="total-rows"
   >
     <span font="semibold">
-      {{ (currentPage - 1) * pageSize }} -
-      {{ (currentPage - 1) * pageSize + rows.length }}
+      {{ pageRange.from }} -
+      {{ pageRange.to }}
     </span>
 
     {{ $t('general.outOf') }}

@@ -11,8 +11,10 @@ const {
   paginationConfig,
 } = useTableStore()
 
-const isFirstPage = computed(() => currentPage.value === 1)
-const isLastPage = computed(() => currentPage.value === totalPages.value)
+const isFirstPage = computed(() => currentPage.value <= 1)
+
+// NOTE: An empty result set has 0 pages, so we must not compare with `===` here
+const isLastPage = computed(() => currentPage.value >= totalPages.value)
 
 const pages = computed(() => {
   // Less than 5 pages
@@ -114,7 +116,7 @@ const pages = computed(() => {
       disable-style="flat"
       class="pagination-el"
       icon="i-line-md:chevron-small-double-right"
-      @click="currentPage = totalPages"
+      @click="currentPage = Math.max(totalPages, 1)"
     />
 
     <!-- Loading -->
