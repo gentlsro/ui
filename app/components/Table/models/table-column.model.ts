@@ -609,6 +609,7 @@ export class TableColumn<T = IItem> {
     this.link = col.link
     this.linkProps = col.linkProps
     this.noFreeze = col.noFreeze
+    this.frozen = col.frozen
     this.autofitLongestText = col.autofitLongestText ?? true
     this.needsFields = col.needsFields
     this.local = col.local ?? false

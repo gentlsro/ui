@@ -59,6 +59,7 @@
     "stretchColumns": "Roztáhnout sloupce",
     "options": "Nastavení tabulky",
     "nonInteractiveColumn": "Neinteraktivní sloupec",
+    "lockedColumn": "Tento sloupec nelze skrýt ani přesunout",
     "layoutDelete": "Smazat rozložení",
     "justifyColumns": "Zarovnat sloupce",
     "autoStretchColumnsExplain": "Když otevřete tabulku, šířky sloupců se přizpůsobí podle obsahu a šířky kontejneru, ale vždy budou alespoň tak široké, aby zaplnily celý kontejner.",

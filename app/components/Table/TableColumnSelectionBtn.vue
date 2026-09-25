@@ -40,8 +40,25 @@ const visibleInteractiveNonHelperColumns = computed(() => {
   return visibleColumnsStore.value.filter(col => !col.isHelperCol && !col.nonInteractive)
 })
 
+// Locked columns (not reorderable) are listed above the draggable ones, so
+// nothing can be dropped before them
+const lockedColumnsLocal = computed(() => {
+  return visibleColumnsLocal.value.filter(col => !col.reorderable)
+})
+
+const movableColumnsLocal = computed({
+  get: () => visibleColumnsLocal.value.filter(col => col.reorderable),
+  set: columns => visibleColumnsLocal.value = [...lockedColumnsLocal.value, ...columns],
+})
+
 function initVisibleColumns() {
-  visibleColumnsLocal.value = klona(visibleInteractiveNonHelperColumns.value)
+  // Always visible columns are included even when a saved state hid them
+  const columns = uniqBy([
+    ...visibleInteractiveNonHelperColumns.value,
+    ...interactiveNonHelperColumns.value.filter(col => col.alwaysVisible),
+  ], 'field')
+
+  visibleColumnsLocal.value = klona(columns)
 }
 
 function isVisible(item: IListItem) {
@@ -51,7 +68,7 @@ function isVisible(item: IListItem) {
 }
 
 function isDisabledFnc(item: IListItem) {
-  return item.ref.nonInteractive
+  return item.ref.nonInteractive || item.ref.alwaysVisible
 }
 
 function handleApply() {
@@ -67,11 +84,12 @@ function handleApply() {
     }
   })
 
-  // Move the columns according to the order in visibleColumnsLocal
+  // Move the columns according to the order in visibleColumnsLocal;
+  // locked columns keep their position
   internalColumns.value = reorderArray(
     internalColumns.value,
     visibleColumnsLocal.value,
-    { isMovable: col => !col.isHelperCol, isSameField: (a, b) => a.field === b.field },
+    { isMovable: col => !col.isHelperCol && col.reorderable, isSameField: (a, b) => a.field === b.field },
   )
 
   // Adjust the `_internalSort`
@@ -95,7 +113,7 @@ function handleSelectMulti(listItems: IListItem[]) {
 
 function handleDeselectMulti(listItems: IListItem[]) {
   const items = listItems
-    .filter(item => !item.ref.nonInteractive)
+    .filter(item => !item.ref.nonInteractive && !item.ref.alwaysVisible)
     .map(item => item.id)
 
   visibleColumnsLocal.value = visibleColumnsLocal.value.filter(col => {
@@ -104,11 +122,11 @@ function handleDeselectMulti(listItems: IListItem[]) {
 }
 
 function handleMoveUp(idx: number) {
-  visibleColumnsLocal.value = moveItem(visibleColumnsLocal, idx, 0)
+  movableColumnsLocal.value = moveItem(movableColumnsLocal.value, idx, 0)
 }
 
 function handleRemove(idx: number) {
-  visibleColumnsLocal.value = visibleColumnsLocal.value.toSpliced(idx, 1)
+  movableColumnsLocal.value = movableColumnsLocal.value.toSpliced(idx, 1)
 }
 </script>
 
@@ -167,7 +185,7 @@ function handleRemove(idx: number) {
         no-edit-controls
         :ui="{
           contentClass: ({ defaults }) => 'grow grid grid-cols-2 gap-2 overflow-auto',
-          controlsClass: ({ defaults }) => `${defaults.all} !p-t-1`,
+          controlsClass: ({ defaults }) => `${defaults.all} !p-t-1 !p-x-4`,
           submitClass: ({ defaults }) => `${defaults.base} !w-auto`,
         }"
         :submit-btn-props="{ size: 'sm', noUppercase: true }"
@@ -286,8 +304,27 @@ function handleRemove(idx: number) {
             <span class="columns__subtitle">{{ $t('general.dragToReorder') }}</span>
           </div>
 
+          <!-- Locked -->
+          <div
+            v-if="lockedColumnsLocal.length"
+            class="columns__locked"
+          >
+            <div
+              v-for="col in lockedColumnsLocal"
+              :key="col.field"
+              class="columns__locked-row"
+              :title="$t('table.lockedColumn')"
+            >
+              <div class="columns__locked-icon" />
+
+              <span grow>
+                {{ col.label }}
+              </span>
+            </div>
+          </div>
+
           <List
-            v-model:items="visibleColumnsLocal"
+            v-model:items="movableColumnsLocal"
             item-key="field"
             item-label="_label"
             :search-config="{ enabled: false }"
@@ -339,11 +376,11 @@ function handleRemove(idx: number) {
 
 .columns {
   &__left {
-    @apply flex flex-col gap-2 overflow-auto border-r-1 border-true-gray-100 dark:border-true-gray-800 p-r-2;
+    @apply flex flex-col gap-2 overflow-auto border-r-1 border-true-gray-100 dark:border-true-gray-800 p-x-2;
   }
 
   &__right {
-    @apply flex flex-col gap-2 overflow-auto;
+    @apply flex flex-col gap-2 overflow-auto p-x-2;
   }
 
   &__left-header,
@@ -378,6 +415,18 @@ function handleRemove(idx: number) {
     &--negative:hover {
       @apply color-negative bg-negative/8;
     }
+  }
+
+  &__locked {
+    @apply flex flex-col m-x-2 p-b-1 border-b-1 border-true-gray-100 dark:border-true-gray-800;
+  }
+
+  &__locked-row {
+    @apply flex items-center gap-1 p-y-1.5 p-l-2 font-rem-14 leading-20px color-true-gray-500 dark:color-true-gray-400;
+  }
+
+  &__locked-icon {
+    @apply i-lucide:lock w-4 h-4 m-r-1 shrink-0;
   }
 
   &__row-btn {
