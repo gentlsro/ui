@@ -205,7 +205,7 @@ function handleRemoveSort(field: string) {
     }
 
     &-chip {
-      @apply relative flex items-center gap-1 h-6 p-x-2 rounded-md text-xs font-medium cursor-pointer
+      @apply relative flex items-center gap-1 h-5 p-x-2 rounded-md text-xs font-medium cursor-pointer
         bg-primary/10 color-primary dark:bg-primary/40 dark:color-white;
 
       @include hover.on-desktop {
