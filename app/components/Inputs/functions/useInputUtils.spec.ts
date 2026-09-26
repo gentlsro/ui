@@ -455,7 +455,7 @@ describe('date input editing', () => {
   })
 
   it('keeps the Dayjs model unchanged and uses the new locale for subsequent model updates', async () => {
-    const { $date } = await import('../../../../../Utilities/shared/utils/$date')
+    const { $date } = await import('@gentl/utilities/shared/utils/$date')
     const value = $date('2026-12-09', { utc: false })
     const wrapper = mount(DateInput, {
       props: { modelValue: value },
@@ -672,7 +672,7 @@ describe('date picker views', () => {
     await wrapper.get('[data-picker-next]').trigger('click')
     expect((wrapper.get('[data-picker-years]').element as HTMLInputElement).value).toBe('2027')
     await wrapper.get('[data-picker-month="5"]').trigger('click')
-    const { $date } = await import('../../../../../Utilities/shared/utils/$date')
+    const { $date } = await import('@gentl/utilities/shared/utils/$date')
     await wrapper.setProps({ disabledDays: [$date('2027-06-20')] })
     expect(wrapper.get('[data-date="2027-06-20"]').attributes('disabled')).toBeDefined()
     expect(wrapper.emitted('update:modelValue')).toBeUndefined()
