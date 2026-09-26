@@ -3,7 +3,13 @@ import type { MaybeElement, ReferenceElement } from '@floating-ui/vue'
 
 export const cover: Middleware = {
   name: 'cover',
-  fn: ({ y, rects, placement }) => {
+  fn: ({ y, rects, placement, middlewareData }) => {
+    // `matchHeight` already aligns the floating element with the reference,
+    // shifting it again would push it out of the reference bounds
+    if (middlewareData.matchHeight) {
+      return {}
+    }
+
     const modifier = placement.startsWith('bottom') ? -1 : 1
     const { height: referenceHeight } = rects.reference
     const { height: menuHeight } = rects.floating
