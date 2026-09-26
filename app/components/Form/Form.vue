@@ -24,6 +24,7 @@ const emits = defineEmits<{
   (e: 'cancel'): void
   (e: 'confirmation'): void
   (e: 'update:errors', errors: string[]): void
+  (e: 'update:isEditing', isEditing: boolean): void
 }>()
 
 // Init
