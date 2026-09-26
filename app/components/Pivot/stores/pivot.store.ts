@@ -617,7 +617,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
 }
 
 export function usePivotStore<T extends IItem = IItem>(payload?: IConfig<T>) {
-  let injectionKey = payload?.injectionKey ?? injectLocal(PIVOT_ID_KEY)
+  let injectionKey = payload?.injectionKey ?? injectLocal(PIVOT_ID_KEY, undefined)
 
   if (!injectionKey) {
     const uuid = generateUUID()

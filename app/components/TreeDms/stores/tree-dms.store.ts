@@ -90,7 +90,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
 }
 
 export function useTreeDmsStore<T extends IItem = IItem>(payload?: IConfig<T>) {
-  let injectionKey = payload?.injectionKey ?? injectLocal(TREE_DMS_INJECTION_KEY)
+  let injectionKey = payload?.injectionKey ?? injectLocal(TREE_DMS_INJECTION_KEY, undefined)
 
   if (!injectionKey) {
     const uuid = generateUUID()
