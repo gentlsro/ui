@@ -1338,6 +1338,9 @@ export const defaultComponentsConfig = {
     props: {
       bordered: false,
       allowComparatorsOfSameType: false,
+      columnSelectionDialogProps: {
+        position: 'top',
+      },
       minimumColumnWidth: 80,
       breakpoint: 600,
       editable: false,
@@ -1407,6 +1410,7 @@ export const defaultComponentsConfig = {
     },
     merge: [
       'autoFit',
+      'columnSelectionDialogProps',
       'loadMetaData',
       'modifiers',
       'selectionConfig',
