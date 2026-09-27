@@ -48,6 +48,11 @@ function getIndicatorIcon(step: IStepperStep) {
   return step.props.icon
 }
 
+// Iconify names (`lucide:user`) render through `Icon`, UnoCSS icon classes (`i-lucide:user`) as a class ~ like `Btn`
+function getResolvedIndicatorIcon(step: IStepperStep) {
+  return resolveIconValue(getIndicatorIcon(step))
+}
+
 function getLabel(step: IStepperStep) {
   return getText(step.props.label) ?? step.props.name
 }
@@ -187,9 +192,16 @@ const descriptionStyle = computed(() => {
             name="indicator"
             v-bind="getSlotProps(step)"
           >
+            <Icon
+              v-if="getResolvedIndicatorIcon(step).name"
+              :name="getResolvedIndicatorIcon(step).name!"
+              :class="[getResolvedIndicatorIcon(step).classes, iconClass]"
+              :style="iconStyle"
+            />
+
             <span
-              v-if="getIndicatorIcon(step)"
-              :class="[getIndicatorIcon(step), iconClass]"
+              v-else-if="getIndicatorIcon(step)"
+              :class="[getResolvedIndicatorIcon(step).classes, iconClass]"
               :style="iconStyle"
             />
 
