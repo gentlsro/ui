@@ -18,10 +18,7 @@ type IProps = {
 
 const props = defineProps<IProps>()
 
-// Utils
-const { currentLocaleCode } = useLocale()
-
-const { columns, ui, state } = usePivotStore()
+const { columns, ui, state, currentLocaleCode } = usePivotStore()
 
 const columnField = computed(() => {
   const index = props.cell.columnFieldIndex

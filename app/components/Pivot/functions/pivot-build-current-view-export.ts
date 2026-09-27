@@ -4,6 +4,8 @@ import type { IPivotValueColumnItem, IPivotValueHeaderCell } from '../types/pivo
 import type { PivotItem } from '../models/pivot-item.model'
 import { resolvePivotRowItemCell } from './pivot-resolve-row-item-cell'
 import { resolvePivotDisplayedValueCells } from './pivot-resolve-value-item'
+import type { IPivotValueLayout } from './pivot-resolve-value-item'
+import type { IPivotLabels } from '../constants/pivot-labels.constant'
 
 export function buildPivotCurrentViewExport<T extends IItem>(payload: {
   displayRowFields: PivotItem<T>[]
@@ -11,10 +13,12 @@ export function buildPivotCurrentViewExport<T extends IItem>(payload: {
   visibleData: IPivotDataItem<T>[]
   visibleValueColumns: IPivotValueColumnItem<T>[]
   visibleValueHeaderRows: IPivotValueHeaderCell[][]
+  valueLayout: IPivotValueLayout<T>
   promotedRowLabelLevelsById: Map<string, number[]>
   collapsedGroupIds: Set<string>
   localeIso: string
   formatCellValue: Parameters<typeof resolvePivotRowItemCell<T>>[0]['formatCellValue']
+  labels?: IPivotLabels
 }): IPivotCurrentViewExport {
   const {
     displayRowFields,
@@ -22,10 +26,12 @@ export function buildPivotCurrentViewExport<T extends IItem>(payload: {
     visibleData,
     visibleValueColumns,
     visibleValueHeaderRows,
+    valueLayout,
     promotedRowLabelLevelsById,
     collapsedGroupIds,
     localeIso,
     formatCellValue,
+    labels,
   } = payload
 
   return {
@@ -59,14 +65,15 @@ export function buildPivotCurrentViewExport<T extends IItem>(payload: {
           collapsedGroupIds,
           localeIso,
           formatCellValue,
+          labels,
         })
 
         return resolved.showContent ? resolved.displayValue : ''
       })
       const values = resolvePivotDisplayedValueCells({
-        item: row.valueItem,
-        visibleValueColumns,
-        collapsedGroupIds,
+        row,
+        columns: visibleValueColumns,
+        layout: valueLayout,
       }).map(cell => {
         return cell.hasValue && Number.isFinite(cell.aggregated)
           ? cell.aggregated

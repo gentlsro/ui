@@ -1,16 +1,22 @@
-<script setup lang="ts" generic="T">
+<script setup lang="ts" generic="T, C extends IVirtualScrollerColumn = TableColumn<T>">
 import type { ComponentPublicInstance, CSSProperties } from 'vue'
 import { get } from 'lodash-es'
 import { defaultRangeExtractor, useVirtualizer } from '@tanstack/vue-virtual'
 import type { Range, VirtualItem } from '@tanstack/vue-virtual'
 import type { IVirtualScrollEvent } from './types/virtual-scroll-event.type'
-import type { IVirtualScrollerProps } from './types/virtual-scroller-props.type'
+import type { IVirtualScrollerColumn, IVirtualScrollerProps } from './types/virtual-scroller-props.type'
 import { getElementSize } from '#layers/utilities/app/functions/get-element-size'
 import { VIRTUAL_SCROLLER_DEFAULT_PROPS } from './constants/virtual-scroller-default-props'
+import {
+  addActiveStickyIndex,
+  getActiveStickyIndex,
+  normalizeStickyIndices,
+} from './functions/virtual-scroller-sticky'
 
-const props = withDefaults(defineProps<IVirtualScrollerProps<T>>(), {
+const props = withDefaults(defineProps<IVirtualScrollerProps<T, C>>(), {
   ...getComponentProps('virtualScroller'),
   virtualizeColumns: false,
+  columnKey: 'field',
 })
 const emits = defineEmits<{
   (e: 'virtualScroll', payload: IVirtualScrollEvent): void
@@ -19,7 +25,16 @@ const emits = defineEmits<{
 defineSlots<{
   'inner'?: () => any
   'inner-content'?: () => any
-  'default': (props: { row: T, index: number, columns?: TableColumn<T>[], style: CSSProperties }) => any
+  'default': (props: {
+    row: T
+    index: number
+    columns?: C[]
+    style: CSSProperties
+    isSticky: boolean
+    isActiveSticky: boolean
+    /** The active sticky row is pinned away from its own position (rows below it are scrolling by) */
+    isStuck: boolean
+  }) => any
 }>()
 
 // Viewport and data
@@ -44,7 +59,10 @@ function getItemKey(index: number) {
   return get(Array.isArray(row) ? row[0] : row, props.rowKey) ?? index
 }
 
-const rowRangeExtractor = computed(() => {
+const stickyIndices = computed(() => normalizeStickyIndices(props.stickyIndices))
+const stickyIndexSet = computed(() => new Set(stickyIndices.value))
+
+const baseRangeExtractor = computed(() => {
   if (cleared.value) {
     return () => []
   }
@@ -63,6 +81,19 @@ const rowRangeExtractor = computed(() => {
 
     return Array.from({ length: count }, (_, index) => fixedRange.first + index)
   }
+})
+// The active sticky row stays rendered after it scrolls out of the range
+const rowRangeExtractor = computed(() => {
+  const extract = baseRangeExtractor.value
+
+  if (!stickyIndices.value.length) {
+    return extract
+  }
+
+  return (range: Range) => addActiveStickyIndex(extract(range), {
+    activeIndex: getActiveStickyIndex(stickyIndices.value, range.startIndex),
+    count: range.count,
+  })
 })
 const rowOverscan = computed(() => {
   if (!isMounted.value) {
@@ -83,10 +114,27 @@ const rowVirtualizer = useVirtualizer<HTMLDivElement, HTMLDivElement>(computed((
   initialRect: { width: 0, height: initialCount * props.rowHeight },
   overscan: rowOverscan.value,
 })))
+const firstVisibleIndex = computed(() => rowVirtualizer.value.range?.startIndex)
+const activeStickyIndex = computed(() => {
+  return getActiveStickyIndex(stickyIndices.value, firstVisibleIndex.value)
+})
 const virtualRows = computed(() => rowVirtualizer.value
   .getVirtualItems()
-  .map(item => ({ ...item, row: rows.value[item.index] }))
-  .filter((item): item is VirtualItem & { row: T } => item.row !== undefined))
+  .map(item => ({
+    ...item,
+    row: rows.value[item.index],
+    isSticky: stickyIndexSet.value.has(item.index),
+    isActiveSticky: item.index === activeStickyIndex.value,
+    isStuck: item.index === activeStickyIndex.value && item.index < (firstVisibleIndex.value ?? 0),
+  }))
+  .filter((item): item is VirtualItem & {
+    row: T
+    isSticky: boolean
+    isActiveSticky: boolean
+    isStuck: boolean
+  } => {
+    return item.row !== undefined
+  }))
 const totalHeight = computed(() => rowVirtualizer.value.getTotalSize())
 
 // Column virtualization
@@ -102,7 +150,11 @@ const columnVirtualizer = useVirtualizer<HTMLDivElement, HTMLDivElement>(compute
   horizontal: true,
   enabled: hasVirtualColumns.value,
   getScrollElement: () => virtualScrollEl.value,
-  getItemKey: (index: number) => String(columns.value[index]?.field ?? index),
+  getItemKey: (index: number) => {
+    const column = columns.value[index] as Record<string, unknown> | undefined
+
+    return String(column?.[props.columnKey] ?? index)
+  },
   estimateSize: (index: number) => columnWidths.value[index] ?? 200,
   initialRect: { width: 1280, height: 0 },
   overscan: isMounted.value ? 1 : 0,
@@ -368,7 +420,11 @@ function getRowStyle(item: VirtualItem) {
         :data-idx="item.index"
         :data-key="item.key"
         class="virtual-scroll__row content-row"
-        :class="rowClass"
+        :class="[rowClass, {
+          'is-sticky': item.isSticky,
+          'is-sticky-active': item.isActiveSticky,
+          'is-stuck': item.isStuck,
+        }]"
         :style="getRowStyle(item)"
       >
         <slot
@@ -376,6 +432,9 @@ function getRowStyle(item: VirtualItem) {
           :index="item.index"
           :columns="visibleColumns"
           :style="slotStyle"
+          :is-sticky="item.isSticky"
+          :is-active-sticky="item.isActiveSticky"
+          :is-stuck="item.isStuck"
         >
           {{ item.row }}
         </slot>
@@ -405,5 +464,19 @@ function getRowStyle(item: VirtualItem) {
   @apply absolute left-0 top-0;
 
   transform: translateY(calc(var(--translateY) * 1px)) translate3d(var(--translate3D, 0, 0, 0));
+}
+
+// Only the active sticky row sticks, so consumers can tell which row is pinned (`isStuck`).
+// Virtualized, it leaves absolute positioning: it is rendered first, so in flow it sits at the top of the content
+// and sticks to the viewport while the rows after it scroll by. In normal flow (below the threshold) it sticks
+// from its own position.
+.virtual-scroll__row.is-sticky-active {
+  @apply sticky top-0 z-1;
+}
+
+.virtual-scroll.is-virtual .virtual-scroll__row.is-sticky-active {
+  @apply sticky top-0;
+
+  transform: translate3d(var(--translate3D, 0, 0, 0));
 }
 </style>

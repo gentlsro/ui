@@ -8,6 +8,8 @@ export type IPivotTransformResult<T = IItem> = {
   valueColumns: IPivotValueColumnItem<T>[]
   valueHeaderRows: IPivotValueHeaderCell[][]
   columnTree: IPivotColumnTreeNode[]
-  stickyIndices: number[]
+
+  /** `<column path id>:<measure id>` of each collapsible column group aggregate, aligned with `columnGroupValues` */
+  columnGroupKeys: string[]
   estimate: IPivotTransformEstimate
 }

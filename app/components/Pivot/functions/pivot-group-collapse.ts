@@ -10,25 +10,44 @@ export function getPivotGroupId(groupPath: string[], rowFieldIndex?: number) {
   return `${rowFieldIndex}:${getPivotPathId(groupPath.slice(0, rowFieldIndex + 1))}`
 }
 
+/**
+ * Collapsed group ids are canonical (`<level>:<path id>`, level = path length - 1), so only the cell's own
+ * ancestors need a lookup; scanning the collapsed set would cost O(cells x collapsed groups) per render
+ */
+export function hasCollapsedPathAncestor(payload: {
+  path: string
+  collapsedGroupIds: Set<string>
+  idPrefix?: string
+}) {
+  const { path, collapsedGroupIds, idPrefix = '' } = payload
+
+  if (!collapsedGroupIds.size) {
+    return false
+  }
+
+  let level = 0
+  let separatorIndex = path.indexOf('/')
+
+  while (separatorIndex !== -1) {
+    if (collapsedGroupIds.has(`${idPrefix}${level}:${path.slice(0, separatorIndex)}`)) {
+      return true
+    }
+
+    level += 1
+    separatorIndex = path.indexOf('/', separatorIndex + 1)
+  }
+
+  return false
+}
+
 export function isPivotRowCellHiddenByCollapsedAncestor(
   cellGroupId: string,
   collapsedGroupIds: Set<string>,
 ) {
-  const cellPath = cellGroupId.slice(cellGroupId.indexOf(':') + 1)
-
-  for (const collapsedGroupId of collapsedGroupIds) {
-    if (cellGroupId === collapsedGroupId) {
-      continue
-    }
-
-    const collapsedPath = collapsedGroupId.slice(collapsedGroupId.indexOf(':') + 1)
-
-    if (cellPath.startsWith(`${collapsedPath}/`)) {
-      return true
-    }
-  }
-
-  return false
+  return hasCollapsedPathAncestor({
+    path: cellGroupId.slice(cellGroupId.indexOf(':') + 1),
+    collapsedGroupIds,
+  })
 }
 
 function isPivotSummaryDataRowAtLevel<T = IItem>(
@@ -192,36 +211,64 @@ export function isPivotRowVisible<T = IItem>(
   return true
 }
 
-export function isPivotStickyGroupHeaderRow<T = IItem>(
-  row: IPivotDataItem<T>,
-  rowFieldCount: number,
-) {
-  const lastCollapsibleLevel = rowFieldCount - 2
+/**
+ * The collapsible levels whose expanded group the row sits inside of (a collapsed row summarizes its own group, so
+ * that level is not part of its context). A pinned row shows these group labels.
+ */
+export function getPivotRowContextLevels<T = IItem>(payload: {
+  row: IPivotDataItem<T>
+  collapsedGroupIds: Set<string>
+  rowFieldCount: number
+}) {
+  const { row, collapsedGroupIds, rowFieldCount } = payload
+  const lastLevel = Math.min(rowFieldCount - 2, row.groupPath.length - 1)
+  const levels: number[] = []
 
-  if (lastCollapsibleLevel < 0) {
-    return false
+  for (let level = 0; level <= lastLevel; level++) {
+    const groupId = row.groupIds[level]
+
+    if (!groupId || collapsedGroupIds.has(groupId)) {
+      break
+    }
+
+    levels.push(level)
   }
 
-  return row.rowItem.cells.some(cell =>
-    cell.kind === 'rowLabel'
-    && cell.rowFieldIndex !== undefined
-    && cell.rowFieldIndex <= lastCollapsibleLevel,
-  )
+  return levels
 }
 
+/**
+ * Rows where the group context changes; the scroller pins the last one above the first visible row, so the pinned
+ * row always shares the first visible row's context. Empty when no row is inside an expanded group.
+ */
 export function getPivotStickyIndices<T = IItem>(
   rows: IPivotDataItem<T>[],
-  rowFieldCount: number,
+  payload: {
+    collapsedGroupIds: Set<string>
+    rowFieldCount: number
+  },
 ) {
-  const indices: number[] = []
-
-  for (let index = 0; index < rows.length; index++) {
-    if (isPivotStickyGroupHeaderRow(rows[index]!, rowFieldCount)) {
-      indices.push(index)
-    }
+  if (payload.rowFieldCount < 2) {
+    return []
   }
 
-  return indices
+  const indices: number[] = []
+  let previousKey: string | undefined
+  let hasContext = false
+
+  rows.forEach((row, index) => {
+    const levels = getPivotRowContextLevels({ row, ...payload })
+    const key = levels.length ? row.groupIds[levels.at(-1)!]! : ''
+
+    hasContext ||= key !== ''
+
+    if (key !== previousKey) {
+      indices.push(index)
+      previousKey = key
+    }
+  })
+
+  return hasContext ? indices : []
 }
 
 export function getInitialCollapsedGroupIds<T = IItem>(payload: {

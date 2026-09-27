@@ -53,7 +53,6 @@ const emptyResult = {
   valueColumns: [],
   valueHeaderRows: [],
   columnTree: [],
-  stickyIndices: [],
   estimate: {
     sourceRowCount: 1,
     projectedRowCount: 0,
@@ -104,7 +103,6 @@ function createPayload(data = [{ group: 'A', amount: 1 }]) {
     },
     collapseConfig: undefined,
     isFirstRender: ref(false),
-    formatNumber: String,
     useWorker: true,
     aggregationKey: 'source-1:aggregation-1',
   } as any
@@ -114,22 +112,93 @@ function getTransformMessage(worker: any) {
   return worker.messages.find((message: any) => message.type === 'TRANSFORM')
 }
 
+function getTransformMessages(worker: any) {
+  return worker.messages.filter((message: any) => message.type === 'TRANSFORM')
+}
+
 describe('pivot transform job lifecycle', () => {
-  it('rejects a superseded job and ignores its stale result', async () => {
+  it('rejects a superseded job, ignores its stale result, and keeps the worker', async () => {
+    const transform = usePivotTransform()
+    const data = [{ group: 'A', amount: 1 }]
+    const first = transform.transformPivotData(createPayload(data))
+    const firstOutcome = first.catch(error => error)
+    const worker = mocks.workers[0]
+    const firstJob = getTransformMessage(worker)
+    const second = transform.transformPivotData(createPayload(data))
+    const secondJob = getTransformMessages(worker).at(-1)
+
+    // The worker answers in order: the superseded job first, then the current one
+    worker.respond({ type: 'SUCCESS', jobId: firstJob.jobId, result: { ...emptyResult, stale: true } })
+    worker.respond({ type: 'SUCCESS', jobId: secondJob.jobId, result: emptyResult })
+
+    await expect(firstOutcome).resolves.toMatchObject({ name: 'AbortError' })
+    await expect(second).resolves.not.toHaveProperty('stale')
+    expect(mocks.workers).toHaveLength(1)
+    expect(worker.terminated).toBe(false)
+    expect(worker.messages.filter((message: any) => message.type === 'SET_DATA')).toHaveLength(1)
+  })
+
+  it('cancels a superseded job so the worker drops its prepared result', async () => {
     const transform = usePivotTransform()
     const first = transform.transformPivotData(createPayload())
     const firstOutcome = first.catch(error => error)
-    const firstWorker = mocks.workers[0]
-    const second = transform.transformPivotData(createPayload())
-    const secondWorker = mocks.workers[1]
-    const secondJob = getTransformMessage(secondWorker)
+    const worker = mocks.workers[0]
+    const firstJob = getTransformMessage(worker)
 
-    firstWorker.respond({ type: 'SUCCESS', jobId: getTransformMessage(firstWorker).jobId, result: emptyResult })
-    secondWorker.respond({ type: 'SUCCESS', jobId: secondJob.jobId, result: emptyResult })
+    transform.transformPivotData(createPayload()).catch(() => {})
 
+    const cancelIndex = worker.messages.findIndex((message: any) => message.type === 'CANCEL')
+    const secondTransformIndex = worker.messages.findLastIndex((message: any) => message.type === 'TRANSFORM')
+
+    expect(worker.messages[cancelIndex]).toEqual({ type: 'CANCEL', jobId: firstJob.jobId })
+    expect(cancelIndex).toBeLessThan(secondTransformIndex)
     await expect(firstOutcome).resolves.toMatchObject({ name: 'AbortError' })
+  })
+
+  it('does not let late messages of a superseded job settle the current one', async () => {
+    const transform = usePivotTransform()
+    const onPerformanceWarning = vi.fn()
+    const first = transform.transformPivotData(createPayload())
+    const worker = mocks.workers[0]
+    const firstJob = getTransformMessage(worker)
+
+    first.catch(() => {})
+
+    const second = transform.transformPivotData({ ...createPayload(), onPerformanceWarning })
+    const secondJob = getTransformMessages(worker).at(-1)
+    let settled = false
+
+    second.finally(() => settled = true).catch(() => {})
+
+    worker.respond({ type: 'WARNING', jobId: firstJob.jobId, estimate: emptyResult.estimate })
+    worker.respond({ type: 'CANCELLED', jobId: firstJob.jobId })
+    worker.respond({ type: 'ERROR', jobId: firstJob.jobId, message: 'stale failure' })
+    await Promise.resolve()
+
+    expect(onPerformanceWarning).not.toHaveBeenCalled()
+    expect(settled).toBe(false)
+
+    worker.respond({ type: 'SUCCESS', jobId: secondJob.jobId, result: emptyResult })
     await expect(second).resolves.toMatchObject({ data: [] })
-    expect(firstWorker.terminated).toBe(true)
+  })
+
+  it('sends new source data to the same worker after a superseded job', async () => {
+    const transform = usePivotTransform()
+    const first = transform.transformPivotData(createPayload([{ group: 'A', amount: 1 }]))
+    const worker = mocks.workers[0]
+
+    first.catch(() => {})
+
+    const second = transform.transformPivotData(createPayload([{ group: 'B', amount: 2 }]))
+    const secondJob = getTransformMessages(worker).at(-1)
+    const setDataMessages = worker.messages.filter((message: any) => message.type === 'SET_DATA')
+
+    expect(mocks.workers).toHaveLength(1)
+    expect(setDataMessages).toHaveLength(2)
+    expect(secondJob.dataVersion).toBe(setDataMessages.at(-1).dataVersion)
+
+    worker.respond({ type: 'SUCCESS', jobId: secondJob.jobId, result: emptyResult })
+    await expect(second).resolves.toMatchObject({ data: [] })
   })
 
   it('keeps a warned job pending and resumes the prepared job', async () => {
@@ -159,9 +228,12 @@ describe('pivot transform job lifecycle', () => {
   it('settles cancellation, worker failure, and disposal', async () => {
     const cancelledTransform = usePivotTransform()
     const cancelled = cancelledTransform.transformPivotData(createPayload())
+    const cancelledWorker = mocks.workers.at(-1)
 
     cancelledTransform.cancelTransform()
     await expect(cancelled).rejects.toMatchObject({ name: 'AbortError' })
+    expect(cancelledWorker.messages.at(-1)).toMatchObject({ type: 'CANCEL' })
+    expect(cancelledWorker.terminated).toBe(false)
 
     const failedTransform = usePivotTransform()
     const failed = failedTransform.transformPivotData(createPayload())
