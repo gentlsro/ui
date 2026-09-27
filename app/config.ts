@@ -1345,9 +1345,9 @@ export const defaultComponentsConfig = {
   // Stepper
   stepper: {
     props: {
-      completedIcon: 'i-lucide:check',
+      completedIcon: 'lucide:check',
       disabled: undefined,
-      errorIcon: 'i-lucide:x',
+      errorIcon: 'lucide:x',
       labelPlacement: 'end',
       linear: undefined,
       modelValue: undefined,

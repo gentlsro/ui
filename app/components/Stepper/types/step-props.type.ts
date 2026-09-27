@@ -18,6 +18,8 @@ export type IStepProps = {
 
   /**
    * Icon shown in the step's indicator instead of its number
+   *
+   * NOTE: An Iconify name (`lucide:user`) or a UnoCSS icon class (`i-lucide:user`), like `Btn`'s `icon`
    */
   icon?: string
 
