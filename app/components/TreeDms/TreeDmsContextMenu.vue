@@ -1,15 +1,22 @@
 <script setup lang="ts">
+import type { AllowedComponentProps } from 'vue'
 import type { IBtnProps } from '../Button/types/btn-props.type'
+import type { ITreeNode } from '../Tree/types/tree-node.type'
 
 // Store
 import { useTreeDmsStore } from './stores/tree-dms.store'
 import { useTreeStore } from '../Tree/stores/tree.store'
 import { isNodeSelected } from '../Tree/functions/is-node-selected'
 
+type IBtnContextMenuOption = IBtnProps
+  & AllowedComponentProps
+  & { id: string, onClick?: () => void }
+
 // Store
 const {
   selection,
   idKey,
+  labelKey,
   childrenKey,
   selectionConfig,
   insertNode,
@@ -32,177 +39,109 @@ const {
 const menuEl = useTemplateRef('menuEl')
 const isDelete = ref(false)
 
-const menuItems = computed<Array<IBtnProps & { id: string }>>(() => {
+async function createItem(type: string, parent?: ITreeNode) {
+  if (isCurrentlyAddingItem.value) {
+    return
+  }
+
+  if (parent) {
+    expandNode(parent)
+  }
+
+  const addedNode = await insertNode(
+    {
+      [idKey.value]: generateUUID(),
+      [labelKey.value]: '',
+      type,
+      [childrenKey.value]: [],
+      ...contextMenuConfig.value?.newItem?.({ type, parent: parent?.ref }),
+      __isNew: true,
+    },
+    { parent },
+  )
+
+  requestAnimationFrame(() => {
+    nodeEditing.value = addedNode
+  })
+  $hide()
+}
+
+const menuItems = computed<Array<IBtnContextMenuOption>>(() => {
   const baseProps: IBtnProps = { size: 'sm', noUppercase: true, align: 'left' }
+  const item = nodeContextMenu.value?.ref
 
-  switch (nodeContextMenu.value?.ref.type) {
+  const newFileOption: IBtnContextMenuOption = {
+    ...baseProps,
+    id: 'new-file',
+    icon: 'i-hugeicons:file-add',
+    label: $t('misc.createFile'),
+    onClick: () => createItem(fileKey.value, nodeContextMenu.value),
+    style: 'order: 10;',
+  }
+
+  const newFolderOption: IBtnContextMenuOption = {
+    ...baseProps,
+    id: 'new-folder',
+    icon: 'i-hugeicons:folder-add',
+    label: $t('misc.createFolder'),
+    onClick: () => createItem(folderKey.value, nodeContextMenu.value),
+    style: 'order: 20;',
+  }
+
+  const renameOption = (order: number): IBtnContextMenuOption => ({
+    ...baseProps,
+    id: 'rename',
+    icon: 'i-fluent:rename-16-regular',
+    label: $t('general.rename'),
+    onClick: () => {
+      nodeEditing.value = nodeContextMenu.value
+      $hide()
+    },
+    style: `order: ${order};`,
+  })
+
+  const deleteOption = (order: number): IBtnContextMenuOption => ({
+    ...baseProps,
+    id: 'delete',
+    label: $t('general.delete'),
+    preset: 'TRASH',
+    class: 'color-negative',
+    onClick: () => {
+      isDelete.value = true
+    },
+    style: `order: ${order};`,
+  })
+
+  let options: Array<IBtnContextMenuOption>
+
+  switch (item?.type) {
     case fileKey.value:
-      return [
-        ...(contextMenuConfig.value?.extendOptions?.({ item: nodeContextMenu.value?.ref }) ?? []),
-
-        // Rename
-        {
-          ...baseProps,
-          id: 'rename',
-          icon: 'i-fluent:rename-16-regular',
-          label: $t('general.rename'),
-          onClick: () => {
-            nodeEditing.value = nodeContextMenu.value
-            $hide()
-          },
-          style: 'order: 10;',
-        },
-        // Delete
-        {
-          ...baseProps,
-          id: 'delete',
-          label: $t('general.delete'),
-          preset: 'TRASH',
-          onClick: () => {
-            isDelete.value = true
-          },
-          style: 'order: 20;',
-        },
+      options = [
+        ...(contextMenuConfig.value?.extendOptions?.({ item }) ?? []),
+        renameOption(10),
+        deleteOption(20),
       ]
+      break
 
     case folderKey.value:
-      return [
-        ...(contextMenuConfig.value?.extendOptions?.({ item: nodeContextMenu.value?.ref }) ?? []),
-
-        // New file
-        {
-          ...baseProps,
-          id: 'new-file',
-          icon: 'i-hugeicons:file-add',
-          label: $t('misc.createFile'),
-          onClick: async () => {
-            if (!nodeContextMenu.value || isCurrentlyAddingItem.value) {
-              return
-            }
-
-            const id = generateUUID()
-            expandNode(nodeContextMenu.value)
-
-            const addedNode = await insertNode(
-              { [idKey.value]: id, label: '', type: fileKey.value, [childrenKey.value]: [], __isNew: true },
-              { parent: nodeContextMenu.value },
-            )
-
-            requestAnimationFrame(() => {
-              nodeEditing.value = addedNode
-            })
-            $hide()
-          },
-          style: 'order: 10;',
-        },
-        // New folder
-        {
-          ...baseProps,
-          id: 'new-folder',
-          icon: 'i-hugeicons:folder-add',
-          label: $t('misc.createFolder'),
-          onClick: async () => {
-            if (!nodeContextMenu.value || isCurrentlyAddingItem.value) {
-              return
-            }
-
-            const id = generateUUID()
-            expandNode(nodeContextMenu.value)
-
-            const addedNode = await insertNode(
-              { [idKey.value]: id, label: '', type: folderKey.value, [childrenKey.value]: [], __isNew: true },
-              { parent: nodeContextMenu.value },
-            )
-
-            requestAnimationFrame(() => {
-              nodeEditing.value = addedNode
-            })
-            $hide()
-          },
-          style: 'order: 20;',
-        },
-        // Rename
-        {
-          ...baseProps,
-          id: 'rename',
-          icon: 'i-fluent:rename-16-regular',
-          label: $t('general.rename'),
-          onClick: () => {
-            nodeEditing.value = nodeContextMenu.value
-            $hide()
-          },
-          style: 'order: 30;',
-        },
-        // Delete
-        {
-          ...baseProps,
-          id: 'delete',
-          label: $t('general.delete'),
-          preset: 'TRASH',
-          class: 'color-negative',
-          onClick: () => {
-            isDelete.value = true
-          },
-          style: 'order: 40;',
-        },
+      options = [
+        ...(contextMenuConfig.value?.extendOptions?.({ item }) ?? []),
+        newFileOption,
+        newFolderOption,
+        renameOption(30),
+        deleteOption(40),
       ]
+      break
 
     default:
-      return [
+      options = [
         ...(contextMenuConfig.value?.extendOptions?.({}) ?? []),
-
-        // New file
-        {
-          ...baseProps,
-          id: 'new-file',
-          icon: 'i-hugeicons:file-add',
-          label: $t('misc.createFile'),
-          onClick: async () => {
-            if (isCurrentlyAddingItem.value) {
-              return
-            }
-
-            const id = generateUUID()
-
-            const addedNode = await insertNode(
-              { [idKey.value]: id, label: '', type: fileKey.value, [childrenKey.value]: [], __isNew: true },
-              { parent: nodeContextMenu.value },
-            )
-
-            requestAnimationFrame(() => {
-              nodeEditing.value = addedNode
-            })
-            $hide()
-          },
-          style: 'order: 10;',
-        },
-        // New folder
-        {
-          ...baseProps,
-          id: 'new-folder',
-          icon: 'i-hugeicons:folder-add',
-          label: $t('misc.createFolder'),
-          onClick: async () => {
-            if (isCurrentlyAddingItem.value) {
-              return
-            }
-
-            const id = generateUUID()
-
-            const addedNode = await insertNode(
-              { [idKey.value]: id, label: '', type: folderKey.value, [childrenKey.value]: [], __isNew: true },
-              { parent: nodeContextMenu.value },
-            )
-
-            requestAnimationFrame(() => {
-              nodeEditing.value = addedNode
-            })
-            $hide()
-          },
-          style: 'order: 20;',
-        },
+        newFileOption,
+        newFolderOption,
       ]
   }
+
+  return contextMenuConfig.value?.getOptions?.({ item, options }) ?? options
 })
 
 whenever(nodeContextMenu, () => {

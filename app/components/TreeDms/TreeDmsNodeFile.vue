@@ -87,6 +87,11 @@ function select() {
     const range = document.createRange()
     range.selectNodeContents(inputEl.value!)
 
+    // A new item with a prefilled label (e.g. a path prefix) gets the caret at the end
+    if (node.value.ref.__isNew && inputEl.value?.textContent) {
+      range.collapse(false)
+    }
+
     const selection = window.getSelection()
     selection?.removeAllRanges()
     selection?.addRange(range)
