@@ -112,6 +112,8 @@
     "performanceWarning": "This pivot may be slow",
     "performanceWarningDetails": "{sourceRows} source rows will produce {rows} pivot rows, {columns} value columns, and {cells} logical value cells.",
     "returnToConfiguration": "Return to configuration",
-    "runAnyway": "Run anyway"
+    "runAnyway": "Run anyway",
+    "grandTotal": "Grand Total",
+    "subtotal": "{label} Total"
   }
 }

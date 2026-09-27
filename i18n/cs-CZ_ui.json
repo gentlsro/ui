@@ -112,6 +112,8 @@
     "performanceWarning": "Tato kontingenční tabulka může být pomalá",
     "performanceWarningDetails": "{sourceRows} zdrojových řádků vytvoří {rows} řádků kontingenční tabulky, {columns} hodnotových sloupců a {cells} logických hodnotových buněk.",
     "returnToConfiguration": "Zpět do konfigurace",
-    "runAnyway": "Přesto spustit"
+    "runAnyway": "Přesto spustit",
+    "grandTotal": "Celkový součet",
+    "subtotal": "{label} celkem"
   }
 }

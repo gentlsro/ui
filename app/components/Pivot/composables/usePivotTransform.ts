@@ -34,8 +34,6 @@ import type { PivotItem } from '../models/pivot-item.model'
 
 import PivotTransformWorker from '../workers/pivot-transform.worker?worker'
 
-type IPivotFormatNumber = (value: number) => string
-
 export type IPivotTransformPayload<T extends IItem = IItem> = {
   data: T[]
   rows: PivotItem<T>[]
@@ -45,8 +43,8 @@ export type IPivotTransformPayload<T extends IItem = IItem> = {
   state: IPivotState
   collapseConfig: IPivotProps<T>['collapseConfig']
   isFirstRender?: Ref<boolean>
-  formatNumber: IPivotFormatNumber
   locale?: string
+  grandTotalLabel?: string
   valuesOnRows?: boolean
   useWorker?: boolean
   performance?: IPivotPerformanceConfig
@@ -131,24 +129,40 @@ export function usePivotTransform() {
     workerData = undefined
   }
 
+  /**
+   * Settles the active job without terminating the worker, so its source snapshot and aggregation cache survive.
+   * The worker finishes the job it is running (its late messages no longer match the active job id) and the
+   * CANCEL drops a job paused on a performance warning.
+   */
+  function abandonActiveWorkerJob(error: Error) {
+    const job = activeWorkerJob
+
+    if (!job) {
+      return
+    }
+
+    activeWorkerJob = undefined
+
+    const request: IPivotTransformWorkerRequest = {
+      type: 'CANCEL',
+      jobId: job.id,
+    }
+
+    try {
+      worker?.postMessage(request)
+    } catch {
+      workerTerminate(error)
+    }
+
+    job.reject(error)
+  }
+
   function cancelTransform(message = 'Pivot transform was cancelled.') {
     const error = createPivotAbortError(message)
 
     mainThreadDecision?.reject(error)
     mainThreadDecision = undefined
-
-    if (activeWorkerJob) {
-      const request: IPivotTransformWorkerRequest = {
-        type: 'CANCEL',
-        jobId: activeWorkerJob.id,
-      }
-
-      try {
-        worker?.postMessage(request)
-      } finally {
-        workerTerminate(error)
-      }
-    }
+    abandonActiveWorkerJob(error)
   }
 
   function continueTransform() {
@@ -244,9 +258,7 @@ export function usePivotTransform() {
   }
 
   function runWorkerTransform<T extends IItem>(payload: IPivotTransformPayload<T>) {
-    if (activeWorkerJob) {
-      workerTerminate(createPivotAbortError())
-    }
+    abandonActiveWorkerJob(createPivotAbortError())
 
     const nextWorker = initWorker()
     const serialized = serializePivotTransformWorkerPayload(payload)
@@ -302,9 +314,9 @@ export function usePivotTransform() {
     const preparedAggregation = cached ?? preparePivotAggregationData({
       ...payload,
       data: payload.items?.length
-        ? applyPivotDataFilters(payload.data, payload.items)
-        : payload.data,
-      sourceRowCount: payload.data.length,
+        ? applyPivotDataFilters(sourceData, payload.items)
+        : sourceData,
+      sourceRowCount: sourceData.length,
     })
 
     if (payload.aggregationKey && !cached) {
@@ -320,6 +332,7 @@ export function usePivotTransform() {
       columns: payload.columns,
       values: payload.values,
       valuesOnRows: payload.valuesOnRows,
+      grandTotalLabel: payload.grandTotalLabel,
     })
 
     if (isPivotPerformanceOverBudget(prepared.estimate, payload.performance)) {

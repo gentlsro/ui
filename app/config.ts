@@ -5,6 +5,7 @@ import { extendUIConfig } from './utils/extend-ui-config'
 
 // Constants
 import { BUTTON_PRESET } from './components/Button/constants/button-preset.constant'
+import { PIVOT_DEFAULT_PERFORMANCE } from './components/Pivot/constants/pivot-performance.constant'
 
 const useUtc = import.meta.env.NUXT_PUBLIC_USE_UTC === 'true'
 
@@ -1065,11 +1066,7 @@ export const defaultComponentsConfig = {
       loadData: undefined,
       loading: undefined,
       minimumColumnWidth: 80,
-      performance: {
-        sourceRowWarningThreshold: 100_000,
-        outputCellWarningThreshold: 250_000,
-        valueColumnWarningThreshold: 250,
-      },
+      performance: { ...PIVOT_DEFAULT_PERFORMANCE },
       ui: {
         containerClass: ({ defaults }) => defaults.all,
         contentClass: ({ defaults }) => defaults.all,

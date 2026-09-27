@@ -1,5 +1,4 @@
 import type { IPivotValueColumnItem, IPivotValueHeaderCell } from '../types/pivot-value-column-item.type'
-import type { IPivotValueItemCell } from '../types/pivot-value-item-cell.type'
 
 // Models
 import type { PivotItem } from '../models/pivot-item.model'
@@ -7,9 +6,11 @@ import type { IPivotTransformValueField } from './pivot-transform-data-core'
 
 import {
   getInitialCollapsedGroupIds,
+  hasCollapsedPathAncestor,
   togglePivotGroupCollapse,
 } from './pivot-group-collapse'
 import { getPivotPathId } from './pivot-path-id'
+import { PIVOT_DEFAULT_LABELS } from '../constants/pivot-labels.constant'
 
 export type IPivotColumnTreeNode = {
   key: string
@@ -18,6 +19,7 @@ export type IPivotColumnTreeNode = {
 }
 
 const COLUMN_GROUP_ID_PREFIX = 'c:'
+const COLUMN_GROUP_ID_RE = /^c:\d+:(.+)$/
 
 export function getPivotColumnGroupId(columnPath: string[], columnFieldIndex?: number) {
   if (columnFieldIndex === undefined) {
@@ -264,8 +266,9 @@ function buildVisibleValueHeaderRows<T extends IItem>(payload: {
   tree: IPivotColumnTreeNode[]
   collapsedColumnGroupIds: Set<string>
   valuesOnRows?: boolean
+  grandTotalLabel: string
 }): IPivotValueHeaderCell[][] {
-  const { columnFields, valueFields, tree, collapsedColumnGroupIds, valuesOnRows } = payload
+  const { columnFields, valueFields, tree, collapsedColumnGroupIds, valuesOnRows, grandTotalLabel } = payload
   const rows: IPivotValueHeaderCell[][] = []
   const expandMeasuresOnRows = valuesOnRows && valueFields.length > 1
   const valuesCount = expandMeasuresOnRows ? 1 : valueFields.length
@@ -293,7 +296,7 @@ function buildVisibleValueHeaderRows<T extends IItem>(payload: {
     if (level === 0) {
       row.push({
         id: 'header:grand-total',
-        label: 'Grand Total',
+        label: grandTotalLabel,
         colspan: valuesCount,
         rowspan: grandTotalRowspan,
         level: 0,
@@ -353,6 +356,7 @@ export function buildVisiblePivotValueColumns<T extends IItem>(payload: {
   collapsedColumnGroupIds: Set<string>
   allValueColumns: IPivotValueColumnItem<T>[]
   valuesOnRows?: boolean
+  grandTotalLabel?: string
 }): {
   valueColumns: IPivotValueColumnItem<T>[]
   valueHeaderRows: IPivotValueHeaderCell[][]
@@ -364,6 +368,7 @@ export function buildVisiblePivotValueColumns<T extends IItem>(payload: {
     collapsedColumnGroupIds,
     allValueColumns,
     valuesOnRows,
+    grandTotalLabel = PIVOT_DEFAULT_LABELS.grandTotal,
   } = payload
 
   const expandMeasuresOnRows = valuesOnRows && valueFields.length > 1
@@ -377,7 +382,7 @@ export function buildVisiblePivotValueColumns<T extends IItem>(payload: {
       valueColumns: allValueColumns,
       valueHeaderRows: allValueColumns.map(col => ([{
         id: `header:${col.id}`,
-        label: col.isGrandTotal ? 'Grand Total' : col.value._label,
+        label: col.isGrandTotal ? grandTotalLabel : col.value._label,
         colspan: 1,
         rowspan: 1,
         level: 0,
@@ -410,8 +415,8 @@ export function buildVisiblePivotValueColumns<T extends IItem>(payload: {
         valueField: valueField.field,
         value: valueField.item!,
         label: valueFields.length > 1
-          ? `Grand Total / ${valueField._label}`
-          : 'Grand Total',
+          ? `${grandTotalLabel} / ${valueField._label}`
+          : grandTotalLabel,
         isGrandTotal: true,
         width: valueField.widthResolved,
       })
@@ -419,7 +424,14 @@ export function buildVisiblePivotValueColumns<T extends IItem>(payload: {
   }
 
   const valueHeaderRows = tree.length
-    ? buildVisibleValueHeaderRows({ columnFields, valueFields, tree, collapsedColumnGroupIds, valuesOnRows })
+    ? buildVisibleValueHeaderRows({
+        columnFields,
+        valueFields,
+        tree,
+        collapsedColumnGroupIds,
+        valuesOnRows,
+        grandTotalLabel,
+      })
     : []
 
   return { valueColumns, valueHeaderRows }
@@ -464,35 +476,17 @@ export function isPivotColumnHeaderHidden(
   groupId: string,
   collapsedColumnGroupIds: Set<string>,
 ) {
-  const match = groupId.match(/^c:(\d+):(.+)$/)
+  const path = groupId.match(COLUMN_GROUP_ID_RE)?.[1]
 
-  if (!match) {
+  if (path === undefined) {
     return false
   }
 
-  const level = Number(match[1])
-  const path = match[2]!
-
-  for (const collapsedId of collapsedColumnGroupIds) {
-    if (collapsedId === groupId) {
-      continue
-    }
-
-    const collapsedMatch = collapsedId.match(/^c:(\d+):(.+)$/)
-
-    if (!collapsedMatch) {
-      continue
-    }
-
-    const collapsedLevel = Number(collapsedMatch[1])
-    const collapsedPath = collapsedMatch[2]!
-
-    if (collapsedLevel < level && path.startsWith(`${collapsedPath}/`)) {
-      return true
-    }
-  }
-
-  return false
+  return hasCollapsedPathAncestor({
+    path,
+    collapsedGroupIds: collapsedColumnGroupIds,
+    idPrefix: COLUMN_GROUP_ID_PREFIX,
+  })
 }
 
 export function togglePivotColumnGroupCollapse(
@@ -500,46 +494,4 @@ export function togglePivotColumnGroupCollapse(
   groupId: string,
 ) {
   return togglePivotGroupCollapse(collapsedColumnGroupIds, groupId)
-}
-
-export function aggregatePivotValueCellsForColumn<T>(payload: {
-  cells: Array<{
-    columnPath: string[]
-    measureId: string
-    valueField: ObjectKey<T>
-    aggregated: number
-    hasValue: boolean
-    kind?: string
-    value: PivotItem<T>
-  }>
-  column: {
-    id: string
-    columnPath: string[]
-    measureId: string
-    valueField: ObjectKey<T>
-    value: PivotItem<T>
-  }
-}) {
-  const { cells, column } = payload
-  const matchingCells = cells.filter(cell => {
-    return cell.measureId === column.measureId
-      && column.columnPath.every((key, index) => cell.columnPath[index] === key)
-      && cell.columnPath[0] !== '__grand_total__'
-      && cell.kind !== 'emptyRow'
-  })
-
-  const aggregated = matchingCells.reduce((sum, cell) => sum + cell.aggregated, 0)
-  const showValue = matchingCells.length > 0
-
-  return {
-    id: `${column.id}-aggregated`,
-    kind: matchingCells[0]?.kind,
-    columnId: column.id,
-    columnPath: column.columnPath,
-    measureId: column.measureId,
-    valueField: column.valueField,
-    value: column.value,
-    aggregated,
-    hasValue: showValue && Number.isFinite(aggregated),
-  } as IPivotValueItemCell<T>
 }

@@ -5,9 +5,6 @@ import type { IPivotRowItemCell } from './types/pivot-row-item-cell.type'
 // Functions
 import { resolvePivotRowItemCell } from './functions/pivot-resolve-row-item-cell'
 
-// Constants
-import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
-
 // Store
 import { usePivotStore } from './stores/pivot.store'
 
@@ -20,11 +17,17 @@ type IProps = {
 
 const props = defineProps<IProps>()
 
-// Utils
-const { currentLocaleCode } = useLocale()
-
 // Store
-const { rows, measureRowColumn, showMeasureColumn, ui, state } = usePivotStore<T>()
+const {
+  rows,
+  measureRowColumn,
+  showMeasureColumn,
+  state,
+  currentLocaleCode,
+  labels,
+  rowItemCellUiClass,
+  rowItemCellUiStyle,
+} = usePivotStore<T>()
 
 const resolved = computed(() => {
   return resolvePivotRowItemCell({
@@ -35,6 +38,7 @@ const resolved = computed(() => {
     rows: rows.value,
     collapsedGroupIds: state.value.collapsedGroupIds,
     localeIso: currentLocaleCode.value,
+    labels: labels.value,
     formatCellValue: ({ value, row, dataType, format, localeIso }) => {
       return formatValue(value, row, {
         dataType,
@@ -49,9 +53,7 @@ const resolved = computed(() => {
 // Styles - row item cell
 const rowItemCellClass = computed(() => {
   return [
-    ui.value?.rowItemCellClass?.({
-      defaults: PIVOT_DEFAULT_PROPS.ui.rowItemCellClass(),
-    }),
+    rowItemCellUiClass.value,
     {
       'is-collapsible': resolved.value.isCollapsible,
       'is-total': props.item.kind === 'subtotal',
@@ -61,7 +63,7 @@ const rowItemCellClass = computed(() => {
 })
 
 const rowItemCellStyle = computed(() => {
-  const rowItemCellStyle = ui.value?.rowItemCellStyle?.()
+  const rowItemCellStyle = rowItemCellUiStyle.value
   let width = props.item.row?.widthResolved
 
   if (props.item.kind === 'valueLabel' && showMeasureColumn.value) {

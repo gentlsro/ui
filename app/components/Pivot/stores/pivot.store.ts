@@ -13,6 +13,7 @@ import { pivotFetchData } from '../functions/pivot-fetch-data'
 import { applyPivotEmptyRows } from '../functions/pivot-transform-data'
 import {
   buildPivotPromotedRowLabelLevels,
+  getPivotRowContextLevels,
   getPivotStickyIndices,
   isPivotRowVisible,
   togglePivotGroupCollapse,
@@ -33,6 +34,7 @@ import {
   normalizePivotFilterSlotIndices,
   syncTableColumnFiltersToPivotItem,
 } from '../functions/pivot-filter-usage'
+import { createPivotValueLayout } from '../functions/pivot-resolve-value-item'
 
 // Models
 import { PivotItem } from '../models/pivot-item.model'
@@ -41,6 +43,8 @@ import {
   PIVOT_DEFAULT_MEASURE_COLUMN_WIDTH,
   PIVOT_MEASURE_ROW_FIELD,
 } from '../constants/pivot-measure-row.constant'
+import { PIVOT_DEFAULT_PROPS } from '../constants/pivot-default-props.constant'
+import type { IPivotLabels } from '../constants/pivot-labels.constant'
 
 export const PIVOT_ID_KEY = Symbol('__pivotId')
 
@@ -69,7 +73,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
 
     // Utils
     const { formatNumber } = useNumber()
-    const { currentLocale } = useLocale()
+    const { currentLocale, currentLocaleCode } = useLocale()
     const {
       transformPivotData,
       continueTransform: continuePendingTransform,
@@ -108,6 +112,26 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     const hoveredIdx = ref<number | undefined>()
     const rowClickable = computed(() => props?.rowClickable ?? false)
     const cellClickable = computed(() => props?.cellClickable ?? false)
+
+    // Texts the Pivot generates itself, in the page language
+    const labels = computed<IPivotLabels>(() => ({
+      grandTotal: $t('pivot.grandTotal'),
+      subtotal: label => $t('pivot.subtotal', { label }),
+    }))
+
+    // Presentation shared by every row / cell instance; resolved once here instead of per rendered cell
+    const rowItemCellUiClass = computed(() => ui.value?.rowItemCellClass?.({
+      defaults: PIVOT_DEFAULT_PROPS.ui.rowItemCellClass(),
+    }))
+    const rowItemCellUiStyle = computed(() => ui.value?.rowItemCellStyle?.())
+    const valueItemUiClass = computed(() => ui.value?.valueItemClass?.({
+      defaults: PIVOT_DEFAULT_PROPS.ui.valueItemClass(),
+    }))
+    const valueItemUiStyle = computed(() => ui.value?.valueItemStyle?.())
+    const valueItemCellUiClass = computed(() => ui.value?.valueItemCellClass?.({
+      defaults: PIVOT_DEFAULT_PROPS.ui.valueItemCellClass(),
+    }))
+    const valueItemCellUiStyle = computed(() => ui.value?.valueItemCellStyle?.())
 
     const emits = ref<IPivotEmitFncs<T>>({
       rowClick: () => {},
@@ -251,11 +275,19 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       return totalWidth > 0 ? `${totalWidth}px` : undefined
     })
 
-    // Data
-    const data = ref<IPivotDataItem<T>[]>([])
-    const valueColumns = ref<IPivotValueColumnItem<T>[]>([])
-    const valueHeaderRows = ref<IPivotValueHeaderCell[][]>([])
-    const columnTree = ref<IPivotColumnTreeNode[]>([])
+    // Data (transform output is replaced wholesale, never mutated, so keep it out of deep reactivity)
+    const data = shallowRef<IPivotDataItem<T>[]>([])
+    const valueColumns = shallowRef<IPivotValueColumnItem<T>[]>([])
+    const valueHeaderRows = shallowRef<IPivotValueHeaderCell[][]>([])
+    const columnTree = shallowRef<IPivotColumnTreeNode[]>([])
+    const columnGroupKeys = shallowRef<string[]>([])
+
+    // Where each value lives in a row's value arrays; value cells are built from it for the rendered columns
+    const valueLayout = computed(() => createPivotValueLayout({
+      valueColumns: valueColumns.value,
+      columnGroupKeys: columnGroupKeys.value,
+      valueFields: resolvedValueFields.value,
+    }))
 
     const layoutValueColumns = computed(() => valueColumns.value.map(column => {
       const valueField = resolvedValueFieldsById.value.get(column.measureId)
@@ -280,16 +312,22 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
         collapsedColumnGroupIds: state.value.collapsedColumnGroupIds,
         allValueColumns: layoutValueColumns.value as IPivotValueColumnItem<T>[],
         valuesOnRows: config.value?.valuesOnRows,
+        grandTotalLabel: labels.value.grandTotal,
       })
     })
 
     const visibleValueColumns = computed(() => visibleValueLayout.value.valueColumns)
+    const visibleValueColumnsWidthPx = computed(() => {
+      return visibleValueColumns.value.reduce((sum, column) => {
+        return sum + (Number.parseFloat(column.width) || 0)
+      }, 0)
+    })
     const visibleValueHeaderRows = computed(() => visibleValueLayout.value.valueHeaderRows)
 
     const totalRows = shallowRef<number>()
 
     const visibleData = computed(() => {
-      const visible = (data.value as IPivotDataItem<T>[]).filter(row => {
+      const visible = data.value.filter(row => {
         return isPivotRowVisible(row, state.value.collapsedGroupIds, rows.value.length)
       })
 
@@ -298,14 +336,25 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
         rowFieldCount: rows.value.length,
         collapsedGroupIds: state.value.collapsedGroupIds,
         rowFields: displayRowFields.value,
-        valueColumns: visibleValueColumns.value as IPivotValueColumnItem<T>[],
         includeMeasureColumn: showMeasureColumn.value,
       })
     })
 
     const visibleStickyIndices = computed(() => {
-      return getPivotStickyIndices(visibleData.value, rows.value.length)
+      return getPivotStickyIndices(visibleData.value, {
+        collapsedGroupIds: state.value.collapsedGroupIds,
+        rowFieldCount: rows.value.length,
+      })
     })
+
+    /** Group labels a stuck (pinned) row shows: the expanded groups the row sits inside of */
+    function getRowContextLevels(row: IPivotDataItem<T>) {
+      return getPivotRowContextLevels({
+        row,
+        collapsedGroupIds: state.value.collapsedGroupIds,
+        rowFieldCount: rows.value.length,
+      })
+    }
 
     const promotedRowLabelLevelsById = computed(() => {
       return buildPivotPromotedRowLabelLevels({
@@ -345,6 +394,8 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       candidateItems: PivotItem<T>[],
     ) {
       return JSON.stringify({
+        // Group order depends on the locale, so a language switch re-aggregates instead of reusing the cache
+        locale: currentLocale.value.code,
         rows: getPivotItemsBySingleUsage(candidateItems, 'row').map(item => String(item.field)),
         columns: getPivotItemsBySingleUsage(candidateItems, 'column').map(item => String(item.field)),
         values: resolvePivotValueFields(candidateItems).map(value => ({
@@ -367,6 +418,8 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       candidateConfig: IPivotProps<T>['config'],
     ) {
       return JSON.stringify({
+        // The transform labels its grand total columns; a new label re-projects the cached aggregation
+        grandTotalLabel: labels.value.grandTotal,
         valuesOnRows: !!candidateConfig?.valuesOnRows,
         values: resolvePivotValueFields(candidateItems).map(value => ({
           id: value.measureId,
@@ -433,8 +486,8 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
           collapseConfig: collapseConfig.value,
           state: nextState,
           isFirstRender: nextIsFirstRender,
-          formatNumber,
           locale: currentLocale.value.code,
+          grandTotalLabel: labels.value.grandTotal,
           valuesOnRows: candidateConfig?.valuesOnRows,
           performance: performance.value,
           aggregationKey: getAggregationKey(candidateAggregationSignature),
@@ -461,6 +514,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
         valueColumns.value = result.valueColumns
         valueHeaderRows.value = result.valueHeaderRows
         columnTree.value = result.columnTree
+        columnGroupKeys.value = result.columnGroupKeys
         performanceWarning.value = undefined
         lastCompletedTransformKey = transformKey
 
@@ -548,6 +602,9 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       ui,
 
       // Utils
+      formatNumber,
+      currentLocaleCode,
+      labels,
       isLoading,
       isFirstFetch,
       isTransforming,
@@ -567,6 +624,12 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       hoveredIdx,
       rowClickable,
       cellClickable,
+      rowItemCellUiClass,
+      rowItemCellUiStyle,
+      valueItemUiClass,
+      valueItemUiStyle,
+      valueItemCellUiClass,
+      valueItemCellUiStyle,
 
       // Emits
       emits,
@@ -601,9 +664,12 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       sourceData,
       visibleData,
       visibleStickyIndices,
+      getRowContextLevels,
       promotedRowLabelLevelsById,
       valueColumns,
       visibleValueColumns,
+      visibleValueColumnsWidthPx,
+      valueLayout,
       valueHeaderRows,
       visibleValueHeaderRows,
       columnTree,

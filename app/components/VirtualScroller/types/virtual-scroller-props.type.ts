@@ -4,12 +4,31 @@ import type { TableColumn } from '../../Table/models/table-column.model'
 // Constants
 import type { VIRTUAL_SCROLLER_DEFAULT_PROPS } from '../constants/virtual-scroller-default-props'
 
-export type IVirtualScrollerProps<T> = {
+/** What horizontal virtualization needs from a column: its width (`_width` in px, or `width` like `120px`) */
+export type IVirtualScrollerColumn = {
+  width: string
+  _width?: number
+}
+
+export type IVirtualScrollerProps<T, C extends IVirtualScrollerColumn = TableColumn<T>> = {
   /** Columns available to the row slot and optional horizontal virtualization. */
-  columns?: TableColumn<T>[]
+  columns?: C[]
 
   /** Virtualize columns as well as rows. Defaults to false. */
   virtualizeColumns?: boolean
+
+  /**
+   * The column property that identifies a virtualized column
+   *
+   * @default 'field'
+   */
+  columnKey?: string
+
+  /**
+   * Row indices that stick to the top while scrolling (typically group headers). The last one at or above the
+   * first visible row stays pinned.
+   */
+  stickyIndices?: number[]
 
   /**
    * The number of rows to render during SSR, using TanStack initialRect.

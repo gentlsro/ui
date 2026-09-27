@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
+import { getPivotValueCells } from './pivot-spec-cells'
 import { pivotTransformDataCore } from './pivot-transform-data-core'
 
 const summary = {
@@ -55,7 +56,7 @@ describe('pivotTransformDataCore valuesOnRows', () => {
   it('valuesOnRows: aggregates correct measure per row', () => {
     const result = pivotTransformDataCore({ data, rows, columns, values, valuesOnRows: true })
     const row = result.data.find(r => r.groupPath[0] === 'Frigo' && r.activeValueField === 'revenue')
-    const janCell = row?.valueItem.cells.find(c => c.columnPath[0] === '2026-01')
+    const janCell = getPivotValueCells(result, row!).find(c => c.columnPath[0] === '2026-01')
     expect(janCell?.aggregated).toBe(100)
   })
 
@@ -121,8 +122,8 @@ describe('pivotTransformDataCore valuesOnRows', () => {
     expect(carHeader?.rowItem.cells.find(cell => cell.rowFieldIndex === 1)?.kind).toBe('rowLabel')
     expect(leafRow?.rowItem.cells.find(cell => cell.rowFieldIndex === 0)?.kind).toBe('empty')
     expect(leafRow?.rowItem.cells.find(cell => cell.rowFieldIndex === 2)?.kind).toBe('rowLabel')
-    expect(centerHeader?.valueItem.cells[0]?.aggregated).toBe(150)
-    expect(carHeader?.valueItem.cells[0]?.aggregated).toBe(100)
-    expect(leafRow?.valueItem.cells[0]?.aggregated).toBe(100)
+    expect(getPivotValueCells(result, centerHeader!)[0]?.aggregated).toBe(150)
+    expect(getPivotValueCells(result, carHeader!)[0]?.aggregated).toBe(100)
+    expect(getPivotValueCells(result, leafRow!)[0]?.aggregated).toBe(100)
   })
 })

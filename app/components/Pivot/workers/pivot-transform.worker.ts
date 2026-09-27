@@ -11,6 +11,7 @@ import type {
 
 import { isPivotPerformanceOverBudget } from '../constants/pivot-performance.constant'
 import {
+  getPivotTransformTransferables,
   materializePivotTransformData,
   preparePivotAggregationData,
   projectPivotPreparedAggregation,
@@ -31,7 +32,10 @@ let preparedJob: {
 } | undefined
 
 function postResponse(response: IPivotTransformWorkerResponse) {
-  self.postMessage(response)
+  // The value matrices move to the main thread instead of being copied; the worker keeps no reference to them
+  const transfer = response.type === 'SUCCESS' ? getPivotTransformTransferables(response.result) : []
+
+  self.postMessage(response, { transfer })
 }
 
 self.onmessage = (event: MessageEvent<IPivotTransformWorkerRequest>) => {
@@ -109,6 +113,7 @@ self.onmessage = (event: MessageEvent<IPivotTransformWorkerRequest>) => {
       columns: request.payload.columns,
       values: request.payload.values,
       valuesOnRows: request.payload.valuesOnRows,
+      grandTotalLabel: request.payload.grandTotalLabel,
     })
 
     if (isPivotPerformanceOverBudget(prepared.estimate, request.performance)) {
