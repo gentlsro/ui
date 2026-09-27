@@ -59,6 +59,8 @@ import type { ISectionProps } from '../components/Section/types/section-props.ty
 import type { ISelectorProps } from '../components/Selector/types/selector-props.type'
 import type { ISeparatorProps } from '../components/Separator/types/separator-props.type'
 import type { ISkeletonProps } from '../components/Skeleton/types/skeleton-props.type'
+import type { IStepProps } from '../components/Stepper/types/step-props.type'
+import type { IStepperProps } from '../components/Stepper/types/stepper-props.type'
 import type { ITableProps } from '../components/Table/types/table-props.type'
 import type { ITabProps } from '../components/Tabs/types/tab-props.type'
 import type { ITabsProps } from '../components/Tabs/types/tabs-props.type'
@@ -151,6 +153,8 @@ export type IUIConfig = {
   selector: IConfigItem<ISelectorProps>
   separator: IConfigItem<ISeparatorProps>
   skeleton: IConfigItem<ISkeletonProps>
+  step: IConfigItem<IStepProps>
+  stepper: IConfigItem<IStepperProps>
   mainBar: IConfigItem<IMainBarProps>
   keyboardShortcut: IConfigItem<IKeyboardShortcutProps>
   table: IConfigItem<ITableProps>

@@ -1330,6 +1330,47 @@ export const defaultComponentsConfig = {
     merge: ['btnProps'],
   },
 
+  // Step
+  step: {
+    props: {
+      name: undefined,
+      label: undefined,
+      description: undefined,
+      icon: undefined,
+      disabled: undefined,
+      error: undefined,
+    },
+  },
+
+  // Stepper
+  stepper: {
+    props: {
+      completedIcon: 'i-lucide:check',
+      disabled: undefined,
+      errorIcon: 'i-lucide:x',
+      labelPlacement: 'end',
+      linear: undefined,
+      modelValue: undefined,
+      orientation: 'horizontal',
+      size: 'md',
+      ui: {
+        containerClass: ({ defaults }) => defaults.all,
+        navigationClass: ({ defaults }) => defaults.all,
+        itemClass: ({ defaults }) => defaults.all,
+        triggerClass: ({ defaults }) => defaults.all,
+        indicatorClass: ({ defaults }) => defaults.all,
+        iconClass: ({ defaults }) => defaults.all,
+        separatorClass: ({ defaults }) => defaults.all,
+        textClass: ({ defaults }) => defaults.all,
+        labelClass: ({ defaults }) => defaults.all,
+        descriptionClass: ({ defaults }) => defaults.all,
+        panelsClass: ({ defaults }) => defaults.all,
+        stepClass: ({ defaults }) => defaults.all,
+      },
+    },
+    merge: ['ui'],
+  },
+
   // Table
   table: {
     props: {
