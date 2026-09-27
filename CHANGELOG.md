@@ -22,6 +22,18 @@ These only affect deeper integrations. None of them are used by the apps in this
 | `useQueryBuilderStore().queryBuilderElRect` removed | Custom code using the query builder store | Measure `queryBuilderEl` when needed. |
 | Test ids: `data-cy="clear-sorting"` removed (each sort chip is `remove-sorting`); `data-cy="sort-outline"` only exists while the column is sorted; the filter chips' "No filters" text is gone | E2E tests | Update the selectors. |
 
+### Added
+
+- **`Stepper` and `Step`**: a step indicator for wizards and multi-step flows, declared like `Tabs`:
+  `<Stepper v-model="step"><Step name="account" label="Account">...</Step></Stepper>`. `v-model` holds the
+  active step's `name`; each `Step` takes `label`, `description`, `icon`, `disabled` and `error` and renders its
+  content only while active. The `Stepper` supports `horizontal` / `vertical` orientation, `labelPlacement`
+  (`end` / `bottom`), `size` and `linear` (no clicking ahead of the furthest reached step), overrides the step
+  parts with the `#indicator`, `#label` and `#description` slots, and exposes `next`, `prev`, `hasNext` and
+  `hasPrev`. Every part is styleable through `ui` with `is-active`, `is-completed`, `is-upcoming`, `is-error`
+  and `is-disabled` state selectors. Steps register through `provide` / `inject` (no slot VNode inspection), so
+  the server renders the full navigation and the structure stays compatible with Vue Vapor.
+
 ### Changed
 
 - **Table defaults:** no zebra rows, a white header in light mode, lighter borders, and the
