@@ -208,9 +208,8 @@ const descriptionStyle = computed(() => {
               :style="iconStyle"
             />
 
-            <template v-else>
-              {{ step.idx + 1 }}
-            </template>
+            <!-- An element keeps the Vapor hydration anchors of this branch aligned -->
+            <span v-else>{{ step.idx + 1 }}</span>
           </slot>
         </span>
 

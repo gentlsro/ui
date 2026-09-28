@@ -92,8 +92,12 @@ function handleSelectToday() {
   selectToday()
 }
 
+// A primitive guard: a VDOM parent's re-render can invalidate prop reads of a
+// Vapor child, and new period objects would re-emit `update:period` every time
+const isUtc = computed(() => !!props.utc)
+
 const period = computed(() => {
-  return getPeriod({ dateRef: internalValue, unit: 'month', utc: props.utc })
+  return getPeriod({ dateRef: internalValue, unit: 'month', utc: isUtc.value })
 })
 
 const extendedPeriod = computed(() => {
@@ -101,7 +105,7 @@ const extendedPeriod = computed(() => {
     dateRef: internalValue,
     unit: 'month',
     minCountOfWeeks: MIN_COUNT_OF_WEEKS,
-    utc: props.utc,
+    utc: isUtc.value,
   })
 })
 
