@@ -2,7 +2,6 @@ import type { IPivotProps } from '../types/pivot-props.type'
 import type { IPivotState } from '../types/pivot-state.type'
 import type { IPivotDataItem } from '../types/pivot-data-item.type'
 import type { IPivotRowItemCell } from '../types/pivot-row-item-cell.type'
-import type { IPivotValueColumnItem } from '../types/pivot-value-column-item.type'
 import type { IPivotTransformResult } from '../types/pivot-transform-result.type'
 import type { IPivotTransformValueField } from './pivot-transform-data-core'
 
@@ -15,8 +14,6 @@ import { pivotTransformDataCore } from './pivot-transform-data-core'
 // Models
 import type { PivotItem } from '../models/pivot-item.model'
 
-type IPivotFormatNumber = (value: number) => string
-
 type IPivotTransformPayload<T extends IItem = IItem> = {
   data: T[]
   rows: PivotItem<T>[]
@@ -26,7 +23,6 @@ type IPivotTransformPayload<T extends IItem = IItem> = {
   state: IPivotState
   collapseConfig: IPivotProps<T>['collapseConfig']
   isFirstRender?: Ref<boolean>
-  formatNumber: IPivotFormatNumber
   valuesOnRows?: boolean
 }
 
@@ -39,12 +35,11 @@ type IShouldInsertPivotEmptyRowAfterPayload<T> = {
 type IBuildEmptyDataItemPayload<T> = {
   afterRowId: string
   rowFields: PivotItem<T>[]
-  valueColumns: IPivotValueColumnItem<T>[]
   includeMeasureColumn?: boolean
 }
 
 function buildEmptyDataItem<T>(payload: IBuildEmptyDataItemPayload<T>): IPivotDataItem<T> {
-  const { afterRowId, rowFields, valueColumns, includeMeasureColumn } = payload
+  const { afterRowId, rowFields, includeMeasureColumn } = payload
   const itemId = `empty:${afterRowId}`
 
   const cells: IPivotRowItemCell<T>[] = rowFields.map((rowField, index) => ({
@@ -78,21 +73,11 @@ function buildEmptyDataItem<T>(payload: IBuildEmptyDataItemPayload<T>): IPivotDa
       kind: 'emptyRow',
       cells,
     },
+    // No values: every cell of a spacer row is empty
     valueItem: {
       id: itemId,
       kind: 'emptyRow',
       groupIds: [],
-      cells: valueColumns.map((column, index) => ({
-        id: `${itemId}-value-${index}`,
-        kind: 'emptyRow',
-        columnId: column.id,
-        columnPath: column.columnPath,
-        measureId: column.measureId,
-        valueField: column.valueField,
-        value: column.value,
-        aggregated: 0,
-        hasValue: false,
-      })),
     },
   }
 }
@@ -154,7 +139,6 @@ export function applyPivotEmptyRows<T>(
     rowFieldCount: number
     collapsedGroupIds: Set<string>
     rowFields: PivotItem<T>[]
-    valueColumns: IPivotValueColumnItem<T>[]
     includeMeasureColumn?: boolean
   },
 ) {
@@ -175,7 +159,6 @@ export function applyPivotEmptyRows<T>(
       result.push(buildEmptyDataItem({
         afterRowId: row.id,
         rowFields: payload.rowFields,
-        valueColumns: payload.valueColumns,
         includeMeasureColumn: payload.includeMeasureColumn,
       }))
     }
@@ -193,7 +176,6 @@ export function pivotTransformData<T extends IItem = IItem>(
     state,
     collapseConfig,
     isFirstRender = ref(true),
-    formatNumber,
     items,
     ...corePayload
   } = payload
@@ -207,7 +189,6 @@ export function pivotTransformData<T extends IItem = IItem>(
     data: filteredData,
     rows: rowFields,
     columns: columnFields,
-    formatNumber,
     valuesOnRows: corePayload.valuesOnRows,
   })
 

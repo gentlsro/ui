@@ -16,6 +16,7 @@ import type { TableColumn } from './models/table-column.model'
 import { tableSelectRow } from './functions/table-select-row'
 import { tableIsCellEditable } from './functions/table-is-cell-editable'
 import { isTableBooleanCheckbox } from './functions/table-toggle-boolean-cell'
+import { tableIsNumericColumn } from './functions/table-is-numeric-column'
 
 // Composables
 import { useTableRowEditing } from './composables/useTableRowEditing'
@@ -29,7 +30,6 @@ import { useTableStore } from './stores/table.store'
 type IProps = Pick<ITableProps, 'ui' | 'editable' | 'freeze' | 'to' | 'showCopyBtn' | 'toLinkProps'> & {
   row: any | any[]
   index: number
-  isVisibleByColumnField: Record<string, boolean>
   visibleColumns: TableColumn[]
 }
 
@@ -73,6 +73,7 @@ const {
   isEditingRow,
   emits,
   rowClickable,
+  customData,
 } = tableStore
 
 const {
@@ -97,6 +98,15 @@ function handleRowActionsClick(ev: MouseEvent) {
     && ev.target.closest('a[href]')?.contains(ev.currentTarget)) {
     ev.preventDefault()
   }
+}
+
+// Consumer slots forwarded by `TableContent` receive the same payload as the table's own slots
+function getCellSlotProps(row: IItem, column: IRowColumn) {
+  return { row, column: column.column, value: column.value, index: props.index, customData: customData.value }
+}
+
+function getRowInsideSlotProps(row: IItem, mode: 'card' | 'row') {
+  return { mode, row, index: props.index, customData: customData.value }
 }
 
 function getRowActionsClass(row: IItem) {
@@ -209,9 +219,9 @@ const rowDataArray = computed(() => {
             valueFormatted: cellFormattedValue,
             column: col,
             isEditable,
-            cellStyle: Object.assign({}, columnCellStyle, uiCellStyle, { '--colWidth': col.width }),
+            cellStyle: Object.assign({}, columnCellStyle, uiCellStyle, tableStore.getFrozenStyle(col), { '--colWidth': tableStore.getColumnWidth(col) }),
             cellInnerStyle: uiCellInnerStyle,
-            cellClass: [columnCellClass, uiCellClass, { 'is-editable': isEditable }],
+            cellClass: [columnCellClass, uiCellClass, { 'is-editable': isEditable, 'is-numeric': tableIsNumericColumn(col) }],
             cellInnerClass: uiCellInnerClass,
             link: {
               to: col.link?.(row) || undefined,
@@ -331,7 +341,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
         :key="actions.row[rowKey]"
       >
         <div
-          v-if="$slots['row-actions'] || actions.canEdit || isFullRowEdit"
+          v-if="$slots['row-actions'] || actions.canEdit"
           class="row-actions card-row-actions"
           :class="getRowActionsClass(actions.row)"
           @click.capture="handleRowActionsClick"
@@ -450,9 +460,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
           <slot
             v-else
             :name="column.column.field"
-            :row="rowData.row"
-            :column="column.column"
-            :value="column.value"
+            v-bind="getCellSlotProps(rowData.row, column)"
           >
             <Component
               :is="column.displayComponent?.component"
@@ -507,8 +515,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
       <!-- Used for absolutely position info/element -->
       <slot
         name="inner"
-        mode="card"
-        :row="rowData.row"
+        v-bind="getRowInsideSlotProps(rowData.row, 'card')"
       />
     </Component>
   </div>
@@ -537,7 +544,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
         column.cellClass,
         {
           'is-cell-selected': isSelectedCell(rowDataArray[0].row, column),
-          'is-frozen': column.column.semiFrozen,
+          'is-frozen': column.column.field in tableStore.frozenOffsets.value,
           'is-frozen-edge': column.column.frozen,
         },
       ]"
@@ -565,9 +572,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
       <slot
         v-else
         :name="column.column.field"
-        :row="rowDataArray[0].row"
-        :column="column.column"
-        :value="column.value"
+        v-bind="getCellSlotProps(rowDataArray[0].row, column)"
       >
         <Component
           :is="column.displayComponent?.component"
@@ -631,7 +636,8 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
       />
 
       <CopyBtn
-        v-if="showCopyBtn && !column.column.noCopyBtn && !column.column.isHelperCol"
+        v-if="showCopyBtn && !column.column.noCopyBtn && !column.column.isHelperCol
+          && !isEditingRow(rowDataArray[0].row) && !getCellEdit(rowDataArray[0].row, column.column.field)"
         size="sm"
         class="copy-btn"
         :model-value="column.valueFormatted"
@@ -704,8 +710,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
     <!-- Used for absolutely position info/element -->
     <slot
       name="inner"
-      mode="row"
-      :row="rowDataArray[0].row"
+      v-bind="getRowInsideSlotProps(rowDataArray[0].row, 'row')"
     />
   </Component>
 </template>
@@ -740,8 +745,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
 }
 
 .separator--vertical .desktop-row-actions,
-.separator--cell .desktop-row-actions,
-.is-bordered .desktop-row-actions {
+.separator--cell .desktop-row-actions {
   border-right-width: 1px;
 }
 
@@ -768,21 +772,16 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
   outline-style: solid;
 }
 
-.is-row .td:has(> .cell-edit-btn) {
-  padding-right: 2rem;
-}
-
-.is-row .td:has(> .cell-edit-btn + .copy-btn) {
-  padding-right: 4.25rem;
-}
-
+// The edit and copy buttons overlay the value on hover instead of reserving space,
+// which would squeeze narrow columns
 .is-row .cell-edit-btn {
+  @apply rounded-md bg-white dark:bg-true-gray-900 shadow-sm color-true-gray-500 dark:color-true-gray-400;
+
   position: absolute;
   right: 0.25rem;
   top: 50%;
   transform: translateY(-50%);
   display: none;
-  opacity: 0.5;
 }
 
 .is-row .td:hover > .cell-edit-btn,
@@ -790,10 +789,49 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
   display: flex;
 }
 
+// A hairline instead of the dotted outline (the copied state keeps its own)
+.is-row .copy-btn.\!outline-dotted {
+  outline-style: solid !important;
+  outline-color: #e5e5e5 !important;
+}
+
+.dark .is-row .copy-btn.\!outline-dotted {
+  outline-color: #404040 !important;
+}
+
 .is-row .cell-edit-btn + .copy-btn {
   right: 2rem;
-  top: 50%;
-  transform: translateY(-50%);
+}
+
+// Numbers sit on the right, so the edit / copy buttons move to the left
+.is-row .td.is-numeric {
+  justify-content: flex-end;
+  font-variant-numeric: tabular-nums;
+
+  > .cell-edit-btn,
+  > .copy-btn {
+    right: auto;
+    left: 0.25rem;
+  }
+
+  > .cell-edit-btn + .copy-btn {
+    left: 2rem;
+  }
+}
+
+// Opaque, so frozen cells and row actions (which inherit the row's background)
+// hide the content scrolling underneath them
+.tr.is-row.is-selected {
+  background-color: color-mix(in srgb, var(--color-primary, #737373) 8%, #fff);
+}
+
+.dark .tr.is-row.is-selected {
+  background-color: color-mix(in srgb, var(--color-primary, #737373) 22%, var(--color-darker, #121212));
+}
+
+// Keep cells at their width like header cells do
+.tr.is-row > .td {
+  flex-shrink: 0;
 }
 
 .tr {

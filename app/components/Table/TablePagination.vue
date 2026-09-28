@@ -4,8 +4,6 @@ import { useTableStore } from './stores/table.store'
 
 // Store
 const {
-  isDataLoading,
-  isMetaLoading,
   totalPages,
   currentPage,
   paginationConfig,
@@ -63,7 +61,7 @@ const pages = computed(() => {
       size="xm"
       disable-style="flat"
       class="pagination-el"
-      icon="i-line-md:chevron-small-double-right rotate-180"
+      icon="i-lucide:chevrons-left"
       @click="currentPage = 1"
     />
 
@@ -73,7 +71,7 @@ const pages = computed(() => {
       size="xm"
       disable-style="flat"
       class="pagination-el"
-      icon="i-material-symbols:chevron-right-rounded rotate-180"
+      icon="i-lucide:chevron-left"
       @click="currentPage--"
     />
 
@@ -102,7 +100,7 @@ const pages = computed(() => {
     <Btn
       :disabled="isLastPage"
       size="xm"
-      icon="i-material-symbols:chevron-right-rounded"
+      icon="i-lucide:chevron-right"
       class="pagination-el"
       @click="currentPage++"
     />
@@ -113,20 +111,9 @@ const pages = computed(() => {
       size="xm"
       disable-style="flat"
       class="pagination-el"
-      icon="i-line-md:chevron-small-double-right"
+      icon="i-lucide:chevrons-right"
       @click="currentPage = totalPages"
     />
-
-    <!-- Loading -->
-    <div
-      v-if="isDataLoading || isMetaLoading"
-      class="is-loading"
-    >
-      <LoaderInline
-        size="sm"
-        roudned-full
-      />
-    </div>
   </div>
 </template>
 
@@ -138,12 +125,12 @@ const pages = computed(() => {
     @apply invisible;
   }
 
-  .is-active {
-    @apply bg-primary color-white;
+  .pagination-el {
+    @apply rounded-md color-true-gray-600 dark:color-true-gray-300 font-medium;
   }
 
-  .is-loading {
-    @apply flex flex-center absolute inset-0 rounded-full backdrop-blur-2;
+  .is-active {
+    @apply bg-primary color-white;
   }
 }
 </style>

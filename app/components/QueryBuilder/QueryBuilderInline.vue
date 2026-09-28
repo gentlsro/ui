@@ -141,8 +141,8 @@ defineExpose({
       <Separator
         v-if="items.length"
         vertical
-        m="r-2 l-1"
-        border="!dark:truegray-500 !primary !r-2px"
+        m="x-1"
+        border="!true-gray-200 !dark:true-gray-700 !r-1px"
       />
     </template>
 
@@ -159,10 +159,8 @@ defineExpose({
       v-if="noChildren && editable"
       size="xs"
       preset="ADD"
-      m="l-2"
-      color="dark:white"
-      border="2 primary"
-      bg="!white !dark:black"
+      no-uppercase
+      class="add-first-condition"
       :label="$t('queryBuilder.addFirstCondition')"
       @click="handleAddFirstCondition"
     />
@@ -171,6 +169,15 @@ defineExpose({
 
 <style scoped lang="scss">
 .query-builder-inline {
-  @apply flex items-center flex-wrap gap-y-0.5 gap-x-1 p-y-1;
+  @apply flex items-center flex-wrap gap-y-1 gap-x-1.5 p-y-1;
+}
+
+.add-first-condition {
+  @apply min-h-7 rounded-lg border-1 border-dashed border-true-gray-300 dark:border-true-gray-600
+    color-true-gray-500 dark:color-true-gray-400 font-medium;
+
+  &:hover {
+    @apply border-primary/60 color-primary dark:color-white bg-primary/5;
+  }
 }
 </style>

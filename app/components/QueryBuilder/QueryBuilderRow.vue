@@ -14,15 +14,14 @@ const props = defineProps<IQueryBuilderRowProps>()
 // Store
 const { items, draggedItem, queryBuilderEl } = useQueryBuilderStore()
 
-// Constants
-const ITEM_ROW_LEFT_MARGIN = 20
-
 // Layout
 const draggableEl = useTemplateRef<{ element?: HTMLElement }>('draggableEl')
 
 // D'n'D
 let clonedElement: HTMLElement | null = null
-let mouseOffset = { x: 0, y: 0 }
+
+// Distance from the pointer to the row's top, kept while dragging
+let pointerOffsetY = 0
 let pointerPosition: { x: number, y: number } | undefined
 let autoScrollFrame: number | undefined
 
@@ -54,11 +53,7 @@ watch(draggableElement, (element, _, onCleanup) => {
     elements: () => [],
     startPredicate: () => true,
     onStart: drag => {
-      const rect = element.getBoundingClientRect()
-      mouseOffset = {
-        x: rect.left - drag.startEvent.x - ITEM_ROW_LEFT_MARGIN,
-        y: rect.top - drag.startEvent.y,
-      }
+      pointerOffsetY = element.getBoundingClientRect().top - drag.startEvent.y
       cloneElement(drag.startEvent)
     },
     // Dragdoll samples movement in RAF; the clone and target update together.
@@ -84,10 +79,10 @@ function updateDragPosition(pos: { x: number, y: number }) {
     return
   }
 
-  const maxLeft = window.innerWidth - clonedElement.offsetWidth - ITEM_ROW_LEFT_MARGIN
+  // Reordering only depends on the hovered row, so the ghost keeps its column
+  // and follows the pointer vertically (a wide row has no room to move sideways)
   const maxTop = window.innerHeight - clonedElement.offsetHeight
-  clonedElement.style.left = `${Math.max(0, Math.min(pos.x + mouseOffset.x, maxLeft))}px`
-  clonedElement.style.top = `${Math.max(0, Math.min(pos.y + mouseOffset.y, maxTop))}px`
+  clonedElement.style.top = `${Math.max(0, Math.min(pos.y + pointerOffsetY, maxTop))}px`
   // Dragdoll reuses its event object; snapshot coordinates so each frame notifies the target watcher.
   draggedItem.value.pos = { x: pos.x, y: pos.y }
   pointerPosition = pos
@@ -181,25 +176,36 @@ function finishDrag(commit: boolean) {
  * Clones an element and positions it on the mouse cursor
  */
 function cloneElement(pos: { x: number, y: number }) {
-  clonedElement = draggableElement.value?.cloneNode(true) as HTMLElement
+  const source = draggableElement.value
+  clonedElement = source?.cloneNode(true) as HTMLElement
 
-  if (clonedElement) {
-    const { x: clientX, y: clientY } = pos
+  if (!clonedElement) {
+    return
+  }
 
-    clonedElement.style.position = 'absolute'
-    clonedElement.style.left = `${clientX + mouseOffset.x}px`
-    clonedElement.style.top = `${clientY + mouseOffset.y}px`
-    clonedElement.style.width = `${draggableElement.value!.offsetWidth}px`
-    clonedElement.style.height = `${draggableElement.value!.offsetHeight}px`
-    clonedElement.style.zIndex = '9999'
-    clonedElement.style.opacity = '0.5'
-    clonedElement.style.pointerEvents = 'none'
-    document.body.appendChild(clonedElement)
+  const { x: clientX, y: clientY } = pos
+  const rect = source!.getBoundingClientRect()
 
-    draggedItem.value = {
-      row: props.item,
-      pos: { x: clientX, y: clientY },
-    }
+  // Fixed to the viewport (like the Tree's ghost), so page or dialog scroll
+  // cannot offset it; its margin is dropped so it sits exactly over the row
+  Object.assign(clonedElement.style, {
+    position: 'fixed',
+    margin: '0',
+    left: `${rect.left}px`,
+    top: `${rect.top}px`,
+    width: `${rect.width}px`,
+    height: `${rect.height}px`,
+    zIndex: '9999',
+    pointerEvents: 'none',
+  })
+
+  // Floating card look (no tree lines), see the unscoped style below
+  clonedElement.classList.add('is-ghost')
+  document.body.appendChild(clonedElement)
+
+  draggedItem.value = {
+    row: props.item,
+    pos: { x: clientX, y: clientY },
   }
 }
 
@@ -251,3 +257,15 @@ function updatePaths(parent?: IQueryBuilderGroup) {
     @delete:row="updatePaths()"
   />
 </template>
+
+<style lang="scss">
+// The floating copy while dragging: a lifted card without the tree lines
+.qb-row.is-ghost {
+  @apply opacity-90 shadow-lg bg-white dark:bg-darker;
+
+  &::before,
+  &::after {
+    display: none;
+  }
+}
+</style>

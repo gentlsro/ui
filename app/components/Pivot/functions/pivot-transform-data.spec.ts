@@ -40,8 +40,6 @@ const values = [
 ]
 
 describe('pivotTransformData expandedLevelOnInit', () => {
-  const formatNumber = (value: number) => String(value)
-
   it('waits for non-empty data before consuming isFirstRender', () => {
     const isFirstRender = ref(true)
     const state = {
@@ -57,7 +55,6 @@ describe('pivotTransformData expandedLevelOnInit', () => {
       state,
       isFirstRender,
       collapseConfig: { expandedLevelOnInit: 0 },
-      formatNumber,
       valuesOnRows: true,
     })
 
@@ -72,7 +69,6 @@ describe('pivotTransformData expandedLevelOnInit', () => {
       state,
       isFirstRender,
       collapseConfig: { expandedLevelOnInit: 0 },
-      formatNumber,
       valuesOnRows: true,
     })
 

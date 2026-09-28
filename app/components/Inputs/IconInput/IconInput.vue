@@ -50,6 +50,7 @@ const {
   handleBlur,
   handleClickWrapper,
   handleFocusOrClick,
+  handlePointerDown,
   focus,
   select,
   blur,
@@ -162,6 +163,7 @@ defineExpose({
         :class="inputClass"
         :style="inputStyle"
         v-bind="inputProps"
+        @pointerdown="handlePointerDown"
         @focus="handleFocusOrClick"
         @blur="handleBlur"
       >

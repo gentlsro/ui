@@ -1,6 +1,6 @@
 <script setup lang="ts" vapor generic="T extends CustomPresets = Record<string, never>">
 // Types
-import type { VaporDirective } from 'vue'
+import type { CSSProperties, VaporDirective } from 'vue'
 import type { CustomPresets, IBtnProps } from './types/btn-props.type'
 
 // Constants
@@ -146,6 +146,33 @@ defineExpose({
   getElement: () => element.value,
 })
 
+// The helper inherits the button's outer border radius, so it must cover the
+// border box too; `inset-0` would place it inside the border where that radius
+// is too large and leaves gaps in the corners. CSS cannot read the border width
+// (it often comes from consumer classes), so measure it once after mount.
+const focusHelperInset = ref<CSSProperties>()
+
+function syncFocusHelperInset() {
+  const el = element.value
+
+  if (props.noHoverEffect || !el) {
+    return
+  }
+
+  const style = getComputedStyle(el)
+
+  focusHelperInset.value = {
+    top: `-${style.borderTopWidth}`,
+    right: `-${style.borderRightWidth}`,
+    bottom: `-${style.borderBottomWidth}`,
+    left: `-${style.borderLeftWidth}`,
+  }
+}
+
+onMounted(() => {
+  nextTick(syncFocusHelperInset)
+})
+
 // Resolve each visual surface through the existing component configuration API.
 const appearance = computed(() => {
   const ui = mergedProps.value.ui
@@ -175,7 +202,7 @@ const appearance = computed(() => {
     labelClass: ui?.labelClass?.({ defaults: defaults.labelClass({ align: props.align, size }) }),
     labelStyle: { ...ui?.labelStyleObj, ...ui?.labelStyle?.() },
     focusHelperClass: ui?.focusHelperClass?.({ defaults: defaults.focusHelperClass() }),
-    focusHelperStyle: ui?.focusHelperStyle?.(),
+    focusHelperStyle: [focusHelperInset.value, ui?.focusHelperStyle?.()],
     loadingClass: ui?.loadingClass?.({ defaults: defaults.loadingClass() }),
     loadingStyle: ui?.loadingStyle?.(),
     loaderClass: ui?.loaderClass?.({ defaults: defaults.loaderClass({ size }) }),
@@ -183,11 +210,19 @@ const appearance = computed(() => {
   }
 })
 
-const isIconifyIcon = computed(() => {
-  const noSpacesRegex = /^\S+$/
+const loaderSize = computed(() => {
+  const size = props.size ?? 'md'
 
-  return typeof props.icon === 'string'
-    && noSpacesRegex.test(props.icon)
+  return BTN_DEFAULT_PROPS.ui.loaderClass({ size }).sizes[size] || undefined
+})
+
+const iconValue = computed(() => {
+  return props.icon || preset.value?.icon
+})
+
+const resolvedIcon = computed(() => {
+  // Preset icons historically render as classes; canonical names still opt into Icon.
+  return resolveIconValue(props.icon || [preset.value?.icon])
 })
 </script>
 
@@ -206,17 +241,17 @@ const isIconifyIcon = computed(() => {
   >
     <slot name="icon">
       <IconRenderer
-        v-if="icon && isIconifyIcon"
-        :name="(icon as string)"
+        v-if="resolvedIcon.name"
+        :name="resolvedIcon.name"
         class="btn-icon"
-        :class="appearance.iconClass"
+        :class="[resolvedIcon.classes, appearance.iconClass]"
         :style="appearance.iconStyle"
       />
 
       <div
-        v-else-if="icon || preset?.icon"
+        v-else-if="iconValue"
         class="btn-icon"
-        :class="[icon || preset?.icon, appearance.iconClass]"
+        :class="[resolvedIcon.classes, appearance.iconClass]"
         :style="appearance.iconStyle"
       />
     </slot>
@@ -263,6 +298,7 @@ const isIconifyIcon = computed(() => {
       <Loader
         :variant="loaderVariant"
         :color="loadingColor"
+        :size="loaderSize"
         class="btn-loader"
         :class="appearance.loaderClass"
         :style="appearance.loaderStyle"
@@ -293,17 +329,17 @@ const isIconifyIcon = computed(() => {
   >
     <slot name="icon">
       <IconRenderer
-        v-if="icon && isIconifyIcon"
-        :name="(icon as string)"
+        v-if="resolvedIcon.name"
+        :name="resolvedIcon.name"
         class="btn-icon"
-        :class="appearance.iconClass"
+        :class="[resolvedIcon.classes, appearance.iconClass]"
         :style="appearance.iconStyle"
       />
 
       <div
-        v-else-if="icon || preset?.icon"
+        v-else-if="iconValue"
         class="btn-icon"
-        :class="[icon || preset?.icon, appearance.iconClass]"
+        :class="[resolvedIcon.classes, appearance.iconClass]"
         :style="appearance.iconStyle"
       />
     </slot>
@@ -350,6 +386,7 @@ const isIconifyIcon = computed(() => {
       <Loader
         :variant="loaderVariant"
         :color="loadingColor"
+        :size="loaderSize"
         class="btn-loader"
         :class="appearance.loaderClass"
         :style="appearance.loaderStyle"

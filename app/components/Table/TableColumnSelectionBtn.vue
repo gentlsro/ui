@@ -40,8 +40,25 @@ const visibleInteractiveNonHelperColumns = computed(() => {
   return visibleColumnsStore.value.filter(col => !col.isHelperCol && !col.nonInteractive)
 })
 
+// Locked columns (not reorderable) are listed above the draggable ones, so
+// nothing can be dropped before them
+const lockedColumnsLocal = computed(() => {
+  return visibleColumnsLocal.value.filter(col => !col.reorderable)
+})
+
+const movableColumnsLocal = computed({
+  get: () => visibleColumnsLocal.value.filter(col => col.reorderable),
+  set: columns => visibleColumnsLocal.value = [...lockedColumnsLocal.value, ...columns],
+})
+
 function initVisibleColumns() {
-  visibleColumnsLocal.value = klona(visibleInteractiveNonHelperColumns.value)
+  // Always visible columns are included even when a saved state hid them
+  const columns = uniqBy([
+    ...visibleInteractiveNonHelperColumns.value,
+    ...interactiveNonHelperColumns.value.filter(col => col.alwaysVisible),
+  ], 'field')
+
+  visibleColumnsLocal.value = klona(columns)
 }
 
 function isVisible(item: IListItem) {
@@ -51,7 +68,7 @@ function isVisible(item: IListItem) {
 }
 
 function isDisabledFnc(item: IListItem) {
-  return item.ref.nonInteractive
+  return item.ref.nonInteractive || item.ref.alwaysVisible
 }
 
 function handleApply() {
@@ -67,11 +84,12 @@ function handleApply() {
     }
   })
 
-  // Move the columns according to the order in visibleColumnsLocal
+  // Move the columns according to the order in visibleColumnsLocal;
+  // locked columns keep their position
   internalColumns.value = reorderArray(
     internalColumns.value,
     visibleColumnsLocal.value,
-    { isMovable: col => !col.isHelperCol, isSameField: (a, b) => a.field === b.field },
+    { isMovable: col => !col.isHelperCol && col.reorderable, isSameField: (a, b) => a.field === b.field },
   )
 
   // Adjust the `_internalSort`
@@ -95,7 +113,7 @@ function handleSelectMulti(listItems: IListItem[]) {
 
 function handleDeselectMulti(listItems: IListItem[]) {
   const items = listItems
-    .filter(item => !item.ref.nonInteractive)
+    .filter(item => !item.ref.nonInteractive && !item.ref.alwaysVisible)
     .map(item => item.id)
 
   visibleColumnsLocal.value = visibleColumnsLocal.value.filter(col => {
@@ -104,18 +122,18 @@ function handleDeselectMulti(listItems: IListItem[]) {
 }
 
 function handleMoveUp(idx: number) {
-  visibleColumnsLocal.value = moveItem(visibleColumnsLocal, idx, 0)
+  movableColumnsLocal.value = moveItem(movableColumnsLocal.value, idx, 0)
 }
 
 function handleRemove(idx: number) {
-  visibleColumnsLocal.value = visibleColumnsLocal.value.toSpliced(idx, 1)
+  movableColumnsLocal.value = movableColumnsLocal.value.toSpliced(idx, 1)
 }
 </script>
 
 <template>
   <Btn
-    icon="i-tabler:columns-2"
-    color="ca"
+    icon="i-lucide:columns-3"
+    class="table-toolbar-btn"
     self-center
     no-uppercase
     size="sm"
@@ -133,12 +151,12 @@ function handleRemove(idx: number) {
       </span>
     </div>
 
-    <div class="hidden i-flowbite:chevron-right-outline h-4 w-4 rotate-90 lt-lg:(flex absolute bottom--1.5 left-1/2 -translate-x-1/2)" />
+    <div class="hidden i-lucide:chevron-down w-3.5 h-3.5 opacity-60 shrink-0 lt-lg:(flex absolute bottom--1.5 left-1/2 -translate-x-1/2)" />
 
     <Dialog
       w="screen-md"
       min-h="1/2"
-      max-h="6/10"
+      max-h="8/10"
       h="auto"
       position="top"
       dense
@@ -167,7 +185,7 @@ function handleRemove(idx: number) {
         no-edit-controls
         :ui="{
           contentClass: ({ defaults }) => 'grow grid grid-cols-2 gap-2 overflow-auto',
-          controlsClass: ({ defaults }) => `${defaults.all} !p-t-1`,
+          controlsClass: ({ defaults }) => `${defaults.all} !p-t-1 !p-x-4`,
           submitClass: ({ defaults }) => `${defaults.base} !w-auto`,
         }"
         :submit-btn-props="{ size: 'sm', noUppercase: true }"
@@ -180,13 +198,11 @@ function handleRemove(idx: number) {
         <!-- Left -->
         <div class="columns__left">
           <div class="columns__left-header">
-            <div flex="~ gap-2 items-center">
-              <h6 font="semibold rem-14">
-                {{ $t('table.availableMetrics') }}
-              </h6>
-              <span text="caption xs">({{ nonHelperColumns.length }})</span>
+            <div class="columns__title">
+              <h6>{{ $t('table.availableMetrics') }}</h6>
+              <span class="columns__count">{{ nonHelperColumns.length }}</span>
             </div>
-            <span text="caption xs">{{ $t('table.selectVisibleColumns') }}</span>
+            <span class="columns__subtitle">{{ $t('table.selectVisibleColumns') }}</span>
           </div>
 
           <List
@@ -210,6 +226,8 @@ function handleRemove(idx: number) {
                   <!-- Select visible -->
                   <Btn
                     size="xs"
+                    no-uppercase
+                    class="columns__action"
                     :label="listItems.length === items.length
                       ? $t('general.selectAll')
                       : $t('general.selectFiltered')"
@@ -220,7 +238,8 @@ function handleRemove(idx: number) {
                   <!-- Unselect visible -->
                   <Btn
                     size="xs"
-                    color="negative"
+                    no-uppercase
+                    class="columns__action columns__action--negative"
                     :label="listItems.length === items.length
                       ? $t('general.clearAll')
                       : $t('general.clearFiltered')"
@@ -278,17 +297,34 @@ function handleRemove(idx: number) {
         <!-- Right -->
         <div class="columns__right">
           <div class="columns__right-header">
-            <div flex="~ gap-2 items-center">
-              <h6 font="semibold rem-14">
-                {{ $t('table.columnsSelected') }}
-              </h6>
-              <span text="caption xs">({{ visibleColumnsLocal.length }})</span>
+            <div class="columns__title">
+              <h6>{{ $t('table.columnsSelected') }}</h6>
+              <span class="columns__count">{{ visibleColumnsLocal.length }}</span>
             </div>
-            <span text="caption xs">{{ $t('general.dragToReorder') }}</span>
+            <span class="columns__subtitle">{{ $t('general.dragToReorder') }}</span>
+          </div>
+
+          <!-- Locked -->
+          <div
+            v-if="lockedColumnsLocal.length"
+            class="columns__locked"
+          >
+            <div
+              v-for="col in lockedColumnsLocal"
+              :key="col.field"
+              class="columns__locked-row"
+              :title="$t('table.lockedColumn')"
+            >
+              <div class="columns__locked-icon" />
+
+              <span grow>
+                {{ col.label }}
+              </span>
+            </div>
           </div>
 
           <List
-            v-model:items="visibleColumnsLocal"
+            v-model:items="movableColumnsLocal"
             item-key="field"
             item-label="_label"
             :search-config="{ enabled: false }"
@@ -309,17 +345,17 @@ function handleRemove(idx: number) {
                   <Btn
                     v-if="index"
                     size="xs"
-                    icon="i-mingcute:arrow-to-up-line"
-                    color="ca"
+                    icon="i-lucide:arrow-up-to-line"
+                    class="columns__row-btn"
                     data-cy="arrow-pin-to-top"
                     @click="handleMoveUp(index)"
                   />
 
                   <!-- Remove -->
                   <Btn
-                    preset="TRASH"
+                    icon="i-lucide:x"
                     size="xs"
-                    m="l--1"
+                    class="columns__row-btn columns__row-btn--remove"
                     data-cy="trash-icon"
                     @click="handleRemove(index)"
                   />
@@ -338,19 +374,71 @@ function handleRemove(idx: number) {
   @apply flex flex-col gap-1 p-t-2 p-b-1 grow;
 }
 
-.columns__left {
-  @apply flex flex-col gap-2 overflow-auto border-r-1 border-ca;
-
-  &-header {
-    @apply flex flex-col p-t-2 p-l-2;
+.columns {
+  &__left {
+    @apply flex flex-col gap-2 overflow-auto border-r-1 border-true-gray-100 dark:border-true-gray-800 p-x-2;
   }
-}
 
-.columns__right {
-  @apply flex flex-col gap-2 overflow-auto;
+  &__right {
+    @apply flex flex-col gap-2 overflow-auto p-x-2;
+  }
 
-  &-header {
-    @apply flex flex-col p-t-2 p-l-2;
+  &__left-header,
+  &__right-header {
+    @apply flex flex-col gap-0.5 p-t-2 p-l-2;
+  }
+
+  &__title {
+    @apply flex items-center gap-2;
+
+    h6 {
+      @apply font-semibold font-rem-14;
+    }
+  }
+
+  &__count {
+    @apply inline-flex items-center h-5 p-x-1.5 rounded-md text-xs font-medium tabular-nums
+      bg-true-gray-100 color-true-gray-600 dark:bg-true-gray-800 dark:color-true-gray-300;
+  }
+
+  &__subtitle {
+    @apply text-xs color-true-gray-500 dark:color-true-gray-400;
+  }
+
+  &__action {
+    @apply rounded-md font-medium color-true-gray-600 dark:color-true-gray-300;
+
+    &:hover {
+      @apply bg-true-gray-100 dark:bg-true-gray-800;
+    }
+
+    &--negative:hover {
+      @apply color-negative bg-negative/8;
+    }
+  }
+
+  &__locked {
+    @apply flex flex-col m-x-2 p-b-1 border-b-1 border-true-gray-100 dark:border-true-gray-800;
+  }
+
+  &__locked-row {
+    @apply flex items-center gap-1 p-y-1.5 p-l-2 font-rem-14 leading-20px color-true-gray-500 dark:color-true-gray-400;
+  }
+
+  &__locked-icon {
+    @apply i-lucide:lock w-4 h-4 m-r-1 shrink-0;
+  }
+
+  &__row-btn {
+    @apply rounded-md color-true-gray-400;
+
+    &:hover {
+      @apply color-true-gray-700 dark:color-true-gray-200 bg-true-gray-100 dark:bg-true-gray-800;
+    }
+
+    &--remove:hover {
+      @apply color-negative bg-negative/10;
+    }
   }
 }
 </style>

@@ -1,5 +1,6 @@
 import type * as PivotTransformModule from './pivot-transform-data-core'
 import { beforeAll, describe, expect, it, vi } from 'vitest'
+import { getPivotColumnGroupCells, getPivotValueCells } from './pivot-spec-cells'
 import { isPivotPerformanceOverBudget } from '../constants/pivot-performance.constant'
 
 const summary = {
@@ -83,8 +84,8 @@ describe('pivot prepared transform correctness', () => {
     })
     const row = result.data.find(item => item.groupPath[0] === 'A')!
 
-    expect(row.valueItem.cells.find(cell => cell.measureId === 'amount-sum')?.aggregated).toBe(30)
-    expect(row.valueItem.cells.find(cell => cell.measureId === 'amount-count')?.aggregated).toBe(2)
+    expect(getPivotValueCells(result, row).find(cell => cell.measureId === 'amount-sum')?.aggregated).toBe(30)
+    expect(getPivotValueCells(result, row).find(cell => cell.measureId === 'amount-count')?.aggregated).toBe(2)
     expect(new Set(result.valueColumns.map(column => column.id)).size).toBe(result.valueColumns.length)
   })
 
@@ -122,15 +123,10 @@ describe('pivot prepared transform correctness', () => {
     const onRows = transformModule.materializePivotTransformData(
       transformModule.projectPivotPreparedAggregation(aggregation, { valuesOnRows: true }),
     )
-    const columnsValue = onColumns.data
-      .find(item => item.groupPath[0] === 'A')!
-      .valueItem
-      .cells
+    const columnsValue = getPivotValueCells(onColumns, onColumns.data.find(item => item.groupPath[0] === 'A')!)
       .find(cell => cell.measureId === 'amount-sum' && cell.columnPath[0] === 'Q1')
-    const rowsValue = onRows.data
-      .find(item => item.groupPath[0] === 'A' && item.activeMeasureId === 'amount-sum')!
-      .valueItem
-      .cells
+    const onRowsRow = onRows.data.find(item => item.groupPath[0] === 'A' && item.activeMeasureId === 'amount-sum')!
+    const rowsValue = getPivotValueCells(onRows, onRowsRow)
       .find(cell => cell.columnPath[0] === 'Q1')
 
     expect(rowsValue?.aggregated).toBe(columnsValue?.aggregated)
@@ -155,7 +151,7 @@ describe('pivot prepared transform correctness', () => {
     })
     const row = result.data.find(item => item.groupPath[0] === 'A')!
 
-    expect(row.valueItem.cells.find(cell => !cell.columnPath.length)?.aggregated).toBe(5)
+    expect(getPivotValueCells(result, row).find(cell => !cell.columnPath.length)?.aggregated).toBe(5)
   })
 
   it('uses collision-safe identities for row paths', () => {
@@ -200,8 +196,8 @@ describe('pivot prepared transform correctness', () => {
     const sourceRow = result.data.find(row => row.groupPath[0] === '__grand_total__')!
     const grandTotal = result.data.find(row => row.rowItem.kind === 'grandTotal')!
 
-    expect(sourceRow.valueItem.cells.find(cell => !cell.columnPath.length)?.aggregated).toBe(5)
-    expect(grandTotal.valueItem.cells.find(cell => !cell.columnPath.length)?.aggregated).toBe(12)
+    expect(getPivotValueCells(result, sourceRow).find(cell => !cell.columnPath.length)?.aggregated).toBe(5)
+    expect(getPivotValueCells(result, grandTotal).find(cell => !cell.columnPath.length)?.aggregated).toBe(12)
   })
 
   it('builds rows and column members from filtered data', () => {
@@ -286,9 +282,7 @@ describe('pivot prepared transform correctness', () => {
         },
       ],
     })
-    const cells = result.data.find(item => item.groupPath[0] === 'A')!
-      .valueItem
-      .columnGroupCells!
+    const cells = getPivotColumnGroupCells(result, result.data.find(item => item.groupPath[0] === 'A')!)
 
     expect(cells['Europe:amount-average']?.aggregated).toBe(15)
     expect(cells['Europe:amount-median']?.aggregated).toBe(15)

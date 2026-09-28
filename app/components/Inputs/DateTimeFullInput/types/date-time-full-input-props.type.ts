@@ -10,8 +10,9 @@ export type IDateTimeFullInputProps = IInputProps & {
   /**
    * Whether the picker closes once a day is selected.
    *
-   * On a narrow viewport the picker stays open so the time can be picked in its
-   * own tab – pass `true` to close it there as well.
+   * The picker stays open by default. A narrow viewport switches to the time
+   * tab; a wider one moves the caret to the time in the input. Pass `true` to
+   * close the picker instead.
    */
   autoClose?: boolean
 

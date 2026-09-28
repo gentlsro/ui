@@ -13,7 +13,7 @@ type MaybeRefsOrGetters<T> = {
 
 type IPayload<Validation extends Type> = {
   state?: MaybeRefOrGetter<Validation['infer']> | MaybeRefsOrGetters<Validation['infer']>
-  schema?: Validation
+  schema?: MaybeRef<Validation>
   scope?: string
   /** Optional diagnostic label; registrations always receive a unique suffix. */
   name?: string
@@ -32,11 +32,13 @@ export type IArkResult = {
 export function useArk<Validation extends Type = any>(payload?: IPayload<Validation>) {
   const {
     state,
-    schema,
     scope = 'base',
     name = 'ark',
     immediate = false,
   } = payload ?? {}
+
+  // Schemas are callable values, so resolving them must not invoke a getter.
+  const schema = computed(() => unref(payload?.schema))
 
   const componentName = `${name}_${generateUUID()}`
 
@@ -54,7 +56,9 @@ export function useArk<Validation extends Type = any>(payload?: IPayload<Validat
     ...validationParts.value,
     {
       state,
-      schema,
+      get schema() {
+        return schema.value
+      },
       componentName,
       scope,
     },
@@ -118,9 +122,9 @@ export function useArk<Validation extends Type = any>(payload?: IPayload<Validat
     }
 
     if (local && path) {
-      if (schema) {
+      if (schema.value) {
         errors = validPaths.flatMap(path => errorsStructure.value.byScopeByPath[scope]?.[path] ?? [])
-          .filter(error => error.$schema === schema)
+          .filter(error => error.$schema === schema.value)
       } else {
         const lastValidationPartWithSchemaInScope = validationParts.value.findLast(part => part.scope === scope && part.schema)
 
@@ -138,7 +142,7 @@ export function useArk<Validation extends Type = any>(payload?: IPayload<Validat
     // Get schema from errors first, fallback to the schema passed to useArk,
     // or try to find it in validationPartsByScope
     const resolvedSchema = errors[0]?.$schema
-      ?? schema
+      ?? schema.value
       ?? validationParts.value.find(part => part.scope === scope && part.schema)?.schema
 
     const isRequired = resolvedSchema && path

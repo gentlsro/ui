@@ -15,6 +15,7 @@ import { FileSystemIconLoader } from '@iconify/utils/lib/loader/node-loaders'
 // Breakpoints
 import { BREAKPOINTS_PX } from './app/constants/breakpoints'
 import { gentlUIPreset } from './app/constants/unocss-preset'
+import { iconAssetProcessor } from './modules/icon-assets/processor'
 
 const fontSize = 16
 const rounding = 2
@@ -126,6 +127,7 @@ export default defineConfig({
     presetIcons({
       scale: 1.2,
       unit: 'rem',
+      processor: iconAssetProcessor,
       collections: {
         custom: FileSystemIconLoader('./client/assets/icons', svg => {
           return svg.replace(/[\r\n]/g, '')

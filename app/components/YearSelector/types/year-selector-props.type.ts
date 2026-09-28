@@ -15,6 +15,11 @@ export type IYearSelectorProps = {
   referenceTarget?: any
 
   /**
+   * Whether to use UTC
+   */
+  utc?: boolean
+
+  /**
    * Visual configuration
    */
   ui?: {

@@ -28,9 +28,6 @@ import { tableBuildFetchPayload } from '../functions/table-build-fetch-payload'
 import { tableSerializePagination } from '../functions/table-serialize-pagination'
 import { queryBuilderInitializeItems } from '../../QueryBuilder/functions/query-builder-initialize-items'
 
-// Constants
-import { TABLE_EXPORTS_DEFAULT } from '../constants/table-exports-default.constant'
-
 // Components
 import type HorizontalScroller from '../../Scroller/HorizontalScroller.vue'
 
@@ -131,6 +128,11 @@ const [
       scrollArrivedState,
       isContentVerticallyScrollable,
 
+      // Relative column widths
+      getColumnWidth,
+      frozenOffsets,
+      getFrozenStyle,
+
       // Selection
       selection,
       selectionByKey,
@@ -181,7 +183,7 @@ const [
 
   // Exporting
   const isExporting = ref(false)
-  const exportData = ref<ITableExport[]>(tableProps?.exportData ?? TABLE_EXPORTS_DEFAULT)
+  const exportData = ref<ITableExport[]>([])
 
   /**
    * By default, reacts to changes in the filter, query builder, search, etc.
@@ -555,6 +557,7 @@ const [
 
     isContentVerticallyScrollable.value = clientHeight < scrollHeight
     measureScroll()
+    measureRelativeWidthBasis()
   })
 
   watch([() => visibleColumns.value.map(column => column.width), () => rows.value.length], measureScroll, { flush: 'post' })
@@ -562,6 +565,79 @@ const [
   syncRefs(headerX, [contentX, totalsX])
   syncRefs(contentX, [headerX, totalsX])
   syncRefs(totalsX, [headerX, contentX])
+  // !SECTION
+
+  // SECTION Relative column widths
+  // Percentages share the visible body width left after helper columns and row
+  // actions. Header, body and totals rows size to different things, so they all
+  // use this one resolved px value rather than resolving `%` against themselves.
+  const relativeWidthBasis = ref(0)
+
+  function measureRelativeWidthBasis() {
+    const scrollEl = virtualScrollElDom.value as HTMLElement | undefined
+
+    if (!scrollEl) {
+      return
+    }
+
+    const helperColsWidth = visibleColumns.value
+      .filter(col => col.isHelperCol)
+      .reduce((agg, col) => agg + Number(stringToFloat(col.width) || 0), 0)
+    const rowActionsEl = tableEl.value?.querySelector<HTMLElement>('.row-actions-header')
+
+    relativeWidthBasis.value = Math.max(0, scrollEl.clientWidth - helperColsWidth - (rowActionsEl?.offsetWidth ?? 0))
+  }
+
+  watch(visibleColumns, measureRelativeWidthBasis, { flush: 'post' })
+
+  /**
+   * The column width with percentages resolved to px (see `relativeWidthBasis`)
+   */
+  function getColumnWidth(column: TableColumn) {
+    // Checked before reading the basis: fixed widths then do not depend on it, so resizing
+    // the table does not re-render (and re-format) every row
+    if (!column.width.includes('%')) {
+      return column.width
+    }
+
+    const basis = relativeWidthBasis.value
+
+    if (!basis) {
+      return column.width
+    }
+
+    return column.width.replace(/(-?[\d.]+)%/g, (_, value) => `${(basis * Number(value)) / 100}px`)
+  }
+  // !SECTION
+
+  // SECTION Frozen columns
+  /**
+   * Sticky `left` offset of every column up to (and including) the frozen one.
+   * Derived from the current widths, so resizing, autofit or the selection column
+   * appearing never leave stale offsets behind
+   */
+  const frozenOffsets = computed<Record<string, string>>(() => {
+    const frozenIdx = visibleColumns.value.findIndex(col => col.frozen)
+
+    if (frozenIdx === -1 || isCardView.value) {
+      return {}
+    }
+
+    const widths: string[] = []
+
+    return visibleColumns.value.slice(0, frozenIdx + 1).reduce((agg, col) => {
+      agg[col.field] = widths.length ? `calc(${widths.join(' + ')})` : '0px'
+      widths.push(getColumnWidth(col))
+
+      return agg
+    }, {} as Record<string, string>)
+  })
+
+  function getFrozenStyle(column: TableColumn) {
+    const left = frozenOffsets.value[column.field]
+
+    return left ? { left, position: 'sticky' as const, zIndex: 1 } : undefined
+  }
   // !SECTION
 
   // SECTION Selection
@@ -917,6 +993,11 @@ const [
     contentX,
     scrollArrivedState,
     isContentVerticallyScrollable,
+
+    // Relative column widths
+    getColumnWidth,
+    frozenOffsets,
+    getFrozenStyle,
 
     // Selection
     selection,

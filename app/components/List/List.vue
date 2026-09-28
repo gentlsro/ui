@@ -46,6 +46,7 @@ const {
   groupBySource: groupBySourceStore,
 
   // Layout
+  isLoading,
   listEl,
   search,
   selection,
@@ -222,7 +223,10 @@ defineExpose(listGetExposed(() => emits('submit')))
     </slot>
 
     <!-- No data -->
-    <slot name="noData">
+    <slot
+      v-if="!isLoading && !listItems?.length"
+      name="noData"
+    >
       <ListNoData
         :ui="mergedProps.ui"
         @submit="emits('submit')"

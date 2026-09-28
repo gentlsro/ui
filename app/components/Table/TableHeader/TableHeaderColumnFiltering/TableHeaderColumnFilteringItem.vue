@@ -42,9 +42,11 @@ defineExpose({ focus: () => valueInputEl.value?.focus() })
 
       <!-- Remove -->
       <Btn
-        preset="TRASH"
+        icon="i-lucide:x"
         size="sm"
         tabindex="-1"
+        class="filtering-item__remove"
+        :title="$t('general.remove')"
         @click="$emit('remove:item')"
       />
     </div>
@@ -64,11 +66,18 @@ defineExpose({ focus: () => valueInputEl.value?.focus() })
 </template>
 
 <style scoped lang="scss">
+@use '#layers/ui/app/css/subtle-remove-btn-mixin.scss' as *;
+
 .filtering-item {
-  @apply flex flex-col gap-1 p-1 border-ca bg-ca border-dotted rounded-custom;
+  @apply flex flex-col gap-1.5;
 
   &__comparator {
-    @apply flex gap-1;
+    @apply flex items-center gap-1;
+  }
+
+  &__remove {
+    @apply shrink-0;
+    @include subtle-remove-btn;
   }
 }
 </style>

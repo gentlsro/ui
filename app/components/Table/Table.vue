@@ -15,6 +15,7 @@ import { tableGetExposed } from './functions/table-get-exposed'
 
 // Constants
 import { TABLE_DEFAULT_PROPS } from './constants/table-default-props.constant'
+import { TABLE_EXPORTS_DEFAULT } from './constants/table-exports-default.constant'
 
 // Stores
 import { useTableStore } from './stores/table.store'
@@ -137,7 +138,7 @@ syncRef(toRef(props, 'emptyValue'), emptyValue, { direction: 'ltr' })
 syncRef(loadMetaDataRef, loadMetaData, { direction: 'ltr' })
 syncRef(loadDataRef, loadData, { direction: 'ltr' })
 syncRef(modifiersRef, modifiers, { direction: 'ltr', immediate: false })
-syncRef(toRef(props, 'exportData', []), exportData, { direction: 'ltr' })
+syncRef(toRef(props, 'exportData', TABLE_EXPORTS_DEFAULT), exportData, { direction: 'ltr' })
 syncRef(queryBuilderPropsRef, queryBuilderProps, { direction: 'ltr' })
 syncRef(toRef(props, 'allowComparatorsOfSameType'), allowComparatorsOfSameType, { direction: 'ltr' })
 syncRef(rows, rowsStore, { direction: 'both' })
@@ -157,8 +158,8 @@ syncRef(toRef(props, 'rowClickable'), rowClickable, { direction: 'ltr' })
 syncRef(toRef(() => mergedProps.value.initialSchemaConfig), initialSchemaConfig, { direction: 'ltr' })
 syncRef(toRef(() => mergedProps.value.ui), uiConfig, { direction: 'ltr', immediate: false })
 
-// When columns change, make sure to get their real widths
-watch(visibleColumns, cols => {
+// When columns or their resolved widths change, make sure to get their real widths
+watch([visibleColumns, () => visibleColumns.value.map(store.getColumnWidth)], ([cols]) => {
   nextTick(() => {
     cols.forEach(col => col._width = col.getWidth(tableEl.value ?? document))
 
@@ -287,16 +288,12 @@ onMounted(() => {
       <!-- Cell slots -->
       <template
         v-for="col in visibleColumns"
-        :key="col.name"
-        #[col.name]="{ row, column, index, value }"
+        :key="col.field"
+        #[col.field]="cellProps"
       >
         <slot
-          :name="col.name"
-          :row
-          :index
-          :custom-data
-          :column
-          :value
+          :name="col.field"
+          v-bind="cellProps"
         />
       </template>
 
@@ -311,7 +308,10 @@ onMounted(() => {
       </template>
 
       <!-- Row inside slot -->
-      <template #row-inside="rowInsideProps">
+      <template
+        v-if="$slots['row-inside']"
+        #row-inside="rowInsideProps"
+      >
         <slot
           name="row-inside"
           v-bind="rowInsideProps"
@@ -321,7 +321,12 @@ onMounted(() => {
     </TableContent>
 
     <!-- Empty -->
-    <TableEmpty v-else />
+    <slot
+      v-else
+      name="empty"
+    >
+      <TableEmpty />
+    </slot>
 
     <!-- Totals -->
     <slot
@@ -355,3 +360,36 @@ onMounted(() => {
     <slot />
   </div>
 </template>
+
+<style scoped lang="scss">
+// Bordered tables frame the header, rows and totals as one rounded block
+.is-bordered {
+  --table-frame-border: #e5e5e5;
+
+  > :deep(.table-header),
+  > :deep(.table-content),
+  > :deep(.table-empty),
+  > :deep(.table-totals) {
+    @apply m-x-3 border-x-1 border-solid;
+
+    border-color: var(--table-frame-border);
+  }
+
+  > :deep(.table-header) {
+    @apply border-t-1 rounded-t-lg;
+  }
+
+  // Whichever block comes last closes the frame
+  > :deep(:is(.table-content, .table-empty, .table-totals):not(:has(+ .table-totals))) {
+    @apply border-b-1 rounded-b-lg m-b-2;
+  }
+
+  > :deep(.table-bottom) {
+    @apply border-t-0;
+  }
+}
+
+.dark .is-bordered {
+  --table-frame-border: #262626;
+}
+</style>

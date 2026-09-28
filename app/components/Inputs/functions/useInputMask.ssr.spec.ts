@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest'
 import { createSSRApp, h, shallowRef } from 'vue'
-import { renderToString } from '@vue/server-renderer'
+import { renderToString } from 'vue/server-renderer'
 import { MaskedNumber } from 'imask'
 import { useInputMask } from './useInputMask'
 

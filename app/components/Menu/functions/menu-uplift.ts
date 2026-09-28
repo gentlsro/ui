@@ -1,26 +1,33 @@
 // Functions
-const { getLastFloatingUIZindex } = useFloatingUIUtils()
+import { useFloatingUIUtils } from '../../../composables/useFloatingUIUtils'
+
+type IMenuUpliftSnapshot = {
+  zIndex: string
+  backgroundColor: string
+}
+
+const menuUpliftSnapshots = new WeakMap<HTMLElement, IMenuUpliftSnapshot>()
 
 export function menuResetUplift(payload: {
   referenceEl?: unknown
-  referenceElZIndex?: string
-  isReferenceElTransparent?: boolean
-  noUplift?: boolean
 }) {
   const el = payload.referenceEl
 
-  if (!(el instanceof Element)) {
+  if (!(el instanceof HTMLElement)) {
     return
   }
 
-  const htmlEl = el as HTMLElement
+  const snapshot = menuUpliftSnapshots.get(el)
 
-  htmlEl.classList.remove('is-menu-active')
-  htmlEl.style.zIndex = payload.referenceElZIndex ?? ''
+  el.classList.remove('is-menu-active')
 
-  if (payload.isReferenceElTransparent && !payload.noUplift) {
-    htmlEl.style.backgroundColor = ''
+  if (!snapshot) {
+    return
   }
+
+  el.style.zIndex = snapshot.zIndex
+  el.style.backgroundColor = snapshot.backgroundColor
+  menuUpliftSnapshots.delete(el)
 }
 
 export function menuUplift(payload: {
@@ -44,22 +51,29 @@ export function menuUplift(payload: {
     color,
   } = payload
 
+  const { getLastFloatingUIZindex } = useFloatingUIUtils()
   zIndex.value = getLastFloatingUIZindex() + 1
 
-  const _referenceEl = referenceEl.value as HTMLElement
+  const _referenceEl = referenceEl.value
 
-  if (!(_referenceEl instanceof Element)) {
+  if (!(_referenceEl instanceof HTMLElement)) {
     return
   }
 
-  const referenceElStyle = getComputedStyle(_referenceEl as any)
+  if (!menuUpliftSnapshots.has(_referenceEl)) {
+    const referenceElStyle = getComputedStyle(_referenceEl)
+    const snapshot: IMenuUpliftSnapshot = {
+      zIndex: _referenceEl.style.zIndex,
+      backgroundColor: _referenceEl.style.backgroundColor,
+    }
+
+    menuUpliftSnapshots.set(_referenceEl, snapshot)
+    referenceElZIndex.value = snapshot.zIndex
+    isReferenceElTransparent.value = referenceElStyle.backgroundColor === 'rgba(0, 0, 0, 0)'
+  }
 
   _referenceEl.classList.add('is-menu-active')
-  referenceElZIndex.value = referenceElStyle.zIndex
 
-  isReferenceElTransparent.value = referenceElStyle.backgroundColor === 'rgba(0, 0, 0, 0)'
-
-  // Uplift the reference element (zIndex)
   const { overlay = true, uplift = true, cover } = modifiers ?? {}
   if (overlay && uplift && !cover) {
     _referenceEl.style.zIndex = `${zIndex.value + 1}`

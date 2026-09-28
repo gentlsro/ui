@@ -26,7 +26,6 @@ const {
   queryBuilderEl,
   breakpoint,
   isSmallerScreen,
-  queryBuilderElRect,
   draggedItem,
   columns: storeColumns,
   items: storeItems,
@@ -78,7 +77,6 @@ if (!props.items.length && !props.noInitialization) {
 
 function updateQueryBuilderLayout(width: number) {
   isSmallerScreen.value = width < breakpoint.value
-  queryBuilderElRect.value = queryBuilderEl.value?.getBoundingClientRect()
 }
 
 onMounted(() => {
@@ -172,7 +170,7 @@ defineExpose({
 
 <style scoped lang="scss">
 .query-builder {
-  @apply relative bg-white dark-bg-dark-950 p-1 p-y-2 rounded-custom overflow-auto;
+  @apply relative p-1 p-y-2 rounded-custom overflow-auto;
 }
 
 .drop-indicator {

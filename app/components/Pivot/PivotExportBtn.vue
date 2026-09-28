@@ -13,8 +13,10 @@ const {
   visibleData,
   visibleValueColumns,
   visibleValueHeaderRows,
+  valueLayout,
   promotedRowLabelLevelsById,
   state,
+  labels,
 } = usePivotStore<T>()
 
 const { currentLocaleCode } = useLocale()
@@ -34,9 +36,11 @@ async function handleExport(format: PivotExportFormat) {
           visibleData: visibleData.value,
           visibleValueColumns: visibleValueColumns.value,
           visibleValueHeaderRows: visibleValueHeaderRows.value,
+          valueLayout: valueLayout.value,
           promotedRowLabelLevelsById: promotedRowLabelLevelsById.value,
           collapsedGroupIds: state.value.collapsedGroupIds,
           localeIso: currentLocaleCode.value,
+          labels: labels.value,
           formatCellValue: ({ value, row, dataType, format, localeIso }) => {
             return formatValue(value, row, {
               dataType,

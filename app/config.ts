@@ -5,6 +5,7 @@ import { extendUIConfig } from './utils/extend-ui-config'
 
 // Constants
 import { BUTTON_PRESET } from './components/Button/constants/button-preset.constant'
+import { PIVOT_DEFAULT_PERFORMANCE } from './components/Pivot/constants/pivot-performance.constant'
 
 const useUtc = import.meta.env.NUXT_PUBLIC_USE_UTC === 'true'
 
@@ -36,6 +37,7 @@ export const defaultComponentsConfig = {
         iconClass: ({ defaults }) => defaults.all,
         labelClass: ({ defaults }) => defaults.all,
         badgeClass: ({ defaults }) => defaults.all,
+        dismissClass: ({ defaults }) => defaults.all,
       },
     },
     merge: ['ui'],
@@ -283,6 +285,7 @@ export const defaultComponentsConfig = {
       errorTakesSpace: true,
       errorVisible: true,
       size: 'md',
+      stackLabel: true,
       fractionDigits: 2,
       currencyPosition: 'prepend',
       ui: {
@@ -402,6 +405,7 @@ export const defaultComponentsConfig = {
       modelValue: undefined,
       noTitle: undefined,
       noTransition: undefined,
+      resizableConfig: { enabled: false },
       side: 'right',
       title: undefined,
       width: 480,
@@ -763,6 +767,7 @@ export const defaultComponentsConfig = {
       cover: undefined,
       fit: true,
       maxHeight: '95%',
+      matchHeight: false,
       matchWidth: undefined,
       noArrow: true,
       noMove: undefined,
@@ -800,6 +805,7 @@ export const defaultComponentsConfig = {
       fit: false,
       ignoreClickOutside: undefined,
       manual: undefined,
+      matchHeight: false,
       matchWidth: undefined,
       maxHeight: '95%',
       modelValue: undefined,
@@ -845,6 +851,7 @@ export const defaultComponentsConfig = {
       fallbackPlacements: undefined,
       fit: true,
       manual: undefined,
+      matchHeight: false,
       matchWidth: undefined,
       modelValue: undefined,
       noArrow: true,
@@ -994,6 +1001,7 @@ export const defaultComponentsConfig = {
       miniWidth: 64,
       modelValue: undefined,
       noBottom: undefined,
+      resizableConfig: { enabled: false },
       side: 'left',
       width: 280,
       ui: {
@@ -1058,11 +1066,7 @@ export const defaultComponentsConfig = {
       loadData: undefined,
       loading: undefined,
       minimumColumnWidth: 80,
-      performance: {
-        sourceRowWarningThreshold: 100_000,
-        outputCellWarningThreshold: 250_000,
-        valueColumnWarningThreshold: 250,
-      },
+      performance: { ...PIVOT_DEFAULT_PERFORMANCE },
       ui: {
         containerClass: ({ defaults }) => defaults.all,
         contentClass: ({ defaults }) => defaults.all,
@@ -1326,6 +1330,47 @@ export const defaultComponentsConfig = {
       btnProps: () => ({ noDim: true, noUppercase: true }),
     },
     merge: ['btnProps'],
+  },
+
+  // Step
+  step: {
+    props: {
+      name: undefined,
+      label: undefined,
+      description: undefined,
+      icon: undefined,
+      disabled: undefined,
+      error: undefined,
+    },
+  },
+
+  // Stepper
+  stepper: {
+    props: {
+      completedIcon: 'lucide:check',
+      disabled: undefined,
+      errorIcon: 'lucide:x',
+      labelPlacement: 'end',
+      linear: undefined,
+      modelValue: undefined,
+      orientation: 'horizontal',
+      size: 'md',
+      ui: {
+        containerClass: ({ defaults }) => defaults.all,
+        navigationClass: ({ defaults }) => defaults.all,
+        itemClass: ({ defaults }) => defaults.all,
+        triggerClass: ({ defaults }) => defaults.all,
+        indicatorClass: ({ defaults }) => defaults.all,
+        iconClass: ({ defaults }) => defaults.all,
+        separatorClass: ({ defaults }) => defaults.all,
+        textClass: ({ defaults }) => defaults.all,
+        labelClass: ({ defaults }) => defaults.all,
+        descriptionClass: ({ defaults }) => defaults.all,
+        panelsClass: ({ defaults }) => defaults.all,
+        stepClass: ({ defaults }) => defaults.all,
+      },
+    },
+    merge: ['ui'],
   },
 
   // Table

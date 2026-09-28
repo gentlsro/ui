@@ -22,20 +22,18 @@ const mergedProps = computed(() => {
 // Layout
 const model = defineModel<Datetime>()
 
-const dateObj = computed(() => $date(model.value))
+const dateObj = computed(() => $date(model.value, { utc: !!props.utc }))
 
 const now = useNow({ interval: $duration(15, 'minute').as('ms') })
-const nowMonth = computed(() => {
-  const dateObj = $date(now.value)
-
-  return `${dateObj.year()}-${padStart(String(dateObj.month()), 2, '0')}`
-})
+const nowValue = computed(() => $date(now.value))
+const nowMonth = computed(() => `${nowValue.value.year()}-${padStart(String(nowValue.value.month()), 2, '0')}`)
 
 const months = computed(() => {
   return Array.from({ length: 12 }, (_, idx) => {
     const idxString = padStart(String(idx), 2, '0')
     const date = $date(
-      `${dateObj.value.year()}-${padStart(String(idx + 1), 2, '0')}-01`,
+      `${nowValue.value.year()}-${padStart(String(idx + 1), 2, '0')}-01`,
+      { utc: !!props.utc },
     )
 
     return {
@@ -48,7 +46,7 @@ const months = computed(() => {
 })
 
 function handleMonthSelect(month: number) {
-  model.value = $date(model.value).month(month).startOf('month').valueOf()
+  model.value = dateObj.value.month(month).startOf('month').valueOf()
 }
 
 // Styles - container

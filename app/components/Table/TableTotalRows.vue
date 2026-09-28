@@ -22,8 +22,8 @@ const pageSize = computed(() => paginationConfig.value?.pageSize ?? 1)
     class="total-rows"
   >
     <span font="semibold">
-      {{ (currentPage - 1) * pageSize }} -
-      {{ (currentPage - 1) * pageSize + rows.length }}
+      {{ formatNumber((currentPage - 1) * pageSize + (rows.length ? 1 : 0)) }} -
+      {{ formatNumber((currentPage - 1) * pageSize + rows.length) }}
     </span>
 
     {{ $t('general.outOf') }}
@@ -41,7 +41,7 @@ const pageSize = computed(() => paginationConfig.value?.pageSize ?? 1)
       font="semibold"
       data-cy="current-rows"
     >
-      {{ rows.length }}
+      {{ formatNumber(rows.length) }}
     </span>
 
     {{ $t('general.outOf') }}

@@ -58,6 +58,7 @@ export * from '../components/DragAndDrop/types/dragged-item.type'
 
 // Drawer
 export * from '../components/Drawer/types/drawer-props.type'
+export * from '../components/Drawer/types/resizable-config.type'
 
 // ElementMovement
 export * from '../components/ElementMovement/types/corner-resize-props.type'
@@ -188,6 +189,10 @@ export * from '../components/Separator/types/separator-props.type'
 
 // Skeleton
 export * from '../components/Skeleton/types/skeleton-props.type'
+
+// Stepper
+export * from '../components/Stepper/types/step-props.type'
+export * from '../components/Stepper/types/stepper-props.type'
 
 // Table
 export * from '../components/Table/types/table-distinct-data.type'

@@ -2,6 +2,8 @@
   "name": "@gentl/ui",
   "type": "module",
   "private": true,
+  "license": "MIT",
+  "author": "Jakub Kylian <jacob.kylian@gmail.com>",
   "main": "./nuxt.config.ts",
   "gentl": {
     "nuxtLayer": {

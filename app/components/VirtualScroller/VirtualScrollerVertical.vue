@@ -195,6 +195,9 @@ defineExpose({
     container: getRect(unrefElement(contentEl.value) as HTMLElement),
   }),
 })
+
+// One object for all rows, so the rows' props do not change on every render
+const slotStyle = computed(() => ({ minHeight: `${props.rowHeight}px` }))
 </script>
 
 <template>
@@ -241,7 +244,7 @@ defineExpose({
             :index="virtualRow.index"
             :is-sticky="virtualRow.isSticky"
             :is-active-sticky="virtualRow.isActiveSticky"
-            :style="{ minHeight: `${rowHeight}px` }"
+            :style="slotStyle"
           />
         </div>
       </template>

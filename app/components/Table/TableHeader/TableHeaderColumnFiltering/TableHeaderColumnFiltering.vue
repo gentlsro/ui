@@ -13,16 +13,16 @@ import { getAvailableComparators } from '../../functions/get-available-comparato
 // Store
 import { useTableStore } from '../../stores/table.store'
 
-const props = defineProps<IProps>()
-
-// Constants
-const BOOLEANISH_COMPARATORS = getBooleanishComparators()
-
 type IProps = {
   column: TableColumn
   modifyFnc?: (filter: ITableFilterItem, debounceMs?: number) => void
   removeFnc?: (filter: ITableFilterItem) => void
 }
+
+const props = defineProps<IProps>()
+
+// Constants
+const BOOLEANISH_COMPARATORS = getBooleanishComparators()
 
 // Store
 const { internalColumns } = useTableStore()
@@ -143,9 +143,11 @@ onMounted(() => {
 
       <!-- Clear filter -->
       <Btn
+        v-if="interactiveFilters.length"
         :label="$t('general.clearFilter')"
-        color="negative"
         size="xs"
+        no-uppercase
+        class="filtering__clear"
         @click="handleClearFilter"
       />
     </div>
@@ -168,10 +170,10 @@ onMounted(() => {
       v-if="hasUnusedComparator"
       size="sm"
       no-uppercase
-      outlined
-      preset="ADD"
+      no-dim
+      icon="i-lucide:plus"
+      class="filtering__add"
       :label="$t('table.addFilter')"
-      bg="!white !dark:black"
       @click="handleAddFilter"
     />
   </div>
@@ -179,22 +181,39 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .filtering {
-  @apply flex flex-col gap-1 p-2;
+  @apply flex flex-col gap-2 p-3 p-t-2;
 
   &__title {
-    @apply flex items-center gap-2;
+    @apply flex items-center gap-2 min-h-6;
 
     &-label {
-      @apply grow font-semibold font-rem-14;
+      @apply grow text-xs font-medium color-true-gray-500 dark:color-true-gray-400;
+    }
+  }
+
+  &__clear {
+    @apply color-true-gray-500 dark:color-true-gray-400 rounded-md font-medium;
+
+    &:hover {
+      @apply color-negative bg-negative/8;
     }
   }
 
   &__content {
-    @apply flex flex-col gap-2;
+    @apply flex flex-col gap-3;
+
+    &:empty {
+      @apply hidden;
+    }
   }
 
-  .is-active {
-    @apply bg-primary color-white;
+  &__add {
+    @apply rounded-lg border-1 border-dashed border-true-gray-300 dark:border-true-gray-600
+      color-true-gray-600 dark:color-true-gray-300 font-medium;
+
+    &:hover {
+      @apply border-primary/60 color-primary bg-primary/5 dark:color-white;
+    }
   }
 }
 </style>

@@ -12,7 +12,13 @@ export type FloatingTarget
 
 export const cover: Middleware = {
   name: 'cover',
-  fn: ({ y, rects, placement }) => {
+  fn: ({ y, rects, placement, middlewareData }) => {
+    // `matchHeight` already aligns the floating element with the reference,
+    // shifting it again would push it out of the reference bounds
+    if (middlewareData.matchHeight) {
+      return {}
+    }
+
     const modifier = placement.startsWith('bottom') ? -1 : 1
     const { height: referenceHeight } = rects.reference
     const { height: menuHeight } = rects.floating
@@ -51,6 +57,23 @@ export const matchWidth: Middleware = {
 
     return {
       x: rects.reference.x,
+    }
+  },
+}
+
+export const matchHeightMiddleware: Middleware = {
+  name: 'matchHeight',
+  fn: ({ elements, rects }) => {
+    const height = rects.reference.height
+    const floatingElStyle = getComputedStyle(elements.floating)
+    const marginTop = floatingElStyle.marginTop
+    const marginBottom = floatingElStyle.marginBottom
+
+    elements.floating.style.height = `calc(${height}px - ${marginTop} - ${marginBottom})`
+    elements.floating.style.maxHeight = `calc(${height}px - ${marginTop} - ${marginBottom})`
+
+    return {
+      y: rects.reference.y,
     }
   },
 }

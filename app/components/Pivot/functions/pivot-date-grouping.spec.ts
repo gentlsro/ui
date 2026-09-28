@@ -7,7 +7,7 @@ const summary = {
   MEDIAN: 'MEDIAN' as SummaryEnum,
 }
 
-let pivotGroupBy: typeof import('./pivot-group-by').pivotGroupBy
+let createPivotGroupKeyResolver: typeof import('./pivot-group-key').createPivotGroupKeyResolver
 let pivotTransformDataCore: typeof import('./pivot-transform-data-core').pivotTransformDataCore
 
 beforeAll(async () => {
@@ -35,7 +35,7 @@ beforeAll(async () => {
       : Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
   })
 
-  ;({ pivotGroupBy } = await import('./pivot-group-by'))
+  ;({ createPivotGroupKeyResolver } = await import('./pivot-group-key'))
   ;({ pivotTransformDataCore } = await import('./pivot-transform-data-core'))
 })
 
@@ -47,9 +47,9 @@ describe('pivot dateSimple grouping', () => {
       { from: '2024-01-16', duration: 7 },
     ]
 
-    const groups = pivotGroupBy(data, 'from', 'dateSimple')
+    const resolveKey = createPivotGroupKeyResolver<IItem>('from', 'dateSimple')
 
-    expect(groups.size).toBe(2)
+    expect(new Set(data.map(resolveKey)).size).toBe(2)
   })
 
   it('transforms when dateSimple field is used as a row', () => {

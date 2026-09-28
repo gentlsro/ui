@@ -66,11 +66,8 @@ const labelStyle = computed(() => {
   return mergedProps.value?.ui?.labelStyle?.()
 })
 
-const isIconifyIcon = computed(() => {
-  const noSpacesRegex = /^\S+$/
-
-  return typeof props.icon === 'string'
-    && noSpacesRegex.test(props.icon)
+const resolvedIcon = computed(() => {
+  return resolveIconValue(props.icon)
 })
 </script>
 
@@ -82,13 +79,14 @@ const isIconifyIcon = computed(() => {
     :style="containerStyle"
   >
     <IconRenderer
-      v-if="icon && isIconifyIcon"
-      :name="(icon as string)"
+      v-if="resolvedIcon.name"
+      :name="resolvedIcon.name"
+      :class="resolvedIcon.classes"
     />
 
     <div
       v-else-if="icon"
-      :class="icon"
+      :class="resolvedIcon.classes"
     />
 
     <CopyBtn

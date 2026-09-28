@@ -16,7 +16,13 @@ type IPlacedHeaderCell = {
   rowEnd: number
 }
 
-const { visibleValueHeaderRows, visibleValueColumns, valueHeaderEl, ui } = usePivotStore()
+const {
+  visibleValueHeaderRows,
+  visibleValueColumns,
+  visibleValueColumnsWidthPx,
+  valueHeaderEl,
+  ui,
+} = usePivotStore()
 const element = useTemplateRef<HTMLElement>('element')
 
 watch(element, value => {
@@ -40,9 +46,7 @@ const gridTemplateColumns = computed(() => {
 })
 
 const gridMinWidth = computed(() => {
-  const totalWidth = visibleValueColumns.value.reduce((sum, column) => {
-    return sum + (Number.parseFloat(column.width) || 0)
-  }, 0)
+  const totalWidth = visibleValueColumnsWidthPx.value
 
   return totalWidth ? `${totalWidth}px` : undefined
 })

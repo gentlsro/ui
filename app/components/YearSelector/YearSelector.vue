@@ -29,9 +29,9 @@ const inputElement = computed(() => yearInputEl.value?.getInputElement())
 /**
  * Internal value is used to navigate through years without changing the actual `model`
  */
-const internalValue = ref($date(model.value).year())
+const internalValue = ref($date(model.value, { utc: !!props.utc }).year())
 
-const dateObj = computed(() => $date(model.value))
+const dateObj = computed(() => $date(model.value, { utc: !!props.utc }))
 
 const yearOptions = computed(() => {
   const countOfYearsShown = 5
@@ -85,11 +85,11 @@ watch(isYearSelectorVisible, visible => {
 function sync() {
   pause()
 
-  return (internalValue.value = $date(model.value).year())
+  return (internalValue.value = $date(model.value, { utc: !!props.utc }).year())
 }
 
 function handleYearSelect(year: number) {
-  model.value = $date(model.value).year(year).valueOf()
+  model.value = $date(model.value, { utc: !!props.utc }).year(year).valueOf()
   isYearSelectorVisible.value = false
 }
 
@@ -108,7 +108,7 @@ function handleMouseWheel(ev: WheelEvent) {
 
 watch(
   model,
-  model => (internalValue.value = $date(model).year()),
+  model => (internalValue.value = $date(model, { utc: !!props.utc }).year()),
 )
 
 defineExpose({ sync })

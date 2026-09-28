@@ -32,6 +32,7 @@ const {
   getPeriod,
   getExtendedPeriod,
   getDaysInPeriod,
+  getCalendarDateValue,
 } = useDateUtils()
 
 // Layout
@@ -70,7 +71,8 @@ const daysInPeriod = computed(() => {
 
 const eventsByDay = computed(() => {
   return props.events?.reduce((agg, event) => {
-    const day = $date(event.date).startOf('d').format('YYYY-MM-DD')
+    // Keyed by the same calendar dates the day cells carry.
+    const day = $date(event.date, { utc: !!props.utc }).startOf('d').format('YYYY-MM-DD')
 
     if (agg[day] === undefined) {
       agg[day] = []
@@ -83,13 +85,15 @@ const eventsByDay = computed(() => {
 })
 
 function handleSelectToday() {
+  const today = getCalendarDateValue($date(), { utc: props.utc })
+
   view.value = 'days'
-  internalValue.value = $date().startOf('month')
+  internalValue.value = today.startOf('month')
   selectToday()
 }
 
 const period = computed(() => {
-  return getPeriod({ dateRef: internalValue, unit: 'month' })
+  return getPeriod({ dateRef: internalValue, unit: 'month', utc: props.utc })
 })
 
 const extendedPeriod = computed(() => {
@@ -97,6 +101,7 @@ const extendedPeriod = computed(() => {
     dateRef: internalValue,
     unit: 'month',
     minCountOfWeeks: MIN_COUNT_OF_WEEKS,
+    utc: props.utc,
   })
 })
 

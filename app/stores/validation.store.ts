@@ -1,10 +1,8 @@
-import { type } from 'arktype'
-import { z } from 'zod'
-
 // Utils
 import { translateZodIssue } from '#layers/utilities/app/functions/translate-zod-issue'
 import type { SchemaType } from '../functions/is-field-required'
 import { isZodSchema } from '../functions/is-field-required'
+import { flattenArkErrors, isArkErrors, isZodFailure } from '../functions/validation-results'
 
 export type ExtendedError = {
   error: unknown
@@ -37,11 +35,9 @@ function resolveErrorsRecursively(payload: {
   const { result, errors, schema, componentName } = payload
 
   // ArkType
-  if (result instanceof type.errors) {
-    const resultFlat = result.flat().flatMap(err => err.flat)
-
-    resultFlat.forEach(result => {
-      const $message = translateArkError(result, $t)
+  if (isArkErrors(result)) {
+    flattenArkErrors(result).forEach(result => {
+      const $message = translateArkError(result as any, $t)
 
       errors?.push({
         $path: result.path.join('.'),
@@ -54,14 +50,7 @@ function resolveErrorsRecursively(payload: {
   }
 
   // Zod - result is a SafeParseReturnType
-  if (
-    result
-    && typeof result === 'object'
-    && 'success' in result
-    && result.success === false
-    && 'error' in result
-    && result.error instanceof z.ZodError
-  ) {
+  if (isZodFailure(result)) {
     result.error.issues.forEach(issue => {
       errors?.push({
         $path: issue.path.join('.'),

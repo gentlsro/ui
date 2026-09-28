@@ -248,6 +248,25 @@ export function useTableCellNavigation(store: ReturnType<typeof useTableStore>, 
     return true
   }
 
+  // Esc also cancels an edit once focus has left the editor (e.g. after clicking
+  // elsewhere). An open menu or dialog gets the key first, as it closes on Esc too
+  useEventListener(document, 'keydown', (ev: KeyboardEvent) => {
+    if (ev.key !== 'Escape' || ev.defaultPrevented || ev.isComposing || !cellEdit.value.length) {
+      return
+    }
+
+    // Inside the editor, the table and row handlers take care of it
+    if (ev.target instanceof Element && ev.target.closest('.active-edit-cell')) {
+      return
+    }
+
+    if (document.querySelector('.floating-element')) {
+      return
+    }
+
+    store.cancelCellEdit()
+  })
+
   useEventListener(tableEl, 'keydown', (ev: KeyboardEvent) => {
     const target = ev.target
 

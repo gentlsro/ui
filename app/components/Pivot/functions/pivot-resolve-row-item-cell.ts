@@ -4,6 +4,8 @@ import type { IPivotRowItemCell } from '../types/pivot-row-item-cell.type'
 import type { PivotItem } from '../models/pivot-item.model'
 import { isRowItemCellCollapsible } from './is-row-item-cell-collapsible'
 import { isPivotRowCellHiddenByCollapsedAncestor } from './pivot-group-collapse'
+import { PIVOT_DEFAULT_LABELS } from '../constants/pivot-labels.constant'
+import type { IPivotLabels } from '../constants/pivot-labels.constant'
 
 export function resolvePivotRowItemCell<T extends IItem>(payload: {
   item: IPivotRowItemCell<T>
@@ -20,6 +22,7 @@ export function resolvePivotRowItemCell<T extends IItem>(payload: {
     format?: PivotItem<T>['format']
     localeIso: string
   }) => unknown
+  labels?: IPivotLabels
 }) {
   const {
     item,
@@ -30,6 +33,7 @@ export function resolvePivotRowItemCell<T extends IItem>(payload: {
     collapsedGroupIds,
     localeIso,
     formatCellValue,
+    labels = PIVOT_DEFAULT_LABELS,
   } = payload
   const level = item.rowFieldIndex
   const isPromoted = level !== undefined && promotedLevels.includes(level)
@@ -54,16 +58,17 @@ export function resolvePivotRowItemCell<T extends IItem>(payload: {
   if (item.kind === 'valueLabel') {
     value = item.label ?? ''
   } else if (isPromoted && level !== undefined) {
-    value = groupPath[level] ?? ''
+    // Same source as the group's own label; the group key is not a display value (dates are keyed by timestamp)
+    value = item.row ? get(item.ref, item.row.field as ObjectKey<T>) : groupPath[level] ?? ''
   } else if (item.kind === 'empty') {
     value = ''
   } else if (item.kind === 'grandTotal') {
-    value = 'Grand Total'
+    value = labels.grandTotal
   } else {
     value = get(item.ref, item.row?.field as ObjectKey<T>)
   }
 
-  const dataType = ['empty', 'grandTotal', 'valueLabel'].includes(item.kind ?? '')
+  const dataType = !isPromoted && ['empty', 'grandTotal', 'valueLabel'].includes(item.kind ?? '')
     ? undefined
     : item.row?.dataType
   const formattedValue = formatCellValue({
@@ -74,7 +79,7 @@ export function resolvePivotRowItemCell<T extends IItem>(payload: {
     localeIso,
   })
   const displayValue = item.kind === 'subtotal' && !isPromoted
-    ? `${formattedValue} Total`
+    ? labels.subtotal(String(formattedValue ?? ''))
     : formattedValue
   const showContent = !isHidden && (isCollapsible || value !== '')
 

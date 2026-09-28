@@ -7,9 +7,6 @@ import type { IPivotDataItem } from './types/pivot-data-item.type'
 // Store
 import { usePivotStore } from './stores/pivot.store'
 
-// Constants
-import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
-
 type IProps = {
   item: IPivotValueItemCell<T>
   column: IPivotValueColumnItem<T>
@@ -18,30 +15,17 @@ type IProps = {
 
 const props = defineProps<IProps>()
 
-const { ui, rowClickable, cellClickable, emits } = usePivotStore<T>()
-const { currentLocaleCode } = useLocale()
-const { formatNumber } = useNumber()
-
-const isClickable = computed(() => cellClickable.value || rowClickable.value)
-
-const valueItemCellClass = computed(() => {
-  return [
-    ui.value?.valueItemCellClass?.({
-      defaults: PIVOT_DEFAULT_PROPS.ui.valueItemCellClass(),
-    }),
-    {
-      'is-total': props.item.kind === 'subtotal',
-      'is-grand-total': props.item.kind === 'grandTotal',
-    },
-  ]
-})
-
-const valueItemCellStyle = computed(() => {
-  const valueItemCellStyle = ui.value?.valueItemCellStyle?.()
-  const width = props.column.width ?? props.item.value.widthResolved
-
-  return Object.assign({}, valueItemCellStyle, { width })
-})
+// This component renders once per visible value cell, so shared state (formatter, locale, ui classes) comes
+// from the store instead of per-instance composables and computeds
+const {
+  rowClickable,
+  cellClickable,
+  emits,
+  formatNumber,
+  currentLocaleCode,
+  valueItemCellUiClass,
+  valueItemCellUiStyle,
+} = usePivotStore<T>()
 
 const formattedValue = computed(() => {
   if (!props.item.hasValue || !Number.isFinite(props.item.aggregated)) {
@@ -60,7 +44,7 @@ const formattedValue = computed(() => {
     })
   }
 
-  return formatNumber(props.item.aggregated)
+  return formatNumber(props.item.aggregated, { localeIso: currentLocaleCode.value })
 })
 
 const accessibleLabel = computed(() => {
@@ -98,12 +82,16 @@ function handleCellKeydown(ev: KeyboardEvent) {
 <template>
   <div
     class="pivot-value-item-cell"
-    :class="[valueItemCellClass, { 'is-clickable': isClickable }]"
-    :style="valueItemCellStyle"
+    :class="[valueItemCellUiClass, {
+      'is-total': item.kind === 'subtotal',
+      'is-grand-total': item.kind === 'grandTotal',
+      'is-clickable': cellClickable || rowClickable,
+    }]"
+    :style="[valueItemCellUiStyle, { width: column.width ?? item.value.widthResolved }]"
     :data-pivot-value-column="item.columnId"
-    :role="isClickable ? 'button' : undefined"
-    :tabindex="isClickable ? 0 : undefined"
-    :aria-label="isClickable ? accessibleLabel : undefined"
+    :role="cellClickable || rowClickable ? 'button' : undefined"
+    :tabindex="cellClickable || rowClickable ? 0 : undefined"
+    :aria-label="cellClickable || rowClickable ? accessibleLabel : undefined"
     @click="handleCellClick"
     @keydown.enter.space.prevent="handleCellKeydown"
   >

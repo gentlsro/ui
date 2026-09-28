@@ -2,63 +2,63 @@
 // Types
 import type { IPivotValueItem } from './types/pivot-value-item.type'
 import type { IPivotDataItem } from './types/pivot-data-item.type'
+import type { IPivotValueColumnItem } from './types/pivot-value-column-item.type'
 
 // Functions
-import {
-  resolvePivotDisplayedValueCells,
-  resolvePivotDisplayedValueItem,
-} from './functions/pivot-resolve-value-item'
+import { resolvePivotDisplayedValueCells } from './functions/pivot-resolve-value-item'
 
 // Store
 import { usePivotStore } from './stores/pivot.store'
 
-// Constants
-import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
-
 type IProps = {
   item: IPivotValueItem<T>
   row: IPivotDataItem<T>
+
+  /**
+   * The rendered slice of `visibleValueColumns` when the scroller virtualizes columns; the scroller then pads
+   * the row to the full width
+   */
+  columns?: IPivotValueColumnItem<T>[]
 }
 
 const props = defineProps<IProps>()
 
-const { state, visibleValueColumns, ui } = usePivotStore<T>()
+const {
+  valueLayout,
+  visibleValueColumns,
+  visibleValueColumnsWidthPx,
+  valueItemUiClass,
+  valueItemUiStyle,
+} = usePivotStore<T>()
 
-const displayedItem = computed(() => {
-  return resolvePivotDisplayedValueItem({
-    item: props.item,
-    collapsedGroupIds: state.value.collapsedGroupIds,
-  })
-})
+const renderedColumns = computed(() => props.columns ?? visibleValueColumns.value)
 
+// Cells are built for the rendered columns only, from the row's value arrays
 const displayedCells = computed(() => {
   return resolvePivotDisplayedValueCells({
-    item: props.item,
-    visibleValueColumns: visibleValueColumns.value,
-    collapsedGroupIds: state.value.collapsedGroupIds,
+    row: props.row,
+    columns: renderedColumns.value,
+    layout: valueLayout.value,
   })
 })
 
 const valueItemClass = computed(() => {
   return [
-    ui.value?.valueItemClass?.({
-      defaults: PIVOT_DEFAULT_PROPS.ui.valueItemClass(),
-    }),
+    valueItemUiClass.value,
     {
-      'is-subtotal': displayedItem.value.kind === 'subtotal',
-      'is-grand-total': displayedItem.value.kind === 'grandTotal',
-      'is-empty-row': displayedItem.value.kind === 'emptyRow',
+      'is-subtotal': props.item.kind === 'subtotal',
+      'is-grand-total': props.item.kind === 'grandTotal',
+      'is-empty-row': props.item.kind === 'emptyRow',
     },
   ]
 })
 
 const valueItemStyle = computed(() => {
-  const totalWidth = visibleValueColumns.value.reduce((sum, column) => {
-    return sum + (Number.parseFloat(column.width) || 0)
-  }, 0)
+  // Only the full row sets the full width; a virtualized slice sizes to its cells
+  const totalWidth = props.columns ? 0 : visibleValueColumnsWidthPx.value
 
   return {
-    ...ui.value?.valueItemStyle?.(),
+    ...valueItemUiStyle.value,
     minWidth: totalWidth ? `${totalWidth}px` : undefined,
     width: totalWidth ? `${totalWidth}px` : undefined,
   }
@@ -75,7 +75,7 @@ const valueItemStyle = computed(() => {
       v-for="(cell, index) in displayedCells"
       :key="cell.id"
       :item="cell"
-      :column="visibleValueColumns[index]!"
+      :column="renderedColumns[index]!"
       :row
     />
   </div>

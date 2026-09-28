@@ -46,6 +46,7 @@ export type IPivotTransformWorkerPayload<T extends IItem = IItem> = {
   values: IPivotTransformWorkerValue<T>[]
   filters?: IPivotTransformWorkerFilter<T>[]
   locale?: string
+  grandTotalLabel?: string
   valuesOnRows?: boolean
   transliterate?: boolean
 }
@@ -126,6 +127,7 @@ export function serializePivotTransformWorkerPayload<T extends IItem>(
     values: toRaw(payload.values).map(serializePivotValue),
     filters: serializePivotFilters(payload.items),
     locale: payload.locale,
+    grandTotalLabel: payload.grandTotalLabel,
     valuesOnRows: payload.valuesOnRows,
     transliterate: rC.public.transliterate,
   }

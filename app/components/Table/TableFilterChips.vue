@@ -13,20 +13,15 @@ const columnFilters = computed(() => {
 </script>
 
 <template>
-  <HorizontalScroller :ui="{ contentClass: ({ defaults }) => `${defaults.all} gap-1` }">
+  <HorizontalScroller
+    v-if="columnFilters.length"
+    class="table-filter-chips"
+    :ui="{ contentClass: ({ defaults }) => `${defaults.all} gap-1.5 items-center` }"
+  >
     <TableFilterChip
       v-for="filter in columnFilters"
       :key="filter.id"
       :filter
     />
-
-    <!-- No filters -->
-    <p
-      v-if="!columnFilters.length"
-      text="caption xs"
-      leading="37px"
-    >
-      {{ $t('table.noFilters') }}
-    </p>
   </HorizontalScroller>
 </template>

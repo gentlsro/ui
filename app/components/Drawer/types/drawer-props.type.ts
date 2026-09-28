@@ -3,6 +3,7 @@ import type { CSSProperties } from 'vue'
 // Types
 import type { BREAKPOINTS } from '../../../constants/breakpoints'
 import type { DRAWER_DEFAULT_PROPS } from '../constants/drawer-default-props.constant'
+import type { IResizableConfig } from './resizable-config.type'
 
 export type IDrawerProps = {
   /**
@@ -66,6 +67,11 @@ export type IDrawerProps = {
    * When true, the drawer opens/closes without the slide (or width) animation
    */
   noTransition?: boolean
+
+  /**
+   * Whether the drawer can be resized by dragging the handle on its inner edge
+   */
+  resizableConfig?: IResizableConfig
 
   /**
    * On which side the drawer should be

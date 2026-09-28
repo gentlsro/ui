@@ -46,6 +46,24 @@ export type ITreeDmsProps<T extends IItem = IItem> = {
     extendOptions?: (payload: {
       item?: T
     }) => Array<IBtnProps & { id: string }>
+
+    /**
+     * A function to adjust the final options of the context menu for given item
+     * (the built-in ones are `new-file`, `new-folder`, `rename` and `delete`)
+     */
+    getOptions?: (payload: {
+      item?: T
+      options: Array<IBtnProps & { id: string }>
+    }) => Array<IBtnProps & { id: string }>
+
+    /**
+     * A function to provide initial values (e.g. a prefilled label) for an item
+     * created from the context menu
+     */
+    newItem?: (payload: {
+      type: string
+      parent?: T
+    }) => Partial<T>
   }
 
   /**

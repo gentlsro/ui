@@ -281,6 +281,7 @@ defineExpose({
     :id="inputId"
     :class="wrapperClass"
     :has-content="!hasNoValue"
+    :ui="mergedProps.ui"
     .focus="focus"
     @click="handleClickWrapper"
   >

@@ -3,6 +3,7 @@ import type { IPivotDataItem } from '../types/pivot-data-item.type'
 import type { IPivotValueColumnItem } from '../types/pivot-value-column-item.type'
 import type { PivotItem } from '../models/pivot-item.model'
 import { buildPivotCurrentViewExport } from './pivot-build-current-view-export'
+import { createPivotValueLayout } from './pivot-resolve-value-item'
 
 type SourceRow = {
   center: string
@@ -30,6 +31,13 @@ const valueColumn = {
   width: '80px',
 } as IPivotValueColumnItem<SourceRow>
 
+// Row values are aligned with `valueColumn`; the collapsed `2026` column group has one aggregate
+const valueLayout = createPivotValueLayout<SourceRow>({
+  valueColumns: [valueColumn],
+  columnGroupKeys: ['2026:revenue-sum'],
+  valueFields: [],
+})
+
 function createVisibleRow(): IPivotDataItem<SourceRow> {
   const ref = { center: 'North', revenue: 10 }
 
@@ -55,41 +63,16 @@ function createVisibleRow(): IPivotDataItem<SourceRow> {
       id: 'north-values',
       kind: 'data',
       groupIds: ['north-group'],
-      cells: [{
-        id: 'north-revenue',
-        kind: 'data',
-        columnId: 'revenue',
-        columnPath: [],
-        measureId: 'revenue-sum',
-        valueField: 'revenue',
-        value: valueField,
-        aggregated: 10,
-        hasValue: true,
-      }],
-      collapsedGroupValueItems: {
-        'north-group': {
-          id: 'north-collapsed-values',
-          kind: 'subtotal',
-          groupIds: ['north-group'],
-          cells: [{
-            id: 'north-collapsed-revenue',
-            kind: 'subtotal',
-            columnId: 'revenue',
-            columnPath: [],
-            measureId: 'revenue-sum',
-            valueField: 'revenue',
-            value: valueField,
-            aggregated: 30,
-            hasValue: true,
-          }],
-        },
-      },
+      values: new Float64Array([10]),
+      hasValues: new Uint8Array([1]),
+      columnGroupValues: new Float64Array([45]),
+      columnGroupHasValues: new Uint8Array([1]),
     },
   }
 }
 
 describe('buildPivotCurrentViewExport', () => {
-  it('exports only supplied visible rows and uses collapsed aggregates', () => {
+  it('exports only supplied visible rows with their values', () => {
     const result = buildPivotCurrentViewExport({
       displayRowFields: [rowField],
       rows: [rowField],
@@ -102,8 +85,9 @@ describe('buildPivotCurrentViewExport', () => {
         rowspan: 1,
         level: 0,
       }]],
+      valueLayout,
       promotedRowLabelLevelsById: new Map(),
-      collapsedGroupIds: new Set(['north-group']),
+      collapsedGroupIds: new Set(),
       localeIso: 'en-US',
       formatCellValue: ({ value }) => value,
     })
@@ -112,7 +96,7 @@ describe('buildPivotCurrentViewExport', () => {
     expect(result.rows).toEqual([{
       kind: 'data',
       rowHeaders: ['North'],
-      values: [30],
+      values: [10],
     }])
   })
 
@@ -120,8 +104,8 @@ describe('buildPivotCurrentViewExport', () => {
     const row = createVisibleRow()
     row.rowItem.kind = 'emptyRow'
     row.rowItem.cells[0]!.kind = 'empty'
-    row.valueItem.cells[0]!.hasValue = false
-    row.valueItem.collapsedGroupValueItems = undefined
+    // Spacer rows carry no values
+    row.valueItem = { id: 'empty-values', kind: 'emptyRow', groupIds: [] }
 
     const result = buildPivotCurrentViewExport({
       displayRowFields: [rowField],
@@ -129,6 +113,7 @@ describe('buildPivotCurrentViewExport', () => {
       visibleData: [row],
       visibleValueColumns: [valueColumn],
       visibleValueHeaderRows: [],
+      valueLayout,
       promotedRowLabelLevelsById: new Map(),
       collapsedGroupIds: new Set(),
       localeIso: 'en-US',
@@ -144,20 +129,6 @@ describe('buildPivotCurrentViewExport', () => {
 
   it('exports the aggregate represented by a collapsed column group', () => {
     const row = createVisibleRow()
-    row.valueItem.collapsedGroupValueItems = undefined
-    row.valueItem.columnGroupCells = {
-      '2026:revenue-sum': {
-        id: '2026-revenue',
-        kind: 'data',
-        columnId: '2026',
-        columnPath: ['2026'],
-        measureId: 'revenue-sum',
-        valueField: 'revenue',
-        value: valueField,
-        aggregated: 45,
-        hasValue: true,
-      },
-    }
 
     const collapsedColumn = {
       ...valueColumn,
@@ -172,6 +143,7 @@ describe('buildPivotCurrentViewExport', () => {
       visibleData: [row],
       visibleValueColumns: [collapsedColumn],
       visibleValueHeaderRows: [],
+      valueLayout,
       promotedRowLabelLevelsById: new Map(),
       collapsedGroupIds: new Set(),
       localeIso: 'en-US',

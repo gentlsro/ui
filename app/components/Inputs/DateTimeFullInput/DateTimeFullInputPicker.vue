@@ -169,10 +169,12 @@ defineExpose({
         {{ $t('dataType.date') }}
       </div>
 
+      <!-- Keep the field focused so the caret can move onto the time -->
       <DatePicker
         ref="datePickerEl"
         v-bind="datePickerProps"
         no-controls
+        @mousedown.stop.prevent
         @update:model-value="emits('update:dateValue', $event)"
       >
         <!-- The actions replace the `Today` button of the date picker -->

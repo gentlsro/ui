@@ -77,7 +77,7 @@ function setFitColumns(mode: NonNullable<IUIState['table']>['fit'], unset?: bool
       {{ $t('table.autoJustifyColumnsExplain') }}
     </span>
 
-    <span class="hint">
+    <span class="hint m-t--4">
       {{ $t('table.autoJustifyColumnsExplain2') }}
     </span>
 
@@ -98,6 +98,6 @@ function setFitColumns(mode: NonNullable<IUIState['table']>['fit'], unset?: bool
 
 <style scoped lang="scss">
 .hint {
-  @apply text-caption font-rem-12 rounded-custom p-2 bg-slate-50 dark:bg-dark-900;
+  @apply text-caption font-rem-12 rounded-custom p-2;
 }
 </style>

@@ -1,0 +1,8 @@
+// Quiet remove (x) button: muted until hovered, then negative
+@mixin subtle-remove-btn {
+  @apply rounded-md color-true-gray-400;
+
+  &:hover {
+    @apply color-negative bg-negative/10;
+  }
+}

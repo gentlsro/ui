@@ -14,6 +14,10 @@ const props = defineProps<IProps>()
 
 const { isLoading } = usePivotStore()
 
+const isMounted = ref(false)
+
+onMounted(() => isMounted.value = true)
+
 const loadingStyle = computed(() => {
   return props.ui?.loadingStyle?.()
 })
@@ -27,7 +31,7 @@ const loadingClass = computed(() => {
 
 <template>
   <div
-    v-if="initial || isLoading"
+    v-if="initial || (isMounted && isLoading)"
     class="pivot-loading"
     :class="[loadingClass, { 'is-initial': initial }]"
     role="status"

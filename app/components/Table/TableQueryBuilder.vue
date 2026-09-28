@@ -60,21 +60,20 @@ function handleRemoveColumnFilter(columnFilter: IQueryBuilderItem) {
 // Constants
 const MIN_VISIBLE_QUERY_BUILDER_ROWS = 1
 const MAX_VISIBLE_QUERY_BUILDER_ROWS = 2
+const QUERY_BUILDER_INLINE_ROW_HEIGHT = 28
 const QUERY_BUILDER_INLINE_PADDING = 8
-const QUERY_BUILDER_INLINE_GAP = 2
+const QUERY_BUILDER_INLINE_GAP = 4
+
+function getQueryBuilderHeight(rows: number) {
+  return rows * QUERY_BUILDER_INLINE_ROW_HEIGHT
+    + (rows - 1) * QUERY_BUILDER_INLINE_GAP
+    + QUERY_BUILDER_INLINE_PADDING
+}
 
 const queryBuilderHeight = computed(() => {
   return {
-    minHeight: `${
-      MIN_VISIBLE_QUERY_BUILDER_ROWS * 26
-      + QUERY_BUILDER_INLINE_PADDING
-      + QUERY_BUILDER_INLINE_GAP
-    }px`,
-    maxHeight: `${
-      MAX_VISIBLE_QUERY_BUILDER_ROWS * 26
-      + QUERY_BUILDER_INLINE_PADDING
-      + QUERY_BUILDER_INLINE_GAP
-    }px`,
+    minHeight: `${getQueryBuilderHeight(MIN_VISIBLE_QUERY_BUILDER_ROWS)}px`,
+    maxHeight: `${getQueryBuilderHeight(MAX_VISIBLE_QUERY_BUILDER_ROWS)}px`,
   }
 })
 </script>

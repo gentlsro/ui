@@ -168,7 +168,7 @@ export const BTN_DEFAULT_PROPS = {
     },
 
     focusHelperClass() {
-      const base = 'absolute fit z-3 cursor-pointer rounded-inherit inset-0 pointer-events-none'
+      const base = 'absolute z-3 cursor-pointer rounded-inherit inset-0 pointer-events-none'
       const hover = 'group-hover/btn:bg-current group-hover/btn:opacity-10'
 
       return {
@@ -197,11 +197,11 @@ export const BTN_DEFAULT_PROPS = {
       // Size variants
       let size = ''
 
-      const xs = 'h-3.5'
-      const xm = 'h-4'
-      const sm = 'h-4.5'
-      const md = 'h-5.5'
-      const lg = 'h-6.5'
+      const xs = 'h-3.5 w-3.5'
+      const xm = 'h-4 w-4'
+      const sm = 'h-4.5 w-4.5'
+      const md = 'h-5.5 w-5.5'
+      const lg = 'h-6.5 w-6.5'
       const auto = ''
 
       const sizes = {
