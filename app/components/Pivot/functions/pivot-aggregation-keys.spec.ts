@@ -1,6 +1,12 @@
 import type * as PivotTransformModule from './pivot-transform-data-core'
-import { beforeAll, describe, expect, it, vi } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import { getPivotColumnGroupCells, getPivotValueCells } from './pivot-spec-cells'
+
+// A Nuxt test environment compiles the auto-imported `getDateSimpleValue` into a
+// real import, which the global stub below cannot replace. Its local day start
+// matches the stubbed UTC day only in UTC, so pin the timezone.
+const ORIGINAL_TZ = process.env.TZ
+process.env.TZ = 'UTC'
 
 const summary = {
   SUM: 'SUM' as SummaryEnum,
@@ -23,6 +29,10 @@ beforeAll(async () => {
       : Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
   })
   transformModule = await import('./pivot-transform-data-core')
+})
+
+afterAll(() => {
+  process.env.TZ = ORIGINAL_TZ
 })
 
 function rowField(field: string, dataType = 'string') {
