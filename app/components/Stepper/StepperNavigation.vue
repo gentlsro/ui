@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { IStepperSlotProps, IStepperStep } from './composables/useStepperUtils'
 
@@ -7,6 +7,9 @@ import { stepperContextKey } from './composables/useStepperUtils'
 
 // Constants
 import { STEPPER_DEFAULT_PROPS } from './constants/stepper-default-props.constant'
+
+// Components
+import IconRenderer from '../Icon/IconRenderer.vue'
 
 const slots = defineSlots<{
   indicator?: (props: IStepperSlotProps) => any
@@ -48,7 +51,7 @@ function getIndicatorIcon(step: IStepperStep) {
   return step.props.icon
 }
 
-// Iconify names (`lucide:user`) render through `Icon`, UnoCSS icon classes (`i-lucide:user`) as a class ~ like `Btn`
+// Iconify names (`lucide:user`) and UnoCSS icon classes (`i-lucide:user`) render natively ~ like `Btn`
 function getResolvedIndicatorIcon(step: IStepperStep) {
   return resolveIconValue(getIndicatorIcon(step))
 }
@@ -192,7 +195,7 @@ const descriptionStyle = computed(() => {
             name="indicator"
             v-bind="getSlotProps(step)"
           >
-            <Icon
+            <IconRenderer
               v-if="getResolvedIndicatorIcon(step).name"
               :name="getResolvedIndicatorIcon(step).name!"
               :class="[getResolvedIndicatorIcon(step).classes, iconClass]"

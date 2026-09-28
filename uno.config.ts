@@ -152,5 +152,8 @@ export default defineConfig({
     'color-contrast',
     'i-emojione:flag-for-united-kingdom',
     'i-emojione:flag-for-czechia',
+    // Stepper default icons (canonical names in `app/config.ts`)
+    'i-lucide:check',
+    'i-lucide:x',
   ],
 })

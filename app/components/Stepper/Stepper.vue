@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 // Types
 import type { IStepperProps } from './types/stepper-props.type'
 import type { IStepperSlotProps } from './composables/useStepperUtils'

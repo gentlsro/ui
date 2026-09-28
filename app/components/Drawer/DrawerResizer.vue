@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" vapor>
 type IProps = {
   /**
    * The side the drawer sits on ~ the resizer hugs the opposite (inner) edge
