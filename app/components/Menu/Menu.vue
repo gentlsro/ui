@@ -54,7 +54,7 @@ const {
 // Utils
 const { color } = useTheme()
 const menuHeader = useTemplateRef<{ element: HTMLElement | null }>('menuHeader')
-useElementMovement({
+const { startMove } = useElementMovement({
   moveHandle: () => menuHeader.value?.element,
   canMove: () => !!isVirtual.value && !!virtualConfig.value?.movable,
   // @ts-expect-error Fuck this
@@ -252,6 +252,8 @@ const contentStyle = computed(() => {
         <slot
           v-if="$slots.title || $slots.header || title"
           name="header"
+          :mousedown="startMove"
+          :pointerdown="startMove"
           :hide
         >
           <MenuHeader

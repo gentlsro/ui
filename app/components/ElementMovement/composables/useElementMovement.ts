@@ -2,6 +2,13 @@ import { Draggable, PointerSensor } from 'dragdoll'
 
 // @vapor-ready — callers pass native DOM refs; active gestures are scoped to their owner.
 
+// Slot consumers can start the same sensor lifecycle from a mouse/pointer handler.
+class MovementPointerSensor extends PointerSensor {
+  start(event: MouseEvent | PointerEvent) {
+    this._onStart(event)
+  }
+}
+
 type Corner = 'nw' | 'n' | 'ne' | 'w' | 'e' | 'sw' | 's' | 'se'
 
 type MoveStart = {
@@ -52,97 +59,124 @@ export function useElementMovement(payload: {
   const moveStart = ref<MoveStart>({ x: 0, y: 0, originalX: 0, originalY: 0 })
   const resizeStart = ref<ResizeStart | null>(null)
 
-  // The handle can mount later (for example when a Menu opens).
-  watch(
-    () => [toValue(payload.moveHandle), toValue(payload.resizeHandles)] as const,
-    ([moveHandle, resizeHandles], _, onCleanup) => {
-      const registrations: (() => void)[] = []
-      for (const [element, resizing] of [[moveHandle, false], [resizeHandles, true]] as const) {
-        if (!element) {
-          continue
+  function registerHandle(element: HTMLElement, resizing: boolean, sourceEvents: 'pointer' | 'mouse' = 'pointer') {
+    let corner: Corner | undefined
+    let previousUserSelect = ''
+    const sensor = new MovementPointerSensor(element, {
+      sourceEvents,
+      listenerOptions: { passive: false },
+      cancelOnEscape: true,
+      startPredicate: event => {
+        if (!(event instanceof MouseEvent) || event.button !== 0 || isMoving.value || isResizing.value) {
+          return false
         }
-        let corner: Corner | undefined
-        let previousUserSelect = ''
-        const sensor = new PointerSensor(element, {
-          sourceEvents: 'pointer',
-          cancelOnEscape: true,
-          startPredicate: event => {
-            if (!(event instanceof PointerEvent) || event.button !== 0) {
-              return false
-            }
-            if (resizing) {
-              corner = event.target instanceof Element
-                ? event.target.closest<HTMLElement>('[data-resize-corner]')?.dataset.resizeCorner as Corner | undefined
-                : undefined
-              if (!corner) {
-                return false
-              }
-            } else if (payload.canMove && !payload.canMove()) {
-              return false
-            }
-            event.preventDefault()
+        if (resizing) {
+          corner = event.target instanceof Element
+            ? event.target.closest<HTMLElement>('[data-resize-corner]')?.dataset.resizeCorner as Corner | undefined
+            : undefined
+          if (!corner) {
+            return false
+          }
+        } else if (payload.canMove && !payload.canMove()) {
+          return false
+        }
+        event.preventDefault()
 
-            return true
-          },
-        })
-        const draggable = new Draggable([sensor], {
-          // Vue owns the geometry; Dragdoll provides pointer lifecycle and RAF sampling.
-          elements: () => [],
-          startPredicate: () => true,
-          onStart: drag => {
-            previousUserSelect = document.body.style.userSelect
-            document.body.style.userSelect = 'none'
-            const pos = drag.startEvent
-            if (resizing && corner) {
-              const rect = toValue(referenceEl)?.getBoundingClientRect()
-              resizeStart.value = {
-                corner,
-                startMouse: { x: pos.x, y: pos.y },
-                original: {
-                  x: rect?.x ?? dimensions.value.x ?? 0,
-                  y: rect?.y ?? dimensions.value.y ?? 0,
-                  w: rect?.width ?? dimensions.value.w ?? 0,
-                  h: rect?.height ?? dimensions.value.h ?? 0,
-                },
-              }
-              isResizing.value = true
-              activeCorner.value = corner
-            } else {
-              moveStart.value = {
-                x: pos.x,
-                y: pos.y,
-                originalX: dimensions.value.x ?? 0,
-                originalY: dimensions.value.y ?? 0,
-              }
-              isMoving.value = true
-            }
-          },
-          onMove: drag => resizing ? updateResize(drag.moveEvent) : updateMove(drag.moveEvent),
-          onEnd: drag => {
-            // The release can arrive before Dragdoll's next sampled frame.
-            if (drag.endEvent?.type === 'end') {
-              if (resizing) {
-                updateResize(drag.endEvent)
-              } else {
-                updateMove(drag.endEvent)
-              }
-            }
-            document.body.style.userSelect = previousUserSelect
-            isMoving.value = false
-            isResizing.value = false
-            activeCorner.value = null
-          },
-        })
-        registrations.push(() => {
-          sensor.cancel()
-          draggable.destroy()
-          sensor.destroy()
-        })
-      }
-      onCleanup(() => registrations.forEach(dispose => dispose()))
+        return true
+      },
+    })
+    const draggable = new Draggable([sensor], {
+      // Vue owns the geometry; Dragdoll provides pointer lifecycle and RAF sampling.
+      elements: () => [],
+      startPredicate: () => true,
+      onStart: drag => {
+        previousUserSelect = document.body.style.userSelect
+        document.body.style.userSelect = 'none'
+        const pos = drag.startEvent
+        if (resizing && corner) {
+          const rect = toValue(referenceEl)?.getBoundingClientRect()
+          resizeStart.value = {
+            corner,
+            startMouse: { x: pos.x, y: pos.y },
+            original: {
+              x: rect?.x ?? dimensions.value.x ?? 0,
+              y: rect?.y ?? dimensions.value.y ?? 0,
+              w: rect?.width ?? dimensions.value.w ?? 0,
+              h: rect?.height ?? dimensions.value.h ?? 0,
+            },
+          }
+          isResizing.value = true
+          activeCorner.value = corner
+        } else {
+          moveStart.value = {
+            x: pos.x,
+            y: pos.y,
+            originalX: dimensions.value.x ?? 0,
+            originalY: dimensions.value.y ?? 0,
+          }
+          isMoving.value = true
+        }
+      },
+      onMove: drag => resizing ? updateResize(drag.moveEvent) : updateMove(drag.moveEvent),
+      onEnd: drag => {
+        // The release can arrive before Dragdoll's next sampled frame.
+        if (drag.endEvent?.type === 'end') {
+          if (resizing) {
+            updateResize(drag.endEvent)
+          } else {
+            updateMove(drag.endEvent)
+          }
+        }
+        document.body.style.userSelect = previousUserSelect
+        isMoving.value = false
+        isResizing.value = false
+        activeCorner.value = null
+      },
+    })
+
+    return {
+      sensor,
+      dispose() {
+        sensor.cancel()
+        draggable.destroy()
+        sensor.destroy()
+      },
+    }
+  }
+
+  let slotMove: ReturnType<typeof registerHandle> | undefined
+  function disposeSlotMove() {
+    slotMove?.dispose()
+    slotMove = undefined
+  }
+
+  function startMove(event: MouseEvent | PointerEvent) {
+    if (!(event.currentTarget instanceof HTMLElement) || event.button !== 0
+      || isMoving.value || isResizing.value || (payload.canMove && !payload.canMove())) {
+      return
+    }
+
+    disposeSlotMove()
+    slotMove = registerHandle(event.currentTarget, false, event instanceof PointerEvent ? 'pointer' : 'mouse')
+    slotMove.sensor.start(event)
+  }
+
+  // Handles and their owner can mount later (for example when a Menu opens).
+  watch(
+    () => [toValue(payload.moveHandle), toValue(payload.resizeHandles), toValue(referenceEl)] as const,
+    ([moveHandle, resizeHandles], _, onCleanup) => {
+      const registrations = [
+        moveHandle ? registerHandle(moveHandle, false) : undefined,
+        resizeHandles ? registerHandle(resizeHandles, true) : undefined,
+      ]
+      onCleanup(() => {
+        registrations.forEach(registration => registration?.dispose())
+        disposeSlotMove()
+      })
     },
     { immediate: true, flush: 'post' },
   )
+  onScopeDispose(disposeSlotMove)
 
   function updateMove(pos: { x: number, y: number }) {
     if (!isMoving.value) {
@@ -293,5 +327,5 @@ export function useElementMovement(payload: {
     dimensions.value.y = newY
   }
 
-  return { isMoving, isResizing, activeCorner }
+  return { isMoving, isResizing, activeCorner, startMove }
 }

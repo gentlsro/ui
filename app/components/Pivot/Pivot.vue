@@ -48,10 +48,10 @@ emits.value = {
 }
 
 // Syncing merged props with store
-syncRef(toRef(mergedProps.value, 'ui'), ui, { direction: 'ltr' })
-syncRef(toRef(mergedProps.value, 'loadData'), loadData, { direction: 'ltr' })
-syncRef(toRef(mergedProps.value, 'collapseConfig'), collapseConfig, { direction: 'ltr' })
-syncRef(toRef(mergedProps.value, 'performance'), performance, { direction: 'ltr' })
+syncRefs(toRef(() => mergedProps.value.ui), ui)
+syncRefs(toRef(() => mergedProps.value.loadData), loadData)
+syncRefs(toRef(() => mergedProps.value.collapseConfig), collapseConfig)
+syncRefs(toRef(() => mergedProps.value.performance), performance)
 
 defineExpose(pivotGetExposed())
 
