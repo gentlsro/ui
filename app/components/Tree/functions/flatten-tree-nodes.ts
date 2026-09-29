@@ -5,36 +5,68 @@ import type { ITreeNodeMeta } from '../types/tree-node-meta.type'
 
 const { sortData } = useSorting()
 
-async function traverseNodes<T extends IItem = IItem>(payload: {
-  flattenedNodes?: ITreeNode<T>[]
+// Number of children a node had when it was created, so a reused node never hides a change of its children
+const childCountByNode = new WeakMap<ITreeNode, number>()
+
+/**
+ * Sorts every children array of the tree up front (sorting is async), so the traversal itself can stay synchronous
+ */
+async function getSortedNodes<T extends IItem = IItem>(payload: {
+  nodes: T[]
+  childrenKey: string
+  sortingConfig: NonNullable<ITreeProps<T>['sortingConfig']>
+  sortedByNodes?: Map<T[], T[]>
+}) {
+  const { nodes, childrenKey, sortingConfig, sortedByNodes = new Map<T[], T[]>() } = payload
+  const nodesSorted = await sortData(nodes, sortingConfig.sortBy ?? []) as T[]
+
+  sortedByNodes.set(nodes, nodesSorted)
+
+  for (const node of nodesSorted) {
+    const children = get(node, childrenKey) as T[] | undefined
+
+    if (children?.length) {
+      await getSortedNodes({ nodes: children, childrenKey, sortingConfig, sortedByNodes })
+    }
+  }
+
+  return sortedByNodes
+}
+
+function traverseNodes<T extends IItem = IItem>(payload: {
+  flattenedNodes: ITreeNode<T>[]
   nodes: T[]
   childrenKey: string
   idKey: string
   labelKey?: string
-  level?: number
+  level: number
   path?: string
   nodeMetaById: Ref<Record<ITreeNode['id'], ITreeNodeMeta>>
   collapseConfig?: ITreeProps<T>['collapseConfig']
-  sortingConfig?: ITreeProps<T>['sortingConfig']
-}): Promise<ITreeNode<T>[]> {
+  sortedByNodes?: Map<T[], T[]>
+  previousNodeById?: Map<ITreeNode['id'], ITreeNode<T>>
+}) {
   const {
-    flattenedNodes = [],
+    flattenedNodes,
     nodes,
     childrenKey,
     idKey,
     labelKey,
-    level = 0,
+    level,
     path,
     nodeMetaById,
     collapseConfig,
-    sortingConfig,
+    sortedByNodes,
+    previousNodeById,
   } = payload
 
-  const nodesSorted = sortingConfig?.enabled
-    ? await sortData(nodes, sortingConfig.sortBy ?? [])
-    : nodes
+  const nodesSorted = sortedByNodes?.get(nodes) ?? nodes
+  const metaById = nodeMetaById.value
+  const metaByIdRaw = toRaw(metaById)
+  const hasChildrenFnc = collapseConfig?.hasChildrenFnc
+  const isExpanded = level < (collapseConfig?.expandedLevelOnInit ?? 0)
 
-  for await (const node of nodesSorted) {
+  for (const node of nodesSorted) {
     // Get node id using idKey
     const nodeId = get(node, idKey) as string | number
 
@@ -44,9 +76,6 @@ async function traverseNodes<T extends IItem = IItem>(payload: {
 
     // Get children
     const children = get(node, childrenKey) as T[] | undefined
-
-    // Determine if node has children using collapseConfig.hasChildrenFnc if available
-    const hasChildrenFnc = collapseConfig?.hasChildrenFnc
     let hasChildren: boolean
     let isChildrenLoaded: boolean
 
@@ -75,24 +104,54 @@ async function traverseNodes<T extends IItem = IItem>(payload: {
 
     // Get label if labelKey is provided
     const label = labelKey ? get(node, labelKey) as string | number | undefined : nodeId
+    const childCount = children?.length ?? 0
 
-    // Create ITreeNode from IItem
-    const treeNode: ITreeNode<T> = {
-      id: nodeId,
-      label,
-      ref: node,
+    // Reuse the previous node when nothing it exposes changed, so rows bound to it don't re-render
+    const previousNode = previousNodeById?.get(nodeId)
+    const canReuse = previousNode
+      && previousNode.ref === node
+      && previousNode.label === label
+      && childCountByNode.get(previousNode) === childCount
+
+    const treeNode: ITreeNode<T> = canReuse ? previousNode : { id: nodeId, label, ref: node }
+
+    if (!canReuse) {
+      childCountByNode.set(treeNode, childCount)
     }
 
-    // Upsert nodeMetaById
-    const isExpanded = level < (collapseConfig?.expandedLevelOnInit ?? 0)
+    // Upsert nodeMetaById, writing only what changed (every write re-renders the rows that read the meta)
+    const existingMeta = metaByIdRaw[nodeId]
 
-    const existingMeta = nodeMetaById.value[nodeId]
-    nodeMetaById.value[nodeId] = {
-      level,
-      path: nodePath,
-      isChildrenLoaded: existingMeta?.isChildrenLoaded ?? isChildrenLoaded,
-      isCollapsed: existingMeta?.isCollapsed ?? !isExpanded,
-      isLoading: existingMeta?.isLoading ?? false,
+    if (!existingMeta) {
+      metaById[nodeId] = {
+        level,
+        path: nodePath,
+        isChildrenLoaded,
+        isCollapsed: !isExpanded,
+        isLoading: false,
+      }
+    } else {
+      const meta = metaById[nodeId]!
+
+      if (existingMeta.level !== level) {
+        meta.level = level
+      }
+
+      if (existingMeta.path !== nodePath) {
+        meta.path = nodePath
+      }
+
+      if (existingMeta.isChildrenLoaded === undefined) {
+        meta.isChildrenLoaded = isChildrenLoaded
+      }
+
+      if (existingMeta.isCollapsed === undefined) {
+        meta.isCollapsed = !isExpanded
+      }
+
+      if (existingMeta.isLoading === undefined) {
+        meta.isLoading = false
+      }
     }
 
     // Add node to flattened array
@@ -100,7 +159,7 @@ async function traverseNodes<T extends IItem = IItem>(payload: {
 
     // Recursively process children if they exist
     if (children && children.length > 0) {
-      await traverseNodes({
+      traverseNodes({
         flattenedNodes,
         nodes: children,
         childrenKey,
@@ -110,7 +169,8 @@ async function traverseNodes<T extends IItem = IItem>(payload: {
         path: nodePath,
         nodeMetaById,
         collapseConfig,
-        sortingConfig,
+        sortedByNodes,
+        previousNodeById,
       })
     }
   }
@@ -131,10 +191,16 @@ export async function flattenTreeNodes<T extends IItem = IItem>(payload: {
   // Configs
   collapseConfig?: ITreeProps<T>['collapseConfig']
   sortingConfig?: ITreeProps<T>['sortingConfig']
-}): Promise<ITreeNode<T>[]> {
-  const { nodeMetaById, parent } = payload
 
-  const args: Partial<{ level: number, path: string }> = {}
+  /**
+   * The nodes of the previous flattening: a node whose item, label and number of children are unchanged is returned
+   * as the same object
+   */
+  previousNodeById?: Map<ITreeNode['id'], ITreeNode<T>>
+}): Promise<ITreeNode<T>[]> {
+  const { nodeMetaById, parent, nodes, childrenKey, sortingConfig } = payload
+
+  const args: { level: number, path?: string } = { level: 0 }
   if (parent) {
     const { level = 0, path } = nodeMetaById.value[parent.id] ?? {}
 
@@ -142,12 +208,14 @@ export async function flattenTreeNodes<T extends IItem = IItem>(payload: {
     args.path = path
   }
 
-  const _nodes: ITreeNode<T>[] = []
-  const flattenedNodes = await traverseNodes({
+  const sortedByNodes = sortingConfig?.enabled
+    ? await getSortedNodes({ nodes, childrenKey, sortingConfig })
+    : undefined
+
+  return traverseNodes({
     ...payload,
     ...args,
-    flattenedNodes: _nodes,
+    sortedByNodes,
+    flattenedNodes: [],
   })
-
-  return flattenedNodes
 }

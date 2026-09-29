@@ -25,7 +25,6 @@ export async function searchNodes<T extends IItem = IItem>(payload: {
     parentIdByNodeId,
     childrenIdsByNodeId,
     searchConfig,
-    collapseConfig: _collapseConfig = { showCollapsedWhenSearched: true },
     searchData,
   } = payload
 
@@ -102,6 +101,11 @@ export async function searchNodes<T extends IItem = IItem>(payload: {
     for (const ancestorId of ancestorIds) {
       visibleNodeIds.add(ancestorId)
     }
+  }
+
+  // Nothing filtered out: keep the same array, so nothing downstream recomputes
+  if (visibleNodeIds.size >= nodesFlattened.length) {
+    return nodesFlattened
   }
 
   nodesFiltered = nodesFlattened.filter(node => visibleNodeIds.has(node.id))

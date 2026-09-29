@@ -14,6 +14,7 @@ export function useTreeNode<T extends IItem = IItem>(payload: ITreeNodeProps<T>)
   const {
     idKey,
     isSearched,
+    isSearchExpanded,
     searchConfig,
     nodeMetaById,
     selection,
@@ -55,8 +56,9 @@ export function useTreeNode<T extends IItem = IItem>(payload: ITreeNodeProps<T>)
     return nodeHovered.value?.id === node.id
   })
 
+  // While a search shows the matches under collapsed parents, the parents render open
   const isCollapsed = computed(() => {
-    return nodeMeta.value?.isCollapsed
+    return !!nodeMeta.value?.isCollapsed && !isSearchExpanded.value
   })
 
   const nodePath = computed(() => {
@@ -95,14 +97,14 @@ export function useTreeNode<T extends IItem = IItem>(payload: ITreeNodeProps<T>)
       {
         'is-root': level === 0,
         'is-padded': level !== 0 && !isCollapsible,
-        'is-collapsed': nodeMeta.value?.isCollapsed,
+        'is-collapsed': isCollapsed.value,
         'is-searched': isSearched.value,
         'is-selected': isSelected.value,
         'is-multi': selectionConfig.value?.multi,
         'is-selectable': selectionConfig.value?.enabled && !selectionConfig.value?.multi,
         'is-focused': isFocused.value,
         'is-hovered': isHovered.value,
-        'is-open': !nodeMeta.value?.isCollapsed,
+        'is-open': !isCollapsed.value,
         'is-collapsible': isCollapsible,
         'uses-checkbox': hasMultiSelect.value,
       },

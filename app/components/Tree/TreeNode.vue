@@ -93,6 +93,9 @@ const nodeContentStyle = computed(() => {
 })
 
 // D'n'D
+let draggable: ReturnType<typeof createDraggable> | undefined
+let isUnmounted = false
+
 onMounted(() => {
   if (!isDndEnabled.value) {
     return
@@ -101,9 +104,14 @@ onMounted(() => {
   nextTick(() => {
     const _el = unrefElement(treeNodeEl as any) as HTMLElement
 
-    createDraggable({
+    if (isUnmounted || !_el) {
+      return
+    }
+
+    draggable = createDraggable({
       el: _el,
       item: node.value,
+      getItem: () => node.value,
 
       // When dragging happened (`onEnd` is called), we want to prevent the click
       onEnd: () => {
@@ -111,6 +119,21 @@ onMounted(() => {
       },
     })
   })
+})
+
+onBeforeUnmount(() => {
+  isUnmounted = true
+
+  // A row scrolled out of the virtual scroller while it is dragged finishes its drag first
+  const _draggable = draggable
+
+  if (_draggable?.drag) {
+    _draggable.on('end', () => setTimeout(() => _draggable.destroy()))
+  } else {
+    _draggable?.destroy()
+  }
+
+  draggable = undefined
 })
 </script>
 

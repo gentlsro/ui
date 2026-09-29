@@ -15,6 +15,13 @@ import { flattenTreeNodes } from '../functions/flatten-tree-nodes'
 import { TREE_INJECTION_KEY } from '../constants/tree-injection-key.constant'
 import { toggleNodeCollapse } from '../functions/toggle-node-collapse'
 
+function isSameNodes(a: ITreeNode[], b: ITreeNode[]) {
+  const aRaw = toRaw(a)
+  const bRaw = toRaw(b)
+
+  return aRaw === bRaw || (aRaw.length === bRaw.length && aRaw.every((node, idx) => toRaw(node) === toRaw(bRaw[idx])))
+}
+
 type IConfig<T extends IItem = IItem> = {
   treeProps?: ITreeProps<T>
   injectionKey?: string
@@ -149,18 +156,15 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     })
 
     // Nodes search & visible
-    const nodesVisible = ref<ITreeNode<T>[]>([])
-    const nodesSearched = ref<ITreeNode<T>[]>([])
-
-    const collapsedIds = computed(() => {
-      return nodesSearched.value
-        .filter(node => nodeMetaById.value[node.id]?.isCollapsed)
-        .map(node => node.id)
-        .join(',')
-    })
+    const nodesVisible = ref<ITreeNode<T>[]>([]) as Ref<ITreeNode<T>[]>
+    const nodesSearched = ref<ITreeNode<T>[]>([]) as Ref<ITreeNode<T>[]>
+    const isSearchFiltered = shallowRef(false)
 
     const { trigger: flattenTrigger } = watchTriggerable(model, async nodes => {
-      nodesFlattened.value = await flattenTreeNodes<T>({
+      const previousNodes = nodesFlattened.value
+      const previousNodeById = new Map(previousNodes.map(node => [node.id, node]))
+
+      const nodesFlattenedNew = await flattenTreeNodes<T>({
         nodes,
         nodeMetaById,
         idKey: idKey.value,
@@ -168,7 +172,19 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
         labelKey: labelKey.value,
         collapseConfig: collapseConfig.value,
         sortingConfig: sortingConfig.value,
+        previousNodeById,
       })
+
+      // The same nodes in the same order: the hierarchy did not change, only the items may have
+      if (isSameNodes(nodesFlattenedNew, previousNodes)) {
+        if (search.value || searchConfig.value?.fnc) {
+          await searchTrigger()
+        }
+
+        return
+      }
+
+      nodesFlattened.value = nodesFlattenedNew
 
       const idByString = nodesFlattened.value.reduce((agg, node) => {
         agg[String(node.id)] = node.id
@@ -188,8 +204,10 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
         return agg
       }, {} as Record<ITreeNode['id'], ITreeNode['id'][]>)
 
+      const metaById = toRaw(nodeMetaById.value)
+
       ancestorIdsByNodeId.value = nodesFlattened.value.reduce((agg, node) => {
-        const { path } = nodeMetaById.value[node.id] ?? {}
+        const { path } = metaById[node.id] ?? {}
 
         if (!path) {
           agg[node.id] = []
@@ -240,30 +258,47 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
           })
         }
 
-        nodesSearched.value = searchedNodes
+        // Set together with the result, so the search's start does not render every node before the matches
+        isSearchFiltered.value = !!search || searchedNodes !== nodesFlattened
+
+        if (searchedNodes === nodesFlattened || !isSameNodes(searchedNodes, nodesSearched.value)) {
+          nodesSearched.value = searchedNodes
+        }
       },
     )
 
-    watch([nodesSearched, collapsedIds], ([nodes]) => {
-      // Only get non-collapsed nodes
-      nodesVisible.value = nodes
-        .filter(node => {
-          const { path } = nodeMetaById.value[node.id] ?? {}
-          const usesFlatSearchView = isSearched.value && !searchConfig.value?.keepParents
+    /**
+     * A search (or a custom search function) narrowed the nodes down: with `showCollapsedWhenSearched`, the matches
+     * are shown even when their parents are collapsed (the collapsed state itself is kept for when the search ends)
+     */
+    const isSearchExpanded = computed(() => {
+      return isSearchFiltered.value && collapseConfig.value?.showCollapsedWhenSearched !== false
+    })
 
-          if (!path || usesFlatSearchView) {
-            return true
-          }
+    watch(
+      () => {
+        const nodes = nodesSearched.value
+        const usesFlatSearchView = isSearched.value && !searchConfig.value?.keepParents
 
-          const parentsMeta = path.split('.')
-            .filter(path => path !== childrenKey.value)
-            .map(id => nodeMetaById.value[id])
-            .slice(0, -1)
-            .filter(Boolean)
+        if (usesFlatSearchView || isSearchExpanded.value) {
+          return nodes
+        }
 
-          return parentsMeta.every(parentMeta => !parentMeta?.isCollapsed)
+        // Only get non-collapsed nodes
+        const metaById = nodeMetaById.value
+        const ancestorIds = ancestorIdsByNodeId.value
+
+        return nodes.filter(node => {
+          return !ancestorIds[node.id]?.some(ancestorId => metaById[ancestorId]?.isCollapsed)
         })
-    }, { immediate: true })
+      },
+      nodes => {
+        if (!isSameNodes(nodes, nodesVisible.value)) {
+          nodesVisible.value = nodes
+        }
+      },
+      { immediate: true },
+    )
 
     // Sync the flattened nodes back to the source nodes
     // (we must keep the hierarchy)
@@ -373,6 +408,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       // Search
       search,
       isSearched,
+      isSearchExpanded,
       searchTrigger,
 
       // Selection
