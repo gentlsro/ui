@@ -302,9 +302,14 @@ export function useTreeDragAndDrop() {
   function createDraggable<T extends IItem = IItem>(payload: {
     el: HTMLElement
     item: ITreeNode<T>
+
+    /**
+     * The current node, when the element outlives the `item` it was created with (a reused row)
+     */
+    getItem?: () => ITreeNode<T>
     onEnd?: () => void
   }) {
-    const { el, item, onEnd } = payload
+    const { el, item, getItem, onEnd } = payload
     const treeElDom = unrefElement(treeEl) as HTMLElement
 
     const pointerSensor = new PointerSensor(el)
@@ -317,7 +322,7 @@ export function useTreeDragAndDrop() {
         treeElDom.classList.add('hide-scrollbar')
 
         store.activeDraggable.value = draggable
-        handleDragStart({ item, el })
+        handleDragStart({ item: getItem?.() ?? item, el })
       },
       onMove: drag => handleDragMove(drag.moveEvent as PointerSensorMoveEvent, drag.moveEvent.y - lastY),
       onEnd: drag => {
@@ -352,6 +357,9 @@ export function useTreeDragAndDrop() {
         },
       ],
     }))
+
+    // The sensor is not destroyed with the draggable
+    draggable.on('destroy', () => pointerSensor.destroy())
 
     return draggable
   }
