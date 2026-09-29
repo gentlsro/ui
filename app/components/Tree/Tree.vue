@@ -140,7 +140,7 @@ const contentStyle = computed(() => {
       v-if="!loading"
       ref="scrollerEl"
       class="tree__content"
-      :rows="(nodesVisible as T[])"
+      :rows="(nodesVisible as unknown as T[])"
       :class="contentClass"
       :style="contentStyle"
       v-bind="mergedProps.scrollerConfig"
