@@ -142,6 +142,7 @@ export function useTreeDragAndDrop() {
       const isDropAllowed = dndConfig.value?.canBeDropped?.({
         draggedNode: draggedNode.value!,
         targetNode: treeNode,
+        placement: isAbove ? 'above' : 'below',
         nodeById: nodeById.value,
         nodeMetaById: nodeMetaById.value,
       }) ?? true
@@ -202,7 +203,7 @@ export function useTreeDragAndDrop() {
       // Hover-to-expand collapsed nodes
       const nodeToExpand = parent ?? treeNode
 
-      if (nodeToExpand && nodeMetaById.value[nodeToExpand.id]?.isCollapsed) {
+      if (nodeToExpand && store.isNodeCollapsed(nodeToExpand.id)) {
         startHoverExpandTimer(nodeToExpand)
       } else {
         clearHoverExpandTimer()
@@ -226,8 +227,10 @@ export function useTreeDragAndDrop() {
     // Remove the ghost element.
     dragItem?.element.remove()
 
-    // Resolve the drag
-    if (draggedNode.value && !isDragOutOfTree && shouldMove && !cancelDrag.value) {
+    // Resolve the drag (not where `dndConfig.canBeDropped` refused the drop)
+    const isDropRefused = dragMeta.value.dropAllowed === false
+
+    if (draggedNode.value && !isDragOutOfTree && shouldMove && !cancelDrag.value && !isDropRefused) {
       moveNode({
         mode: dndConfig.value?.dropMode ?? 'parent',
         dragMeta: dragMeta.value,

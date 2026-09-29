@@ -65,6 +65,11 @@ export type ITreeProps<T extends IItem = IItem> = {
 
   /**
    * The data (nodes) of the tree
+   *
+   * When the data changes, a node whose item (the same object), label and number of children are unchanged keeps
+   * its row as it is. The rows read reactive items reactively, so a change of a reactive item re-renders its row;
+   * a raw (non-reactive) item mutated in place re-renders only once its label or children change. To show other
+   * changes of such an item, replace the item with a new object (or make the items reactive).
    */
   modelValue?: T[]
 
@@ -193,7 +198,9 @@ export type ITreeProps<T extends IItem = IItem> = {
 
     /**
      * When true, the tree nodes will be shown even if their parents are collapsed
-     * when searching
+     * when searching (while a search query is set; a custom `searchConfig.fnc` narrowing the nodes without a query
+     * keeps the collapsed parents collapsed). Collapsing a row during the search hides its matches for that search
+     * only, the stored collapsed state (`meta`) is not changed.
      *
      * @default true
      */
@@ -241,6 +248,11 @@ export type ITreeProps<T extends IItem = IItem> = {
     canBeDropped?: (payload: {
       draggedNode: ITreeNode<T>
       targetNode?: ITreeNode<T>
+
+      /**
+       * Where the node would be placed relative to `targetNode` (with `dropMode = place`)
+       */
+      placement?: 'above' | 'below'
       nodeById: Record<string, ITreeNode<T>>
       nodeMetaById: Record<string, ITreeNodeMeta>
     }) => boolean

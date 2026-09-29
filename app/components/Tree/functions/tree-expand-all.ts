@@ -12,8 +12,15 @@ export async function treeExpandAll(payload: {
   getStore: () => ReturnType<typeof useTreeStore>
 }) {
   const { getStore } = payload
-  const { actionsConfig, nodesFlattened, nodeMetaById } = getStore()
+  const { actionsConfig, nodesFlattened, nodeMetaById, isSearchExpanded, searchCollapsedIds } = getStore()
   const { autoLoadChildrenOnExpandAll } = actionsConfig.value ?? {}
+
+  // While a search shows every match open, only the search's own state changes
+  if (isSearchExpanded.value) {
+    searchCollapsedIds.value = new Set()
+
+    return
+  }
 
   // We want to do this outside of the async loop to prevent rerendering the tree
   // for each change
