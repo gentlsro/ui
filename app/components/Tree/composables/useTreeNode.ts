@@ -14,7 +14,7 @@ export function useTreeNode<T extends IItem = IItem>(payload: ITreeNodeProps<T>)
   const {
     idKey,
     isSearched,
-    isSearchExpanded,
+    isNodeCollapsed,
     searchConfig,
     nodeMetaById,
     selection,
@@ -56,9 +56,9 @@ export function useTreeNode<T extends IItem = IItem>(payload: ITreeNodeProps<T>)
     return nodeHovered.value?.id === node.id
   })
 
-  // While a search shows the matches under collapsed parents, the parents render open
+  // While a search shows the matches under collapsed parents, only the rows collapsed during the search are collapsed
   const isCollapsed = computed(() => {
-    return !!nodeMeta.value?.isCollapsed && !isSearchExpanded.value
+    return isNodeCollapsed(node.id)
   })
 
   const nodePath = computed(() => {

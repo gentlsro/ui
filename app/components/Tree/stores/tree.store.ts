@@ -253,13 +253,14 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
             parentIdByNodeId: parentIdByNodeId.value,
             childrenIdsByNodeId: childrenIdsByNodeId.value,
             searchConfig: searchConfig.value,
-            collapseConfig: collapseConfig.value,
             searchData,
           })
         }
 
-        // Set together with the result, so the search's start does not render every node before the matches
-        isSearchFiltered.value = !!search || searchedNodes !== nodesFlattened
+        // Set together with the result, so the search's start does not render every node before the matches.
+        // Only a query opens the rows: a custom search function narrowing the nodes without one (a filter) keeps
+        // the collapsed rows collapsed
+        isSearchFiltered.value = !!search
 
         if (searchedNodes === nodesFlattened || !isSameNodes(searchedNodes, nodesSearched.value)) {
           nodesSearched.value = searchedNodes
@@ -268,25 +269,67 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     )
 
     /**
-     * A search (or a custom search function) narrowed the nodes down: with `showCollapsedWhenSearched`, the matches
-     * are shown even when their parents are collapsed (the collapsed state itself is kept for when the search ends)
+     * A search query is active: with `showCollapsedWhenSearched`, the matches are shown even when their parents are
+     * collapsed (the collapsed state itself is kept for when the search ends)
      */
     const isSearchExpanded = computed(() => {
       return isSearchFiltered.value && collapseConfig.value?.showCollapsedWhenSearched !== false
     })
+
+    /**
+     * The rows collapsed while `isSearchExpanded`: collapsing during a search hides the row's matches without
+     * touching `meta.isCollapsed`, and a new query (or the search's end) starts with every row open again
+     */
+    const searchCollapsedIds = shallowRef(new Set<ITreeNode['id']>())
+
+    watch([search, isSearchExpanded], () => {
+      if (searchCollapsedIds.value.size) {
+        searchCollapsedIds.value = new Set()
+      }
+    })
+
+    /**
+     * Whether the node's row is collapsed as shown: `meta.isCollapsed`, or the search's own state while
+     * `isSearchExpanded`
+     */
+    function isNodeCollapsed(nodeId: ITreeNode['id']) {
+      return isSearchExpanded.value
+        ? searchCollapsedIds.value.has(nodeId)
+        : !!nodeMetaById.value[nodeId]?.isCollapsed
+    }
+
+    function toggleSearchCollapsed(nodeId: ITreeNode['id']) {
+      const ids = new Set(searchCollapsedIds.value)
+
+      if (!ids.delete(nodeId)) {
+        ids.add(nodeId)
+      }
+
+      searchCollapsedIds.value = ids
+    }
 
     watch(
       () => {
         const nodes = nodesSearched.value
         const usesFlatSearchView = isSearched.value && !searchConfig.value?.keepParents
 
-        if (usesFlatSearchView || isSearchExpanded.value) {
+        if (usesFlatSearchView) {
           return nodes
+        }
+
+        const ancestorIds = ancestorIdsByNodeId.value
+
+        // Only the rows collapsed during the search hide their matches
+        if (isSearchExpanded.value) {
+          const collapsedIds = searchCollapsedIds.value
+
+          return collapsedIds.size
+            ? nodes.filter(node => !ancestorIds[node.id]?.some(ancestorId => collapsedIds.has(ancestorId)))
+            : nodes
         }
 
         // Only get non-collapsed nodes
         const metaById = nodeMetaById.value
-        const ancestorIds = ancestorIdsByNodeId.value
 
         return nodes.filter(node => {
           return !ancestorIds[node.id]?.some(ancestorId => metaById[ancestorId]?.isCollapsed)
@@ -324,9 +367,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
 
     // Helper functions
     function collapseNode(node: ITreeNode<T>) {
-      const isCollapsed = nodeMetaById.value[node.id]?.isCollapsed
-
-      if (isCollapsed) {
+      if (isNodeCollapsed(node.id)) {
         return
       }
 
@@ -334,9 +375,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     }
 
     function expandNode(node: ITreeNode<T>) {
-      const isCollapsed = nodeMetaById.value[node.id]?.isCollapsed
-
-      if (!isCollapsed) {
+      if (!isNodeCollapsed(node.id)) {
         return
       }
 
@@ -410,6 +449,8 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       isSearched,
       isSearchExpanded,
       searchTrigger,
+      searchCollapsedIds,
+      toggleSearchCollapsed,
 
       // Selection
       selection,
@@ -436,6 +477,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       removeNode,
       collapseNode,
       expandNode,
+      isNodeCollapsed,
 
       // Emits
       emits,
