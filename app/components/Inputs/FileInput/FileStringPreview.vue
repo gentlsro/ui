@@ -18,8 +18,6 @@ defineEmits<{
 }>()
 
 // Utils
-const rC = useRuntimeConfig()
-
 function getFileExtension(filename: string) {
   return filename.split('.').reverse()[0]
 }
@@ -36,7 +34,7 @@ const actions = computed(() => ({
 }))
 
 // Layout
-const fileUrl = `${rC.public.FILES_HOST}/files${props.file.path}`
+const fileUrl = getLocalImageUrl(props.file.path)
 
 const icon = computed(() => {
   const ext = getFileExtension(props.file.name ?? '')
