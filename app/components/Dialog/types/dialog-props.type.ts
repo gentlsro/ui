@@ -93,7 +93,8 @@ export type IDialogProps = {
   trigger?: 'click' | 'contextmenu'
 
   /**
-   * When true, focus will be trapped inside the dialog
+   * Trap keyboard focus inside the dialog (Tab cycles within dialog, restored on close)
+   * @default true
    */
   trapFocus?: boolean
 
