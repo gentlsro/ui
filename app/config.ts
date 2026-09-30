@@ -381,7 +381,6 @@ export const defaultComponentsConfig = {
       persistent: undefined,
       title: undefined,
       transitionDuration: 250,
-      trapFocus: true,
       ui: {
         backdropClass: ({ defaults }) => defaults.all,
         wrapperClass: ({ defaults }) => defaults.all,
