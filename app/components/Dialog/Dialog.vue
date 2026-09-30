@@ -4,7 +4,6 @@ import type { IDialogProps } from './types/dialog-props.type'
 
 // Functions
 import { useDialogLayout } from './functions/useDialogLayout'
-import { useFocusTrap } from '@vueuse/integrations/useFocusTrap'
 
 // Constants
 import { DIALOG_DEFAULT_PROPS } from './constants/dialog-default-props.constant'
@@ -103,15 +102,6 @@ const {
   triggerEl,
 } = useDialogLayout(modelHandler, props)
 
-const { 
-   activate: activateFocusTrap,
-   deactivate: deactivateFocusTrap
-  } = useFocusTrap(floatingEl, {
-  immediate: false,
-})
-
-
-
 function hide(ignorePersistent = true) {
   if (props.persistent && !ignorePersistent) {
     bounce()
@@ -157,16 +147,6 @@ whenever(model, isVisible => {
 
   triggerEl.value?.classList.add('is-dialog-active')
 }, { immediate: true })
-
-
-// Activate or deactivate the focus trap based on the dialog's visibility and the trapFocus prop.
-watch(model, isVisible => {
-  if (isVisible && props.trapFocus !== false) {
-    nextTick(() => activateFocusTrap())
-  } else {
-    deactivateFocusTrap()
-  }
-})
 
 // Click outside
 onClickOutside(floatingEl, handleClickOutside, {

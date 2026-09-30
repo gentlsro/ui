@@ -92,12 +92,6 @@ export type IDialogProps = {
    */
   trigger?: 'click' | 'contextmenu'
 
-  /**
-   * Trap keyboard focus inside the dialog (Tab cycles within dialog, restored on close)
-   * @default true
-   */
-  trapFocus?: boolean
-
   ui?: {
     /**
      * Class to apply to the `backdrop`
