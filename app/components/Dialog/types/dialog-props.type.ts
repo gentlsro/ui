@@ -94,7 +94,7 @@ export type IDialogProps = {
 
   /**
    * Trap keyboard focus inside the dialog (Tab cycles within dialog, restored on close)
-   * @default true
+   * @default false
    */
   trapFocus?: boolean
 
