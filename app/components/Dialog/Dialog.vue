@@ -147,7 +147,7 @@ whenever(model, isVisible => {
 
 // Activate or deactivate the focus trap based on the dialog's visibility and the trapFocus prop.
 watch(model, isVisible => {
-  if (isVisible && props.trapFocus !== false) {
+  if (isVisible && mergedProps.value.trapFocus !== false) {
     nextTick(() => activateFocusTrap())
   } else {
     deactivateFocusTrap()
