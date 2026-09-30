@@ -12,6 +12,7 @@
     "axios": "1.16.0",
     "change-case": "5.4.4",
     "dayjs": "1.11.20",
+    "focus-trap": "7.5.4",
     "fuse.js": "7.3.0",
     "jsonwebtoken": "9.0.3",
     "klona": "2.0.6",
