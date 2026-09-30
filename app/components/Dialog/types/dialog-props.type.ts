@@ -92,6 +92,11 @@ export type IDialogProps = {
    */
   trigger?: 'click' | 'contextmenu'
 
+  /**
+   * When true, focus will be trapped inside the dialog
+   */
+  trapFocus?: boolean
+
   ui?: {
     /**
      * Class to apply to the `backdrop`
