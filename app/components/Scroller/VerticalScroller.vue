@@ -33,15 +33,10 @@ const {
   arrivedState,
   isOverflown,
   measure,
-  handleWheel,
   handleScrollViaBtn,
 } = useScrollerScroll()
 
 syncRef(sourceY, y, { direction: 'both', immediate: false })
-
-function addEventListener() {
-  useEventListener(scrollEl, 'wheel', handleWheel, { passive: false })
-}
 
 onMounted(() => {
   y.value = sourceY.value
@@ -131,7 +126,6 @@ defineExpose({
       class="content"
       :class="contentClass"
       :style="contentStyle"
-      @vue:mounted="addEventListener"
     >
       <slot />
     </div>
