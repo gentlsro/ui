@@ -117,6 +117,7 @@ const {
   loadMetaData,
   modifiers,
   queryBuilderProps,
+  columnSelectionDialogProps,
   queryBuilder: queryBuilderStore,
   search: searchStore,
   visibleColumns,
@@ -146,6 +147,7 @@ const loadDataRef = computed(() => mergedProps.value.loadData)
 const loadMetaDataRef = computed(() => mergedProps.value.loadMetaData)
 const modifiersRef = computed(() => mergedProps.value.modifiers)
 const queryBuilderPropsRef = computed(() => mergedProps.value.queryBuilderProps)
+const columnSelectionDialogPropsRef = computed(() => mergedProps.value.columnSelectionDialogProps)
 const selectionConfigRef = computed(() => mergedProps.value.selectionConfig)
 const autofitConfigRef = computed(() => mergedProps.value.autoFit)
 
@@ -157,6 +159,7 @@ syncRef(loadDataRef, loadData, { direction: 'ltr' })
 syncRef(modifiersRef, modifiers, { direction: 'ltr', immediate: false })
 syncRef(toRef(props, 'exportData', TABLE_EXPORTS_DEFAULT), exportData, { direction: 'ltr' })
 syncRef(queryBuilderPropsRef, queryBuilderProps, { direction: 'ltr' })
+syncRef(columnSelectionDialogPropsRef, columnSelectionDialogProps, { direction: 'ltr' })
 syncRef(toRef(props, 'allowComparatorsOfSameType'), allowComparatorsOfSameType, { direction: 'ltr' })
 syncRef(rows, rowsStore, { direction: 'both' })
 syncRef(toRef(props, 'minimumColumnWidth'), minimumColumnWidth, { direction: 'ltr' })
