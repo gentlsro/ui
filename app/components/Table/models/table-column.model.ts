@@ -524,15 +524,18 @@ export class TableColumn<T = IItem> {
           { labelChars: 0, row: undefined } as Record<string, any>,
         )
 
-      maxContentWidth = await getCellWidth({
-        row: maxContentRow.row,
-        col: this,
-        slotRenderFnc,
-        ui,
-      })
+      // Without any row (empty table), we only consider the header width
+      if (!isNil(maxContentRow.row)) {
+        maxContentWidth = await getCellWidth({
+          row: maxContentRow.row,
+          col: this,
+          slotRenderFnc,
+          ui,
+        })
 
-      // We add a litle bit of tolerance
-      maxContentWidth += 4
+        // We add a litle bit of tolerance
+        maxContentWidth += 4
+      }
     }
 
     // When necessary, we can put `autofitLongestText = false` to calculate the
