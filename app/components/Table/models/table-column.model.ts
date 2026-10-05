@@ -169,6 +169,12 @@ export class TableColumn<T = IItem> {
   minWidth?: number
 
   /**
+   * Where the column's values sit: `end` (right) or `start` (left). Defaults to `end` for numeric data types, so
+   * digits line up; set `start` for a numeric column that shows text (e.g. a key shown by its row's name)
+   */
+  align?: 'start' | 'end'
+
+  /**
    * When true, the column cannot be frozen
    *
    * NOTE: You probably don't want to set this manually
@@ -453,7 +459,9 @@ export class TableColumn<T = IItem> {
    * Gets the width in px (returns a number)
    */
   getWidth(scope: ParentNode = document) {
-    const el = scope.querySelector(`[data-column="${this.field}"]`)
+    // Compared as text, not through a selector: a field name may hold quotes, brackets or control characters
+    const el = Array.from(scope.querySelectorAll('[data-column]'))
+      .find(item => item.getAttribute('data-column') === this.field)
 
     if (!el) {
       return 0
@@ -600,6 +608,7 @@ export class TableColumn<T = IItem> {
     this.width = normalizeColumnWidth(col.width)
     this.originalWidth = normalizeColumnWidth(col.originalWidth ?? this.width)
     this.minWidth = col.minWidth
+    this.align = col.align
     this.hideLabel = col.hideLabel
     this.sortable = col.sortable ?? true
     this.searchable = col.searchable ?? false

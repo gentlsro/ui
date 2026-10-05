@@ -1,5 +1,3 @@
-import { useTableCellEditing } from '../composables/useTableCellEditing'
-
 // Types
 import type { ITableProps } from '../types/table-props.type'
 import type { ITableTotal } from '../types/table-total.type'
@@ -8,6 +6,7 @@ import type { ITableSortItem } from '../types/table-sort-item.type'
 import type { ITableStateColumn } from '../types/table-state-column.type'
 import type { IQueryBuilderRow } from '../../QueryBuilder/types/query-builder-row-props.type'
 import type { ITableEmitFncs } from '../types/table-emit-fncs.type'
+import type { ITableExport } from '../types/table-export.type'
 
 // Models
 import type { TableColumn } from '../models/table-column.model'
@@ -15,7 +14,6 @@ import type { TableColumn } from '../models/table-column.model'
 // Functions
 import { tableNavigate } from '../functions/table-navigate'
 import { getListItemKey } from '../../List/functions/helpers'
-import type { ITableExport } from '../types/table-export.type'
 import { extendColumns } from '../functions/table-extend-columns'
 import { tableMergeColumns } from '../functions/table-merge-columns'
 import { getStateColumnData as getStateColumnDataDefault } from '../functions/get-state-column-data'
@@ -27,6 +25,9 @@ import { tableSerializeSorting } from '../functions/table-serialize-sorting'
 import { tableBuildFetchPayload } from '../functions/table-build-fetch-payload'
 import { tableSerializePagination } from '../functions/table-serialize-pagination'
 import { queryBuilderInitializeItems } from '../../QueryBuilder/functions/query-builder-initialize-items'
+
+// Composables
+import { useTableCellEditing } from '../composables/useTableCellEditing'
 
 // Components
 import type HorizontalScroller from '../../Scroller/HorizontalScroller.vue'
@@ -136,9 +137,13 @@ const [
       selectionByKey,
 
       // Editing
+      rowEditConfig,
       selectedCell,
       cellEdit,
       cellEditMode,
+      editingRow,
+      isSavingRow,
+      rowSaveError,
       cellEditValue,
       isCellEditModified,
       loadCellEditValue,
@@ -264,6 +269,7 @@ const [
   const emits = ref<ITableEmitFncs>({
     rowClick: (_payload: { row: any, ev?: MouseEvent }) => {},
     columnResize: (_payload: { column: TableColumn<any>, columns: TableColumn<any>[], width: number }) => {},
+    columnSelect: (_payload: { columns: TableColumn<any>[] }) => {},
   })
   // !SECTION
 
@@ -642,10 +648,14 @@ const [
   // !SECTION
 
   // SECTION Editing
+  const rowEditConfig = ref<ITableProps['rowEdit']>(tableProps?.rowEdit)
   const selectedCell = ref<{ rowKey: unknown, field: string }>()
   const {
     cellEdit,
     cellEditMode,
+    editingRow,
+    isSavingRow,
+    rowSaveError,
     cellEditValue,
     isCellEditModified,
     loadCellEditValue,
@@ -659,7 +669,7 @@ const [
     startCellEdit,
     saveCellEditValue,
     cancelCellEdit,
-  } = useTableCellEditing()
+  } = useTableCellEditing(rowEditConfig)
 
   // !SECTION
 
@@ -987,9 +997,13 @@ const [
     selectionByKey,
 
     // Editing
+    rowEditConfig,
     selectedCell,
     cellEdit,
     cellEditMode,
+    editingRow,
+    isSavingRow,
+    rowSaveError,
     cellEditValue,
     isCellEditModified,
     loadCellEditValue,

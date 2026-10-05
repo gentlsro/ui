@@ -133,12 +133,14 @@ const {
   rowClickable,
   initialSchemaConfig,
   uiConfig,
+  rowEditConfig,
 } = store
 
 // Set emits
 storeEmits.value = {
   rowClick: (payload: { ev?: MouseEvent, row: any }) => emits('click:row', payload),
   columnResize: (payload: { column: TableColumn<any>, columns: TableColumn<any>[], width: number }) => emits('resize:column', payload),
+  columnSelect: (payload: { columns: TableColumn<any>[] }) => emits('select:columns', payload),
 }
 
 // Sync refs with store
@@ -172,6 +174,7 @@ syncRefs(toRef(props, 'breakpoint', 0), breakpoint)
 syncRefs(toRef(props, 'rowsLimit'), rowsLimit)
 syncRef(isLoading, isDataLoading, { direction: 'both' })
 syncRefs(toRef(props, 'rowClickable'), rowClickable)
+syncRefs(toRef(props, 'rowEdit'), rowEditConfig)
 syncRefs(toRef(() => mergedProps.value.initialSchemaConfig), initialSchemaConfig)
 syncRefs(toRef(() => mergedProps.value.ui), uiConfig, { immediate: false })
 
