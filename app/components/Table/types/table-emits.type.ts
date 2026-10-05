@@ -7,4 +7,5 @@ export type ITableEmits = {
       columns: TableColumn<any>[]
       width: number
     }): void
+  (e: 'select:columns', payload: { columns: TableColumn<any>[] }): void
 }

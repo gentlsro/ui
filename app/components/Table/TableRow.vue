@@ -3,11 +3,11 @@
 // unnecessary creation of vue components for each cell and to keep consistency
 // between card and regular views
 
+// Utils
 import { renderSlot } from 'vue'
-import type { FunctionalComponent } from 'vue'
-import { Checkbox, NuxtLink } from '#components'
 
 // Types
+import type { FunctionalComponent } from 'vue'
 import type { ITableProps } from './types/table-props.type'
 import type { IRowColumn } from './types/table-row-column.type'
 
@@ -31,6 +31,9 @@ import { useTableStore } from './stores/table.store'
 
 // Provide / Inject
 import { tableSlotNamesKey, tableSlotsKey } from './provide/table.provide'
+
+// Components
+import { Checkbox, NuxtLink } from '#components'
 
 type IProps = Pick<ITableProps, 'ui' | 'editable' | 'freeze' | 'to' | 'showCopyBtn' | 'toLinkProps'> & {
   row: any | any[]
@@ -73,6 +76,9 @@ const {
   rowsColumnCount,
   isCardView,
   cellEdit,
+  isSavingRow,
+  rowSaveError,
+  isEditingCell,
   getCellEdit,
   updateCellEditValue,
   isEditingRow,
@@ -87,6 +93,7 @@ const {
 // to re-render whenever its parents do
 const tableSlots = injectLocal(tableSlotsKey, {})
 const tableSlotNames = injectLocal(tableSlotNamesKey, shallowRef<string[]>([]))
+
 const tableSlotNameSet = computed(() => new Set(tableSlotNames.value))
 
 function hasTableSlot(name: string) {
@@ -111,6 +118,7 @@ function getRowInsideSlotProps(row: IItem, mode: 'card' | 'row') {
   return { mode, row, index: props.index, customData: customData.value }
 }
 
+// Row editing
 const {
   isEditableRow,
   isFullRowEdit,
@@ -125,7 +133,7 @@ const {
   handleToggleBoolean,
 } = useTableRowEditing(tableStore, toRef(props, 'editable'))
 
-// Layout
+// Cell values
 const [DefineValueTemplate, ReuseValueTemplate] = createReusableTemplate<{
   column: IRowColumn
   row: any
@@ -136,6 +144,7 @@ const RowComponent = computed(() => {
   return props.to ? NuxtLink : 'div'
 })
 
+// Row actions
 const [DefineRowActions, ReuseRowActions] = createReusableTemplate<{
   actions: ReturnType<typeof getRowActions>
 }>()
@@ -149,6 +158,7 @@ function handleRowActionsClick(ev: MouseEvent) {
 
 function getRowActionsClass(row: IItem) {
   const defaults = TABLE_DEFAULT_PROPS.ui.rowActionsClass()
+
   return props.ui?.rowActionsClass?.({ row, defaults }) ?? defaults.all
 }
 
@@ -163,14 +173,16 @@ function hasRowActions(rowData: typeof rowDataArray.value[number]) {
 
 function getRowActions(rowData: typeof rowDataArray.value[number]) {
   const isEditing = isEditingRow(rowData.row)
-  
+
   return {
     row: rowData.row,
     mode: isCardView.value ? 'card' as const : 'row' as const,
     isEditing,
     isModified: isEditing && tableStore.isCellEditModified.value,
     canEdit: isFullRowEdit.value && tableStore.visibleColumns.value.some(column => tableIsCellEditable(rowData.row, column)),
-    disabled: cellEdit.value.length > 0 && !isEditing,
+    disabled: isSavingRow.value || (isEditingCell.value && !isEditing),
+    isSaving: isEditing && isSavingRow.value,
+    error: isEditing ? rowSaveError.value : undefined,
     edit: () => handleEditRow(rowData),
     save: () => {
       if (isEditingRow(rowData.row)) {
@@ -185,6 +197,7 @@ function getRowActions(rowData: typeof rowDataArray.value[number]) {
   }
 }
 
+// Row data
 const rowDataArray = computed(() => {
   const rowArray = Array.isArray(props.row)
     ? props.row
@@ -280,6 +293,7 @@ const rowDataArray = computed(() => {
   })
 })
 
+// Row visuals
 const rowClassArray = computed(() => {
   const rowArray = Array.isArray(props.row)
     ? props.row
@@ -321,6 +335,7 @@ const rowStyleArray = computed(() => {
   ])
 })
 
+// Row selection and clicks
 function handleSelectToggle(row: IItem, ev?: MouseEvent) {
   const isCtrl = ev && !(ev.ctrlKey || ev.metaKey)
   const isLink = ev && ev.target instanceof HTMLAnchorElement
@@ -352,12 +367,12 @@ function handleRowClick(payload: { row: IItem, ev?: MouseEvent }) {
   }
 }
 
+// Cell editor
 function getEditComponentProps(row: IItem, column: IRowColumn) {
   return typeof column.column._editComponent.props === 'function'
     ? column.column._editComponent.props({ row, column: column.column })
     : column.column._editComponent.props
 }
-
 </script>
 
 <template>
@@ -417,6 +432,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
     </span>
   </DefineValueTemplate>
 
+  <!-- Row actions -->
   <DefineRowActions v-slot="{ actions }">
     <div
       class="row-actions"
@@ -429,6 +445,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
         name="row-actions"
         :slot-props="actions"
       >
+        <!-- Editing -->
         <template v-if="actions.isEditing">
           <Btn
             size="sm"
@@ -437,6 +454,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
             icon="i-material-symbols:close-rounded"
             :name="$t('general.cancel')"
             :title="$t('general.cancel')"
+            :disabled="actions.isSaving"
             no-uppercase
             no-bold
             @click.stop.prevent="handleCancelEditCell"
@@ -449,10 +467,14 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
             icon="i-material-symbols:check-rounded"
             :name="$t('general.save')"
             :title="$t('general.save')"
+            :loading="actions.isSaving"
+            :disabled="actions.isSaving"
             no-uppercase
             @click.stop.prevent="handleSaveCellEditValue"
           />
         </template>
+
+        <!-- Edit row -->
         <Btn
           v-else-if="actions.canEdit"
           size="sm"
@@ -508,6 +530,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
           },
         ]"
         :data-field="column.column.field"
+        :data-column="column.column.field"
         :data-key="rowData.rowKey"
       >
         <!-- Label -->
@@ -544,6 +567,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
               v-bind="getEditComponentProps(rowData.row, column)"
               size="sm"
               class="active-edit-cell"
+              :disabled="isSavingRow"
               :no-border="false"
               grow
               @update:model-value="updateCellEditValue(rowData.row, column.column.field, $event)"
@@ -638,6 +662,13 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
         name="row-inside"
         :slot-props="getRowInsideSlotProps(rowData.row, 'card')"
       />
+
+      <!-- Save feedback -->
+      <span
+        v-if="isEditingRow(rowData.row) && rowSaveError"
+        class="row-save-error"
+        role="alert"
+      >{{ rowSaveError }}</span>
     </Component>
   </div>
 
@@ -649,7 +680,11 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
     class="tr is-row"
     :class="[
       rowClassArray[0],
-      { 'is-selected': isSelected(rowDataArray[0].row), 'is-clickable': rowClickable },
+      {
+        'is-selected': isSelected(rowDataArray[0].row),
+        'is-clickable': rowClickable,
+        'has-edit-error': isEditingRow(rowDataArray[0].row) && rowSaveError,
+      },
     ]"
     :style="rowStyleArray[0]"
     :to="to?.(rowDataArray[0].row, { rowKey })"
@@ -671,6 +706,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
       ]"
       :tabindex="column.isEditable ? -1 : undefined"
       :data-field="column.column.field"
+      :data-column="column.column.field"
       :data-key="rowDataArray[0].rowKey"
       @click="handleSelectCell(rowDataArray[0], column, $event)"
       @dblclick="handleEditCell(rowDataArray[0], column, $event)"
@@ -683,6 +719,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
           v-bind="getEditComponentProps(rowDataArray[0].row, column)"
           size="sm"
           class="active-edit-cell"
+          :disabled="isSavingRow"
           no-border
           grow
           @update:model-value="updateCellEditValue(rowDataArray[0].row, column.column.field, $event)"
@@ -795,11 +832,24 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
       name="row-inside"
       :slot-props="getRowInsideSlotProps(rowDataArray[0].row, 'row')"
     />
+    <span
+      v-if="isEditingRow(rowDataArray[0].row) && rowSaveError"
+      class="row-save-error"
+      role="alert"
+    >{{ rowSaveError }}</span>
   </Component>
 </template>
 
 <style scoped lang="scss">
 @use './styles/frozen-edge-shadow' as *;
+
+.has-edit-error {
+  @apply flex-wrap;
+}
+
+.row-save-error {
+  @apply basis-full font-rem-12 color-negative p-x-2 p-y-1;
+}
 
 .can-scroll-right .desktop-row-actions.is-frozen {
   border-left-width: 1px;

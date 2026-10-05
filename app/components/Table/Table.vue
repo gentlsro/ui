@@ -133,12 +133,14 @@ const {
   rowClickable,
   initialSchemaConfig,
   uiConfig,
+  rowEditConfig,
 } = store
 
 // Set emits
 storeEmits.value = {
   rowClick: (payload: { ev?: MouseEvent, row: any }) => emits('click:row', payload),
   columnResize: (payload: { column: TableColumn<any>, columns: TableColumn<any>[], width: number }) => emits('resize:column', payload),
+  columnSelect: (payload: { columns: TableColumn<any>[] }) => emits('select:columns', payload),
 }
 
 // Sync refs with store
@@ -171,9 +173,10 @@ syncRef(toRef(props, 'splitRows', []), splitRowsConfig, { direction: 'ltr' })
 syncRef(toRef(props, 'breakpoint', 0), breakpoint, { direction: 'ltr' })
 syncRef(toRef(props, 'rowsLimit'), rowsLimit, { direction: 'ltr' })
 syncRef(isLoading, isDataLoading, { direction: 'both' })
-syncRef(toRef(props, 'rowClickable'), rowClickable, { direction: 'ltr' })
-syncRef(toRef(() => mergedProps.value.initialSchemaConfig), initialSchemaConfig, { direction: 'ltr' })
-syncRef(toRef(() => mergedProps.value.ui), uiConfig, { direction: 'ltr', immediate: false })
+syncRefs(toRef(props, 'rowClickable'), rowClickable)
+syncRefs(toRef(props, 'rowEdit'), rowEditConfig)
+syncRefs(toRef(() => mergedProps.value.initialSchemaConfig), initialSchemaConfig)
+syncRefs(toRef(() => mergedProps.value.ui), uiConfig, { immediate: false })
 
 // When columns or their resolved widths change, make sure to get their real widths
 watch([visibleColumns, () => visibleColumns.value.map(store.getColumnWidth)], ([cols]) => {

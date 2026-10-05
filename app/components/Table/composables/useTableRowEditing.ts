@@ -1,4 +1,4 @@
-import type { useTableStore } from '../stores/table.store'
+// Types
 import type { ITableProps } from '../types/table-props.type'
 import type { IRowColumn } from '../types/table-row-column.type'
 
@@ -6,22 +6,34 @@ import type { IRowColumn } from '../types/table-row-column.type'
 import { tableIsEditorPopupOpen } from '../functions/table-is-editor-popup-open'
 import { isTableBooleanCheckbox, tableToggleBooleanCell } from '../functions/table-toggle-boolean-cell'
 
-export function useTableRowEditing(tableStore: ReturnType<typeof useTableStore>, editable: Ref<ITableProps['editable']>) {
-  const { 
+// Store
+import type { useTableStore } from '../stores/table.store'
+
+export function useTableRowEditing(
+  tableStore: ReturnType<typeof useTableStore>,
+  editable: Ref<ITableProps['editable']>,
+) {
+  // Store
+  const {
     tableEl,
     rowKey,
     isCardView,
     selectedCell,
     cellEdit,
     isEditingRow,
-   } = tableStore
+  } = tableStore
 
+  // Editing mode
   const isEditableRow = computed(() => {
-    return isObject(editable.value)
-      ? !editable.value.view 
-       || (editable.value.view === 'card' && isCardView.value) // Card view
-       || (editable.value.view === 'row' && !isCardView.value) // Desktop view
-      : !!editable.value
+    const config = editable.value
+
+    if (!isObject(config)) {
+      return !!config
+    }
+
+    return !config.view
+      || (config.view === 'card' && isCardView.value)
+      || (config.view === 'row' && !isCardView.value)
   })
 
   const isFullRowEdit = computed(() => {
@@ -35,6 +47,7 @@ export function useTableRowEditing(tableStore: ReturnType<typeof useTableStore>,
         : isCardView.value)
   })
 
+  // Row editing
   function handleEditRow(rowData: { row: IItem }) {
     if (!isFullRowEdit.value) {
       return
@@ -49,6 +62,7 @@ export function useTableRowEditing(tableStore: ReturnType<typeof useTableStore>,
     }
 
     const target = ev.target
+
     if (target instanceof Element && tableIsEditorPopupOpen(target)) {
       return
     }
@@ -65,6 +79,7 @@ export function useTableRowEditing(tableStore: ReturnType<typeof useTableStore>,
     ev.stopPropagation()
   }
 
+  // Cell selection
   function isSelectedCell(row: IItem, column: IRowColumn) {
     return selectedCell.value?.rowKey === row[rowKey.value]
       && selectedCell.value?.field === column.column.field
@@ -102,6 +117,7 @@ export function useTableRowEditing(tableStore: ReturnType<typeof useTableStore>,
     ev?.stopPropagation()
   }
 
+  // Cell editing
   function handleEditCell(
     rowData: { row: IItem },
     column: IRowColumn,
@@ -117,6 +133,7 @@ export function useTableRowEditing(tableStore: ReturnType<typeof useTableStore>,
 
     if (isTableBooleanCheckbox(column.column)) {
       handleToggleBoolean(rowData.row, column)
+
       return
     }
 
@@ -131,18 +148,23 @@ export function useTableRowEditing(tableStore: ReturnType<typeof useTableStore>,
     tableStore.startCellEdit(rowData.row, column.column)
   }
 
-  function handleSaveCellEditValue() {
-    const editedRow = isFullRowEdit.value ? cellEdit.value[0]?.row : undefined
-    tableStore.finishCellEdit()
-    restoreRowFocus(editedRow)
+  // Saving and cancellation
+  async function handleSaveCellEditValue() {
+    const editedRow = isFullRowEdit.value ? tableStore.editingRow.value : undefined
+    await tableStore.finishCellEdit()
+
+    if (editedRow && !isEditingRow(editedRow)) {
+      restoreRowFocus(editedRow)
+    }
   }
 
   function handleCancelEditCell() {
-    const editedRow = isFullRowEdit.value ? cellEdit.value[0]?.row : undefined
+    const editedRow = isFullRowEdit.value ? tableStore.editingRow.value : undefined
     tableStore.cancelCellEdit()
     restoreRowFocus(editedRow)
   }
 
+  // Editor focus
   function restoreRowFocus(editedRow?: IItem) {
     if (editedRow) {
       void nextTick(() => {
@@ -155,6 +177,7 @@ export function useTableRowEditing(tableStore: ReturnType<typeof useTableStore>,
 
   function handleEditCellMounted(row: IItem, column: IRowColumn) {
     const first = cellEdit.value[0]
+
     if (first?.row !== row || first.column.field !== column.column.field) {
       return
     }
@@ -173,6 +196,7 @@ export function useTableRowEditing(tableStore: ReturnType<typeof useTableStore>,
     }
   }
 
+  // Boolean cells
   function handleToggleBoolean(row: IItem, column: IRowColumn) {
     if (!isFullRowEdit.value && column.isEditable && isTableBooleanCheckbox(column.column)) {
       tableToggleBooleanCell(tableStore, row, column.column)
