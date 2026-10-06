@@ -20,6 +20,7 @@ const mergedProps = computed(() => {
 
 // Layout
 // Adjustment of label position when we use `prepend` slot
+// The label sits next to the prepend content and is only shifted over it when floating
 const prependWidth = ref(0)
 const isMounted = ref(false)
 
@@ -276,6 +277,8 @@ label.label {
 
   &.is-floating.is-regular {
     @apply translate-y--1px;
+
+    left: var(--prependWidth);
   }
 
   &.is-required .label__text::after {
@@ -296,6 +299,8 @@ label.label {
 
     &.is-regular {
       @apply translate-y--1px;
+
+      left: var(--prependWidth);
     }
   }
 
@@ -317,12 +322,6 @@ label.label.is-inline {
 .wrapper__body:not(.selector-wrapper):focus-within {
   label.label:not(.is-inside):not(.is-inline) {
     @apply p-x-1;
-  }
-}
-
-.wrapper {
-  label.label.is-regular {
-    left: var(--prependWidth);
   }
 }
 
