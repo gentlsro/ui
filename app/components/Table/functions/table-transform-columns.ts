@@ -7,6 +7,7 @@ import { TableColumn } from '../models/table-column.model'
 
 // Functions
 import { tableExtractDataFromUrl } from './table-extract-data-from-url'
+import { TABLE_HELPER_COL_SORT, tableCompareColumnsBySort } from './table-column-sort-key'
 
 function getUsedProperties(payload: {
   shouldUrlBeUsed?: boolean
@@ -100,12 +101,7 @@ export function tableTransformColumns(payload: {
   let _columns = internalColumns.map(col => new TableColumn(col))
 
   if (!shouldUrlBeUsed && !shouldSchemaBeUsed && !initialSchemaConfig?.schema) {
-    _columns = _columns.toSorted((a, b) => {
-      const aSort = a._internalSort ?? Number.MAX_SAFE_INTEGER
-      const bSort = b._internalSort ?? Number.MAX_SAFE_INTEGER
-
-      return aSort - bSort
-    })
+    _columns = _columns.toSorted(tableCompareColumnsBySort)
 
     return { columns: _columns, queryBuilder: [] }
   }
@@ -179,12 +175,7 @@ export function tableTransformColumns(payload: {
   })
 
   if (!isSchemaUsed && !isUrlUsed) {
-    _columns = _columns.toSorted((a, b) => {
-      const aSort = a._internalSort ?? Number.MAX_SAFE_INTEGER
-      const bSort = b._internalSort ?? Number.MAX_SAFE_INTEGER
-
-      return aSort - bSort
-    })
+    _columns = _columns.toSorted(tableCompareColumnsBySort)
 
     return {
       columns: _columns,
@@ -204,11 +195,14 @@ export function tableTransformColumns(payload: {
       // Order and visibility
       if (_visibleColumns.length) {
         // Order of the columns and their visibility
-        const orderIdx = col.isHelperCol ? -1000 : _visibleColumns.indexOf(colField)
+        const orderIdx = col.isHelperCol ? TABLE_HELPER_COL_SORT : _visibleColumns.indexOf(colField)
         const isVisible = col.isHelperCol || orderIdx > -1
 
+        // Helper columns carry their position, so `isHelperCol` wins over `nonInteractive`
         col.hidden = col.nonInteractive ? col.hidden : !isVisible
-        col._internalSort = (col.nonInteractive ? (col._internalSort ?? Number.MAX_SAFE_INTEGER) : orderIdx)
+        col._internalSort = col.nonInteractive && !col.isHelperCol
+          ? (col._internalSort ?? Number.MAX_SAFE_INTEGER)
+          : orderIdx
       }
 
       // Sorting
@@ -297,12 +291,7 @@ export function tableTransformColumns(payload: {
 
       return col
     })
-    .toSorted((a, b) => {
-      const aSort = a._internalSort ?? Number.MAX_SAFE_INTEGER
-      const bSort = b._internalSort ?? Number.MAX_SAFE_INTEGER
-
-      return aSort - bSort
-    })
+    .toSorted(tableCompareColumnsBySort)
 
   return {
     queryBuilder,
