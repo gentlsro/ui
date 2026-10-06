@@ -99,7 +99,15 @@ defineExpose({
 <template>
   <div
     class="scroller-vertical"
-    :class="[`arrows--${arrows}`, { 'is-overflown': isOverflown }, containerClass]"
+    :class="[
+      `arrows--${arrows}`,
+      {
+        'is-overflown': isOverflown,
+        'has-fade-start': !arrivedState.top,
+        'has-fade-end': !arrivedState.bottom,
+      },
+      containerClass,
+    ]"
     :style="containerStyle"
   >
     <!-- Top arrow -->

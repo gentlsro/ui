@@ -110,7 +110,15 @@ defineExpose({
 <template>
   <div
     class="scroller-horizontal"
-    :class="[`arrows--${arrows}`, { 'is-overflown': isOverflown }, containerClass]"
+    :class="[
+      `arrows--${arrows}`,
+      {
+        'is-overflown': isOverflown,
+        'has-fade-start': !arrivedState.left,
+        'has-fade-end': !arrivedState.right,
+      },
+      containerClass,
+    ]"
     :style="containerStyle"
   >
     <!-- Left arrow -->

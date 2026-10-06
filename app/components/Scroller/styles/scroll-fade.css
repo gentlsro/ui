@@ -72,11 +72,15 @@
   }
 }
 
-/* Existing overflow measurement keeps the static fallback clear for short content. */
+/* Without scroll timelines (Firefox), the measured edges show each fade only while that edge is not reached. */
 @supports not (animation-timeline: scroll()) {
-  .scroller-horizontal.is-overflown > .content,
-  .scroller-vertical.is-overflown > .content {
+  .scroller-horizontal.has-fade-start > .content,
+  .scroller-vertical.has-fade-start > .content {
     --scroller-fade-start: var(--scroller-fade-start-size);
+  }
+
+  .scroller-horizontal.has-fade-end > .content,
+  .scroller-vertical.has-fade-end > .content {
     --scroller-fade-end: var(--scroller-fade-end-size);
   }
 }
