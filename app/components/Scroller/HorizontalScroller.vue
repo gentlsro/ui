@@ -40,7 +40,11 @@ const {
 syncRef(sourceX, x, { direction: 'both', immediate: false })
 
 function addEventListener() {
-  useEventListener(scrollEl, 'wheel', handleWheel, { passive: false })
+  useEventListener(scrollEl, 'wheel', ev => {
+    if (!props.noWheelScroll) {
+      handleWheel(ev)
+    }
+  }, { passive: false })
 }
 
 onMounted(() => {
