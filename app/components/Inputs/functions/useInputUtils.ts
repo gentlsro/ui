@@ -12,6 +12,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
   const {
     props,
     maskRef,
+    preserveValueOnMaskChange,
     eventHandlers = {},
     maskEventHandlers,
     menuElRef,
@@ -42,10 +43,10 @@ export function useInputUtils(options: IInputUtilsOptions) {
   const { emptyValue } = toRefs(props)
 
   const imaskOptions = computed<FactoryOpts>(() => {
-    const source = toRaw(toValue(maskRef))
+    const source = toValue(maskRef)
 
     return source instanceof Masked
-      ? { mask: createMask({ mask: source }) }
+      ? { mask: createMask({ mask: toRaw(source) }) }
       : source
   })
 
@@ -87,13 +88,15 @@ export function useInputUtils(options: IInputUtilsOptions) {
     unmasked.value = temporaryMask.unmaskedValue
   }
 
-  watch(imaskOptions, () => {
-    const liveMask = toRaw(mask.value) as InputMask<FactoryOpts> | undefined
+  if (preserveValueOnMaskChange) {
+    watch(imaskOptions, () => {
+      const liveMask = toRaw(mask.value) as InputMask<FactoryOpts> | undefined
 
-    if (liveMask && !isNil(model.value) && !isEqual(model.value, props.emptyValue)) {
-      liveMask.typedValue = model.value
-    }
-  })
+      if (liveMask && !isNil(model.value) && !isEqual(model.value, props.emptyValue)) {
+        liveMask.typedValue = model.value
+      }
+    })
+  }
 
   const isEmpty = computed(() => {
     return (

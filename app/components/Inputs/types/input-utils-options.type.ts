@@ -13,6 +13,8 @@ type MaskRefs = {
 export type IInputUtilsOptions = {
   props: Omit<IInputProps, 'mask' | 'name'>
   maskRef: Ref<FactoryOpts>
+  /** Reformat the typed value instead of reinterpreting digits on mask changes. */
+  preserveValueOnMaskChange?: boolean
   menuElRef?: MaybeRefOrGetter
   preventFocusOnTouch?: boolean
 

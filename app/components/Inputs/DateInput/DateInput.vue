@@ -161,6 +161,7 @@ const {
 } = useInputUtils({
   props,
   maskRef: mask,
+  preserveValueOnMaskChange: true,
   maskEventHandlers: {
     onCompleted: () => {
       if (!preventSync.value) {
