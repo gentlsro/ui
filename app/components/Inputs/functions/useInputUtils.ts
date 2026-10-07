@@ -1,7 +1,8 @@
 import { useIMask } from 'vue-imask'
-import { createMask } from 'imask'
+import { createMask, Masked } from 'imask'
 
 // Types
+import type { FactoryOpts } from 'imask'
 import type { IInputUtilsOptions } from '../types/input-utils-options.type'
 
 // Functions
@@ -40,7 +41,15 @@ export function useInputUtils(options: IInputUtilsOptions) {
   const lastValidValue = ref<any>()
   const { emptyValue } = toRefs(props)
 
-  const { el, mask, masked, unmasked, typed } = useIMask(maskRef, {
+  const imaskOptions = computed<FactoryOpts>(() => {
+    const source = toRaw(toValue(maskRef))
+
+    return source instanceof Masked
+      ? { mask: createMask({ mask: source }) }
+      : source
+  })
+
+  const { el, mask, masked, unmasked, typed } = useIMask(imaskOptions, {
     onAccept: ev => {
       nextTick(() => {
         const val = maskEventHandlers?.onAccept?.(
