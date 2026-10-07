@@ -96,15 +96,18 @@ const nodeContentStyle = computed(() => {
 let draggable: ReturnType<typeof createDraggable> | undefined
 let isUnmounted = false
 
-onMounted(() => {
-  if (!isDndEnabled.value) {
-    return
-  }
+// A node `dndConfig.canBeDragged` refuses gets no drag at all, so it cannot even be picked up
+const isDraggable = computed(() => {
+  const canBeDragged = getStore().dndConfig.value?.canBeDragged
 
+  return isDndEnabled.value && (canBeDragged?.({ node: node.value, nodeMeta: nodeMeta.value }) ?? true)
+})
+
+function mountDraggable() {
   nextTick(() => {
     const _el = unrefElement(treeNodeEl as any) as HTMLElement
 
-    if (isUnmounted || !_el) {
+    if (isUnmounted || !_el || draggable || !isDraggable.value) {
       return
     }
 
@@ -119,11 +122,9 @@ onMounted(() => {
       },
     })
   })
-})
+}
 
-onBeforeUnmount(() => {
-  isUnmounted = true
-
+function destroyDraggable() {
   // A row scrolled out of the virtual scroller while it is dragged finishes its drag first
   const _draggable = draggable
 
@@ -134,6 +135,19 @@ onBeforeUnmount(() => {
   }
 
   draggable = undefined
+}
+
+onMounted(() => {
+  if (isDraggable.value) {
+    mountDraggable()
+  }
+})
+
+watch(isDraggable, value => value ? mountDraggable() : destroyDraggable())
+
+onBeforeUnmount(() => {
+  isUnmounted = true
+  destroyDraggable()
 })
 </script>
 

@@ -48,7 +48,7 @@ const mask = computed<MaskedNumber>(() => {
         return ''
       }
 
-      return value.toString()
+      return MaskedNumber.DEFAULTS.format(value)
     },
   })
 
