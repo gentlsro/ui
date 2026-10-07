@@ -167,13 +167,13 @@ onKeyStroke('Enter', ev => {
 
         <!-- Filter -->
         <div
-          v-if="column.filterDbQuery.length"
+          v-if="column.filterable || column.filterDbQuery.length"
           class="icon i-lucide:list-filter"
         />
 
         <!-- Idle -->
         <div
-          v-if="!column.sort && !column.filterDbQuery.length"
+          v-if="!column.filterable && !column.sort && !column.filterDbQuery.length"
           class="icon i-lucide:chevron-down"
         />
       </div>
@@ -226,7 +226,7 @@ onKeyStroke('Enter', ev => {
 
 <style scoped lang="scss">
 .filter-btn {
-  @apply color-true-gray-500 dark:color-true-gray-400 rounded-md p-x-1 transition-opacity;
+  @apply color-true-gray-500 dark:color-true-gray-400 rounded-md p-x-1;
 
   &:hover,
   &.is-open {
@@ -235,7 +235,7 @@ onKeyStroke('Enter', ev => {
 
   &.is-sorted,
   &.is-filtered {
-    @apply color-primary bg-primary/10 dark:color-true-gray-100 dark:bg-primary/45;
+    @apply color-primary bg-primary/10 dark:bg-primary/45;
   }
 
   &__icons {
@@ -253,10 +253,5 @@ onKeyStroke('Enter', ev => {
   .icon {
     @apply w-3.5 h-3.5 shrink-0;
   }
-}
-
-// Idle columns only reveal the menu button on hover, like the freeze button
-.th:not(:hover, :focus-within) .filter-btn:not(.is-sorted, .is-filtered, .is-open) {
-  opacity: 0;
 }
 </style>
