@@ -2,7 +2,7 @@ import { useIMask } from 'vue-imask'
 import { createMask, Masked } from 'imask'
 
 // Types
-import type { FactoryOpts } from 'imask'
+import type { FactoryOpts, InputMask } from 'imask'
 import type { IInputUtilsOptions } from '../types/input-utils-options.type'
 
 // Functions
@@ -86,6 +86,14 @@ export function useInputUtils(options: IInputUtilsOptions) {
     typed.value = temporaryMask.typedValue
     unmasked.value = temporaryMask.unmaskedValue
   }
+
+  watch(imaskOptions, () => {
+    const liveMask = toRaw(mask.value) as InputMask<FactoryOpts> | undefined
+
+    if (liveMask && !isNil(model.value) && !isEqual(model.value, props.emptyValue)) {
+      liveMask.typedValue = model.value
+    }
+  })
 
   const isEmpty = computed(() => {
     return (
