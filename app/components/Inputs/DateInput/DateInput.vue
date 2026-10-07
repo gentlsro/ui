@@ -24,7 +24,7 @@ defineEmits<{
 }>()
 
 // Utils
-const { getCurrentLocaleDateFormat } = useLocale()
+const { currentLocale, getCurrentLocaleDateFormat } = useLocale()
 const { formatDate, parseDate } = useDateUtils()
 
 const mergedProps = computed(() => {
@@ -82,11 +82,11 @@ const mask = computed<FactoryOpts>(() => {
         return val
       }
 
-      if (props.utc) {
-        return formatDate(val, 'utc')
-      } else {
-        return formatDate(val)
-      }
+      return formatDate(val, {
+        outputIntlOptions: props.utc ? 'utc' : 'short',
+        localeIso: currentLocale.value.code,
+        removeSpaces: true,
+      })
     },
     parse: (val: any) => {
       if (!isDate(val)) {
@@ -161,6 +161,7 @@ const {
 } = useInputUtils({
   props,
   maskRef: mask,
+  preserveValueOnMaskChange: true,
   maskEventHandlers: {
     onCompleted: () => {
       if (!preventSync.value) {

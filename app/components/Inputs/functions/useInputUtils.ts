@@ -1,7 +1,8 @@
 import { useIMask } from 'vue-imask'
-import { createMask } from 'imask'
+import { createMask, Masked } from 'imask'
 
 // Types
+import type { FactoryOpts, InputMask } from 'imask'
 import type { IInputUtilsOptions } from '../types/input-utils-options.type'
 
 // Functions
@@ -11,6 +12,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
   const {
     props,
     maskRef,
+    preserveValueOnMaskChange,
     eventHandlers = {},
     maskEventHandlers,
     menuElRef,
@@ -40,7 +42,15 @@ export function useInputUtils(options: IInputUtilsOptions) {
   const lastValidValue = ref<any>()
   const { emptyValue } = toRefs(props)
 
-  const { el, mask, masked, unmasked, typed } = useIMask(maskRef, {
+  const imaskOptions = computed<FactoryOpts>(() => {
+    const source = toValue(maskRef)
+
+    return source instanceof Masked
+      ? { mask: createMask({ mask: toRaw(source) }) }
+      : source
+  })
+
+  const { el, mask, masked, unmasked, typed } = useIMask(imaskOptions, {
     onAccept: ev => {
       nextTick(() => {
         const val = maskEventHandlers?.onAccept?.(
@@ -76,6 +86,16 @@ export function useInputUtils(options: IInputUtilsOptions) {
     masked.value = temporaryMask.value
     typed.value = temporaryMask.typedValue
     unmasked.value = temporaryMask.unmaskedValue
+  }
+
+  if (preserveValueOnMaskChange) {
+    watch(imaskOptions, () => {
+      const liveMask = toRaw(mask.value) as InputMask<FactoryOpts> | undefined
+
+      if (liveMask && !isNil(model.value) && !isEqual(model.value, props.emptyValue)) {
+        liveMask.typedValue = model.value
+      }
+    })
   }
 
   const isEmpty = computed(() => {
