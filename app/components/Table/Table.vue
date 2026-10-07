@@ -7,7 +7,7 @@ import type { ITableProps } from './types/table-props.type'
 import type { ITableEmits } from './types/table-emits.type'
 
 // Provide / Inject
-import { tableSlotsKey } from './provide/table.provide'
+import { tableMeasurementsKey, tableSlotsKey } from './provide/table.provide'
 
 // Functions
 import { tableInitialize } from './functions/table-initialize'
@@ -19,6 +19,8 @@ import { TABLE_EXPORTS_DEFAULT } from './constants/table-exports-default.constan
 
 // Stores
 import { useTableStore } from './stores/table.store'
+import { useRenderTemporaryTableCell } from './composables/useRenderTemporaryTableCell'
+import TableMeasurement from './TableMeasurement.vue'
 
 const props = withDefaults(defineProps<ITableProps>(), {
   ...getComponentProps('table'),
@@ -195,6 +197,10 @@ const hasToolbar = computed(() => {
   return TOOLBAR_FEATURES.some(feature => props.features?.includes(feature))
 })
 
+const measurements = useRenderTemporaryTableCell()
+const { requests: measurementRequests } = measurements
+provideLocal(tableMeasurementsKey, measurements)
+
 tableInitialize()
 defineExpose(tableGetExposed())
 
@@ -355,6 +361,24 @@ onMounted(() => {
 
     <!-- Loading -->
     <TableLoading v-if="isInitialLoad" />
+
+    <TableMeasurement
+      v-for="request in measurementRequests"
+      :key="request.id"
+      :request
+      :custom-data
+      @ready="element => measurements.setElement(request.id, element)"
+    >
+      <template
+        v-if="request.kind === 'cell' && slots[request.col.field]"
+        #default="cellProps"
+      >
+        <slot
+          :name="request.col.field"
+          v-bind="cellProps"
+        />
+      </template>
+    </TableMeasurement>
 
     <!-- Default slot to be used for custom content (most likely absolutely positioned) -->
     <slot />

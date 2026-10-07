@@ -11,7 +11,7 @@ import type { ITableDistinctData } from '../types/table-distinct-data.type'
 
 // Functions
 import { getDateSimpleValue } from '#layers/utilities/app/composables/useDateUtils'
-import { useRenderTemporaryTableCell } from '../composables/useRenderTemporaryTableCell'
+import type { TableMeasurements } from '../composables/useRenderTemporaryTableCell'
 
 // Components
 import DynamicInput from '../../Inputs/DynamicInput/DynamicInput.vue'
@@ -479,12 +479,12 @@ export class TableColumn<T = IItem> {
 
   async autoFit(payload: {
     rows: any[]
-    slotRenderFnc?: Function
+    measurements: TableMeasurements
     tableMinColWidth: number
     autofitConfig?: ITableProps['autoFit']
     ui?: ITableProps['ui']
   }) {
-    const { rows, slotRenderFnc, tableMinColWidth = 80, autofitConfig, ui } = payload
+    const { rows, measurements, tableMinColWidth = 80, autofitConfig, ui } = payload
 
     if (!this.resizable) {
       return
@@ -495,13 +495,13 @@ export class TableColumn<T = IItem> {
       rowsLimit = 80,
       mode = 'fit-with-header',
     } = autofitConfig ?? getComponentProps('table').autoFit()
-    const { getCellWidth, getHeaderWidth } = useRenderTemporaryTableCell()
+    const { getCellWidth, getHeaderWidth } = measurements
 
     const considerHeader = mode === 'fit-with-header'
     let maxContentWidth = 0
 
     // We primarily use the row with the longest text to calculate the autofit width
-    if (this.autofitLongestText) {
+    if (this.autofitLongestText && rows.length) {
       // We get the row with the maximum content
       const maxContentRow = (rows || [])
         .slice(0, rowsLimit)
@@ -524,15 +524,19 @@ export class TableColumn<T = IItem> {
           { labelChars: 0, row: undefined } as Record<string, any>,
         )
 
-      maxContentWidth = await getCellWidth({
+      const width = await getCellWidth({
         row: maxContentRow.row,
         col: this,
-        slotRenderFnc,
+        index: rows.indexOf(maxContentRow.row),
         ui,
       })
 
-      // We add a litle bit of tolerance
-      maxContentWidth += 4
+      if (width === undefined) {
+        return
+      }
+
+      // Preserve the existing content tolerance.
+      maxContentWidth = width + 4
     }
 
     // When necessary, we can put `autofitLongestText = false` to calculate the
@@ -544,15 +548,24 @@ export class TableColumn<T = IItem> {
         const width = await getCellWidth({
           row,
           col: this,
-          slotRenderFnc,
+          index: rows.indexOf(row),
           ui,
         })
+
+        if (width === undefined) {
+          return
+        }
 
         maxContentWidth = Math.max(maxContentWidth, width)
       }
     }
 
-    const headerWidth = await getHeaderWidth(this, ui) + 1 // +1 for the border
+    const measuredHeader = await getHeaderWidth(this, ui)
+    if (measuredHeader === undefined) {
+      return
+    }
+
+    const headerWidth = measuredHeader + 1 // +1 for the border
 
     const colMinWidth = Math.min(
       Math.max(

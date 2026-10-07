@@ -2,7 +2,7 @@
 import { useTableStore } from '../stores/table.store'
 
 // Provide / Inject
-import { tableSlotsKey } from '../provide/table.provide'
+import { tableMeasurementsKey } from '../provide/table.provide'
 
 export function useTableAutoFit() {
   // Store
@@ -18,12 +18,16 @@ export function useTableAutoFit() {
     uiConfig,
   } = useTableStore()
 
-  const tableSlots = injectLocal(tableSlotsKey)
+  const measurements = injectLocal(tableMeasurementsKey)!
 
   async function fitColumns(
     ev?: Partial<Pick<PointerEvent, 'shiftKey' | 'ctrlKey' | 'metaKey'>>,
     options?: { mode?: 'fit' | 'stretch' | 'justify' | 'fit-with-header' | null },
   ) {
+    if (import.meta.server) {
+      return
+    }
+
     const { mode = uiState.value.table?.fit } = options ?? {}
     if (!ev && !mode) {
       return
@@ -37,7 +41,10 @@ export function useTableAutoFit() {
       isJustify = !!(ev?.ctrlKey || ev?.metaKey)
     }
 
-    const scope = tableEl.value ?? document
+    const scope = tableEl.value
+    if (!scope?.isConnected) {
+      return
+    }
 
     const resizableColumns = visibleColumns.value
       .filter(col => col.resizable && !col.isHelperCol)
@@ -77,15 +84,16 @@ export function useTableAutoFit() {
     // across the available table width
     else if (isStretch) {
       for await (const col of resizableColumns) {
-        const slotRenderFnc = tableSlots?.[col.field]
-
         await col.autoFit({
           rows: rows.value,
-          slotRenderFnc,
+          measurements,
           tableMinColWidth: minimumColumnWidth.value,
           autofitConfig: { ...autofitConfig.value, mode },
           ui: uiConfig.value,
         })
+        if (!scope.isConnected) {
+          return
+        }
       }
 
       const colsTotalWidth = resizableColumns.reduce((agg, col) => {
@@ -113,15 +121,16 @@ export function useTableAutoFit() {
     // Fit columns ~ will try to fit the columns based on their content
     else {
       for await (const col of resizableColumns) {
-        const slotRenderFnc = tableSlots?.[col.field]
-
         await col.autoFit({
           rows: rows.value,
-          slotRenderFnc,
+          measurements,
           tableMinColWidth: minimumColumnWidth.value,
           autofitConfig: { ...autofitConfig.value, mode },
           ui: uiConfig.value,
         })
+        if (!scope.isConnected) {
+          return
+        }
       }
     }
 
@@ -129,7 +138,9 @@ export function useTableAutoFit() {
     internalColumns.value = [...internalColumns.value]
 
     requestAnimationFrame(() => {
-      virtualScrollEl.value?.rerender(true)
+      if (scope.isConnected) {
+        virtualScrollEl.value?.rerender(true)
+      }
     })
   }
 

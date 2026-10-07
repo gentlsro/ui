@@ -186,7 +186,7 @@ defineExpose({ element: wrapperEl })
     :class="wrapperClass"
     data-cy="input-field"
   >
-    <!-- TODO(I02): Restore these variables to .wrapper after the Vapor migration. -->
+    <!-- TODO(I02): Restore root variables once Vue fixes mixed-owner style hydration (still broken in rc.9). -->
     <Component
       :is="WrapperComponent"
       v-bind="wrapperProps"

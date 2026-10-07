@@ -6,13 +6,13 @@ import { klona } from 'klona/full'
 import type { IActiveTableSplitter, ITableSplitter } from '../types/table-splitter.type'
 
 // Provide / Inject
-import { tableSlotsKey } from '../provide/table.provide'
+import { tableMeasurementsKey } from '../provide/table.provide'
 
 // Store
 import { useTableStore } from '../stores/table.store'
 
 export function useTableColumnResizing() {
-  const tableSlots = inject(tableSlotsKey)
+  const measurements = inject(tableMeasurementsKey)!
 
   // Store
   const {
@@ -77,15 +77,17 @@ export function useTableColumnResizing() {
 
     // Handle double-click ~ resize to fit
     if (col && splitterJustClicked.value) {
-      const slotRenderFnc = tableSlots?.[col.field]
-
       await col.autoFit({
         rows: rows.value,
-        slotRenderFnc,
+        measurements,
         tableMinColWidth: minimumColumnWidth.value,
         autofitConfig: autofitConfig.value,
         ui: uiConfig.value,
       })
+
+      if (!tableEl.value?.isConnected) {
+        return
+      }
 
       // Trigger the reactivity on columns
       internalColumns.value = [...internalColumns.value]
@@ -197,6 +199,10 @@ export function useTableColumnResizing() {
     cancelResize()
 
     nextTick(() => {
+      if (!tableEl.value?.isConnected) {
+        return
+      }
+
       // Trigger the reactivity on columns
       internalColumns.value = [...internalColumns.value]
 

@@ -243,7 +243,15 @@ export function useInputUtils(options: IInputUtilsOptions) {
 
   function isTouchPointer(ev?: Event) {
     if (ev instanceof PointerEvent) {
-      return ev.pointerType === 'touch' || ev.pointerType === 'pen'
+      if (ev.pointerType === 'touch' || ev.pointerType === 'pen') {
+        return true
+      }
+
+      // A real mouse press must not reuse the preceding touch's history.
+      // The store records this pointerdown after the input handler runs.
+      if (ev.type !== 'click') {
+        return false
+      }
     }
 
     // WebKit can report pointerType="mouse" for a touch-generated click.
@@ -261,18 +269,12 @@ export function useInputUtils(options: IInputUtilsOptions) {
     return isTouch && !isKeyboardNewer
   }
 
-  // Cancel only the default mouse focus, preserving click in WebKit too.
-  // Opening on click also lets the browser distinguish a tap from a scroll.
-  function handleMouseDown(ev: MouseEvent) {
-    if (preventFocusOnTouch && isTouchPointer(ev)) {
-      ev.preventDefault()
-    }
-  }
-
-  // Block focus (and the keyboard) on touch. Do not open the picker here:
-  // the same tap's leftover click would land on the overlay. The wrapper
-  // click handler opens it after that click hits the still-closed input.
-  function handlePointerDown(ev: PointerEvent) {
+  // Both input event bindings need the same press bookkeeping: focus opens
+  // the picker before the gesture's click reaches the wrapper. Suppress that
+  // click's toggle, but keep later clicks on an already focused input working.
+  // Touch pickers bind mousedown so cancelling editable focus preserves the
+  // click in WebKit. They open on click, allowing scroll gestures to finish.
+  function handleInputPress(ev: MouseEvent) {
     const isFocusPrevented = preventFocusOnTouch && isTouchPointer(ev)
 
     skipNextInputClick = !isFocusPrevented
@@ -416,8 +418,8 @@ export function useInputUtils(options: IInputUtilsOptions) {
     blur,
     getInputElement,
     handleFocusOrClick,
-    handleMouseDown,
-    handlePointerDown,
+    handleMouseDown: handleInputPress,
+    handlePointerDown: handleInputPress,
     handleClickWrapper,
   }
 }

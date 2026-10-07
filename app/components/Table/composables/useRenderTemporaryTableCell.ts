@@ -1,165 +1,79 @@
-// @unocss-include
-// VDOM-only measurement: slotRenderFnc must return VNodes, not native Vapor slots.
-
+// @vapor-ready
 import type { ITableProps } from '../types/table-props.type'
-
-// Models
 import type { TableColumn } from '../models/table-column.model'
 
-// Components
-import Checkbox from '../../Checkbox/Checkbox.vue'
-
-/**
- * Splits a string into two sections at a word boundary near the middle and returns the longer section.
- * If the string is empty, returns an empty string.
- *
- * NOTE: Modified from Claude's original implementation
- */
-function splitStringInMiddle(input: string): string {
-  if (!input) {
-    return ''
-  }
-
-  const words = input.split(' ')
-
-  // If single word or empty, return the input
-  if (words.length <= 1) {
-    return input
-  }
-
-  // For two words, return the longer one
-  if (words.length === 2) {
-    return words[0]!.length >= words[1]!.length ? words[0]! : words[1]!
-  }
-
-  // Find the middle word index
-  const middleWordIndex = Math.floor(words.length / 2)
-
-  // Create the two parts
-  const firstPart = words.slice(0, middleWordIndex).join(' ')
-  const secondPart = words.slice(middleWordIndex).join(' ')
-
-  // Return the longer part
-  return firstPart.length >= secondPart.length ? firstPart : secondPart
+type CellMeasurement = {
+  row: IItem
+  col: TableColumn<any>
+  index?: number
+  ui?: ITableProps['ui']
 }
 
+export type TableMeasurementRequest = CellMeasurement & {
+  id: number
+  kind: 'cell' | 'header'
+}
+
+export type TableMeasurements = Pick<
+  ReturnType<typeof useRenderTemporaryTableCell>,
+  'getCellWidth' | 'getHeaderWidth'
+>
+
+/** Requests are rendered declaratively by the owning Table, preserving its context. */
 export function useRenderTemporaryTableCell() {
-  const { setTempComponent } = useUIStore()
+  const requests = shallowRef<TableMeasurementRequest[]>([])
+  const elements = new Map<number, HTMLElement>()
+  let nextId = 0
+  let disposed = false
 
-  async function getCellWidth(payload: {
-    row: any
-    col: TableColumn<any>
-    slotRenderFnc?: Function
-    ui?: ITableProps['ui']
-  }) {
-    const { row, col, slotRenderFnc, ui } = payload
+  onScopeDispose(() => {
+    disposed = true
+    requests.value = []
+    elements.clear()
+  })
 
-    let maxContentWidth = 0
-    let cleanup: ReturnType<typeof setTempComponent> | undefined
+  async function measure(payload: Omit<TableMeasurementRequest, 'id'>) {
+    // No DOM work or column-width mutations during SSR or after owner disposal.
+    if (import.meta.server || disposed) {
+      return undefined
+    }
+
+    const request = { ...payload, id: nextId++ }
+    requests.value = [...requests.value, request]
 
     try {
-      const value = col.valueGetter(row)
-      const formattedValue = formatValue(value, row, {
-        format: col.format,
-        dataType: col.dataType,
-      })
-
-      // @ts-expect-error
-      const { cellInnerClass, cellInnerStyle, cellClass, cellStyle } = ui ?? getComponentProps('table').ui?.() ?? {}
-
-      const _cellClass = [cellClass, 'flex', 'items-center']
-
-      // NOTE - When using a slot, we need to render the component that is being
-      //        used in the slot, so we can get the actual width of the cell
-      if (slotRenderFnc) {
-        const vnode = slotRenderFnc({
-          row,
-          index: 0,
-          refreshDataFnc: () => {},
-        })
-
-        cleanup = setTempComponent(
-          () => h(
-            'div',
-            { style: cellStyle, class: _cellClass },
-            [vnode],
-          ),
-        )
-        await nextTick()
-
-        maxContentWidth = cleanup.element?.getBoundingClientRect().width || 0
-      } else {
-        cleanup = setTempComponent(() => {
-          return col.dataType === 'boolean'
-            ? h(
-                Checkbox,
-                { size: 'sm', modelValue: value, label: formattedValue },
-              )
-            : h(
-                'div',
-                { style: cellStyle, class: _cellClass },
-                [h('span', { class: cellInnerClass, style: cellInnerStyle }, [formattedValue])],
-              )
-        },
-        )
-        await nextTick()
-
-        maxContentWidth = cleanup.element?.getBoundingClientRect().width || 0
+      await nextTick()
+      if (disposed) {
+        return undefined
       }
 
-      return maxContentWidth
+      const element = elements.get(request.id)
+      if (!element?.isConnected) {
+        return undefined
+      }
+
+      return element.getBoundingClientRect().width
     } finally {
-      cleanup?.()
-    }
-  }
-
-  async function getHeaderWidth(
-    col: TableColumn<any>,
-    ui?: ITableProps['ui'],
-  ) {
-    let cleanup: ReturnType<typeof setTempComponent> | undefined
-    let maxContentWidth = 0
-
-    try {
-      // Split the label into two sections at a word boundary near the middle
-      // in case we have a longer label
-      const longerPart = col._label.length > 16
-        ? splitStringInMiddle(col._label)
-        : col._label
-
-      // @ts-expect-error
-      const { headerCellClass, headerCellInnerClass, headerCellStyle, headerCellInnerStyle } = ui ?? getComponentProps('table').ui?.() ?? {}
-
-      // UI
-      const _headerCellClass = ['flex items-center gap-2', headerCellClass, col.headerClass]
-      const _headerCellStyle = { ...headerCellStyle, ...col.headerStyle }
-
-      const _headerCellInnerClass = [headerCellInnerClass]
-      const _headerCellInnerStyle = headerCellInnerStyle
-
-      const isHelperCol = col.isHelperCol || col.nonInteractive
-      const hasFilterBtn = (col.filterable || col.sortable) && !isHelperCol
-
-      cleanup = setTempComponent(() => {
-        return h(
-          'div',
-          { class: _headerCellClass, style: _headerCellStyle },
-          [
-            h('span', { class: _headerCellInnerClass, style: _headerCellInnerStyle }, [longerPart]),
-            ...(hasFilterBtn ? [h('div', { style: { flexShrink: 0, width: '32px', height: '32px' } })] : []),
-          ],
-        )
-      },
-      )
+      elements.delete(request.id)
+      requests.value = requests.value.filter(item => item.id !== request.id)
+      // Callers can start the next autofit only after the previous slot is unmounted.
       await nextTick()
-
-      maxContentWidth = cleanup.element?.getBoundingClientRect().width || 0
-
-      return maxContentWidth
-    } finally {
-      cleanup?.()
     }
   }
 
-  return { getCellWidth, getHeaderWidth }
+  function setElement(id: number, element: HTMLElement) {
+    if (!disposed) {
+      elements.set(id, element)
+    }
+  }
+
+  function getCellWidth(payload: CellMeasurement) {
+    return measure({ ...payload, kind: 'cell' })
+  }
+
+  function getHeaderWidth(col: TableColumn<any>, ui?: ITableProps['ui']) {
+    return measure({ col, row: {}, ui, kind: 'header' })
+  }
+
+  return { requests, setElement, getCellWidth, getHeaderWidth }
 }

@@ -1,14 +1,11 @@
-import { createVNode, render } from 'vue'
 import { defu } from 'defu'
 import { skipHydrate } from 'pinia'
-import type { Component, CSSProperties } from 'vue'
 import { uiConfig } from '$uiConfig'
 
 // Types
 import type { IUIState } from '../types/ui-state.type'
 
 export const useUIStore = defineStore('__ui', () => {
-  const { vueApp } = useNuxtApp()
   const { getLastFloatingUI } = useFloatingUIUtils()
 
   // State
@@ -47,51 +44,6 @@ export const useUIStore = defineStore('__ui', () => {
     height,
     width,
   } = useViewport()
-
-  // VDOM interop boundary for Table's legacy render-function measurements.
-  // Detached roots inherit app providers, not providers from the calling owner.
-  function setTempComponent(component: Component, style?: CSSProperties) {
-    if (import.meta.server) {
-      return Object.assign(() => {}, { element: undefined })
-    }
-
-    const element = document.createElement('div')
-    element.dataset.uiTempComponent = ''
-    Object.assign(element.style, {
-      position: 'fixed',
-      top: '80px',
-      right: '80px',
-      visibility: 'hidden',
-      pointerEvents: 'none',
-    })
-    element.inert = true
-    document.body.appendChild(element)
-
-    let removed = false
-    const cleanup = Object.assign(() => {
-      if (removed) {
-        return
-      }
-
-      removed = true
-      try {
-        render(null, element)
-      } finally {
-        element.remove()
-      }
-    }, { element })
-
-    try {
-      const vnode = createVNode(component, { style })
-      vnode.appContext = vueApp._context
-      render(vnode, element)
-    } catch (error) {
-      cleanup()
-      throw error
-    }
-
-    return cleanup
-  }
 
   // Events history
   const lastPointerDownEvent = ref<PointerEvent>()
@@ -160,8 +112,5 @@ export const useUIStore = defineStore('__ui', () => {
 
     // Floating UI
     isAnyFloatingUIOpen,
-
-    // Temporary component
-    setTempComponent: skipHydrate(setTempComponent),
   }
 })
