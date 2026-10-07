@@ -243,6 +243,16 @@ export type ITreeProps<T extends IItem = IItem> = {
     dropMode?: 'parent' | 'place'
 
     /**
+     * Function that is used to check if a node can be picked up at all (a node it refuses gets no drag)
+     *
+     * Use-case: rows that keep their place, like pinned entries or group headers
+     */
+    canBeDragged?: (payload: {
+      node: ITreeNode<T>
+      nodeMeta?: ITreeNodeMeta
+    }) => boolean
+
+    /**
      * Function that is used to check if the draged node can be dropped at given node
      */
     canBeDropped?: (payload: {
