@@ -6,7 +6,7 @@ import type { IPageDrawerProps } from './types/page-drawer-props.type'
 import { useLayoutStore } from '../../stores/layout.store'
 
 // Constants
-import { BREAKPOINTS } from '../../constants/breakpoints'
+import { $bp, BREAKPOINTS } from '../../constants/breakpoints'
 import { PAGE_DRAWER_DEFAULT_PROPS } from './constants/page-drawer-default-props.constant'
 
 const props = withDefaults(defineProps<IPageDrawerProps>(), {
@@ -144,6 +144,22 @@ onClickOutside(drawerEl, handleClickOutside, {
   ignore: props.ignoreClickOutside,
 })
 
+// Below the absolute breakpoint the drawer is a sheet over the page, which Escape dismisses
+const isOverlay = computed(() => $bp.smaller(props.absoluteBreakpoint ?? 'md').value)
+
+onKeyStroke('Escape', ev => {
+  if (!model.value || !isOverlay.value || ev.defaultPrevented) {
+    return
+  }
+
+  // A floating UI (menu/dialog) opened on top of the drawer is dismissed first
+  if (document.querySelector('.floating-element')) {
+    return
+  }
+
+  model.value = false
+})
+
 // Breakpoints are instance props, so media queries cannot live in the SFC stylesheet.
 useHead(() => {
   const side = props.side ?? 'left'
@@ -162,8 +178,8 @@ useHead(() => {
         }
 
         @media (max-width: ${absoluteMaxWidth}px) {
-          aside.page-drawer${selector} {
-            position: absolute;
+          ${selector} .drawer-resizer {
+            display: none;
           }
 
           ${selector}.is-open:not(.is-mini) ~ .page-wrapper {
@@ -221,7 +237,7 @@ useHead(() => {
 
     <!-- Resizer -->
     <DrawerResizer
-      v-if="isResizable && !isMini"
+      v-if="isResizable && !isMini && model"
       :side="props.side"
       :is-resizing
       @mousedown="handleMouseDown"
@@ -237,13 +253,19 @@ header.is-hidden ~ .page-drawer {
 }
 
 .page-drawer {
-  transition-property: width transform;
+  // `visibility` flips at the end of the slide out (and at the start of the slide in)
+  transition-property: width, transform, visibility;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 
   // The width follows the pointer while resizing, so it must not transition
   &.is-resizing {
-    transition-property: transform;
+    transition-property: transform, visibility;
+  }
+
+  // A closed drawer is slid off-screen; hiding it also keeps it out of the tab order
+  &:not(.is-open) {
+    visibility: hidden;
   }
 
   &-filler {
