@@ -1,27 +1,29 @@
+import type { LocationQuery, LocationQueryRaw } from '#vue-router'
 import type { TableColumn } from '../models/table-column.model'
 
-export function tableNavigate(payload: {
-  columns: TableColumn[]
+const TABLE_QUERY_KEYS = ['filters', 'qb', 'order', 'select', 'search', 'skip', 'take']
+
+/**
+ * Merges the table's query params into the given (live) route query, keeping
+ * all the params that are not related to the table untouched
+ */
+export function tableBuildUrlQuery(payload: {
+  columns: Pick<TableColumn, 'field'>[]
+  currentQuery: LocationQuery
   queryParams: URLSearchParams
   isInfiniteScroll?: boolean
-  customData?: IItem
-}) {
-  const { columns, queryParams, isInfiniteScroll } = payload
-  const currentParams = useRequestURL().searchParams
+}): LocationQueryRaw {
+  const { columns, currentQuery, isInfiniteScroll } = payload
+  const queryParams = new URLSearchParams(payload.queryParams)
+  const query: LocationQueryRaw = { ...currentQuery }
 
   // Get only non-table related params
-  currentParams.delete('filters')
-  currentParams.delete('qb')
-  currentParams.delete('order')
-  currentParams.delete('select')
-  currentParams.delete('search')
-  currentParams.delete('skip')
-  currentParams.delete('take')
+  TABLE_QUERY_KEYS.forEach(key => delete query[key])
 
   // Remove all fields that are the present in the columns
   const columnFields = columns.map(column => column.field)
   columnFields.forEach(field => {
-    currentParams.delete(field)
+    delete query[field]
     queryParams.delete(field.toLowerCase())
   })
 
@@ -33,15 +35,31 @@ export function tableNavigate(payload: {
       return
     }
 
-    currentParams.set(key, value)
+    query[key] = value
   })
 
-  // Sentry throws errors here for some reason...
-  const query = currentParams.entries()?.reduce((agg, [key, value]) => {
-    agg[key] = decodeURIComponent(value)
+  return query
+}
 
-    return agg
-  }, {} as IItem) ?? {}
+export function tableNavigate(payload: {
+  columns: TableColumn[]
+  queryParams: URLSearchParams
+  isInfiniteScroll?: boolean
+  customData?: IItem
+}) {
+  const { columns, queryParams, isInfiniteScroll } = payload
 
-  navigateTo({ query, replace: true })
+  // We merge into the live route at write time (not into a snapshot), so we
+  // don't drop params that someone else added in the meantime
+  const route = useRouter().currentRoute.value
+
+  const query = tableBuildUrlQuery({
+    columns,
+    currentQuery: route.query,
+    queryParams,
+    isInfiniteScroll,
+  })
+
+  // Pin the path (and keep the hash), so the write never moves the user elsewhere
+  return navigateTo({ path: route.path, query, hash: route.hash }, { replace: true })
 }
