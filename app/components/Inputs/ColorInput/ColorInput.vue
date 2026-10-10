@@ -116,6 +116,7 @@ const {
   isBlurred,
   isTouched,
   handleBlur,
+  handleKeydown,
   handleClickWrapper,
   handleFocusOrClick,
   handlePointerDown,
@@ -194,7 +195,7 @@ defineExpose({
       />
     </template>
 
-    <template #default="{ inputClass, inputStyle }">
+    <template #default="{ inputClass, inputStyle, ariaProps }">
       <input
         :id="inputId"
         ref="el"
@@ -207,16 +208,15 @@ defineExpose({
         autocorrect="off"
         autocapitalize="off"
         spellcheck="false"
-        :label="label || placeholder"
         :name="name || path || label || placeholder"
         class="control"
-        role="presentation"
         :class="inputClass"
         :style="inputStyle"
-        v-bind="inputProps"
+        v-bind="{ ...ariaProps, ...inputProps }"
         @pointerdown="handlePointerDown"
         @focus="handleFocusOrClick"
         @blur="handleInputBlur"
+        @keydown="handleKeydown"
       >
 
       <MenuProxy

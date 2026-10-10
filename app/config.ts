@@ -628,6 +628,7 @@ export const defaultComponentsConfig = {
       originalValue: undefined,
       preferMargin: undefined,
       tooltip: undefined,
+      variant: 'regular',
       ui: {
         borderRadius: '0.5rem',
         borderColor: {
