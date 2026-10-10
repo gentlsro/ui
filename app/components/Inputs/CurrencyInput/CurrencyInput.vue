@@ -83,6 +83,7 @@ const {
   handleClickWrapper,
   handleFocusOrClick,
   handleBlur,
+  handleKeydown,
   isBlurred,
 } = useInputUtils({
   props,
@@ -305,7 +306,7 @@ defineExpose({
       />
     </template>
 
-    <template #default="{ inputClass, inputStyle }">
+    <template #default="{ inputClass, inputStyle, ariaProps }">
       <input
         :id="inputId"
         ref="el"
@@ -315,15 +316,14 @@ defineExpose({
         :placeholder
         :readonly
         :disabled
-        :label="label || placeholder"
         :name="name || path || label || placeholder"
         class="control"
-        role="presentation"
         :class="inputClass"
         :style="inputStyle"
-        v-bind="inputProps"
+        v-bind="{ ...ariaProps, ...inputProps }"
         @focus="handleFocusOrClick"
         @blur="handleBlur"
+        @keydown="handleKeydown"
         @beforeinput="handleBeforeInput"
       >
     </template>

@@ -260,6 +260,17 @@ export type IInputWrapperProps = IInputLabelProps & {
   }
 
   /**
+   * The input's appearance
+   *
+   * - `regular`: the bordered form field
+   * - `cell`: a flat control for tables and dense rows. No border until hover, the primary border and a solid
+   *   background on focus, errors float instead of taking space, read-only looks like plain text. Inputs commit their
+   *   value on blur or Enter (`emitOnBlur`), Escape restores the stored value, and they leave out decorations such as
+   *   the copy and step buttons. Pair it with `size="xs"` for the 28 px row height.
+   */
+  variant?: 'regular' | 'cell'
+
+  /**
    * Validation object
    */
   validation?: Pick<IArkResult, 'path' | 'isRequired' | 'messages'>

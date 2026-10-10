@@ -26,8 +26,11 @@ export function useInputUtils(options: IInputUtilsOptions) {
   let isInternalFocus = false
   let skipNextInputClick = false
 
+  // A cell always commits on blur (or Enter): its edits often rewrite a whole document
+  const isEmitOnBlur = () => !!props.emitOnBlur || props.variant === 'cell'
+
   const debouncedChange = useDebounceFn((val: any) => {
-    if (!props.emitOnBlur) {
+    if (!isEmitOnBlur()) {
       const isSame = isEqual(val, originalModel.value)
 
       if (!isSame) {
@@ -199,11 +202,58 @@ export function useInputUtils(options: IInputUtilsOptions) {
     onBlur?.()
     blur()
 
-    if (props.emitOnBlur) {
-      originalModel.value = model.value
+    if (isEmitOnBlur()) {
+      commit()
     }
 
     instance?.emit('blur', ev)
+  }
+
+  // Draft & commit (`emitOnBlur`): the typed value is a draft until blur or Enter writes it.
+  // The parent's prop updates on its next render, so a second commit before then (Enter, then a blur) compares
+  // against the value just written instead of the stale prop
+  let pendingCommit: { value: unknown } | undefined
+
+  const getCommittedValue = () => pendingCommit ? pendingCommit.value : originalModel.value
+
+  function commit() {
+    if (isEqual(model.value, getCommittedValue())) {
+      return
+    }
+
+    pendingCommit = { value: model.value }
+    originalModel.value = model.value
+    nextTick(() => {
+      pendingCommit = undefined
+    })
+  }
+
+  function handleKeydown(ev: KeyboardEvent) {
+    // A read-only input has no draft: finalizing its mask would write its display-rounded value
+    if (!isEmitOnBlur() || ev.isComposing || props.readonly || props.disabled) {
+      return
+    }
+
+    // Enter is a new line in a textarea
+    if (ev.key === 'Enter' && !(ev.target instanceof HTMLTextAreaElement)) {
+      // Finalize the mask as a blur would (bounds, zeros), then commit its last valid value
+      const live = toRaw(mask.value)
+
+      live?.masked.doCommit()
+      live?.updateControl()
+      syncTypedWithModel()
+
+      if (!isEqual(model.value, lastValidValue.value)) {
+        model.value = lastValidValue.value
+      }
+
+      commit()
+    } else if (ev.key === 'Escape' && !isEqual(model.value, getCommittedValue())) {
+      // Escape discards the draft; only an unchanged input lets it through to close menus and dialogs
+      ev.stopPropagation()
+      model.value = getCommittedValue()
+      lastValidValue.value = model.value
+    }
   }
 
   // In some cases, we click into the wrapper but not directly in the `.control`
@@ -383,6 +433,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
     setTypedValue,
 
     handleBlur,
+    handleKeydown,
     clear,
     focus,
     select,
