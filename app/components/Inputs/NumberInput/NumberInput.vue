@@ -32,14 +32,18 @@ const mergedProps = computed(() => {
 })
 
 // Mask
+// `exact`: the number as written in data (JSON), whatever the locale: no grouping, `.` as the decimal separator and
+// every fraction digit a JS number keeps
+const EXACT_SCALE = 20
+
 const mask = computed<MaskedNumber>(() => {
   let mask = new MaskedNumber({
-    thousandsSeparator: props.noGrouping
+    thousandsSeparator: props.noGrouping || props.exact
       ? ''
       : separators.value.thousandSeparator,
-    radix: separators.value.decimalSeparator,
+    radix: props.exact ? '.' : separators.value.decimalSeparator,
     mapToRadix: ['.', ','],
-    scale: props.fractionDigits,
+    scale: props.exact ? EXACT_SCALE : props.fractionDigits,
     mask: Number,
     min: props.min,
     max: props.max,
@@ -82,6 +86,7 @@ const {
   handleClickWrapper,
   handleFocusOrClick,
   handleBlur,
+  handleKeydown,
 } = useInputUtils({
   props,
   maskRef: mask,
@@ -110,13 +115,24 @@ const { path } = useInputValidationUtils(props)
 // Layout
 const readonly = toRef(props, 'readonly')
 
+// A cell leaves out the step buttons
+const hasStep = computed(() => {
+  return !!props.step && props.variant !== 'cell' && !readonly.value && !props.disabled
+})
+
 function handlePaste(ev: ClipboardEvent) {
   const pastedText = ev.clipboardData?.getData('text')
-  const parsedValue = parseNumber(pastedText)
+  const parsedValue = props.exact ? parseExactNumber(pastedText) : parseNumber(pastedText)
 
   if (!isNil(parsedValue)) {
     model.value = parsedValue
   }
+}
+
+function parseExactNumber(text?: string) {
+  const value = Number(text?.trim().replace(',', '.'))
+
+  return text?.trim() && Number.isFinite(value) ? value : undefined
 }
 
 defineExpose({
@@ -159,25 +175,24 @@ defineExpose({
       />
     </template>
 
-    <template #default="{ inputClass, inputStyle }">
+    <template #default="{ inputClass, inputStyle, ariaProps }">
       <input
         :id="inputId"
         ref="el"
         flex="1"
         :value="masked"
-        inputmode="numeric"
+        :inputmode="exact ? 'decimal' : 'numeric'"
         :placeholder="placeholder"
         :readonly="readonly"
         :disabled="disabled"
-        :label="label || placeholder"
         :name="name || path || label || placeholder"
         class="control"
-        role="presentation"
         :class="inputClass"
         :style="inputStyle"
-        v-bind="inputProps"
+        v-bind="{ ...ariaProps, ...inputProps }"
         @focus="handleFocusOrClick"
         @blur="handleBlur"
+        @keydown="handleKeydown"
         @paste.stop.prevent="handlePaste"
         @keypress.enter="$emit('enter', $event)"
       >
@@ -194,7 +209,7 @@ defineExpose({
       #append
     >
       <div
-        v-if="step || hasClearableBtn || $slots.append"
+        v-if="hasStep || hasClearableBtn || $slots.append"
         :class="appendClass"
         :style="appendStyle"
         data-cy="offset-buttons"
@@ -209,12 +224,12 @@ defineExpose({
           v-if="hasClearableBtn"
           :clear-confirmation
           :size
-          @click.stop.prevent="!clearConfirmation && clear()"
+          @clear="clear()"
         />
 
         <!-- Step -->
         <NumberInputStep
-          v-if="step && !readonly && !disabled"
+          v-if="hasStep"
           v-bind="props"
           v-model="originalModel"
         />

@@ -163,15 +163,20 @@ const focusHelperStyle = computed(() => {
 </script>
 
 <template>
-  <label
+  <div
     ref="labelEl"
-    tabindex="0"
+    role="checkbox"
+    :aria-checked="isIndeterminate ? 'mixed' : isChecked"
+    :aria-disabled="disabled || undefined"
+    :aria-readonly="readonly || undefined"
+    :tabindex="disabled ? -1 : 0"
     class="checkbox__container group/checkbox"
     :class="[classes, containerClass]"
     :style="containerStyle"
     @keydown="handleKey"
     @click.stop.prevent="handleStateChange"
   >
+    <!-- Carries the value for native forms; the container is the control people and assistive tech use -->
     <input
       type="checkbox"
       hidden
@@ -179,6 +184,7 @@ const focusHelperStyle = computed(() => {
       :name="name"
       :checked="isChecked"
       :indeterminate="isIndeterminate"
+      :disabled="disabled"
     >
 
     <div
@@ -224,5 +230,5 @@ const focusHelperStyle = computed(() => {
       :style="focusHelperStyle"
       tabindex="-1"
     />
-  </label>
+  </div>
 </template>

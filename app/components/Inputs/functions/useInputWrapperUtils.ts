@@ -30,6 +30,7 @@ export function useInputWrapperUtils() {
       'validation',
       'validationPath',
       'preferMargin',
+      'variant',
     )
   }
 
@@ -68,8 +69,16 @@ export function useInputWrapperUtils() {
     const isRegular = props.layout === 'regular'
     const hasLabel = !!props.label
 
+    // Size: xs (28 px, no label layouts: the row control of tables and cells)
+    if (props.size === 'xs') {
+      styleVariables['--fontSize'] = '13px'
+      styleVariables['--lineHeight'] = '20px'
+      styleVariables['--padding'] = preferMargin ? '0 8px' : '4px 8px'
+      styleVariables['--margin'] = preferMargin ? '4px 0' : '0'
+    }
+
     // Size: sm
-    if (props.size === 'sm') {
+    else if (props.size === 'sm') {
       styleVariables['--fontSize'] = '14px'
       styleVariables['--lineHeight'] = '24px'
       styleVariables['--padding'] = preferMargin ? '0 12px' : '4px 12px'

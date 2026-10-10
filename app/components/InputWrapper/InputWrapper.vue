@@ -33,9 +33,11 @@ const mergedProps = computed(() => {
 
 // Layout
 const wrapperEl = ref<HTMLDivElement>()
+const isCell = computed(() => props.variant === 'cell')
 
 const isModified = computed(() => {
-  if (!props.originalValue) {
+  // `undefined` means no original value was given; `0`, `false` and `''` are values to compare against
+  if (props.originalValue === undefined) {
     return false
   }
 
@@ -72,6 +74,7 @@ const wrapperClass = computed(() => {
       'has-content': props.hasContent,
       'has-label-inside': props.layout === 'label-inside',
       'is-inline': props.layout === 'inline',
+      'is-cell': isCell.value,
     },
   ]
 })
@@ -118,6 +121,26 @@ const inputStyle = computed(() => {
 const wrapperStyleVariables = computed(() => {
   return getInputWrapperStyleVariables({ ...props, ...mergedProps.value })
 })
+
+// Accessibility: the input tag is rendered by the input component, so it gets these through the default slot
+const errorId = computed(() => props.id ? `${props.id}-error` : undefined)
+const hintId = computed(() => props.id ? `${props.id}-hint` : undefined)
+
+const ariaProps = computed(() => {
+  const hasIssues = !!issues.value.length
+  const describedBy = [
+    hasIssues && props.errorVisible ? errorId.value : undefined,
+    props.hint ? hintId.value : undefined,
+  ].filter(Boolean)
+
+  return {
+    'aria-invalid': hasIssues ? 'true' : undefined,
+    'aria-describedby': describedBy.length ? describedBy.join(' ') : undefined,
+  } as const
+})
+
+// A cell keeps its row height: errors float over the content below instead of taking space
+const isErrorTakingSpace = computed(() => !isCell.value && props.errorTakesSpace)
 
 const isInputRequired = computed(() => {
   if (!isNil(props.required)) {
@@ -172,6 +195,7 @@ const wrapperProps = computed(() => {
     hint: props.hint,
     size: props.size,
     hasLabel: !!props.label,
+    variant: props.variant,
     ui: mergedProps.value.ui,
   }
 })
@@ -224,6 +248,7 @@ const wrapperProps = computed(() => {
         <slot
           :input-class
           :input-style
+          :aria-props
         />
       </template>
 
@@ -252,7 +277,8 @@ const wrapperProps = computed(() => {
         #error
       >
         <InputErrorContainer
-          :error-takes-space
+          :id="errorId"
+          :error-takes-space="isErrorTakingSpace"
           :errors="issues"
           :class="errorClass"
           :style="errorStyle"
@@ -267,6 +293,7 @@ const wrapperProps = computed(() => {
         <slot name="hint">
           <InputHintContainer
             v-if="hint"
+            :id="hintId"
             :hint
             :class="hintClass"
             :style="hintStyle"

@@ -26,8 +26,11 @@ export function useInputUtils(options: IInputUtilsOptions) {
   let isInternalFocus = false
   let skipNextInputClick = false
 
+  // A cell always commits on blur (or Enter): its edits often rewrite a whole document
+  const isEmitOnBlur = () => !!props.emitOnBlur || props.variant === 'cell'
+
   const debouncedChange = useDebounceFn((val: any) => {
-    if (!props.emitOnBlur) {
+    if (!isEmitOnBlur()) {
       const isSame = isEqual(val, originalModel.value)
 
       if (!isSame) {
@@ -199,11 +202,38 @@ export function useInputUtils(options: IInputUtilsOptions) {
     onBlur?.()
     blur()
 
-    if (props.emitOnBlur) {
-      originalModel.value = model.value
+    if (isEmitOnBlur()) {
+      commit()
     }
 
     instance?.emit('blur', ev)
+  }
+
+  // Draft & commit (`emitOnBlur`): the typed value is a draft until blur or Enter writes it
+  function commit() {
+    if (!isEqual(model.value, originalModel.value)) {
+      originalModel.value = model.value
+    }
+  }
+
+  function handleKeydown(ev: KeyboardEvent) {
+    if (!isEmitOnBlur() || ev.isComposing) {
+      return
+    }
+
+    if (ev.key === 'Enter') {
+      // An incomplete mask commits its last valid value, as a blur would
+      if (!isEqual(model.value, lastValidValue.value)) {
+        model.value = lastValidValue.value
+      }
+
+      commit()
+    } else if (ev.key === 'Escape' && !isEqual(model.value, originalModel.value)) {
+      // Escape discards the draft; only an unchanged input lets it through to close menus and dialogs
+      ev.stopPropagation()
+      model.value = originalModel.value
+      lastValidValue.value = originalModel.value
+    }
   }
 
   // In some cases, we click into the wrapper but not directly in the `.control`
@@ -383,6 +413,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
     setTypedValue,
 
     handleBlur,
+    handleKeydown,
     clear,
     focus,
     select,
