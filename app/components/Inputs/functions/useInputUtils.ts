@@ -209,11 +209,23 @@ export function useInputUtils(options: IInputUtilsOptions) {
     instance?.emit('blur', ev)
   }
 
-  // Draft & commit (`emitOnBlur`): the typed value is a draft until blur or Enter writes it
+  // Draft & commit (`emitOnBlur`): the typed value is a draft until blur or Enter writes it.
+  // The parent's prop updates on its next render, so a second commit before then (Enter, then a blur) compares
+  // against the value just written instead of the stale prop
+  let pendingCommit: { value: unknown } | undefined
+
+  const getCommittedValue = () => pendingCommit ? pendingCommit.value : originalModel.value
+
   function commit() {
-    if (!isEqual(model.value, originalModel.value)) {
-      originalModel.value = model.value
+    if (isEqual(model.value, getCommittedValue())) {
+      return
     }
+
+    pendingCommit = { value: model.value }
+    originalModel.value = model.value
+    nextTick(() => {
+      pendingCommit = undefined
+    })
   }
 
   function handleKeydown(ev: KeyboardEvent) {
@@ -221,18 +233,25 @@ export function useInputUtils(options: IInputUtilsOptions) {
       return
     }
 
-    if (ev.key === 'Enter') {
-      // An incomplete mask commits its last valid value, as a blur would
+    // Enter is a new line in a textarea
+    if (ev.key === 'Enter' && !(ev.target instanceof HTMLTextAreaElement)) {
+      // Finalize the mask as a blur would (bounds, zeros), then commit its last valid value
+      const live = toRaw(mask.value)
+
+      live?.masked.doCommit()
+      live?.updateControl()
+      syncTypedWithModel()
+
       if (!isEqual(model.value, lastValidValue.value)) {
         model.value = lastValidValue.value
       }
 
       commit()
-    } else if (ev.key === 'Escape' && !isEqual(model.value, originalModel.value)) {
+    } else if (ev.key === 'Escape' && !isEqual(model.value, getCommittedValue())) {
       // Escape discards the draft; only an unchanged input lets it through to close menus and dialogs
       ev.stopPropagation()
-      model.value = originalModel.value
-      lastValidValue.value = originalModel.value
+      model.value = getCommittedValue()
+      lastValidValue.value = model.value
     }
   }
 

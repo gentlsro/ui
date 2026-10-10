@@ -45,6 +45,7 @@ const {
   clear,
   getInputElement,
   handleBlur,
+  handleKeydown,
   handleClickWrapper,
   handleFocusOrClick,
   elMask,
@@ -146,6 +147,7 @@ defineExpose({
         v-bind="{ ...ariaProps, ...inputProps }"
         @focus="handleFocusOrClick"
         @blur="handleBlur"
+        @keydown="handleKeydown"
       />
 
       <slot name="inner" />

@@ -44,6 +44,7 @@ const {
   isBlurred,
   isTouched,
   handleBlur,
+  handleKeydown,
   handleClickWrapper,
   handleFocusOrClick,
   handlePointerDown,
@@ -160,6 +161,7 @@ defineExpose({
         @pointerdown="handlePointerDown"
         @focus="handleFocusOrClick"
         @blur="handleBlur"
+        @keydown="handleKeydown"
       >
 
       <MenuProxy

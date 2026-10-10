@@ -83,6 +83,7 @@ const {
   handleClickWrapper,
   handleFocusOrClick,
   handleBlur,
+  handleKeydown,
   isBlurred,
 } = useInputUtils({
   props,
@@ -322,6 +323,7 @@ defineExpose({
         v-bind="{ ...ariaProps, ...inputProps }"
         @focus="handleFocusOrClick"
         @blur="handleBlur"
+        @keydown="handleKeydown"
         @beforeinput="handleBeforeInput"
       >
     </template>

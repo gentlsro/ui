@@ -1,3 +1,5 @@
+import { escape } from 'lodash-es'
+
 // Types
 import type { IInputWrapperProps } from '../../InputWrapper/types/input-wrapper-props.type'
 
@@ -40,8 +42,9 @@ export function useInputValidationUtils(props: IInputWrapperProps) {
   })
 
   const issues = computed(() => {
-    // Errors passed by the parent are always shown; validation messages once the validation is visible
-    const errors = props.errors?.filter(Boolean) ?? []
+    // Errors passed by the parent are always shown; validation messages once the validation is visible.
+    // The error container renders HTML, and the parent's errors can carry server or user text, so they are escaped
+    const errors = props.errors?.filter(Boolean).map(error => escape(error)) ?? []
     const msgs = validationResult.value?.isValidationVisible
       ? validationResult.value.messages ?? []
       : []

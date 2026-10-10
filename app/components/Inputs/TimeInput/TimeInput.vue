@@ -166,6 +166,7 @@ const {
   handleFocusOrClick,
   handlePointerDown,
   handleBlur,
+  handleKeydown,
 } = useInputUtils({
   props: propsExtended,
   maskRef: maskFullTime,
@@ -318,6 +319,7 @@ defineExpose({
         @focus="handleFocusOrClick"
         @input="handleInput"
         @blur="handleBlur"
+        @keydown="handleKeydown"
       >
     </template>
 
