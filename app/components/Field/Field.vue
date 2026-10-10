@@ -120,6 +120,12 @@ defineExpose({
 }
 
 .wrapper {
+  &--xs {
+    :deep(.input-wrapper__input) {
+      @apply min-h-7;
+    }
+  }
+
   &--sm {
     :deep(.input-wrapper__input) {
       @apply min-h-8;

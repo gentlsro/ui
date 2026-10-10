@@ -40,13 +40,13 @@ export function useInputValidationUtils(props: IInputWrapperProps) {
   })
 
   const issues = computed(() => {
-    const msgs = validationResult.value?.messages ?? []
+    // Errors passed by the parent are always shown; validation messages once the validation is visible
+    const errors = props.errors?.filter(Boolean) ?? []
+    const msgs = validationResult.value?.isValidationVisible
+      ? validationResult.value.messages ?? []
+      : []
 
-    if (validationResult.value?.isValidationVisible) {
-      return msgs
-    }
-
-    return []
+    return [...errors, ...msgs]
   })
 
   return {

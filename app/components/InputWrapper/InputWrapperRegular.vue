@@ -8,7 +8,7 @@ import { INPUT_WRAPPER_DEFAULT_PROPS } from './constants/input-wrapper-default-p
 const props = defineProps<
   Pick<
     IInputWrapperProps,
-    'noBorder' | 'readonly' | 'disabled' | 'size' | 'hint' | 'ui' | 'loading'
+    'noBorder' | 'readonly' | 'disabled' | 'size' | 'hint' | 'ui' | 'loading' | 'variant'
   > & {
     hasErrors?: boolean
     hasLabel?: boolean
@@ -26,6 +26,7 @@ const classes = computed(() => {
     'is-disabled': props.disabled,
     'has-label': !!props.hasLabel,
     'is-mounted': isMounted.value,
+    'is-cell': props.variant === 'cell',
   }
 })
 
@@ -198,12 +199,38 @@ const inputInnerContainerStyle = computed(() => {
   }
 }
 
-.input-wrapper__regular.has-errors > .input-wrapper__regular-border {
-  @apply border-negative;
-}
-
 .input-wrapper__regular.is-readonly > .input-wrapper__regular-border {
   @apply border-dashed;
+}
+
+// Cell: flat until hovered, the primary border and a solid background when focused, read-only reads as plain text
+.input-wrapper__regular.is-cell {
+  > .input-wrapper__regular-border {
+    @apply border-solid border-transparent bg-transparent;
+  }
+
+  &:not(.is-readonly):not(.is-disabled):focus-within > .input-wrapper__regular-border {
+    @apply bg-white dark:bg-black;
+  }
+
+  // An error keeps its border on hover and focus
+  &:not(.is-readonly):not(.is-disabled):not(.has-errors) {
+    &:hover > .input-wrapper__regular-border {
+      @apply border-slate-200 dark:border-white/10;
+    }
+
+    &:focus-within > .input-wrapper__regular-border {
+      @apply border-$borderColorFocus;
+    }
+  }
+
+  &.has-errors > .input-wrapper__regular-border {
+    @apply border-negative;
+  }
+}
+
+.input-wrapper__regular.has-errors > .input-wrapper__regular-border {
+  @apply border-negative;
 }
 
 .input-wrapper__regular.is-disabled {

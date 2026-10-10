@@ -8,7 +8,7 @@ import { INPUT_WRAPPER_DEFAULT_PROPS } from './constants/input-wrapper-default-p
 const props = defineProps<
   Pick<
     IInputWrapperProps,
-    'noBorder' | 'readonly' | 'disabled' | 'size' | 'hint' | 'ui'
+    'noBorder' | 'readonly' | 'disabled' | 'size' | 'hint' | 'ui' | 'variant'
   > & {
     hasErrors?: boolean
     hasLabel?: boolean

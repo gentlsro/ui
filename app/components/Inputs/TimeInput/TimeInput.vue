@@ -295,7 +295,7 @@ defineExpose({
       />
     </template>
 
-    <template #default="{ inputClass, inputStyle }">
+    <template #default="{ inputClass, inputStyle, ariaProps }">
       <input
         :id="inputId"
         ref="el"
@@ -306,7 +306,6 @@ defineExpose({
         :placeholder="placeholder"
         :readonly="readonly"
         :disabled="disabled"
-        :label="label || placeholder"
         :name="name || path || label || placeholder"
         class="control"
         :class="inputClass"
@@ -314,7 +313,7 @@ defineExpose({
           ...inputStyle,
           ...(hasNoValue && { color: 'var(--placeholder-color)' }),
         }"
-        v-bind="inputProps"
+        v-bind="{ ...ariaProps, ...inputProps }"
         @pointerdown="handlePointerDown"
         @focus="handleFocusOrClick"
         @input="handleInput"
