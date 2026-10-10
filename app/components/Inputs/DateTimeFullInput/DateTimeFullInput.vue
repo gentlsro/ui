@@ -118,6 +118,7 @@ const {
   focus,
   select,
   handleBlur,
+  handleKeydown,
   blur,
   clear,
   getInputElement,
@@ -350,6 +351,7 @@ defineExpose({
         @pointerdown="handlePointerDown"
         @focus="handleFocusOrClick"
         @blur="handleBlur"
+        @keydown="handleKeydown"
       >
     </template>
 

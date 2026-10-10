@@ -6,6 +6,7 @@ import type { INumberInputProps } from './types/number-input-props.type'
 
 // Functions
 import { useInputUtils } from '../functions/useInputUtils'
+import { MaskedExactNumber } from './functions/masked-exact-number'
 import { useInputValidationUtils } from '../functions/useInputValidationUtils'
 
 // Constants
@@ -32,18 +33,19 @@ const mergedProps = computed(() => {
 })
 
 // Mask
-// `exact`: the number as written in data (JSON), whatever the locale: no grouping, `.` as the decimal separator and
-// every fraction digit a JS number keeps
-const EXACT_SCALE = 20
-
 const mask = computed<MaskedNumber>(() => {
+  // `exact`: the number as written in data (JSON), not rounded or grouped
+  if (props.exact && !props.mask) {
+    return new MaskedExactNumber({ min: props.min, max: props.max }) as unknown as MaskedNumber
+  }
+
   let mask = new MaskedNumber({
-    thousandsSeparator: props.noGrouping || props.exact
+    thousandsSeparator: props.noGrouping
       ? ''
       : separators.value.thousandSeparator,
-    radix: props.exact ? '.' : separators.value.decimalSeparator,
+    radix: separators.value.decimalSeparator,
     mapToRadix: ['.', ','],
-    scale: props.exact ? EXACT_SCALE : props.fractionDigits,
+    scale: props.fractionDigits,
     mask: Number,
     min: props.min,
     max: props.max,
