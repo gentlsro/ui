@@ -229,7 +229,8 @@ export function useInputUtils(options: IInputUtilsOptions) {
   }
 
   function handleKeydown(ev: KeyboardEvent) {
-    if (!isEmitOnBlur() || ev.isComposing) {
+    // A read-only input has no draft: finalizing its mask would write its display-rounded value
+    if (!isEmitOnBlur() || ev.isComposing || props.readonly || props.disabled) {
       return
     }
 
