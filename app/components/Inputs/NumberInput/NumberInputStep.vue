@@ -111,6 +111,12 @@ function stopStep() {
   @apply flex flex-col shrink w-4;
 }
 
+.is--xs {
+  :deep(.step-icon) {
+    @apply w-2.5 h-2.5;
+  }
+}
+
 .is--sm {
   :deep(.step-icon) {
     @apply w-3 h-3;

@@ -70,6 +70,11 @@ const eyeBtnProps = computed(() => {
   } as IBtnProps
 
   switch (props.size) {
+    case 'xs':
+      _props.icon += ' w-3.5 h-3.5'
+
+      break
+
     case 'sm':
       _props.icon += ' w-4 h-4'
 
