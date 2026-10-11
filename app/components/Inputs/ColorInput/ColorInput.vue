@@ -181,7 +181,8 @@ defineExpose({
   >
     <template #prepend>
       <div
-        class="w-6 h-6 rounded-custom border-1 border-ca m-l-2"
+        class="rounded-custom border-1 border-ca"
+        :class="size === 'xs' ? 'w-5 h-5 m-l-1.5' : 'w-6 h-6 m-l-2'"
         :style="{ backgroundColor: colorSelected }"
         data-cy="color-picker-preview"
       />

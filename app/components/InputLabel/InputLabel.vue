@@ -59,6 +59,7 @@ const labelClassLocal = computed(() => {
       'is-inside': isInside,
       'is-regular': isRegular,
       'is-floating': !isInline && (props.stackLabel || props.placeholder || props.hasContent),
+      'is-stacked': !isInline && props.stackLabel,
       'is-mounted': isMounted.value,
       'is-focusable': props.ui?.focusInputOnLabelClick,
       'has-hint': hasLabelHint,
@@ -223,6 +224,15 @@ label.label {
     }
   }
 
+  // Size: Extra small (the 28 px row of tables and dense panes)
+  &--xs {
+    @apply font-rem-13;
+
+    &.is-inline {
+      @apply font-rem-12;
+    }
+  }
+
   // Size: Small
   &--sm {
     @apply font-rem-14;
@@ -334,5 +344,11 @@ label.label.is-inline {
     font-size 0.15s cubic-bezier(0.4, 0, 0.2, 1),
     left 0.15s cubic-bezier(0.4, 0, 0.2, 1),
     color 0.15s linear;
+
+  // A stacked label never floats in or out, so only its colour animates: its position (from the measured prepend)
+  // must not slide into place when the prepend is laid out late
+  &.is-stacked {
+    transition: color 0.15s linear;
+  }
 }
 </style>
