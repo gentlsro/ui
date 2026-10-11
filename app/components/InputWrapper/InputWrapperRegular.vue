@@ -27,29 +27,38 @@ const isLabelTransitionReady = ref(false)
 let prependObserver: ResizeObserver | undefined
 let transitionFrame = 0
 
+function measurePrepend() {
+  const element = prependEl.value
+  if (!element) {
+    return
+  }
+
+  const width = element.clientWidth
+  if (isMounted.value && width === prependWidth.value) {
+    return
+  }
+
+  // Grid movement and its negative offset must take effect together. Only
+  // animate subsequent focus/value changes, never layout compensation.
+  isLabelTransitionReady.value = false
+  prependWidth.value = width
+  cancelAnimationFrame(transitionFrame)
+  transitionFrame = requestAnimationFrame(() => {
+    transitionFrame = requestAnimationFrame(() => {
+      isLabelTransitionReady.value = true
+    })
+  })
+}
+
+// Slot updates can change the grid before ResizeObserver delivers in WebKit.
+onUpdated(measurePrepend)
+
 onMounted(() => {
   const element = prependEl.value
 
   if (element) {
-    const measure = () => {
-      const width = element.clientWidth
-      if (isMounted.value && width === prependWidth.value) {
-        return
-      }
-
-      // Grid movement and its negative offset must take effect together. Only
-      // animate subsequent focus/value changes, never layout compensation.
-      isLabelTransitionReady.value = false
-      prependWidth.value = width
-      cancelAnimationFrame(transitionFrame)
-      transitionFrame = requestAnimationFrame(() => {
-        transitionFrame = requestAnimationFrame(() => {
-          isLabelTransitionReady.value = true
-        })
-      })
-    }
-    measure()
-    prependObserver = new ResizeObserver(measure)
+    measurePrepend()
+    prependObserver = new ResizeObserver(measurePrepend)
     prependObserver.observe(element)
   }
 

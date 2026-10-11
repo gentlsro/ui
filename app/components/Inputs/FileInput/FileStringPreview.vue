@@ -1,4 +1,6 @@
 <script setup lang="ts" vapor>
+import { handleDownloadFile } from '#imports'
+
 // Constants
 import { ICON_BY_FILE_EXTENSION } from './constants/icon-by-file-extension'
 

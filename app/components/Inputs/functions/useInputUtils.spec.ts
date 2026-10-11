@@ -357,16 +357,17 @@ describe('input menu interactions', () => {
       show: vi.fn(() => (menu.isOpen = true)),
       hide: vi.fn(() => (menu.isOpen = false)),
     }
-    const props = reactive({
-      modelValue: null,
-      emptyValue: null,
-      id: 'menu-input',
-      noHideFloating: true,
-    })
     const maskRef = shallowRef<FactoryOpts>({ mask: Number })
     let input: ReturnType<typeof useInputUtils>
     const component = defineComponent({
-      setup() {
+      props: {
+        modelValue: { default: null },
+        emptyValue: { default: null },
+        id: { type: String, default: 'menu-input' },
+        noHideFloating: { type: Boolean, default: true },
+      },
+      emits: ['update:modelValue'],
+      setup(props) {
         input = useInputUtils({ props, emit: vi.fn(), maskRef, menuElRef: ref(menu) })
 
         return () => h('div', {

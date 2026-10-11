@@ -65,7 +65,7 @@ const rootProps = computed(() => {
   }
 
   const toPath = typeof props.to === 'string' ? props.to : props.to?.path ?? ''
-  const currentPath = localePath(route.path, nuxtApp.$i18n.locale.value)
+  const currentPath = localePath({ path: route.path }, nuxtApp.$i18n.locale.value)
 
   return {
     href: linkHref.value,

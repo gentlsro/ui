@@ -1,4 +1,4 @@
-import type { RouteLocationRaw } from '#vue-router'
+import type { NavigationTarget } from '../../../types/navigation-target.type'
 import type { AllowedComponentProps, CSSProperties } from 'vue'
 
 // Types
@@ -102,7 +102,7 @@ export type ISelectorProps = IFieldProps & {
   /**
    * A link to the item (for single selection)
    */
-  to?: RouteLocationRaw | ((item: any) => RouteLocationRaw)
+  to?: NavigationTarget | ((item: any) => NavigationTarget)
 
   // List
   /**

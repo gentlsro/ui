@@ -2,7 +2,7 @@
 import type { CSSProperties } from 'vue'
 import type { NuxtLinkProps } from '#app'
 import type { Required } from 'utility-types'
-import type { RouteLocationRaw } from '#vue-router'
+import type { NavigationTarget } from '../../../types/navigation-target.type'
 import type { ITableTotal } from './table-total.type'
 import type { ITableLayout } from './table-layout.type'
 import type { ITableRowEdit } from './table-row-edit.type'
@@ -619,7 +619,7 @@ export type ITableProps<
   /**
    * Link to the detail from page
    */
-  to?: (row: any, options?: { rowKey?: string }) => RouteLocationRaw | undefined
+  to?: (row: any, options?: { rowKey?: string }) => NavigationTarget | undefined
 
   /**
    * Props to pass to the NuxtLink component

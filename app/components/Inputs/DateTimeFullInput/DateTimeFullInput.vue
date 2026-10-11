@@ -211,7 +211,7 @@ function placeCursorOnTime() {
     focusInputWithoutClosingPicker(input)
   }
 
-  // vue-imask exposes a readonly proxy; cursor writes on it are ignored.
+  // The mask binding exposes a readonly proxy; update the owned IMask instance.
   toRaw(mask).updateCursor(getTimeCursorPosition())
 }
 

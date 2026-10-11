@@ -1,5 +1,6 @@
 <script setup lang="ts" vapor>
 import type { CSSProperties } from 'vue'
+import { lowerCase } from 'lodash-es'
 import colors from '../../../constants/colors.json'
 
 // Types

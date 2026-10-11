@@ -12,8 +12,7 @@ import {
   normalizeStickyIndices,
 } from './functions/virtual-scroller-sticky'
 
-// A native block owns the styled viewport; attributes still target the real
-// scroll element rather than leaking onto the interop boundary.
+// Forward attributes and listeners once, to the actual scroll viewport.
 defineOptions({ inheritAttrs: false })
 const props = withDefaults(defineProps<IVirtualScrollerProps<T, C>>(), {
   ...getComponentProps('virtualScroller'),
@@ -115,6 +114,8 @@ const rowVirtualizer = useVirtualizer<HTMLDivElement, HTMLDivElement>(computed((
   rangeExtractor: rowRangeExtractor.value,
   initialRect: { width: 0, height: initialCount * props.rowHeight },
   overscan: rowOverscan.value,
+  // Row measurement changes rendered geometry; defer it out of ResizeObserver delivery.
+  useAnimationFrameWithResizeObserver: true,
 })))
 const firstVisibleIndex = computed(() => rowVirtualizer.value.range?.startIndex)
 const activeStickyIndex = computed(() => {
@@ -395,51 +396,49 @@ function getRowStyle(item: VirtualItem) {
 </script>
 
 <template>
-  <div class="contents">
+  <div
+    ref="virtualScrollEl"
+    v-bind="$attrs"
+    class="virtual-scroll"
+    :class="[containerClass, { 'is-virtual': isMounted && isVirtual }]"
+    :style="containerStyle"
+    tabindex="0"
+  >
     <div
-      ref="virtualScrollEl"
-      v-bind="$attrs"
-      class="virtual-scroll"
-      :class="[containerClass, { 'is-virtual': isMounted && isVirtual }]"
-      :style="containerStyle"
-      tabindex="0"
+      ref="contentEl"
+      class="virtual-scroll__content"
+      :class="contentClass"
+      :style="contentStyle"
     >
       <div
-        ref="contentEl"
-        class="virtual-scroll__content"
-        :class="contentClass"
-        :style="contentStyle"
+        v-for="item in virtualRows"
+        :key="String(item.key)"
+        :ref="measureRow"
+        :data-index="item.index"
+        :data-idx="item.index"
+        :data-key="String(item.key)"
+        class="virtual-scroll__row content-row"
+        :class="[rowClass, {
+          'is-sticky': item.isSticky,
+          'is-sticky-active': item.isActiveSticky,
+          'is-stuck': item.isStuck,
+        }]"
+        :style="getRowStyle(item)"
       >
-        <div
-          v-for="item in virtualRows"
-          :key="String(item.key)"
-          :ref="measureRow"
-          :data-index="item.index"
-          :data-idx="item.index"
-          :data-key="String(item.key)"
-          class="virtual-scroll__row content-row"
-          :class="[rowClass, {
-            'is-sticky': item.isSticky,
-            'is-sticky-active': item.isActiveSticky,
-            'is-stuck': item.isStuck,
-          }]"
-          :style="getRowStyle(item)"
+        <slot
+          :row="item.row"
+          :index="item.index"
+          :columns="visibleColumns"
+          :style="slotStyle"
+          :is-sticky="item.isSticky"
+          :is-active-sticky="item.isActiveSticky"
+          :is-stuck="item.isStuck"
         >
-          <slot
-            :row="item.row"
-            :index="item.index"
-            :columns="visibleColumns"
-            :style="slotStyle"
-            :is-sticky="item.isSticky"
-            :is-active-sticky="item.isActiveSticky"
-            :is-stuck="item.isStuck"
-          >
-            {{ item.row }}
-          </slot>
-        </div>
-        <slot name="inner-content" />
-        <slot name="inner" />
+          {{ item.row }}
+        </slot>
       </div>
+      <slot name="inner-content" />
+      <slot name="inner" />
     </div>
   </div>
 </template>

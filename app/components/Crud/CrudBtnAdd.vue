@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type { RouteLocationRaw } from '#vue-router'
+import type { NavigationTarget } from '../../types/navigation-target.type'
 
 // Types
 import type { ICrudBtnProps, ICrudBtnsProps } from './types/crud-btn-props.type'
 
 type IProps = ICrudBtnProps & {
-  to?: RouteLocationRaw
+  to?: NavigationTarget
 }
 
 const props = withDefaults(defineProps<IProps>(), {

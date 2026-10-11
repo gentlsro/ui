@@ -1,5 +1,6 @@
 <script setup lang="ts" vapor>
 import type { Required } from 'utility-types'
+import { FileModel } from '#imports'
 
 // Constants
 import { IMAGE_TYPES } from './constants/image-types'
@@ -23,6 +24,10 @@ const { formatBytes } = useNumber()
 
 // Layout
 const isPreviewOpen = ref(false)
+const isMounted = ref(false)
+onMounted(() => isMounted.value = true)
+
+watch(() => props.file, () => isPreviewOpen.value = false)
 
 const icon = computed(() => {
   const icon = ICON_BY_FILE_TYPE[props.file.type as keyof typeof ICON_BY_FILE_TYPE]
@@ -37,32 +42,35 @@ const size = computed(() => {
     : formatBytes(props.file.size ?? 0)
 })
 
-const imageUrl = computed(() => {
-  const isImageFile = IMAGE_TYPES.includes(props.file.type ?? '')
-
-  if (!isImageFile) {
-    return null
-  }
-
-  if (props.file instanceof FileModel) {
-    return URL.createObjectURL(props.file.file)
-  } else {
-    return getLocalImageUrl(props.file.path)
+// Own one browser URL per local media file and revoke it on replacement/disposal.
+const localMediaUrl = useObjectUrl(() => {
+  if (
+    isMounted.value
+    && props.file instanceof FileModel
+    && (IMAGE_TYPES.includes(props.file.type ?? '') || VIDEO_TYPES.includes(props.file.type ?? ''))
+  ) {
+    return props.file.file
   }
 })
 
-const videoUrl = computed(() => {
-  const isVideoFile = VIDEO_TYPES.includes(props.file.type ?? '')
-
-  if (!isVideoFile) {
+const imageUrl = computed(() => {
+  if (!IMAGE_TYPES.includes(props.file.type ?? '')) {
     return null
   }
 
-  if (props.file instanceof FileModel) {
-    return URL.createObjectURL(props.file.file)
-  } else {
-    return getLocalImageUrl(props.file.path)
+  return props.file instanceof FileModel
+    ? localMediaUrl.value
+    : getLocalImageUrl(props.file.path)
+})
+
+const videoUrl = computed(() => {
+  if (!VIDEO_TYPES.includes(props.file.type ?? '')) {
+    return null
   }
+
+  return props.file instanceof FileModel
+    ? localMediaUrl.value
+    : getLocalImageUrl(props.file.path)
 })
 
 const downloadUrl = computedAsync(async () => {

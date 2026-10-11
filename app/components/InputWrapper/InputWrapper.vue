@@ -208,15 +208,15 @@ defineExpose({ element: wrapperEl })
     ref="wrapperEl"
     class="wrapper group/wrapper"
     :class="wrapperClass"
+    :style="wrapperStyleVariables"
     data-cy="input-field"
   >
-    <!-- TODO(I02): Restore root variables once Vue fixes mixed-owner style hydration (still broken in rc.9). -->
     <Component
       :is="WrapperComponent"
       v-bind="wrapperProps"
       class="wrapper__body"
       :class="[contentClassLocal, contentClass]"
-      :style="[wrapperStyleVariables, contentStyle]"
+      :style="contentStyle"
     >
       <!-- Label -->
       <template

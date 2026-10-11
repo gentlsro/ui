@@ -1,4 +1,6 @@
 <script setup lang="ts" vapor generic="T extends IItem = IItem">
+import { get } from 'lodash-es'
+
 // Types
 import type { ITreeNode } from '../Tree/types/tree-node.type'
 

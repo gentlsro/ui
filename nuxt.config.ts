@@ -4,7 +4,7 @@ import { createResolver } from 'nuxt/kit'
 import { loadEnv } from 'vite'
 import { writeFile } from 'node:fs/promises'
 import { cwd, env as processEnv } from 'node:process'
-import { prepareLocalNuxtLayers } from './prepare-layers'
+import { prepareLocalNuxtLayers } from './prepare-layers.ts'
 
 const env = {
   ...import.meta.env,
@@ -88,8 +88,7 @@ export default defineNuxtConfig({
   },
 
   build: {
-    // No touchy or I cut fingers
-    transpile: ['imask', 'vue-imask'],
+    transpile: ['imask'],
   },
 
   future: {

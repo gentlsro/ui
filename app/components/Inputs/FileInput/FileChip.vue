@@ -1,4 +1,6 @@
 <script setup lang="ts" vapor>
+import { handleDownloadFile } from '#imports'
+
 // Types
 import type { IFileInputProps } from './types/file-input-props.type'
 

@@ -1,4 +1,6 @@
 <script setup lang="ts" vapor>
+import { FileModel, handleDownloadFile } from '#imports'
+
 // Constants
 import { IMAGE_TYPES } from './constants/image-types'
 import { ICON_BY_FILE_TYPE } from './constants/icon-by-file-type'
