@@ -23,6 +23,7 @@ const classes = computed(() => {
     'has-errors': props.hasErrors,
     'is-readonly': props.readonly,
     'is-disabled': props.disabled,
+    'is-cell': props.variant === 'cell',
   }
 })
 
@@ -177,6 +178,10 @@ const inputInnerContainerStyle = computed(() => {
     }
 
     // Label must be have at least the same height as the input to be positioned properly
+    &.is-xs > .input-wrapper__inline-label {
+      @apply min-h-7;
+    }
+
     &.is-sm > .input-wrapper__inline-label {
       @apply min-h-8;
     }
@@ -235,5 +240,31 @@ const inputInnerContainerStyle = computed(() => {
 
 .input-wrapper__inline:not(.has-border) .input-wrapper__inline-border {
   @apply border-none;
+}
+
+// Cell: flat until hovered, the primary border and a solid background when focused, read-only reads as plain text
+.input-wrapper__inline.is-cell {
+  .input-wrapper__inline-border {
+    @apply border-solid border-transparent bg-transparent;
+  }
+
+  &:not(.is-readonly):not(.is-disabled):focus-within .input-wrapper__inline-border {
+    @apply bg-white dark:bg-black;
+  }
+
+  // An error keeps its border on hover and focus
+  &:not(.is-readonly):not(.is-disabled):not(.has-errors) {
+    &:hover .input-wrapper__inline-border {
+      @apply border-slate-200 dark:border-white/10;
+    }
+
+    &:focus-within .input-wrapper__inline-border {
+      @apply border-$borderColorFocus;
+    }
+  }
+
+  &.has-errors .input-wrapper__inline-border {
+    @apply border-negative;
+  }
 }
 </style>
