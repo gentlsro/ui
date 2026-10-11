@@ -64,8 +64,8 @@ const {
 const columns = toRef(props, 'columns')
 
 syncRef(items, storeItems, { direction: 'both', deep: true })
-syncRef(columns, storeColumns, { direction: 'ltr' })
-syncRef(toRef(props, 'getFilterComponent'), storeGetFilterComponentFnc, { direction: 'ltr' })
+syncRefs(columns, storeColumns)
+syncRefs(toRef(props, 'getFilterComponent'), storeGetFilterComponentFnc)
 
 // Lifecycle
 // When no items are provided, initialize the items with a group

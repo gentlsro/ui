@@ -58,14 +58,17 @@ const nodeHovered = defineModel<ITreeNode<T> | undefined>('nodeHovered')
 // Syncing merged props with store
 syncRef(nodeFocused, storeNodeFocused, { direction: 'both' })
 syncRef(nodeHovered, storeNodeHovered, { direction: 'both' })
-syncRef(toRef(() => mergedProps.value.ui), ui, { direction: 'ltr' })
-syncRef(toRef(() => mergedProps.value.searchConfig), searchConfig, { direction: 'ltr' })
-syncRef(toRef(() => mergedProps.value.actionsConfig), actionsConfig, { direction: 'ltr' })
-syncRef(toRef(() => mergedProps.value.dndConfig), dndConfig, { direction: 'ltr' })
-syncRef(toRef(() => mergedProps.value.loadChildrenConfig), loadChildrenConfig, { direction: 'ltr' })
-syncRef(toRef(() => mergedProps.value.collapseConfig), collapseConfig, { direction: 'ltr' })
-syncRef(toRef(() => mergedProps.value.selectionConfig), selectionConfig, { direction: 'ltr' })
-syncRef(toRef(() => mergedProps.value.sortingConfig), sortingConfig, { direction: 'ltr' })
+// One-way syncs use `syncRefs`: `syncRef` reads and writes its pause state in
+// the callback, which re-triggers a parent's render when it passes inline
+// config objects (a new object on every render => endless re-render)
+syncRefs(toRef(() => mergedProps.value.ui), ui)
+syncRefs(toRef(() => mergedProps.value.searchConfig), searchConfig)
+syncRefs(toRef(() => mergedProps.value.actionsConfig), actionsConfig)
+syncRefs(toRef(() => mergedProps.value.dndConfig), dndConfig)
+syncRefs(toRef(() => mergedProps.value.loadChildrenConfig), loadChildrenConfig)
+syncRefs(toRef(() => mergedProps.value.collapseConfig), collapseConfig)
+syncRefs(toRef(() => mergedProps.value.selectionConfig), selectionConfig)
+syncRefs(toRef(() => mergedProps.value.sortingConfig), sortingConfig)
 
 // Init keyboard navigation
 if (!props.noKeyboard) {

@@ -55,8 +55,8 @@ const model = defineModel<T[]>()
 const search = ref('')
 const treeEl = useTemplateRef('treeEl')
 
-syncRef(toRef(() => mergedProps.value?.modifiers), modifiers, { direction: 'ltr' })
-syncRef(toRef(() => mergedProps.value?.contextMenuConfig), contextMenuConfig, { direction: 'ltr' })
+syncRefs(toRef(() => mergedProps.value?.modifiers), modifiers)
+syncRefs(toRef(() => mergedProps.value?.contextMenuConfig), contextMenuConfig)
 
 // Menu
 function handleNodeClick(payload: { node: ITreeNode<T>, ev?: MouseEvent }) {
