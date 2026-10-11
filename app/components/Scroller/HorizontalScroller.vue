@@ -39,7 +39,11 @@ const {
 
 syncRef(sourceX, x, { direction: 'both', immediate: false })
 
-useEventListener(scrollEl, 'wheel', handleWheel, { passive: false })
+useEventListener(scrollEl, 'wheel', ev => {
+  if (!props.noWheelScroll) {
+    handleWheel(ev)
+  }
+}, { passive: false })
 
 onMounted(() => {
   x.value = sourceX.value
@@ -104,7 +108,15 @@ defineExpose({
 <template>
   <div
     class="scroller-horizontal"
-    :class="[`arrows--${arrows}`, { 'is-overflown': isOverflown }, containerClass]"
+    :class="[
+      `arrows--${arrows}`,
+      {
+        'is-overflown': isOverflown,
+        'has-fade-start': !arrivedState.left,
+        'has-fade-end': !arrivedState.right,
+      },
+      containerClass,
+    ]"
     :style="containerStyle"
   >
     <!-- Left arrow -->

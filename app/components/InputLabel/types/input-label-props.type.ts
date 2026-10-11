@@ -51,8 +51,10 @@ export type IInputLabelProps = {
 
   /**
    * The input's size
+   *
+   * `xs` is the 28 px row control of dense layouts (tables, cells); it is meant for inputs without a label
    */
-  size?: 'sm' | 'md' | 'lg'
+  size?: 'xs' | 'sm' | 'md' | 'lg'
 
   /**
    * When true, the label will be `floating` even when with no content

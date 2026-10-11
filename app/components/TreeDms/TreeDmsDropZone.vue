@@ -25,6 +25,7 @@ const {
   dragMeta,
   dndConfig,
   expandNode,
+  isNodeCollapsed,
 } = useTreeStore<T>()
 
 // Utils
@@ -191,7 +192,7 @@ function updateExternalDragTarget(e: { clientX: number, clientY: number }) {
   // Hover-to-expand collapsed folders
   const nodeToExpand = parentNode ?? (node.ref.type === props.folderKey ? node : null)
 
-  if (nodeToExpand && nodeMetaById.value[nodeToExpand.id]?.isCollapsed) {
+  if (nodeToExpand && isNodeCollapsed(nodeToExpand.id)) {
     startHoverExpandTimer(nodeToExpand)
   } else {
     clearHoverExpandTimer()

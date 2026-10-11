@@ -48,6 +48,7 @@ const {
   isBlurred,
   isTouched,
   handleBlur,
+  handleKeydown,
   handleClickWrapper,
   handleFocusOrClick,
   handlePointerDown,
@@ -77,6 +78,7 @@ const isPickerActive = ref(false)
 
 // Icon
 const iconClassBySize = {
+  xs: { size: 16 },
   sm: { size: 18 },
   md: { size: 22 },
   lg: { size: 26 },
@@ -143,7 +145,7 @@ defineExpose({
       </div>
     </template>
 
-    <template #default="{ inputClass, inputStyle }">
+    <template #default="{ inputClass, inputStyle, ariaProps }">
       <input
         :id="inputId"
         ref="el"
@@ -156,16 +158,15 @@ defineExpose({
         autocorrect="off"
         autocapitalize="off"
         spellcheck="false"
-        :label="label || placeholder"
         :name="name || path || label || placeholder"
         class="control"
-        role="presentation"
         :class="inputClass"
         :style="inputStyle"
-        v-bind="inputProps"
+        v-bind="{ ...ariaProps, ...inputProps }"
         @pointerdown="handlePointerDown"
         @focus="handleFocusOrClick"
         @blur="handleBlur"
+        @keydown="handleKeydown"
       >
 
       <MenuProxy

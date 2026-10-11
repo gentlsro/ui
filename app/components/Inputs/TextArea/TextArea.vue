@@ -49,6 +49,7 @@ const {
   clear,
   getInputElement,
   handleBlur,
+  handleKeydown,
   handleClickWrapper,
   handleFocusOrClick,
   elMask,
@@ -138,7 +139,7 @@ defineExpose({
     </template>
 
     <!-- Default -->
-    <template #default="{ inputClass, inputStyle }">
+    <template #default="{ inputClass, inputStyle, ariaProps }">
       <textarea
         :id="inputId"
         ref="el"
@@ -148,16 +149,15 @@ defineExpose({
         :readonly="readonly"
         :disabled="disabled"
         autocomplete="off"
-        :label="label || placeholder"
         :name="name || path || label || placeholder"
         class="control"
-        role="presentation"
         :rows="rows"
         :class="[inputClass, resizeClass]"
         :style="inputStyle"
-        v-bind="inputProps"
+        v-bind="{ ...ariaProps, ...inputProps }"
         @focus="handleFocusOrClick"
         @blur="handleBlur"
+        @keydown="handleKeydown"
       />
 
       <slot name="inner" />

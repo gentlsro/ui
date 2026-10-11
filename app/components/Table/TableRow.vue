@@ -68,6 +68,9 @@ const {
   rowsColumnCount,
   isCardView,
   cellEdit,
+  isSavingRow,
+  rowSaveError,
+  isEditingCell,
   getCellEdit,
   updateCellEditValue,
   isEditingRow,
@@ -124,7 +127,9 @@ function getRowActions(rowData: typeof rowDataArray.value[number]) {
     isEditing,
     isModified: isEditing && tableStore.isCellEditModified.value,
     canEdit: isFullRowEdit.value && tableStore.visibleColumns.value.some(column => tableIsCellEditable(rowData.row, column)),
-    disabled: cellEdit.value.length > 0 && !isEditing,
+    disabled: isSavingRow.value || (isEditingCell.value && !isEditing),
+    isSaving: isEditing && isSavingRow.value,
+    error: isEditing ? rowSaveError.value : undefined,
     edit: () => handleEditRow(rowData),
     save: () => {
       if (isEditingRow(rowData.row)) {
@@ -360,6 +365,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
                 icon="i-material-symbols:close-rounded"
                 :name="$t('general.cancel')"
                 :title="$t('general.cancel')"
+                :disabled="actions.isSaving"
                 no-uppercase
                 no-bold
                 @click.stop.prevent="handleCancelEditCell"
@@ -372,6 +378,8 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
                 icon="i-material-symbols:check-rounded"
                 :name="$t('general.save')"
                 :title="$t('general.save')"
+                :disabled="actions.isSaving"
+                :loading="actions.isSaving"
                 no-uppercase
                 @click.stop.prevent="handleSaveCellEditValue"
               />
@@ -674,6 +682,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
               icon="i-material-symbols:close-rounded"
               :name="$t('general.cancel')"
               :title="$t('general.cancel')"
+              :disabled="actions.isSaving"
               no-uppercase
               no-bold
               @click.stop.prevent="handleCancelEditCell"
@@ -686,6 +695,8 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
               icon="i-material-symbols:check-rounded"
               :name="$t('general.save')"
               :title="$t('general.save')"
+              :disabled="actions.isSaving"
+              :loading="actions.isSaving"
               no-uppercase
               @click.stop.prevent="handleSaveCellEditValue"
             />

@@ -23,6 +23,12 @@ export type INumberInputProps = IInputProps & {
   noGrouping?: boolean
 
   /**
+   * Keep the number exactly as stored: no rounding to `fractionDigits`, no thousands grouping and `.` as the decimal
+   * separator in every locale. Use it for raw data (JSON, configuration) rather than amounts shown to people
+   */
+  exact?: boolean
+
+  /**
    * The step to increment/decrement the value by
    *
    * NOTE - use `null` to remove the step

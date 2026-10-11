@@ -51,6 +51,7 @@ const {
   label,
   isTouched,
   handleBlur,
+  handleKeydown,
   handleClickWrapper,
   handleFocusOrClick,
   focus,
@@ -99,7 +100,11 @@ const eyeBtnProps = computed(() => {
 })
 
 const hasCopyBtn = computed(() => {
-  return props.readonly && !props.disabled && !props.noCopy && hasContent.value
+  return props.readonly
+    && !props.disabled
+    && !props.noCopy
+    && props.variant !== 'cell'
+    && hasContent.value
 })
 
 const inputType = computed(() => {
@@ -171,7 +176,7 @@ defineExpose({
       />
     </template>
 
-    <template #default="{ inputClass, inputStyle }">
+    <template #default="{ inputClass, inputStyle, ariaProps }">
       <input
         :id="inputId"
         ref="el"
@@ -186,15 +191,14 @@ defineExpose({
         autocorrect="off"
         autocapitalize="off"
         spellcheck="false"
-        :label="label || placeholder"
         :name="name || path || label || placeholder"
         class="control"
-        role="presentation"
         :class="[inputClass, { 'custom-enter': !!customEnter }]"
         :style="inputStyle"
-        v-bind="inputProps"
+        v-bind="{ ...ariaProps, ...inputProps }"
         @focus="handleFocusOrClick"
         @blur="handleBlur"
+        @keydown="handleKeydown"
         @keypress.enter="$emit('enter', $event)"
       >
     </template>

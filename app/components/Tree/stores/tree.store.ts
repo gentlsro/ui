@@ -20,6 +20,13 @@ import { flattenTreeNodes } from '../functions/flatten-tree-nodes'
 import { TREE_INJECTION_KEY } from '../constants/tree-injection-key.constant'
 import { toggleNodeCollapse } from '../functions/toggle-node-collapse'
 
+function isSameNodes(a: ITreeNode[], b: ITreeNode[]) {
+  const aRaw = toRaw(a)
+  const bRaw = toRaw(b)
+
+  return aRaw === bRaw || (aRaw.length === bRaw.length && aRaw.every((node, idx) => toRaw(node) === toRaw(bRaw[idx])))
+}
+
 type IConfig<T extends IItem = IItem> = {
   treeProps?: ITreeProps<T>
   injectionKey?: string
@@ -120,10 +127,14 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     })
 
     // Nodes search & visible
-    const nodesSearched = ref<ITreeNode<T>[]>([])
+    const nodesSearched = ref<ITreeNode<T>[]>([]) as Ref<ITreeNode<T>[]>
+    const isSearchFiltered = shallowRef(false)
 
     const { trigger: flattenTrigger } = watchTriggerable([model, idKey, labelKey, childrenKey], async ([nodes]) => {
-      nodesFlattened.value = await flattenTreeNodes<T>({
+      const previousNodes = nodesFlattened.value
+      const previousNodeById = new Map(previousNodes.map(node => [node.id, node]))
+
+      const nodesFlattenedNew = await flattenTreeNodes<T>({
         nodes: nodes ?? [],
         nodeMetaById,
         idKey: idKey.value,
@@ -131,7 +142,19 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
         labelKey: labelKey.value,
         collapseConfig: collapseConfig.value,
         sortingConfig: sortingConfig.value,
+        previousNodeById,
       })
+
+      // The same nodes in the same order: the hierarchy did not change, only the items may have
+      if (isSameNodes(nodesFlattenedNew, previousNodes)) {
+        if (search.value || searchConfig.value?.fnc) {
+          await searchTrigger()
+        }
+
+        return
+      }
+
+      nodesFlattened.value = nodesFlattenedNew
 
       const idByString = nodesFlattened.value.reduce((agg, node) => {
         agg[String(node.id)] = node.id
@@ -151,8 +174,10 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
         return agg
       }, {} as Record<ITreeNode['id'], ITreeNode['id'][]>)
 
+      const metaById = toRaw(nodeMetaById.value)
+
       ancestorIdsByNodeId.value = nodesFlattened.value.reduce((agg, node) => {
-        const { path } = nodeMetaById.value[node.id] ?? {}
+        const { path } = metaById[node.id] ?? {}
 
         if (!path) {
           agg[node.id] = []
@@ -198,34 +223,93 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
             parentIdByNodeId: parentIdByNodeId.value,
             childrenIdsByNodeId: childrenIdsByNodeId.value,
             searchConfig: searchConfig.value,
-            collapseConfig: collapseConfig.value,
             searchData,
           })
         }
 
-        nodesSearched.value = searchedNodes
+        // Set together with the result, so the search's start does not render every node before the matches.
+        // Only a query opens the rows: a custom search function narrowing the nodes without one (a filter) keeps
+        // the collapsed rows collapsed
+        isSearchFiltered.value = !!search
+
+        if (searchedNodes === nodesFlattened || !isSameNodes(searchedNodes, nodesSearched.value)) {
+          nodesSearched.value = searchedNodes
+        }
       },
     )
 
-    const nodesVisible = computed(() => {
-      // Only get non-collapsed nodes
-      return nodesSearched.value
-        .filter(node => {
-          const { path } = nodeMetaById.value[node.id] ?? {}
-          const usesFlatSearchView = isSearched.value && !searchConfig.value?.keepParents
+    /**
+     * A search query is active: with `showCollapsedWhenSearched`, the matches are shown even when their parents are
+     * collapsed (the collapsed state itself is kept for when the search ends)
+     */
+    const isSearchExpanded = computed(() => {
+      return isSearchFiltered.value && collapseConfig.value?.showCollapsedWhenSearched !== false
+    })
 
-          if (!path || usesFlatSearchView) {
-            return true
-          }
+    /**
+     * The rows collapsed while `isSearchExpanded`: collapsing during a search hides the row's matches without
+     * touching `meta.isCollapsed`, and a new query (or the search's end) starts with every row open again
+     */
+    const searchCollapsedIds = shallowRef(new Set<ITreeNode['id']>())
 
-          const parentsMeta = path.split('.')
-            .filter(path => path !== childrenKey.value)
-            .map(id => nodeMetaById.value[id])
-            .slice(0, -1)
-            .filter(Boolean)
+    watch([search, isSearchExpanded], () => {
+      if (searchCollapsedIds.value.size) {
+        searchCollapsedIds.value = new Set()
+      }
+    })
 
-          return parentsMeta.every(parentMeta => !parentMeta?.isCollapsed)
+    /**
+     * Whether the node's row is collapsed as shown: `meta.isCollapsed`, or the search's own state while
+     * `isSearchExpanded`
+     */
+    function isNodeCollapsed(nodeId: ITreeNode['id']) {
+      return isSearchExpanded.value
+        ? searchCollapsedIds.value.has(nodeId)
+        : !!nodeMetaById.value[nodeId]?.isCollapsed
+    }
+
+    function toggleSearchCollapsed(nodeId: ITreeNode['id']) {
+      const ids = new Set(searchCollapsedIds.value)
+
+      if (!ids.delete(nodeId)) {
+        ids.add(nodeId)
+      }
+
+      searchCollapsedIds.value = ids
+    }
+
+    // Derive visibility lazily: async initialization must also update it during SSR,
+    // where queued watchers do not run. Reuse equal results to avoid row churn.
+    const nodesVisible = computed<ITreeNode<T>[]>(previousNodes => {
+      const nodes = nodesSearched.value
+      const usesFlatSearchView = isSearched.value && !searchConfig.value?.keepParents
+
+      if (usesFlatSearchView) {
+        return nodes
+      }
+
+      const ancestorIds = ancestorIdsByNodeId.value
+
+      // Only the rows collapsed during the search hide their matches
+      let visibleNodes: ITreeNode<T>[]
+      if (isSearchExpanded.value) {
+        const collapsedIds = searchCollapsedIds.value
+
+        visibleNodes = collapsedIds.size
+          ? nodes.filter(node => !ancestorIds[node.id]?.some(ancestorId => collapsedIds.has(ancestorId)))
+          : nodes
+      } else {
+        // Only get non-collapsed nodes
+        const metaById = nodeMetaById.value
+
+        visibleNodes = nodes.filter(node => {
+          return !ancestorIds[node.id]?.some(ancestorId => metaById[ancestorId]?.isCollapsed)
         })
+      }
+
+      return previousNodes && isSameNodes(visibleNodes, previousNodes)
+        ? previousNodes
+        : visibleNodes
     })
 
     // Sync the flattened nodes back to the source nodes
@@ -252,9 +336,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
 
     // Helper functions
     function collapseNode(node: ITreeNode<T>) {
-      const isCollapsed = nodeMetaById.value[node.id]?.isCollapsed
-
-      if (isCollapsed) {
+      if (isNodeCollapsed(node.id)) {
         return
       }
 
@@ -262,9 +344,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     }
 
     function expandNode(node: ITreeNode<T>) {
-      const isCollapsed = nodeMetaById.value[node.id]?.isCollapsed
-
-      if (!isCollapsed) {
+      if (!isNodeCollapsed(node.id)) {
         return
       }
 
@@ -321,6 +401,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       dndConfig,
       childrenKey,
       expandNode,
+      isNodeCollapsed,
       onMove: (node, meta) => {
         moveNode({
           mode: dndConfig.value?.dropMode ?? 'parent',
@@ -358,7 +439,10 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       // Search
       search,
       isSearched,
+      isSearchExpanded,
       searchTrigger,
+      searchCollapsedIds,
+      toggleSearchCollapsed,
 
       // Selection
       selection,
@@ -386,6 +470,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       removeNode,
       collapseNode,
       expandNode,
+      isNodeCollapsed,
 
       // Emits
       emits,

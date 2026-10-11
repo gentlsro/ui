@@ -8,10 +8,14 @@ import type { TableColumn } from '../models/table-column.model'
 const ALIGNED_NUMERIC_DATA_TYPES: ExtendedDataType[] = ['decimal', 'currency', 'percent']
 
 /**
- * Numeric columns are right-aligned, so their digits line up
+ * Numeric columns are right-aligned, so their digits line up; a column's own `align` decides over its data type
  */
-export function tableIsNumericColumn(column: Pick<TableColumn, 'dataType'>) {
-  const { dataType } = column
+export function tableIsNumericColumn(column: Pick<TableColumn, 'dataType' | 'align'>) {
+  const { dataType, align } = column
+
+  if (align) {
+    return align === 'end'
+  }
 
   if (!dataType) {
     return false

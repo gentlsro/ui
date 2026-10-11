@@ -1,4 +1,4 @@
-import type { useTableStore } from '../stores/table.store'
+// Types
 import type { ITableProps } from '../types/table-props.type'
 import type { IRowColumn } from '../types/table-row-column.type'
 import type { TableColumn } from '../models/table-column.model'
@@ -7,7 +7,14 @@ import type { TableColumn } from '../models/table-column.model'
 import { tableIsEditorPopupOpen } from '../functions/table-is-editor-popup-open'
 import { isTableBooleanCheckbox, tableToggleBooleanCell } from '../functions/table-toggle-boolean-cell'
 
-export function useTableRowEditing(tableStore: ReturnType<typeof useTableStore>, editable: Ref<ITableProps['editable']>) {
+// Store
+import type { useTableStore } from '../stores/table.store'
+
+export function useTableRowEditing(
+  tableStore: ReturnType<typeof useTableStore>,
+  editable: Ref<ITableProps['editable']>,
+) {
+  // Store
   const {
     tableEl,
     rowKey,
@@ -17,12 +24,17 @@ export function useTableRowEditing(tableStore: ReturnType<typeof useTableStore>,
     isEditingRow,
   } = tableStore
 
+  // Editing mode
   const isEditableRow = computed(() => {
-    return isObject(editable.value)
-      ? !editable.value.view
-      || (editable.value.view === 'card' && isCardView.value) // Card view
-      || (editable.value.view === 'row' && !isCardView.value) // Desktop view
-      : !!editable.value
+    const config = editable.value
+
+    if (!isObject(config)) {
+      return !!config
+    }
+
+    return !config.view
+      || (config.view === 'card' && isCardView.value)
+      || (config.view === 'row' && !isCardView.value)
   })
 
   const isFullRowEdit = computed(() => {
@@ -36,6 +48,7 @@ export function useTableRowEditing(tableStore: ReturnType<typeof useTableStore>,
         : isCardView.value)
   })
 
+  // Row editing
   function handleEditRow(rowData: { row: IItem }) {
     if (!isFullRowEdit.value) {
       return
@@ -50,6 +63,7 @@ export function useTableRowEditing(tableStore: ReturnType<typeof useTableStore>,
     }
 
     const target = ev.target
+
     if (target instanceof Element && tableIsEditorPopupOpen(target)) {
       return
     }
@@ -66,6 +80,7 @@ export function useTableRowEditing(tableStore: ReturnType<typeof useTableStore>,
     ev.stopPropagation()
   }
 
+  // Cell selection
   function isSelectedCell(row: IItem, column: IRowColumn) {
     return selectedCell.value?.rowKey === row[rowKey.value]
       && selectedCell.value?.field === column.column.field
@@ -103,6 +118,7 @@ export function useTableRowEditing(tableStore: ReturnType<typeof useTableStore>,
     ev?.stopPropagation()
   }
 
+  // Cell editing
   function handleEditCell(
     rowData: { row: IItem },
     column: IRowColumn,
@@ -133,18 +149,23 @@ export function useTableRowEditing(tableStore: ReturnType<typeof useTableStore>,
     tableStore.startCellEdit(rowData.row, column.column)
   }
 
-  function handleSaveCellEditValue() {
-    const editedRow = isFullRowEdit.value ? cellEdit.value[0]?.row : undefined
-    tableStore.finishCellEdit()
-    restoreRowFocus(editedRow)
+  // Saving and cancellation
+  async function handleSaveCellEditValue() {
+    const editedRow = isFullRowEdit.value ? tableStore.editingRow.value : undefined
+    await tableStore.finishCellEdit()
+
+    if (editedRow && !isEditingRow(editedRow)) {
+      restoreRowFocus(editedRow)
+    }
   }
 
   function handleCancelEditCell() {
-    const editedRow = isFullRowEdit.value ? cellEdit.value[0]?.row : undefined
+    const editedRow = isFullRowEdit.value ? tableStore.editingRow.value : undefined
     tableStore.cancelCellEdit()
     restoreRowFocus(editedRow)
   }
 
+  // Editor focus
   function restoreRowFocus(editedRow?: IItem) {
     if (editedRow) {
       void nextTick(() => {
@@ -164,7 +185,10 @@ export function useTableRowEditing(tableStore: ReturnType<typeof useTableStore>,
     const cell = Array.from(tableEl.value?.querySelectorAll<HTMLElement>('.td[data-key][data-field]') ?? [])
       .find(el => el.dataset.key === String(row[rowKey.value]) && el.dataset.field === column.field)
     const el = cell?.querySelector<HTMLElement>('.active-edit-cell')
-    const controlEl = el?.querySelector<HTMLElement>('.control')
+    // A custom editor can expose a native control as its root rather than a wrapper.
+    const controlEl = el?.matches('input, textarea, select')
+      ? el
+      : el?.querySelector<HTMLElement>('.control, input, textarea, select')
     const focusEl = controlEl ?? (el?.matches('[tabindex]') ? el : el?.querySelector<HTMLElement>('[tabindex]:not([tabindex="-1"])'))
 
     focusEl?.focus({ preventScroll: true })

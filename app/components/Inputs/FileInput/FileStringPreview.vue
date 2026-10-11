@@ -32,6 +32,8 @@ const actions = computed(() => ({
   ...props.actions,
 }))
 
+const fileUrl = computed(() => getLocalImageUrl(props.file.path))
+
 const icon = computed(() => {
   const ext = getFileExtension(props.file.name ?? '')
 
@@ -46,7 +48,7 @@ const imageUrl = computed(() => {
   const isImage = (props.file.type ?? '').startsWith('image/')
 
   if (isImage) {
-    return getLocalImageUrl(props.file.path)
+    return fileUrl.value
   }
 
   return null
@@ -107,7 +109,7 @@ const imageUrl = computed(() => {
       icon="i-material-symbols:download"
       self-start
       :label="$t('file.download')"
-      @click.stop.prevent="handleDownloadFile(file, { url: downloadUrl })"
+      @click.stop.prevent="handleDownloadFile(file, { url: downloadUrl ?? fileUrl })"
     />
   </div>
 </template>

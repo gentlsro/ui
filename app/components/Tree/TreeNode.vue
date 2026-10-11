@@ -31,6 +31,7 @@ const {
   hasMultiSelect,
   nodeMeta,
   nodeHovered,
+  isDndEnabled,
   getStore,
 } = useTreeNode(props)
 
@@ -98,9 +99,17 @@ const nodeContentStyle = computed(() => {
 // Node roots are stable for their mounted lifetime; custom Vapor nodes expose element.
 let unmounting = false
 let releaseDrag: ReturnType<typeof createDraggable>
-onMounted(async () => {
+
+const isDraggable = computed(() => {
+  const canBeDragged = getStore().dndConfig.value?.canBeDragged
+
+  return isDndEnabled.value
+    && (canBeDragged?.({ node: node.value, nodeMeta: nodeMeta.value }) ?? true)
+})
+
+async function mountDraggable() {
   await nextTick()
-  if (unmounting) {
+  if (unmounting || releaseDrag || !isDraggable.value) {
     return
   }
 
@@ -112,17 +121,32 @@ onMounted(async () => {
   releaseDrag = createDraggable({
     el: element,
     item: node.value,
+    getItem: () => node.value,
     onEnd: () => {
       if (!unmounting) {
         isPreventClick.value = true
       }
     },
   })
+}
+
+function destroyDraggable(preserveActive = false) {
+  releaseDrag?.(preserveActive)
+  releaseDrag = undefined
+}
+
+onMounted(mountDraggable)
+watch(isDraggable, value => {
+  if (value) {
+    void mountDraggable()
+  } else {
+    destroyDraggable()
+  }
 })
 
 onBeforeUnmount(() => {
   unmounting = true
-  releaseDrag?.(!!scrollerEl.value?.element?.classList.contains('is-virtual'))
+  destroyDraggable(!!scrollerEl.value?.element?.classList.contains('is-virtual'))
 })
 </script>
 

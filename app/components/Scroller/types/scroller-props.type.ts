@@ -15,6 +15,9 @@ type IScrollerBaseProps = {
 }
 
 export type IHorizontalScrollerProps = IScrollerBaseProps & {
+  /** Disable vertical-wheel conversion to horizontal scrolling. Native horizontal gestures still work. */
+  noWheelScroll?: boolean
+
   ui?: {
     /**
      * Class to apply to the container

@@ -23,11 +23,20 @@ export async function toggleNodeCollapse<T extends IItem = IItem>(payload: {
     model,
     collapseConfig,
     sortingConfig,
+    isSearchExpanded,
+    toggleSearchCollapsed,
   } = getStore()
 
   const nodeMeta = nodeMetaById.value[node.id]
 
   if (!nodeMeta) {
+    return
+  }
+
+  // While a search shows every match open, collapsing is the search's own state (the stored state is kept)
+  if (isSearchExpanded.value) {
+    toggleSearchCollapsed(node.id)
+
     return
   }
 

@@ -20,6 +20,7 @@ type IConfig<T extends IItem> = {
   dndConfig: Ref<ITreeProps<T>['dndConfig']>
   childrenKey: Readonly<Ref<string>>
   expandNode: (node: ITreeNode<T>) => void
+  isNodeCollapsed: (nodeId: ITreeNode['id']) => boolean
   onMove: (node: ITreeNode<T>, meta: ITreeDragMeta<T>) => void
 }
 
@@ -36,6 +37,7 @@ export function useTreeDragAndDrop<T extends IItem>(config: IConfig<T>) {
     nodeMetaById,
     childrenKey,
     expandNode,
+    isNodeCollapsed,
     onMove,
   } = config
 
@@ -164,6 +166,7 @@ export function useTreeDragAndDrop<T extends IItem>(config: IConfig<T>) {
     const isDropAllowed = dndConfig.value?.canBeDropped?.({
       draggedNode: draggedNode.value!,
       targetNode: treeNode,
+      placement: isAbove ? 'above' : 'below',
       nodeById: nodeById.value,
       nodeMetaById: nodeMetaById.value,
     }) ?? true
@@ -225,7 +228,7 @@ export function useTreeDragAndDrop<T extends IItem>(config: IConfig<T>) {
     // Hover-to-expand collapsed nodes
     const nodeToExpand = parent ?? treeNode
 
-    if (nodeToExpand && nodeMetaById.value[nodeToExpand.id]?.isCollapsed) {
+    if (nodeToExpand && isNodeCollapsed(nodeToExpand.id)) {
       startHoverExpandTimer(nodeToExpand)
     } else {
       clearHoverExpandTimer()
@@ -319,9 +322,10 @@ export function useTreeDragAndDrop<T extends IItem>(config: IConfig<T>) {
   function createDraggable(payload: {
     el: HTMLElement
     item: ITreeNode<T>
+    getItem?: () => ITreeNode<T>
     onEnd?: () => void
   }) {
-    const { el, item, onEnd } = payload
+    const { el, item, getItem, onEnd } = payload
     const scrollElement = scrollerEl.value?.element
     if (!scrollElement) {
       return
@@ -346,7 +350,7 @@ export function useTreeDragAndDrop<T extends IItem>(config: IConfig<T>) {
         scrollElement.classList.add('hide-scrollbar')
 
         activeDraggable.value = draggable
-        handleDragStart({ item, el })
+        handleDragStart({ item: getItem?.() ?? item, el })
       },
       // Dragdoll samples pointer events through its RAF ticker before calling onMove.
       onMove: drag => handleDragMove(drag.moveEvent as PointerSensorMoveEvent),

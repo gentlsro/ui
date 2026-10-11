@@ -5,6 +5,20 @@ export function useScrollerScroll(onScrolled: (position: number) => void, axis: 
 
   const { arrivedState, x, y, measure } = useScroll(scrollEl)
 
+  // The content can change size while the scroller keeps its own (items loaded
+  // or filtered out), and only a scroll would otherwise refresh the edges
+  const contentEls = shallowRef<HTMLElement[]>([])
+
+  function updateContentEls() {
+    const children = [...scrollEl.value?.children ?? []]
+
+    contentEls.value = children.filter(child => child instanceof HTMLElement)
+  }
+
+  watch(scrollEl, updateContentEls)
+  useMutationObserver(scrollEl, updateContentEls, { childList: true })
+  useResizeObserver(contentEls, () => measure())
+
   const isOverflown = computed(() => axis === 'x'
     ? !arrivedState.left || !arrivedState.right
     : !arrivedState.top || !arrivedState.bottom)
@@ -21,32 +35,25 @@ export function useScrollerScroll(onScrolled: (position: number) => void, axis: 
     }
   }
 
-  // Via wheel
+  // Via wheel: a vertical wheel scrolls the horizontal scroller sideways, except
+  // over content that scrolls vertically itself, which keeps the native scroll
   function handleWheel(ev: WheelEvent) {
-    if (ev.deltaX) {
+    const el = scrollEl.value
+
+    if (!el || ev.deltaX || !ev.deltaY || ev.ctrlKey || isInsideVerticalScroll(ev, el)) {
       return
     }
 
-    const scrollSpeed = 25
+    const maxLeft = el.scrollWidth - el.clientWidth
+    const isAtEdge = ev.deltaY > 0 ? el.scrollLeft >= maxLeft - 1 : el.scrollLeft <= 0
 
-    // Scrolling right
-    if (ev.deltaY > 0 && !arrivedState.right) {
-      handleScroll(scrollSpeed, 'x')
-      ev.stopPropagation()
-      ev.preventDefault()
-    } else if (ev.deltaY < 0 && !arrivedState.left) {
-      handleScroll(-1 * scrollSpeed, 'x')
-      ev.stopPropagation()
-      ev.preventDefault()
-    } else if (ev.deltaY < 0 && !arrivedState.top) {
-      handleScroll(-1 * scrollSpeed, 'y')
-      ev.stopPropagation()
-      ev.preventDefault()
-    } else if (ev.deltaY > 0 && !arrivedState.bottom) {
-      handleScroll(scrollSpeed, 'y')
-      ev.stopPropagation()
-      ev.preventDefault()
+    if (isAtEdge) {
+      return
     }
+
+    el.scrollBy({ left: getWheelDistance(ev, el), behavior: 'auto' })
+    ev.stopPropagation()
+    ev.preventDefault()
   }
 
   // Via buttons
@@ -81,4 +88,34 @@ export function useScrollerScroll(onScrolled: (position: number) => void, axis: 
     handleWheel,
     handleScrollViaBtn,
   }
+}
+
+function isInsideVerticalScroll(ev: WheelEvent, scrollEl: HTMLElement) {
+  let el = ev.target instanceof Element ? ev.target : null
+
+  while (el && el !== scrollEl) {
+    if (el.scrollHeight > el.clientHeight + 1) {
+      const { overflowY } = getComputedStyle(el)
+
+      if (['auto', 'scroll', 'overlay'].includes(overflowY)) {
+        return true
+      }
+    }
+
+    el = el.parentElement
+  }
+
+  return false
+}
+
+function getWheelDistance(ev: WheelEvent, scrollEl: HTMLElement) {
+  if (ev.deltaMode === WheelEvent.DOM_DELTA_LINE) {
+    return ev.deltaY * 16
+  }
+
+  if (ev.deltaMode === WheelEvent.DOM_DELTA_PAGE) {
+    return ev.deltaY * scrollEl.clientWidth
+  }
+
+  return ev.deltaY
 }

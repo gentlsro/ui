@@ -1,9 +1,8 @@
-import type { TableColumn } from '../models/table-column.model'
-import type { useTableStore } from '../stores/table.store'
+// Types
 import type { ITableProps } from '../types/table-props.type'
 
-// Utils
-import { useEventListener, useMutationObserver } from '@vueuse/core'
+// Models
+import type { TableColumn } from '../models/table-column.model'
 
 // Functions
 import { tableEditMoveCell } from '../functions/table-edit-move-cell'
@@ -11,7 +10,14 @@ import { tableIsCellEditable } from '../functions/table-is-cell-editable'
 import { tableIsEditorPopupOpen } from '../functions/table-is-editor-popup-open'
 import { isTableBooleanCheckbox, tableToggleBooleanCell } from '../functions/table-toggle-boolean-cell'
 
-export function useTableCellNavigation(store: ReturnType<typeof useTableStore>, editable: Ref<ITableProps['editable']>) {
+// Store
+import type { useTableStore } from '../stores/table.store'
+
+export function useTableCellNavigation(
+  store: ReturnType<typeof useTableStore>,
+  editable: Ref<ITableProps['editable']>,
+) {
+  // Store
   const {
     selectedCell,
     cellEdit,
@@ -24,6 +30,7 @@ export function useTableCellNavigation(store: ReturnType<typeof useTableStore>, 
     virtualScrollEl,
   } = store
 
+  // Focus management
   let pendingFocus = false
   let leavingGrid = false
 
@@ -100,6 +107,7 @@ export function useTableCellNavigation(store: ReturnType<typeof useTableStore>, 
     focusSelectedCell()
   }
 
+  // Rendered cells and selection
   useMutationObserver(tableEl, () => {
     updateTabStop()
     focusSelectedCell()
@@ -130,23 +138,40 @@ export function useTableCellNavigation(store: ReturnType<typeof useTableStore>, 
     leavingGrid = false
   })
 
+  // Selection after row or column changes
   watch([() => [...rows.value], visibleColumns], () => {
     const selected = selectedCell.value
 
-    if (selected && (!rows.value.some(row => row[rowKey.value] === selected.rowKey)
-      || !visibleColumns.value.some(column => column.field === selected.field))) {
-      selectedCell.value = undefined
-      store.cancelCellEdit()
+    if (selected) {
+      const hasRow = rows.value.some(row => row[rowKey.value] === selected.rowKey)
+      const hasColumn = visibleColumns.value.some(column => {
+        return column.field === selected.field
+      })
+
+      if (!hasRow || !hasColumn) {
+        selectedCell.value = undefined
+        store.cancelCellEdit()
+      }
     }
 
     // Keys can survive a refresh while the objects held by the editors do not.
-    if (cellEdit.value.some(edit => !rows.value.some(row => toRaw(row) === toRaw(edit.row))
-      || !visibleColumns.value.some(column => column.field === edit.column.field && tableIsCellEditable(edit.row, column)))) {
+    const hasInvalidEdit = cellEdit.value.some(edit => {
+      const isDraft = store.rowEditConfig.value?.isDraft?.(edit.row)
+      const hasRow = isDraft || rows.value.some(row => toRaw(row) === toRaw(edit.row))
+      const hasColumn = visibleColumns.value.some(column => {
+        return column.field === edit.column.field
+          && tableIsCellEditable(edit.row, column)
+      })
+
+      return !hasRow || !hasColumn
+    })
+
+    if (hasInvalidEdit) {
       store.cancelCellEdit()
     }
-    // Cancel edits immediately when their row or column disappears
   }, { flush: 'sync' })
 
+  // Focused cell
   useEventListener(tableEl, 'focusin', (ev: FocusEvent) => {
     const el = ev.target
 
@@ -167,6 +192,7 @@ export function useTableCellNavigation(store: ReturnType<typeof useTableStore>, 
     }
   })
 
+  // Starting an edit
   function replaceFocusedInput(text: string) {
     void nextTick(() => {
       const input = document.activeElement
@@ -197,6 +223,7 @@ export function useTableCellNavigation(store: ReturnType<typeof useTableStore>, 
     return true
   }
 
+  // Keyboard navigation
   // Return false when native Tab should move focus out of the table.
   function moveSelection(ev: KeyboardEvent, target: HTMLElement, rowIndex: number, columnIndex: number) {
     const destination = tableEditMoveCell({
@@ -248,6 +275,7 @@ export function useTableCellNavigation(store: ReturnType<typeof useTableStore>, 
     return true
   }
 
+  // Keyboard events
   // Esc also cancels an edit once focus has left the editor (e.g. after clicking
   // elsewhere). An open menu or dialog gets the key first, as it closes on Esc too
   useEventListener(document, 'keydown', (ev: KeyboardEvent) => {
@@ -287,6 +315,7 @@ export function useTableCellNavigation(store: ReturnType<typeof useTableStore>, 
 
     if (editing) {
       const editor = target.closest('.active-edit-cell')
+
       if (!editor) {
         return
       }

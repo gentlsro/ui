@@ -20,6 +20,7 @@ const {
   visibleColumns: visibleColumnsStore,
   nonHelperColumns,
   onDataFetchQueue,
+  emits,
 } = useTableStore()
 
 // Utils
@@ -100,6 +101,7 @@ function handleApply() {
   })
 
   onDataFetchQueue.value.push(fitColumns)
+  emits.value.columnSelect({ columns: visibleColumnsLocal.value })
   $hide()
 }
 

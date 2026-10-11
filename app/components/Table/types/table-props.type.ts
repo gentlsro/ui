@@ -1,17 +1,20 @@
+// Types
 import type { CSSProperties } from 'vue'
 import type { NuxtLinkProps } from '#app'
 import type { Required } from 'utility-types'
 import type { RouteLocationRaw } from '#vue-router'
-
-// Types
 import type { ITableTotal } from './table-total.type'
 import type { ITableLayout } from './table-layout.type'
+import type { ITableRowEdit } from './table-row-edit.type'
 import type { TableFeature } from './table-feature.type'
 import type { ISelection } from '../../../types/selection.type'
 import type { ITableFetchPayload } from './table-fetch-payload.type'
 import type { IQueryBuilderProps } from '../../QueryBuilder/types/query-builder-props.type'
 import type { IVirtualScrollEvent } from '../../VirtualScroller/types/virtual-scroll-event.type'
 import type { IVirtualScrollerProps } from '../../VirtualScroller/types/virtual-scroller-props.type'
+import type { IQueryBuilderRow } from '../../QueryBuilder/types/query-builder-row-props.type'
+import type { ITableFilterItem } from './table-filter-item.type'
+import type { ITableExport } from './table-export.type'
 
 // Models
 import type { TableColumn } from '../models/table-column.model'
@@ -21,7 +24,6 @@ import type { tableNavigate } from '../functions/table-navigate'
 import type { tableExtractSortingFromUrl } from '../functions/table-extract-sorting-from-url'
 import type { tableExtractFiltersFromUrl } from '../functions/table-extract-filters-from-url'
 import type { tableExtractSelectedColumnsFromUrl } from '../functions/table-extract-selected-columns-from-url'
-import type { IQueryBuilderRow } from '../../QueryBuilder/types/query-builder-row-props.type'
 import type { tableSerializeSorting } from '../functions/table-serialize-sorting'
 import type { tableSerializeFilters } from '../functions/table-serialize-filters'
 import type { tableSerializeSelect } from '../functions/table-serialize-select'
@@ -31,17 +33,15 @@ import type { tableSaveLayout } from '../functions/table-save-layout'
 import type { tableDeleteLayout } from '../functions/table-delete-layout'
 import type { getStateColumnData } from '../functions/get-state-column-data'
 import type { tableFilterValueChangeDebounce } from '../functions/table-filter-value-change-debounce'
-
-// Store
-import type { useTableStore } from '../stores/table.store'
 import type { tableExtractPaginationFromUrl } from '../functions/table-extract-pagination-from-url'
 import type { tableSerializePagination } from '../functions/table-serialize-pagination'
 import type { tableGetLayoutMeta } from '../functions/table-get-layout-meta'
-import type { ITableFilterItem } from './table-filter-item.type'
-import type { ITableExport } from './table-export.type'
 
 // Constants
 import type { TABLE_DEFAULT_PROPS } from '../constants/table-default-props.constant'
+
+// Store
+import type { useTableStore } from '../stores/table.store'
 
 export type ITableProps<
   K extends typeof tableBuildFetchPayload = typeof tableBuildFetchPayload,
@@ -74,6 +74,9 @@ export type ITableProps<
    * `cell` edits one field; `row` edits all editable fields together.
    */
   editable?: boolean | { view?: 'card' | 'row', mode?: 'cell' | 'row' }
+
+  /** Optional async transaction for full-row editing. Cell-mode hooks remain column-specific. */
+  rowEdit?: ITableRowEdit
 
   /**
    * Pin table elements. The separate `freeze` feature enables column freeze controls.

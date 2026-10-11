@@ -1,12 +1,21 @@
 import { blurFocusedInput } from '#layers/utilities/app/utils/blur-focused-input'
 
+type Hideable = Element & { hide?: (force?: boolean) => void }
+
 export default defineNuxtPlugin(() => {
   // Hide last floating element on ESC
   onKeyStroke('Escape', () => {
     const uiStore = useUIStore()
 
-    const lastFloatingElement = Array.from(document.body.children).toReversed().find(child => child.classList.contains('floating-element')) as HTMLElement
-    const notificationsElement = document.querySelector('.notifications')
+    // Only menus and dialogs can be hidden; other floating elements (like a docked
+    // toolbar teleported to the body) can come after them and are skipped
+    const lastFloatingElement = Array.from(document.body.children)
+      .toReversed()
+      .find((child: Hideable) => {
+        return child.classList.contains('floating-element') && typeof child.hide === 'function'
+      }) as Hideable | undefined
+
+    const notificationsElement = document.querySelector('.notifications') as Hideable | null
     const hasOngoingNotifications = document.querySelector('.notification-row')
     const isActiveElementInput = uiStore.isActiveElementInput()
 
@@ -14,13 +23,9 @@ export default defineNuxtPlugin(() => {
     blurFocusedInput()
 
     if (lastFloatingElement && !hasOngoingNotifications) {
-    // @ts-expect-error DOM
-      lastFloatingElement.hide(!isActiveElementInput)
+      lastFloatingElement.hide?.(!isActiveElementInput)
     }
 
-    if (notificationsElement) {
-    // @ts-expect-error DOM
-      notificationsElement.hide()
-    }
+    notificationsElement?.hide?.()
   })
 })

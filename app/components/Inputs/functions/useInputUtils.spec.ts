@@ -207,6 +207,38 @@ describe('input mask synchronization', () => {
     expect(emitted.mock.calls).toEqual([[12]])
   })
 
+  it('commits a cell draft once when Enter is followed immediately by blur', async () => {
+    const { input, wrapper, emitted } = inputHarness(12, undefined, { variant: 'cell' })
+    await settle()
+    await wrapper.get('input').setValue('25')
+    await settle()
+    expect(emitted).not.toHaveBeenCalled()
+
+    input.handleKeydown(new KeyboardEvent('keydown', { key: 'Enter' }))
+    input.handleBlur(new FocusEvent('blur'))
+    await settle()
+    expect(emitted.mock.calls).toEqual([[25]])
+  })
+
+  it('discards a cell draft on Escape and lets an unchanged Escape bubble', async () => {
+    const { input, wrapper, emitted } = inputHarness(12, undefined, { variant: 'cell' })
+    await settle()
+    await wrapper.get('input').setValue('25')
+    await settle()
+    const discard = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })
+    input.handleKeydown(discard)
+    expect(discard.cancelBubble).toBe(true)
+    await settle()
+    expect(wrapper.element.value).toBe('12')
+    input.handleBlur(new FocusEvent('blur'))
+    await settle()
+    expect(emitted).not.toHaveBeenCalled()
+
+    const unchanged = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })
+    input.handleKeydown(unchanged)
+    expect(unchanged.cancelBubble).toBe(false)
+  })
+
   it('isolates mask instances shared by multiple inputs', async () => {
     const source = new MaskedNumber({ mask: Number, radix: '.' })
     source.typedValue = 99

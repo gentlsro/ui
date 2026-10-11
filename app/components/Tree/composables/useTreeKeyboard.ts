@@ -14,6 +14,7 @@ export function useTreeKeyboard() {
     nodesVisible,
     nodeMetaById,
     nodeFocused,
+    isNodeCollapsed,
     draggedNode,
     cancelDrag,
     activeDraggable,
@@ -90,7 +91,7 @@ export function useTreeKeyboard() {
       case 'ArrowLeft':
         ev.preventDefault()
 
-        if (nodeMeta && !nodeMeta?.isCollapsed && nodeFocused.value) {
+        if (nodeMeta && nodeFocused.value && !isNodeCollapsed(nodeFocused.value.id)) {
           toggleNodeCollapse({ node: nodeFocused.value, getStore: () => store })
         }
 
@@ -100,7 +101,7 @@ export function useTreeKeyboard() {
       case 'ArrowRight':
         ev.preventDefault()
 
-        if (nodeMeta && nodeMeta?.isCollapsed && nodeFocused.value) {
+        if (nodeMeta && nodeFocused.value && isNodeCollapsed(nodeFocused.value.id)) {
           toggleNodeCollapse({ node: nodeFocused.value, getStore: () => store })
         }
 

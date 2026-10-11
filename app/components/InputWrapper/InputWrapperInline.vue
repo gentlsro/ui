@@ -8,7 +8,7 @@ import { INPUT_WRAPPER_DEFAULT_PROPS } from './constants/input-wrapper-default-p
 const props = defineProps<
   Pick<
     IInputWrapperProps,
-    'noBorder' | 'readonly' | 'disabled' | 'size' | 'hint' | 'ui'
+    'noBorder' | 'readonly' | 'disabled' | 'size' | 'hint' | 'ui' | 'variant'
   > & {
     hasErrors?: boolean
     hasLabel?: boolean
@@ -208,16 +208,13 @@ const inputInnerContainerStyle = computed(() => {
   @apply border-custom rounded-$borderRadius pointer-events-none border-$borderColorBase fit;
 }
 
-.input-wrapper__inline:hover {
-  > .input-wrapper__inline-border {
-    @apply border-$borderColorHover;
-  }
+// The border sits inside the input column, so the hover and focus of the whole field reach it as a descendant
+.input-wrapper__inline:hover .input-wrapper__inline-border {
+  @apply border-$borderColorHover;
 }
 
-.input-wrapper__inline:focus-within {
-  > .input-wrapper__inline-border {
-    @apply border-$borderColorFocus;
-  }
+.input-wrapper__inline:focus-within .input-wrapper__inline-border {
+  @apply border-$borderColorFocus;
 }
 
 .input-wrapper__inline.has-errors .input-wrapper__inline-border {

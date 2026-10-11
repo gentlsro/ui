@@ -18,7 +18,7 @@ const props = defineProps<IProps>()
 // Store
 const treeStore = useTreeStore()
 const treeDmsStore = useTreeDmsStore()
-const { labelKey, nodeMetaById, removeNode } = treeStore
+const { labelKey, removeNode, isNodeCollapsed } = treeStore
 const { nodeEditing, isLoadingByNodeId, hasNodeIcon } = treeDmsStore
 
 // Layout
@@ -28,7 +28,7 @@ const triggerKey = ref(0)
 const node = defineModel<ITreeNode<T>>('node', { required: true })
 
 const isCollapsed = computed(() => {
-  return !!nodeMetaById.value[node.value.id]?.isCollapsed
+  return isNodeCollapsed(node.value.id)
 })
 
 function handleBlur() {

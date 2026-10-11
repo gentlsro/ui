@@ -12,7 +12,6 @@ export async function searchNodes<T extends IItem = IItem>(payload: {
   parentIdByNodeId?: Record<ITreeNode['id'], ITreeNode['id'] | undefined>
   childrenIdsByNodeId?: Record<ITreeNode['id'], ITreeNode['id'][]>
   searchConfig?: ITreeProps<T>['searchConfig']
-  collapseConfig?: ITreeProps<T>['collapseConfig']
   searchData: ReturnType<typeof useSearching>['searchData']
 }): Promise<ITreeNode<T>[]> {
   const {
@@ -25,7 +24,6 @@ export async function searchNodes<T extends IItem = IItem>(payload: {
     parentIdByNodeId,
     childrenIdsByNodeId,
     searchConfig,
-    collapseConfig: _collapseConfig = { showCollapsedWhenSearched: true },
     searchData,
   } = payload
 
@@ -106,5 +104,6 @@ export async function searchNodes<T extends IItem = IItem>(payload: {
 
   nodesFiltered = nodesFlattened.filter(node => visibleNodeIds.has(node.id))
 
-  return nodesFiltered
+  // Nothing filtered out: keep the same array, so nothing downstream recomputes
+  return nodesFiltered.length === nodesFlattened.length ? nodesFlattened : nodesFiltered
 }

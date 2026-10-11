@@ -33,13 +33,10 @@ const {
   arrivedState,
   isOverflown,
   measure,
-  handleWheel,
   handleScrollViaBtn,
 } = useScrollerScroll(position => emits('scrolled', position), 'y')
 
 syncRef(sourceY, y, { direction: 'both', immediate: false })
-
-useEventListener(scrollEl, 'wheel', handleWheel, { passive: false })
 
 onMounted(() => {
   y.value = sourceY.value
@@ -102,7 +99,15 @@ defineExpose({
 <template>
   <div
     class="scroller-vertical"
-    :class="[`arrows--${arrows}`, { 'is-overflown': isOverflown }, containerClass]"
+    :class="[
+      `arrows--${arrows}`,
+      {
+        'is-overflown': isOverflown,
+        'has-fade-start': !arrivedState.top,
+        'has-fade-end': !arrivedState.bottom,
+      },
+      containerClass,
+    ]"
     :style="containerStyle"
   >
     <!-- Top arrow -->

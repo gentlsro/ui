@@ -136,6 +136,7 @@ export function useFieldUtils(options?: {
     return reactivePick(props, [
       'cursor',
       'disabled',
+      'errors',
       'errorTakesSpace',
       'errorVisible',
       'hasContent',
@@ -153,6 +154,7 @@ export function useFieldUtils(options?: {
       'stackLabel',
       'validation',
       'validationPath',
+      'variant',
       'ui',
     ])
   }
