@@ -155,7 +155,7 @@ function buildFlatValueHeaderRows<T extends IItem>(
   return [
     valueColumns.map(col => ({
       id: `header:${col.id}`,
-      label: col.isGrandTotal ? grandTotalLabel : col.value._label,
+      label: col.isGrandTotal ? grandTotalLabel : (col.value._label ?? col.label),
       colspan: 1,
       rowspan: 1,
       level: 0,
@@ -193,53 +193,18 @@ export function buildPivotValueColumns<T extends IItem>(payload: {
   const primaryValueField = valueFields[0]!
   const valueColumns: IPivotValueColumnItem<T>[] = []
 
+  // Without a column dimension a row's value is its total already: no grand-total column repeats it
   if (!columnFields.length) {
-    if (expandMeasuresOnRows) {
+    for (const valueField of expandMeasuresOnRows ? [primaryValueField] : valueFields) {
       valueColumns.push({
-        id: 'value',
+        id: expandMeasuresOnRows ? 'value' : `value:${valueField.measureId}`,
         columnPath: [],
-        measureId: primaryValueField.measureId,
-        valueField: primaryValueField.field,
-        value: primaryValueField.item ?? { field: primaryValueField.field } as PivotItem<T>,
-        label: primaryValueField._label,
-        width: primaryValueField.widthResolved,
+        measureId: valueField.measureId,
+        valueField: valueField.field,
+        value: valueField.item ?? { field: valueField.field } as PivotItem<T>,
+        label: valueField._label,
+        width: valueField.widthResolved,
       })
-
-      valueColumns.push({
-        id: 'grand-total',
-        columnPath: ['__grand_total__'],
-        measureId: primaryValueField.measureId,
-        valueField: primaryValueField.field,
-        value: primaryValueField.item ?? { field: primaryValueField.field } as PivotItem<T>,
-        label: grandTotalLabel,
-        isGrandTotal: true,
-        width: primaryValueField.widthResolved,
-      })
-    } else {
-      for (const valueField of valueFields) {
-        valueColumns.push({
-          id: `value:${valueField.measureId}`,
-          columnPath: [],
-          measureId: valueField.measureId,
-          valueField: valueField.field,
-          value: valueField.item ?? { field: valueField.field } as PivotItem<T>,
-          label: valueField._label,
-          width: valueField.widthResolved,
-        })
-      }
-
-      for (const valueField of valueFields) {
-        valueColumns.push({
-          id: `grand-total:${valueField.measureId}`,
-          columnPath: ['__grand_total__'],
-          measureId: valueField.measureId,
-          valueField: valueField.field,
-          value: valueField.item ?? { field: valueField.field } as PivotItem<T>,
-          label: grandTotalLabel,
-          isGrandTotal: true,
-          width: valueField.widthResolved,
-        })
-      }
     }
 
     return {
