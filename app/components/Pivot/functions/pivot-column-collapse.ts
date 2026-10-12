@@ -380,14 +380,15 @@ export function buildVisiblePivotValueColumns<T extends IItem>(payload: {
   if (!columnFields.length) {
     return {
       valueColumns: allValueColumns,
-      valueHeaderRows: allValueColumns.map(col => ([{
+      // (one header row, a cell per value column: a row per column stacked the labels down the first column)
+      valueHeaderRows: [allValueColumns.map(col => ({
         id: `header:${col.id}`,
-        label: col.isGrandTotal ? grandTotalLabel : col.value._label,
+        label: col.isGrandTotal ? grandTotalLabel : (col.value._label ?? col.label),
         colspan: 1,
         rowspan: 1,
         level: 0,
         width: col.width,
-      }])),
+      }))],
     }
   }
 
