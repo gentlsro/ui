@@ -3,7 +3,7 @@
 export const PIVOT_DEFAULT_PROPS = {
   ui: {
     topClass() {
-      const base = 'flex shrink-0 items-center p-x-1 bg-white dark:bg-true-gray-900 color-true-gray-700 dark:color-true-gray-200 border-b border-true-gray-200 dark:border-true-gray-800'
+      const base = 'flex shrink-0 items-center p-x-2 p-y-1'
 
       return {
         base,
@@ -50,7 +50,7 @@ export const PIVOT_DEFAULT_PROPS = {
     rowHeaderClass() {
       const base = 'relative flex overflow-auto shrink-0 hide-scrollbar'
       const border = 'border-b border-true-gray-200 dark:border-true-gray-800'
-      const bg = 'bg-white dark:bg-true-gray-900'
+      const bg = ''
 
       return {
         base,
@@ -61,7 +61,7 @@ export const PIVOT_DEFAULT_PROPS = {
     },
 
     rowHeaderCellClass() {
-      const base = 'font-rem-12 font-medium leading-tight color-true-gray-500 dark:color-true-gray-300 shrink-0 min-w-10 min-h-9 flex items-center p-x-2 p-y-1'
+      const base = 'font-rem-12 font-medium leading-tight shrink-0 min-w-10 min-h-9 flex items-center p-x-2 p-y-1'
       const border = 'border-r border-true-gray-200 dark:border-true-gray-800'
 
       return {
@@ -94,9 +94,9 @@ export const PIVOT_DEFAULT_PROPS = {
     rowItemClass() {
       const base = 'flex'
       const subtotal = '[&.is-subtotal]:(font-semibold)'
-      const grandTotal = '[&.is-grand-total]:(font-semibold border-t-1 border-t-true-gray-300 dark:border-t-true-gray-700 bg-white dark:bg-true-gray-900)'
+      const grandTotal = '[&.is-grand-total]:(font-semibold)'
       const border = 'border-b border-true-gray-200 dark:border-true-gray-800'
-      const bg = 'bg-white dark:bg-darker'
+      const bg = ''
       const alternate = ''
       const hovered = '[&.is-hovered]:(!bg-true-gray-50 !dark:bg-true-gray-900)'
       const clickable = '[&.is-clickable]:(cursor-pointer) [&.is-clickable:focus-visible]:(outline-2 outline-primary outline-solid outline-offset--2)'
@@ -119,7 +119,7 @@ export const PIVOT_DEFAULT_PROPS = {
       const border = 'border-r border-true-gray-200 dark:border-true-gray-800'
       const collapsible = '[&.is-collapsible]:(p-l-1)'
       const total = '[&.is-total]:(font-semibold)'
-      const grandTotal = '[&.is-grand-total]:(font-semibold border-t-1 border-t-true-gray-300 dark:border-t-true-gray-700 bg-white dark:bg-true-gray-900)'
+      const grandTotal = '[&.is-grand-total]:(font-semibold)'
 
       return {
         base,
@@ -133,7 +133,7 @@ export const PIVOT_DEFAULT_PROPS = {
 
     valueHeaderClass() {
       const base = 'grow min-w-0 overflow-hidden p-r-$scrollbarWidth'
-      const bg = 'bg-white dark:bg-true-gray-900'
+      const bg = ''
 
       return {
         base,
@@ -143,7 +143,7 @@ export const PIVOT_DEFAULT_PROPS = {
     },
 
     valueHeaderCellClass() {
-      const base = 'font-rem-12 font-medium leading-tight color-true-gray-500 dark:color-true-gray-300 shrink-0 min-w-10 min-h-9 flex items-center gap-2 p-x-2 p-y-1'
+      const base = 'font-rem-12 font-medium leading-tight shrink-0 min-w-10 min-h-9 flex items-center justify-end text-right gap-2 p-x-2 p-y-1'
       const border = 'border-r border-b border-true-gray-200 dark:border-true-gray-800'
       const collapsible = '[&.is-collapsible]:(p-l-1)'
 
@@ -159,8 +159,8 @@ export const PIVOT_DEFAULT_PROPS = {
       const base = 'flex'
       const border = 'border-b border-true-gray-200 dark:border-true-gray-800'
       const subtotal = '[&.is-subtotal]:(font-semibold)'
-      const grandTotal = '[&.is-grand-total]:(font-semibold border-t-1 border-t-true-gray-300 dark:border-t-true-gray-700 bg-white dark:bg-true-gray-900)'
-      const bg = 'bg-white dark:bg-darker'
+      const grandTotal = '[&.is-grand-total]:(font-semibold)'
+      const bg = ''
       const alternate = ''
       const hovered = '[&.is-hovered]:(!bg-true-gray-50 !dark:bg-true-gray-900)'
 
@@ -180,7 +180,7 @@ export const PIVOT_DEFAULT_PROPS = {
       const base = 'font-rem-13 tabular-nums shrink-0 min-w-10 flex items-center justify-end p-x-2 p-y-1'
       const border = 'border-r border-true-gray-200 dark:border-true-gray-800'
       const total = '[&.is-total]:(font-semibold)'
-      const grandTotal = '[&.is-grand-total]:(font-semibold border-t-1 border-t-true-gray-300 dark:border-t-true-gray-700 bg-white dark:bg-true-gray-900)'
+      const grandTotal = '[&.is-grand-total]:(font-semibold)'
       const clickable = '[&.is-clickable]:(cursor-pointer) [&.is-clickable:focus-visible]:(outline-2 outline-primary outline-solid outline-offset--2)'
 
       return {
