@@ -194,8 +194,9 @@ export const PIVOT_DEFAULT_PROPS = {
     },
 
     valuesScrollerClass() {
+      // (the cells draw the line between the row labels and the values: a scroller's own line ran on below the last row)
       const base = 'grow overflow-x-scroll!'
-      const border = 'border-l-1 border-true-gray-200 dark:border-true-gray-800'
+      const border = ''
 
       return {
         base,
