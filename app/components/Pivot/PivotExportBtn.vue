@@ -75,7 +75,7 @@ async function handleExport(format: PivotExportFormat) {
     icon="i-material-symbols:download"
     color="ca"
     no-uppercase
-    bg="!white !dark:black"
+    bg="!white !dark:true-gray-900"
     size="sm"
     :label="$t('table.export', 1)"
     outlined
