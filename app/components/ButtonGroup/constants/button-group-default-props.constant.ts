@@ -40,4 +40,4 @@ export const BUTTON_GROUP_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies Partial<IButtonGroupProps>
+}
