@@ -8,6 +8,13 @@ import type { BUTTON_GROUP_DEFAULT_PROPS } from '../constants/button-group-defau
 
 export type IButtonGroupProps = {
   /**
+   * How the group looks
+   * - `pill`: the buttons in a rounded outline, the active one filled with the primary color
+   * - `segmented`: the buttons in one recessed track, the active one raised; compact, for dense panels
+   */
+  variant?: 'pill' | 'segmented'
+
+  /**
    * Whether the buttons are disabled
    */
   disabled?: boolean
@@ -31,6 +38,13 @@ export type IButtonGroupProps = {
      */
     containerClass?: (payload: {
       defaults: ReturnType<typeof BUTTON_GROUP_DEFAULT_PROPS['ui']['containerClass']>
+    }) => ClassType
+
+    /**
+     * Class applied to every button
+     */
+    buttonClass?: (payload: {
+      defaults: ReturnType<typeof BUTTON_GROUP_DEFAULT_PROPS['ui']['buttonClass']>
     }) => ClassType
 
     /**

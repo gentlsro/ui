@@ -122,8 +122,10 @@ export const defaultComponentsConfig = {
       buttons: undefined,
       disabled: undefined,
       modelValue: undefined,
+      variant: 'pill',
       ui: {
         containerClass: ({ defaults }) => defaults.all,
+        buttonClass: ({ defaults }) => defaults.all,
         activeClass: ({ defaults }) => defaults.all,
       },
     },
