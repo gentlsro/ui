@@ -70,7 +70,15 @@ export async function listFetchData(payload: {
     })
   })
 
-  let _items = payloadKey ? get(res, payloadKey) : res
+  const itemsFetched = payloadKey ? get(res, payloadKey) : res
+
+  if (import.meta.dev && payloadKey && !isNil(res) && isNil(itemsFetched)) {
+    console.warn(`[UI] List: \`loadData.payloadKey\` "${payloadKey}" was not found in the \`loadData.fnc\` response`, res)
+  }
+
+  // NOTE: A missing payload (no response, or a response not matching `payloadKey`)
+  // degrades to an empty list instead of throwing
+  let _items = itemsFetched ?? []
   let _count = _items.length
   const hasCount = countKey && !isNil(get(res, countKey))
 
