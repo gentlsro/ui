@@ -280,8 +280,11 @@ export function useInputUtils(options: IInputUtilsOptions) {
     }
   }
 
+  // Only `pointerdown` carries a reliable type: iOS Safari dispatches a tap's
+  // `click` as a PointerEvent with `pointerType: 'mouse'`, so later events in
+  // the same gesture read the type of the `pointerdown` that started it
   function isTouchPointer(ev?: Event) {
-    const pointerType = ev instanceof PointerEvent
+    const pointerType = ev instanceof PointerEvent && ev.type === 'pointerdown'
       ? ev.pointerType
       : uiStore.lastPointerDownType
 
