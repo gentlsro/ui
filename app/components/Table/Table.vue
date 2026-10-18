@@ -331,6 +331,14 @@ onMounted(() => {
     <!-- Bottom -->
     <slot name="bottom">
       <TableBottom :ui="mergedProps.ui">
+        <!-- Replaces the row count, for tables whose rows are not a flat list (e.g. a tree) -->
+        <template
+          v-if="slots['total-rows']"
+          #total-rows
+        >
+          <slot name="total-rows" />
+        </template>
+
         <template #loading>
           <slot
             name="bottom-loading"

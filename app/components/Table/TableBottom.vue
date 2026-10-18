@@ -49,7 +49,9 @@ const bottomStyle = computed(() => {
   >
     <!-- Left -->
     <div class="table-bottom__left">
-      <TableTotalRows />
+      <slot name="total-rows">
+        <TableTotalRows />
+      </slot>
     </div>
 
     <!-- Center -->
