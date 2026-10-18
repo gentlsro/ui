@@ -7,7 +7,7 @@ import type { CustomPresets, IBtnProps } from './types/btn-props.type'
 import { useBtnUtils } from './functions/useBtnUtils'
 
 // Constants
-import { BTN_DEFAULT_PROPS } from './constants/btn-default-props.constant'
+import { BTN_DEFAULT_PROPS, BTN_LABEL_BREAKPOINT_CLASSES } from './constants/btn-default-props.constant'
 
 // Components
 import BtnOrNuxtLinkResolver from './BtnOrNuxtLinkResolver.vue'
@@ -46,10 +46,18 @@ const preset = computed(() => {
   return presets[props.preset as keyof typeof presets] ?? null
 })
 
+const labelBreakpointClasses = computed(() => {
+  const hasLabel = label.value || slots.label
+
+  return hasLabel && props.labelBreakpoint
+    ? BTN_LABEL_BREAKPOINT_CLASSES[props.labelBreakpoint]
+    : undefined
+})
+
 const classes = computed(() => {
   return [
     `btn--${props.size}`,
-    `breakpoint--${props.labelBreakpoint ?? 'Inf'}`,
+    labelBreakpointClasses.value?.container,
     { 'is-stacked': props.stacked },
     { 'is-dimmed': !props.noDim },
     { 'is-round': props.round },
@@ -197,6 +205,8 @@ const iconValue = computed(() => {
   return props.icon || preset.value?.icon
 })
 
+const [DefineLabel, UseLabel] = createReusableTemplate()
+
 const resolvedIcon = computed(() => {
   // Preset icons historically render as classes; canonical names still opt into Icon.
   return resolveIconValue(props.icon || [preset.value?.icon])
@@ -231,20 +241,33 @@ const resolvedIcon = computed(() => {
       />
     </slot>
 
-    <slot
-      name="label"
-      :ui="mergedProps.ui"
-      :style="labelStyle"
-    >
-      <div
-        v-if="label"
-        class="btn-label"
-        :class="[labelClass, noTruncate ? 'overflow-hidden' : 'truncate']"
+    <DefineLabel>
+      <slot
+        name="label"
+        :ui="mergedProps.ui"
         :style="labelStyle"
       >
-        {{ label }}
-      </div>
-    </slot>
+        <div
+          v-if="label"
+          class="btn-label"
+          :class="[labelClass, noTruncate ? 'overflow-hidden' : 'truncate']"
+          :style="labelStyle"
+        >
+          {{ label }}
+        </div>
+      </slot>
+    </DefineLabel>
+
+    <!-- Hidden below `labelBreakpoint`; `contents` keeps the label a direct flex item -->
+    <span
+      v-if="labelBreakpointClasses"
+      class="contents"
+      :class="labelBreakpointClasses.label"
+    >
+      <UseLabel />
+    </span>
+
+    <UseLabel v-else />
 
     <slot />
 
