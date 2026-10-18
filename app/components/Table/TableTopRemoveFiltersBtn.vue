@@ -62,6 +62,7 @@ onKeyStroke(['d', 'D'], (ev: KeyboardEvent) => {
     v-if="hasAnyFilters"
     size="sm"
     :label="$t('table.removeQueryBuilderFilters')"
+    label-breakpoint="2xl"
     icon="i-lucide:x"
     no-uppercase
     no-dim

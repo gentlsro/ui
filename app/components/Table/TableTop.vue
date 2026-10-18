@@ -72,10 +72,12 @@ const topStyle = computed(() => {
       </slot>
 
       <slot name="query-builder">
+        <!-- A narrow table edits its conditions in the query builder dialog, when it has one -->
         <TableQueryBuilder
           v-if="featuresEnabledByName.queryBuilder"
           v-model:query-builder="queryBuilder"
           :query-builder-props
+          :class="{ 'table-top__query-builder--dialog': featuresEnabledByName.queryBuilderDialog }"
         />
       </slot>
 
@@ -137,6 +139,13 @@ const topStyle = computed(() => {
 
   &__export {
     @apply order-40 m-t-0.5 shrink-0;
+  }
+
+  // The table is the container (`@container`), as for the toolbar's `@…:` classes
+  @container (width < 32rem) {
+    &__query-builder--dialog {
+      display: none !important;
+    }
   }
 }
 </style>

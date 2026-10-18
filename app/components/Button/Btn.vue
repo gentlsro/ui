@@ -7,7 +7,7 @@ import type { CustomPresets, IBtnProps } from './types/btn-props.type'
 import { useBtnUtils } from './functions/useBtnUtils'
 
 // Constants
-import { BTN_DEFAULT_PROPS, BTN_LABEL_BREAKPOINT_CLASSES } from './constants/btn-default-props.constant'
+import { BTN_DEFAULT_PROPS } from './constants/btn-default-props.constant'
 
 // Components
 import BtnOrNuxtLinkResolver from './BtnOrNuxtLinkResolver.vue'
@@ -46,18 +46,19 @@ const preset = computed(() => {
   return presets[props.preset as keyof typeof presets] ?? null
 })
 
-const labelBreakpointClasses = computed(() => {
+// Styled below, a container query per size
+const labelBreakpointClass = computed(() => {
   const hasLabel = label.value || slots.label
 
   return hasLabel && props.labelBreakpoint
-    ? BTN_LABEL_BREAKPOINT_CLASSES[props.labelBreakpoint]
+    ? `label-breakpoint--${props.labelBreakpoint}`
     : undefined
 })
 
 const classes = computed(() => {
   return [
     `btn--${props.size}`,
-    labelBreakpointClasses.value?.container,
+    labelBreakpointClass.value,
     { 'is-stacked': props.stacked },
     { 'is-dimmed': !props.noDim },
     { 'is-round': props.round },
@@ -260,9 +261,8 @@ const resolvedIcon = computed(() => {
 
     <!-- Hidden below `labelBreakpoint`; `contents` keeps the label a direct flex item -->
     <span
-      v-if="labelBreakpointClasses"
-      class="contents"
-      :class="labelBreakpointClasses.label"
+      v-if="labelBreakpointClass"
+      class="btn__label-breakpoint"
     >
       <UseLabel />
     </span>
@@ -313,3 +313,37 @@ const resolvedIcon = computed(() => {
     />
   </BtnOrNuxtLinkResolver>
 </template>
+
+<style lang="scss">
+// The UnoCSS container sizes, so a label goes where the container's `@…:` classes switch
+$label-breakpoints: (
+  'xs': 20rem,
+  'sm': 24rem,
+  'md': 28rem,
+  'lg': 32rem,
+  'xl': 36rem,
+  '2xl': 42rem,
+  '3xl': 48rem,
+  '4xl': 56rem,
+  '5xl': 64rem,
+  '6xl': 72rem,
+  '7xl': 80rem,
+);
+
+.btn__label-breakpoint {
+  display: contents;
+}
+
+// Without a container around the button, no query matches and the label shows
+@each $name, $width in $label-breakpoints {
+  @container (width < #{$width}) {
+    .btn.label-breakpoint--#{$name} {
+      padding-inline: 0 !important;
+
+      .btn__label-breakpoint {
+        display: none;
+      }
+    }
+  }
+}
+</style>
