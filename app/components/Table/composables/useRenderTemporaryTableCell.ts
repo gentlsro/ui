@@ -53,6 +53,12 @@ export function useRenderTemporaryTableCell() {
   }) {
     const { row, col, slotRenderFnc, ui } = payload
 
+    // There is nothing to measure without a row (e.g. empty table), rendering
+    // the cell (or the slot) would only make it access properties of `undefined`
+    if (isNil(row)) {
+      return 0
+    }
+
     let maxContentWidth = 0
     let cleanup: () => void = () => {}
 
