@@ -777,6 +777,16 @@ const [
     }
   })
 
+  /**
+   * A new sort starts again from the first page (it kept the page: sorting on page 2 showed rows 6–10 of the new
+   * order). A sort restored with the table's saved state keeps the saved page
+   */
+  watch(sortingSerialized, () => {
+    if (!isInitialLoad.value && currentPage.value > 1) {
+      currentPage.value = 1
+    }
+  })
+
   // React to the query params changes
   watch(() => queryParams.value.toString(), queryParams => {
     console.log('Query params change', decodeURIComponent(queryParams.toString()))

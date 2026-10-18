@@ -78,6 +78,21 @@ export function createPivotGroupKeyResolver<T>(
   }
 }
 
+/**
+ * The value a group key stands for, for display: date keys are day timestamps and turn back into a number
+ * (formatting the key string would read its digits as `YYYYMMDD…`), the empty date key into `null`.
+ * Other keys are returned as they are.
+ */
+export function getPivotGroupKeyValue(key: string, dataType?: ExtendedDataType): unknown {
+  if (!isPivotDateDataType(dataType)) {
+    return key
+  }
+
+  const timestamp = key === '' ? Number.NaN : Number(key)
+
+  return Number.isFinite(timestamp) ? timestamp : null
+}
+
 function compareStrings(a: string, b: string) {
   if (a === b) {
     return 0

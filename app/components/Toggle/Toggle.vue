@@ -181,6 +181,9 @@ const focusHelperStyle = computed(() => {
   <label
     ref="containerEl"
     tabindex="0"
+    role="switch"
+    :aria-checked="model === 'checked' ? 'true' : model === 'unchecked' ? 'false' : 'mixed'"
+    :aria-disabled="disabled || readonly || undefined"
     class="toggle__container group"
     :class="[
       `is-${model}`,
