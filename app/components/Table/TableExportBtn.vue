@@ -40,6 +40,7 @@ async function handleExportData(exportDefinition: ITableExport) {
     no-dim
     size="sm"
     :label="$t('table.export', 1)"
+    label-breakpoint="2xl"
     :loading="isExporting"
   >
     <div class="i-lucide:chevron-down w-3.5 h-3.5 opacity-60" />

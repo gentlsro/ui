@@ -6,8 +6,7 @@ import type { NavigateToOptions } from '#layers/utilities/app/types/navigate-to.
 
 // Constants
 import type { ButtonPresetDefaults } from '../constants/button-preset.constant'
-import type { BTN_DEFAULT_PROPS } from '../constants/btn-default-props.constant'
-import type { BREAKPOINTS } from '../../../constants/breakpoints'
+import type { BTN_DEFAULT_PROPS, BTN_LABEL_BREAKPOINTS } from '../constants/btn-default-props.constant'
 
 export type CustomPresets = Record<string, { icon: string, color: string }>
 
@@ -74,11 +73,13 @@ export type IBtnProps<T extends CustomPresets = Record<string, never>> = IBtnNav
   label?: string | null | number | false | (() => string | number | undefined | false)
 
   /**
-   * The breakpoint at which the labels are shown
+   * The container size from which the label is shown; below it the button is
+   * icon-only. Follows the nearest `@container` like the UnoCSS `@…:` classes;
+   * without one the label always shows.
    *
-   * Example: 'md' -> labels will be visible on devices with 'md' screens or bigger
+   * Example: '2xl' -> the label shows in containers 42rem wide or wider
    */
-  labelBreakpoint?: keyof typeof BREAKPOINTS
+  labelBreakpoint?: typeof BTN_LABEL_BREAKPOINTS[number]
 
   /**
    * The type of loader to use

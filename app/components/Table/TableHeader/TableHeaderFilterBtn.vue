@@ -235,7 +235,8 @@ onKeyStroke('Enter', ev => {
 
   &.is-sorted,
   &.is-filtered {
-    @apply color-primary bg-primary/10 dark:bg-primary/45;
+    // Primary on a primary tint is too dark to read in dark mode
+    @apply color-primary bg-primary/10 dark:(color-blue-300 bg-primary/30);
   }
 
   &__icons {

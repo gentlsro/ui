@@ -1,7 +1,6 @@
 // @unocss-include
 
 import type { IBtnProps } from '../types/btn-props.type'
-import type { BREAKPOINTS } from '../../../constants/breakpoints'
 
 type ButtonStyleProps = Pick<IBtnProps, 'size' | 'align' | 'noUppercase' | 'noBold' | 'noDim' | 'round' | 'rounded'
   | 'outlined' | 'stacked' | 'disabled' | 'disableStyle'> & { hasLabel: boolean }
@@ -226,20 +225,7 @@ export const BTN_DEFAULT_PROPS = {
 }
 
 /**
- * `labelBreakpoint`: below the breakpoint the label is hidden and the button
- * is as narrow as an icon-only one. Media queries, so the server renders it
- * right. Full class names, so UnoCSS finds them.
+ * Sizes `labelBreakpoint` takes: the UnoCSS container sizes (`@2xl:` …), so a
+ * button drops its label where the container's other `@…:` classes switch
  */
-export const BTN_LABEL_BREAKPOINT_CLASSES = {
-  'xs': { label: 'lt-xs:hidden', container: 'lt-xs:p-x-0!' },
-  'xm': { label: 'lt-xm:hidden', container: 'lt-xm:p-x-0!' },
-  'sm': { label: 'lt-sm:hidden', container: 'lt-sm:p-x-0!' },
-  'md': { label: 'lt-md:hidden', container: 'lt-md:p-x-0!' },
-  'lg': { label: 'lt-lg:hidden', container: 'lt-lg:p-x-0!' },
-  'xl': { label: 'lt-xl:hidden', container: 'lt-xl:p-x-0!' },
-  '2xl': { label: 'lt-2xl:hidden', container: 'lt-2xl:p-x-0!' },
-  '3xl': { label: 'lt-3xl:hidden', container: 'lt-3xl:p-x-0!' },
-  '4xl': { label: 'lt-4xl:hidden', container: 'lt-4xl:p-x-0!' },
-  'page': { label: 'lt-page:hidden', container: 'lt-page:p-x-0!' },
-  'inf': { label: 'lt-inf:hidden', container: 'lt-inf:p-x-0!' },
-} as const satisfies Record<keyof typeof BREAKPOINTS, { label: string, container: string }>
+export const BTN_LABEL_BREAKPOINTS = ['xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl', '6xl', '7xl'] as const
