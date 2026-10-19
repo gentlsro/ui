@@ -1,6 +1,7 @@
 export type ISelectorEmits = {
   (e: 'update:modelValue', val: any): void
   (e: 'update:options', val: any[]): void
+  (e: 'update:search', val: string | undefined): void
   (e: 'add:item', item: any): void
   (e: 'remove:item', item: any): void
   (e: 'select:item', item: any): void
