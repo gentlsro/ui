@@ -26,6 +26,13 @@ export function resolveIconValue(value?: IconValue): ResolvedIconValue {
   }
 
   const tokens = normalized.split(/\s+/)
+
+  // An UnoCSS icon class makes the value a class list: its custom variants
+  // (`wrapper:w-4` from `group-[…]/wrapper:(h-4 w-4)`) are not Iconify names
+  if (tokens.length > 1 && tokens.some(token => token.startsWith('i-'))) {
+    return { classes: normalized }
+  }
+
   const iconIndex = tokens.findIndex(token => {
     return !token.startsWith('i-')
       && canonicalIconNameRegex.test(token)
