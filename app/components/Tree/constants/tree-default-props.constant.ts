@@ -92,7 +92,8 @@ export const TREE_DEFAULT_PROPS = {
     },
 
     actionsClass() {
-      const base = 'flex gap-1 items-center'
+      // Beside the search, which gives way first: the buttons keep their size
+      const base = 'flex gap-1 items-center shrink-0'
 
       return {
         base,
