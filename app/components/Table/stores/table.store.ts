@@ -180,6 +180,11 @@ const [
     source: { type: 'store', name: 'table' },
   })
 
+  // Data requests have their own abort controller, so superseding one never aborts the meta request
+  const { fn: dataFn, abortController: dataAbortController } = useFn({
+    source: { type: 'store', name: 'table' },
+  })
+
   /**
    * Navigates to a URL corresponding to the current state of the table
    */
@@ -759,7 +764,6 @@ const [
 
   // Only the latest data request may write its result
   let latestDataRequestId = 0
-  let dataAbortController: AbortController | undefined
 
   async function fetchAndSetData(payload?: {
     isFetchMore?: boolean
@@ -788,16 +792,14 @@ const [
     const requestId = ++latestDataRequestId
     const isLatestRequest = () => requestId === latestDataRequestId
 
-    dataAbortController?.abort()
-    const abortController = new AbortController()
-    dataAbortController = abortController
+    dataAbortController.value?.abort()
 
     isDataLoading.value = true
     let res: any
 
     try {
-      res = await fn(
-        () => loadData.value?.fnc?.(fetchPayload, { signal: abortController.signal }),
+      res = await dataFn(
+        createAbortController => loadData.value?.fnc?.(fetchPayload, { signal: createAbortController().signal }),
         {
           onComplete: () => {
             if (isLatestRequest()) {
