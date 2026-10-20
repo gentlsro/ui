@@ -180,6 +180,11 @@ const [
     source: { type: 'store', name: 'table' },
   })
 
+  // Data requests have their own abort controller, so superseding one never aborts the meta request
+  const { fn: dataFn, abortController: dataAbortController } = useFn({
+    source: { type: 'store', name: 'table' },
+  })
+
   /**
    * Navigates to a URL corresponding to the current state of the table
    */
@@ -757,6 +762,9 @@ const [
     return resModified
   }
 
+  // Only the latest data request may write its result
+  let latestDataRequestId = 0
+
   async function fetchAndSetData(payload?: {
     isFetchMore?: boolean
     force?: boolean
@@ -765,7 +773,11 @@ const [
     const isOverLimit = rows.value.length >= rowsLimit.value
     const isInitial = isInitialLoad.value && !payload?.force
 
-    if (isDataLoading.value || isInvalidFetchMore || isInitial || !loadData.value?.fnc) {
+    // Fetching more rows waits for the request in flight (~ no double fetch while scrolling),
+    // while a query change supersedes it, so the latest query wins
+    const isFetchMoreWhileLoading = isDataLoading.value && payload?.isFetchMore
+
+    if (isFetchMoreWhileLoading || isInvalidFetchMore || isInitial || !loadData.value?.fnc) {
       return
     }
 
@@ -777,18 +789,44 @@ const [
     }
 
     const fetchPayload = getFetchPayload()
+    const requestId = ++latestDataRequestId
+    const isLatestRequest = () => requestId === latestDataRequestId
+
+    dataAbortController.value?.abort()
 
     isDataLoading.value = true
-    const res = await fn(
-      () => loadData.value?.fnc?.(fetchPayload),
-      {
-        onComplete: () => isDataLoading.value = false,
-        onError: ({ error, response }) => {
-          isDataLoading.value = false
-          loadData.value?.onError?.(error, response, getStore)
+    let res: any
+
+    try {
+      res = await dataFn(
+        createAbortController => loadData.value?.fnc?.(fetchPayload, { signal: createAbortController().signal }),
+        {
+          onComplete: () => {
+            if (isLatestRequest()) {
+              isDataLoading.value = false
+            }
+          },
+          onError: ({ error, response }) => {
+            if (isLatestRequest()) {
+              isDataLoading.value = false
+              loadData.value?.onError?.(error, response, getStore)
+            }
+          },
         },
-      },
-    )
+      )
+    } catch (error) {
+      // The failure of a superseded request (~ aborted) is no longer relevant
+      if (!isLatestRequest()) {
+        return
+      }
+
+      throw error
+    }
+
+    // A newer request has started meanwhile, its result is the one to show
+    if (!isLatestRequest()) {
+      return
+    }
 
     const resModified = loadData.value?.onFetch?.({ res, getStore }) ?? res
     const { payloadKey, countKey = 'count' } = loadData.value ?? {}

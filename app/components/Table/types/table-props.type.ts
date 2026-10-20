@@ -181,8 +181,11 @@ export type ITableProps<
   loadData?: {
     /**
      * The function to use for fetching the data
+     *
+     * A query change while a request is in flight supersedes it: the `signal` is aborted
+     * and the result of the superseded request is dropped
      */
-    fnc?: (payload: ITableFetchPayload<K>) => any | Promise<any>
+    fnc?: (payload: ITableFetchPayload<K>, context: { signal: AbortSignal }) => any | Promise<any>
 
     /**
      * The key to use for the items from the server response
