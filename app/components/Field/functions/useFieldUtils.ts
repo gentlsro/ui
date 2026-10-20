@@ -142,6 +142,7 @@ export function useFieldUtils(options?: {
       'hasContent',
       'hint',
       'label',
+      'labelHint',
       'layout',
       'loading',
       'name',
