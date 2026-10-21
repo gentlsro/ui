@@ -216,7 +216,10 @@ onBeforeUnmount(() => {
 .tree-node {
   @apply relative flex;
 
+  // Indented by its level, and as much narrower: a node's classes may make it full width (w-full), which with the
+  // indent pushed a nested row (and the actions at its end) past the tree's right edge
   margin-left: calc(var(--level) * var(--treePadding));
+  max-width: calc(100% - var(--level) * var(--treePadding));
 
   &.is-selectable {
     @apply cursor-pointer;
