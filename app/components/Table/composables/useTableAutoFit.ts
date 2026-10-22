@@ -43,14 +43,17 @@ export function useTableAutoFit() {
       .filter(col => col.resizable && !col.isHelperCol)
       .slice(0, 25)
 
-    const helperColsWidth = internalColumns.value
-      .filter(col => col.isHelperCol)
-      .reduce((agg, col) => {
-        const colWidth = col.getWidth(scope)
-        agg += colWidth
+    // Empty tables render .table-empty instead of the row scroller.
+    const containerEl = unrefElement(virtualScrollEl.value)
+      ?? scope.querySelector('.table-empty')
+      ?? scope
 
-        return agg
-      }, 0)
+    const fixedColsWidth = [
+      ...internalColumns.value.filter(col => col.isHelperCol),
+      ...visibleColumns.value.filter(col => !col.resizable && !col.isHelperCol),
+    ].reduce((agg, col) => agg + col.getWidth(scope), 0)
+
+    const availableWidth = ((containerEl as Element).clientWidth ?? 0) - fixedColsWidth
 
     // Justify columns ~ will try to distribute the space evenly between all columns
     if (isJustify) {
@@ -61,9 +64,7 @@ export function useTableAutoFit() {
         return agg
       }, 0)
 
-      const virtualScrollWidth = (unrefElement(virtualScrollEl.value)?.clientWidth ?? 0) - helperColsWidth
-
-      colsTotalWidth = Math.max(colsTotalWidth, virtualScrollWidth)
+      colsTotalWidth = Math.max(colsTotalWidth, availableWidth)
       const columnWidth = colsTotalWidth / resizableColumns.length
 
       resizableColumns.forEach(col => {
@@ -88,26 +89,22 @@ export function useTableAutoFit() {
         })
       }
 
-      const colsTotalWidth = resizableColumns.reduce((agg, col) => {
-        const colWidth = col.getWidth(scope)
-        agg += colWidth
+      // autoFit updates col.width before the DOM reflects the new width.
+      const widths = resizableColumns.map(col => col.width?.endsWith('px')
+        ? Number.parseFloat(col.width)
+        : col.getWidth(scope))
 
-        return agg
-      }, 0)
+      const colsTotalWidth = widths.reduce((agg, width) => agg + width, 0)
 
-      const virtualScrollWidth = (unrefElement(virtualScrollEl.value)?.clientWidth ?? 0) - helperColsWidth
+      // Keep existing widths if the columns already fill the table.
+      if (colsTotalWidth && colsTotalWidth < availableWidth) {
+        resizableColumns.forEach((col, index) => {
+          const columnWidth = (availableWidth / colsTotalWidth) * widths[index]!
+          const colWidth = Math.max(columnWidth, col.minWidth || 0, minimumColumnWidth.value)
 
-      // If the columns are already wider than the table, we don't do anything
-      if (colsTotalWidth > virtualScrollWidth) {
-        return
+          col.width = `${colWidth}px`
+        })
       }
-
-      resizableColumns.forEach(col => {
-        const columnWidth = (virtualScrollWidth / colsTotalWidth) * col.getWidth(scope)
-        const colWidth = Math.max(columnWidth, col.minWidth || 0, minimumColumnWidth.value)
-
-        col.width = `${colWidth}px`
-      })
     }
 
     // Fit columns ~ will try to fit the columns based on their content

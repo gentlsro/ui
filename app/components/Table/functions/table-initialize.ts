@@ -36,9 +36,9 @@ export function tableInitialize() {
       // We may have returned a special property `_preventFetchData`, in which case
       // we do not fetch the data (for example in case we already got the data in the meta fetch)
       if (typeof res === 'object' && res?._preventFetchData) {
-        if (rows.value.length) {
-          autoFit()
-        }
+        // Fit columns even when the table is empty.
+        autoFit()
+
         isInitialLoad.value = false
 
         onDataFetchQueue.value.push(tableStore.navigate)
@@ -50,9 +50,8 @@ export function tableInitialize() {
       if (loadData.value?.fnc && isImmediate) {
         tableStore.fetchAndSetData({ force: true })
           .then(() => {
-            if (rows.value.length) {
-              autoFit()
-            }
+            // Fit columns even when the table is empty.
+            autoFit()
 
             isInitialLoad.value = false
           })
