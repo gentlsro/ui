@@ -30,7 +30,7 @@ const nonHelperFilterableColumns = computed(() => {
 
 function handleUpdateColumnFilter(columnFilter: IQueryBuilderItem) {
   const modifiedColumnFilters = queryBuilderEl.value
-    ?.getModifiedColumnFilter(columnFilter) as Array<{ field: string, filterField?: string, filters: IQueryBuilderItem[] }>
+    ?.getModifiedColumnFilter(columnFilter) as Array<{ field: string, filters: IQueryBuilderItem[] }>
 
   modifiedColumnFilters.forEach(col => {
     const column = internalColumns.value.find(c => c.field === col.field)
@@ -38,11 +38,12 @@ function handleUpdateColumnFilter(columnFilter: IQueryBuilderItem) {
     if (column) {
       column.filters = [
         ...column.filters.filter(f => f.nonInteractive),
+        // A column's filters query its `filterField` (e.g. `sprints.some.id` for `sprints`)
         ...col.filters.map(f => new FilterItem({
           ...column,
           ...f,
-          field: col.field,
-          filterField: col.filterField ?? col.field,
+          field: column.field,
+          filterField: column.filterField,
         })),
       ]
     }
