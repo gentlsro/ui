@@ -11,9 +11,6 @@ import { moveNode } from '../functions/move-node'
 // Store
 import { useTreeStore } from '../stores/tree.store'
 
-const TREE_CLASS = ['tree']
-const TREE_NODE_CLASSES = ['tree-node']
-
 export function useTreeDragAndDrop() {
   // Store
   const store = useTreeStore()
@@ -29,10 +26,12 @@ export function useTreeDragAndDrop() {
   } = store
 
   // Utils
-  const { x, y } = useSharedMouse()
-  let lastY = 0
   let shouldMove = true
   let startMousePosition = { x: 0, y: 0 }
+  let pointerPosition = { x: 0, y: 0 }
+
+  // Whether the previous callback reported the pointer outside this tree
+  let isOutside = false
 
   // Hover-to-expand collapsed folders
   let hoverExpandTimer: ReturnType<typeof setTimeout> | null = null
@@ -60,12 +59,37 @@ export function useTreeDragAndDrop() {
     hoverExpandTargetId = null
   }
 
+  function isOverTree(elements: Element[]) {
+    return elements.includes(unrefElement(treeEl) as HTMLElement)
+  }
+
+  /**
+   * Report movement outside this tree and re-entry
+   */
+  function reportDragOutside(elements: Element[], position: { x: number, y: number }) {
+    const onDragOutside = dndConfig.value?.onDragOutside
+
+    if (!onDragOutside || !draggedNode.value) {
+      return
+    }
+
+    const isOutsideNow = !isOverTree(elements)
+
+    if (isOutsideNow) {
+      onDragOutside({ phase: 'move', draggedNode: draggedNode.value, ...position })
+    } else if (isOutside) {
+      onDragOutside({ phase: 'return', draggedNode: draggedNode.value, ...position })
+    }
+
+    isOutside = isOutsideNow
+  }
+
   function handleDragStart<T extends IItem = IItem>(payload: { item: ITreeNode<T>, el: HTMLElement }) {
     // Turn off selection while dragging
     getSelection()?.removeAllRanges()
     document.documentElement.classList.add('select-none')
 
-    startMousePosition = { x: x.value, y: y.value }
+    isOutside = false
     draggedNode.value = payload.item
     dragMeta.value = {
       ...dragMeta.value,
@@ -76,12 +100,13 @@ export function useTreeDragAndDrop() {
 
   function handleDragMove(
     ev: Pick<PointerSensorMoveEvent, 'x' | 'y'>,
-    delta = 0,
   ) {
     const { x, y } = ev
-    lastY = y
+    pointerPosition = { x, y }
     const elements = document.elementsFromPoint(x, y)
     shouldMove = true
+
+    reportDragOutside(elements, { x, y })
 
     const draggedOverContentRow = elements
       .find(el => el.classList.contains('content-row')) as HTMLElement | undefined
@@ -214,9 +239,16 @@ export function useTreeDragAndDrop() {
   function handleDragEnd(drag?: Draggable['drag']) {
     clearHoverExpandTimer()
 
-    const isDragOutOfTree = !document
-      .elementsFromPoint(x.value, y.value)
-      .some(el => TREE_CLASS.some(cls => el.classList.contains(cls)))
+    const endEvent = drag?.endEvent
+    const lastEvent = endEvent && 'x' in endEvent ? endEvent : drag?.moveEvent ?? pointerPosition
+    const position = { x: lastEvent.x, y: lastEvent.y }
+    const isDragOutOfTree = !isOverTree(document.elementsFromPoint(position.x, position.y))
+    const isCancelled = cancelDrag.value || endEvent?.type === 'cancel' || endEvent?.type === 'destroy'
+
+    // Released or cancelled outside the tree: the page may take the node, the tree does not move it
+    const nodeOutside = isDragOutOfTree ? draggedNode.value : undefined
+    const outsidePhase = isCancelled ? 'cancel' : 'drop'
+    isOutside = false
 
     const dragItem = drag?.items[0]
 
@@ -230,7 +262,7 @@ export function useTreeDragAndDrop() {
     // Resolve the drag (not where `dndConfig.canBeDropped` refused the drop)
     const isDropRefused = dragMeta.value.dropAllowed === false
 
-    if (draggedNode.value && !isDragOutOfTree && shouldMove && !cancelDrag.value && !isDropRefused) {
+    if (draggedNode.value && !isDragOutOfTree && shouldMove && !isCancelled && !isDropRefused) {
       moveNode({
         mode: dndConfig.value?.dropMode ?? 'parent',
         dragMeta: dragMeta.value,
@@ -252,14 +284,16 @@ export function useTreeDragAndDrop() {
         sourceEl: undefined,
       }
     })
+
+    // Last, so a handler that throws or is slow cannot leave the tree mid-drag
+    if (nodeOutside) {
+      dndConfig.value?.onDragOutside?.({ phase: outsidePhase, draggedNode: nodeOutside, ...position })
+    }
   }
 
   function handleScroll() {
     requestAnimationFrame(() => {
-      handleDragMove({
-        x: x.value,
-        y: y.value,
-      })
+      handleDragMove(pointerPosition)
     })
   }
 
@@ -320,14 +354,14 @@ export function useTreeDragAndDrop() {
       elements: () => [createClone(el)],
       frozenStyles: () => ['left', 'top'],
       onStart: drag => {
-        lastY = drag.startEvent.y
+        pointerPosition = { x: drag.startEvent.x, y: drag.startEvent.y }
         treeElDom.addEventListener('scroll', handleScroll)
         treeElDom.classList.add('hide-scrollbar')
 
         store.activeDraggable.value = draggable
         handleDragStart({ item: getItem?.() ?? item, el })
       },
-      onMove: drag => handleDragMove(drag.moveEvent as PointerSensorMoveEvent, drag.moveEvent.y - lastY),
+      onMove: drag => handleDragMove(drag.moveEvent),
       onEnd: drag => {
         onEnd?.()
         treeElDom.removeEventListener('scroll', handleScroll)
