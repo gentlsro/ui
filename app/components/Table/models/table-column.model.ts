@@ -508,8 +508,8 @@ export class TableColumn<T = IItem> {
     const considerHeader = mode === 'fit-with-header'
     let maxContentWidth = 0
 
-    // We primarily use the row with the longest text to calculate the autofit width
-    if (this.autofitLongestText) {
+    // Use the row with the longest text when rows are available.
+    if (this.autofitLongestText && rows?.length) {
       // We get the row with the maximum content
       const maxContentRow = (rows || [])
         .slice(0, rowsLimit)
