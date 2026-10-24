@@ -75,10 +75,8 @@ async function handleExport(format: PivotExportFormat) {
     icon="i-material-symbols:download"
     color="ca"
     no-uppercase
-    bg="!white !dark:black"
     size="sm"
     :label="$t('table.export', 1)"
-    outlined
     :loading="isExporting"
   >
     <div class="i-flowbite:chevron-right-outline rotate-90" />

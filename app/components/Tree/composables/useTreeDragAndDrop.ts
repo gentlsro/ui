@@ -42,7 +42,6 @@ export function useTreeDragAndDrop<T extends IItem>(config: IConfig<T>) {
   } = config
 
   // Utils
-  const { x, y } = useSharedMouse()
   let scrollFrame = 0
   let cancelActiveDrag: (() => void) | undefined
 
@@ -55,6 +54,8 @@ export function useTreeDragAndDrop<T extends IItem>(config: IConfig<T>) {
   }, { flush: 'post' })
   let shouldMove = true
   let startMousePosition = { x: 0, y: 0 }
+  let pointerPosition = { x: 0, y: 0 }
+  let isOutside = false
 
   // Hover-to-expand collapsed folders
   let hoverExpandTimer: ReturnType<typeof setTimeout> | null = null
@@ -82,12 +83,31 @@ export function useTreeDragAndDrop<T extends IItem>(config: IConfig<T>) {
     hoverExpandTargetId = null
   }
 
+  function isOverTree(elements: Element[]) {
+    return !!treeEl.value && elements.includes(treeEl.value)
+  }
+
+  function reportDragOutside(elements: Element[], position: { x: number, y: number }) {
+    const onDragOutside = dndConfig.value?.onDragOutside
+    if (!onDragOutside || !draggedNode.value) {
+      return
+    }
+
+    const isOutsideNow = !isOverTree(elements)
+    if (isOutsideNow) {
+      onDragOutside({ phase: 'move', draggedNode: draggedNode.value, ...position })
+    } else if (isOutside) {
+      onDragOutside({ phase: 'return', draggedNode: draggedNode.value, ...position })
+    }
+    isOutside = isOutsideNow
+  }
+
   function handleDragStart(payload: { item: ITreeNode<T>, el: HTMLElement }) {
     // Turn off selection while dragging
     getSelection()?.removeAllRanges()
     document.documentElement.classList.add('select-none')
 
-    startMousePosition = { x: x.value, y: y.value }
+    isOutside = false
     draggedNode.value = payload.item
     dragMeta.value = {
       ...dragMeta.value,
@@ -100,8 +120,10 @@ export function useTreeDragAndDrop<T extends IItem>(config: IConfig<T>) {
     ev: Pick<PointerSensorMoveEvent, 'x' | 'y'>,
   ) {
     const { x, y } = ev
+    pointerPosition = { x, y }
     const elements = document.elementsFromPoint(x, y)
     shouldMove = true
+    reportDragOutside(elements, { x, y })
 
     const draggedOverItem = elements.find((el): el is HTMLElement => {
       return el instanceof HTMLElement && !!treeEl.value?.contains(el) && el.classList.contains('tree-node')
@@ -244,10 +266,14 @@ export function useTreeDragAndDrop<T extends IItem>(config: IConfig<T>) {
     clearHoverExpandTimer()
     cancelAnimationFrame(scrollFrame)
 
-    const root = treeEl.value
-    const isDragOutOfTree = !root || !document
-      .elementsFromPoint(x.value, y.value)
-      .includes(root)
+    const endEvent = drag?.endEvent
+    const lastEvent = endEvent && 'x' in endEvent ? endEvent : drag?.moveEvent ?? pointerPosition
+    const position = { x: lastEvent.x, y: lastEvent.y }
+    const isDragOutOfTree = !isOverTree(document.elementsFromPoint(position.x, position.y))
+    const isCancelled = !drag || cancelDrag.value || endEvent?.type === 'cancel' || endEvent?.type === 'destroy'
+    const nodeOutside = isDragOutOfTree ? draggedNode.value : undefined
+    const outsidePhase = isCancelled ? 'cancel' : 'drop'
+    isOutside = false
 
     const dragItem = drag?.items[0]
 
@@ -259,7 +285,7 @@ export function useTreeDragAndDrop<T extends IItem>(config: IConfig<T>) {
     dragItem?.element.remove()
 
     // Resolve the drag
-    if (drag && draggedNode.value && !isDragOutOfTree && shouldMove && !cancelDrag.value && dragMeta.value.dropAllowed) {
+    if (drag && draggedNode.value && !isDragOutOfTree && shouldMove && !isCancelled && dragMeta.value.dropAllowed !== false) {
       onMove(draggedNode.value, { ...dragMeta.value })
     }
 
@@ -268,15 +294,17 @@ export function useTreeDragAndDrop<T extends IItem>(config: IConfig<T>) {
     // Clear immediately so a later frame cannot overwrite the next drag session.
     draggedNode.value = undefined
     dragMeta.value = {}
+
+    // Report after cleanup, so a consumer callback cannot leave a live drag behind.
+    if (nodeOutside) {
+      dndConfig.value?.onDragOutside?.({ phase: outsidePhase, draggedNode: nodeOutside, ...position })
+    }
   }
 
   function handleScroll() {
     cancelAnimationFrame(scrollFrame)
     scrollFrame = requestAnimationFrame(() => {
-      handleDragMove({
-        x: x.value,
-        y: y.value,
-      })
+      handleDragMove(pointerPosition)
     })
   }
 
@@ -343,8 +371,9 @@ export function useTreeDragAndDrop<T extends IItem>(config: IConfig<T>) {
         return [clone]
       },
       frozenStyles: () => ['left', 'top'],
-      onStart: () => {
+      onStart: drag => {
         cancelActiveDrag?.()
+        pointerPosition = { x: drag.startEvent.x, y: drag.startEvent.y }
         cancelActiveDrag = dispose
         scrollElement.addEventListener('scroll', handleScroll)
         scrollElement.classList.add('hide-scrollbar')

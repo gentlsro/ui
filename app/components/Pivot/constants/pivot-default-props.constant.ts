@@ -3,7 +3,7 @@
 export const PIVOT_DEFAULT_PROPS = {
   ui: {
     topClass() {
-      const base = 'flex shrink-0 bg-slate-600 color-white dark:(bg-black color-white)'
+      const base = 'flex shrink-0 items-center p-x-2 p-y-1'
 
       return {
         base,
@@ -30,7 +30,7 @@ export const PIVOT_DEFAULT_PROPS = {
     },
 
     columnFiltersClass() {
-      const base = 'flex gap-2 items-center border-r border-white/50 p-r-2'
+      const base = 'flex gap-2 items-center border-r border-true-gray-200 dark:border-true-gray-800 p-r-2'
 
       return {
         base,
@@ -49,8 +49,8 @@ export const PIVOT_DEFAULT_PROPS = {
 
     rowHeaderClass() {
       const base = 'relative flex overflow-auto shrink-0 hide-scrollbar'
-      const border = 'border-b border-light-8 dark:border-dark-6'
-      const bg = 'bg-slate-200 dark:bg-dark-950'
+      const border = 'border-b border-true-gray-200 dark:border-true-gray-800'
+      const bg = ''
 
       return {
         base,
@@ -61,8 +61,8 @@ export const PIVOT_DEFAULT_PROPS = {
     },
 
     rowHeaderCellClass() {
-      const base = 'font-rem-12 font-bold shrink-0 min-w-10 flex items-end p-x-2 p-y-1'
-      const border = 'border-r border-light-8 dark:border-dark-6'
+      const base = 'font-rem-12 font-medium leading-tight shrink-0 min-w-10 min-h-9 flex items-center p-x-2 p-y-1'
+      const border = 'border-r border-true-gray-200 dark:border-true-gray-800'
 
       return {
         base,
@@ -73,7 +73,7 @@ export const PIVOT_DEFAULT_PROPS = {
 
     containerClass() {
       const base = 'relative flex flex-col grow overflow-auto'
-      const border = 'border-t border-l border-light-8 dark:border-dark-6'
+      const border = 'border-t border-l border-true-gray-200 dark:border-true-gray-800'
 
       return {
         base,
@@ -93,12 +93,12 @@ export const PIVOT_DEFAULT_PROPS = {
 
     rowItemClass() {
       const base = 'flex'
-      const subtotal = '[&.is-subtotal]:(font-bold)'
-      const grandTotal = '[&.is-grand-total]:(font-bold)'
-      const border = 'border-b border-light-8 dark:border-dark-6'
-      const bg = 'bg-slate-100 dark:bg-dark-950'
-      const alternate = '[&.is-odd]:(bg-white dark:bg-dark-900)'
-      const hovered = '[&.is-hovered]:(!bg-slate-200 !dark:bg-black outline-1 outline-primary outline-solid outline-offset--1)'
+      const subtotal = '[&.is-subtotal]:(font-semibold)'
+      const grandTotal = '[&.is-grand-total]:(font-semibold)'
+      const border = 'border-b border-true-gray-200 dark:border-true-gray-800'
+      const bg = ''
+      const alternate = ''
+      const hovered = '[&.is-hovered]:(!bg-true-gray-50 !dark:bg-true-gray-900)'
       const clickable = '[&.is-clickable]:(cursor-pointer) [&.is-clickable:focus-visible]:(outline-2 outline-primary outline-solid outline-offset--2)'
 
       return {
@@ -115,11 +115,11 @@ export const PIVOT_DEFAULT_PROPS = {
     },
 
     rowItemCellClass() {
-      const base = 'font-rem-12 shrink-0 min-w-10 flex items-center gap-2 p-x-2 p-y-1'
-      const border = 'border-r border-light-8 dark:border-dark-6'
+      const base = 'font-rem-13 shrink-0 min-w-10 flex items-center gap-2 p-x-2 p-y-1'
+      const border = 'border-r border-true-gray-200 dark:border-true-gray-800'
       const collapsible = '[&.is-collapsible]:(p-l-1)'
-      const total = '[&.is-total]:(font-bold)'
-      const grandTotal = '[&.is-grand-total]:(font-bold)'
+      const total = '[&.is-total]:(font-semibold)'
+      const grandTotal = '[&.is-grand-total]:(font-semibold)'
 
       return {
         base,
@@ -133,7 +133,7 @@ export const PIVOT_DEFAULT_PROPS = {
 
     valueHeaderClass() {
       const base = 'flex grow min-w-0 overflow-hidden p-r-$scrollbarWidth'
-      const bg = 'bg-slate-200 dark:bg-dark-950'
+      const bg = ''
 
       return {
         base,
@@ -143,8 +143,8 @@ export const PIVOT_DEFAULT_PROPS = {
     },
 
     valueHeaderCellClass() {
-      const base = 'font-rem-12 font-bold shrink-0 min-w-10 flex items-center gap-2 p-x-2 p-y-1'
-      const border = 'border-r border-b border-light-8 dark:border-dark-6'
+      const base = 'font-rem-12 font-medium leading-tight shrink-0 min-w-10 min-h-9 flex items-center justify-end text-right gap-2 p-x-2 p-y-1'
+      const border = 'border-r border-b border-true-gray-200 dark:border-true-gray-800'
       const collapsible = '[&.is-collapsible]:(p-l-1)'
 
       return {
@@ -157,12 +157,12 @@ export const PIVOT_DEFAULT_PROPS = {
 
     valueItemClass() {
       const base = 'flex'
-      const border = 'border-b border-light-8 dark:border-dark-6'
-      const subtotal = '[&.is-subtotal]:(font-bold)'
-      const grandTotal = '[&.is-grand-total]:(font-bold)'
-      const bg = 'bg-slate-100 dark:bg-dark-950'
-      const alternate = '[&.is-odd]:(bg-white dark:bg-dark-900)'
-      const hovered = '[&.is-hovered]:(!bg-slate-200 !dark:bg-black outline-1 outline-primary outline-solid outline-offset--1)'
+      const border = 'border-b border-true-gray-200 dark:border-true-gray-800'
+      const subtotal = '[&.is-subtotal]:(font-semibold)'
+      const grandTotal = '[&.is-grand-total]:(font-semibold)'
+      const bg = ''
+      const alternate = ''
+      const hovered = '[&.is-hovered]:(!bg-true-gray-50 !dark:bg-true-gray-900)'
 
       return {
         base,
@@ -177,10 +177,10 @@ export const PIVOT_DEFAULT_PROPS = {
     },
 
     valueItemCellClass() {
-      const base = 'font-rem-12 shrink-0 min-w-10 flex items-center justify-end p-x-2 p-y-1'
-      const border = 'border-r border-light-8 dark:border-dark-6'
-      const total = '[&.is-total]:(font-bold)'
-      const grandTotal = '[&.is-grand-total]:(font-bold)'
+      const base = 'font-rem-13 tabular-nums shrink-0 min-w-10 flex items-center justify-end p-x-2 p-y-1'
+      const border = 'border-r border-true-gray-200 dark:border-true-gray-800'
+      const total = '[&.is-total]:(font-semibold)'
+      const grandTotal = '[&.is-grand-total]:(font-semibold)'
       const clickable = '[&.is-clickable]:(cursor-pointer) [&.is-clickable:focus-visible]:(outline-2 outline-primary outline-solid outline-offset--2)'
 
       return {
@@ -194,8 +194,9 @@ export const PIVOT_DEFAULT_PROPS = {
     },
 
     valuesScrollerClass() {
+      // (the cells draw the line between the row labels and the values: a scroller's own line ran on below the last row)
       const base = 'grow overflow-x-scroll!'
-      const border = 'border-l-1 border-light-8 dark:border-dark-6'
+      const border = ''
 
       return {
         base,

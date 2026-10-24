@@ -5,6 +5,7 @@ import type { IPivotValueHeaderCell } from './types/pivot-value-column-item.type
 // Functions
 import { isPivotColumnHeaderHidden } from './functions/pivot-column-collapse'
 import { isValueHeaderCellCollapsible } from './functions/is-value-header-cell-collapsible'
+import { getPivotGroupKeyValue } from './functions/pivot-group-key'
 
 // Store
 import { usePivotStore } from './stores/pivot.store'
@@ -52,8 +53,8 @@ const formattedLabel = computed(() => {
     return props.cell.label
   }
 
-  // Group keys are raw; format via the column field for Table-like display.
-  return formatValue(props.cell.label, undefined, {
+  // Group keys are raw (dates are day timestamps); format via the column field for Table-like display.
+  return formatValue(getPivotGroupKeyValue(props.cell.label, field.dataType), undefined, {
     dataType: field.dataType,
     format: field.format,
     localeIso: currentLocaleCode.value,

@@ -313,6 +313,26 @@ export type ITreeProps<T extends IItem = IItem> = {
       nodeMetaById?: Record<string, ITreeNodeMeta>
       placement?: 'above' | 'below'
     }) => void | Promise<void>
+
+    /**
+     * Reports drags outside this tree so the page can handle drops on a canvas or another target.
+     * Dropping outside this tree leaves the node in its current position within the tree.
+     *
+     * - `move`: each drag update while the pointer is outside this tree
+     * - `return`: the pointer re-entered this tree
+     * - `drop`: the user released the node outside this tree
+     * - `cancel`: the drag ended outside this tree after Escape or sensor cancellation
+     *
+     * A drag reports at most one `drop` or `cancel`, and only outside this tree.
+     * A `drop` can arrive without a preceding `move`.
+     * Coordinates use viewport pixels, matching `PointerEvent.clientX` and `clientY`.
+     */
+    onDragOutside?: (payload: {
+      phase: 'move' | 'return' | 'drop' | 'cancel'
+      draggedNode: ITreeNode<T>
+      x: number
+      y: number
+    }) => void
   }
 
   /**

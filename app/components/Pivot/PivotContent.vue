@@ -8,7 +8,8 @@ import { usePivotStore } from './stores/pivot.store'
 // Constants
 import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
 
-const PIVOT_ROW_HEIGHT = 32
+// (the table's row height, so a pivot beside a table reads as the same component)
+const PIVOT_ROW_HEIGHT = 36
 // About 5 rows, as before the switch from `VirtualScrollerVertical` (its default overscan renders ~40 extra rows)
 const PIVOT_OVERSCAN = { top: PIVOT_ROW_HEIGHT * 5, bottom: PIVOT_ROW_HEIGHT * 5 }
 

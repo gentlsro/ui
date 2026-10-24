@@ -255,6 +255,7 @@ const contentStyle = computed(() => {
           :mousedown="startMove"
           :pointerdown="startMove"
           :hide
+          :mousedown="handleMoveMouseDown"
         >
           <MenuHeader
             ref="menuHeader"

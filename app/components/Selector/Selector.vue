@@ -441,6 +441,12 @@ if (props.immediateFetch && mergedProps.value.loadData?.fnc) {
   @apply shrink-0 color-ca inline cursor-pointer;
 }
 
+.wrapper--xs {
+  .dropdown-icon {
+    @apply h-3 w-3;
+  }
+}
+
 .wrapper--sm {
   .dropdown-icon {
     @apply h-3.5 w-3.5;

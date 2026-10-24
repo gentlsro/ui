@@ -223,3 +223,9 @@ export const BTN_DEFAULT_PROPS = {
     },
   },
 }
+
+/**
+ * Sizes `labelBreakpoint` takes: the UnoCSS container sizes (`@2xl:` …), so a
+ * button drops its label where the container's other `@…:` classes switch
+ */
+export const BTN_LABEL_BREAKPOINTS = ['xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl', '6xl', '7xl'] as const

@@ -111,10 +111,10 @@ export function useQueryBuilderColumnFilters(
 
     return [
       // New column
-      { field: newField!, filterField: newColumn?.filterField, filters: [...newColumn?.filters, filter] },
+      { field: newField!, filters: [...newColumn?.filters, filter] },
 
       // Old column
-      { field: oldField!, filterField: oldColumn?.filterField, filters: oldColumn?.filters.filter(f => f.id !== filterId) },
+      { field: oldField!, filters: oldColumn?.filters.filter(f => f.id !== filterId) },
     ]
   }
 

@@ -45,6 +45,7 @@ const {
   label,
   masked,
   model,
+  originalModel,
   isBlurred,
   isTouched,
   handleBlur,
@@ -75,6 +76,12 @@ const wrapperClass = computed(() => {
 
 // Picker
 const isPickerActive = ref(false)
+
+// A picked icon is the value, not a draft: it saves at once, even where typing saves on blur (`cell`)
+function handlePickIcon(icon?: string | null) {
+  originalModel.value = icon
+  isPickerActive.value = false
+}
 
 // Icon
 const iconClassBySize = {
@@ -186,7 +193,7 @@ defineExpose({
           :min-search-length
           w="auto"
           :ui="mergedProps.ui"
-          @update:model-value="$hide()"
+          @update:model-value="handlePickIcon"
         />
       </MenuProxy>
     </template>

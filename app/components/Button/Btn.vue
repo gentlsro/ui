@@ -119,10 +119,19 @@ const preset = computed(() => {
   return presets[props.preset as keyof typeof presets] ?? null
 })
 
+// Styled below, a container query per size
+const labelBreakpointClass = computed(() => {
+  const hasLabel = label.value || slots.label
+
+  return hasLabel && props.labelBreakpoint
+    ? `label-breakpoint--${props.labelBreakpoint}`
+    : undefined
+})
+
 const classes = computed(() => {
   return [
     `btn--${props.size}`,
-    `breakpoint--${props.labelBreakpoint ?? 'Inf'}`,
+    labelBreakpointClass.value,
     { 'is-stacked': props.stacked },
     { 'is-dimmed': !props.noDim },
     { 'is-round': props.round },
@@ -256,7 +265,28 @@ const resolvedIcon = computed(() => {
       />
     </slot>
 
+    <span
+      v-if="labelBreakpointClass"
+      class="btn__label-breakpoint"
+    >
+      <slot
+        name="label"
+        :ui="mergedProps.ui"
+        :style="appearance.labelStyle"
+      >
+        <div
+          v-if="label"
+          class="btn-label"
+          :class="[appearance.labelClass, noTruncate ? 'overflow-hidden' : 'truncate']"
+          :style="appearance.labelStyle"
+        >
+          {{ label }}
+        </div>
+      </slot>
+    </span>
+
     <slot
+      v-else
       name="label"
       :ui="mergedProps.ui"
       :style="appearance.labelStyle"
@@ -344,7 +374,28 @@ const resolvedIcon = computed(() => {
       />
     </slot>
 
+    <span
+      v-if="labelBreakpointClass"
+      class="btn__label-breakpoint"
+    >
+      <slot
+        name="label"
+        :ui="mergedProps.ui"
+        :style="appearance.labelStyle"
+      >
+        <div
+          v-if="label"
+          class="btn-label"
+          :class="[appearance.labelClass, noTruncate ? 'overflow-hidden' : 'truncate']"
+          :style="appearance.labelStyle"
+        >
+          {{ label }}
+        </div>
+      </slot>
+    </span>
+
     <slot
+      v-else
       name="label"
       :ui="mergedProps.ui"
       :style="appearance.labelStyle"
@@ -411,5 +462,37 @@ a.btn:not(.no-underline):hover {
 
 .no-active {
   @apply color-black dark:color-white;
+}
+
+// The UnoCSS container sizes, so a label goes where the container's `@…:` classes switch
+$label-breakpoints: (
+  'xs': 20rem,
+  'sm': 24rem,
+  'md': 28rem,
+  'lg': 32rem,
+  'xl': 36rem,
+  '2xl': 42rem,
+  '3xl': 48rem,
+  '4xl': 56rem,
+  '5xl': 64rem,
+  '6xl': 72rem,
+  '7xl': 80rem,
+);
+
+.btn__label-breakpoint {
+  display: contents;
+}
+
+// Without a container around the button, no query matches and the label shows
+@each $name, $width in $label-breakpoints {
+  @container (width < #{$width}) {
+    .btn.label-breakpoint--#{$name} {
+      padding-inline: 0 !important;
+
+      .btn__label-breakpoint {
+        display: none;
+      }
+    }
+  }
 }
 </style>

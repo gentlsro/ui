@@ -46,7 +46,7 @@ const menuTarget = () => btnEl.value?.element
 <template>
   <Btn
     ref="btnEl"
-    preset="TRASH"
+    icon="i-iconamoon:trash"
     :label
     :loading
     :disabled

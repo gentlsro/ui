@@ -161,5 +161,10 @@ const innerStyle = computed(() => {
 <style lang="scss" scoped>
 .selector__inner {
   @apply flex items-center gap-1 flex-wrap;
+
+  // A chip never gets wider than the field: its label truncates instead of overflowing behind the field's edge
+  > :deep(*) {
+    @apply max-w-full min-w-0;
+  }
 }
 </style>

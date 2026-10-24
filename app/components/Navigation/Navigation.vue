@@ -33,7 +33,9 @@ const mergedProps = computed(() => {
 const minHeight = uiConfig.navigation.defaultNavigationHeight
 const headerEl = useTemplateRef('headerEl')
 const navigationEl = useTemplateRef('navigationEl')
-const { height } = useElementSize(headerEl)
+// `useElementSize` writes its initial size as soon as the element mounts, before the first measurement; it starts
+// from the height the page already uses (server render or the previous navigation), not 0
+const { height } = useElementSize(headerEl, { width: 0, height: navigationHeight.value })
 
 watchEffect(() => {
   if (headerEl.value) {

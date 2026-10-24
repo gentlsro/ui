@@ -29,7 +29,7 @@ const iconClass = computed(() => {
 
   switch (props.size) {
     case 'xs':
-      classes.push('w-4 h-4')
+      classes.push('w-3.5 h-3.5')
       break
     case 'sm':
       classes.push('w-5 h-5')

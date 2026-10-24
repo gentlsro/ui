@@ -120,7 +120,7 @@ defineExpose({
   @apply relative;
 
   &::after {
-    @apply absolute inset-0 pointer-events-none color-[#9ca3af];
+    @apply absolute inset-0 flex items-center pointer-events-none color-[#9ca3af];
 
     content: attr(data-placeholder);
     font-size: inherit;
