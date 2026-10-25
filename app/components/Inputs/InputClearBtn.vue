@@ -9,7 +9,7 @@ defineEmits<{ (e: 'clear'): void }>()
 
 const iconClass = computed(() => {
   const classes = [
-    'i-eva:close-fill',
+    'i-mdi:close',
     'group-[.wrapper--sm]/wrapper:(h-4 w-4)',
   ]
 

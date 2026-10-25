@@ -377,7 +377,7 @@ defineExpose({
 
         <div
           v-if="!noPickerIcon"
-          class="picker-icon i-system-uicons:calendar-date"
+          class="picker-icon i-solar:calendar-date-outline"
           @mousedown="handlePickerIconClick"
           @click.stop.prevent
         />

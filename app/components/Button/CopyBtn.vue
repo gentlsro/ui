@@ -8,7 +8,7 @@ const props = withDefaults(defineProps<IBtnProps & {
   transform?: (model: any) => string | Promise<string>
   noText?: boolean
 }>(), {
-  icon: 'i-bx:copy',
+  icon: 'i-lucide:copy',
 })
 
 // Copy

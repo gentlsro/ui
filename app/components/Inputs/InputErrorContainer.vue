@@ -30,7 +30,7 @@ const errorMessages = computed(() => {
   >
     <div v-bind="$attrs">
       <div
-        class="inline-block m-r-2 align-middle i-ci:error font-rem-16"
+        class="inline-block m-r-2 align-middle i-mdi:error font-rem-16"
       />
       <span
         class="align-middle"

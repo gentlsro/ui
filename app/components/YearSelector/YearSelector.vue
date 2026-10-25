@@ -178,7 +178,7 @@ const yearBtnStyle = computed(() => {
     <Btn
       size="auto"
       tabindex="-1"
-      icon="i-majesticons:chevron-left"
+      icon="i-lucide:chevron-left"
       :class="previousBtnClass"
       :style="previousBtnStyle"
       @click="handleYearSelect(dateObj.year() - 1)"
@@ -205,7 +205,7 @@ const yearBtnStyle = computed(() => {
     <Btn
       size="auto"
       tabindex="-1"
-      icon="i-majesticons:chevron-right"
+      icon="i-lucide:chevron-right"
       :class="nextBtnClass"
       :style="nextBtnStyle"
       @click="handleYearSelect(dateObj.year() + 1)"

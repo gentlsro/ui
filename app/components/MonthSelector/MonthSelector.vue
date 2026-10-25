@@ -133,7 +133,7 @@ const monthBtnStyle = computed(() => {
     <Btn
       size="auto"
       tabindex="-1"
-      icon="i-majesticons:chevron-left"
+      icon="i-lucide:chevron-left"
       :class="previousBtnClass"
       :style="previousBtnStyle"
       @click="handleMonthSelect({ idx: month - 1 })"
@@ -155,7 +155,7 @@ const monthBtnStyle = computed(() => {
     <Btn
       size="auto"
       tabindex="-1"
-      icon="i-majesticons:chevron-right"
+      icon="i-lucide:chevron-right"
       :class="nextBtnClass"
       :style="nextBtnStyle"
       @click="handleMonthSelect({ idx: month + 1 })"

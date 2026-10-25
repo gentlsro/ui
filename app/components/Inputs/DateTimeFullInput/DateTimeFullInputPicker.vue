@@ -100,7 +100,7 @@ defineExpose({
     >
       <Tab
         name="date"
-        icon="i-system-uicons:calendar-date"
+        icon="i-solar:calendar-date-outline"
         :label="$t('dataType.date')"
       >
         <div

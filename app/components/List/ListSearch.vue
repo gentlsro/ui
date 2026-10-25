@@ -63,7 +63,7 @@ const searchStyle = computed(() => {
 
         <Btn
           size="sm"
-          icon="i-eva:close-fill !w-6 !h-6"
+          icon="i-mdi:close !w-6 !h-6"
           color="negative"
           m="l-1"
           class="mobile-close-btn"

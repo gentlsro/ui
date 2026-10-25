@@ -32,7 +32,7 @@ export function getInputByDataType(
       return createComponent({
         component: TextInput,
         props,
-        icon: 'i-mi-text',
+        icon: 'i-lucide:text',
       })
 
     case 'number':
@@ -42,7 +42,7 @@ export function getInputByDataType(
       return createComponent({
         component: NumberInput,
         props,
-        icon: 'i-ant-design:number-outlined',
+        icon: 'i-tabler:number',
       })
 
     case 'currency':
@@ -50,7 +50,7 @@ export function getInputByDataType(
       return createComponent({
         component: CurrencyInput,
         props,
-        icon: 'i-grommet-icons:currency',
+        icon: 'i-lucide:currency',
       })
 
     case 'duration':
@@ -58,7 +58,7 @@ export function getInputByDataType(
       return createComponent({
         component: DurationInput,
         props,
-        icon: 'i-lets-icons:time-atack-light',
+        icon: 'i-lucide:timer',
       })
 
       break
@@ -82,7 +82,7 @@ export function getInputByDataType(
       return createComponent({
         component: DateInput,
         props,
-        icon: 'i-system-uicons:calendar-date',
+        icon: 'i-solar:calendar-date-outline',
       })
 
     case 'timestamp':
@@ -90,7 +90,7 @@ export function getInputByDataType(
       return createComponent({
         component: DateInput,
         props: { ...props, utc: true },
-        icon: 'i-system-uicons:calendar-date',
+        icon: 'i-solar:calendar-date-outline',
       })
 
     case 'yearMonth':
@@ -106,7 +106,7 @@ export function getInputByDataType(
       return createComponent({
         component: TimeInput,
         props,
-        icon: 'i-ion:time-outline',
+        icon: 'i-carbon:time',
       })
 
     default:

@@ -190,7 +190,7 @@ export const defaultComponentsConfig = {
       removeBtn: {
         size: 'auto',
         class: '!w-3 !h-3 color-negative',
-        icon: 'i-ion:close',
+        icon: 'i-mdi:close',
       },
     },
     merge: ['tooltip', 'removeBtn', 'ui'],

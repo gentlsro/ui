@@ -65,7 +65,7 @@ const eyeBtnProps = computed(() => {
   const _props = {
     size: 'auto',
     color: 'ca',
-    icon: isValueTemporaryVisible.value ? 'i-eva:eye-fill' : 'i-eva:eye-off-fill',
+    icon: isValueTemporaryVisible.value ? 'i-lucide:eye' : 'i-lucide:eye-off',
     tabindex: '-1',
   } as IBtnProps
 

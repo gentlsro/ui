@@ -183,7 +183,7 @@ function handleImageClick(url: string) {
       >
         <!-- Upload failed -->
         <template v-if="file.hasError">
-          <div class="i-ion:close color-negative h-12 w-12" />
+          <div class="i-mdi:close color-negative h-12 w-12" />
 
           <span text="caption center">
             {{ $t('file.uploadFailed') }}
@@ -199,7 +199,7 @@ function handleImageClick(url: string) {
 
         <!-- To be uploaded -->
         <template v-else-if="!file.isUploading && !file.isUploaded">
-          <div class="i-ion:cloud-upload color-ca h-12 w-12" />
+          <div class="i-lucide:cloud-upload color-ca h-12 w-12" />
 
           <p
             text="caption"

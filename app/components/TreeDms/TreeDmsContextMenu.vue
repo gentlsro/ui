@@ -212,7 +212,7 @@ async function handleDelete() {
       />
 
       <div flex="~ center">
-        <div class="i-clarity:warning-solid w-8 h-8 color-negative" />
+        <div class="i-mdi:warning w-8 h-8 color-negative" />
       </div>
 
       <span

@@ -338,7 +338,7 @@ defineExpose({
 
         <Btn
           v-if="hasClearableBtn"
-          icon="i-eva:close-fill h-6 w-6"
+          icon="i-mdi:close h-6 w-6"
           color="ca"
           size="auto"
           h="7"
@@ -371,7 +371,7 @@ defineExpose({
 
           <div
             v-if="!noIcon"
-            class="time-input-icon i-bx:time-five"
+            class="time-input-icon i-lucide:clock"
           />
         </template>
       </div>

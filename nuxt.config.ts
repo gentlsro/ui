@@ -5,6 +5,7 @@ import { loadEnv } from 'vite'
 import { writeFile } from 'node:fs/promises'
 import { cwd, env as processEnv } from 'node:process'
 import { prepareLocalNuxtLayers } from './prepare-layers'
+import { ICON_COLLECTIONS } from './icon-collections'
 
 const env = {
   ...import.meta.env,
@@ -171,9 +172,15 @@ export default defineNuxtConfig({
     ],
   },
 
+  // Icons come from the curated sets only: the server never asks the Iconify API, and the
+  // IconPicker searches the same sets (`modules/icon-catalog`)
   icon: {
     size: '1em',
     mode: 'svg',
+    serverBundle: {
+      collections: [...ICON_COLLECTIONS],
+    },
+    fallbackToApi: false,
   },
 
   pinia: {

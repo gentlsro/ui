@@ -240,13 +240,13 @@ onMounted(() => {
 
   &.is-new {
     .icon {
-      @apply i-eva:plus-fill w-4 h-4 leading-none;
+      @apply i-lucide:plus w-4 h-4 leading-none;
     }
   }
 
   &.is-added {
     .icon {
-      @apply i-gg:add w-4 h-4 leading-none;
+      @apply i-mdi:add w-4 h-4 leading-none;
     }
   }
 

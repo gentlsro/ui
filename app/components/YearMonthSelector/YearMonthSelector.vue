@@ -192,7 +192,7 @@ onMounted(() => {
       >
         <Btn
           v-if="clearable && modelValue && !readonly && !disabled"
-          icon="i-eva:close-fill h-6 w-6"
+          icon="i-mdi:close h-6 w-6"
           color="ca"
           size="auto"
           h="7"
@@ -201,7 +201,7 @@ onMounted(() => {
         />
 
         <div
-          i-formkit:month
+          i-tabler:calendar-month
           class="picker-icon"
           :class="pickerIconClass"
           :style="pickerIconStyle"

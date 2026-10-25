@@ -2,7 +2,7 @@
 
 export const BUTTON_PRESET = {
   ADD: {
-    icon: 'i-eva:plus-fill',
+    icon: 'i-lucide:plus',
     color: 'color-primary',
   },
   ARCHIVE: {
@@ -22,11 +22,11 @@ export const BUTTON_PRESET = {
     color: 'color-ca',
   },
   CLOSE: {
-    icon: 'i-ion:close',
+    icon: 'i-mdi:close',
     color: 'color-negative',
   },
   DONE: {
-    icon: 'i-akar-icons:circle-check',
+    icon: 'i-lucide:circle-check',
     color: 'color-positive',
   },
   EDIT: {

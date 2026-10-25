@@ -54,7 +54,7 @@ function finishYear() {
       <Btn
         size="auto"
         class="w-8 h-8 shrink-0 p-0"
-        icon="i-majesticons:chevron-left w-5 h-5"
+        icon="i-lucide:chevron-left w-5 h-5"
         :aria-label="`${$t('general.previous')} ${$t('general.month', 1)}`"
         data-picker-previous-month
         @click="$emit('navigate', -1, 'month')"
@@ -76,7 +76,7 @@ function finishYear() {
       <Btn
         size="auto"
         class="w-8 h-8 shrink-0 p-0"
-        icon="i-majesticons:chevron-right w-5 h-5"
+        icon="i-lucide:chevron-right w-5 h-5"
         :aria-label="`${$t('general.next')} ${$t('general.month', 1)}`"
         data-picker-next-month
         @click="$emit('navigate', 1, 'month')"
@@ -89,7 +89,7 @@ function finishYear() {
       <Btn
         size="auto"
         class="w-8 h-8 shrink-0 p-0"
-        icon="i-majesticons:chevron-left w-5 h-5"
+        icon="i-lucide:chevron-left w-5 h-5"
         :aria-label="`${$t('general.previous')} ${$t('general.year', 1)}`"
         data-picker-previous
         @click="$emit('navigate', -1, 'year')"
@@ -133,7 +133,7 @@ function finishYear() {
       <Btn
         size="auto"
         class="w-8 h-8 shrink-0 p-0"
-        icon="i-majesticons:chevron-right w-5 h-5"
+        icon="i-lucide:chevron-right w-5 h-5"
         :aria-label="`${$t('general.next')} ${$t('general.year', 1)}`"
         data-picker-next
         @click="$emit('navigate', 1, 'year')"

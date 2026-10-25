@@ -27,7 +27,7 @@ defineProps<IProps>()
     <!-- Sorting -->
     <div
       v-if="hasSorting"
-      class="i-basil:sort-outline m-l--2px w-3 h-3"
+      class="i-mdi:sort m-l--2px w-3 h-3"
     />
 
     <Separator

@@ -96,7 +96,7 @@ export const LIST_DEFAULT_PROPS = {
     },
 
     moveHandleIconClass() {
-      const base = 'i-akar-icons:drag-vertical color-ca w-4 h-4 cursor-move'
+      const base = 'i-mdi:drag-vertical color-ca w-4 h-4 cursor-move'
 
       return {
         base,

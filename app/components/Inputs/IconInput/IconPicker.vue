@@ -23,40 +23,49 @@ const props = withDefaults(defineProps<IProps>(), {
   minSearchLength: 1,
 })
 
-// Utils
-const { isLoading, fn } = useFn({
-  source: { type: 'component', name: 'icon' },
-})
-
 // Layout
 const model = defineModel<IProps['modelValue']>('modelValue')
 const search = defineModel<string>('search')
 const icons = ref<string[]>([])
+const isLoading = ref(false)
+const hasError = ref(false)
 
-// Data fetching
-function getIcons() {
-  let searchStr = search.value ?? ''
-
-  if (searchStr.includes(':')) {
-    searchStr = searchStr.split(':').slice(1).join(':')
-  }
-
-  if (!searchStr) {
-    throw new Error('Search string is empty')
-  }
-
-  return $fetch('https://api.iconify.design/search', {
-    query: { query: encodeURIComponent(searchStr) },
-  })
-}
+// Data fetching: the layer's own catalog (`modules/icon-catalog`), so every result renders;
+// `set:` typed first narrows to that set
+let requestId = 0
 
 async function fetchAndSetIcons() {
+  const id = ++requestId
+
   if (!search.value || search.value.length < props.minSearchLength) {
+    icons.value = []
+    hasError.value = false
+
     return
   }
 
-  const res = await fn<any>(getIcons)
-  icons.value = res.icons
+  isLoading.value = true
+
+  try {
+    const res = await $fetch<{ icons: string[] }>('/_ui/icons/search', {
+      query: { q: search.value },
+    })
+
+    // A slower earlier response must not replace the latest one
+    if (id === requestId) {
+      icons.value = res.icons
+      hasError.value = false
+    }
+  } catch {
+    if (id === requestId) {
+      icons.value = []
+      hasError.value = true
+    }
+  } finally {
+    if (id === requestId) {
+      isLoading.value = false
+    }
+  }
 }
 
 watchThrottled(search, fetchAndSetIcons, {
@@ -114,6 +123,14 @@ watchThrottled(search, fetchAndSetIcons, {
         class="p-x-3 p-y-2 color-ca font-rem-14"
       >
         {{ $t('general.atLeastCharactersToSearch', { count: minSearchLength }) }}
+      </div>
+
+      <!-- Search failed -->
+      <div
+        v-else-if="hasError"
+        class="p-x-3 p-y-2 color-negative font-rem-14"
+      >
+        {{ $t('general.errorOccured') }}
       </div>
 
       <!-- No data -->

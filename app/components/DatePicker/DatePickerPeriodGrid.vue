@@ -73,7 +73,7 @@ const options = computed(() => {
     <Btn
       v-if="view === 'years'"
       size="auto"
-      icon="i-majesticons:chevron-left w-5 h-5"
+      icon="i-lucide:chevron-left w-5 h-5"
       :ui="{ containerClass: ({ defaults }) => `${defaults.all} w-8 h-8 shrink-0 self-center p-0` }"
       :aria-label="`${$t('general.previous')} ${$t('general.year', 2)}`"
       data-picker-previous-years
@@ -114,7 +114,7 @@ const options = computed(() => {
     <Btn
       v-if="view === 'years'"
       size="auto"
-      icon="i-majesticons:chevron-right w-5 h-5"
+      icon="i-lucide:chevron-right w-5 h-5"
       :ui="{ containerClass: ({ defaults }) => `${defaults.all} w-8 h-8 shrink-0 self-center p-0` }"
       :aria-label="`${$t('general.next')} ${$t('general.year', 2)}`"
       data-picker-next-years

@@ -29,7 +29,7 @@ const icon = computed(() => {
     case 'warning':
       return 'i-fluent:warning-24-filled'
     case 'info':
-      return 'i-proicons:info'
+      return 'i-lucide:info'
     case 'positive':
       return 'i-ep:success-filled'
     case 'negative':

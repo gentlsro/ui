@@ -353,7 +353,7 @@ defineExpose({
         <!-- Clear button -->
         <Btn
           v-if="hasClearableBtn && isEditable"
-          icon="i-eva:close-fill h-6 w-6"
+          icon="i-mdi:close h-6 w-6"
           color="ca"
           size="auto"
           h="7"

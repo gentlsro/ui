@@ -9,7 +9,7 @@ defineProps<IProps>()
 <template>
   <Btn
     class="file-add"
-    icon="i-eva:plus-fill h-8 w-8"
+    icon="i-lucide:plus h-8 w-8"
     size="auto"
     stacked
     color="primary"

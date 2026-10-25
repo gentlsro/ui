@@ -59,7 +59,7 @@ export const COLLAPSE_DEFAULT_PROPS = {
     },
 
     expandIconClass() {
-      const base = 'i-majesticons:chevron-right transition-transform'
+      const base = 'i-lucide:chevron-right transition-transform'
       // State styling via CSS selectors - rotate when parent is open
       const open = '[.collapse.is-open_&]:(rotate-90deg)'
 
