@@ -1,22 +1,12 @@
 // @unocss-include
-import { existsSync } from 'node:fs'
 import { createResolver } from 'nuxt/kit'
-import { loadEnv } from 'vite'
 import { writeFile } from 'node:fs/promises'
-import { cwd, env as processEnv } from 'node:process'
 import { prepareLocalNuxtLayers } from './prepare-layers'
 
-const env = {
-  ...import.meta.env,
-  ...loadEnv('', processEnv.NUXT_DOTENV_DIR ?? cwd(), ''),
-}
-
-const isMonorepo = env.VITE_MONOREPO === 'true'
 const { resolve } = createResolver(import.meta.url)
-const hasUtilitiesLib = isMonorepo || existsSync(resolve('../Utilities'))
 
 export default defineNuxtConfig({
-  extends: hasUtilitiesLib ? ['../Utilities'] : ['github:gentlsro/Utilities#2.3'],
+  extends: ['@gentl/utilities'],
 
   modules: [
     '@nuxtjs/i18n',
@@ -182,5 +172,11 @@ export default defineNuxtConfig({
 
   unocss: {
     nuxtLayers: true,
+  },
+
+  eslint: {
+    config: {
+      standalone: false,
+    },
   },
 })

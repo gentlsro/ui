@@ -19,7 +19,6 @@ import { getListDefaultSortBy } from '../functions/helpers/get-list-default-sort
 // Components
 import type SearchInput from '../../Inputs/TextInput/SearchInput.vue'
 import type { Type } from 'arktype'
-import { type } from 'arktype'
 
 export const LIST_ID_KEY = Symbol('__listId')
 
@@ -162,14 +161,20 @@ function createStore(injectionKey?: string) {
       }, {} as Record<string, IListItemToAdd>)
     })
 
-    // Add validation
+    // Add validation: only a list given a schema validates what is added, and only it loads ArkType (whose module is a
+    // long task to evaluate; its caller already loaded it to build the schema)
     const schema = addConfig.value?.validationSchema as NonNullable<IListProps['addConfig']>['validationSchema'] as Type<any>
+    const addSchema = shallowRef<Type<any>>()
+
+    if (schema) {
+      import('arktype').then(({ type }) => {
+        addSchema.value = type({ search: schema })
+      })
+    }
 
     const { validation } = useArk({
       state: () => ({ search: search.value }),
-      schema: type({
-        search: schema ?? 'unknown.any',
-      }),
+      schema: addSchema,
       scope: '_listAdd',
     })
 

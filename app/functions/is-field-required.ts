@@ -19,6 +19,7 @@ export function isZodSchema(schema: SchemaType): schema is z.ZodType {
  */
 export function isArkTypeSchema(schema: SchemaType): schema is Type {
   const raw = toRaw(schema)
+
   return 'internal' in raw && typeof raw === 'function'
 }
 
@@ -75,8 +76,7 @@ function getZodSchemaAtPath(schema: z.ZodType, path: string): z.ZodType | undefi
     // Handle ZodArray - for numeric indices, get the element schema
     else if (zodKind(unwrapped) === 'array' && !Number.isNaN(Number(part))) {
       currentSchema = toRaw((unwrapped as z.ZodArray).element) as z.ZodType
-    }
-    else {
+    } else {
       return undefined
     }
   }
@@ -121,13 +121,19 @@ function isArkTypeFieldRequired(payload: { path: string, schema: Type }): boolea
 // ============================================================================
 
 /**
- * Check if a field is required in a schema (supports both ArkType and Zod)
+ * Check if a field is required in a schema (ArkType, Zod, or a plain validator that answers it: `isFieldRequired`)
  */
 export function isFieldRequired(payload: {
   path: string
   schema: SchemaType
 }): boolean {
   const { path, schema } = payload
+  // (a schema that is a plain validator says itself which of its fields are required)
+  const ownAnswer = (toRaw(schema) as { isFieldRequired?: (path: string) => boolean }).isFieldRequired
+
+  if (ownAnswer) {
+    return ownAnswer(path)
+  }
 
   if (isZodSchema(schema)) {
     return isZodFieldRequired({ path, schema })
