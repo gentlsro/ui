@@ -296,7 +296,7 @@ onMounted(() => {
 
       <!-- Cell slots -->
       <template
-        v-for="col in visibleColumns"
+        v-for="col in visibleColumns.filter(column => $slots[column.field])"
         :key="col.field"
         #[col.field]="cellProps"
       >
@@ -307,7 +307,10 @@ onMounted(() => {
       </template>
 
       <!-- Row slot -->
-      <template #row="{ row, index }">
+      <template
+        v-if="$slots.row"
+        #row="{ row, index }"
+      >
         <slot
           name="row"
           :row

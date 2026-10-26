@@ -76,6 +76,8 @@ function handleFocusFirstInput() {
   focusFirstInput({ el: formEl.value, lastPointerDownType: lastPointerDownType.value })
 }
 
+const { start: scheduleFocus } = useTimeoutFn(handleFocusFirstInput, 0, { immediate: false })
+
 // When triggering the edit mode, we want to focus the first input
 watch(isEditing, isEditing => {
   // Potentially focus the first input
@@ -85,7 +87,7 @@ watch(isEditing, isEditing => {
   // 2. Potentially prevent the `e` key being inputted into the input
 
     if (props.focusFirstInput) {
-      setTimeout(() => handleFocusFirstInput())
+      scheduleFocus()
     }
   } else {
     emits('cancel')
@@ -95,7 +97,7 @@ watch(isEditing, isEditing => {
 // We also try to focus the first input when the form is mounted
 onMounted(() => {
   if (props.focusFirstInput) {
-    setTimeout(() => handleFocusFirstInput())
+    scheduleFocus()
   }
 })
 

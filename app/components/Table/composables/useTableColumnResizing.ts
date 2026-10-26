@@ -1,4 +1,5 @@
 import { useRafTask } from '#layers/utilities/app/composables/useRafTask'
+import { disableDocumentSelection } from '../../ElementMovement/functions/disable-document-selection'
 
 import { klona } from 'klona/full'
 
@@ -34,6 +35,7 @@ export function useTableColumnResizing() {
   // State
   const splitterJustClicked = refAutoReset(false, 500)
   const activeSplitter = ref<IActiveTableSplitter>()
+  let restoreSelection: (() => void) | undefined
 
   const columnSplitters = computed(() => {
     const splitters: ITableSplitter[] = []
@@ -124,7 +126,8 @@ export function useTableColumnResizing() {
     }
 
     document.documentElement.style.cursor = 'col-resize'
-    document.documentElement.style.userSelect = 'none'
+    restoreSelection?.()
+    restoreSelection = disableDocumentSelection(document.documentElement)
 
     document.documentElement.addEventListener(
       'pointermove',
@@ -171,7 +174,8 @@ export function useTableColumnResizing() {
     document.documentElement.removeEventListener('pointerup', handleSplitterPointerUp)
     document.documentElement.removeEventListener('pointercancel', cancelResize)
     document.documentElement.style.cursor = ''
-    document.documentElement.style.userSelect = ''
+    restoreSelection?.()
+    restoreSelection = undefined
   }
 
   onBeforeUnmount(cancelResize)

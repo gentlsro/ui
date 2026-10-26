@@ -1,4 +1,5 @@
 // Types
+import type { ComponentExposed } from 'vue-component-type-helpers'
 import type { ITableProps } from '../types/table-props.type'
 import type { ITableTotal } from '../types/table-total.type'
 import type { ITableLayout } from '../types/table-layout.type'
@@ -266,10 +267,23 @@ const [
   // SECTION Layout
   const tableEl = ref<HTMLDivElement>()
   const virtualScrollEl = ref<any>()
-  const headerEl = ref<InstanceType<typeof HorizontalScroller>>()
-  const totalsEl = ref<InstanceType<typeof HorizontalScroller>>()
+  const headerEl = ref<ComponentExposed<typeof HorizontalScroller>>()
+  const totalsEl = ref<ComponentExposed<typeof HorizontalScroller>>()
 
-  const { width: tableWidth } = useElementSize(tableEl)
+  const tableWidth = ref(0)
+  // A breakpoint changes the entire row layout. Commit the measured width in
+  // the next frame so that those changes cannot resize observed ancestors
+  // during ResizeObserver delivery (particularly on owner remount in WebKit).
+  const tableWidthTask = useRafTask<{ element: Element, width: number }>(measurement => {
+    if (measurement.element === tableEl.value && measurement.element.isConnected) {
+      tableWidth.value = measurement.width
+    }
+  })
+  useResizeObserver(tableEl, ([entry]) => {
+    if (entry) {
+      tableWidthTask.schedule({ element: entry.target, width: entry.contentRect.width })
+    }
+  })
   // !SECTION
 
   // SECTION Emits
@@ -558,9 +572,11 @@ const [
   })
 
   const isContentVerticallyScrollable = ref(false)
-  useResizeObserver(virtualScrollElDom, () => {
+  // Relative column widths can resize the observed viewport. Deliver layout
+  // work outside ResizeObserver and cancel it with the owning table scope.
+  const viewportResizeTask = useRafTask<void>(() => {
     const element = virtualScrollElDom.value
-    if (!element) {
+    if (!element?.isConnected) {
       return
     }
 
@@ -570,6 +586,7 @@ const [
     measureScroll()
     measureRelativeWidthBasis()
   })
+  useResizeObserver(virtualScrollElDom, () => viewportResizeTask.schedule())
 
   watch([() => visibleColumns.value.map(column => column.width), () => rows.value.length], measureScroll, { flush: 'post' })
 

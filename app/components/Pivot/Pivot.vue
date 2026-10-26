@@ -27,6 +27,19 @@ const mergedProps = computed(() => {
 const uuid = generateUUID()
 provideLocal(PIVOT_ID_KEY, uuid)
 
+// Immediate server fetches seed the first client pass before rendering. Only
+// source records enter the payload; functions and display models stay local.
+const nuxtApp = useNuxtApp()
+const initialSourceKey = `__pivot-source:${useId()}`
+// Nuxt retains state initializers. Even an empty setup closure can retain the
+// owning store and its detached DOM, so an undefined seed needs no initializer.
+const initialSource = useState<{ data: T[], count?: number } | undefined>(
+  initialSourceKey,
+)
+onUnmounted(() => {
+  nuxtApp.runWithContext(() => clearNuxtState(initialSourceKey, { reset: false }))
+})
+
 // Store
 const {
   pivotEl,
@@ -40,7 +53,13 @@ const {
   isFirstFetch,
   visibleData,
   emits,
-} = usePivotStore({ props })
+  sourceData,
+  totalRows,
+} = usePivotStore({
+  props,
+  initialData: initialSource.value?.data,
+  initialCount: initialSource.value?.count,
+})
 
 emits.value = {
   rowClick: payload => emit('click:row', payload),
@@ -113,11 +132,14 @@ onMounted(async () => {
   }
 })
 
-// SSR and hydration must choose the same content branch. Client navigation can
-// render the shell immediately while initial data is being prepared.
-if (import.meta.server || useNuxtApp().isHydrating) {
+// Keep setup synchronous for native consumers without Suspense. Static data
+// commits synchronously; async immediate fetches preserve SSR through prefetch.
+onServerPrefetch(async () => {
   await initialLoad
-}
+  if (shouldFetchPivotData({ data: props.data, loadData: mergedProps.value.loadData }, 'setup')) {
+    initialSource.value = { data: sourceData.value, count: totalRows.value }
+  }
+})
 </script>
 
 <template>
@@ -135,7 +157,10 @@ if (import.meta.server || useNuxtApp().isHydrating) {
       <PivotHeader />
     </slot>
 
-    <slot name="content">
+    <slot
+      v-if="$slots.content || visibleData.length || !isInitialLoad"
+      name="content"
+    >
       <PivotContent v-if="visibleData.length" />
       <PivotEmpty v-else-if="!isInitialLoad" />
     </slot>

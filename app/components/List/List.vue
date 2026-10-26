@@ -49,6 +49,7 @@ const {
   isLoading,
   listEl,
   search,
+  searchError,
   selection,
   isFirstFetch,
   containerEl,
@@ -134,16 +135,25 @@ else if (storeItems.value) {
 onMounted(() => {
   const _selection = Array.isArray(selection.value)
     ? selection.value
-    : [selection.value].filter(Boolean)
+    : [selection.value].filter(value => !isNil(value))
 
   if (_selection.length === 1) {
-    requestAnimationFrame(() => {
-      const itemKey = getListItemKey(_selection[0], props.itemKey)
-      const itemIdx = listItems.value?.findIndex(item => item.id === itemKey)
-      itemFocusedIdx.value = itemIdx
+    focusTask.schedule(_selection[0])
+  }
+})
+const focusTask = useRafTask((selected: unknown) => {
+  if (containerEl.value?.isConnected) {
+    const itemKey = getListItemKey(selected, props.itemKey)
+    const itemIdx = listItems.value?.findIndex(item => item.id === itemKey)
+    itemFocusedIdx.value = itemIdx
 
-      listEl.value?.scrollTo(itemIdx)
-    })
+    listEl.value?.scrollTo(itemIdx)
+  }
+})
+
+watch(searchError, error => {
+  if (error !== undefined) {
+    emits('error:search', error)
   }
 })
 
@@ -224,13 +234,25 @@ defineExpose(listGetExposed(() => emits('submit')))
 
     <!-- No data -->
     <slot
-      v-if="!isLoading && !listItems?.length"
+      v-if="!isLoading && !listItems?.length && searchError === undefined"
       name="noData"
     >
       <ListNoData
         :ui="mergedProps.ui"
         @submit="emits('submit')"
         @change:content-size="$emit('change:contentSize', $event)"
+      />
+    </slot>
+
+    <slot
+      v-if="searchError !== undefined"
+      name="search-error"
+      :error="searchError"
+    >
+      <Banner
+        role="alert"
+        variant="error"
+        :label="$t('general.errorOccured')"
       />
     </slot>
 

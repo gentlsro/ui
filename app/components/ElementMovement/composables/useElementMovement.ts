@@ -1,4 +1,5 @@
 import { Draggable, PointerSensor } from 'dragdoll'
+import { disableDocumentSelection } from '../functions/disable-document-selection'
 
 // @vapor-ready — callers pass native DOM refs; active gestures are scoped to their owner.
 
@@ -61,7 +62,7 @@ export function useElementMovement(payload: {
 
   function registerHandle(element: HTMLElement, resizing: boolean, sourceEvents: 'pointer' | 'mouse' = 'pointer') {
     let corner: Corner | undefined
-    let previousUserSelect = ''
+    let restoreSelection: (() => void) | undefined
     const sensor = new MovementPointerSensor(element, {
       sourceEvents,
       listenerOptions: { passive: false },
@@ -90,8 +91,7 @@ export function useElementMovement(payload: {
       elements: () => [],
       startPredicate: () => true,
       onStart: drag => {
-        previousUserSelect = document.body.style.userSelect
-        document.body.style.userSelect = 'none'
+        restoreSelection = disableDocumentSelection()
         const pos = drag.startEvent
         if (resizing && corner) {
           const rect = toValue(referenceEl)?.getBoundingClientRect()
@@ -127,7 +127,8 @@ export function useElementMovement(payload: {
             updateMove(drag.endEvent)
           }
         }
-        document.body.style.userSelect = previousUserSelect
+        restoreSelection?.()
+        restoreSelection = undefined
         isMoving.value = false
         isResizing.value = false
         activeCorner.value = null

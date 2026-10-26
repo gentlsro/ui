@@ -15,7 +15,7 @@ export const BREADCRUMBS_DEFAULT_PROPS = {
     },
 
     breadcrumbsClass() {
-      const base = 'flex gap-x-1 items-center text-sm overflow-auto'
+      const base = 'flex gap-x-1 items-center text-sm min-w-0 flex-1'
       const responsive = 'lt-lg:(m-t-2px m-b-2px)'
       const mainBar = '[.main-bar_&]:(m-t-0)'
 

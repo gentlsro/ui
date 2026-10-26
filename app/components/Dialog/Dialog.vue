@@ -374,7 +374,7 @@ const contentClasses = computed(() => {
                 preset="CLOSE"
                 size="sm"
                 self-start
-                @click="hide"
+                @click="hide()"
               />
             </div>
           </slot>

@@ -86,8 +86,11 @@ function focus() {
 
 function select() {
   nextTick(() => {
+    if (!inputEl.value?.isConnected) {
+      return
+    }
     const range = document.createRange()
-    range.selectNodeContents(inputEl.value!)
+    range.selectNodeContents(inputEl.value)
 
     const selection = window.getSelection()
     selection?.removeAllRanges()

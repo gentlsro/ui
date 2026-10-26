@@ -46,6 +46,7 @@ defineExpose({
       autofocus
       grow
       data-tree-search
+      :ui="{ wrapperClass: ({ defaults }) => [defaults.all, 'min-w-0 flex-1'] }"
       v-bind="searchConfig?.inputProps"
     />
 

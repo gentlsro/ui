@@ -213,13 +213,13 @@ const previousValueStyle = computed(() => {
               </span>
             </span>
 
-            <NuxtLink
+            <UILink
               v-else
               :to="typeof to === 'function'
                 ? to({ value, parsedValue: val, label: getShownValue(val) })
                 : to"
               class="link"
-              v-bind="navigateToOptions"
+              :navigate-to-options="navigateToOptions"
               :class="[
                 valueClass,
                 { 'font-semibold': !noBold, 'is-modified': isModified },
@@ -266,7 +266,7 @@ const previousValueStyle = computed(() => {
                   </Btn>
                 </span>
               </span>
-            </NuxtLink>
+            </UILink>
 
             <slot name="value-append" />
           </slot>
@@ -287,7 +287,7 @@ const previousValueStyle = computed(() => {
               {{ getShownValue(val) }}
             </span>
 
-            <NuxtLink
+            <UILink
               v-else
               :to="toPreviousValue"
               class="link"
@@ -298,7 +298,7 @@ const previousValueStyle = computed(() => {
                 <span class="link__label-icon" />
                 <span>{{ getShownValue(val) }}</span>
               </span>
-            </NuxtLink>
+            </UILink>
           </div>
         </template>
       </ValueFormatter>

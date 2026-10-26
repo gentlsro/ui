@@ -16,6 +16,7 @@
   "table": {
     "noSavedLayouts": "Zatím žádná uložená rozložení",
     "totalsLabel": "Celkem",
+    "columnOptions": "Možnosti sloupce {column}",
     "tooManyData": "Tabulka je optimalizována pro ~100 000 řádků dat. Vyšší počet dat může způsobovat problémy. ",
     "searchPossibleInColumns": "Vyhledávat lze ve sloupcích",
     "nonSearchableColumnsInfo": "Pro filtraci ostatních sloupců prosím využijte filtr tabulky",
@@ -91,6 +92,9 @@
     "addFirstCondition": "Přidat první podmínku",
     "negation": "Negováno",
     "negation2": "Negace"
+  },
+  "tabs": {
+    "label": "Záložky"
   },
   "general": {
     "moveAndResizeAvailable": "Tento element lze přesouvat a měnit jeho velikost"

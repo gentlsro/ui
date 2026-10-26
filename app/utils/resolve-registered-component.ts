@@ -1,11 +1,11 @@
-import type { Component } from 'vue'
-import { defineAsyncComponent, markRaw } from 'vue'
+import type { VaporComponent } from 'vue'
+import { defineVaporAsyncComponent, markRaw } from 'vue'
 
-type ComponentModule = { default: Component } | Component
+type ComponentModule = { default: VaporComponent } | VaporComponent
 type ComponentLoader = () => Promise<ComponentModule>
 
 const componentLoaders = import.meta.glob('../components/**/*.vue') as Record<string, ComponentLoader>
-const componentCache = new Map<string, Component>()
+const componentCache = new Map<string, VaporComponent>()
 const loaderPathByKey = new Map<string, string[]>()
 
 function toLookupKey(value: string) {
@@ -30,7 +30,7 @@ for (const path of Object.keys(componentLoaders)) {
  * Resolves a component by name from the UI component folder.
  * Uses async components to keep Vite chunk-splitting intact.
  */
-export function resolveRegisteredComponent(name: string): Component | string {
+export function resolveRegisteredComponent(name: string): VaporComponent | string {
   const cacheKey = toLookupKey(name)
   const cached = componentCache.get(cacheKey)
 
@@ -52,14 +52,14 @@ export function resolveRegisteredComponent(name: string): Component | string {
   const selectedPath = possiblePaths[0]
   const loader = componentLoaders[selectedPath as keyof typeof componentLoaders]
 
-  const component = markRaw(defineAsyncComponent(async () => {
+  const component = markRaw(defineVaporAsyncComponent(async () => {
     const mod = await loader?.()
 
     if (mod && typeof mod === 'object' && 'default' in mod) {
       return mod.default
     }
 
-    return mod as Component
+    return mod as VaporComponent
   }))
 
   componentCache.set(cacheKey, component)

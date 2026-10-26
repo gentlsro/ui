@@ -1,8 +1,9 @@
-import { createHash } from 'node:crypto'
-import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
+import { createHash, randomUUID } from 'node:crypto'
+import { closeSync, existsSync, mkdirSync, openSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import process from 'node:process'
 import type { CSSObject } from 'unocss'
+import type { IconAsset } from '../../app/types/runtime-icon.type.ts'
 
 export const ICON_ASSETS_DIRECTORY_ENV = 'GENTL_ICON_ASSETS_DIR'
 export const ICON_ASSETS_BASE_URL = '/_icons'
@@ -16,6 +17,53 @@ type IIconMeta = {
 type IIconAssetProcessor = (cssObject: CSSObject, meta: IIconMeta) => void
 
 const DATA_URL = /url\("data:image\/svg\+xml[^"]*"\)/
+
+function publishAsset(path: string, contents: string) {
+  const temporary = `${path}.${randomUUID()}.tmp`
+  try {
+    writeFileSync(temporary, contents)
+    renameSync(temporary, path)
+  } finally {
+    rmSync(temporary, { force: true })
+  }
+}
+
+/** Serialize read/merge/write across client/SSR workers and publish atomically. */
+export function updateIconManifest(options: {
+  directory: string
+  update: (manifest: Record<string, IconAsset>) => Record<string, IconAsset>
+  reset?: boolean
+}) {
+  mkdirSync(options.directory, { recursive: true })
+  const lock = join(options.directory, 'manifest.lock')
+  const deadline = Date.now() + 5000
+  let handle: number | undefined
+  const pause = new Int32Array(new SharedArrayBuffer(4))
+  while (handle === undefined) {
+    try {
+      handle = openSync(lock, 'wx')
+    } catch (error) {
+      if (!(error instanceof Error) || !('code' in error) || error.code !== 'EEXIST') {
+        throw error
+      }
+      if (Date.now() >= deadline) {
+        throw new Error(`Timed out updating icon manifest: ${options.directory}`)
+      }
+      Atomics.wait(pause, 0, 0, 5)
+    }
+  }
+  try {
+    const path = join(options.directory, 'manifest.json')
+    const manifest: Record<string, IconAsset> = !options.reset && existsSync(path)
+      ? JSON.parse(readFileSync(path, 'utf8'))
+      : {}
+    const updated = options.update(manifest)
+    publishAsset(path, JSON.stringify(Object.fromEntries(Object.entries(updated).toSorted())))
+  } finally {
+    closeSync(handle)
+    rmSync(lock, { force: true })
+  }
+}
 
 function toStandaloneSvg(svg: string) {
   let standalone = svg.startsWith('<svg>') ? svg.replace('<svg>', '<svg >') : svg
@@ -54,10 +102,23 @@ export function createIconAssetProcessor(options: {
       const path = join(options.directory, file)
 
       if (!existsSync(path)) {
-        writeFileSync(path, svg)
+        publishAsset(path, svg)
       }
 
       written.add(file)
+      // The runtime renderer can reuse the same content-hashed asset. Merge
+      // entries produced by the client and SSR builds instead of replacing them.
+      updateIconManifest({
+        directory: options.directory,
+        update: manifest => {
+          manifest[`${meta.collection}:${meta.name}`] = {
+            url: `${options.baseURL ?? ICON_ASSETS_BASE_URL}/${file}`,
+            mode: typeof cssObject['--un-icon'] === 'string' ? 'mask' : 'background',
+          }
+
+          return manifest
+        },
+      })
     }
 
     const url = `url(${options.baseURL ?? ICON_ASSETS_BASE_URL}/${file})`

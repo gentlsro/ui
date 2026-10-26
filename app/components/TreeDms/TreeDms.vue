@@ -19,7 +19,7 @@ const props = withDefaults(
 )
 
 defineExpose({
-  getStore: () => useTreeDmsStore(),
+  getStore: () => treeDmsStore,
   getTreeStore: () => {
     const treeStore = treeEl.value?.store()
 
@@ -41,6 +41,7 @@ const uuid = generateUUID()
 provideLocal(TREE_DMS_INJECTION_KEY, uuid)
 
 // Store
+const treeDmsStore = useTreeDmsStore({ props })
 const {
   modifiers,
   contextMenuConfig,
@@ -48,7 +49,7 @@ const {
   nodeContextMenu,
   isContextMenuOpen,
   folderKey,
-} = useTreeDmsStore({ props })
+} = treeDmsStore
 
 // Layout
 const model = defineModel<T[]>()

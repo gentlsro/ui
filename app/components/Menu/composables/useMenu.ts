@@ -20,6 +20,7 @@ export function useMenu(payload: {
 }) {
   const { menuProps, getHost, onHide } = payload
   let removeTriggerListener: (() => void) | undefined
+  const floatingSyncFrames = new Set<number>()
   const isMounted = ref(false)
 
   // Utils
@@ -154,11 +155,16 @@ export function useMenu(payload: {
   function syncFloatingUIWithVirtualDimensions(payload?: {
     onDone?: () => void
   }) {
-    requestAnimationFrame(() => {
+    const frame = requestAnimationFrame(() => {
+      floatingSyncFrames.delete(frame)
+      const element = floatingEl.value
+      if (!element?.isConnected) {
+        return
+      }
       const isXDiff = virtualDimensions.value?.x !== floatingUI.x.value
       const isYDiff = virtualDimensions.value?.y !== floatingUI.y.value
       const { total } = getElementSize(
-        floatingEl.value as HTMLElement,
+        element,
         { includeBorder: true, includePadding: true, includeMargin: true },
       )
 
@@ -174,6 +180,7 @@ export function useMenu(payload: {
 
       payload?.onDone?.()
     })
+    floatingSyncFrames.add(frame)
   }
 
   function calculateVirtualElement() {
@@ -303,17 +310,16 @@ export function useMenu(payload: {
     }
   })
 
+  useEventListener(floatingEl, 'animationend', () => {
+    floatingEl.value?.classList.remove('bounce')
+  })
+
   function bounce() {
     if (menuProps.noBounce) {
       return
     }
 
-    const _floatingEl = floatingEl.value as HTMLElement
-
-    _floatingEl.addEventListener('animationend', () => {
-      _floatingEl.classList.remove('bounce')
-    })
-    _floatingEl.classList.add('bounce')
+    floatingEl.value?.classList.add('bounce')
   }
 
   function handleClickOutside(ev: Event) {
@@ -354,6 +360,8 @@ export function useMenu(payload: {
   })
 
   onBeforeUnmount(() => {
+    floatingSyncFrames.forEach(frame => cancelAnimationFrame(frame))
+    floatingSyncFrames.clear()
     removeTriggerListener?.()
 
     menuResetUplift({ referenceEl: referenceEl.value })

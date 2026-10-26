@@ -114,6 +114,32 @@ function getTransformMessages(worker: any) {
 }
 
 describe('pivot transform job lifecycle', () => {
+  it('commits a main-thread result synchronously and preserves the Promise API', async () => {
+    const transform = usePivotTransform()
+    const payload = { ...createPayload(), useWorker: false }
+    const result = transform.transformPivotDataImmediate(payload)
+    expect(result).not.toBeInstanceOf(Promise)
+    expect(result).toHaveProperty('data')
+    const asyncResult = transform.transformPivotData(payload)
+    expect(asyncResult).toBeInstanceOf(Promise)
+    expect(await asyncResult).toEqual(result)
+  })
+
+  it('keeps an immediate transform pending until its performance warning is approved', async () => {
+    const transform = usePivotTransform()
+    const onPerformanceWarning = vi.fn()
+    const result = transform.transformPivotDataImmediate({
+      ...createPayload([{ group: 'A', amount: 1 }, { group: 'B', amount: 2 }]),
+      useWorker: false,
+      performance: { sourceRowWarningThreshold: 1 },
+      onPerformanceWarning,
+    })
+    expect(result).toBeInstanceOf(Promise)
+    expect(onPerformanceWarning).toHaveBeenCalledOnce()
+    transform.continueTransform()
+    await expect(result).resolves.toHaveProperty('data')
+  })
+
   it('rejects a superseded job, ignores its stale result, and keeps the worker', async () => {
     const transform = usePivotTransform()
     const data = [{ group: 'A', amount: 1 }]

@@ -20,7 +20,7 @@ const { internalColumns } = useTableStore()
 // Layout
 const column = toRef(props, 'column')
 
-function handleSort(sort?: 'asc' | 'desc', ev?: PointerEvent) {
+function handleSort(sort?: 'asc' | 'desc', ev?: MouseEvent) {
   // With shift, the column joins (or leaves) the multi-sort
   if (ev?.shiftKey) {
     tableSetColumnSort(internalColumns.value, column.value, sort)

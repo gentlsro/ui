@@ -18,7 +18,14 @@ const emits = defineEmits<{
 
 // Layout
 const contentEl = useTemplateRef<HTMLDivElement>('contentEl')
+const contentInnerEl = useTemplateRef<HTMLDivElement>('contentInnerEl')
 const inTransition = ref(false)
+const heightTask = useRafTask((height: number) => {
+  const el = contentEl.value
+  if (el?.isConnected && props.isOpen && !props.noHeightCalculation) {
+    el.style.height = `${height}px`
+  }
+})
 
 function handleTransition(when: 'before' | 'after') {
   const toEmit = [
@@ -40,24 +47,32 @@ function handleTransition(when: 'before' | 'after') {
 
 watch(
   () => props.isOpen,
-  async isOpen => {
+  async (isOpen, _, onCleanup) => {
+    let active = true
+    onCleanup(() => {
+      active = false
+      heightTask.cancel()
+    })
     if (props.noHeightCalculation) {
       return
     }
 
-    const el = contentEl.value as HTMLDivElement
+    const el = contentEl.value
+    if (!el?.isConnected) {
+      return
+    }
 
     if (isOpen) {
       el.style.height = '0px'
 
-      requestAnimationFrame(() => {
-        el.style.height = `${getContentHeight(el.scrollHeight)}px`
-      })
+      heightTask.schedule(getContentHeight(el.scrollHeight))
     } else {
       el.style.height = `${getContentHeight(el.scrollHeight)}px`
 
       await nextTick()
-      el.style.height = '0px'
+      if (active && el === contentEl.value && el.isConnected) {
+        el.style.height = '0px'
+      }
     }
   },
 )
@@ -69,6 +84,21 @@ function getContentHeight(actualContentHeight: number) {
   return Math.min(maxContentHeight, contentHeight)
 }
 
+function getAutoContentHeight() {
+  const el = contentEl.value
+  const inner = contentInnerEl.value
+  if (!el || !inner) {
+    return 0
+  }
+  const style = getComputedStyle(el)
+  const frame = style.boxSizing === 'border-box'
+    ? Number.parseFloat(style.borderTopWidth) + Number.parseFloat(style.borderBottomWidth)
+    + Number.parseFloat(style.paddingTop) + Number.parseFloat(style.paddingBottom)
+    : 0
+
+  return getContentHeight(inner.scrollHeight + frame)
+}
+
 function onTransitionEnd() {
   if (props.noHeightCalculation) {
     return
@@ -78,14 +108,34 @@ function onTransitionEnd() {
   inTransition.value = false
 
   if (el) {
-    el.style.height = ''
-    el.style.maxHeight = props.maxContentHeight ? `${props.maxContentHeight}px` : ''
+    el.style.height = props.autoAdjustHeight && props.isOpen
+      ? `${getAutoContentHeight()}px`
+      : ''
+    el.style.maxHeight = props.maxContentHeight !== undefined ? `${props.maxContentHeight}px` : ''
   }
 }
 
-if (props.autoAdjustHeight) {
-  // TODO: Implement this
-}
+const resizeTarget = computed(() => props.autoAdjustHeight && props.isOpen && !props.noHeightCalculation
+  ? contentInnerEl.value
+  : undefined)
+useResizeObserver(resizeTarget, () => {
+  if (contentInnerEl.value) {
+    heightTask.schedule(getAutoContentHeight())
+  }
+})
+watch([() => props.contentHeight, () => props.maxContentHeight, () => props.autoAdjustHeight], () => {
+  if (props.autoAdjustHeight && contentInnerEl.value && props.isOpen) {
+    heightTask.schedule(getAutoContentHeight())
+  } else if (contentEl.value && !props.autoAdjustHeight) {
+    contentEl.value.style.height = ''
+  }
+})
+watch(() => props.noHeightCalculation, disabled => {
+  if (disabled && contentEl.value) {
+    heightTask.cancel()
+    contentEl.value.style.height = ''
+  }
+})
 
 const contentClass = computed(() => {
   return props.ui?.contentClass?.({
@@ -94,7 +144,10 @@ const contentClass = computed(() => {
 })
 
 const contentStyle = computed(() => {
-  return props.ui?.contentStyle?.()
+  return {
+    ...props.ui?.contentStyle?.(),
+    maxHeight: props.maxContentHeight !== undefined ? `${props.maxContentHeight}px` : undefined,
+  }
 })
 
 const contentInnerClass = computed(() => {
@@ -120,12 +173,17 @@ const contentInnerStyle = computed(() => {
       v-show="isOpen"
       ref="contentEl"
       class="collapse__content"
-      :class="[contentClass, { 'is-floating': floating, 'in-transition': inTransition }]"
+      :class="[contentClass, {
+        'is-floating': floating,
+        'in-transition': inTransition,
+        'auto-adjust-height': autoAdjustHeight && !noTransition && !noHeightCalculation,
+      }]"
       :data-state="isOpen ? 'open' : 'closed'"
       :style="contentStyle"
       @transitionend="onTransitionEnd"
     >
       <div
+        ref="contentInnerEl"
         class="collapse__content-inner"
         :class="contentInnerClass"
         :style="contentInnerStyle"
@@ -138,6 +196,9 @@ const contentInnerStyle = computed(() => {
 
 <style lang="scss" scoped>
 .collapse__content {
+  &.auto-adjust-height {
+    transition: height var(--transitionDuration) var(--transitionTimingFunction);
+  }
   &.in-transition {
     @apply overflow-hidden;
   }
@@ -145,6 +206,11 @@ const contentInnerStyle = computed(() => {
   &.is-floating {
     @apply absolute top-0 left-0 right-0 bg-white dark:bg-dark-950 z-100;
   }
+}
+
+.collapse__content-inner {
+  // Measure intrinsic content, rather than a flex child shrinking to its parent.
+  flex-shrink: 0;
 }
 
 // Transition

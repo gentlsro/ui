@@ -18,7 +18,8 @@ export async function handleItemBlur<T extends IItem>(payload: {
   getTreeDmsStore: () => ReturnType<typeof useTreeDmsStore>
 }) {
   const { inputEl, node, select, getTreeStore, getTreeDmsStore } = payload
-  const { isLoadingByNodeId, modifiers, nodeEditing, isCurrentlyAddingItem } = getTreeDmsStore()
+  const { isLoadingByNodeId, modifiers, nodeEditing, isCurrentlyAddingItem, isActive } = getTreeDmsStore()
+  const editedNode = node.value
 
   const treeStore = getTreeStore()
   const {
@@ -32,7 +33,7 @@ export async function handleItemBlur<T extends IItem>(payload: {
     selectionConfig,
   } = treeStore
 
-  if (!inputEl || isLoadingByNodeId.value[node.value.id] || nodeEditing.value?.id !== node.value.id) {
+  if (!isActive() || !inputEl || isLoadingByNodeId.value[node.value.id] || nodeEditing.value?.id !== node.value.id) {
     isCurrentlyAddingItem.value = false
 
     return
@@ -74,15 +75,15 @@ export async function handleItemBlur<T extends IItem>(payload: {
           childrenKey: childrenKey.value,
         })?.ref,
       })
-    }
-
-    catch {
+    } catch {
       shouldProceed = false
-    }
-    
-    finally {
+    } finally {
       isLoadingByNodeId.value[node.value.id] = false
     }
+  }
+
+  if (!isActive() || node.value !== editedNode || nodeEditing.value?.id !== editedNode.id) {
+    return
   }
 
   if (!shouldProceed) {
@@ -106,6 +107,9 @@ export async function handleItemBlur<T extends IItem>(payload: {
   // We need to replace the current node with the one we got from the modifier
   const newNodes = removeNode(node.value, { commit: false })
   const addedNode = await insertNode(item, { parent, nodes: newNodes })
+  if (!isActive()) {
+    return
+  }
 
   // Update the selection
   const isSelected = isNodeSelected({
@@ -120,7 +124,9 @@ export async function handleItemBlur<T extends IItem>(payload: {
 
     // We need to wait for the deselect first to select the new object
     nextTick(() => {
-      selectNode({ node: addedNode, getStore: () => treeStore })
+      if (isActive()) {
+        selectNode({ node: addedNode, getStore: () => treeStore })
+      }
     })
   }
 

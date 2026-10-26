@@ -36,6 +36,7 @@ watch(draggableElement, (element, _, onCleanup) => {
   }
   const sensor = new PointerSensor(element, {
     sourceEvents: 'pointer',
+    listenerOptions: { passive: false },
     cancelOnEscape: true,
     startPredicate: event => {
       if (!(event instanceof PointerEvent) || event.button !== 0

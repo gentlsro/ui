@@ -186,7 +186,7 @@ useTableCellNavigation(tableStore, toRef(props, 'editable'))
 
           <!-- Field slots -->
           <template
-            v-for="col in slotProps.columns ?? visibleColumns"
+            v-for="col in (slotProps.columns ?? visibleColumns).filter(column => $slots[column.field])"
             :key="col.field"
             #[col.field]="cellProps"
           >

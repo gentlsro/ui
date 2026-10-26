@@ -1,4 +1,5 @@
 import { Draggable, PointerSensor } from 'dragdoll'
+import { disableDocumentSelection } from '../functions/disable-document-selection'
 
 // @vapor-ready — native handles and scope-owned Dragdoll registration.
 
@@ -56,9 +57,10 @@ export function useCornerAdjustment(payload: {
       return
     }
     let corner: Corner | undefined
-    let previousUserSelect = ''
+    let restoreSelection: (() => void) | undefined
     const sensor = new PointerSensor(element, {
       sourceEvents: 'pointer',
+      listenerOptions: { passive: false },
       cancelOnEscape: true,
       startPredicate: event => {
         if (!(event instanceof PointerEvent) || event.button !== 0) {
@@ -80,8 +82,7 @@ export function useCornerAdjustment(payload: {
       elements: () => [],
       startPredicate: () => true,
       onStart: drag => {
-        previousUserSelect = document.body.style.userSelect
-        document.body.style.userSelect = 'none'
+        restoreSelection = disableDocumentSelection()
         cornerStart.value = {
           corner: corner!,
           startMouse: { x: drag.startEvent.x, y: drag.startEvent.y },
@@ -99,7 +100,8 @@ export function useCornerAdjustment(payload: {
         isAdjusting.value = false
         activeCorner.value = null
         cornerStart.value = null
-        document.body.style.userSelect = previousUserSelect
+        restoreSelection?.()
+        restoreSelection = undefined
       },
     })
     onCleanup(() => {

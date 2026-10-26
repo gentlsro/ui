@@ -44,9 +44,11 @@ describe('icon assets', () => {
     process(first, meta)
     process(second, meta)
 
-    const [file] = readdirSync(directory)
+    const files = readdirSync(directory).filter(file => file.endsWith('.svg'))
+    const [file] = files
 
-    expect(readdirSync(directory)).toHaveLength(1)
+    expect(files).toHaveLength(1)
+    expect(readdirSync(directory)).toContain('manifest.json')
     expect(file).toMatch(/^lucide-check\.[\w-]{8}\.svg$/)
     expect(readFileSync(join(directory, file!), 'utf8')).toBe(svg.replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" '))
     expect(first['--un-icon']).toBe(`url(/_icons/${file})`)

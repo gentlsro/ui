@@ -1,6 +1,6 @@
 import { autoScrollPlugin, Draggable, PointerSensor } from 'dragdoll'
 import '../../../functions/dragdoll-ticker'
-import type { PointerSensorMoveEvent } from 'dragdoll'
+import type { AnyDraggable, PointerSensorMoveEvent } from 'dragdoll'
 
 // Types
 import type { ITreeNode } from '../types/tree-node.type'
@@ -14,7 +14,7 @@ type IConfig<T extends IItem> = {
   draggedNode: Ref<ITreeNode<T> | undefined>
   dragMeta: Ref<ITreeDragMeta<T>>
   cancelDrag: Ref<boolean>
-  activeDraggable: Ref<Draggable | null>
+  activeDraggable: Ref<AnyDraggable | null>
   nodeById: Readonly<Ref<Record<string, ITreeNode<T>>>>
   nodeMetaById: Ref<Record<string, ITreeNodeMeta>>
   dndConfig: Ref<ITreeProps<T>['dndConfig']>
@@ -237,7 +237,7 @@ export function useTreeDragAndDrop<T extends IItem>(config: IConfig<T>) {
         nodeMetaById: nodeMetaById.value,
         childrenKey: childrenKey.value,
       })
-    } else if (draggedOverItemId) {
+    } else if (!isNil(draggedOverItemId)) {
       parent = nodeById.value[draggedOverItemId]
     }
 
@@ -260,7 +260,7 @@ export function useTreeDragAndDrop<T extends IItem>(config: IConfig<T>) {
   function handleDragEnd(drag?: Draggable['drag']) {
     // Dragdoll cancels queued movement on end; resolve the release position before committing.
     if (drag?.endEvent?.type === 'end') {
-      handleDragMove(drag.endEvent as PointerSensorMoveEvent)
+      handleDragMove(drag.endEvent)
     }
 
     clearHoverExpandTimer()

@@ -40,7 +40,8 @@ const readonly = toRef(props, 'readonly')
 
 // The picker is a dialog below this breakpoint – the same one `MenuProxy` uses
 const menuBreakpoint = getComponentProps('menuProxy').breakpoint ?? 'sm'
-const isCompact = computed(() => !$bp[menuBreakpoint].value)
+const menuViewport = $bp[menuBreakpoint]
+const isCompact = computed(() => !menuViewport.value)
 
 const is12h = computed(() => !localeUses24HourTime())
 const datePattern = computed(() => getCurrentLocaleDateFormat())
@@ -352,7 +353,7 @@ defineExpose({
           ...(hasNoValue && { color: 'var(--placeholder-color)' }),
         }"
         v-bind="{ ...ariaProps, ...inputProps }"
-        @pointerdown="handlePointerDown"
+        @mousedown="handlePointerDown"
         @focus="handleFocusOrClick"
         @blur="handleBlur"
         @keydown="handleKeydown"
@@ -380,7 +381,7 @@ defineExpose({
         />
 
         <div
-          v-if="!noPickerIcon"
+          v-if="!noPickerIcon && !readonly && !disabled"
           class="picker-icon i-system-uicons:calendar-date"
           @mousedown="handlePickerIconClick"
           @click.stop.prevent

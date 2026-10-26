@@ -3,7 +3,7 @@
 // unnecessary creation of vue components for each cell and to keep consistency
 // between card and regular views
 
-import { Checkbox, NuxtLink } from '#components'
+import { Checkbox, UILink } from '#components'
 
 // Types
 import type { ITableProps } from './types/table-props.type'
@@ -91,10 +91,6 @@ const {
   handleCancelEditCell,
   handleToggleBoolean,
 } = useTableRowEditing(tableStore, toRef(props, 'editable'))
-
-const RowComponent = computed(() => {
-  return props.to ? NuxtLink : 'div'
-})
 
 function handleRowActionsClick(ev: MouseEvent) {
   if (ev.target instanceof Element && ev.currentTarget instanceof Node
@@ -280,6 +276,14 @@ const rowStyleArray = computed(() => {
   ])
 })
 
+// Whole-row and cell links must be sibling anchors. Wrapping cells in an
+// anchor produces invalid nested links and the browser repairs SSR markup.
+const rowTargets = computed(() => rowDataArray.value.map(row => props.to?.(row.row, { rowKey: rowKey.value })))
+
+function getRowLinkLabel(row: typeof rowDataArray.value[number]) {
+  return row.columns.map(column => column.valueFormatted).filter(value => !isNil(value) && value !== '').join(' ') || String(row.rowKey)
+}
+
 function handleSelectToggle(row: IItem, ev?: MouseEvent) {
   const isCtrl = ev && !(ev.ctrlKey || ev.metaKey)
   const isLink = ev && ev.target instanceof HTMLAnchorElement
@@ -326,21 +330,27 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
     :class="{ 'is-card-editing': cellEdit.length > 0 }"
     :style="{ '--cols': rowsColumnCount }"
   >
-    <Component
-      :is="RowComponent"
+    <div
       v-for="(rowData, idx) in rowDataArray"
       :key="idx"
-      v-bind="{ ...$attrs, ...toLinkProps }"
+      v-bind="$attrs"
       class="tr"
-      :class="[rowClassArray[idx], { 'is-selected': isSelected(rowData.row), 'is-clickable': rowClickable }]"
+      :class="[rowClassArray[idx], { 'is-selected': isSelected(rowData.row), 'is-clickable': rowClickable, 'has-row-link': !!rowTargets[idx] }]"
       :style="rowStyleArray[idx]"
-      :to="to?.(rowData.row, { rowKey })"
       @keydown="handleRowEditKeydown(rowData.row, $event)"
       @click="[
         handleSelectToggle(rowData.row, $event),
         handleRowClick({ row: rowData.row, ev: $event }),
       ]"
     >
+      <UILink
+        v-if="rowTargets[idx]"
+        v-bind="toLinkProps"
+        :to="rowTargets[idx]"
+        :aria-label="getRowLinkLabel(rowData)"
+        class="row-link"
+        @click.stop="handleRowClick({ row: rowData.row, ev: $event })"
+      />
       <template
         v-for="actions in [getRowActions(rowData)]"
         :key="actions.row[rowKey]"
@@ -499,7 +509,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
               @update:model-value="handleToggleBoolean(rowData.row, column)"
               @dblclick.stop
             />
-            <NuxtLink
+            <UILink
               v-else-if="column.link?.to"
               v-bind="column.link"
               class="link"
@@ -508,7 +518,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
               @click.stop
             >
               {{ column.valueFormatted }}
-            </NuxtLink>
+            </UILink>
             <span
               v-else
               :style="column.cellInnerStyle"
@@ -525,24 +535,30 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
         name="inner"
         v-bind="getRowInsideSlotProps(rowData.row, 'card')"
       />
-    </Component>
+    </div>
   </div>
 
   <!-- Regular view -->
-  <Component
-    :is="RowComponent"
+  <div
     v-else-if="rowDataArray[0]"
-    v-bind="{ ...$attrs, ...toLinkProps }"
+    v-bind="$attrs"
     class="tr is-row"
     :class="[
       rowClassArray[0],
-      { 'is-selected': isSelected(rowDataArray[0].row), 'is-clickable': rowClickable },
+      { 'is-selected': isSelected(rowDataArray[0].row), 'is-clickable': rowClickable, 'has-row-link': !!rowTargets[0] },
     ]"
     :style="rowStyleArray[0]"
-    :to="to?.(rowDataArray[0].row, { rowKey })"
     @click="handleRowClick({ row: rowDataArray[0].row, ev: $event })"
     @keydown="handleRowEditKeydown(rowDataArray[0].row, $event)"
   >
+    <UILink
+      v-if="rowTargets[0]"
+      v-bind="toLinkProps"
+      :to="rowTargets[0]"
+      :aria-label="getRowLinkLabel(rowDataArray[0])"
+      class="row-link"
+      @click.stop="handleRowClick({ row: rowDataArray[0].row, ev: $event })"
+    />
     <div
       v-for="column in rowDataArray[0].columns"
       :key="column.id"
@@ -611,7 +627,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
           @update:model-value="handleToggleBoolean(rowDataArray[0].row, column)"
           @dblclick.stop
         />
-        <NuxtLink
+        <UILink
           v-else-if="column.link?.to"
           v-bind="column.link"
           class="link"
@@ -620,7 +636,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
           @click.stop
         >
           {{ column.valueFormatted }}
-        </NuxtLink>
+        </UILink>
         <span
           v-else
           :style="column.cellInnerStyle"
@@ -723,7 +739,7 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
       name="inner"
       v-bind="getRowInsideSlotProps(rowDataArray[0].row, 'row')"
     />
-  </Component>
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -846,6 +862,40 @@ function getEditComponentProps(row: IItem, column: IRowColumn) {
 }
 
 .tr {
+  &.has-row-link {
+    position: relative;
+
+    // Paint above the cell surfaces without changing their pointer layering.
+    &:has(> .row-link:focus-visible) {
+      outline: 2px solid currentColor;
+      outline-offset: -2px;
+    }
+
+    > .row-link {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
+
+    > .td,
+    > .row-actions {
+      position: relative;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    :deep(a),
+    :deep(button),
+    :deep(input),
+    :deep(select),
+    :deep(textarea),
+    :deep(label),
+    :deep([role='button']),
+    :deep([contenteditable]) {
+      pointer-events: auto;
+    }
+  }
+
   &-split {
     @apply grid w-full;
 

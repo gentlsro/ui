@@ -104,6 +104,7 @@ const textStyle = computed(() => {
     />
 
     <span
+      v-if="label !== false"
       class="progress-bar__text"
       :class="textClass"
       :style="textStyle"

@@ -3,11 +3,9 @@ import type { AllowedComponentProps, CSSProperties } from 'vue'
 // Constants
 import type { FORM_DEFAULT_PROPS } from '../constants/form-default-props.constant'
 
-// Types - placeholder until components are migrated
-// TODO: Section type somehow fucks the types
+// Types
 import type { IBtnProps } from '../../Button/types/btn-props.type'
-
-type IErrorsSectionProps = Record<string, any>
+import type { ISectionProps } from '../../Section/types/section-props.type'
 
 export type IFormProps = {
   /**
@@ -162,7 +160,7 @@ export type IFormProps = {
   /**
    * Props for the errors section
    */
-  errorsSectionProps?: IErrorsSectionProps
+  errorsSectionProps?: ISectionProps & AllowedComponentProps
 
   /**
    * If true, the submit button will be disabled.

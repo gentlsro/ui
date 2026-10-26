@@ -7,13 +7,17 @@ import type { CustomPresets, IBtnProps } from './types/btn-props.type'
 import { BTN_DEFAULT_PROPS } from './constants/btn-default-props.constant'
 
 import IconRenderer from '../Icon/IconRenderer.vue'
+import { useUILink } from '../Link/composables/useUILink'
+import { normalizeClass } from 'vue'
 
 // Directives
 import { vRippleVapor as vRipple } from '../../directives/ripple.directive'
 
 const props = withDefaults(defineProps<IBtnProps<T>>(), {
+  prefetch: undefined,
   ...getComponentProps('button'),
 })
+const emits = defineEmits<{ click: [event: MouseEvent] }>()
 
 const mergedProps = computed(() => {
   return getComponentMergedProps('button', props)
@@ -35,73 +39,29 @@ const vRoot: VaporDirective<HTMLButtonElement | HTMLAnchorElement> = el => {
 }
 
 // Navigation belongs to the root; the content and styling are shared by both modes.
-const route = useRoute()
-const localePath = useLocalePath()
-const nuxtApp = useNuxtApp()
-const router = useRouter()
-
 const isLink = computed(() => !!props.to && !props.disabled)
-const linkTarget = computed(() => {
-  return props.external || props.download
-    ? '_blank'
-    : props.navigateToOptions?.open?.target
-})
-
-const linkHref = computed(() => {
-  if (!props.to) {
-    return
-  }
-
-  if (props.external && typeof props.to === 'string') {
-    return props.to
-  }
-
-  return router.resolve(props.to).href
-})
+const link = useUILink(props, element)
 
 const rootProps = computed(() => {
   if (!isLink.value) {
     return { type: props.type, disabled: props.disabled }
   }
 
-  const toPath = typeof props.to === 'string' ? props.to : props.to?.path ?? ''
-  const currentPath = localePath({ path: route.path }, nuxtApp.$i18n.locale.value)
-
   return {
-    href: linkHref.value,
-    target: linkTarget.value,
-    rel: linkTarget.value === '_blank' ? 'noopener noreferrer' : undefined,
-    download: props.download || undefined,
-    class: {
-      'router-link-active': !props.exact && toPath.startsWith(currentPath),
+    ...link.attrs.value,
+    target: props.external || props.download ? link.attrs.value.target ?? '_blank' : link.attrs.value.target,
+    rel: props.external || props.download ? link.attrs.value.rel ?? 'noopener noreferrer' : link.attrs.value.rel,
+    class: [link.attrs.value.class, {
       'no-active': props.noActiveLink,
       'no-underline': props.noUnderline,
-    },
+    }],
   }
 })
 
 function handleRootClick(ev: MouseEvent) {
-  if (
-    !isLink.value
-    || props.external
-    || props.download
-    || linkTarget.value
-    || ev.defaultPrevented
-    || ev.button !== 0
-    || ev.metaKey
-    || ev.ctrlKey
-    || ev.shiftKey
-    || ev.altKey
-  ) {
-    return
-  }
-
-  ev.preventDefault()
-
-  if (props.replace) {
-    router.replace(props.to)
-  } else {
-    router.push(props.to)
+  emits('click', ev)
+  if (isLink.value) {
+    void link.navigate(ev)
   }
 }
 
@@ -233,6 +193,18 @@ const resolvedIcon = computed(() => {
   // Preset icons historically render as classes; canonical names still opt into Icon.
   return resolveIconValue(props.icon || [preset.value?.icon])
 })
+
+const rootName = computed(() => {
+  const value = props.name ?? (label.value || normalizeClass(props.icon))
+
+  return value ? String(value) : undefined
+})
+
+const rootLabel = computed(() => {
+  const value = label.value ?? (props.name || normalizeClass(props.icon))
+
+  return value === false || value === '' ? undefined : String(value)
+})
 </script>
 
 <template>
@@ -241,8 +213,8 @@ const resolvedIcon = computed(() => {
     v-root
     v-ripple="!disabled && ripple"
     v-bind="rootProps"
-    :name="name ?? (label || icon)"
-    :aria-label="label ?? (name || icon)"
+    :name="rootName"
+    :aria-label="rootLabel"
     class="btn group/btn"
     :class="[classes, appearance.containerClass]"
     :style="appearance.containerStyle"
@@ -350,8 +322,8 @@ const resolvedIcon = computed(() => {
     v-root
     v-ripple="!disabled && ripple"
     v-bind="rootProps"
-    :name="name ?? (label || icon)"
-    :aria-label="label ?? (name || icon)"
+    :name="rootName"
+    :aria-label="rootLabel"
     class="btn group/btn"
     :class="[classes, appearance.containerClass]"
     :style="appearance.containerStyle"

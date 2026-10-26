@@ -7,10 +7,16 @@ import type { IBtnProps } from '../../Button/types/btn-props.type'
 import type { ITreeDragMeta } from './tree-drag-meta.type'
 import type { ICheckboxProps } from '../../Checkbox/types/checkbox-props.type'
 import type { ITextInputProps } from '../../Inputs/TextInput/types/text-input-props.type'
-import type { IVirtualScrollerVerticalProps } from '../../VirtualScroller/types/virtual-scroller-vertical-props.type'
+import type { IVirtualScrollerProps } from '../../VirtualScroller/types/virtual-scroller-props.type'
 
 // Constants
 import type { TREE_DEFAULT_PROPS } from '../constants/tree-default-props.constant'
+
+/** Tree owns its flattened node data and stable IDs; callers configure layout and scrolling. */
+export type ITreeScrollerConfig<T extends IItem = IItem> = Partial<Omit<
+  IVirtualScrollerProps<ITreeNode<T>>,
+  'rows' | 'rowKey' | 'columns' | 'virtualizeColumns' | 'columnKey'
+>>
 
 export type ITreeProps<T extends IItem = IItem> = {
   /**
@@ -97,7 +103,7 @@ export type ITreeProps<T extends IItem = IItem> = {
   /**
    * Scroller configuration
    */
-  scrollerConfig?: Partial<IVirtualScrollerVerticalProps<T>>
+  scrollerConfig?: ITreeScrollerConfig<T>
 
   /**
    * The search value

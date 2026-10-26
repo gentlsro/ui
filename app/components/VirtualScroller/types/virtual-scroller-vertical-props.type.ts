@@ -10,6 +10,15 @@ export type IVirtualScrollerVerticalProps<T extends IItem = IItem> = {
    */
   rows: T[]
 
+  /** Keep measured heights when an existing page is appended. */
+  fetchMore?: boolean
+
+  /** Disable automatic and explicitly triggered virtualScroll notifications. */
+  noScrollEmit?: boolean
+
+  /** Bounded first-pass row count for matching server HTML and hydration. */
+  initialRowsRenderCount?: number
+
   /**
    * The height of each row
    *

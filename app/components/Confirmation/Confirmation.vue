@@ -120,8 +120,9 @@ function handleClose() {
         <Btn
           :label="$t('general.close')"
           no-uppercase
+          no-dim
           icon="i-solar:close-square-broken"
-          color="negative"
+          color="red-700 dark:red-400"
           @click="handleClose"
         />
       </div>

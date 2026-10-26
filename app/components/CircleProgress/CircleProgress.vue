@@ -17,17 +17,7 @@ const circlePath = computed(() => 'M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a
 const { formatNumber } = useNumber()
 
 // Layout
-const animatedProgress = ref(0)
 const size = toRef(props, 'size')
-
-// Watch for changes in progress prop and update animatedProgress with smooth transition
-watch(
-  () => props.progress,
-  newProgress => {
-    animatedProgress.value = newProgress
-  },
-  { immediate: true },
-)
 
 const strokeDasharray = computed(() => `${props.progress * 100 / 100}, 100`)
 

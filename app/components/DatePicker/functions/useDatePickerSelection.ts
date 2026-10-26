@@ -22,17 +22,21 @@ export function useDatePickerSelection(props: IDatePickerProps, originalModel: R
       return false
     }
 
-    if (typeof props.disabledDays === 'function') {
-      return props.disabledDays(day.dateObj)
-    } else if (props.disabledDays) {
-      return props.disabledDays.some(d => $date(d).isSame(day.dateObj, 'd'))
+    const disabled = typeof props.disabledDays === 'function'
+      ? props.disabledDays(day.dateObj)
+      : props.disabledDays?.some(d => $date(d, { utc: props.utc }).isSame(day.dateObj, 'd'))
+
+    if (disabled) {
+      return true
     }
 
     if (typeof props.allowedDays === 'function') {
       return !props.allowedDays(day.dateObj)
     } else if (props.allowedDays) {
-      return !props.allowedDays.some(d => $date(d).isSame(day.dateObj, 'd'))
+      return !props.allowedDays.some(d => $date(d, { utc: props.utc }).isSame(day.dateObj, 'd'))
     }
+
+    return false
   }
 
   // Data

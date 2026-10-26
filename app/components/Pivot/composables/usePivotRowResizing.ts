@@ -1,4 +1,5 @@
 import { useRafTask } from '#layers/utilities/app/composables/useRafTask'
+import { disableDocumentSelection } from '../../ElementMovement/functions/disable-document-selection'
 
 import { klona } from 'klona/full'
 
@@ -22,6 +23,7 @@ export function usePivotRowResizing<T extends IItem = IItem>() {
   let pageX = 0
 
   const activeSplitter = ref<IActivePivotSplitter<T>>()
+  let restoreSelection: (() => void) | undefined
 
   function getResolvedMinimumColumnWidth() {
     const value = Number(minimumColumnWidth.value)
@@ -117,7 +119,8 @@ export function usePivotRowResizing<T extends IItem = IItem>() {
     }
 
     document.documentElement.style.cursor = 'col-resize'
-    document.documentElement.style.userSelect = 'none'
+    restoreSelection?.()
+    restoreSelection = disableDocumentSelection(document.documentElement)
 
     document.documentElement.addEventListener(
       'pointermove',
@@ -165,7 +168,8 @@ export function usePivotRowResizing<T extends IItem = IItem>() {
     document.documentElement.removeEventListener('pointerup', handleSplitterPointerUp)
     document.documentElement.removeEventListener('pointercancel', cancelResize)
     document.documentElement.style.cursor = ''
-    document.documentElement.style.userSelect = ''
+    restoreSelection?.()
+    restoreSelection = undefined
   }
 
   onBeforeUnmount(cancelResize)

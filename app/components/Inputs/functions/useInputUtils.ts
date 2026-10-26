@@ -22,6 +22,23 @@ export function useInputUtils(options: IInputUtilsOptions) {
 
   const uiStore = useUIStore()
   const { onBlur, onFocus } = eventHandlers
+  let disposed = false
+  const timers = new Set<ReturnType<typeof setTimeout>>()
+  onScopeDispose(() => {
+    disposed = true
+    timers.forEach(timer => clearTimeout(timer))
+    timers.clear()
+  })
+  function defer(callback: () => void, delay = 0) {
+    if (disposed || import.meta.server) {
+      return
+    }
+    const timer = setTimeout(() => {
+      timers.delete(timer)
+      callback()
+    }, delay)
+    timers.add(timer)
+  }
   const isTouched = ref(false)
   let isInternalFocus = false
   let skipNextInputClick = false
@@ -30,6 +47,9 @@ export function useInputUtils(options: IInputUtilsOptions) {
   const isEmitOnBlur = () => !!props.emitOnBlur || props.variant === 'cell'
 
   const debouncedChange = useDebounceFn((val: any) => {
+    if (disposed) {
+      return
+    }
     if (!isEmitOnBlur()) {
       const isSame = isEqual(val, originalModel.value)
 
@@ -148,12 +168,12 @@ export function useInputUtils(options: IInputUtilsOptions) {
       ?? (!isBlurred.value && !(preventFocusOnTouch && isTouchInteraction()))
 
     if (restoreFocus) {
-      setTimeout(focus, 0)
+      defer(focus)
     }
 
-    setTimeout(() => {
+    defer(() => {
       emit('clear')
-    }, 0)
+    })
   }
 
   function handleBlur(ev: FocusEvent) {
@@ -396,7 +416,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
   }
 
   // Autofocus on init
-  setTimeout(() => {
+  defer(() => {
     if (props.autofocus && import.meta.client) {
       focus(undefined, true)
     }

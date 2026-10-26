@@ -546,7 +546,7 @@ export const defaultComponentsConfig = {
       cancelBtnProps: {},
       editBtnProps: {},
       errorsSectionProps: {
-        ui: { sectionClass: 'flex flex-col gap-y-2 order-first' },
+        ui: { containerClass: ({ defaults }) => [defaults.all, 'gap-y-2 order-first'] },
       },
       submitDisabled: undefined,
       ui: {
@@ -1330,6 +1330,7 @@ export const defaultComponentsConfig = {
   tab: {
     props: {
       name: undefined,
+      keepAlive: undefined,
       btnProps: () => ({ noDim: true, noUppercase: true }),
     },
     merge: ['btnProps'],

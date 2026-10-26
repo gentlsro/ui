@@ -145,7 +145,7 @@ onClickOutside(drawerEl, handleClickOutside, {
 })
 
 // Below the absolute breakpoint the drawer is a sheet over the page, which Escape dismisses
-const isOverlay = computed(() => $bp.smaller(props.absoluteBreakpoint ?? 'md').value)
+const isOverlay = $bp.smaller(() => props.absoluteBreakpoint ?? 'md')
 
 onKeyStroke('Escape', ev => {
   if (!model.value || !isOverlay.value || ev.defaultPrevented) {

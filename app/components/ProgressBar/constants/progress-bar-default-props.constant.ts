@@ -3,7 +3,7 @@
 export const PROGRESS_BAR_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'flex relative h-8 rounded-custom'
+      const base = 'flex relative isolate h-8 rounded-custom'
 
       return {
         base,
@@ -48,7 +48,7 @@ export const PROGRESS_BAR_DEFAULT_PROPS = {
     },
 
     textClass() {
-      const base = 'absolute left-1/2 top-1/2 translate--50% mix-blend-difference color-white z-3 text-nowrap whitespace-nowrap'
+      const base = 'absolute left-1/2 top-1/2 translate--50% color-slate-900 z-5 text-nowrap whitespace-nowrap'
 
       return {
         base,

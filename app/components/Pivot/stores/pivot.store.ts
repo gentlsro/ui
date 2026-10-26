@@ -50,12 +50,15 @@ export const PIVOT_ID_KEY = Symbol('__pivotId')
 
 type IConfig<T extends IItem = IItem> = {
   props?: IPivotProps<T>
+  initialData?: T[]
+  initialCount?: number
   injectionKey?: string
 }
 
 function createStore<T extends IItem = IItem>(injectionKey?: string) {
   const injectionState = createInjectionState((payload?: IConfig<T>) => {
     const { props } = payload ?? {}
+    const nuxtApp = useNuxtApp()
 
     // Configs
     const loadData = ref(props?.loadData)
@@ -73,7 +76,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     const { formatNumber } = useNumber()
     const { currentLocale, currentLocaleCode } = useLocale()
     const {
-      transformPivotData,
+      transformPivotDataImmediate,
       continueTransform: continuePendingTransform,
       cancelTransform: cancelPendingTransform,
     } = usePivotTransform()
@@ -149,7 +152,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     const sourceData = initRef({
       propName: 'data',
       props,
-      defaultValue: [],
+      defaultValue: payload?.initialData ?? [],
     }) as Ref<T[]>
 
     const items = initRef({
@@ -320,7 +323,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     })
     const visibleValueHeaderRows = computed(() => visibleValueLayout.value.valueHeaderRows)
 
-    const totalRows = shallowRef<number>()
+    const totalRows = shallowRef<number | undefined>(payload?.initialCount)
 
     const visibleData = computed(() => {
       const visible = data.value.filter(row => {
@@ -473,7 +476,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       transformError.value = undefined
 
       try {
-        const result = await transformPivotData({
+        const operation = transformPivotDataImmediate({
           data: sourceData.value,
           rows: candidateRows,
           columns: candidateColumns,
@@ -487,12 +490,16 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
           valuesOnRows: candidateConfig?.valuesOnRows,
           performance: performance.value,
           aggregationKey: getAggregationKey(candidateAggregationSignature),
+          // SSR and its first client pass must commit the same rows. Later
+          // changes and standalone CSR retain automatic worker selection.
+          useWorker: import.meta.server || nuxtApp.isHydrating ? false : undefined,
           onPerformanceWarning: estimate => {
             if (generation === recomputeGeneration) {
               performanceWarning.value = estimate
             }
           },
         })
+        const result = operation instanceof Promise ? await operation : operation
 
         if (generation !== recomputeGeneration) {
           return false

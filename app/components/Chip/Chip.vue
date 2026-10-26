@@ -14,6 +14,7 @@ import IconRenderer from '../Icon/IconRenderer.vue'
 import { CHIP_DEFAULT_PROPS } from './constants/chip-default-props.constant'
 
 const props = withDefaults(defineProps<IChipProps>(), {
+  prefetch: undefined,
   ...getComponentProps('chip'),
 })
 
@@ -103,9 +104,19 @@ const resolvedIcon = computed(() => {
     />
 
     <slot v-if="!isNil(label) || $slots.default">
-      <NuxtLink
+      <UILink
         v-if="to"
-        v-bind="navigateToOptions"
+        :navigate-to-options="navigateToOptions"
+        :disabled
+        :external
+        :download
+        :replace
+        :exact
+        :target
+        :rel
+        :prefetch
+        :no-prefetch
+        :prefetch-on
         :to
         class="link"
         :class="labelClass"
@@ -113,7 +124,7 @@ const resolvedIcon = computed(() => {
         data-onboarding="chip-label"
       >
         {{ label }}
-      </NuxtLink>
+      </UILink>
 
       <span
         v-else

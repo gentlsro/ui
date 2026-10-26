@@ -34,6 +34,7 @@ const {
   isOverflown,
   measure,
   handleScrollViaBtn,
+  handleKeyboardClick,
 } = useScrollerScroll(position => emits('scrolled', position), 'y')
 
 syncRef(sourceY, y, { direction: 'both', immediate: false })
@@ -119,12 +120,14 @@ defineExpose({
     >
       <Btn
         name="scroll-top"
+        :aria-label="$t('general.previous')"
         size="xs"
         self-center
         no-dim
         no-hover-effect
         icon="i-majesticons:chevron-up"
         @pointerdown.stop.prevent="handleScrollViaBtn(false, 'y')"
+        @click="handleKeyboardClick($event, false)"
       />
     </div>
 
@@ -147,12 +150,14 @@ defineExpose({
     >
       <Btn
         name="scroll-bottom"
+        :aria-label="$t('general.next')"
         size="xs"
         self-center
         no-dim
         no-hover-effect
         icon="i-majesticons:chevron-down"
         @pointerdown.stop.prevent="handleScrollViaBtn(true, 'y')"
+        @click="handleKeyboardClick($event, true)"
       />
     </div>
   </div>

@@ -1,9 +1,6 @@
 <script setup lang="ts" vapor>
-import { defineComponent, h } from 'vue'
-import type { Component, PropType } from 'vue'
 import type { DialogEntry } from '../../composables/useDialog'
 
-// Dialog and legacy render-function content remain an explicit VDOM boundary.
 defineProps<{ dialogs: readonly DialogEntry[] }>()
 
 type DialogExpose = {
@@ -11,14 +8,6 @@ type DialogExpose = {
 }
 
 const dialogRefs = new Map<number, DialogExpose>()
-
-const DialogSlotRenderer = defineComponent({
-  props: {
-    content: { type: [Object, Function] as PropType<Component>, required: true },
-    hide: { type: Function as PropType<() => void>, required: true },
-  },
-  setup: props => () => h(props.content, { hide: props.hide }),
-})
 
 function setDialogRef(id: number, target: unknown) {
   if (target) {
@@ -50,8 +39,8 @@ onBeforeUnmount(() => dialogRefs.clear())
       :key="name"
       #[name]
     >
-      <DialogSlotRenderer
-        :content="renderer"
+      <component
+        :is="renderer"
         :hide="() => hideDialog(dialog.id)"
       />
     </template>

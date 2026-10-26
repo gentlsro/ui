@@ -18,6 +18,7 @@ const emits = defineEmits<{
 const items = computed(() => props.items ?? [])
 const scrollEl = useTemplateRef<HTMLElement>('scrollEl')
 const isJumping = ref(false)
+let active = true
 
 // Dragging – the scrollbar is hidden, so the wheel is also dragged with the mouse
 const DRAG_THRESHOLD = 4
@@ -49,7 +50,7 @@ function indexFromScrollTop(scrollTop: number) {
 function scrollToIndex(index: number) {
   const el = scrollEl.value
 
-  if (!el || index < 0) {
+  if (!active || !el || !el.isConnected || !el.clientHeight || index < 0) {
     return
   }
 
@@ -69,7 +70,7 @@ function emitIndex(index: number) {
 }
 
 function settle() {
-  if (!scrollEl.value || isJumping.value) {
+  if (!active || !scrollEl.value?.isConnected || !scrollEl.value.clientHeight || isJumping.value) {
     return
   }
 
@@ -162,7 +163,7 @@ useScroll(scrollEl, {
 })
 
 watch(() => props.modelValue, value => {
-  if (isJumping.value) {
+  if (!active) {
     return
   }
 
@@ -177,6 +178,18 @@ watch(() => props.modelValue, value => {
 
 onMounted(() => {
   nextTick(sync)
+})
+
+onActivated(() => {
+  active = true
+  nextTick(sync)
+})
+
+onDeactivated(() => {
+  active = false
+  removeDragListeners()
+  dragState = null
+  isDragging.value = false
 })
 
 defineExpose({

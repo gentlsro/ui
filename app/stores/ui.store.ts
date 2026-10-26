@@ -13,8 +13,16 @@ export const useUIStore = defineStore('__ui', () => {
   const lastKeydownEvent = ref<KeyboardEvent>()
   const hasUserLeftPage = usePageLeave()
 
-  const uiState = useCookie<IUIState>('__ui', {
-    default: () => defu(uiConfig.misc.uiState, {
+  if (import.meta.client) {
+    // Re-entry can have no relatedTarget after a Firefox viewport resize.
+    // It still means the pointer is back inside the page.
+    useEventListener(document.documentElement, 'mouseenter', () => {
+      hasUserLeftPage.value = false
+    })
+  }
+
+  function getDefaultUIState() {
+    return defu(uiConfig.misc.uiState, {
       form: {
         confirmation: {
           enabled: uiConfig.form.confirmationInit.enabled,
@@ -22,10 +30,22 @@ export const useUIStore = defineStore('__ui', () => {
           editable: uiConfig.form.confirmationInit.editable,
         },
       },
-    }),
+    })
+  }
+
+  const uiState = useCookie<IUIState>('__ui', {
+    default: getDefaultUIState,
     domain: usePreferenceCookieDomain(),
     watch: true,
   })
+
+  // Cookie Store deletion notifications use null even with a default callback.
+  // Restore preferences before consumers react to an absent cookie.
+  watch(uiState, state => {
+    if (isNil(state)) {
+      uiState.value = getDefaultUIState()
+    }
+  }, { flush: 'sync' })
 
   function setState(state: Partial<IUIState>, extend = true) {
     if (extend) {
@@ -52,17 +72,17 @@ export const useUIStore = defineStore('__ui', () => {
   const lastPasteEvent = ref<ClipboardEvent>()
 
   if (!isInitialized.value && import.meta.client) {
-    document.documentElement.addEventListener('pointerdown', ev => {
+    useEventListener(document.documentElement, 'pointerdown', ev => {
       lastPointerDownEvent.value = ev
       lastPointerDownEl.value = ev.target as HTMLElement
       lastPointerDownType.value = ev.pointerType
     })
 
-    document.documentElement.addEventListener('keydown', ev => {
+    useEventListener(document.documentElement, 'keydown', ev => {
       lastKeydownEvent.value = ev
     })
 
-    document.documentElement.addEventListener('paste', ev => {
+    useEventListener(document.documentElement, 'paste', ev => {
       lastPasteEvent.value = ev
     })
 

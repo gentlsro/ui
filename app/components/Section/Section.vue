@@ -103,7 +103,7 @@ const loadingStyle = computed(() => {
       :title-style
     >
       <Component
-        :is="Heading"
+        :is="titleElement.component"
         v-bind="titleElement.props"
         class="section__title"
         :class="titleClass"

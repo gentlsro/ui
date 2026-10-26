@@ -39,7 +39,8 @@ const menuProxyEl = ref<IMenuProxyExpose>()
 
 const isMounted = ref(false)
 
-const isMenu = computed(() => isMounted.value && $bp[props.breakpoint].value)
+const breakpointMatches = $bp.greaterOrEqual(() => props.breakpoint)
+const isMenu = computed(() => isMounted.value && breakpointMatches.value)
 
 const noOverlay = computed(() => {
   if (!isNil(props.noOverlay)) {

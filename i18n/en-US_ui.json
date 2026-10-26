@@ -51,6 +51,7 @@
     "emptyFilters": "Filters are not set",
     "emptySorting": "Sorting is not set",
     "columnFilters": "Column filters",
+    "columnOptions": "Options for {column}",
     "columnFiltersHint": "Filters that were created via column filtering",
     "columnsSelected": "Selected columns",
     "layout": {},
@@ -91,6 +92,9 @@
     "addFirstCondition": "Add first condition",
     "negation": "Negated",
     "negation2": "Negation"
+  },
+  "tabs": {
+    "label": "Tabs"
   },
   "general": {
     "moveAndResizeAvailable": "You can move and resize this element"

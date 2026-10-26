@@ -18,7 +18,7 @@ export function listHandleAdd(payload: {
   isAddedItem?: boolean
   isNewItem?: boolean
   itemKey?: string
-  itemLabel?: string
+  itemLabel?: IListProps['itemLabel']
 }) {
   const {
     isMulti,
@@ -40,7 +40,9 @@ export function listHandleAdd(payload: {
         const obj: IItem = {}
 
         set(obj, itemKey, item.label)
-        set(obj, itemLabel, item.label)
+        // A label getter has no writable key. Custom record shapes can use
+        // transformAddedItem; the default new record keeps the standard label.
+        set(obj, typeof itemLabel === 'string' ? itemLabel : 'label', item.label)
 
         return obj
       }

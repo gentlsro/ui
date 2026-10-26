@@ -68,8 +68,11 @@ export function useFieldUtils(options?: {
     const target = ev.target as HTMLElement
     const isFocusable = target.classList.contains('input-wrapper__focusable')
       || !!target.closest('.input-wrapper__focusable')
+    // Focus can change control geometry before pointer-up. Firefox then sends
+    // the click to a shared ancestor; it still belongs to the opening gesture.
     const isInitialControlClick = skipNextControlClick
-      && pointerDownTarget === target
+      && pointerDownTarget instanceof Node
+      && target.contains(pointerDownTarget)
 
     pointerDownTarget = null
     skipNextControlClick = false

@@ -44,14 +44,22 @@ const tabStyle = computed(() => {
     hidden
     aria-hidden="true"
   />
-  <KeepAlive :include="isKeptAlive ? ['TabPanel'] : []">
-    <TabPanel
-      v-if="isActive"
-      v-bind="$attrs"
-      :class="tabClass"
-      :style="tabStyle"
-    >
-      <slot :tab="props" />
-    </TabPanel>
-  </KeepAlive>
+  <div
+    :id="registration?.panelId"
+    :role="tabs?.hasNavigation.value ? 'tabpanel' : undefined"
+    :aria-labelledby="tabs?.hasNavigation.value ? registration?.tabId : undefined"
+    :tabindex="tabs?.hasNavigation.value ? 0 : undefined"
+    :hidden="!isActive"
+  >
+    <KeepAlive :include="isKeptAlive ? ['TabPanel'] : []">
+      <TabPanel
+        v-if="isActive"
+        v-bind="$attrs"
+        :class="tabClass"
+        :style="tabStyle"
+      >
+        <slot :tab="props" />
+      </TabPanel>
+    </KeepAlive>
+  </div>
 </template>

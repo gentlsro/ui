@@ -1,5 +1,7 @@
 // Types
-import type { Draggable } from 'dragdoll'
+import type { AnyDraggable } from 'dragdoll'
+import type { ComponentExposed } from 'vue-component-type-helpers'
+import type VirtualScroller from '../../VirtualScroller/VirtualScroller.vue'
 import type { ITreeNode } from '../types/tree-node.type'
 import type { ITreeProps } from '../types/tree-props.type'
 import type { ITreeEmitFncs } from '../types/tree-emit-fncs.type'
@@ -35,7 +37,7 @@ type IConfig<T extends IItem = IItem> = {
 function createStore<T extends IItem = IItem>(injectionKey?: string) {
   const injectionState = createInjectionState((payload?: IConfig<T>) => {
     const { treeProps } = payload ?? {}
-    const { searchData } = useSearching()
+    const { searchDataSync } = useSearching()
 
     const idKey = computed(() => treeProps?.idKey === undefined ? 'id' : treeProps.idKey)
 
@@ -60,7 +62,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     // Layout
     const treeEl = ref<HTMLElement>()
     const searchEl = ref<any>()
-    const scrollerEl = ref<any>()
+    const scrollerEl = ref<ComponentExposed<typeof VirtualScroller<ITreeNode<T>>>>()
 
     // Search
     const search = initRef({
@@ -97,9 +99,9 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
 
     // D'n'D
     const draggedNode = ref<ITreeNode<T> | undefined>()
-    const dragMeta = ref<ITreeDragMeta<T>>({})
+    const dragMeta = ref<ITreeDragMeta<T>>({}) as Ref<ITreeDragMeta<T>>
     const cancelDrag = ref(false)
-    const activeDraggable = shallowRef<Draggable | null>(null)
+    const activeDraggable = shallowRef<AnyDraggable | null>(null)
 
     // Nodes
     const nodesFlattened = shallowRef<ITreeNode<T>[]>([])
@@ -127,93 +129,122 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     })
 
     // Nodes search & visible
-    const nodesSearched = ref<ITreeNode<T>[]>([]) as Ref<ITreeNode<T>[]>
+    // Search replaces this derived list; node wrappers stay immutable, while
+    // their source items and collapse metadata keep their existing reactivity.
+    const nodesSearched = shallowRef<ITreeNode<T>[]>([])
     const isSearchFiltered = shallowRef(false)
+    const isInitializing = shallowRef(false)
+    const searchError = shallowRef<unknown>()
+    let mounted = false
+    let disposed = false
+    let searchRequest = 0
+    let pendingSearchCommit: (() => void) | undefined
+    let previousSortingConfig = sortingConfig.value
+    let previousSearchConfig = searchConfig.value
 
-    const { trigger: flattenTrigger } = watchTriggerable([model, idKey, labelKey, childrenKey], async ([nodes]) => {
-      const previousNodes = nodesFlattened.value
-      const previousNodeById = new Map(previousNodes.map(node => [node.id, node]))
+    onMounted(() => {
+      mounted = true
+      pendingSearchCommit?.()
+      pendingSearchCommit = undefined
+    })
 
-      const nodesFlattenedNew = await flattenTreeNodes<T>({
-        nodes: nodes ?? [],
-        nodeMetaById,
-        idKey: idKey.value,
-        childrenKey: childrenKey.value,
-        labelKey: labelKey.value,
-        collapseConfig: collapseConfig.value,
-        sortingConfig: sortingConfig.value,
-        previousNodeById,
-      })
+    onScopeDispose(() => {
+      disposed = true
+      searchRequest++
+      pendingSearchCommit = undefined
+    })
 
-      // The same nodes in the same order: the hierarchy did not change, only the items may have
-      if (isSameNodes(nodesFlattenedNew, previousNodes)) {
-        if (search.value || searchConfig.value?.fnc) {
-          await searchTrigger()
+    const { trigger: flattenTrigger, ignorePrevAsyncUpdates: ignorePreviousFlatten } = watchTriggerable(
+      [model, idKey, labelKey, childrenKey],
+      ([nodes]) => {
+        const previousNodes = nodesFlattened.value
+        const previousNodeById = new Map(previousNodes.map(node => [node.id, node]))
+
+        const nodesFlattenedNew = flattenTreeNodes<T>({
+          nodes: nodes ?? [],
+          nodeMetaById,
+          idKey: idKey.value,
+          childrenKey: childrenKey.value,
+          labelKey: labelKey.value,
+          collapseConfig: collapseConfig.value,
+          sortingConfig: sortingConfig.value,
+          previousNodeById,
+        })
+
+        // The same nodes in the same order: the hierarchy did not change, only the items may have
+        if (isSameNodes(nodesFlattenedNew, previousNodes)) {
+          return searchTrigger()
         }
 
-        return
-      }
+        // Search once after the hierarchy indexes have been rebuilt.
+        ignoreSearchUpdates(() => nodesFlattened.value = nodesFlattenedNew)
 
-      nodesFlattened.value = nodesFlattenedNew
+        const idByString = nodesFlattened.value.reduce((agg, node) => {
+          agg[String(node.id)] = node.id
 
-      const idByString = nodesFlattened.value.reduce((agg, node) => {
-        agg[String(node.id)] = node.id
+          return agg
+        }, {} as Record<string, ITreeNode['id']>)
 
-        return agg
-      }, {} as Record<string, ITreeNode['id']>)
+        const _parentIdByNodeId = nodesFlattened.value.reduce((agg, node) => {
+          agg[node.id] = undefined
 
-      const _parentIdByNodeId = nodesFlattened.value.reduce((agg, node) => {
-        agg[node.id] = undefined
+          return agg
+        }, {} as Record<ITreeNode['id'], ITreeNode['id'] | undefined>)
 
-        return agg
-      }, {} as Record<ITreeNode['id'], ITreeNode['id'] | undefined>)
-
-      const _childrenIdsByNodeId = nodesFlattened.value.reduce((agg, node) => {
-        agg[node.id] = []
-
-        return agg
-      }, {} as Record<ITreeNode['id'], ITreeNode['id'][]>)
-
-      const metaById = toRaw(nodeMetaById.value)
-
-      ancestorIdsByNodeId.value = nodesFlattened.value.reduce((agg, node) => {
-        const { path } = metaById[node.id] ?? {}
-
-        if (!path) {
+        const _childrenIdsByNodeId = nodesFlattened.value.reduce((agg, node) => {
           agg[node.id] = []
 
           return agg
-        }
+        }, {} as Record<ITreeNode['id'], ITreeNode['id'][]>)
 
-        agg[node.id] = path
-          .split('.')
-          .filter(part => part !== childrenKey.value)
-          .slice(0, -1)
-          .map(id => idByString[id] ?? id)
+        const metaById = toRaw(nodeMetaById.value)
 
-        const parentId = agg[node.id]?.at(-1)
-        _parentIdByNodeId[node.id] = parentId
+        ancestorIdsByNodeId.value = nodesFlattened.value.reduce((agg, node) => {
+          const { path } = metaById[node.id] ?? {}
 
-        if (parentId && (parentId in _childrenIdsByNodeId)) {
-          _childrenIdsByNodeId[parentId]?.push(node.id)
-        }
+          if (!path) {
+            agg[node.id] = []
 
-        return agg
-      }, {} as Record<ITreeNode['id'], ITreeNode['id'][]>)
+            return agg
+          }
 
-      parentIdByNodeId.value = _parentIdByNodeId
-      childrenIdsByNodeId.value = _childrenIdsByNodeId
-    })
+          agg[node.id] = path
+            .split('.')
+            .filter(part => part !== childrenKey.value)
+            .slice(0, -1)
+            .map(id => idByString[id] ?? id)
 
-    const { trigger: searchTrigger } = watchTriggerable(
+          const parentId = agg[node.id]?.at(-1)
+          _parentIdByNodeId[node.id] = parentId
+
+          if (!isNil(parentId) && (parentId in _childrenIdsByNodeId)) {
+            _childrenIdsByNodeId[parentId]?.push(node.id)
+          }
+
+          return agg
+        }, {} as Record<ITreeNode['id'], ITreeNode['id'][]>)
+
+        parentIdByNodeId.value = _parentIdByNodeId
+        childrenIdsByNodeId.value = _childrenIdsByNodeId
+
+        return searchTrigger()
+      },
+    )
+
+    const {
+      trigger: searchTrigger,
+      ignoreUpdates: ignoreSearchUpdates,
+      ignorePrevAsyncUpdates: ignorePreviousSearch,
+    } = watchTriggerable(
       [search, nodesFlattened],
-      async ([search, nodesFlattened]) => {
-        let searchedNodes: ITreeNode<T>[] = []
+      ([search, nodesFlattened]) => {
+        const request = ++searchRequest
+        pendingSearchCommit = undefined
+        searchError.value = undefined
 
-        if (!search && !searchConfig.value?.fnc) {
-          searchedNodes = nodesFlattened
-        } else {
-          searchedNodes = await searchNodes<T>({
+        let result: ITreeNode<T>[] | Promise<ITreeNode<T>[]>
+        try {
+          result = searchNodes<T>({
             nodesFlattened,
             search: search ?? '',
             idKey: idKey.value,
@@ -223,20 +254,88 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
             parentIdByNodeId: parentIdByNodeId.value,
             childrenIdsByNodeId: childrenIdsByNodeId.value,
             searchConfig: searchConfig.value,
-            searchData,
+            searchData: searchDataSync,
           })
+        } catch (error) {
+          handleSearchError(error)
+
+          return
         }
 
-        // Set together with the result, so the search's start does not render every node before the matches.
-        // Only a query opens the rows: a custom search function narrowing the nodes without one (a filter) keeps
-        // the collapsed rows collapsed
-        isSearchFiltered.value = !!search
-
-        if (searchedNodes === nodesFlattened || !isSameNodes(searchedNodes, nodesSearched.value)) {
-          nodesSearched.value = searchedNodes
+        function handleSearchError(error: unknown) {
+          if (disposed || request !== searchRequest) {
+            return
+          }
+          const commitError = () => {
+            if (!disposed && request === searchRequest) {
+              searchError.value = error
+              isInitializing.value = false
+            }
+          }
+          if (mounted) {
+            commitError()
+          } else {
+            isInitializing.value = true
+            pendingSearchCommit = commitError
+          }
         }
+
+        function commit(searchedNodes: ITreeNode<T>[]) {
+          if (disposed || request !== searchRequest) {
+            return
+          }
+
+          // Set together with the result, so the search's start does not render every node before the matches.
+          // Only a query opens the rows: a custom search function narrowing the nodes without one (a filter) keeps
+          // the collapsed rows collapsed
+          isSearchFiltered.value = !!search
+
+          if (searchedNodes === nodesFlattened || !isSameNodes(searchedNodes, nodesSearched.value)) {
+            nodesSearched.value = searchedNodes
+          }
+
+          isInitializing.value = false
+        }
+
+        if (Array.isArray(result)) {
+          commit(result)
+
+          return
+        }
+
+        // Async custom searches render the same pending state on the server
+        // and the first client pass. Commit after mount, without async setup.
+        if (!mounted) {
+          isInitializing.value = true
+        }
+
+        return result.then(searchedNodes => {
+          if (disposed || request !== searchRequest) {
+            return
+          }
+
+          if (mounted) {
+            commit(searchedNodes)
+          } else {
+            pendingSearchCommit = () => commit(searchedNodes)
+          }
+        }, handleSearchError)
       },
     )
+
+    watch(sortingConfig, config => {
+      if (!isEqual(config, previousSortingConfig)) {
+        previousSortingConfig = config
+        flattenTrigger()
+      }
+    })
+
+    watch(searchConfig, config => {
+      if (!isEqual(config, previousSearchConfig)) {
+        previousSearchConfig = config
+        searchTrigger()
+      }
+    })
 
     /**
      * A search query is active: with `showCollapsedWhenSearched`, the matches are shown even when their parents are
@@ -325,13 +424,17 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       nodeHover: () => {},
     })
 
-    /**
-     * We have bunch of async function here that we might want to run on component init
-     * for SSR reasons
-     */
-    async function init() {
-      await flattenTrigger()
-      await searchTrigger()
+    // Built-in sorting/search and synchronous custom searches commit before
+    // rendering. Only a genuinely asynchronous custom search stays pending.
+    function init() {
+      // Merged configuration is applied by the owner after creating the store.
+      // Its queued watchers must not repeat the same initial custom search.
+      ignorePreviousFlatten()
+      ignorePreviousSearch()
+      previousSortingConfig = sortingConfig.value
+      previousSearchConfig = searchConfig.value
+
+      return flattenTrigger()
     }
 
     // Helper functions
@@ -420,6 +523,8 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
       parentKey,
       maxLevel,
       init,
+      isInitializing,
+      searchError,
 
       // Configs
       dndConfig,

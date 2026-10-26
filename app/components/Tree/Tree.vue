@@ -35,6 +35,8 @@ const mergedProps = computed(() => {
 // Store
 const {
   init,
+  isInitializing,
+  searchError,
   nodeFocused: storeNodeFocused,
   nodeHovered: storeNodeHovered,
   emits: storeEmits,
@@ -86,11 +88,18 @@ storeEmits.value = {
 }
 
 defineExpose(treeGetExposed())
+watch(searchError, error => {
+  if (error !== undefined) {
+    emits('error:search', error)
+  }
+})
 
 // Init
-// Keep setup synchronous across the Vapor boundary; SSR waits for initial data.
+// Keep setup synchronous for consumers without Suspense. Built-in operations
+// finish immediately; async custom searches retain a deterministic pending view.
 const initialization = init()
 onServerPrefetch(() => initialization)
+onMounted(() => initialization)
 
 // Styles - Container
 const containerClass = computed(() => {
@@ -142,18 +151,19 @@ const contentStyle = computed(() => {
     </slot>
 
     <VirtualScroller
-      v-if="!loading"
+      v-if="!loading && !isInitializing"
       ref="scrollerEl"
+      v-bind="mergedProps.scrollerConfig"
       class="tree__content"
-      :rows="(nodesVisible as unknown as T[])"
+      :rows="nodesVisible"
+      row-key="id"
       :class="contentClass"
       :style="contentStyle"
-      v-bind="mergedProps.scrollerConfig"
       :row-height="mergedProps.scrollerConfig?.rowHeight"
     >
       <template #default="{ row, index }">
         <TreeNode
-          :node="(row as unknown as ITreeNode<T>)"
+          :node="row"
           :index
           :connectors
           :ui="mergedProps.ui"
@@ -165,7 +175,7 @@ const contentStyle = computed(() => {
           >
             <slot
               name="node"
-              :node="(row as unknown as ITreeNode<T>)"
+              :node="row"
               :index
             />
           </template>
@@ -177,10 +187,15 @@ const contentStyle = computed(() => {
         <TreeDropIndicator v-if="dndConfig?.enabled" />
       </template>
 
-      <template #inner>
-        <slot name="no-data">
+      <template
+        v-if="nodesVisible.length === 0 || $slots['content-inner']"
+        #inner
+      >
+        <slot
+          v-if="nodesVisible.length === 0 && !loading && !searchError"
+          name="no-data"
+        >
           <TreeNoData
-            v-if="nodesVisible.length === 0 && !loading"
             :ui="mergedProps.ui"
           />
         </slot>
@@ -188,8 +203,23 @@ const contentStyle = computed(() => {
       </template>
     </VirtualScroller>
 
-    <slot name="loading">
-      <TreeLoading v-if="loading" />
+    <slot
+      name="loading"
+      :loading="loading || isInitializing"
+    >
+      <TreeLoading v-if="loading || isInitializing" />
+    </slot>
+
+    <slot
+      v-if="searchError"
+      name="search-error"
+      :error="searchError"
+    >
+      <Banner
+        role="alert"
+        variant="error"
+        :label="$t('general.errorOccured')"
+      />
     </slot>
 
     <slot name="inner" />

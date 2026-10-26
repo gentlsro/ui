@@ -171,6 +171,8 @@ export default defineNuxtConfig({
   },
 
   icon: {
+    // Native rendering consumes JSON/SVG data in CSR and SSR alike.
+    provider: 'server',
     size: '1em',
     mode: 'svg',
   },

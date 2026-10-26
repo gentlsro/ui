@@ -207,7 +207,7 @@ export function useListDragAndDrop(config: IConfig) {
   function handleDragEnd(drag?: Draggable['drag']) {
     // Dragdoll cancels queued movement on end; resolve the release position before committing.
     if (drag?.endEvent?.type === 'end') {
-      handleDragMove(drag.endEvent as PointerSensorMoveEvent)
+      handleDragMove(drag.endEvent)
     }
 
     cancelAnimationFrame(moveFrame)

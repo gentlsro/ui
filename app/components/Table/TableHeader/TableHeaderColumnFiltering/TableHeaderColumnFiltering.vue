@@ -29,8 +29,8 @@ const { internalColumns } = useTableStore()
 
 // Layout
 const isMounted = ref(false)
-const filteringItems = new Map<string, { focus?: () => void }>()
-function setFilteringItem(id: string, target: unknown) {
+const filteringItems = new Map<string | number, { focus?: () => void }>()
+function setFilteringItem(id: string | number, target: unknown) {
   if (target && typeof target === 'object' && 'focus' in target) {
     filteringItems.set(id, target as { focus?: () => void })
   } else {

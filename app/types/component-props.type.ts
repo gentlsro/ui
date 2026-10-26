@@ -82,6 +82,7 @@ export * from '../components/InputLabel/types/input-label-props.type'
 export * from '../components/Inputs/ColorInput/types/color-props.type'
 export * from '../components/Inputs/CurrencyInput/types/currency-input-props.type'
 export * from '../components/Inputs/DateInput/types/date-input-props.type'
+export * from '../components/Inputs/DateTimeFullInput/types/date-time-full-input-props.type'
 export * from '../components/Inputs/DurationInput/types/duration-input-props.type'
 export * from '../components/Inputs/FileInput/types/file-input-emits.type'
 export * from '../components/Inputs/FileInput/types/file-input-props.type'
@@ -104,6 +105,9 @@ export * from '../components/Item/types/item-props.type'
 
 // KeyboardShortcut
 export * from '../components/KeyboardShortcut/types/keyboard-shortcut-props.type'
+
+// Link
+export * from '../components/Link/types/link-props.type'
 
 // List
 export * from '../components/List/types/list-drag-meta.type'

@@ -97,14 +97,19 @@ watchThrottled(contentHeight, () => {
 
 // When the search is not enabled, we need to focus the content list
 // to be able to use keyboard navigation
+const { start: focusList } = useTimeoutFn(() => {
+  if (!isPickerActive.value) {
+    return
+  }
+  const listElDom = listEl.value?.element
+  const contentElDom = listElDom?.querySelector('.virtual-scroll') as HTMLElement
+
+  contentElDom?.focus()
+}, 0, { immediate: false })
+
 whenever(isPickerActive, () => {
   if (props.noSearch) {
-    setTimeout(() => {
-      const listElDom = listEl.value?.element
-      const contentElDom = listElDom?.querySelector('.virtual-scroll') as HTMLElement
-
-      contentElDom?.focus()
-    })
+    focusList()
   }
 })
 </script>

@@ -15,6 +15,12 @@ type IScrollerBaseProps = {
 }
 
 export type IHorizontalScrollerProps = IScrollerBaseProps & {
+  /** Override the scroll-arrow tab stops when a composite widget owns keyboard navigation. */
+  arrowTabindex?: number
+
+  /** Override the scroll container's implicit tab stop for composite widgets. */
+  contentTabindex?: number
+
   /** Disable vertical-wheel conversion to horizontal scrolling. Native horizontal gestures still work. */
   noWheelScroll?: boolean
 

@@ -102,7 +102,7 @@ export const TREE_DEFAULT_PROPS = {
     },
 
     searchClass() {
-      const base = 'flex'
+      const base = 'flex min-w-0 gap-1'
 
       return {
         base,

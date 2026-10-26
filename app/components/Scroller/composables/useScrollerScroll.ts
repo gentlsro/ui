@@ -17,7 +17,11 @@ export function useScrollerScroll(onScrolled: (position: number) => void, axis: 
 
   watch(scrollEl, updateContentEls)
   useMutationObserver(scrollEl, updateContentEls, { childList: true })
-  useResizeObserver(contentEls, () => measure())
+  // Edge controls can resize the scroller's ancestors. Measuring children
+  // inside ResizeObserver would toggle those controls during the same delivery
+  // loop (for example a Table header switching to cards on owner remount).
+  const contentResizeTask = useRafTask<void>(measure)
+  useResizeObserver(contentEls, () => contentResizeTask.schedule())
 
   const isOverflown = computed(() => axis === 'x'
     ? !arrivedState.left || !arrivedState.right
@@ -70,6 +74,14 @@ export function useScrollerScroll(onScrolled: (position: number) => void, axis: 
     resume()
   }
 
+  // Keyboard activation emits a click without a pointer event. Advance once,
+  // keeping pointer holds on their existing animation-frame path.
+  function handleKeyboardClick(event: MouseEvent, increment: boolean) {
+    if (event.detail === 0) {
+      handleScroll(increment ? 80 : -80, axis)
+    }
+  }
+
   useEventListener('pointerup', pause)
   useEventListener('pointercancel', pause)
   useEventListener('blur', pause)
@@ -87,6 +99,7 @@ export function useScrollerScroll(onScrolled: (position: number) => void, axis: 
     handleScroll,
     handleWheel,
     handleScrollViaBtn,
+    handleKeyboardClick,
   }
 }
 

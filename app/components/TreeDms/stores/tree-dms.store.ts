@@ -12,6 +12,8 @@ export const TREE_DMS_INJECTION_KEY = Symbol('tree-dms')
 function createStore<T extends IItem = IItem>(injectionKey?: string) {
   const injectionState = createInjectionState((payload?: IConfig<T>) => {
     const { props } = payload ?? {}
+    let disposed = false
+    onScopeDispose(() => disposed = true)
 
     const fileKey = computed(() => props?.fileKey === undefined ? 'file' : props.fileKey)
 
@@ -49,6 +51,7 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     })
 
     const returnedData = {
+      isActive: () => !disposed,
       // Utils
       fileKey,
       folderKey,

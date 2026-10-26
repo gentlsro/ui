@@ -53,6 +53,12 @@ const cleared = ref(false)
 const estimateOverride = ref<number>()
 const rangeOverride = ref<{ first: number, last: number }>()
 const initialCount = props.initialRowsRenderCount ?? Math.ceil(2160 / props.rowHeight)
+// Hydration must match the populated server range. Fresh client mounts can
+// wait for TanStack's connected viewport measurement instead of constructing
+// and discarding the SSR estimate (including offscreen virtual columns).
+const nuxtApp = useNuxtApp()
+const needsServerEstimate = import.meta.server
+  || (nuxtApp.isHydrating && nuxtApp.payload.serverRendered)
 
 function getItemKey(index: number) {
   const row = rows.value[index]
@@ -87,7 +93,7 @@ const baseRangeExtractor = computed(() => {
 const rowRangeExtractor = computed(() => {
   const extract = baseRangeExtractor.value
 
-  if (!stickyIndices.value.length) {
+  if (cleared.value || !stickyIndices.value.length) {
     return extract
   }
 
@@ -112,7 +118,7 @@ const rowVirtualizer = useVirtualizer<HTMLDivElement, HTMLDivElement>(computed((
   estimateSize: () => estimateOverride.value ?? props.rowHeight ?? 0,
   getItemKey,
   rangeExtractor: rowRangeExtractor.value,
-  initialRect: { width: 0, height: initialCount * props.rowHeight },
+  initialRect: { width: 0, height: needsServerEstimate ? initialCount * props.rowHeight : 0 },
   overscan: rowOverscan.value,
   // Row measurement changes rendered geometry; defer it out of ResizeObserver delivery.
   useAnimationFrameWithResizeObserver: true,
@@ -159,7 +165,7 @@ const columnVirtualizer = useVirtualizer<HTMLDivElement, HTMLDivElement>(compute
     return String(column?.[props.columnKey] ?? index)
   },
   estimateSize: (index: number) => columnWidths.value[index] ?? 200,
-  initialRect: { width: 1280, height: 0 },
+  initialRect: { width: needsServerEstimate ? 1280 : 0, height: 0 },
   overscan: isMounted.value ? 1 : 0,
 })))
 const virtualColumns = computed(() => columnVirtualizer.value.getVirtualItems())
@@ -236,14 +242,18 @@ watch(
   },
   { flush: 'post' },
 )
-// Consumers size themselves by this, so include the scroller's own box extras
-watch([contentSize.height, contentSize.width], ([height, width]) => {
+// Consumers can resize an ancestor in response (for example a Selector menu).
+// Deliver outside ResizeObserver's loop and cancel pending work with the owner.
+const contentSizeTask = useRafTask<void>(() => {
+  const height = contentSize.height.value
+  const width = contentSize.width.value
   const { extra } = virtualScrollEl.value
     ? getElementSize(virtualScrollEl.value, { includeBorder: true, includePadding: true, includeMargin: true })
     : { extra: { vertical: 0, horizontal: 0 } }
 
   emits('change:contentSize', { height: height + extra.vertical, width: width + extra.horizontal })
 })
+watch([contentSize.height, contentSize.width], () => contentSizeTask.schedule())
 
 watch(rows, () => {
   cleared.value = false

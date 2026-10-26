@@ -14,10 +14,16 @@ export type ITabsProps = {
    */
   noNav?: boolean
 
+  /** Accessible name of the default tablist. Defaults to the localized Tabs label. */
+  navigationLabel?: string
+
+  /** Arrow keys move focus; manual mode selects with Enter/Space or a click. */
+  activationMode?: 'manual' | 'automatic'
+
   /**
    * The props that should be passed to the KeepAlive
    *
-   * NOTE: If not used, there will be no `KeepAlive`
+   * NOTE: If not used, only Tab declarations with keepAlive=true are cached.
    * NOTE 2: If using `include` or `exclude`, you need to prefix the names with `Tab_`
    */
   keepAliveProps?: KeepAliveProps

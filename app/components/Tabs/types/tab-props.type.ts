@@ -19,7 +19,8 @@ export type ITabProps = {
   icon?: string
 
   /**
-   * Whether the tab should be kept alive
+   * Cache this tab without requiring global keepAliveProps. False opts out of
+   * the global cache; undefined follows it. Global include/exclude/max still apply.
    */
   keepAlive?: boolean
 

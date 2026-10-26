@@ -1,4 +1,4 @@
-import type { AllowedComponentProps, ConcreteComponent, CSSProperties } from 'vue'
+import type { AllowedComponentProps, ConcreteComponent, CSSProperties, VaporComponent } from 'vue'
 
 // Types
 import type { FloatingTarget } from '../../../composables/useFloatingUIUtils'
@@ -221,7 +221,7 @@ export type IListProps = {
    * Vapor components expose their draggable HTMLElement as `element`.
    * Keep the root element stable for the row lifetime.
    */
-  rowComponent?: ConcreteComponent | string
+  rowComponent?: ConcreteComponent | VaporComponent | string
 
   /**
    * Scroller configuration

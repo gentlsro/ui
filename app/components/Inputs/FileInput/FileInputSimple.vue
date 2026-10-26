@@ -104,7 +104,7 @@ const appendStyle = computed(() => {
           size="sm"
           :disabled="readonly || disabled"
           disable-style="flat"
-          @click.stop.prevent="openFileDialog"
+          @click.stop.prevent="openFileDialog()"
         />
       </div>
     </template>

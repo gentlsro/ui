@@ -28,8 +28,15 @@ const mergedProps = computed(() => {
 
 // Layout
 const isOpen = defineModel<boolean>({ default: false })
+let openingRequest = 0
+let disposed = false
+onScopeDispose(() => {
+  disposed = true
+  openingRequest++
+})
 
 async function handleToggle() {
+  const request = ++openingRequest
   // Closing
   if (isOpen.value) {
     isOpen.value = false
@@ -40,7 +47,7 @@ async function handleToggle() {
   // Opening
   const shouldOpen = await props.beforeShowFnc?.() ?? true
 
-  if (shouldOpen) {
+  if (shouldOpen && !disposed && request === openingRequest) {
     isOpen.value = true
   }
 }

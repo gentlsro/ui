@@ -22,16 +22,25 @@ const sourceModel = defineModel<string | number>()
 const tabs = useTabsUtils(props, sourceModel)
 const { model, navigation, syncOrder } = tabs
 const panelsEl = ref<HTMLElement>()
+const navigationEl = ref<HTMLElement>()
 
 provide(tabsContextKey, {
   registerTab: tabs.registerTab,
+  hasNavigation: computed(() => !props.noNav),
   ui: computed(() => mergedProps.value.ui),
 })
 
 // Keyed Vapor slot moves can happen without updating this owner. Follow the
 // declarations' DOM order so the navigation also handles moves through wrappers.
 useMutationObserver(panelsEl, syncOrder, { childList: true, subtree: true })
-onMounted(syncOrder)
+onMounted(() => {
+  syncOrder()
+  // Declarations register first for matching SSR/hydration. Once both stable
+  // wrappers exist, navigation belongs first in the actual keyboard DOM order.
+  if (panelsEl.value && navigationEl.value) {
+    panelsEl.value.before(navigationEl.value)
+  }
+})
 
 // Styles - container
 const containerClass = computed(() => {
@@ -51,14 +60,16 @@ const containerStyle = computed(() => {
     :class="containerClass"
     :style="containerStyle"
   >
-    <!-- Register declarations before rendering navigation, also during SSR. -->
     <div
       ref="panelsEl"
       class="tabs__panels"
     >
       <slot />
     </div>
-    <div class="tabs__navigation">
+    <div
+      ref="navigationEl"
+      class="tabs__navigation"
+    >
       <slot
         name="navigation"
         :ui="mergedProps.ui"
@@ -68,6 +79,8 @@ const containerStyle = computed(() => {
           v-if="!noNav"
           v-model="model"
           :tabs="navigation"
+          :label="navigationLabel"
+          :activation-mode="activationMode"
           :ui="mergedProps.ui"
         />
       </slot>

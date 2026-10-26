@@ -25,7 +25,7 @@ const model = computed({
   get() {
     // If string-like values are allowed, we need to check them against stringified values
     if (props.allowString) {
-      const val = originalModel.value === null ? 'null' : originalModel.value.toString()
+      const val = String(originalModel.value)
 
       const checkValueString = props.checkValue?.toString()
       const uncheckValueString = props.uncheckValue?.toString()
@@ -180,10 +180,11 @@ const focusHelperStyle = computed(() => {
 <template>
   <label
     ref="containerEl"
-    tabindex="0"
-    role="switch"
-    :aria-checked="model === 'checked' ? 'true' : model === 'unchecked' ? 'false' : 'mixed'"
-    :aria-disabled="disabled || readonly || undefined"
+    :role="allowIndeterminate || model === 'indeterminate' ? 'checkbox' : 'switch'"
+    :tabindex="disabled ? -1 : 0"
+    :aria-checked="model === 'indeterminate' ? 'mixed' : model === 'checked'"
+    :aria-readonly="readonly || undefined"
+    :aria-disabled="disabled || undefined"
     class="toggle__container group"
     :class="[
       `is-${model}`,

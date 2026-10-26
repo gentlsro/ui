@@ -12,7 +12,7 @@ import type { ISearchInputExpose } from '../../Inputs/TextInput/types/search-inp
 import { useListDragAndDrop } from '../composables/useListDragAndDrop'
 import { getListItemKey } from '../functions/helpers'
 import { listFetchData } from '../functions/list-fetch-data'
-import { buildListItems } from '../functions/build-list-items'
+import { useListItemsTransformer } from '../functions/build-list-items'
 import { listItemSelect } from '../functions/list-item-select'
 import { listHandleAddSearch } from '../functions/list-handle-add-search'
 import { isListItemSelected } from '../functions/helpers/is-list-item-selected'
@@ -32,6 +32,17 @@ type IConfig = {
 function createStore(injectionKey?: string) {
   const injectionState = createInjectionState((payload?: IConfig) => {
     const { listProps } = payload ?? {}
+    const transformListItems = useListItemsTransformer()
+    let transformRequest = 0
+    let disposed = false
+    let pendingTransformCommit: (() => void) | undefined
+    const searchError = shallowRef<unknown>()
+    const isTransforming = ref(false)
+    onScopeDispose(() => {
+      disposed = true
+      transformRequest++
+      pendingTransformCommit = undefined
+    })
 
     // Store
     const { lastPointerDownType } = storeToRefs(useUIStore())
@@ -59,7 +70,7 @@ function createStore(injectionKey?: string) {
     const itemLabel = computed(() => listProps?.itemLabel === undefined ? 'label' : listProps.itemLabel)
 
     const isLoading = computed(() => {
-      return isRequestLoading.value || isLoadingSource.value
+      return isRequestLoading.value || isLoadingSource.value || isTransforming.value
     })
 
     // Layout
@@ -205,13 +216,15 @@ function createStore(injectionKey?: string) {
       }
     })
 
-    watchDebounced(
-      ([items, addedItems, isHiddenByItemKey, refreshTrigger, itemKey, itemLabel, noFilter, fuseOptions, sortBy]),
-      async ([items, addedItems]) => {
-        const _items = [...items, ...addedItems.map(item => item.ref)]
-          .filter(item => !isHiddenByItemKey.value[getListItemKey(item, itemKey.value)])
+    function rebuildItems() {
+      const request = transformRequest
+      searchError.value = undefined
+      const _items = [...items.value, ...addedItems.value.map(item => item.ref)]
+        .filter(item => !isHiddenByItemKey.value[getListItemKey(item, itemKey.value)])
 
-        const res = await buildListItems({
+      let result: ReturnType<typeof transformListItems>
+      try {
+        result = transformListItems({
           items: _items,
           itemKey: itemKey.value,
           itemLabel: itemLabel.value,
@@ -225,7 +238,40 @@ function createStore(injectionKey?: string) {
           useWorker: useWorker.value,
           addedItemById: addedItemById.value,
         })
+      } catch (error) {
+        fail(error)
 
+        return
+      }
+
+      function applyOwnedCommit(callback: () => void) {
+        if (disposed || request !== transformRequest) {
+          return
+        }
+        if (isMounted.value) {
+          callback()
+        } else {
+          pendingTransformCommit = callback
+        }
+      }
+
+      function fail(error: unknown) {
+        if (disposed || request !== transformRequest) {
+          return
+        }
+        if (!isMounted.value) {
+          isTransforming.value = true
+        }
+        applyOwnedCommit(() => {
+          searchError.value = error
+          isTransforming.value = false
+        })
+      }
+
+      function commit(res: Awaited<typeof result>) {
+        if (disposed || request !== transformRequest) {
+          return
+        }
         hasExactMatch.value = res.hasExactMatch
 
         listHandleAddSearch({
@@ -238,6 +284,7 @@ function createStore(injectionKey?: string) {
         })
 
         itemsGrouped.value = res.items
+        isTransforming.value = false
 
         // Prefocus first item non-group item if out of bounds or
         const isNothingFocused = itemFocusedIdx.value === -1
@@ -251,9 +298,17 @@ function createStore(injectionKey?: string) {
           const firstNonGroupItemIndex = listItems.value.findIndex(item => !('isGroup' in item))
           itemFocusedIdx.value = firstNonGroupItemIndex
         }
-      },
-      { debounce: () => isMounted.value ? 10 : 0 }, // To prevent double-trigger when adding items
-    )
+      }
+
+      if ('then' in result) {
+        isTransforming.value = true
+        void result.then(res => {
+          applyOwnedCommit(() => commit(res))
+        }).catch(fail)
+      } else {
+        commit(result)
+      }
+    }
 
     // Selection
     const selection = initRef({
@@ -397,6 +452,26 @@ function createStore(injectionKey?: string) {
       onItemMoved: (item, items) => emits.value.itemMoved(item, items),
     })
 
+    const { start: scheduleTransform } = useTimeoutFn(rebuildItems, 10, { immediate: false })
+    watch(
+      [items, addedItems, isHiddenByItemKey, refreshTrigger, itemKey, itemLabel, noFilter, fuseOptions, sortBy, groupBy, search, searchConfig, sortingConfig],
+      () => {
+        transformRequest++
+        pendingTransformCommit = undefined
+        if (isMounted.value) {
+          scheduleTransform()
+        } else {
+          rebuildItems()
+        }
+      },
+      { immediate: true },
+    )
+    onMounted(() => {
+      isMounted.value = true
+      pendingTransformCommit?.()
+      pendingTransformCommit = undefined
+    })
+
     const returnedData = {
       // Configs
       modifiers,
@@ -414,6 +489,7 @@ function createStore(injectionKey?: string) {
       itemKey,
       itemLabel,
       isLoading,
+      isTransforming,
       abortController,
       isRequestLoading,
       handleRequestFn: fn,
@@ -429,6 +505,7 @@ function createStore(injectionKey?: string) {
 
       // Search
       search,
+      searchError,
       searchEl,
       hasExactMatch,
       fuseOptions,

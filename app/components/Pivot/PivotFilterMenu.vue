@@ -27,9 +27,9 @@ const props = defineProps<IProps>()
 const { syncPivotItemFilters } = usePivotStore<T>()
 
 const isMounted = ref(false)
-const filteringItems = new Map<string, { focus?: () => void }>()
+const filteringItems = new Map<string | number, { focus?: () => void }>()
 
-function setFilteringItem(id: string, target: unknown) {
+function setFilteringItem(id: string | number, target: unknown) {
   if (target && typeof target === 'object' && 'focus' in target) {
     filteringItems.set(id, target as { focus?: () => void })
   } else {
@@ -133,6 +133,7 @@ function handleClearFilter() {
 }
 
 let timeout: ReturnType<typeof setTimeout> | undefined
+onScopeDispose(() => clearTimeout(timeout))
 
 function modifyFnc(_filter: ITableFilterItem<T>, debounceMs?: number) {
   debouncedSync(debounceMs ?? 300)

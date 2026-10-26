@@ -16,6 +16,8 @@ import { useTreeStore } from '../Tree/stores/tree.store'
 type IProps = Pick<ITreeDmsProps<T>, 'modelValue' | 'fileKey' | 'folderKey' | 'treeProps' | 'dropZoneConfig'>
 
 const props = defineProps<IProps>()
+let disposed = false
+onScopeDispose(() => disposed = true)
 
 // Store
 const {
@@ -37,6 +39,9 @@ function handleStructureItemCreated(payload: {
   item: T
   parentItem?: T | null
 }) {
+  if (disposed) {
+    return
+  }
   const { item, parentItem } = payload
 
   const parent = parentItem?.type === props.folderKey ? parentItem : undefined
@@ -261,6 +266,9 @@ const { isOverDropZone: _isOverDropZone } = useDropZone(
       const createdParentByName: Record<string, T> = {}
 
       processDroppedItems(items, async (item, parentItem, file) => {
+        if (disposed) {
+          return
+        }
         const isFile = 'type' in item
 
         // Resolve parent: use treeParent for top-level drops;

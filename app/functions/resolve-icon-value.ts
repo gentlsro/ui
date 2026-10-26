@@ -14,10 +14,9 @@ const classVariantRegex
   = /^(?:[2-9]?xl|xs|sm|md|lg|hover|focus(?:-visible|-within)?|active|disabled|enabled|checked|dark|light|first|last|odd|even|visited|print|motion-safe|motion-reduce|group-hover|group-focus|peer-checked):/i
 
 /**
- * Canonical Iconify names can carry styling classes. Legacy UnoCSS values keep
- * their class rendering when mixed with other classes or supplied as arrays/maps,
- * including custom collections unavailable to Nuxt Icon. A single string keeps
- * the existing Nuxt Icon/custom component behavior.
+ * Both canonical names and legacy Uno values can arrive in arrays/class maps.
+ * Keep legacy classes for CSS variants/custom Uno collections, but also expose
+ * the name so runtime data can render without a pre-generated CSS rule.
  */
 export function resolveIconValue(value?: IconValue): ResolvedIconValue {
   const normalized = normalizeClass(value).trim()
@@ -27,17 +26,12 @@ export function resolveIconValue(value?: IconValue): ResolvedIconValue {
 
   const tokens = normalized.split(/\s+/)
 
-  // An UnoCSS icon class makes the value a class list: its custom variants
-  // (`wrapper:w-4` from `group-[…]/wrapper:(h-4 w-4)`) are not Iconify names
-  if (tokens.length > 1 && tokens.some(token => token.startsWith('i-'))) {
-    return { classes: normalized }
-  }
-
-  const iconIndex = tokens.findIndex(token => {
-    return !token.startsWith('i-')
-      && canonicalIconNameRegex.test(token)
-      && !classVariantRegex.test(token)
-  })
+  // A legacy icon identifies the collection before custom Uno variants such
+  // as `wrapper:w-4`; keep its name for native runtime data and its CSS classes.
+  const legacyIndex = tokens.findIndex(token => token.startsWith('i-'))
+  const iconIndex = legacyIndex !== -1
+    ? legacyIndex
+    : tokens.findIndex(token => canonicalIconNameRegex.test(token) && !classVariantRegex.test(token))
 
   if (iconIndex === -1) {
     return typeof value === 'string' && /^\S+$/.test(value) && !classVariantRegex.test(value)
@@ -45,7 +39,10 @@ export function resolveIconValue(value?: IconValue): ResolvedIconValue {
       : { classes: normalized }
   }
 
-  const [name] = tokens.splice(iconIndex, 1)
+  const name = tokens[iconIndex]!
+  if (!name.startsWith('i-') || (typeof value === 'string' && tokens.length === 1)) {
+    tokens.splice(iconIndex, 1)
+  }
 
   return { classes: tokens.join(' '), name }
 }

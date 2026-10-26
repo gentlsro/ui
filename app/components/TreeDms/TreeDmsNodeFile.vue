@@ -86,8 +86,11 @@ function focus() {
 
 function select() {
   nextTick(() => {
+    if (!inputEl.value?.isConnected) {
+      return
+    }
     const range = document.createRange()
-    range.selectNodeContents(inputEl.value!)
+    range.selectNodeContents(inputEl.value)
 
     // A new item with a prefilled label (e.g. a path prefix) gets the caret at the end
     if (node.value.ref.__isNew && inputEl.value?.textContent) {

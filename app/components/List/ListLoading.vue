@@ -12,7 +12,7 @@ type IProps = Pick<IListProps, 'ui'>
 
 const props = defineProps<IProps>()
 
-const { isFirstFetch, items, isLoading } = useListStore()
+const { isFirstFetch, items, isLoading, isTransforming, listItems } = useListStore()
 
 const loadingStyle = computed(() => {
   return props.ui?.loadingStyle?.()
@@ -27,7 +27,7 @@ const loadingClass = computed(() => {
 
 <template>
   <div
-    v-if="isFirstFetch && !items.length && isLoading"
+    v-if="(isFirstFetch && !items.length && isLoading) || (isTransforming && !listItems.length)"
     class="list-loading"
     :class="loadingClass"
     :style="loadingStyle"

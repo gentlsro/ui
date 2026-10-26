@@ -35,8 +35,9 @@ const contentEls = computedWithControl(
     const children = scrollArea.value?.children ?? []
 
     // Rails do not exist until initialization; keep all actual slot children.
-    return Array.from(children).filter(element => {
-      return !element.classList.contains('ps__rail-x')
+    return Array.from(children).filter((element): element is HTMLElement | SVGElement => {
+      return (element instanceof HTMLElement || element instanceof SVGElement)
+        && !element.classList.contains('ps__rail-x')
         && !element.classList.contains('ps__rail-y')
     })
   },

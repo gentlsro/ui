@@ -1,6 +1,6 @@
 // Types
-import type { CSSProperties } from 'vue'
-import type { NuxtLinkProps } from '#app'
+import type { AnchorHTMLAttributes, CSSProperties } from 'vue'
+import type { IUILinkProps } from '../../Link/types/link-props.type'
 import type { Required } from 'utility-types'
 import type { NavigationTarget } from '../../../types/navigation-target.type'
 import type { ITableTotal } from './table-total.type'
@@ -625,9 +625,9 @@ export type ITableProps<
   to?: (row: any, options?: { rowKey?: string }) => NavigationTarget | undefined
 
   /**
-   * Props to pass to the NuxtLink component
+   * Native row link props and anchor attributes
    */
-  toLinkProps?: NuxtLinkProps
+  toLinkProps?: IUILinkProps & AnchorHTMLAttributes
 
   /**
    * Totals

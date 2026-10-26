@@ -76,6 +76,20 @@ function inputHarness(...args: Parameters<typeof inputFixture>) {
 }
 
 describe('input mask synchronization', () => {
+  it('cancels pending clear/focus work and suppresses a debounced model commit after owner disposal', async () => {
+    vi.useFakeTimers()
+    const { input, wrapper, emitted } = inputHarness(12, undefined, { debounce: 100, autofocus: true, autofocusTimeout: 200 })
+    await settle()
+    input.clear(true)
+    input.model.value = 25
+    await settle()
+    emitted.mockClear()
+    wrapper.unmount()
+    await vi.runAllTimersAsync()
+    expect(emitted).not.toHaveBeenCalled()
+    expect(wrapper.emitted('clear')).toBeUndefined()
+  })
+
   it('uses the typed formatter when an empty numeric field is set to zero', async () => {
     const mask = new MaskedNumber({
       mask: Number,

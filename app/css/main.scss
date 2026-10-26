@@ -58,6 +58,10 @@ html.is-dialog-open .dialog .scroll-picker__scroller {
   @apply color-primary;
 }
 
+.dark .router-link-active {
+  color: color-mix(in srgb, var(--color-primary) 50%, white);
+}
+
 .management-page {
   @apply overflow-auto gap-2 p-2;
 

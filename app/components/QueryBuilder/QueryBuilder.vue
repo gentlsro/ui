@@ -79,6 +79,8 @@ function updateQueryBuilderLayout(width: number) {
   isSmallerScreen.value = width < breakpoint.value
 }
 
+const layoutTask = useRafTask(updateQueryBuilderLayout)
+
 onMounted(() => {
   if (queryBuilderEl.value) {
     updateQueryBuilderLayout(queryBuilderEl.value.clientWidth)
@@ -89,7 +91,7 @@ useResizeObserver(queryBuilderEl, entries => {
   const { contentRect } = entries?.[0] ?? {}
 
   if (contentRect) {
-    updateQueryBuilderLayout(contentRect.width)
+    layoutTask.schedule(contentRect.width)
   }
 })
 

@@ -36,17 +36,28 @@ export function useDrawerResize(options: IUseDrawerResizeOptions) {
 
   let currentX = 0
   let currentWidth = 0
+  const widthTask = useRafTask((width: number) => {
+    if (isResizing.value) {
+      options.width.value = width
+    }
+  })
 
   function handleMouseMove(event: MouseEvent) {
     // Dragging the resizer away from the drawer (towards the page) grows it
     const diffX = (event.clientX - currentX) * (toValue(options.side) === 'left' ? 1 : -1)
 
-    requestAnimationFrame(() => {
-      options.width.value = Math.min(Math.max(currentWidth + diffX, minWidth), maxWidth)
-    })
+    widthTask.schedule(Math.min(Math.max(currentWidth + diffX, minWidth), maxWidth))
   }
 
   function handleMouseUp() {
+    widthTask.flush()
+    clearResize()
+  }
+
+  function clearResize() {
+    if (!import.meta.client) {
+      return
+    }
     document.removeEventListener('mousemove', handleMouseMove)
     document.removeEventListener('mouseup', handleMouseUp)
 
@@ -74,7 +85,10 @@ export function useDrawerResize(options: IUseDrawerResizeOptions) {
     document.addEventListener('mouseup', handleMouseUp)
   }
 
-  onUnmounted(handleMouseUp)
+  onScopeDispose(() => {
+    widthTask.cancel()
+    clearResize()
+  })
 
   return {
     handleMouseDown,

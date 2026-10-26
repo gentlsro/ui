@@ -51,7 +51,7 @@ export function useTableAutoFit() {
       .slice(0, 25)
 
     // Empty tables render .table-empty instead of the row scroller.
-    const containerEl = unrefElement(virtualScrollEl.value)
+    const containerEl = virtualScrollEl.value?.element
       ?? scope.querySelector('.table-empty')
       ?? scope
 

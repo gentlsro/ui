@@ -1,4 +1,5 @@
 // Types
+import type { ComponentExposed } from 'vue-component-type-helpers'
 import type { IFormProps } from '../types/form-props.type'
 
 // Functions
@@ -24,7 +25,7 @@ function createStore(injectionKey?: string) {
     // Layout
     const formEl = ref<HTMLFormElement>()
     const isSubmitPrevented = refAutoReset(false, 50)
-    const confirmationEl = ref<InstanceType<typeof MenuConfirmation>>()
+    const confirmationEl = ref<ComponentExposed<typeof MenuConfirmation>>()
 
     const isEditing = initRef({
       propName: 'isEditing',

@@ -45,6 +45,8 @@ const breadcrumbsStyle = computed(() => {
 })
 
 // Layout
+const usedBreadcrumbs = computed(() => props.breadcrumbs ?? breadcrumbs.value)
+
 const breadcrumbsItems = computed(() => {
   const homePath = typeof uiConfig.breadcrumbs.home.path === 'function'
     ? uiConfig.breadcrumbs.home.path()
@@ -58,11 +60,9 @@ const breadcrumbsItems = computed(() => {
         label: uiConfig.breadcrumbs.home.label,
       }
 
-  const usedBreadcrumbs = props.breadcrumbs ?? breadcrumbs.value
-
   return [
     homeBreacrumb,
-    ...usedBreadcrumbs,
+    ...usedBreadcrumbs.value,
   ]
     .flatMap(breadcrumb => [breadcrumb, 'splitter'])
     .slice(0, -1)
@@ -82,7 +82,8 @@ const breadcrumbsItems = computed(() => {
       :style="breadcrumbsStyle"
     >
       <HorizontalScroller
-        :ui="{ contentClass: ({ defaults }) => `${defaults.all} gap-1 items-center` }"
+        class="min-w-0 flex-1"
+        :ui="{ contentClass: ({ defaults }) => `${defaults.all} min-w-0 gap-1 items-center` }"
       >
         <template
           v-for="(breadcrumb, idx) in breadcrumbsItems"
@@ -110,8 +111,8 @@ const breadcrumbsItems = computed(() => {
             size="sm"
             class="breadcrumb-item shrink-0"
             no-truncate
-            :class="[{ 'is-last': breadcrumb === breadcrumbs[breadcrumbs.length - 1] }]"
-            :no-dim="breadcrumb === breadcrumbs[breadcrumbs.length - 1]"
+            :class="[{ 'is-last': breadcrumb === usedBreadcrumbs[usedBreadcrumbs.length - 1] }]"
+            :no-dim="breadcrumb === usedBreadcrumbs[usedBreadcrumbs.length - 1]"
             no-uppercase
           />
         </template>

@@ -5,6 +5,7 @@ import type { IListProps } from './list-props.type'
 export type IListSlots = {
   'noData'?: () => any
   'loading'?: () => any
+  'search-error'?: (props: { error: unknown }) => any
   'move-handle'?: () => any
 
   'search': (props: {

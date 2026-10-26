@@ -59,12 +59,16 @@ function handleToggleCollapse() {
 </script>
 
 <template>
+  <!-- Hidden leaves keep the configured button geometry without an unused runtime icon. -->
   <Btn
     v-bind="collapseConfig?.btnProps"
-    icon="i-flowbite:chevron-right-outline !h-5 !w-5"
+    :icon="collapseBtnClass === 'visible' || !collapseBtnClass
+      ? 'i-flowbite:chevron-right-outline !h-5 !w-5'
+      : ['!h-5', '!w-5']"
     class="tree-collapse-btn"
     :class="collapseBtnClass"
     :loading="nodeMeta?.isLoading"
+    @keydown.enter.stop
     @mousedown.stop.prevent
     @click.stop.prevent="handleToggleCollapse"
   />

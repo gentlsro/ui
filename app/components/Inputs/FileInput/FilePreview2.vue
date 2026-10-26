@@ -73,7 +73,7 @@ const videoUrl = computed(() => {
     : getLocalImageUrl(props.file.path)
 })
 
-const downloadUrl = computedAsync(async () => {
+const generatedDownloadUrl = computedAsync(async () => {
   const file = props.file instanceof FileModel
     ? props.file.uploadedFile
     : props.file as Required<IFile, 'name' | 'path'>
@@ -90,6 +90,7 @@ const downloadUrl = computedAsync(async () => {
     { returnUrlOnly: true },
   )
 })
+const downloadUrl = computed(() => props.downloadUrl ?? generatedDownloadUrl.value)
 </script>
 
 <template>
@@ -115,7 +116,7 @@ const downloadUrl = computedAsync(async () => {
           <Separator vertical />
 
           <!-- Download -->
-          <NuxtLink
+          <UILink
             v-if="downloadUrl"
             class="link"
             :to="downloadUrl"
@@ -125,7 +126,7 @@ const downloadUrl = computedAsync(async () => {
             rel="noopener noreferrer"
           >
             {{ $t('general.download') }}
-          </NuxtLink>
+          </UILink>
         </div>
       </div>
 

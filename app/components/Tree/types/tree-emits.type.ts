@@ -3,6 +3,7 @@ import type { ITreeProps } from './tree-props.type'
 import type { ITreeNode } from './tree-node.type'
 
 export type ITreeEmits<T extends IItem = IItem> = {
+  (e: 'error:search', error: unknown): void
   (e: 'update:search', value: ITreeProps<T>['search']): void
   (e: 'update:selection', value: ITreeProps<T>['selection']): void
   (e: 'update:meta', value: ITreeProps<T>['meta']): void

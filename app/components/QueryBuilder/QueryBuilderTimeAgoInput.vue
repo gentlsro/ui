@@ -26,7 +26,7 @@ type IProps = {
 
 const props = defineProps<IProps>()
 const emits = defineEmits<{
-  (e: 'update:modelValue', val: any): void
+  (e: 'update:modelValue', val: string): void
 }>()
 
 defineExpose({
@@ -38,6 +38,8 @@ const inputEl = useTemplateRef('inputEl')
 const menuEl = useTemplateRef('menuEl')
 const item = toRef(props, 'item')
 const exactInputOptions = toRef(props, 'exactInputOptions')
+const preferredUnit = ref('m')
+const preferredExact = ref(false)
 
 const units = computed(() => [
   { id: 'd', label: $t('general.day', agoValue.value.value ?? 0) },
@@ -49,33 +51,24 @@ const units = computed(() => [
 // ComapratorEnum.AGO, CoparatorEnum.NOT_AGO, ComparatorEnum.UNTIL, ComparatorEnum.NOT_UNTIL
 const agoValue = computed({
   get() {
-    const matches = (item.value.value || '').match(/(\d+\.\d+|\d+)([a-z]+)/i)
-    let value: number | undefined
-    let unit: string
-    const unitShortName = matches?.[2] as string
+    const matches = String(item.value.value ?? '').match(/^(\d+(?:\.\d+)?)([dwmy])(e?)$/i)
+    const shortUnit = matches?.[2]?.toLowerCase() ?? preferredUnit.value
+    const exact = matches ? !!matches[3] : preferredExact.value
+    const unit = ({ d: 'day', w: 'week', m: 'month', y: 'year' })[shortUnit as 'd' | 'w' | 'm' | 'y']
 
-    if (matches) {
-      value = Number.parseFloat(matches[1])
-
-      if (unitShortName === 'd' || unitShortName === 'de') {
-        unit = 'day'
-      } else if (unitShortName === 'w' || unitShortName === 'we') {
-        unit = 'week'
-      } else if (unitShortName === 'm' || unitShortName === 'me') {
-        unit = 'month'
-      } else {
-        unit = 'year'
-      }
-    } else {
-      unit = 'month'
-    }
-
-    return { value, unit, unitShortName } as Partial<IAgoValue>
+    return {
+      value: matches ? Number.parseFloat(matches[1]!) : undefined,
+      unit,
+      unitShortName: `${shortUnit}${exact ? 'e' : ''}`,
+    } satisfies IAgoValue
   },
-  set({ value, unitShortName }: Partial<IAgoValue>) {
-    item.value.value = `${value ?? agoValue.value.value}${
-      unitShortName || agoValue.value.unitShortName
-    }`
+  set(update: Partial<IAgoValue>) {
+    const value = 'value' in update ? update.value : agoValue.value.value
+    const unit = update.unitShortName ?? agoValue.value.unitShortName
+    // A cleared number stays empty while the user's unit/exact choice survives.
+    preferredUnit.value = unit.replace(/e$/, '')
+    preferredExact.value = unit.endsWith('e')
+    item.value.value = isNil(value) ? '' : `${value}${unit}`
 
     emits('update:modelValue', item.value.value)
   },
@@ -98,8 +91,12 @@ const isExact = computed({
   },
 })
 
+function setNumber(value: number | null | undefined) {
+  agoValue.value = { value }
+}
+
 // Set isExact value from exactInputOptions props, if provided
-if (exactInputOptions.value?.value && exactInputOptions.value.value !== isExact.value) {
+if (exactInputOptions.value && exactInputOptions.value.value !== isExact.value) {
   isExact.value = exactInputOptions.value.value
 }
 
@@ -120,7 +117,7 @@ function setUnit(unitShortName: string) {
     layout="regular"
     :mask="{ mask: /^\d+$/ }"
     class="qb-item__content-value"
-    @update:model-value="agoValue = { value: $event }"
+    @update:model-value="setNumber"
   >
     <template #append>
       <div flex="~ gap-1">
@@ -166,6 +163,7 @@ function setUnit(unitShortName: string) {
           no-uppercase
           :label="$t('table.exactFilter')"
           :disabled="exactInputOptions?.isButtonDisabled"
+          :aria-pressed="isExact"
           @click="isExact = !isExact"
         />
       </div>

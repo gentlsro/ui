@@ -18,7 +18,7 @@ export async function listItemSelect(payload: {
   addConfig: IListProps['addConfig']
   isSelected: boolean
   itemKey?: string
-  itemLabel?: string
+  itemLabel?: IListProps['itemLabel']
   addedItems: Ref<IListItemToAdd[]>
   emits: IListEmitFncs
   searchInput: ISearchInputExpose | undefined

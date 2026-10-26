@@ -136,12 +136,11 @@ watch(referenceEl, (_nextEl, prevEl) => {
   applyUplift()
 })
 
+const positionTask = useRafTask<void>(() => update())
 useResizeObserver(contentEl, () => {
-  requestAnimationFrame(() => {
-    if (!props.noMove) {
-      update()
-    }
-  })
+  if (!props.noMove) {
+    positionTask.schedule()
+  }
 })
 
 watch(menuPlacement, placement => {
@@ -150,19 +149,24 @@ watch(menuPlacement, placement => {
 
 // Watch the virtual position to update the floating UI
 watch(virtualDimensions, () => {
-  requestAnimationFrame(() => {
-    update()
-  })
+  positionTask.schedule()
 }, { deep: true })
 
 // We react to page resize/scroll to reposition the floating UI
+// Closed menus have no floating surface to position. In particular, observing
+// an anchor inside an entering Dialog makes WebKit deliver its zero-sized
+// transition frame and then report an undelivered resize notification.
+const activeReference = computed(() => model.value ? referenceEl.value : undefined)
 // @ts-expect-error Bad element type
-const { x: pageX, y: pageY } = useElementBounding(referenceEl, { windowResize: true })
+const { x: pageX, y: pageY } = useElementBounding(activeReference, { windowResize: true })
 
 if (!props.noMove && !props.virtualConfig?.enabled) {
-  watchThrottled([pageX, pageY], update, {
-    trailing: true,
-    throttle: 100,
+  // The frame task already coalesces movement. A second throttle would leave
+  // a trailing timer that could schedule new work after the menu is disposed.
+  watch([pageX, pageY], () => {
+    if (model.value) {
+      positionTask.schedule()
+    }
   })
 }
 
@@ -255,7 +259,6 @@ const contentStyle = computed(() => {
           :mousedown="startMove"
           :pointerdown="startMove"
           :hide
-          :mousedown="handleMoveMouseDown"
         >
           <MenuHeader
             ref="menuHeader"

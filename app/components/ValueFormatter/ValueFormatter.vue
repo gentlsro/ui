@@ -47,7 +47,15 @@ const formattedOriginalValue = computed(() => {
 })
 
 const isEmptyValue = computed(() => {
-  return isNil(formattedValue) || formattedValue.value === props.emptyValue
+  return isNil(formattedValue.value)
+    || formattedValue.value === ''
+    || formattedValue.value === props.emptyValue
+})
+
+const isEmptyOriginalValue = computed(() => {
+  return isNil(formattedOriginalValue.value)
+    || formattedOriginalValue.value === ''
+    || formattedOriginalValue.value === props.emptyValue
 })
 
 // Styles - container
@@ -83,11 +91,7 @@ const containerStyle = computed(() => {
       :class="containerClass"
       :style="containerStyle"
     >
-      {{
-        isNil(formattedOriginalValue)
-          ? emptyValueString
-          : formattedOriginalValue
-      }}
+      {{ isEmptyOriginalValue ? emptyValueString : formattedOriginalValue }}
     </span>
   </slot>
 </template>

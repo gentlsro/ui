@@ -3,22 +3,22 @@ import type { ITreeNode } from '../types/tree-node.type'
 import type { ITreeProps } from '../types/tree-props.type'
 import type { ITreeNodeMeta } from '../types/tree-node-meta.type'
 
-const { sortData } = useSorting()
+const { sortDataSync } = useSorting()
 
 // Number of children a node had when it was created, so a reused node never hides a change of its children
 const childCountByNode = new WeakMap<ITreeNode, number>()
 
 /**
- * Sorts every children array of the tree up front (sorting is async), so the traversal itself can stay synchronous
+ * Sort every children array before traversal, including the initial SSR render.
  */
-async function getSortedNodes<T extends IItem = IItem>(payload: {
+function getSortedNodes<T extends IItem = IItem>(payload: {
   nodes: T[]
   childrenKey: string
   sortingConfig: NonNullable<ITreeProps<T>['sortingConfig']>
   sortedByNodes?: Map<T[], T[]>
 }) {
   const { nodes, childrenKey, sortingConfig, sortedByNodes = new Map<T[], T[]>() } = payload
-  const nodesSorted = await sortData(nodes, sortingConfig.sortBy ?? []) as T[]
+  const nodesSorted = sortDataSync({ rowsRef: nodes, columnsRef: sortingConfig.sortBy ?? [] })
 
   sortedByNodes.set(nodes, nodesSorted)
 
@@ -26,7 +26,7 @@ async function getSortedNodes<T extends IItem = IItem>(payload: {
     const children = get(node, childrenKey) as T[] | undefined
 
     if (children?.length) {
-      await getSortedNodes({ nodes: children, childrenKey, sortingConfig, sortedByNodes })
+      getSortedNodes({ nodes: children, childrenKey, sortingConfig, sortedByNodes })
     }
   }
 
@@ -74,7 +74,7 @@ function traverseNodes<T extends IItem = IItem>(payload: {
     // Get node id using idKey
     const nodeId = get(node, idKey) as string | number
 
-    if (!nodeId) {
+    if (isNil(nodeId) || nodeId === '') {
       continue // Skip nodes without id
     }
 
@@ -182,7 +182,7 @@ function traverseNodes<T extends IItem = IItem>(payload: {
   return flattenedNodes
 }
 
-export async function flattenTreeNodes<T extends IItem = IItem>(payload: {
+export function flattenTreeNodes<T extends IItem = IItem>(payload: {
   nodes: T[]
   parent?: ITreeNode<T> | null
 
@@ -201,7 +201,7 @@ export async function flattenTreeNodes<T extends IItem = IItem>(payload: {
    * as the same object
    */
   previousNodeById?: Map<ITreeNode['id'], ITreeNode<T>>
-}): Promise<ITreeNode<T>[]> {
+}): ITreeNode<T>[] {
   const { nodeMetaById, parent, nodes, childrenKey, sortingConfig } = payload
 
   const args: { level: number, path?: string } = { level: 0 }
@@ -213,7 +213,7 @@ export async function flattenTreeNodes<T extends IItem = IItem>(payload: {
   }
 
   const sortedByNodes = sortingConfig?.enabled
-    ? await getSortedNodes({ nodes, childrenKey, sortingConfig })
+    ? getSortedNodes({ nodes, childrenKey, sortingConfig })
     : undefined
 
   return traverseNodes({

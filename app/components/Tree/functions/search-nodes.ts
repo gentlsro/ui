@@ -2,7 +2,7 @@
 import type { ITreeNode } from '../types/tree-node.type'
 import type { ITreeProps } from '../types/tree-props.type'
 
-export async function searchNodes<T extends IItem = IItem>(payload: {
+export function searchNodes<T extends IItem = IItem>(payload: {
   nodesFlattened: ITreeNode<T>[]
   search: string
   idKey?: string
@@ -12,8 +12,8 @@ export async function searchNodes<T extends IItem = IItem>(payload: {
   parentIdByNodeId?: Record<ITreeNode['id'], ITreeNode['id'] | undefined>
   childrenIdsByNodeId?: Record<ITreeNode['id'], ITreeNode['id'][]>
   searchConfig?: ITreeProps<T>['searchConfig']
-  searchData: ReturnType<typeof useSearching>['searchData']
-}): Promise<ITreeNode<T>[]> {
+  searchData: ReturnType<typeof useSearching>['searchDataSync']
+}): ITreeNode<T>[] | Promise<ITreeNode<T>[]> {
   const {
     nodesFlattened,
     search,
@@ -35,7 +35,7 @@ export async function searchNodes<T extends IItem = IItem>(payload: {
   function shouldIncludeInSearch(node: ITreeNode<T>): boolean {
     if (typeof includeInSearchConfig === 'function') {
       const parentId = parentIdByNodeId?.[node.id]
-      const parent = parentId ? nodeById?.[parentId]?.ref : undefined
+      const parent = !isNil(parentId) ? nodeById?.[parentId]?.ref : undefined
       const childrenIds = childrenIdsByNodeId?.[node.id] ?? []
 
       const children = childrenIds
@@ -67,43 +67,40 @@ export async function searchNodes<T extends IItem = IItem>(payload: {
   const nodesSearchCandidates = nodesFlattened.filter(shouldIncludeInSearch)
 
   // Filter nodes
-  let nodesFiltered: ITreeNode<T>[] = []
+  const result = searchConfig?.fnc
+    ? searchConfig.fnc(search, nodesSearchCandidates)
+    : searchData({
+        searchRef: search,
+        rowsRef: nodesSearchCandidates,
+        fuseOptions: {
+          keys: [`ref.${labelKey}`],
+          useExtendedSearch: true,
+          ...searchConfig?.fuseOptions,
+        },
+      }).map(res => res.item)
 
-  if (searchConfig?.fnc) {
-    nodesFiltered = await searchConfig.fnc(search, nodesSearchCandidates) as ITreeNode<T>[]
-  } else {
-    const fuseResult = await searchData({
-      searchRef: search,
-      rowsRef: nodesSearchCandidates,
-      fuseOptions: {
-        keys: [`ref.${labelKey}`],
-        useExtendedSearch: true,
-        ...searchConfig?.fuseOptions,
-      },
-    })
+  return Array.isArray(result) ? includeParents(result) : result.then(includeParents)
 
-    nodesFiltered = fuseResult.map(res => res.item) as ITreeNode<T>[]
-  }
+  function includeParents(nodes: ITreeNode<T>[]) {
+    // Enforce includeInSearch even for custom search functions.
+    let nodesFiltered = nodes.filter(shouldIncludeInSearch)
 
-  // Enforce includeInSearch rule even for custom search functions.
-  nodesFiltered = nodesFiltered.filter(shouldIncludeInSearch)
-
-  if (!searchConfig?.keepParents) {
-    return nodesFiltered
-  }
-
-  const visibleNodeIds = new Set(nodesFiltered.map(node => node.id))
-
-  for (const node of nodesFiltered) {
-    const ancestorIds = ancestorIdsByNodeId?.[node.id] ?? []
-
-    for (const ancestorId of ancestorIds) {
-      visibleNodeIds.add(ancestorId)
+    if (!searchConfig?.keepParents) {
+      return nodesFiltered
     }
+
+    const visibleNodeIds = new Set(nodesFiltered.map(node => node.id))
+
+    for (const node of nodesFiltered) {
+      const ancestorIds = ancestorIdsByNodeId?.[node.id] ?? []
+
+      for (const ancestorId of ancestorIds) {
+        visibleNodeIds.add(ancestorId)
+      }
+    }
+    nodesFiltered = nodesFlattened.filter(node => visibleNodeIds.has(node.id))
+
+    // Keep the same array when no nodes were filtered out.
+    return nodesFiltered.length === nodesFlattened.length ? nodesFlattened : nodesFiltered
   }
-
-  nodesFiltered = nodesFlattened.filter(node => visibleNodeIds.has(node.id))
-
-  // Nothing filtered out: keep the same array, so nothing downstream recomputes
-  return nodesFiltered.length === nodesFlattened.length ? nodesFlattened : nodesFiltered
 }

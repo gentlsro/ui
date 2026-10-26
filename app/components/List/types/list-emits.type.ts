@@ -7,6 +7,7 @@ export type IListEmits = {
   (e: 'update:search', value: IListProps['search']): void
   (e: 'update:addedItems', value: IListProps['addedItems']): void
   (e: 'update:selection', value: IListProps['selection']): void
+  (e: 'error:search', error: unknown): void
   (e: 'submit'): void
   (e: 'select:item', item: IListItem): void
   (e: 'unselect:item', item: IListItem): void

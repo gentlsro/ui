@@ -35,6 +35,7 @@ const {
   measure,
   handleWheel,
   handleScrollViaBtn,
+  handleKeyboardClick,
 } = useScrollerScroll(position => emits('scrolled', position), 'x')
 
 syncRef(sourceX, x, { direction: 'both', immediate: false })
@@ -128,17 +129,21 @@ defineExpose({
     >
       <Btn
         name="scroll-left"
+        :tabindex="arrowTabindex"
+        :aria-label="$t('general.previous')"
         size="xs"
         self-center
         no-dim
         no-hover-effect
         icon="i-majesticons:chevron-left"
         @pointerdown.stop.prevent="handleScrollViaBtn(false, 'x')"
+        @click="handleKeyboardClick($event, false)"
       />
     </div>
 
     <div
       ref="scrollEl"
+      :tabindex="contentTabindex"
       hide-scrollbar
       class="content"
       :class="contentClass"
@@ -156,12 +161,15 @@ defineExpose({
     >
       <Btn
         name="scroll-right"
+        :tabindex="arrowTabindex"
+        :aria-label="$t('general.next')"
         size="xs"
         self-center
         no-dim
         no-hover-effect
         icon="i-majesticons:chevron-right"
         @pointerdown.stop.prevent="handleScrollViaBtn(true, 'x')"
+        @click="handleKeyboardClick($event, true)"
       />
     </div>
   </div>

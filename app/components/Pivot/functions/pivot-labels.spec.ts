@@ -90,7 +90,7 @@ describe('pivot total labels', () => {
     expect(visible.valueHeaderRows[0]!.at(-1)?.label).toBe('Celkový součet')
   })
 
-  it('labels the grand total header without column fields', () => {
+  it('keeps the value header without duplicating a grand total when there are no column fields', () => {
     const result = transform.pivotTransformDataCore({
       data,
       rows: rowFields,
@@ -107,6 +107,7 @@ describe('pivot total labels', () => {
       grandTotalLabel: CZECH.grandTotal,
     })
 
-    expect(visible.valueHeaderRows.flat().map(cell => cell.label)).toEqual(['Součet', 'Celkový součet'])
+    expect(visible.valueHeaderRows.flat().map(cell => cell.label)).toEqual(['Součet'])
+    expect(visible.valueColumns.some(column => column.isGrandTotal)).toBe(false)
   })
 })

@@ -52,7 +52,7 @@ const isMultiSort = computed(() => {
   return internalColumns.value.filter(col => col.sort).length > 1
 })
 
-function handleClick(ev: PointerEvent) {
+function handleClick(ev: MouseEvent) {
   const isShift = ev.shiftKey
 
   // When shift is not used, we simply open the menu
@@ -103,7 +103,8 @@ function handleMenuBeforeHide() {
 }
 
 // // Debouncing
-let timeout: any
+let timeout: ReturnType<typeof setTimeout> | undefined
+onScopeDispose(() => clearTimeout(timeout))
 
 function modifyFnc(filter: ITableFilterItem, debounceMs?: number) {
   const _debounceMs = debounceMs ?? filterValueChangeDebounce({ column: column.value, filter })
@@ -116,7 +117,7 @@ function removeFnc() {
 
 function debouncedSync(ms: number) {
   clearTimeout(timeout)
-  timeout = null
+  timeout = undefined
 
   timeout = setTimeout(() => {
     column.value.filters = columnCopy.value.filters.map(f => new FilterItem(f))
@@ -141,6 +142,8 @@ onKeyStroke('Enter', ev => {
     size="xs"
     no-dim
     :class="btnClass"
+    :aria-label="$t('table.columnOptions', { column: column._label })"
+    :aria-expanded="isMenuOpen"
     @click="handleClick"
   >
     <!-- Icon -->

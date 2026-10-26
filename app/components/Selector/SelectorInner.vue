@@ -6,6 +6,7 @@ import type { ISelectorEmits } from './types/selector-emits.type'
 // Store
 import { useSelectorStore } from './stores/selector.store'
 import { getListItem, getListItemLabel } from '../List/functions/helpers'
+import { UILink } from '#components'
 
 // Constants
 import { SELECTOR_DEFAULT_PROPS } from './constants/selector-default-props'
@@ -34,7 +35,7 @@ function resolveTo(item: any) {
 }
 
 const modelArray = computed(() => {
-  if (!model.value || model.value === props.emptyValue) {
+  if (isNil(model.value) || model.value === props.emptyValue) {
     return []
   }
 
@@ -79,9 +80,9 @@ const innerStyle = computed(() => {
 
 <template>
   <Component
-    :is="to ? 'NuxtLink' : 'span'"
+    :is="to ? UILink : 'span'"
     v-if="!isMulti"
-    :to
+    :to="resolveTo(getListItem(model, optionByKey) ?? model)"
     :target="to ? '_blank' : undefined"
     truncate
   >

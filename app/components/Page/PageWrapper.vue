@@ -50,9 +50,8 @@ const classes = computed(() => {
   ]
 })
 
-onMounted(() => {
-  setTimeout(() => (isMounted.value = true), 250)
-})
+const { start: markMounted } = useTimeoutFn(() => isMounted.value = true, 250, { immediate: false })
+onMounted(markMounted)
 
 // Styles - container
 const containerClass = computed(() => {

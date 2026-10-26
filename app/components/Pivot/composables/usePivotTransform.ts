@@ -304,7 +304,7 @@ export function usePivotTransform() {
     })
   }
 
-  async function runMainThreadTransform<T extends IItem>(payload: IPivotTransformPayload<T>) {
+  function runMainThreadTransform<T extends IItem>(payload: IPivotTransformPayload<T>) {
     const sourceData = toRaw(payload.data)
     const cached = payload.aggregationKey
       && mainThreadPrepared?.key === payload.aggregationKey
@@ -336,15 +336,16 @@ export function usePivotTransform() {
     })
 
     if (isPivotPerformanceOverBudget(prepared.estimate, payload.performance)) {
-      await waitForMainThreadConfirmation(payload, prepared.estimate)
+      return waitForMainThreadConfirmation(payload, prepared.estimate)
+        .then(() => materializePivotTransformData(prepared))
     }
 
     return materializePivotTransformData(prepared)
   }
 
-  const transformPivotData = async <T extends IItem>(
+  const transformPivotDataImmediate = <T extends IItem>(
     payload: IPivotTransformPayload<T>,
-  ): Promise<IPivotTransformResult<T>> => {
+  ): IPivotTransformResult<T> | Promise<IPivotTransformResult<T>> => {
     cancelTransform('Pivot transform was superseded.')
 
     const useWorker = payload.useWorker ?? shouldUsePivotTransformWorker({
@@ -355,35 +356,52 @@ export function usePivotTransform() {
       hasSummaryFormat: payload.values.some(value => !!value.summaryFormat),
     })
 
-    let usedWorker = useWorker
-    let coreResult: IPivotTransformResult<T>
-
-    if (usedWorker) {
+    if (useWorker) {
       try {
-        coreResult = await runWorkerTransform(payload)
+        return runWorkerTransform(payload).then(result => finish(result, true), fallback)
       } catch (error) {
+        return fallback(error)
+      }
+
+      function fallback(error: unknown) {
         if (!isPivotDataCloneError(error)) {
           throw error
         }
 
         workerTerminate()
-        usedWorker = false
-        coreResult = await runMainThreadTransform(payload)
+
+        return finishMainThread()
       }
-    } else {
-      coreResult = await runMainThreadTransform(payload)
     }
 
-    const result = usedWorker
-      ? rehydratePivotTransformResult(coreResult, {
-          rows: payload.rows,
-          values: payload.values,
-        })
-      : coreResult
+    return finishMainThread()
 
-    applyPivotTransformState(payload, result)
+    function finishMainThread() {
+      const result = runMainThreadTransform(payload)
 
-    return result
+      return result instanceof Promise
+        ? result.then(result => finish(result, false))
+        : finish(result, false)
+    }
+
+    function finish(coreResult: IPivotTransformResult<T>, usedWorker: boolean) {
+      const result = usedWorker
+        ? rehydratePivotTransformResult(coreResult, {
+            rows: payload.rows,
+            values: payload.values,
+          })
+        : coreResult
+
+      applyPivotTransformState(payload, result)
+
+      return result
+    }
+  }
+
+  // Existing callers keep their Promise contract. The owning Pivot can commit
+  // small main-thread results before rendering, without asynchronous setup.
+  const transformPivotData = async <T extends IItem>(payload: IPivotTransformPayload<T>) => {
+    return transformPivotDataImmediate(payload)
   }
 
   tryOnScopeDispose(() => {
@@ -395,6 +413,7 @@ export function usePivotTransform() {
 
   return {
     transformPivotData,
+    transformPivotDataImmediate,
     pivotTransformData,
     pivotTransformDataCore,
     continueTransform,

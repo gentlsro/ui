@@ -25,14 +25,15 @@ const { getColor, hexToRgb, rgbaToHex, isRgba, isHex } = useColors()
 const model = defineModel<string>()
 const { isSupported, open: openEyeDropper, sRGBHex } = useEyeDropper()
 const isMounted = ref(false)
+const disallowedColors = computed(() => new Set(props.disallowedColors?.map(color => color.toLowerCase())))
 
 // Keep the browser-only capability out of the initial hydration tree.
 onMounted(() => isMounted.value = true)
 
 const themeColors = computed(() => {
-  const hasWhite = !props.disallowedColors?.includes('white')
-  const hasBlack = !props.disallowedColors?.includes('black')
-  const hasTransparent = !props.disallowedColors?.includes('transparent')
+  const hasWhite = !disallowedColors.value.has('white')
+  const hasBlack = !disallowedColors.value.has('black')
+  const hasTransparent = !disallowedColors.value.has('transparent')
 
   return [
     ...(hasTransparent
@@ -52,7 +53,7 @@ const themeColors = computed(() => {
       : []),
     ...(hasWhite ? [{ tw: 'white', hex: '#FFFFFF', rgba: 'rgba(255, 255, 255, 1)', style: { border: '1px solid #000' } }] : []),
     ...(hasBlack ? [{ tw: 'black', hex: '#000000', rgba: 'rgba(0, 0, 0, 1)' }] : []),
-    ...THEME_COLORS.map(color => ({
+    ...THEME_COLORS.filter(color => !disallowedColors.value.has(color)).map(color => ({
       tw: color,
       hex: getColor(color, undefined, true),
       rgba: hexToRgb(getColor(color, undefined, true)),
@@ -82,7 +83,6 @@ const colorSelected = computed(() => {
 
 const standardColorsByColumn = computed(() => {
   const _colors = pick(colors, GENERIC_COLORS)
-  const _disallowedColors = props.disallowedColors?.map(color => color.toLocaleLowerCase()) ?? []
 
   return Object.entries(_colors).reduce((agg, [key, value]) => {
     const colors = Object.entries(value)
@@ -95,6 +95,7 @@ const standardColorsByColumn = computed(() => {
       })
       .slice(9, -1)
       .filter((_, i) => i % 2 === 1)
+      .filter(color => !disallowedColors.value.has(color.tw))
 
     agg[key] = colors
 
@@ -181,16 +182,20 @@ function setColor(color: { tw: string, hex: string, rgba: string }) {
 
       <div flex="~ justify-between">
         <div grid="~ flow-col gap-x-px">
-          <div
+          <button
+            type="button"
             class="color-block color-block--auto"
             @click="model = undefined"
           >
             {{ $t('color.auto') }}
-          </div>
+          </button>
 
-          <div
+          <button
             v-for="themeColor in themeColors"
             :key="themeColor.tw"
+            type="button"
+            :aria-label="themeColor.tw"
+            :aria-pressed="themeColor.tw === 'transparent' ? model === 'transparent' : colorSelected?.toLowerCase() === themeColor.hex?.toLowerCase()"
             :data-color="themeColor.tw"
             :style="{ backgroundColor: themeColor.hex, ...themeColor.style }"
             class="color-block"
@@ -202,6 +207,8 @@ function setColor(color: { tw: string, hex: string, rgba: string }) {
         <div grid="~ flow-col gap-x-px">
           <button
             v-if="isMounted && isSupported"
+            type="button"
+            :aria-label="`${$t('general.select')}: ${$t('color.self')}`"
             class="color-block color-block--eyedropper"
             @click="openEyeDropper()"
           >
@@ -226,9 +233,12 @@ function setColor(color: { tw: string, hex: string, rgba: string }) {
           :key="colorKey"
           grid="~ gap-y-px"
         >
-          <div
+          <button
             v-for="columnColor in columnColors"
             :key="columnColor.tw"
+            type="button"
+            :aria-label="columnColor.tw"
+            :aria-pressed="colorSelected === columnColor.hex"
             :data-color="columnColor.tw"
             :style="{ backgroundColor: columnColor.hex }"
             :class="{ 'is-selected': colorSelected === columnColor.hex }"

@@ -46,8 +46,9 @@ const route = useRoute()
 
 // Layout
 const isMounted = ref(false)
+const largeViewport = $bp.lg
 const loaderType = computed(() => {
-  return isMounted.value && $bp.lg.value && props.labels ? 'inline' : 'block'
+  return isMounted.value && largeViewport.value && props.labels ? 'inline' : 'block'
 })
 
 onMounted(() => isMounted.value = true)

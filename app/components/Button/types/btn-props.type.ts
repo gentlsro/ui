@@ -2,7 +2,7 @@ import type { AllowedComponentProps, CSSProperties } from 'vue'
 
 // Types
 import type { ITooltipProps } from '../../Tooltip/types/tooltip-props.type'
-import type { NavigateToOptions } from '#layers/utilities/app/types/navigate-to.type'
+import type { IUILinkProps } from '../../Link/types/link-props.type'
 
 // Constants
 import type { ButtonPresetDefaults } from '../constants/button-preset.constant'
@@ -19,19 +19,12 @@ type BtnPresetKey<T extends CustomPresets>
     | keyof BtnPresetRegistry
     | (string extends keyof T ? never : keyof T)
 
-export type INavigation = {
-  disabled?: boolean
-  download?: boolean | string
-  exact?: boolean
-  external?: boolean
-  replace?: boolean
-  to?: any // should be RouteLocationRaw but that breaks some projects for whatever reason
-  navigateToOptions?: NavigateToOptions
-}
+export type INavigation = Pick<IUILinkProps, 'disabled' | 'download' | 'exact' | 'external' | 'replace' | 'to' | 'target' | 'rel'
+  | 'prefetch' | 'noPrefetch' | 'prefetchOn' | 'navigateToOptions'>
 
 export type IBtnNavigationProps = INavigation & {
   /**
-   * When true, the button will not inherit the default NuxtLink active class
+   * When true, the button will not receive route active classes
    */
   noActiveLink?: boolean
 
