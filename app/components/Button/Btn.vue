@@ -220,7 +220,7 @@ const resolvedIcon = computed(() => {
     v-ripple="!disabled && ripple"
     v-bind="btnProps"
     :name="name ?? (label || icon)"
-    :aria-label="label ?? (name || icon)"
+    :aria-label="label || name || (slots.label ? undefined : iconValue)"
     class="btn group/btn"
     :class="[classes, containerClass]"
     :style="containerStyle"
