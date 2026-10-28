@@ -5,55 +5,55 @@ export const PROGRESS_BAR_DEFAULT_PROPS = {
     containerClass() {
       const base = 'flex relative h-8 rounded-custom'
 
-      return {
+      return withClassPicker({
         base,
         all: base,
-      } as const
+      } as const)
     },
 
     innerClass() {
       const base = 'absolute h-full'
 
-      return {
+      return withClassPicker({
         base,
         all: base,
-      } as const
+      } as const)
     },
 
     colorClass() {
       const base = 'bg-positive mix-blend-screen w-full z-4'
 
-      return {
+      return withClassPicker({
         base,
         all: base,
-      } as const
+      } as const)
     },
 
     whiteBgClass() {
       const base = 'bg-white w-full z-1'
 
-      return {
+      return withClassPicker({
         base,
         all: base,
-      } as const
+      } as const)
     },
 
     blackBgClass() {
       const base = 'bg-black z-2'
 
-      return {
+      return withClassPicker({
         base,
         all: base,
-      } as const
+      } as const)
     },
 
     textClass() {
       const base = 'absolute left-1/2 top-1/2 translate--50% mix-blend-difference color-white z-3 text-nowrap whitespace-nowrap'
 
-      return {
+      return withClassPicker({
         base,
         all: base,
-      } as const
+      } as const)
     },
   },
 }

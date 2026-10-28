@@ -6,10 +6,10 @@ export const VIRTUAL_SCROLLER_VERTICAL_DEFAULT_PROPS = {
     rowClass() {
       const base = ''
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
   },
 } satisfies Omit<IVirtualScrollerVerticalProps<any>, 'rows'>

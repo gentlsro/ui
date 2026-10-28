@@ -5,10 +5,10 @@ export const COLLAPSE_DEFAULT_PROPS = {
     containerClass() {
       const base = 'relative flex flex-col'
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
 
     headerClass() {
@@ -20,42 +20,42 @@ export const COLLAPSE_DEFAULT_PROPS = {
 
       const border = 'light:(border-1 border-slate-300) dark:(border-1 border-black)'
 
-      return {
+      return withClassPicker({
         base,
         bg,
         border,
         open,
         all: `${base} ${bg} ${open} ${border}`,
-      } as const
+      } as const)
     },
 
     headerRightClass() {
       const base = 'flex self-center items-center gap-1 items-center self-start shrink-0'
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
 
     titleClass() {
       const base = 'font-rem-14 font-semibold'
       const color = 'color-slate-900 dark:color-slate-100'
 
-      return {
+      return withClassPicker({
         base,
         color,
         all: `${base} ${color}`,
-      } as const
+      } as const)
     },
 
     subtitleClass() {
       const base = 'text-caption leading-tight font-rem-12'
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
 
     expandIconClass() {
@@ -63,20 +63,20 @@ export const COLLAPSE_DEFAULT_PROPS = {
       // State styling via CSS selectors - rotate when parent is open
       const open = '[.collapse.is-open_&]:(rotate-90deg)'
 
-      return {
+      return withClassPicker({
         base,
         open,
         all: `${base} ${open}`,
-      } as const
+      } as const)
     },
 
     textClass() {
       const base = 'flex flex-col grow'
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
 
     contentClass() {
@@ -85,22 +85,22 @@ export const COLLAPSE_DEFAULT_PROPS = {
       const border = 'border-x-1 border-b-1 light:(border-slate-300) dark:(border-black)'
       const floating = '[&.is-floating]:(absolute z-11 left-0 right-0 bottom-0 translate-y-full)'
 
-      return {
+      return withClassPicker({
         base,
         bg,
         floating,
         border,
         all: `${base} ${bg} ${floating} ${border}`,
-      } as const
+      } as const)
     },
 
     contentInnerClass() {
       const base = 'flex flex-col p-2'
 
-      return {
+      return withClassPicker({
         base,
         all: base,
-      } as const
+      } as const)
     },
   },
 }

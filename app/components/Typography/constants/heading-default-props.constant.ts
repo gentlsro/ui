@@ -9,11 +9,11 @@ export const HEADING_DEFAULT_PROPS = {
       const base = 'flex items-center p-x-2 rounded-custom relative'
       const filled = '[&.is-filled]:(p-x-4)'
 
-      return {
+      return withClassPicker({
         base,
         filled,
         all: `${base} ${filled}`,
-      } as const
+      } as const)
     },
   },
 } satisfies IHeadingProps

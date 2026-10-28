@@ -5,37 +5,37 @@ export const TABS_DEFAULT_PROPS = {
     containerClass() {
       const base = 'flex flex-col'
 
-      return {
+      return withClassPicker({
         base,
         all: base,
-      } as const
+      } as const)
     },
 
     navigationClass() {
       const base = 'shrink-0'
 
-      return {
+      return withClassPicker({
         base,
         all: base,
-      } as const
+      } as const)
     },
 
     navigationContentClass() {
       const base = 'flex gap-1'
 
-      return {
+      return withClassPicker({
         base,
         all: base,
-      } as const
+      } as const)
     },
 
     tabClass() {
       const base = 'fit rounded-b-custom'
 
-      return {
+      return withClassPicker({
         base,
         all: base,
-      } as const
+      } as const)
     },
 
     tabNavBtnClass() {
@@ -45,12 +45,12 @@ export const TABS_DEFAULT_PROPS = {
       const active = '[&.is-active]:(bg-primary color-white)'
       const inactive = '[&:not(.is-active)]:(color-ca)'
 
-      return {
+      return withClassPicker({
         base,
         active,
         inactive,
         all: `${base} ${active} ${inactive}`,
-      } as const
+      } as const)
     },
   },
 }

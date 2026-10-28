@@ -5,10 +5,10 @@ export const NOTIFICATIONS_DEFAULT_PROPS = {
     containerClass() {
       const base = 'flex flex-col gap-y-1 transition-transform fixed z-$zMax min-w-240px max-w-320px lt-xm:max-w-280px flex-center'
 
-      return {
+      return withClassPicker({
         base,
         all: base,
-      } as const
+      } as const)
     },
   },
 }

@@ -9,11 +9,11 @@ export const DIALOG_DEFAULT_PROPS = {
       const base = 'fixed inset-0 z-$zIndex transition-background-color duration-$transitionDuration ease-out bg-transparent'
       const active = '[&.is-active]:(bg-darker/70)'
 
-      return {
+      return withClassPicker({
         base,
         active,
         all: `${base} ${active}`,
-      } as const
+      } as const)
     },
 
     wrapperClass() {
@@ -32,7 +32,7 @@ export const DIALOG_DEFAULT_PROPS = {
       const positionRight = '[&[position="right"]]:justify-end [&[position="right"]]:items-center'
       const positionCenter = '[&[position="center"]]:flex-center'
 
-      return {
+      return withClassPicker({
         base,
         positionTop,
         positionBottom,
@@ -40,7 +40,7 @@ export const DIALOG_DEFAULT_PROPS = {
         positionRight,
         positionCenter,
         all: `${base} ${positionTop} ${positionBottom} ${positionLeft} ${positionRight} ${positionCenter}`,
-      } as const
+      } as const)
     },
 
     dialogClass(payload: {
@@ -71,30 +71,30 @@ export const DIALOG_DEFAULT_PROPS = {
 
       const hasTransition = '[&.has-transition]:(transition-all duration-$transitionDuration ease-out)'
 
-      return {
+      return withClassPicker({
         base,
         positions,
         hasTransition,
         all: `${base} ${position} ${hasTransition}`,
-      } as const
+      } as const)
     },
 
     headerClass() {
       const base = 'flex items-center gap-2 p-x-4 p-y-3 border-b border-b-truegray-2 dark:border-b-truegray-7 bg-white dark:bg-dark-950'
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
 
     titleClass() {
       const base = 'flex-grow font-semibold text-lg m-0'
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
 
     contentClass() {
@@ -102,12 +102,12 @@ export const DIALOG_DEFAULT_PROPS = {
       const padding = 'p-4'
       const dense = '[&.is-dense]:(p-0)'
 
-      return {
+      return withClassPicker({
         base,
         dense,
         padding,
         all: `${base} ${dense} ${padding}`,
-      } as const
+      } as const)
     },
   },
 }

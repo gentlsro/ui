@@ -10,19 +10,19 @@ export const SELECTOR_DEFAULT_PROPS = {
         const { hasSearch } = payload
         const base = hasSearch ? 'p-x-2' : 'p-2'
 
-        return {
+        return withClassPicker({
           ...payload.defaults,
           base,
-        } as const
+        } as const)
       },
 
       searchClass() {
         const base = 'gap-1 p-2'
 
-        return {
+        return withClassPicker({
           base,
           all: `${base}`,
-        } as const
+        } as const)
       },
     },
   },
@@ -31,10 +31,10 @@ export const SELECTOR_DEFAULT_PROPS = {
     innerClass() {
       const base = ''
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
   },
 } satisfies ISelectorProps

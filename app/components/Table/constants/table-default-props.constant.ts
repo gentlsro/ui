@@ -5,28 +5,28 @@ export const TABLE_DEFAULT_PROPS = {
     alternateRowClass() {
       const base = ''
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
 
     headerCellClass() {
       const base = 'p-l-2 p-r-1 min-h-9 bg-white dark:bg-true-gray-900 color-true-gray-500 dark:color-true-gray-300'
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
 
     headerCellInnerClass() {
       const base = 'font-rem-12 font-medium leading-tight line-clamp-2'
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
 
     rowClass() {
@@ -44,7 +44,7 @@ export const TABLE_DEFAULT_PROPS = {
       const cardEditingCancel = '[&.is-card_.td.is-editing_.cancel-edit-btn]:(flex)'
       const cardEditingLabel = '[.tr-split.is-card-editing_&.is-card.is-editable_.td-label]:(color-black dark:color-white)'
 
-      return {
+      return withClassPicker({
         base,
         clickable,
         card,
@@ -60,25 +60,25 @@ export const TABLE_DEFAULT_PROPS = {
         cardEditingLabel,
         // all: `${base} ${cardCell} ${cardCellLabel} ${cardCellValue}`,
         all: `${base} ${clickable} ${card} ${cardSelectable} ${cardSelected} ${cardCell} ${cardCellLabel} ${cardCellValue} ${cardEditableHoverEditBtn} ${cardEditBtn} ${cardCancelEditBtn} ${cardEditingCancel} ${cardEditingLabel}`,
-      } as const
+      } as const)
     },
 
     rowActionsClass() {
       const base = 'flex justify-end items-center flex-wrap gap-2 p-x-1 bg-inherit border-true-gray-200 dark:border-true-gray-800'
 
-      return { 
-        base, 
+      return withClassPicker({
+        base,
         all: base,
-      } as const
+      } as const)
     },
 
     rowActionsHeaderClass() {
       const base = 'p-x-1 bg-white dark:bg-true-gray-900 border-true-gray-200 dark:border-true-gray-800'
 
-      return { 
-        base, 
+      return withClassPicker({
+        base,
         all: base,
-      } as const
+      } as const)
     },
 
     cellClass() {
@@ -90,7 +90,7 @@ export const TABLE_DEFAULT_PROPS = {
       const rowSeparatorHorizontal = '[.separator--horizontal_.is-row_&]:(border-b-1)'
       const rowSeparatorCell = '[.separator--cell_.is-row_&]:(border-r-1 border-b-1)'
 
-      return {
+      return withClassPicker({
         base,
         link,
         copyBtn,
@@ -99,46 +99,46 @@ export const TABLE_DEFAULT_PROPS = {
         rowSeparatorHorizontal,
         rowSeparatorCell,
         all: `${base} ${link} ${copyBtn} ${copyBtnHover} ${rowSeparatorVertical} ${rowSeparatorHorizontal} ${rowSeparatorCell}`,
-      } as const
+      } as const)
     },
 
     cellInnerClass() {
       const base = 'font-rem-13 p-y-1 truncate'
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
 
     contentClass() {
-      return {
+      return withClassPicker({
         all: '',
-      } as const
+      } as const)
     },
 
     headerClass() {
       const base = 'relative shrink-0'
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
 
     toolbarClass() {
-      return {
+      return withClassPicker({
         all: '',
-      } as const
+      } as const)
     },
 
     topClass() {
       const base = 'flex items-start p-x-3 p-y-2 gap-1'
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
 
     bottomClass() {
@@ -148,30 +148,30 @@ export const TABLE_DEFAULT_PROPS = {
       const loading = ''
       const limitReached = ''
 
-      return {
+      return withClassPicker({
         base,
         loading,
         limitReached,
         all: `${base} ${loading} ${limitReached}`,
-      } as const
+      } as const)
     },
 
     containerClass() {
       const base = 'relative flex flex-col overflow-auto grow @container bg-white dark:bg-transparent'
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
 
     totalsCellClass() {
       const base = 'font-rem-13 font-semibold p-x-2 p-y-2 border-t-1 border-true-gray-200 dark:border-true-gray-700 bg-white dark:bg-true-gray-900'
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
   },
 } as const

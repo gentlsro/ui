@@ -9,12 +9,12 @@ export const TOGGLE_DEFAULT_PROPS = {
       const readonly = '[&.is-readonly]:(cursor-default)'
       const disabled = '[&.is-disabled]:(cursor-not-allowed op-50)'
 
-      return {
+      return withClassPicker({
         base,
         readonly,
         disabled,
         all: `${base} ${readonly} ${disabled}`,
-      } as const
+      } as const)
     },
 
     toggleClass(payload: {
@@ -55,7 +55,7 @@ export const TOGGLE_DEFAULT_PROPS = {
       // Readonly
       const readonly = 'group-[.is-readonly]:(border-dotted)'
 
-      return {
+      return withClassPicker({
         base,
         tapHighlight,
         visual,
@@ -66,7 +66,7 @@ export const TOGGLE_DEFAULT_PROPS = {
         readonly,
         size: sizeClass,
         all: `${base} ${tapHighlight} ${visual} ${sizeClass} ${checked} ${unchecked} ${indeterminate} ${readonly}`,
-      } as const
+      } as const)
     },
 
     bulletClass(payload: {
@@ -169,7 +169,7 @@ export const TOGGLE_DEFAULT_PROPS = {
 
       const positions = `${uncheckedPosition} ${checkedPosition} ${indeterminatePosition}` as const
 
-      return {
+      return withClassPicker({
         base,
         size: sizeClass,
         sizes,
@@ -181,7 +181,7 @@ export const TOGGLE_DEFAULT_PROPS = {
         readonlyUnchecked,
         positions,
         all: `${base} ${sizeClass} ${hoverable} ${checked} ${unchecked} ${indeterminate} ${readonlyChecked} ${readonlyUnchecked} ${positions}`,
-      } as const
+      } as const)
     },
 
     labelClass(payload: {
@@ -204,32 +204,32 @@ export const TOGGLE_DEFAULT_PROPS = {
 
       sizeClass = sizes[size]
 
-      return {
+      return withClassPicker({
         base,
         size: sizeClass,
         sizes,
         all: `${base} ${sizeClass}`,
-      } as const
+      } as const)
     },
 
     iconClass() {
       const base = ''
 
-      return {
+      return withClassPicker({
         base,
         all: base,
-      } as const
+      } as const)
     },
 
     focusHelperClass() {
       const base = 'absolute fit z-3 cursor-pointer rounded-inherit inset-0 pointer-events-none'
       const hover = 'group-hover:(bg-current opacity-10)'
 
-      return {
+      return withClassPicker({
         base,
         hover,
         all: `${base} ${hover}`,
-      } as const
+      } as const)
     },
   },
 }

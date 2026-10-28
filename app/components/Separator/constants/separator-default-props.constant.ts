@@ -15,7 +15,7 @@ export const SEPARATOR_DEFAULT_PROPS = {
       const verticalSpaced = '[&.is-vertical.is-spaced]:(p-r-.5 m-r-.5)'
       const verticalInset = '[&.is-vertical.is-inset]:(m-y-1)'
 
-      return {
+      return withClassPicker({
         base,
         horizontal,
         horizontalSpaced,
@@ -24,8 +24,7 @@ export const SEPARATOR_DEFAULT_PROPS = {
         verticalSpaced,
         verticalInset,
         all: `${base} ${horizontal} ${horizontalSpaced} ${horizontalInset} ${vertical} ${verticalSpaced} ${verticalInset}`,
-      } as const
+      } as const)
     },
   },
 }
-

@@ -8,10 +8,10 @@ export const BREADCRUMBS_DEFAULT_PROPS = {
     containerClass() {
       const base = 'flex gap-1 items-center'
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
 
     breadcrumbsClass() {
@@ -19,12 +19,12 @@ export const BREADCRUMBS_DEFAULT_PROPS = {
       const responsive = 'lt-lg:(m-t-2px m-b-2px)'
       const mainBar = '[.main-bar_&]:(m-t-0)'
 
-      return {
+      return withClassPicker({
         base,
         responsive,
         mainBar,
         all: `${base} ${responsive} ${mainBar}`,
-      } as const
+      } as const)
     },
   },
 } satisfies IBreadcrumbsProps

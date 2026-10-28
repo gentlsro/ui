@@ -8,23 +8,23 @@ export const CHIP_DEFAULT_PROPS = {
       const border = 'border-px border-ca rounded-custom'
       const size = 'h-5 p-y-3px p-l-2'
 
-      return {
+      return withClassPicker({
         base,
         border,
         size,
         all: `${base} ${border} ${size}`,
-      } as const
+      } as const)
     },
 
     labelClass() {
       const base = 'leading-tight truncate grow'
       const size = 'font-rem-12'
 
-      return {
+      return withClassPicker({
         base,
         size,
         all: `${base} ${size}`,
-      } as const
+      } as const)
     },
   },
 } satisfies IChipProps

@@ -6,11 +6,11 @@ export const MARQUEE_DEFAULT_PROPS = {
       const base = 'group flex gap-$gap overflow-hidden p-2'
       const vertical = '[&.is-vertical]:(flex-col)'
 
-      return {
+      return withClassPicker({
         base,
         vertical,
         all: `${base} ${vertical}`,
-      } as const
+      } as const)
     },
 
     contentClass(payload: {
@@ -23,12 +23,12 @@ export const MARQUEE_DEFAULT_PROPS = {
       const verticalLayout = vertical ? 'flex-col' : ''
       const paused = pauseOnHover ? 'group-hover:[animation-play-state:paused]' : ''
 
-      return {
+      return withClassPicker({
         base,
         verticalLayout,
         paused,
         all: `${base} ${verticalLayout} ${paused}`.trim(),
-      } as const
+      } as const)
     },
   },
 }

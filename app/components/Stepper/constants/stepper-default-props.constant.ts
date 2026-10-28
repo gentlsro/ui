@@ -31,12 +31,12 @@ export const STEPPER_DEFAULT_PROPS = {
 
       const size = sizes[sizeProp]
 
-      return {
+      return withClassPicker({
         base,
         layouts,
         sizes,
         all: `${base} ${layout} ${size}`,
-      } as const
+      } as const)
     },
 
     navigationClass(payload: {
@@ -54,11 +54,11 @@ export const STEPPER_DEFAULT_PROPS = {
 
       const layout = layouts[layoutProp]
 
-      return {
+      return withClassPicker({
         base,
         layouts,
         all: `${base} ${layout}`,
-      } as const
+      } as const)
     },
 
     itemClass(payload: {
@@ -76,11 +76,11 @@ export const STEPPER_DEFAULT_PROPS = {
 
       const layout = layouts[layoutProp]
 
-      return {
+      return withClassPicker({
         base,
         layouts,
         all: `${base} ${layout}`,
-      } as const
+      } as const)
     },
 
     triggerClass(payload: {
@@ -100,13 +100,13 @@ export const STEPPER_DEFAULT_PROPS = {
 
       const layout = layouts[layoutProp]
 
-      return {
+      return withClassPicker({
         base,
         interactive,
         disabled,
         layouts,
         all: `${base} ${interactive} ${disabled} ${layout}`,
-      } as const
+      } as const)
     },
 
     indicatorClass(payload: {
@@ -134,7 +134,7 @@ export const STEPPER_DEFAULT_PROPS = {
 
       const size = sizes[sizeProp]
 
-      return {
+      return withClassPicker({
         base,
         dimensions,
         transition,
@@ -144,7 +144,7 @@ export const STEPPER_DEFAULT_PROPS = {
         error,
         sizes,
         all: `${base} ${dimensions} ${transition} ${upcoming} ${active} ${completed} ${error} ${size}`,
-      } as const
+      } as const)
     },
 
     iconClass(payload: {
@@ -164,11 +164,11 @@ export const STEPPER_DEFAULT_PROPS = {
 
       const size = sizes[sizeProp]
 
-      return {
+      return withClassPicker({
         base,
         sizes,
         all: `${base} ${size}`,
-      } as const
+      } as const)
     },
 
     separatorClass(payload: {
@@ -193,12 +193,12 @@ export const STEPPER_DEFAULT_PROPS = {
 
       const layout = layouts[layoutProp]
 
-      return {
+      return withClassPicker({
         base,
         completed,
         layouts,
         all: `${base} ${completed} ${layout}`,
-      } as const
+      } as const)
     },
 
     textClass(payload: {
@@ -216,11 +216,11 @@ export const STEPPER_DEFAULT_PROPS = {
 
       const layout = layouts[layoutProp]
 
-      return {
+      return withClassPicker({
         base,
         layouts,
         all: `${base} ${layout}`,
-      } as const
+      } as const)
     },
 
     labelClass(payload: {
@@ -244,13 +244,13 @@ export const STEPPER_DEFAULT_PROPS = {
 
       const size = sizes[sizeProp]
 
-      return {
+      return withClassPicker({
         base,
         upcoming,
         error,
         sizes,
         all: `${base} ${upcoming} ${error} ${size}`,
-      } as const
+      } as const)
     },
 
     descriptionClass(payload: {
@@ -273,12 +273,12 @@ export const STEPPER_DEFAULT_PROPS = {
 
       const size = sizes[sizeProp]
 
-      return {
+      return withClassPicker({
         base,
         error,
         sizes,
         all: `${base} ${error} ${size}`,
-      } as const
+      } as const)
     },
 
     panelsClass(payload: {
@@ -299,21 +299,21 @@ export const STEPPER_DEFAULT_PROPS = {
 
       const layout = layouts[layoutProp]
 
-      return {
+      return withClassPicker({
         base,
         empty,
         layouts,
         all: `${base} ${empty} ${layout}`,
-      } as const
+      } as const)
     },
 
     stepClass() {
       const base = 'w-full'
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
   },
 }

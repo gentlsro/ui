@@ -16,11 +16,11 @@ export const INPUT_LABEL_DEFAULT_PROPS = {
        */
       const activeColor = 'group-focus-within/wrapper:color-primary'
 
-      return {
+      return withClassPicker({
         base,
         activeColor,
         all: `${base} ${activeColor}`,
-      } as const
+      } as const)
     },
   },
 } satisfies IInputLabelProps

@@ -12,14 +12,14 @@ export const MENU_DEFAULT_PROPS = {
       const limits = 'max-w-95vw max-h-95%'
       const shadow = 'light:(shadow-consistent-xs shadow-darker/12)'
 
-      return {
+      return withClassPicker({
         base,
         background,
         border,
         limits,
         shadow,
         all: `${base} ${background} ${border} ${limits} ${shadow}`,
-      } as const
+      } as const)
     },
 
     contentClass() {
@@ -28,13 +28,13 @@ export const MENU_DEFAULT_PROPS = {
       const padding = 'p-1'
       const gap = 'gap-1'
 
-      return {
+      return withClassPicker({
         base,
         dense,
         padding,
         gap,
         all: `${base} ${dense} ${padding} ${gap}`,
-      } as const
+      } as const)
     },
 
     headerClass() {
@@ -42,32 +42,32 @@ export const MENU_DEFAULT_PROPS = {
       const font = 'font-semibold'
       const movable = '[&.is-movable]:cursor-move'
 
-      return {
+      return withClassPicker({
         base,
         font,
         movable,
         all: `${base} ${font} ${movable}`,
-      } as const
+      } as const)
     },
 
     titleClass() {
       const base = 'grow'
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
 
     overlayClass() {
       const base = 'fixed inset-0 transition-background-color ease bg-transparent'
       const active = '[&.is-active]:(bg-darker/70)'
 
-      return {
+      return withClassPicker({
         base,
         active,
         all: `${base} ${active}`,
-      } as const
+      } as const)
     },
   },
 } satisfies IMenuProps

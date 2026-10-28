@@ -8,72 +8,72 @@ export const INPUT_WRAPPER_DEFAULT_PROPS = {
     wrapperClass() {
       const base = ''
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
     appendClass() {
       const base = 'flex gap-1 flex-center p-x-2 shrink-0'
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
 
     contentClass() {
       const base = ''
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
 
     errorClass() {
       const base = 'inline-block p-b-1 transition-height duration-150 color-negative font-rem-12'
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
 
     hintClass() {
       const base = 'color-ca font-rem-12 leading-tight p-y-2px p-x-2 inline-block'
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
 
     inputContainerClass() {
       const base = 'bg-white dark:bg-black'
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
 
     inputInnerContainerClass() {
       const base = ''
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
 
     inputClass() {
       const base = ''
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
   },
 } satisfies IInputWrapperProps

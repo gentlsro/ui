@@ -33,14 +33,14 @@ export const BANNER_DEFAULT_PROPS = {
 
       variant = variants[variantProp]
 
-      return {
+      return withClassPicker({
         base,
         ring,
         font,
         position,
         variants,
         all: `${base} ${ring} ${font} ${position} ${variant}`,
-      } as const
+      } as const)
     },
 
     containerClass(payload: {
@@ -87,14 +87,14 @@ export const BANNER_DEFAULT_PROPS = {
 
       variant = outlinedProp ? variants[`${variantProp}Outlined`] : variants[variantProp]
 
-      return {
+      return withClassPicker({
         base,
         font,
         outlined,
         dismissable,
         variants,
         all: `${base} ${font} ${outlined} ${dismissable} ${variant}`,
-      } as const
+      } as const)
     },
 
     iconClass(payload: {
@@ -125,21 +125,21 @@ export const BANNER_DEFAULT_PROPS = {
 
       const centered = '[.banner.is-icon-center_&]:(self-center m-t-0)'
 
-      return {
+      return withClassPicker({
         base,
         icons,
         centered,
         all: `${base} ${icon} ${centered}`,
-      } as const
+      } as const)
     },
 
     labelClass() {
       const base = 'flex-1 min-w-0 p-y-0.5 leading-5 break-words'
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
 
     dismissClass() {
@@ -147,12 +147,12 @@ export const BANNER_DEFAULT_PROPS = {
       const hover = 'group-hover/banner:color-true-gray-700 dark:group-hover/banner:color-true-gray-200'
       const centered = '[.banner.is-icon-center_&]:(top-50% translate-y--50%)'
 
-      return {
+      return withClassPicker({
         base,
         hover,
         centered,
         all: `${base} ${hover} ${centered}`,
-      } as const
+      } as const)
     },
   },
 }

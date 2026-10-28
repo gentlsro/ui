@@ -21,7 +21,7 @@ export const NOTIFICATION_ROW_DEFAULT_PROPS = {
       const primary = '[&.is-primary]:color-primary'
       const secondary = '[&.is-secondary]:color-secondary'
 
-      return {
+      return withClassPicker({
         base,
         leftBar,
         rightBar,
@@ -33,72 +33,72 @@ export const NOTIFICATION_ROW_DEFAULT_PROPS = {
         secondary,
         border,
         all: `${base} ${leftBar} ${rightBar} ${positive} ${negative} ${warning} ${info} ${primary} ${secondary} ${border}`,
-      } as const
+      } as const)
     },
 
     titleRowClass() {
       const base = 'flex gap-x-2 w-full items-center'
 
-      return {
+      return withClassPicker({
         base,
         all: base,
-      } as const
+      } as const)
     },
 
     iconClass() {
       const base = 'shrink-0 self-start h-6 w-6 m-t-1.5'
 
-      return {
+      return withClassPicker({
         base,
         all: base,
-      } as const
+      } as const)
     },
 
     titleClass() {
       const base = 'grow overflow-auto'
       const withSubtitle = '[&.has-subtitle]:(font-bold tracking-wide)'
 
-      return {
+      return withClassPicker({
         base,
         withSubtitle,
         all: `${base} ${withSubtitle}`,
-      } as const
+      } as const)
     },
 
     titleTextClass() {
       const base = 'max-w-full break-words'
 
-      return {
+      return withClassPicker({
         base,
         all: base,
-      } as const
+      } as const)
     },
 
     subtitleClass() {
       const base = 'tracking-wide text-sm color-black dark:color-white break-words p-b-2 p-t-1.5'
 
-      return {
+      return withClassPicker({
         base,
         all: base,
-      } as const
+      } as const)
     },
 
     subtitleItemClass() {
       const base = 'list-inside text-caption p-b-1'
 
-      return {
+      return withClassPicker({
         base,
         all: base,
-      } as const
+      } as const)
     },
 
     counterClass() {
       const base = 'absolute z-1 rounded-2 -top-2 -right-4 p-x-1 min-w-7 bg-inherit color-inherit border-2 border-current text-center'
 
-      return {
+      return withClassPicker({
         base,
         all: base,
-      } as const
+      } as const)
     },
   },
 }

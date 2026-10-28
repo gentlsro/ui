@@ -9,47 +9,47 @@ export const SECTION_DEFAULT_PROPS = {
       const base = 'relative flex flex-col'
       const dense = '[&.is-dense]:(!p-0)'
 
-      return {
+      return withClassPicker({
         base,
         dense,
         all: `${base} ${dense}`,
-      } as const
+      } as const)
     },
 
     titleClass() {
       const base = 'relative font-semibold m-b-0 p-b-0.5'
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
 
     subtitleClass() {
       const base = 'font-rem-14 font-400'
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
 
     contentClass() {
       const base = ''
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
 
     loadingClass() {
       const base = 'absolute! inset-0 rounded-custom'
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
   },
 } satisfies ISectionProps

@@ -8,29 +8,28 @@ export const PAGE_TITLE_DEFAULT_PROPS = {
     containerClass() {
       const base = 'flex flex-col gap-6 max-w-screen-lg p-y-4 m-b-2 m-l-2'
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
 
     pageTitleClass() {
       const base = 'flex gap-2'
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
 
     titleClass() {
       const base = 'grow m-b-0 font-700'
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
   },
 } satisfies IPageTitleProps
-

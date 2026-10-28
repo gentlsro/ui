@@ -19,7 +19,7 @@ export const DRAWER_DEFAULT_PROPS = {
       const relative = '[&.is-relative]:(relative shrink-0 overflow-x-hidden)'
       const notFullHeightFixed = '[&:not(.is-full-height):not(.is-absolute):not(.is-relative)]:(m-t-$navHeight)'
 
-      return {
+      return withClassPicker({
         base,
         right,
         left,
@@ -30,16 +30,16 @@ export const DRAWER_DEFAULT_PROPS = {
         relative,
         notFullHeightFixed,
         all: `${base} ${right} ${left} ${open} ${closed} ${fixed} ${absolute} ${relative} ${notFullHeightFixed}`,
-      } as const
+      } as const)
     },
 
     titleClass() {
       const base = 'flex gap-2 items-center p-1 m-1 rounded-custom bg-slate-100 dark:bg-dark-950'
 
-      return {
+      return withClassPicker({
         base,
         all: base,
-      } as const
+      } as const)
     },
   },
 }

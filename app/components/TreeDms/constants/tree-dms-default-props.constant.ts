@@ -7,10 +7,10 @@ export const TREE_DMS_DEFAULT_PROPS = {
     labelClass() {
       const base = ''
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
   },
 } satisfies Pick<ITreeDmsProps<any>, 'ui'>

@@ -20,11 +20,11 @@ export const BURGER_DEFAULT_PROPS = {
 
       const size = sizes[sizeProp]
 
-      return {
+      return withClassPicker({
         base,
         sizes,
         all: `${base} ${size}`,
-      } as const
+      } as const)
     },
 
     burgerClass(payload: {
@@ -45,11 +45,11 @@ export const BURGER_DEFAULT_PROPS = {
 
       const size = sizes[sizeProp]
 
-      return {
+      return withClassPicker({
         base,
         sizes,
         all: `${base} ${size}`,
-      } as const
+      } as const)
     },
   },
 }

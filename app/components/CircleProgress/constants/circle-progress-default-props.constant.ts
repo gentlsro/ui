@@ -5,46 +5,46 @@ export const CIRCLE_PROGRESS_DEFAULT_PROPS = {
     containerClass() {
       const base = 'relative flex flex-center'
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
 
     svgClass() {
       const base = 'origin-center'
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
 
     circleBgClass() {
       const base = 'stroke-#eee [stroke-linecap:round]'
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
 
     circleClass() {
       const base = '[stroke-linecap:round]'
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
 
     textClass() {
       const base = 'absolute text-lg font-semibold'
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
   },
 }

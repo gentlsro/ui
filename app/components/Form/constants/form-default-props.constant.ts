@@ -9,11 +9,11 @@ export const FORM_DEFAULT_PROPS = {
       const base = 'flex flex-col gap-2 grow overflow-auto'
       const gap = 'gap-2'
 
-      return {
+      return withClassPicker({
         base,
         gap,
         all: `${base} ${gap}`,
-      } as const
+      } as const)
     },
 
     contentClass() {
@@ -21,12 +21,12 @@ export const FORM_DEFAULT_PROPS = {
       const gap = 'gap-2'
       const padding = 'p-2'
 
-      return {
+      return withClassPicker({
         base,
         gap,
         padding,
         all: `${base} ${gap} ${padding}`,
-      } as const
+      } as const)
     },
 
     controlsClass() {
@@ -35,13 +35,13 @@ export const FORM_DEFAULT_PROPS = {
       const background = 'bg-white dark:bg-dark-950'
       const padding = 'p-y-1 p-x-2'
 
-      return {
+      return withClassPicker({
         base,
         border,
         background,
         padding,
         all: `${base} ${border} ${background} ${padding}`,
-      } as const
+      } as const)
     },
 
     submitWrapperClass() {
@@ -50,11 +50,11 @@ export const FORM_DEFAULT_PROPS = {
       // Presets
       const fullWidth = `${base} grow`
 
-      return {
+      return withClassPicker({
         base,
         fullWidth,
         all: `${base} m-l-auto`,
-      } as const
+      } as const)
     },
 
     submitClass() {
@@ -63,20 +63,20 @@ export const FORM_DEFAULT_PROPS = {
       // Presets
       const fullWidth = `${base} grow`
 
-      return {
+      return withClassPicker({
         base,
         fullWidth,
         all: `${base} w-40`,
-      } as const
+      } as const)
     },
 
     cancelClass() {
       const base = 'w-auto'
 
-      return {
+      return withClassPicker({
         base,
         all: `${base}`,
-      } as const
+      } as const)
     },
   },
 } satisfies IFormProps
