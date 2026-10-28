@@ -142,16 +142,28 @@ watch(virtualDimensions, () => {
   })
 }, { deep: true })
 
-// We react to page resize/scroll to reposition the floating UI
-// @ts-expect-error Bad element type
-const { x: pageX, y: pageY } = useElementBounding(referenceEl, { windowResize: true })
+// Only a visible, anchored menu needs scroll/resize tracking. Keep it through the leave transition, then release
+// the observer and window listeners; editors can mount hundreds of closed menus beside their fields.
+const shouldTrackAnchor = computed(() => debouncedModel.value && !props.noMove && !isVirtual.value)
 
-if (!props.noMove && !props.virtualConfig?.enabled) {
-  watchThrottled([pageX, pageY], update, {
-    trailing: true,
-    throttle: 100,
+watch(shouldTrackAnchor, (track, _previous, onCleanup) => {
+  if (!track) {
+    return
+  }
+
+  const scope = effectScope()
+  scope.run(() => {
+    // @ts-expect-error Bad element type
+    const { x: pageX, y: pageY } = useElementBounding(referenceEl, { windowResize: true })
+
+    watchThrottled([pageX, pageY], () => {
+      if (shouldTrackAnchor.value) {
+        update()
+      }
+    }, { trailing: true, throttle: 100 })
   })
-}
+  onCleanup(() => scope.stop())
+}, { immediate: true })
 
 // Click outside
 onClickOutside(
