@@ -4,13 +4,10 @@ import type { CSSProperties } from 'vue'
 import type { CustomPresets, IBtnProps } from './types/btn-props.type'
 
 // Functions
-import { useBtnUtils } from './functions/useBtnUtils'
+import { useUILink } from '../Link/composables/useUILink'
 
 // Constants
 import { BTN_DEFAULT_PROPS } from './constants/btn-default-props.constant'
-
-// Components
-import BtnOrNuxtLinkResolver from './BtnOrNuxtLinkResolver.vue'
 
 // Directives
 import { vRipple } from '../../directives/ripple.directive'
@@ -19,18 +16,49 @@ const props = withDefaults(defineProps<IBtnProps<T>>(), {
   ...getComponentProps('button'),
 })
 
-// Utils
-const { getBtnOrNuxtLinkResolverProps } = useBtnUtils()
-
-const btnProps = getBtnOrNuxtLinkResolverProps(props)
-
 const mergedProps = computed(() => {
   return getComponentMergedProps('button', props)
 })
 
 // Layout
 const slots = useSlots()
-const component = ref<InstanceType<typeof BtnOrNuxtLinkResolver>>()
+const element = shallowRef<HTMLButtonElement | HTMLAnchorElement>()
+
+// Navigation: a link is the button's own `<a>` (`useUILink`), as `NuxtLink` renders it, without a component of its own
+const nuxtApp = useNuxtApp()
+const route = useRoute()
+const localePath = useLocalePath()
+const isLink = computed(() => !!props.to && !props.disabled)
+const link = useUILink(props, element)
+
+// (a link to a page under the current one is active too, unless `exact`)
+const isUnderCurrent = computed(() => {
+  const to = props.to
+  const path = typeof to === 'string' ? to : to && typeof to === 'object' && 'path' in to ? String(to.path) : ''
+
+  return !props.exact && path.startsWith(localePath(route.path as any, nuxtApp.$i18n.locale.value))
+})
+
+const rootProps = computed(() => {
+  if (!isLink.value) {
+    return { type: props.type, disabled: props.disabled }
+  }
+
+  const target = props.external || props.download ? '_blank' : props.navigateToOptions?.open?.target
+
+  return {
+    ...link.attrs.value,
+    target,
+    rel: target && target !== '_self' ? 'noopener noreferrer' : link.attrs.value.rel,
+    download: props.download || undefined,
+    class: [link.attrs.value.class, {
+      'router-link-active': isUnderCurrent.value,
+      'no-active': props.noActiveLink,
+      'no-underline': props.noUnderline,
+    }],
+    onClick: link.navigate,
+  }
+})
 
 const label = computed(() => {
   if (typeof props.label === 'function') {
@@ -77,7 +105,7 @@ const classes = computed(() => {
 })
 
 defineExpose({
-  getElement: () => component.value,
+  getElement: () => element.value,
 })
 
 // Styles - container
@@ -148,9 +176,9 @@ const focusHelperClass = computed(() => {
 const focusHelperInset = ref<CSSProperties>()
 
 function syncFocusHelperInset() {
-  const el = component.value?.$el as HTMLElement | undefined
+  const el = element.value
 
-  if (props.noHoverEffect || !(el instanceof HTMLElement)) {
+  if (props.noHoverEffect || !el) {
     return
   }
 
@@ -206,8 +234,6 @@ const iconValue = computed(() => {
   return props.icon || preset.value?.icon
 })
 
-const [DefineLabel, UseLabel] = createReusableTemplate()
-
 const resolvedIcon = computed(() => {
   // Preset icons historically render as classes; canonical names still opt into Icon.
   return resolveIconValue(props.icon || [preset.value?.icon])
@@ -215,10 +241,11 @@ const resolvedIcon = computed(() => {
 </script>
 
 <template>
-  <BtnOrNuxtLinkResolver
-    ref="component"
+  <component
+    :is="isLink ? 'a' : 'button'"
+    ref="element"
     v-ripple="!disabled && ripple"
-    v-bind="btnProps"
+    v-bind="rootProps"
     :name="name ?? (label || icon)"
     :aria-label="label || name || (slots.label ? undefined : iconValue)"
     class="btn group/btn"
@@ -242,7 +269,11 @@ const resolvedIcon = computed(() => {
       />
     </slot>
 
-    <DefineLabel>
+    <!-- Hidden below `labelBreakpoint`; `contents` keeps the label a direct flex item -->
+    <span
+      v-if="labelBreakpointClass"
+      class="btn__label-breakpoint"
+    >
       <slot
         name="label"
         :ui="mergedProps.ui"
@@ -257,17 +288,23 @@ const resolvedIcon = computed(() => {
           {{ label }}
         </div>
       </slot>
-    </DefineLabel>
-
-    <!-- Hidden below `labelBreakpoint`; `contents` keeps the label a direct flex item -->
-    <span
-      v-if="labelBreakpointClass"
-      class="btn__label-breakpoint"
-    >
-      <UseLabel />
     </span>
 
-    <UseLabel v-else />
+    <slot
+      v-else
+      name="label"
+      :ui="mergedProps.ui"
+      :style="labelStyle"
+    >
+      <div
+        v-if="label"
+        class="btn-label"
+        :class="[labelClass, noTruncate ? 'overflow-hidden' : 'truncate']"
+        :style="labelStyle"
+      >
+        {{ label }}
+      </div>
+    </slot>
 
     <slot />
 
@@ -311,8 +348,18 @@ const resolvedIcon = computed(() => {
       :style="focusHelperStyle"
       tabindex="-1"
     />
-  </BtnOrNuxtLinkResolver>
+  </component>
 </template>
+
+<style lang="scss" scoped>
+a.btn:not(.no-underline):hover {
+  @apply underline;
+}
+
+.no-active {
+  @apply color-black dark:color-white;
+}
+</style>
 
 <style lang="scss">
 // The UnoCSS container sizes, so a label goes where the container's `@…:` classes switch
