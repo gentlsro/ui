@@ -31,9 +31,9 @@ const label = computed(() => {
 })
 
 const labelClass = computed(() => {
-  return props.dmsUi?.labelClass?.(withClassPicker({
+  return resolveUIClass(props.dmsUi?.labelClass, {
     defaults: TREE_DMS_DEFAULT_PROPS.ui.labelClass(),
-  }))
+  })
 })
 
 const labelStyle = computed(() => {

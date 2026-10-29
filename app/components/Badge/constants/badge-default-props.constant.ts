@@ -27,4 +27,4 @@ export const BADGE_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies IBadgeProps
+} satisfies Omit<IBadgeProps, 'ui'> & { ui: object }

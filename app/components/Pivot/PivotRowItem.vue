@@ -24,9 +24,9 @@ const promotedLevels = computed(() => {
 // Styles - row item
 const rowItemClass = computed(() => {
   return [
-    ui.value?.rowItemClass?.(withClassPicker({
+    resolveUIClass(ui.value?.rowItemClass, {
       defaults: PIVOT_DEFAULT_PROPS.ui.rowItemClass(),
-    })),
+    }),
     {
       'is-subtotal': props.row.rowItem.kind === 'subtotal',
       'is-grand-total': props.row.rowItem.kind === 'grandTotal',

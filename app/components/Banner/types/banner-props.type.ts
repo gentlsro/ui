@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
@@ -48,7 +49,7 @@ export type IBannerProps = {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
 
     /**
      * Class for the counter badge
@@ -109,5 +110,5 @@ export type IBannerProps = {
      * Style for the dismiss indicator
      */
     dismissStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['banner']>
 }

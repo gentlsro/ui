@@ -1,3 +1,4 @@
+import type { UIClasses, UIProps, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { AllowedComponentProps, CSSProperties } from 'vue'
 
@@ -98,7 +99,7 @@ export type ITreeProps<T extends IItem = IItem> = {
   /**
    * Scroller configuration
    */
-  scrollerConfig?: Partial<IVirtualScrollerVerticalProps<T>>
+  scrollerConfig?: Partial<IVirtualScrollerProps<T>>
 
   /**
    * The search value
@@ -162,7 +163,7 @@ export type ITreeProps<T extends IItem = IItem> = {
     /**
      * Props to pass to the search input
      */
-    inputProps?: ITextInputProps & AllowedComponentProps
+    inputProps?: UIProps<ITextInputProps, UIResolvedClasses['searchInput']> & AllowedComponentProps
   } | undefined
 
   /**
@@ -426,7 +427,7 @@ export type ITreeProps<T extends IItem = IItem> = {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class to apply to the tree container
      */
@@ -525,5 +526,5 @@ export type ITreeProps<T extends IItem = IItem> = {
      * Margin (left) for the tree nodes. Uses regular CSS `margin-left` syntax
      */
     nodePadding?: string
-  }
+  }, UIResolvedClasses['tree']>
 }

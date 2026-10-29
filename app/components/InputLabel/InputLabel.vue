@@ -69,9 +69,9 @@ const labelClassLocal = computed(() => {
 })
 
 const labelClass = computed(() => {
-  return mergedProps.value.ui?.labelClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value.ui?.labelClass, {
     defaults: INPUT_LABEL_DEFAULT_PROPS.ui.labelClass(),
-  }))
+  })
 })
 
 const labelStyle = computed(() => {

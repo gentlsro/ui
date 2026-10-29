@@ -70,4 +70,4 @@ export const MENU_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies IMenuProps
+} satisfies Omit<IMenuProps, 'ui'> & { ui: object }

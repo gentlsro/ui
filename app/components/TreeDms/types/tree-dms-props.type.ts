@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { WithClassPicker } from '../../../functions/with-class-picker'
 // Types
 import type { CSSProperties } from 'vue'
@@ -145,7 +146,7 @@ export type ITreeDmsProps<T extends IItem = IItem> = {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class to apply to the label
      */
@@ -157,5 +158,5 @@ export type ITreeDmsProps<T extends IItem = IItem> = {
      * Style to apply to the label
      */
     labelStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['treeDms']>
 }

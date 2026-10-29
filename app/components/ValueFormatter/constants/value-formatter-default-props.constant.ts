@@ -14,4 +14,4 @@ export const VALUE_FORMATTER_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies Partial<IValueFormatterProps>
+} satisfies Omit<Partial<IValueFormatterProps>, 'ui'> & { ui: object }

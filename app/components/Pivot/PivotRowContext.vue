@@ -33,9 +33,9 @@ const cells = computed<IPivotRowItemCell<T>[]>(() => {
 })
 
 const rowItemClass = computed(() => {
-  return ui.value?.rowItemClass?.(withClassPicker({
+  return resolveUIClass(ui.value?.rowItemClass, {
     defaults: PIVOT_DEFAULT_PROPS.ui.rowItemClass(),
-  }))
+  })
 })
 
 const rowItemStyle = computed(() => {

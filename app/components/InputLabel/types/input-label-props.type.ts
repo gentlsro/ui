@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { AllowedComponentProps, CSSProperties } from 'vue'
 
@@ -65,11 +66,11 @@ export type IInputLabelProps = {
   /**
    * Visual configuration
    */
-  ui?: { /**
-          * When true, the input will be focused when the label is clicked
-          *
-          * Note: This is ONLY applicable for `inline` layout
-          */
+  ui?: UIClasses<{ /**
+                    * When true, the input will be focused when the label is clicked
+                    *
+                    * Note: This is ONLY applicable for `inline` layout
+                    */
     focusInputOnLabelClick?: boolean
 
     /**
@@ -96,5 +97,5 @@ export type IInputLabelProps = {
      * The width of the label when it's in inline mode (use actual CSS syntax)
      */
     labelInlineWidth?: string
-  }
+  }, UIResolvedClasses['inputLabel']>
 }

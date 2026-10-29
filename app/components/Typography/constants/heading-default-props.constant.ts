@@ -16,4 +16,4 @@ export const HEADING_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies IHeadingProps
+} satisfies Omit<IHeadingProps, 'ui'> & { ui: object }

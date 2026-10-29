@@ -170,9 +170,9 @@ watchThrottled(
 
 // Styles - Row
 const rowClass = computed(() => {
-  return mergedProps.value.ui?.rowClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value.ui?.rowClass, {
     defaults: VIRTUAL_SCROLLER_VERTICAL_DEFAULT_PROPS.ui.rowClass(),
-  }))
+  })
 })
 
 const rowStyle = computed(() => {

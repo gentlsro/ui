@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
@@ -68,7 +69,7 @@ export type IDatePickerProps = {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     dayClass?: (payload: DatePickerDayState & WithClassPicker<{
       defaults: ReturnType<typeof DATE_PICKER_DEFAULT_PROPS['ui']['dayClass']>
     }>) => ClassType
@@ -139,5 +140,5 @@ export type IDatePickerProps = {
      * Style to apply to the controls
      */
     controlsStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['datePicker']>
 }

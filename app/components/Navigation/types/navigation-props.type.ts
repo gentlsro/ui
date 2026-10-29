@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
@@ -28,7 +29,7 @@ export type INavigationProps = {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class to apply to the header (wrapper)
      */
@@ -52,5 +53,5 @@ export type INavigationProps = {
      * Style to apply to the navigation
      */
     navigationStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['navigation']>
 }

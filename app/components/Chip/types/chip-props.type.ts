@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { AllowedComponentProps, CSSProperties } from 'vue'
 
@@ -55,7 +56,7 @@ export type IChipProps = INavigation & {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * The chip's container class
      */
@@ -79,5 +80,5 @@ export type IChipProps = INavigation & {
      * The chip's label style
      */
     labelStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['chip']>
 }

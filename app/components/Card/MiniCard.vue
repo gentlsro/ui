@@ -47,9 +47,9 @@ const isModified = computed(() => {
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.containerClass, {
     defaults: MINI_CARD_DEFAULT_PROPS.ui.containerClass(),
-  }))
+  })
 })
 
 const containerStyle = computed(() => {
@@ -58,9 +58,9 @@ const containerStyle = computed(() => {
 
 // Styles - icon container
 const iconContainerClass = computed(() => {
-  return mergedProps.value?.ui?.iconContainerClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.iconContainerClass, {
     defaults: MINI_CARD_DEFAULT_PROPS.ui.iconContainerClass(),
-  }))
+  })
 })
 
 const iconContainerStyle = computed(() => {
@@ -69,9 +69,9 @@ const iconContainerStyle = computed(() => {
 
 // Styles - icon
 const iconClass = computed(() => {
-  return mergedProps.value?.ui?.iconClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.iconClass, {
     defaults: MINI_CARD_DEFAULT_PROPS.ui.iconClass(),
-  }))
+  })
 })
 
 const iconStyle = computed(() => {
@@ -80,9 +80,9 @@ const iconStyle = computed(() => {
 
 // Styles - content
 const contentClass = computed(() => {
-  return mergedProps.value?.ui?.contentClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.contentClass, {
     defaults: MINI_CARD_DEFAULT_PROPS.ui.contentClass(),
-  }))
+  })
 })
 
 const contentStyle = computed(() => {
@@ -91,9 +91,9 @@ const contentStyle = computed(() => {
 
 // Styles - label
 const labelClass = computed(() => {
-  return mergedProps.value?.ui?.labelClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.labelClass, {
     defaults: MINI_CARD_DEFAULT_PROPS.ui.labelClass(),
-  }))
+  })
 })
 
 const labelStyle = computed(() => {
@@ -102,9 +102,9 @@ const labelStyle = computed(() => {
 
 // Styles - value
 const valueClass = computed(() => {
-  return mergedProps.value?.ui?.valueClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.valueClass, {
     defaults: MINI_CARD_DEFAULT_PROPS.ui.valueClass(),
-  }))
+  })
 })
 
 const valueStyle = computed(() => {
@@ -113,9 +113,9 @@ const valueStyle = computed(() => {
 
 // Styles - previous value
 const previousValueClass = computed(() => {
-  return mergedProps.value?.ui?.previousValueClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.previousValueClass, {
     defaults: MINI_CARD_DEFAULT_PROPS.ui.previousValueClass(),
-  }))
+  })
 })
 
 const previousValueStyle = computed(() => {

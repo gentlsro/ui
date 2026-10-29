@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties, KeepAliveProps } from 'vue'
 
@@ -26,7 +27,7 @@ export type ITabsProps = {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class to apply to the container
      */
@@ -87,5 +88,5 @@ export type ITabsProps = {
      * Style to apply to the tab's navigation button
      */
     tabNavBtnStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['tabs']>
 }

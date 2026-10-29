@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
@@ -23,7 +24,7 @@ export type IYearSelectorProps = {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class to apply to the container
      */
@@ -83,5 +84,5 @@ export type IYearSelectorProps = {
      * Style to apply to each year button
      */
     yearBtnStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['yearSelector']>
 }

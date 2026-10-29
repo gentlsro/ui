@@ -103,9 +103,9 @@ const classes = computed(() => {
 
 // Styles - header
 const headerClass = computed(() => {
-  return mergedProps.value?.ui?.headerClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.headerClass, {
     defaults: NAVIGATION_DEFAULT_PROPS.ui.headerClass(),
-  }))
+  })
 })
 
 const headerStyle = computed(() => {
@@ -114,9 +114,9 @@ const headerStyle = computed(() => {
 
 // Styles - navigation
 const navigationClass = computed(() => {
-  return mergedProps.value?.ui?.navigationClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.navigationClass, {
     defaults: NAVIGATION_DEFAULT_PROPS.ui.navigationClass(),
-  }))
+  })
 })
 
 const navigationStyle = computed(() => {

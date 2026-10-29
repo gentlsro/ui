@@ -28,10 +28,10 @@ const { getColumnWidth, getFrozenStyle } = useTableStore()
 
 const totalsCellClass = computed(() => {
   return [
-    props.ui?.totalsCellClass?.(withClassPicker({
+    resolveUIClass(props.ui?.totalsCellClass, {
       column: props.column,
       defaults: TABLE_DEFAULT_PROPS.ui.totalsCellClass(),
-    })),
+    }),
     props.column.totalsCellClass,
     { 'is-numeric': tableIsNumericColumn(props.column) },
   ]

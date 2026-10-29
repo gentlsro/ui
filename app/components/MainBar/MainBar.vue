@@ -41,9 +41,9 @@ const mergedProps = computed(() => {
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.containerClass, {
     defaults: MAIN_BAR_DEFAULT_PROPS.ui.containerClass(),
-  }))
+  })
 })
 
 const containerStyle = computed(() => {
@@ -52,9 +52,9 @@ const containerStyle = computed(() => {
 
 // Styles - content
 const contentClass = computed(() => {
-  return mergedProps.value?.ui?.contentClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.contentClass, {
     defaults: MAIN_BAR_DEFAULT_PROPS.ui.contentClass(),
-  }))
+  })
 })
 
 const contentStyle = computed(() => {
@@ -63,9 +63,9 @@ const contentStyle = computed(() => {
 
 // Styles - titleWrapper
 const titleWrapperClass = computed(() => {
-  return mergedProps.value?.ui?.titleWrapperClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.titleWrapperClass, {
     defaults: MAIN_BAR_DEFAULT_PROPS.ui.titleWrapperClass(),
-  }))
+  })
 })
 
 const titleWrapperStyle = computed(() => {
@@ -74,9 +74,9 @@ const titleWrapperStyle = computed(() => {
 
 // Styles - title
 const titleClass = computed(() => {
-  return mergedProps.value?.ui?.titleClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.titleClass, {
     defaults: MAIN_BAR_DEFAULT_PROPS.ui.titleClass(),
-  }))
+  })
 })
 
 const titleStyle = computed(() => {
@@ -85,9 +85,9 @@ const titleStyle = computed(() => {
 
 // Styles - subtitle
 const subtitleClass = computed(() => {
-  return mergedProps.value?.ui?.subtitleClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.subtitleClass, {
     defaults: MAIN_BAR_DEFAULT_PROPS.ui.subtitleClass(),
-  }))
+  })
 })
 
 const subtitleStyle = computed(() => {
@@ -96,9 +96,9 @@ const subtitleStyle = computed(() => {
 
 // Styles - actions
 const actionsClass = computed(() => {
-  return mergedProps.value?.ui?.actionsClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.actionsClass, {
     defaults: MAIN_BAR_DEFAULT_PROPS.ui.actionsClass(),
-  }))
+  })
 })
 
 const actionsStyle = computed(() => {

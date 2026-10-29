@@ -34,9 +34,9 @@ const isVisible = computed(() => {
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.containerClass, {
     defaults: KEYBOARD_SHORTCUT_DEFAULT_PROPS.ui.containerClass(),
-  }))
+  })
 })
 
 const containerStyle = computed(() => {
@@ -45,9 +45,9 @@ const containerStyle = computed(() => {
 
 // Styles - wrapper
 const wrapperClass = computed(() => {
-  return mergedProps.value?.ui?.wrapperClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.wrapperClass, {
     defaults: KEYBOARD_SHORTCUT_DEFAULT_PROPS.ui.wrapperClass(),
-  }))
+  })
 })
 
 const wrapperStyle = computed(() => {
@@ -56,9 +56,9 @@ const wrapperStyle = computed(() => {
 
 // Styles - icon
 const iconClass = computed(() => {
-  return mergedProps.value?.ui?.iconClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.iconClass, {
     defaults: KEYBOARD_SHORTCUT_DEFAULT_PROPS.ui.iconClass(),
-  }))
+  })
 })
 
 const iconStyle = computed(() => {

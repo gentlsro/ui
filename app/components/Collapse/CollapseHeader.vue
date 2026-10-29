@@ -25,44 +25,44 @@ const title = computed(() => typeof props.title === 'function' ? props.title() :
 const subtitle = computed(() => typeof props.subtitle === 'function' ? props.subtitle() : props.subtitle)
 
 // Styles - Header
-const headerClass = computed(() => props.ui?.headerClass?.(withClassPicker({
+const headerClass = computed(() => resolveUIClass(props.ui?.headerClass, {
   defaults: COLLAPSE_DEFAULT_PROPS.ui.headerClass(),
-})))
+}))
 
 const headerStyle = computed(() => props.ui?.headerStyle?.())
 
 // Styles - Title
-const titleClass = computed(() => props.ui?.titleClass?.(withClassPicker({
+const titleClass = computed(() => resolveUIClass(props.ui?.titleClass, {
   defaults: COLLAPSE_DEFAULT_PROPS.ui.titleClass(),
-})))
+}))
 
 const titleStyle = computed(() => props.ui?.titleStyle?.())
 
 // Styles - Subtitle
-const subtitleClass = computed(() => props.ui?.subtitleClass?.(withClassPicker({
+const subtitleClass = computed(() => resolveUIClass(props.ui?.subtitleClass, {
   defaults: COLLAPSE_DEFAULT_PROPS.ui.subtitleClass(),
-})))
+}))
 
 const subtitleStyle = computed(() => props.ui?.subtitleStyle?.())
 
 // Styles - Expand icon
-const expandIconClass = computed(() => props.ui?.expandIconClass?.(withClassPicker({
+const expandIconClass = computed(() => resolveUIClass(props.ui?.expandIconClass, {
   defaults: COLLAPSE_DEFAULT_PROPS.ui.expandIconClass(),
-})))
+}))
 
 const expandIconStyle = computed(() => props.ui?.expandIconStyle?.())
 
 // Styles - Header right
-const headerRightClass = computed(() => props.ui?.headerRightClass?.(withClassPicker({
+const headerRightClass = computed(() => resolveUIClass(props.ui?.headerRightClass, {
   defaults: COLLAPSE_DEFAULT_PROPS.ui.headerRightClass(),
-})))
+}))
 
 const headerRightStyle = computed(() => props.ui?.headerRightStyle?.())
 
 // Styles - Text
-const textClass = computed(() => props.ui?.textClass?.(withClassPicker({
+const textClass = computed(() => resolveUIClass(props.ui?.textClass, {
   defaults: COLLAPSE_DEFAULT_PROPS.ui.textClass(),
-})))
+}))
 
 const textStyle = computed(() => props.ui?.textStyle?.())
 </script>

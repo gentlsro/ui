@@ -6,7 +6,7 @@ import type Field from '../../../Field/Field.vue'
 
 export function useFileInput(payload: {
   model: Ref<IFileInputProps['modelValue']>
-  props: IFileInputProps
+  props: Omit<IFileInputProps, 'ui'>
 }) {
   const { model, props } = payload
 

@@ -40,9 +40,9 @@ function handleMouseLeave() {
 
 // Styles - Content
 const contentClass = computed(() => {
-  return ui.value?.contentClass?.(withClassPicker({
+  return resolveUIClass(ui.value?.contentClass, {
     defaults: PIVOT_DEFAULT_PROPS.ui.contentClass(),
-  }))
+  })
 })
 
 const contentStyle = computed(() => {
@@ -51,16 +51,16 @@ const contentStyle = computed(() => {
 
 // Styles - Values
 const valuesScrollerClass = computed(() => {
-  return ui.value?.valuesScrollerClass?.(withClassPicker({
+  return resolveUIClass(ui.value?.valuesScrollerClass, {
     defaults: PIVOT_DEFAULT_PROPS.ui.valuesScrollerClass(),
-  }))
+  })
 })
 
 // Styles - Rows
 const rowsScrollerClass = computed(() => {
-  return ui.value?.rowsScrollerClass?.(withClassPicker({
+  return resolveUIClass(ui.value?.rowsScrollerClass, {
     defaults: PIVOT_DEFAULT_PROPS.ui.rowsScrollerClass(),
-  }))
+  })
 })
 
 const rowsWrapperStyle = computed(() => {
@@ -68,9 +68,9 @@ const rowsWrapperStyle = computed(() => {
 })
 
 const rowsWrapperClass = computed(() => {
-  return ui.value?.rowsWrapperClass?.(withClassPicker({
+  return resolveUIClass(ui.value?.rowsWrapperClass, {
     defaults: PIVOT_DEFAULT_PROPS.ui.rowsWrapperClass(),
-  }))
+  })
 })
 
 const rowsScrollerStyle = computed(() => {

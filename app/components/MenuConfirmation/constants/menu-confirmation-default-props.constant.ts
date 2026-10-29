@@ -24,4 +24,4 @@ export const MENU_CONFIRMATION_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies IMenuConfirmationProps
+} satisfies Omit<IMenuConfirmationProps, 'ui'> & { ui: object }

@@ -23,4 +23,4 @@ export const INPUT_LABEL_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies IInputLabelProps
+} satisfies Omit<IInputLabelProps, 'ui'> & { ui: object }

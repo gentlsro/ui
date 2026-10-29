@@ -1,10 +1,6 @@
 // @unocss-include
 
-import { uiConfigLayers } from '$uiConfig'
-import { normalizeClass } from 'vue'
-import type { UIResolvedClasses } from '../../../types/ui-config.type'
-
-export const FORM_BASE_DEFAULTS = {
+export const FORM_DEFAULT_PROPS = {
   ui: {
     containerClass() {
       const base = 'flex flex-col gap-2 grow overflow-auto'
@@ -80,67 +76,4 @@ export const FORM_BASE_DEFAULTS = {
       } as const
     },
   },
-}
-
-type FormFactories = typeof FORM_BASE_DEFAULTS.ui
-type Surface = keyof FormFactories
-type Resolvers = {
-  [Key in Surface]: () => UIResolvedClasses['form'][Key]
-}
-
-type ConfigLayer = {
-  default?: { form?: { props?: { ui?: Record<string, unknown> } } }
-}
-
-/** Prepare Form's existing config callbacks once, on first use. */
-function resolveFormDefaults(): Resolvers {
-  const factories = FORM_BASE_DEFAULTS.ui
-  const resolved = {} as Resolvers
-  const surfaces = Object.keys(factories) as Surface[]
-
-  function prepare() {
-    const layers = uiConfigLayers as readonly ConfigLayer[]
-
-    for (const surface of surfaces) {
-      const baseFactory = factories[surface]
-      const callbacks = layers.map(layer => layer.default?.form?.props?.ui?.[surface])
-        .filter((callback): callback is (payload: { defaults: object, p: (...keys: never[]) => string }) => unknown => typeof callback === 'function')
-      const factory = callbacks.length
-        ? () => {
-            let defaults: { all: string } = baseFactory()
-
-            for (const callback of callbacks) {
-              const value = callback(withClassPicker({ defaults }))
-              const all = typeof value === 'string' ? value : normalizeClass(value)
-
-              if (all !== defaults.all) {
-                defaults = { ...defaults, all }
-              }
-            }
-
-            return defaults
-          }
-        : baseFactory
-
-      Object.defineProperty(resolved, surface, { value: factory, enumerable: true, configurable: true })
-    }
-  }
-
-  for (const surface of surfaces) {
-    Object.defineProperty(resolved, surface, {
-      enumerable: true,
-      configurable: true,
-      get() {
-        prepare()
-
-        return resolved[surface]
-      },
-    })
-  }
-
-  return resolved
-}
-
-export const FORM_DEFAULT_PROPS = {
-  ui: resolveFormDefaults(),
 }

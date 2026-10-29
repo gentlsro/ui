@@ -11,7 +11,7 @@ type MaskRefs = {
 }
 
 export type IInputUtilsOptions = {
-  props: Omit<IInputProps, 'mask' | 'name'>
+  props: Omit<IInputProps, 'mask' | 'name' | 'ui'>
   maskRef: Ref<FactoryOpts>
   /** Reformat the typed value instead of reinterpreting digits on mask changes. */
   preserveValueOnMaskChange?: boolean

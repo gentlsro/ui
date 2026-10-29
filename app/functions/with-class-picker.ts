@@ -22,3 +22,13 @@ export function withClassPicker<T extends { defaults: object }>(payload: T) {
 
 export type WithClassPicker<T extends { defaults: object }>
   = ReturnType<typeof withClassPicker<T>>
+
+/** Configured callbacks resolve `all` before invoking the public callback. */
+export function resolveUIClass<Payload extends { defaults: { all: string } }, Result>(
+  callback: ((payload: Payload) => Result) | undefined,
+  payload: Omit<Payload, 'defaults' | 'p'> & {
+    defaults: Omit<Payload['defaults'], 'all'> & { all: string }
+  },
+): Result | undefined {
+  return (callback as ((payload: unknown) => Result) | undefined)?.(withClassPicker(payload))
+}

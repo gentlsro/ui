@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
@@ -64,7 +65,7 @@ export type IStepperProps = {
    * NOTE: Use `is-active`, `is-completed`, `is-upcoming`, `is-error` and `is-disabled` CSS selectors for state styling,
    * the state classes are applied to the item, trigger, indicator, label and description
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class to apply to the container
      */
@@ -208,5 +209,5 @@ export type IStepperProps = {
      * Style to apply to the content of the active step (the `Step` component)
      */
     stepStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['stepper']>
 }

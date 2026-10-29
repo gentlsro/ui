@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { AllowedComponentProps, CSSProperties } from 'vue'
 
@@ -182,7 +183,7 @@ export type IBtnProps<T extends CustomPresets = Record<string, never>> = IBtnNav
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class applied to the container (button element)
      */
@@ -262,5 +263,5 @@ export type IBtnProps<T extends CustomPresets = Record<string, never>> = IBtnNav
      * Style applied to the loader
      */
     loaderStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['button']>
 }

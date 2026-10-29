@@ -11,9 +11,9 @@ const props = defineProps<IProps>()
 
 // Styles - title
 const titleClass = computed(() => {
-  return props.ui?.titleClass?.(withClassPicker({
+  return resolveUIClass(props.ui?.titleClass, {
     defaults: DRAWER_DEFAULT_PROPS.ui.titleClass(),
-  }))
+  })
 })
 
 const titleStyle = computed(() => {

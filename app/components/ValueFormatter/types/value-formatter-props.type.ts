@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
@@ -68,7 +69,7 @@ export type IValueFormatterProps = {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class for the container
      */
@@ -80,5 +81,5 @@ export type IValueFormatterProps = {
      * Style for the container
      */
     containerStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['valueFormatter']>
 }

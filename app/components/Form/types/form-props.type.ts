@@ -1,4 +1,6 @@
-import type { UIClassPicker, UIClassSet, UIResolvedClasses } from '../../../types/ui-config.type'
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
+import type { WithClassPicker } from '../../../functions/with-class-picker'
+import type { FORM_DEFAULT_PROPS } from '../constants/form-default-props.constant'
 import type { AllowedComponentProps, CSSProperties } from 'vue'
 
 // Types - placeholder until components are migrated
@@ -7,7 +9,7 @@ import type { IBtnProps } from '../../Button/types/btn-props.type'
 
 type IErrorsSectionProps = Record<string, any>
 
-export type IFormProps<Classes extends UIClassSet['form'] = UIResolvedClasses['form']> = {
+export type IFormProps = {
   /**
    * If true, the form will have a border.
    */
@@ -170,11 +172,11 @@ export type IFormProps<Classes extends UIClassSet['form'] = UIResolvedClasses['f
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class to apply to the cancel button
      */
-    cancelClass?: (payload: UIClassPicker<Classes['cancelClass']>) => ClassType
+    cancelClass?: (payload: WithClassPicker<{ defaults: ReturnType<typeof FORM_DEFAULT_PROPS.ui.cancelClass> }>) => ClassType
 
     /**
      * Style to apply to the cancel button
@@ -184,7 +186,7 @@ export type IFormProps<Classes extends UIClassSet['form'] = UIResolvedClasses['f
     /**
      * Class to apply to the form itself
      */
-    containerClass?: (payload: UIClassPicker<Classes['containerClass']>) => ClassType
+    containerClass?: (payload: WithClassPicker<{ defaults: ReturnType<typeof FORM_DEFAULT_PROPS.ui.containerClass> }>) => ClassType
 
     /**
      * Style to apply to the form itself
@@ -194,7 +196,7 @@ export type IFormProps<Classes extends UIClassSet['form'] = UIResolvedClasses['f
     /**
      * Class to apply to the content
      */
-    contentClass?: (payload: UIClassPicker<Classes['contentClass']>) => ClassType
+    contentClass?: (payload: WithClassPicker<{ defaults: ReturnType<typeof FORM_DEFAULT_PROPS.ui.contentClass> }>) => ClassType
 
     /**
      * Style to apply to the content
@@ -204,7 +206,7 @@ export type IFormProps<Classes extends UIClassSet['form'] = UIResolvedClasses['f
     /**
      * Class to apply to the submit button
      */
-    submitClass?: (payload: UIClassPicker<Classes['submitClass']>) => ClassType
+    submitClass?: (payload: WithClassPicker<{ defaults: ReturnType<typeof FORM_DEFAULT_PROPS.ui.submitClass> }>) => ClassType
 
     /**
      * Style to apply to the submit button
@@ -214,7 +216,7 @@ export type IFormProps<Classes extends UIClassSet['form'] = UIResolvedClasses['f
     /**
      * Class to apply to the controls container
      */
-    controlsClass?: (payload: UIClassPicker<Classes['controlsClass']>) => ClassType
+    controlsClass?: (payload: WithClassPicker<{ defaults: ReturnType<typeof FORM_DEFAULT_PROPS.ui.controlsClass> }>) => ClassType
 
     /**
      * Style to apply to the controls container
@@ -224,11 +226,11 @@ export type IFormProps<Classes extends UIClassSet['form'] = UIResolvedClasses['f
     /**
      *  Class to apply to the submit button wrapper (which might have the Cancel button and slots)
      */
-    submitWrapperClass?: (payload: UIClassPicker<Classes['submitWrapperClass']>) => ClassType
+    submitWrapperClass?: (payload: WithClassPicker<{ defaults: ReturnType<typeof FORM_DEFAULT_PROPS.ui.submitWrapperClass> }>) => ClassType
 
     /**
      * Style to apply to the submit button wrapper (which might have the Cancel button and slots)
      */
     submitWrapperStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['form']>
 }

@@ -27,4 +27,4 @@ export const PAGE_WRAPPER_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies IPageWrapperProps
+} satisfies Omit<IPageWrapperProps, 'ui'> & { ui: object }

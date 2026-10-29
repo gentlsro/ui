@@ -49,4 +49,4 @@ export const PAGE_DRAWER_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies IPageDrawerProps
+} satisfies Omit<IPageDrawerProps, 'ui'> & { ui: object }

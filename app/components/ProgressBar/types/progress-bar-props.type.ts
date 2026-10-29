@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
@@ -18,7 +19,7 @@ export type IProgressBarProps = {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class to apply to the container
      */
@@ -90,5 +91,5 @@ export type IProgressBarProps = {
      * Style to apply to the text
      */
     textStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['progressBar']>
 }

@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { WithClassPicker } from '../../../functions/with-class-picker'
 // Types
 import type { CSSProperties } from 'vue'
@@ -646,7 +647,7 @@ export type ITableProps<
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /** Class applied to the action area in card and desktop rows. */
     rowActionsClass?: (payload: WithClassPicker<{
       row: IItem
@@ -830,5 +831,5 @@ export type ITableProps<
     totalsCellStyle?: (payload: {
       column: TableColumn
     }) => CSSProperties
-  }
+  }, UIResolvedClasses['table']>
 }
