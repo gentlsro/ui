@@ -1,5 +1,4 @@
 import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
-import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 import type { MaybeElement } from '@floating-ui/vue'
 
@@ -85,9 +84,9 @@ export type ITooltipProps = {
     /**
      * Class for the tooltip container
      */
-    containerClass?: (payload: WithClassPicker<{
+    containerClass?: (payload: {
       defaults: ReturnType<typeof TOOLTIP_DEFAULT_PROPS['ui']['containerClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style for the tooltip container
@@ -97,9 +96,9 @@ export type ITooltipProps = {
     /**
      * Class for the tooltip content
      */
-    contentClass?: (payload: WithClassPicker<{
+    contentClass?: (payload: {
       defaults: ReturnType<typeof TOOLTIP_DEFAULT_PROPS['ui']['contentClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style for the tooltip content
@@ -109,9 +108,9 @@ export type ITooltipProps = {
     /**
      * Class for the tooltip title
      */
-    titleClass?: (payload: WithClassPicker<{
+    titleClass?: (payload: {
       defaults: ReturnType<typeof TOOLTIP_DEFAULT_PROPS['ui']['titleClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style for the tooltip title
@@ -121,9 +120,9 @@ export type ITooltipProps = {
     /**
      * Class for the tooltip description
      */
-    descriptionClass?: (payload: WithClassPicker<{
+    descriptionClass?: (payload: {
       defaults: ReturnType<typeof TOOLTIP_DEFAULT_PROPS['ui']['descriptionClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style for the tooltip description
@@ -133,9 +132,9 @@ export type ITooltipProps = {
     /**
      * Class for the arrow
      */
-    arrowClass?: (payload: WithClassPicker<{
+    arrowClass?: (payload: {
       defaults: ReturnType<typeof TOOLTIP_DEFAULT_PROPS['ui']['arrowClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style for the arrow

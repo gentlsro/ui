@@ -1,8 +1,5 @@
 // @unocss-include
 
-// Types
-import type { IBreadcrumbsProps } from '../types/breadcrumbs-props.type'
-
 export const BREADCRUMBS_DEFAULT_PROPS = {
   ui: {
     containerClass() {
@@ -27,4 +24,4 @@ export const BREADCRUMBS_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies Omit<IBreadcrumbsProps, 'ui'> & { ui: object }
+}

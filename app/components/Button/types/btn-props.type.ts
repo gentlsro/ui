@@ -1,5 +1,4 @@
 import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
-import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { AllowedComponentProps, CSSProperties } from 'vue'
 
 // Types
@@ -187,9 +186,9 @@ export type IBtnProps<T extends CustomPresets = Record<string, never>> = IBtnNav
     /**
      * Class applied to the container (button element)
      */
-    containerClass?: (payload: WithClassPicker<{
+    containerClass?: (payload: {
       defaults: ReturnType<typeof BTN_DEFAULT_PROPS['ui']['containerClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style applied to the container
@@ -199,9 +198,9 @@ export type IBtnProps<T extends CustomPresets = Record<string, never>> = IBtnNav
     /**
      * Classes applied to the icon
      */
-    iconClass?: (payload: WithClassPicker<{
+    iconClass?: (payload: {
       defaults: ReturnType<typeof BTN_DEFAULT_PROPS['ui']['iconClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style applied to the icon
@@ -211,9 +210,9 @@ export type IBtnProps<T extends CustomPresets = Record<string, never>> = IBtnNav
     /**
      * Classes applied to the label
      */
-    labelClass?: (payload: WithClassPicker<{
+    labelClass?: (payload: {
       defaults: ReturnType<typeof BTN_DEFAULT_PROPS['ui']['labelClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style applied to the label
@@ -231,9 +230,9 @@ export type IBtnProps<T extends CustomPresets = Record<string, never>> = IBtnNav
     /**
      * Classes applied to the focus helper
      */
-    focusHelperClass?: (payload: WithClassPicker<{
+    focusHelperClass?: (payload: {
       defaults: ReturnType<typeof BTN_DEFAULT_PROPS['ui']['focusHelperClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style applied to the focus helper
@@ -243,9 +242,9 @@ export type IBtnProps<T extends CustomPresets = Record<string, never>> = IBtnNav
     /**
      * Classes applied to the loading overlay
      */
-    loadingClass?: (payload: WithClassPicker<{
+    loadingClass?: (payload: {
       defaults: ReturnType<typeof BTN_DEFAULT_PROPS['ui']['loadingClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style applied to the loading overlay
@@ -255,9 +254,9 @@ export type IBtnProps<T extends CustomPresets = Record<string, never>> = IBtnNav
     /**
      * Classes applied to the loader
      */
-    loaderClass?: (payload: WithClassPicker<{
+    loaderClass?: (payload: {
       defaults: ReturnType<typeof BTN_DEFAULT_PROPS['ui']['loaderClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style applied to the loader

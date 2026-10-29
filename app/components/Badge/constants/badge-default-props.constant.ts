@@ -1,8 +1,5 @@
 // @unocss-include
 
-// Types
-import type { IBadgeProps } from '../types/badge-props.type'
-
 export const BADGE_DEFAULT_PROPS = {
   ui: {
     containerClass() {
@@ -27,4 +24,4 @@ export const BADGE_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies Omit<IBadgeProps, 'ui'> & { ui: object }
+}

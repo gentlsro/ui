@@ -1,7 +1,5 @@
 // @unocss-include
 
-import type { IVirtualScrollerProps } from '../types/virtual-scroller-props.type'
-
 export const VIRTUAL_SCROLLER_DEFAULT_PROPS = {
   ui: {
     containerClass() {
@@ -29,4 +27,4 @@ export const VIRTUAL_SCROLLER_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies Omit<IVirtualScrollerProps<any>, 'ui'> & { ui: object }
+}

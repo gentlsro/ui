@@ -1,5 +1,4 @@
 import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
-import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
 // Types
@@ -51,9 +50,9 @@ export type ISectionProps = {
     /**
      * Class for the container
      */
-    containerClass?: (payload: WithClassPicker<{
+    containerClass?: (payload: {
       defaults: ReturnType<typeof SECTION_DEFAULT_PROPS['ui']['containerClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style for the container
@@ -63,9 +62,9 @@ export type ISectionProps = {
     /**
      * Class for the content
      */
-    contentClass?: (payload: WithClassPicker<{
+    contentClass?: (payload: {
       defaults: ReturnType<typeof SECTION_DEFAULT_PROPS['ui']['contentClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style for the content
@@ -75,9 +74,9 @@ export type ISectionProps = {
     /**
      * Class for the title
      */
-    titleClass?: (payload: WithClassPicker<{
+    titleClass?: (payload: {
       defaults: ReturnType<typeof SECTION_DEFAULT_PROPS['ui']['titleClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style for the title
@@ -87,9 +86,9 @@ export type ISectionProps = {
     /**
      * Class for the subtitle
      */
-    subtitleClass?: (payload: WithClassPicker<{
+    subtitleClass?: (payload: {
       defaults: ReturnType<typeof SECTION_DEFAULT_PROPS['ui']['subtitleClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style for the subtitle
@@ -99,9 +98,9 @@ export type ISectionProps = {
     /**
      * Class for the loading state
      */
-    loadingClass?: (payload: WithClassPicker<{
+    loadingClass?: (payload: {
       defaults: ReturnType<typeof SECTION_DEFAULT_PROPS['ui']['loadingClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style for the loading state

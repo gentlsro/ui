@@ -1,5 +1,4 @@
 import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
-import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 import type { Boundary, OffsetOptions, Placement } from '@floating-ui/dom'
 
@@ -206,9 +205,9 @@ export type IMenuProps = {
     /**
      * Class to apply to the `menu` itself
      */
-    menuClass?: (payload: WithClassPicker<{
+    menuClass?: (payload: {
       defaults: ReturnType<typeof MENU_DEFAULT_PROPS['ui']['menuClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the `menu` itself
@@ -218,9 +217,9 @@ export type IMenuProps = {
     /**
      * Class to apply to the `overlay`
      */
-    overlayClass?: (payload: WithClassPicker<{
+    overlayClass?: (payload: {
       defaults: ReturnType<typeof MENU_DEFAULT_PROPS['ui']['overlayClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the `overlay`
@@ -230,9 +229,9 @@ export type IMenuProps = {
     /**
      * Class to apply to the `content`
      */
-    contentClass?: (payload: WithClassPicker<{
+    contentClass?: (payload: {
       defaults: ReturnType<typeof MENU_DEFAULT_PROPS['ui']['contentClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the `content`
@@ -242,9 +241,9 @@ export type IMenuProps = {
     /**
      * Class to apply to the `header`
      */
-    headerClass?: (payload: WithClassPicker<{
+    headerClass?: (payload: {
       defaults: ReturnType<typeof MENU_DEFAULT_PROPS['ui']['headerClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the `header`
@@ -254,9 +253,9 @@ export type IMenuProps = {
     /**
      * Class to apply to the `title`
      */
-    titleClass?: (payload: WithClassPicker<{
+    titleClass?: (payload: {
       defaults: ReturnType<typeof MENU_DEFAULT_PROPS['ui']['titleClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the `title`

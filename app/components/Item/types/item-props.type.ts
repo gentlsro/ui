@@ -1,5 +1,4 @@
 import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
-import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
 // Constants
@@ -33,9 +32,9 @@ export type IItemProps = {
     /**
      * Class to apply to the container element
      */
-    containerClass?: (payload: WithClassPicker<{
+    containerClass?: (payload: {
       defaults: ReturnType<typeof ITEM_DEFAULT_PROPS['ui']['containerClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the container element
@@ -45,9 +44,9 @@ export type IItemProps = {
     /**
      * Class to apply to the focus helper overlay
      */
-    focusHelperClass?: (payload: WithClassPicker<{
+    focusHelperClass?: (payload: {
       defaults: ReturnType<typeof ITEM_DEFAULT_PROPS['ui']['focusHelperClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the focus helper overlay

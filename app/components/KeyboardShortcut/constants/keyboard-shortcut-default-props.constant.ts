@@ -30,3 +30,4 @@ export const KEYBOARD_SHORTCUT_DEFAULT_PROPS = {
     },
   },
 }
+

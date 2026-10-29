@@ -1,5 +1,4 @@
 import type { UIClasses, UIProps, UIResolvedClasses } from '../../../types/ui-config.type'
-import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { AllowedComponentProps, CSSProperties } from 'vue'
 
 // Types
@@ -431,9 +430,9 @@ export type ITreeProps<T extends IItem = IItem> = {
     /**
      * Class to apply to the tree container
      */
-    containerClass?: (payload: WithClassPicker<{
+    containerClass?: (payload: {
       defaults: ReturnType<typeof TREE_DEFAULT_PROPS['ui']['containerClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the tree container (wrapper)
@@ -443,9 +442,9 @@ export type ITreeProps<T extends IItem = IItem> = {
     /**
      * Class to apply to the tree content (the section containing the nodes)
      */
-    contentClass?: (payload: WithClassPicker<{
+    contentClass?: (payload: {
       defaults: ReturnType<typeof TREE_DEFAULT_PROPS['ui']['contentClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the content
@@ -455,11 +454,11 @@ export type ITreeProps<T extends IItem = IItem> = {
     /**
      * Class to apply to the nodes
      */
-    nodeClass?: ((payload: WithClassPicker<{
+    nodeClass?: ((payload: {
       node: T
       index: number
       defaults: ReturnType<typeof TREE_DEFAULT_PROPS['ui']['nodeClass']>
-    }>) => ClassType)
+    }) => ClassType)
 
     /**
      * Style to apply to the nodes
@@ -472,11 +471,11 @@ export type ITreeProps<T extends IItem = IItem> = {
     /**
      * Class to apply to the node content (excluding the collapse button)
      */
-    nodeContentClass?: ((payload: WithClassPicker<{
+    nodeContentClass?: ((payload: {
       node: T
       index: number
       defaults: ReturnType<typeof TREE_DEFAULT_PROPS['ui']['nodeContentClass']>
-    }>) => ClassType)
+    }) => ClassType)
 
     /**
      * Style to apply to the node content (excluding the collapse button)
@@ -489,9 +488,9 @@ export type ITreeProps<T extends IItem = IItem> = {
     /**
      * Class to apply to the no data component
      */
-    noDataClass?: (payload: WithClassPicker<{
+    noDataClass?: (payload: {
       defaults: ReturnType<typeof TREE_DEFAULT_PROPS['ui']['noDataClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the no data component
@@ -501,9 +500,9 @@ export type ITreeProps<T extends IItem = IItem> = {
     /**
      * Class to apply to the tree actions (wrapper)
      */
-    actionsClass?: (payload: WithClassPicker<{
+    actionsClass?: (payload: {
       defaults: ReturnType<typeof TREE_DEFAULT_PROPS['ui']['actionsClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the tree actions (wrapper)
@@ -513,9 +512,9 @@ export type ITreeProps<T extends IItem = IItem> = {
     /**
      * Class to apply to the tree search
      */
-    searchClass?: (payload: WithClassPicker<{
+    searchClass?: (payload: {
       defaults: ReturnType<typeof TREE_DEFAULT_PROPS['ui']['searchClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Class to apply to the tree search

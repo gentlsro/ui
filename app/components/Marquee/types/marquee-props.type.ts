@@ -1,5 +1,4 @@
 import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
-import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
 // Constants
@@ -43,9 +42,9 @@ export type IMarqueeProps = {
     /**
      * Class to apply to the container
      */
-    containerClass?: (payload: WithClassPicker<{
+    containerClass?: (payload: {
       defaults: ReturnType<typeof MARQUEE_DEFAULT_PROPS['ui']['containerClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the container
@@ -55,11 +54,11 @@ export type IMarqueeProps = {
     /**
      * Class to apply to each repeated track
      */
-    contentClass?: (payload: WithClassPicker<{
+    contentClass?: (payload: {
       defaults: ReturnType<typeof MARQUEE_DEFAULT_PROPS['ui']['contentClass']>
       pauseOnHover: boolean
       vertical: boolean
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to each repeated track

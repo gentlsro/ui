@@ -1,5 +1,4 @@
 import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
-import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
 // Types
@@ -24,9 +23,9 @@ export type IYearMonthSelectorProps = Omit<IFieldProps, 'ui'> & {
     /**
      * Class to apply to the picker icon
      */
-    pickerIconClass?: (payload: WithClassPicker<{
+    pickerIconClass?: (payload: {
       defaults: ReturnType<typeof YEAR_MONTH_SELECTOR_DEFAULT_PROPS['ui']['pickerIconClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the picker icon

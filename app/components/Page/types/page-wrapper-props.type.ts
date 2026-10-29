@@ -1,5 +1,4 @@
 import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
-import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
 // Types
@@ -41,9 +40,9 @@ export type IPageWrapperProps = {
     /**
      * Class to apply to the container
      */
-    containerClass?: (payload: WithClassPicker<{
+    containerClass?: (payload: {
       defaults: ReturnType<typeof PAGE_WRAPPER_DEFAULT_PROPS['ui']['containerClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the container
@@ -53,9 +52,9 @@ export type IPageWrapperProps = {
     /**
      * Class to apply to the content
      */
-    contentClass?: (payload: WithClassPicker<{
+    contentClass?: (payload: {
       defaults: ReturnType<typeof PAGE_WRAPPER_DEFAULT_PROPS['ui']['contentClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the content

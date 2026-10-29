@@ -18,10 +18,10 @@ function setAliasPaths(nuxt: Nuxt, alias: string, tsPath: string) {
 function generateUIConfigCode(configPaths: { path: string }[], parents: Record<string, Record<string, string[]>>) {
   return `import type { UIProps, UIResolvedClasses } from '${resolve(currentDir, 'app/types/ui-config.type')}'
 import { customDefu } from '#layers/utilities/app/utils/custom-defu'
-${configPaths.map(({ path }, idx) => `import config${idx}, * as configModule${idx} from '${path}'`).join('\n')}
+${configPaths.map(({ path }, idx) => `import config${idx} from '${path}'`).join('\n')}
 
 const uiConfigMerged = customDefu(${configPaths.map((_, idx) => `config${idx}`).join(', ')})
-export const uiConfigLayers = [${configPaths.map((_, idx) => `configModule${idx}`).reverse().join(', ')}] as const
+export const uiConfigLayers = [${configPaths.map((_, idx) => `config${idx}`).reverse().join(', ')}] as const
 export const uiClassParents: Record<string, Record<string, string[]>> = ${JSON.stringify(parents)}
 
 type WrappedValue<Value> = Value extends (...args: never[]) => unknown
@@ -294,7 +294,10 @@ function componentClassTypes(configPath: string, context: {
       const returned = body && ts.isBlock(body)
         ? body.statements.length === 1 && body.statements[0] && ts.isReturnStatement(body.statements[0]) ? body.statements[0].expression : undefined
         : body
-      fields[surface] = returned ? expressionType(returned) : 'string'
+      const type = returned ? expressionType(returned) : 'string'
+      if (type !== `${slots}["all"]` && type !== `PickedClasses<${slots}, ["all"]>`) {
+        fields[surface] = type
+      }
     }
   }
 
@@ -385,6 +388,32 @@ export default defineNuxtModule({
     // Imported config edits must refresh generated types and cached callbacks too.
     nuxt.options.watch.push(...configDependencies)
 
+    const inheritedTypes = Object.entries(parents).filter(([, surfaces]) => Object.keys(surfaces).length).map(([component, surfaces]) => {
+      const parts: string[] = []
+      const own = classes[component]!.filter(surface => !(surface in surfaces))
+      if (own.length) {
+        parts.push(`Pick<BaseUIClasses[${JSON.stringify(component)}], ${own.map(surface => JSON.stringify(surface)).join(' | ')}>`)
+      }
+      const grouped = new Map<string, string[]>()
+      for (const [surface, sources] of Object.entries(surfaces)) {
+        if (sources.length === 1) {
+          const fields = grouped.get(sources[0]!) ?? []
+          fields.push(surface)
+          grouped.set(sources[0]!, fields)
+        } else {
+          parts.push(`{ ${JSON.stringify(surface)}: ${sources.map(parent => `Stage${orderedConfigs.length}[${JSON.stringify(parent)}][${JSON.stringify(surface)}]`).join(' | ')} }`)
+        }
+      }
+      for (const [parent, fields] of grouped) {
+        const type = `Stage${orderedConfigs.length}[${JSON.stringify(parent)}]`
+        parts.push(fields.length === classes[parent]!.length
+          ? type
+          : `Pick<${type}, ${fields.map(surface => JSON.stringify(surface)).join(' | ')}>`)
+      }
+
+      return `  ${JSON.stringify(component)}: ${parts.join(' & ')}`
+    })
+
     addTypeTemplate({
       filename: 'types/ui-class-config.d.ts',
       getContents: () => `import type { BaseUIClasses } from '${classTypesPath}'
@@ -400,18 +429,18 @@ type ClassList<Values extends readonly string[]> = Values extends readonly [infe
   : ''
 
 type Stage0 = Omit<BaseUIClasses, ${Object.entries(parents).filter(([, surfaces]) => Object.keys(surfaces).length).map(([component]) => JSON.stringify(component)).join(' | ') || 'never'}> & {
-${Object.entries(parents).filter(([, surfaces]) => Object.keys(surfaces).length).map(([component, surfaces]) => `  ${JSON.stringify(component)}: Omit<BaseUIClasses[${JSON.stringify(component)}], ${Object.keys(surfaces).map(surface => JSON.stringify(surface)).join(' | ')}> & { ${Object.entries(surfaces).map(([surface, sources]) => `${JSON.stringify(surface)}: ${sources.map(parent => `Stage${orderedConfigs.length}[${JSON.stringify(parent)}][${JSON.stringify(surface)}]`).join(' | ')}`).join('; ')} }`).join('\n')}
+${inheritedTypes.join('\n')}
 }
-${orderedConfigs.map((_, idx) => `type ClassAll${idx} = { ${Object.entries(classTypes[idx]!).map(([component, fields]) => `${JSON.stringify(component)}: { ${Object.entries(fields).map(([surface, type]) => `${JSON.stringify(surface)}: ${type}`).join('; ')} }`).join('; ')} }
-type Stage${idx + 1} = {
-  [Component in keyof Stage${idx}]: {
-    [Surface in keyof Stage${idx}[Component]]: Component extends keyof ClassAll${idx}
-      ? Surface extends keyof ClassAll${idx}[Component]
-        ? Omit<Stage${idx}[Component][Surface], 'all'> & { all: ClassAll${idx}[Component][Surface] }
-        : Stage${idx}[Component][Surface]
-      : Stage${idx}[Component][Surface]
+${orderedConfigs.map((_, idx) => {
+  const changed = Object.entries(classTypes[idx]!).filter(([, fields]) => Object.keys(fields).length)
+  if (!changed.length) {
+    return `type Stage${idx + 1} = Stage${idx}`
   }
-}`).join('\n')}
+
+  return `type Stage${idx + 1} = Omit<Stage${idx}, ${changed.map(([component]) => JSON.stringify(component)).join(' | ')}> & {
+${changed.map(([component, fields]) => `  ${JSON.stringify(component)}: Omit<Stage${idx}[${JSON.stringify(component)}], ${Object.keys(fields).map(surface => JSON.stringify(surface)).join(' | ')}> & { ${Object.entries(fields).map(([surface, type]) => `${JSON.stringify(surface)}: Omit<Stage${idx}[${JSON.stringify(component)}][${JSON.stringify(surface)}], 'all'> & { all: ${type} }`).join('; ')} }`).join('\n')}
+}`
+}).join('\n')}
 
 declare module '${classTypesPath}' {
   interface UIClassRegistry {

@@ -12,7 +12,7 @@ export type PickedClasses<Classes, Keys extends readonly PropertyKey[]>
       : ''
 
 /** Adds a typed picker beside the callback's class defaults. */
-export function withClassPicker<T extends { defaults: object }>(payload: T) {
+export function withClassPicker<T extends { defaults: object }>(payload: T): WithClassPicker<T> {
   const defaults: T['defaults'] = payload.defaults
 
   return Object.assign(payload, {
@@ -20,8 +20,9 @@ export function withClassPicker<T extends { defaults: object }>(payload: T) {
   })
 }
 
-export type WithClassPicker<T extends { defaults: object }>
-  = ReturnType<typeof withClassPicker<T>>
+export type WithClassPicker<T extends { defaults: object }> = T & {
+  p: <const Keys extends ClassKey<T['defaults']>[]>(...keys: Keys) => PickedClasses<T['defaults'], Keys>
+}
 
 /** Configured callbacks resolve `all` before invoking the public callback. */
 export function resolveUIClass<Payload extends { defaults: { all: string } }, Result>(

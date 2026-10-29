@@ -1,5 +1,4 @@
 import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
-import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { RouteLocationRaw } from '#vue-router'
 import type { AllowedComponentProps, CSSProperties } from 'vue'
 
@@ -188,9 +187,9 @@ export type ISelectorProps = Omit<IFieldProps, 'ui'> & {
     /**
      * Class to apply to the actual content inside the wrapper
      */
-    innerClass?: (payload: WithClassPicker<{
+    innerClass?: (payload: {
       defaults: ReturnType<typeof SELECTOR_DEFAULT_PROPS['ui']['innerClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the actual content inside the wrapper

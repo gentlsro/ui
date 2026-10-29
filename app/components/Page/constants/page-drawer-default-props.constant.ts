@@ -1,8 +1,5 @@
 // @unocss-include
 
-// Types
-import type { IPageDrawerProps } from '../types/page-drawer-props.type'
-
 export const PAGE_DRAWER_DEFAULT_PROPS = {
   ui: {
     containerClass() {
@@ -49,4 +46,4 @@ export const PAGE_DRAWER_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies Omit<IPageDrawerProps, 'ui'> & { ui: object }
+}

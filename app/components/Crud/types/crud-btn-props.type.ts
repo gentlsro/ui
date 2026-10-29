@@ -1,5 +1,4 @@
 import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
-import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { AllowedComponentProps, CSSProperties } from 'vue'
 
 // Types
@@ -75,9 +74,9 @@ export type ICrudBtnsProps = {
     /**
      * Class to apply to the container
      */
-    containerClass?: (payload: WithClassPicker<{
+    containerClass?: (payload: {
       defaults: ReturnType<typeof CRUD_BTNS_DEFAULT_PROPS['ui']['containerClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the container
@@ -109,9 +108,9 @@ export type ICrudEditBtnProps = {
     /**
      * Class to apply to the wrapper
      */
-    wrapperClass?: (payload: WithClassPicker<{
+    wrapperClass?: (payload: {
       defaults: ReturnType<typeof CRUD_EDIT_BTN_DEFAULT_PROPS['ui']['wrapperClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the wrapper
@@ -121,9 +120,9 @@ export type ICrudEditBtnProps = {
     /**
      * Class to apply to the button
      */
-    btnClass?: (payload: WithClassPicker<{
+    btnClass?: (payload: {
       defaults: ReturnType<typeof CRUD_EDIT_BTN_DEFAULT_PROPS['ui']['btnClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the button

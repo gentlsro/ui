@@ -1,5 +1,4 @@
 import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
-import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 import type { SCROLLER_DEFAULT_PROPS } from '../constants/scroller-default-props.constant'
 
@@ -24,9 +23,9 @@ export type IHorizontalScrollerProps = IScrollerBaseProps & {
     /**
      * Class to apply to the container
      */
-    containerClass?: (payload: WithClassPicker<{
+    containerClass?: (payload: {
       defaults: ReturnType<typeof SCROLLER_DEFAULT_PROPS['ui']['horizontalContainerClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the container
@@ -36,9 +35,9 @@ export type IHorizontalScrollerProps = IScrollerBaseProps & {
     /**
      * Class to apply to the content
      */
-    contentClass?: (payload: WithClassPicker<{
+    contentClass?: (payload: {
       defaults: ReturnType<typeof SCROLLER_DEFAULT_PROPS['ui']['contentClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the content. Customize the mask with `--scroll-fade-size`,
@@ -47,9 +46,9 @@ export type IHorizontalScrollerProps = IScrollerBaseProps & {
      */
     contentStyle?: () => CSSProperties
 
-    arrowClass?: (payload: WithClassPicker<{
+    arrowClass?: (payload: {
       defaults: ReturnType<typeof SCROLLER_DEFAULT_PROPS['ui']['arrowClass']>
-    }>) => ClassType
+    }) => ClassType
 
     arrowStyle?: () => CSSProperties
   }, UIResolvedClasses['horizontalScroller']>
@@ -60,9 +59,9 @@ export type IVerticalScrollerProps = IScrollerBaseProps & {
     /**
      * Class to apply to the container
      */
-    containerClass?: (payload: WithClassPicker<{
+    containerClass?: (payload: {
       defaults: ReturnType<typeof SCROLLER_DEFAULT_PROPS['ui']['verticalContainerClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the container
@@ -72,9 +71,9 @@ export type IVerticalScrollerProps = IScrollerBaseProps & {
     /**
      * Class to apply to the content
      */
-    contentClass?: (payload: WithClassPicker<{
+    contentClass?: (payload: {
       defaults: ReturnType<typeof SCROLLER_DEFAULT_PROPS['ui']['verticalContentClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the content. Customize the mask with `--scroll-fade-size`,
@@ -86,9 +85,9 @@ export type IVerticalScrollerProps = IScrollerBaseProps & {
     /**
      * Class to apply to the arrow
      */
-    arrowClass?: (payload: WithClassPicker<{
+    arrowClass?: (payload: {
       defaults: ReturnType<typeof SCROLLER_DEFAULT_PROPS['ui']['arrowClass']>
-    }>) => ClassType
+    }) => ClassType
 
     arrowStyle?: () => CSSProperties
   }, UIResolvedClasses['verticalScroller']>

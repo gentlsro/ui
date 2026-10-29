@@ -1,5 +1,4 @@
 // @unocss-include
-import type { IChipProps } from '../types/chip-props.type'
 
 export const CHIP_DEFAULT_PROPS = {
   ui: {
@@ -27,4 +26,4 @@ export const CHIP_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies Omit<IChipProps, 'ui'> & { ui: object }
+}
