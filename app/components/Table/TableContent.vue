@@ -80,9 +80,9 @@ const scrollerProps = computed(() => {
 })
 
 const contentClass = computed(() => {
-  return props.ui?.contentClass?.({
+  return props.ui?.contentClass?.(withClassPicker({
     defaults: TABLE_DEFAULT_PROPS.ui.contentClass(),
-  })
+  }))
 })
 
 const contentStyle = computed(() => {

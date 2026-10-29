@@ -1,3 +1,4 @@
+import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { AllowedComponentProps, ConcreteComponent, CSSProperties } from 'vue'
 
 // Types
@@ -380,9 +381,9 @@ export type IListProps = {
     /**
      * Class to apply to the container
      */
-    containerClass?: (payload: {
+    containerClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof LIST_DEFAULT_PROPS['ui']['containerClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the container
@@ -392,10 +393,10 @@ export type IListProps = {
     /**
      * Class to apply to the content area
      */
-    contentClass?: (payload: {
+    contentClass?: (payload: WithClassPicker<{
       hasSearch?: boolean
       defaults: ReturnType<typeof LIST_DEFAULT_PROPS['ui']['contentClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the content area
@@ -407,9 +408,9 @@ export type IListProps = {
     /**
      * Class to apply to the move handle
      */
-    moveHandleClass?: (payload: {
+    moveHandleClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof LIST_DEFAULT_PROPS['ui']['moveHandleClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the move handle
@@ -419,9 +420,9 @@ export type IListProps = {
     /**
      * Class to apply to the move handle icon
      */
-    moveHandleIconClass?: (payload: {
+    moveHandleIconClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof LIST_DEFAULT_PROPS['ui']['moveHandleIconClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the move handle icon
@@ -431,9 +432,9 @@ export type IListProps = {
     /**
      * Class to apply to the loading area
      */
-    loadingClass?: (payload: {
+    loadingClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof LIST_DEFAULT_PROPS['ui']['loadingClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the loading area
@@ -443,9 +444,9 @@ export type IListProps = {
     /**
      * Class to apply to the `Banner` when there are no items
      */
-    noDataClass?: (payload: {
+    noDataClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof LIST_DEFAULT_PROPS['ui']['noDataClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the `Banner` when there are no items
@@ -455,12 +456,12 @@ export type IListProps = {
     /**
      * Class to apply to the list row
      */
-    rowClass?: (payload: {
+    rowClass?: (payload: WithClassPicker<{
       row: IItem
       groupsCount: number
       isLast: boolean
       defaults: ReturnType<typeof LIST_DEFAULT_PROPS['ui']['rowClass']>
-    },
+    }>,
     ) => ClassType
 
     /**
@@ -476,12 +477,12 @@ export type IListProps = {
      * Class to apply to the list row content (excluding the `checkbox` and `moveHandle`)
      */
     rowContentClass?: (
-      payload: {
+      payload: WithClassPicker<{
         row: any
         groupsCount: number
         isLast: boolean
         defaults: ReturnType<typeof LIST_DEFAULT_PROPS['ui']['rowContentClass']>
-      },
+      }>,
     ) => ClassType
 
     /**
@@ -498,11 +499,11 @@ export type IListProps = {
     /**
      * Class to apply to the list row group
      */
-    rowGroupClass?: (payload: {
+    rowGroupClass?: (payload: WithClassPicker<{
       group: IGroupRow
       level: number
       defaults: ReturnType<typeof LIST_DEFAULT_PROPS['ui']['rowGroupClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the list row group
@@ -515,9 +516,9 @@ export type IListProps = {
     /**
      * Class to apply to the search area
      */
-    searchClass?: (payload: {
+    searchClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof LIST_DEFAULT_PROPS['ui']['searchClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the search area

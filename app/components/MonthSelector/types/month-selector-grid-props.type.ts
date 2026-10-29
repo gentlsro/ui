@@ -1,3 +1,4 @@
+import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
 // Constants
@@ -21,9 +22,9 @@ export type IMonthSelectorGridProps = {
     /**
      * Class to apply to the container
      */
-    containerClass?: (payload: {
+    containerClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof MONTH_SELECTOR_GRID_DEFAULT_PROPS['ui']['containerClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the container
@@ -33,9 +34,9 @@ export type IMonthSelectorGridProps = {
     /**
      * Class to apply to each month button
      */
-    monthBtnClass?: (payload: {
+    monthBtnClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof MONTH_SELECTOR_GRID_DEFAULT_PROPS['ui']['monthBtnClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to each month button

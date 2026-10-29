@@ -42,9 +42,9 @@ const title = computed(() => {
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return mergedProps.value?.ui?.containerClass?.(withClassPicker({
     defaults: PAGE_TITLE_DEFAULT_PROPS.ui.containerClass(),
-  })
+  }))
 })
 
 const containerStyle = computed(() => {
@@ -53,9 +53,9 @@ const containerStyle = computed(() => {
 
 // Styles - pageTitle
 const pageTitleClass = computed(() => {
-  return mergedProps.value?.ui?.pageTitleClass?.({
+  return mergedProps.value?.ui?.pageTitleClass?.(withClassPicker({
     defaults: PAGE_TITLE_DEFAULT_PROPS.ui.pageTitleClass(),
-  })
+  }))
 })
 
 const pageTitleStyle = computed(() => {
@@ -64,9 +64,9 @@ const pageTitleStyle = computed(() => {
 
 // Styles - title
 const titleClass = computed(() => {
-  return mergedProps.value?.ui?.titleClass?.({
+  return mergedProps.value?.ui?.titleClass?.(withClassPicker({
     defaults: PAGE_TITLE_DEFAULT_PROPS.ui.titleClass(),
-  })
+  }))
 })
 
 const titleStyle = computed(() => {

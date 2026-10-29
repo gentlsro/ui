@@ -92,9 +92,9 @@ await init()
 
 // Styles - Container
 const containerClass = computed(() => {
-  return mergedProps.value.ui?.containerClass?.({
+  return mergedProps.value.ui?.containerClass?.(withClassPicker({
     defaults: TREE_DEFAULT_PROPS.ui.containerClass(),
-  })
+  }))
 })
 
 const containerStyle = computed(() => {
@@ -103,9 +103,9 @@ const containerStyle = computed(() => {
 
 // Styles - Content
 const contentClass = computed(() => {
-  return mergedProps.value.ui?.contentClass?.({
+  return mergedProps.value.ui?.contentClass?.(withClassPicker({
     defaults: TREE_DEFAULT_PROPS.ui.contentClass(),
-  })
+  }))
 })
 
 const contentStyle = computed(() => {

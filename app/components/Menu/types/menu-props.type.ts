@@ -1,3 +1,4 @@
+import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 import type { Boundary, OffsetOptions, Placement } from '@floating-ui/dom'
 
@@ -204,9 +205,9 @@ export type IMenuProps = {
     /**
      * Class to apply to the `menu` itself
      */
-    menuClass?: (payload: {
+    menuClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof MENU_DEFAULT_PROPS['ui']['menuClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the `menu` itself
@@ -216,9 +217,9 @@ export type IMenuProps = {
     /**
      * Class to apply to the `overlay`
      */
-    overlayClass?: (payload: {
+    overlayClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof MENU_DEFAULT_PROPS['ui']['overlayClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the `overlay`
@@ -228,9 +229,9 @@ export type IMenuProps = {
     /**
      * Class to apply to the `content`
      */
-    contentClass?: (payload: {
+    contentClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof MENU_DEFAULT_PROPS['ui']['contentClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the `content`
@@ -240,9 +241,9 @@ export type IMenuProps = {
     /**
      * Class to apply to the `header`
      */
-    headerClass?: (payload: {
+    headerClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof MENU_DEFAULT_PROPS['ui']['headerClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the `header`
@@ -252,9 +253,9 @@ export type IMenuProps = {
     /**
      * Class to apply to the `title`
      */
-    titleClass?: (payload: {
+    titleClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof MENU_DEFAULT_PROPS['ui']['titleClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the `title`

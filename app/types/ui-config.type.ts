@@ -184,7 +184,7 @@ export type IUIConfig<FormClasses extends UIClassSet['form'] = UIResolvedClasses
 type FormFactories = typeof FORM_BASE_DEFAULTS.ui
 
 export type BaseUIClasses = {
-  form: { [Surface in keyof FormFactories]: Omit<ReturnType<FormFactories[Surface]>, 'p'> }
+  form: { [Surface in keyof FormFactories]: ReturnType<FormFactories[Surface]> }
 }
 
 export type UIClassSet = {
@@ -208,4 +208,4 @@ export type UIConfigClasses = UIClassRegistry extends {
   : BaseUIClasses
 
 export type UIClassPicker<Slots extends object>
-  = ReturnType<typeof withClassPicker<Slots & { all: string }>>
+  = ReturnType<typeof withClassPicker<{ defaults: Slots & { all: string } }>>

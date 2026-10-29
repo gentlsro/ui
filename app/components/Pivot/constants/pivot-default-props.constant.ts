@@ -5,46 +5,46 @@ export const PIVOT_DEFAULT_PROPS = {
     topClass() {
       const base = 'flex shrink-0 items-center p-x-2 p-y-1'
 
-      return withClassPicker({
+      return {
         base,
         all: base,
-      } as const)
+      } as const
     },
 
     headerClass() {
       const base = 'relative flex shrink-0'
 
-      return withClassPicker({
+      return {
         base,
         all: base,
-      } as const)
+      } as const
     },
 
     titleClass() {
       const base = 'flex items-center gap-2 font-rem-18 font-bold p-x-2 p-y-1 min-w-70'
 
-      return withClassPicker({
+      return {
         base,
         all: base,
-      } as const)
+      } as const
     },
 
     columnFiltersClass() {
       const base = 'flex gap-2 items-center border-r border-true-gray-200 dark:border-true-gray-800 p-r-2'
 
-      return withClassPicker({
+      return {
         base,
         all: base,
-      } as const)
+      } as const
     },
 
     filtersClass() {
       const base = 'flex gap-2 items-center'
 
-      return withClassPicker({
+      return {
         base,
         all: base,
-      } as const)
+      } as const
     },
 
     rowHeaderClass() {
@@ -52,43 +52,43 @@ export const PIVOT_DEFAULT_PROPS = {
       const border = 'border-b border-true-gray-200 dark:border-true-gray-800'
       const bg = ''
 
-      return withClassPicker({
+      return {
         base,
         border,
         bg,
         all: `${base} ${border} ${bg}`,
-      } as const)
+      } as const
     },
 
     rowHeaderCellClass() {
       const base = 'font-rem-12 font-medium leading-tight shrink-0 min-w-10 min-h-9 flex items-center p-x-2 p-y-1'
       const border = 'border-r border-true-gray-200 dark:border-true-gray-800'
 
-      return withClassPicker({
+      return {
         base,
         border,
         all: `${base} ${border}`,
-      } as const)
+      } as const
     },
 
     containerClass() {
       const base = 'relative flex flex-col grow overflow-auto'
       const border = 'border-t border-l border-true-gray-200 dark:border-true-gray-800'
 
-      return withClassPicker({
+      return {
         base,
         border,
         all: `${base} ${border}`,
-      } as const)
+      } as const
     },
 
     contentClass() {
       const base = 'flex overflow-auto grow'
 
-      return withClassPicker({
+      return {
         base,
         all: base,
-      } as const)
+      } as const
     },
 
     rowItemClass() {
@@ -101,7 +101,7 @@ export const PIVOT_DEFAULT_PROPS = {
       const hovered = '[&.is-hovered]:(!bg-true-gray-50 !dark:bg-true-gray-900)'
       const clickable = '[&.is-clickable]:(cursor-pointer) [&.is-clickable:focus-visible]:(outline-2 outline-primary outline-solid outline-offset--2)'
 
-      return withClassPicker({
+      return {
         base,
         subtotal,
         grandTotal,
@@ -111,7 +111,7 @@ export const PIVOT_DEFAULT_PROPS = {
         clickable,
         bg,
         all: `${base} ${subtotal} ${grandTotal} ${bg} ${border} ${alternate} ${hovered} ${clickable}`,
-      } as const)
+      } as const
     },
 
     rowItemCellClass() {
@@ -121,25 +121,25 @@ export const PIVOT_DEFAULT_PROPS = {
       const total = '[&.is-total]:(font-semibold)'
       const grandTotal = '[&.is-grand-total]:(font-semibold)'
 
-      return withClassPicker({
+      return {
         base,
         collapsible,
         total,
         grandTotal,
         border,
         all: `${base} ${collapsible} ${total} ${grandTotal} ${border}`,
-      } as const)
+      } as const
     },
 
     valueHeaderClass() {
       const base = 'grow min-w-0 overflow-hidden p-r-$scrollbarWidth'
       const bg = ''
 
-      return withClassPicker({
+      return {
         base,
         bg,
         all: `${base} ${bg}`,
-      } as const)
+      } as const
     },
 
     valueHeaderCellClass() {
@@ -147,12 +147,12 @@ export const PIVOT_DEFAULT_PROPS = {
       const border = 'border-r border-b border-true-gray-200 dark:border-true-gray-800'
       const collapsible = '[&.is-collapsible]:(p-l-1)'
 
-      return withClassPicker({
+      return {
         base,
         collapsible,
         border,
         all: `${base} ${collapsible} ${border}`,
-      } as const)
+      } as const
     },
 
     valueItemClass() {
@@ -164,7 +164,7 @@ export const PIVOT_DEFAULT_PROPS = {
       const alternate = ''
       const hovered = '[&.is-hovered]:(!bg-true-gray-50 !dark:bg-true-gray-900)'
 
-      return withClassPicker({
+      return {
         base,
         subtotal,
         grandTotal,
@@ -173,7 +173,7 @@ export const PIVOT_DEFAULT_PROPS = {
         alternate,
         hovered,
         all: `${base} ${subtotal} ${grandTotal} ${bg} ${border} ${alternate} ${hovered}`,
-      } as const)
+      } as const
     },
 
     valueItemCellClass() {
@@ -183,14 +183,14 @@ export const PIVOT_DEFAULT_PROPS = {
       const grandTotal = '[&.is-grand-total]:(font-semibold)'
       const clickable = '[&.is-clickable]:(cursor-pointer) [&.is-clickable:focus-visible]:(outline-2 outline-primary outline-solid outline-offset--2)'
 
-      return withClassPicker({
+      return {
         base,
         total,
         grandTotal,
         clickable,
         border,
         all: `${base} ${total} ${grandTotal} ${border} ${clickable}`,
-      } as const)
+      } as const
     },
 
     valuesScrollerClass() {
@@ -198,38 +198,38 @@ export const PIVOT_DEFAULT_PROPS = {
       const base = 'grow overflow-x-scroll!'
       const border = ''
 
-      return withClassPicker({
+      return {
         base,
         border,
         all: `${base} ${border}`,
-      } as const)
+      } as const
     },
 
     rowsScrollerClass() {
       const base = 'hide-scrollbar'
 
-      return withClassPicker({
+      return {
         base,
         all: base,
-      } as const)
+      } as const
     },
 
     rowsWrapperClass() {
       const base = 'flex flex-col shrink-0 overflow-x-scroll'
 
-      return withClassPicker({
+      return {
         base,
         all: base,
-      } as const)
+      } as const
     },
 
     loadingClass() {
       const base = 'flex flex-center p-y-3 absolute inset-0 bg-white/68 dark:bg-dark-950/87 backdrop-blur-sm'
 
-      return withClassPicker({
+      return {
         base,
         all: base,
-      } as const)
+      } as const
     },
   },
 }

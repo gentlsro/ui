@@ -88,9 +88,9 @@ if (props.autoAdjustHeight) {
 }
 
 const contentClass = computed(() => {
-  return props.ui?.contentClass?.({
+  return props.ui?.contentClass?.(withClassPicker({
     defaults: COLLAPSE_DEFAULT_PROPS.ui.contentClass(),
-  })
+  }))
 })
 
 const contentStyle = computed(() => {
@@ -98,9 +98,9 @@ const contentStyle = computed(() => {
 })
 
 const contentInnerClass = computed(() => {
-  return props.ui?.contentInnerClass?.({
+  return props.ui?.contentInnerClass?.(withClassPicker({
     defaults: COLLAPSE_DEFAULT_PROPS.ui.contentInnerClass(),
-  })
+  }))
 })
 
 const contentInnerStyle = computed(() => {

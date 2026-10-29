@@ -25,9 +25,9 @@ const {
 } = usePivotStore()
 
 const valueHeaderClass = computed(() => {
-  return ui.value?.valueHeaderClass?.({
+  return ui.value?.valueHeaderClass?.(withClassPicker({
     defaults: PIVOT_DEFAULT_PROPS.ui.valueHeaderClass(),
-  })
+  }))
 })
 
 const valueHeaderStyle = computed(() => {

@@ -37,11 +37,11 @@ function handleCheck(ev: Event) {
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return mergedProps.value?.ui?.containerClass?.(withClassPicker({
     defaults: RADIO_DEFAULT_PROPS.ui.containerClass({
       size: props.size ?? 'sm',
     }),
-  })
+  }))
 })
 
 const containerStyle = computed(() => {
@@ -50,12 +50,12 @@ const containerStyle = computed(() => {
 
 // Styles - radio
 const radioClass = computed(() => {
-  return mergedProps.value?.ui?.radioClass?.({
+  return mergedProps.value?.ui?.radioClass?.(withClassPicker({
     defaults: RADIO_DEFAULT_PROPS.ui.radioClass({
       size: props.size ?? 'sm',
       color: props.color ?? 'primary',
     }),
-  })
+  }))
 })
 
 const radioStyle = computed(() => {
@@ -64,11 +64,11 @@ const radioStyle = computed(() => {
 
 // Styles - label
 const labelClass = computed(() => {
-  return mergedProps.value?.ui?.labelClass?.({
+  return mergedProps.value?.ui?.labelClass?.(withClassPicker({
     defaults: RADIO_DEFAULT_PROPS.ui.labelClass({
       size: props.size ?? 'sm',
     }),
-  })
+  }))
 })
 
 const labelStyle = computed(() => {
@@ -77,9 +77,9 @@ const labelStyle = computed(() => {
 
 // Styles - focus helper
 const focusHelperClass = computed(() => {
-  return mergedProps.value?.ui?.focusHelperClass?.({
+  return mergedProps.value?.ui?.focusHelperClass?.(withClassPicker({
     defaults: RADIO_DEFAULT_PROPS.ui.focusHelperClass(),
-  })
+  }))
 })
 
 const focusHelperStyle = computed(() => {

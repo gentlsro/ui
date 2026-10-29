@@ -65,12 +65,12 @@ watch(counter, bounce)
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return mergedProps.value?.ui?.containerClass?.(withClassPicker({
     defaults: BANNER_DEFAULT_PROPS.ui.containerClass({
       variant: props.variant ?? 'none',
       outlined: props.outlined ?? false,
     }),
-  })
+  }))
 })
 
 const containerStyle = computed(() => {
@@ -79,11 +79,11 @@ const containerStyle = computed(() => {
 
 // Styles - icon
 const iconClass = computed(() => {
-  return mergedProps.value?.ui?.iconClass?.({
+  return mergedProps.value?.ui?.iconClass?.(withClassPicker({
     defaults: BANNER_DEFAULT_PROPS.ui.iconClass({
       variant: props.variant ?? 'none',
     }),
-  })
+  }))
 })
 
 const iconStyle = computed(() => {
@@ -92,9 +92,9 @@ const iconStyle = computed(() => {
 
 // Styles - label
 const labelClass = computed(() => {
-  return mergedProps.value?.ui?.labelClass?.({
+  return mergedProps.value?.ui?.labelClass?.(withClassPicker({
     defaults: BANNER_DEFAULT_PROPS.ui.labelClass(),
-  })
+  }))
 })
 
 const labelStyle = computed(() => {
@@ -103,11 +103,11 @@ const labelStyle = computed(() => {
 
 // Styles - badge
 const badgeClass = computed(() => {
-  return mergedProps.value?.ui?.badgeClass?.({
+  return mergedProps.value?.ui?.badgeClass?.(withClassPicker({
     defaults: BANNER_DEFAULT_PROPS.ui.badgeClass({
       variant: props.variant ?? 'none',
     }),
-  })
+  }))
 })
 
 const badgeStyle = computed(() => {
@@ -116,9 +116,9 @@ const badgeStyle = computed(() => {
 
 // Styles - dismiss
 const dismissClass = computed(() => {
-  return mergedProps.value?.ui?.dismissClass?.({
+  return mergedProps.value?.ui?.dismissClass?.(withClassPicker({
     defaults: BANNER_DEFAULT_PROPS.ui.dismissClass(),
-  })
+  }))
 })
 
 const dismissStyle = computed(() => {

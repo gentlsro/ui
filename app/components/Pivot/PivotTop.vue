@@ -13,9 +13,9 @@ const isConfigurationOpen = ref(false)
 
 // Styles - top
 const topClass = computed(() => {
-  return ui.value?.topClass?.({
+  return ui.value?.topClass?.(withClassPicker({
     defaults: PIVOT_DEFAULT_PROPS.ui.topClass(),
-  })
+  }))
 })
 
 const topStyle = computed(() => {
@@ -24,9 +24,9 @@ const topStyle = computed(() => {
 
 // Styles - title
 const titleClass = computed(() => {
-  return ui.value?.titleClass?.({
+  return ui.value?.titleClass?.(withClassPicker({
     defaults: PIVOT_DEFAULT_PROPS.ui.titleClass(),
-  })
+  }))
 })
 
 const titleStyle = computed(() => {

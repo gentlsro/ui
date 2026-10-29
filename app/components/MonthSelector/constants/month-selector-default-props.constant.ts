@@ -5,46 +5,46 @@ export const MONTH_SELECTOR_DEFAULT_PROPS = {
     containerClass() {
       const base = 'flex gap-x-1 items-center'
 
-      return withClassPicker({
+      return {
         base,
         all: base,
-      } as const)
+      } as const
     },
 
     previousBtnClass() {
       const base = 'w-8 h-8 p-3 lt-xs:hidden'
 
-      return withClassPicker({
+      return {
         base,
         all: base,
-      } as const)
+      } as const
     },
 
     currentBtnClass() {
       const base = 'flex-1 h-8 self-center capitalize'
 
-      return withClassPicker({
+      return {
         base,
         all: base,
-      } as const)
+      } as const
     },
 
     nextBtnClass() {
       const base = 'w-8 h-8 p-3 lt-xs:hidden'
 
-      return withClassPicker({
+      return {
         base,
         all: base,
-      } as const)
+      } as const
     },
 
     gridContainerClass() {
       const base = 'grid grid-cols-2 xm:grid-cols-3 gap-1'
 
-      return withClassPicker({
+      return {
         base,
         all: base,
-      } as const)
+      } as const
     },
 
     monthBtnClass() {
@@ -54,12 +54,12 @@ export const MONTH_SELECTOR_DEFAULT_PROPS = {
       const selected = '[&.is-selected]:(bg-primary color-white)'
       const current = '[&.is-current]:(border-2 border-ca)'
 
-      return withClassPicker({
+      return {
         base,
         selected,
         current,
         all: `${base} ${selected} ${current}`,
-      } as const)
+      } as const
     },
   },
 }

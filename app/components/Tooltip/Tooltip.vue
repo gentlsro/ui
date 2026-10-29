@@ -168,9 +168,9 @@ onBeforeUnmount(() => {
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return mergedProps.value?.ui?.containerClass?.(withClassPicker({
     defaults: TOOLTIP_DEFAULT_PROPS.ui.containerClass(),
-  })
+  }))
 })
 
 const containerStyle = computed(() => {
@@ -179,9 +179,9 @@ const containerStyle = computed(() => {
 
 // Styles - content
 const contentClass = computed(() => {
-  return mergedProps.value?.ui?.contentClass?.({
+  return mergedProps.value?.ui?.contentClass?.(withClassPicker({
     defaults: TOOLTIP_DEFAULT_PROPS.ui.contentClass(),
-  })
+  }))
 })
 
 const contentStyle = computed(() => {
@@ -190,9 +190,9 @@ const contentStyle = computed(() => {
 
 // Styles - title
 const titleClass = computed(() => {
-  return mergedProps.value?.ui?.titleClass?.({
+  return mergedProps.value?.ui?.titleClass?.(withClassPicker({
     defaults: TOOLTIP_DEFAULT_PROPS.ui.titleClass(),
-  })
+  }))
 })
 
 const titleStyle = computed(() => {
@@ -201,9 +201,9 @@ const titleStyle = computed(() => {
 
 // Styles - description
 const descriptionClass = computed(() => {
-  return mergedProps.value?.ui?.descriptionClass?.({
+  return mergedProps.value?.ui?.descriptionClass?.(withClassPicker({
     defaults: TOOLTIP_DEFAULT_PROPS.ui.descriptionClass(),
-  })
+  }))
 })
 
 const descriptionStyle = computed(() => {
@@ -212,9 +212,9 @@ const descriptionStyle = computed(() => {
 
 // Styles - arrow
 const arrowClass = computed(() => {
-  return mergedProps.value?.ui?.arrowClass?.({
+  return mergedProps.value?.ui?.arrowClass?.(withClassPicker({
     defaults: TOOLTIP_DEFAULT_PROPS.ui.arrowClass(),
-  })
+  }))
 })
 
 const arrowStyle = computed(() => {

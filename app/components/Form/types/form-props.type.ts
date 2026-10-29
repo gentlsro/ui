@@ -174,9 +174,7 @@ export type IFormProps<Classes extends UIClassSet['form'] = UIResolvedClasses['f
     /**
      * Class to apply to the cancel button
      */
-    cancelClass?: (payload: {
-      defaults: UIClassPicker<Classes['cancelClass']>
-    }) => ClassType
+    cancelClass?: (payload: UIClassPicker<Classes['cancelClass']>) => ClassType
 
     /**
      * Style to apply to the cancel button
@@ -186,9 +184,7 @@ export type IFormProps<Classes extends UIClassSet['form'] = UIResolvedClasses['f
     /**
      * Class to apply to the form itself
      */
-    containerClass?: (payload: {
-      defaults: UIClassPicker<Classes['containerClass']>
-    }) => ClassType
+    containerClass?: (payload: UIClassPicker<Classes['containerClass']>) => ClassType
 
     /**
      * Style to apply to the form itself
@@ -198,9 +194,7 @@ export type IFormProps<Classes extends UIClassSet['form'] = UIResolvedClasses['f
     /**
      * Class to apply to the content
      */
-    contentClass?: (payload: {
-      defaults: UIClassPicker<Classes['contentClass']>
-    }) => ClassType
+    contentClass?: (payload: UIClassPicker<Classes['contentClass']>) => ClassType
 
     /**
      * Style to apply to the content
@@ -210,9 +204,7 @@ export type IFormProps<Classes extends UIClassSet['form'] = UIResolvedClasses['f
     /**
      * Class to apply to the submit button
      */
-    submitClass?: (payload: {
-      defaults: UIClassPicker<Classes['submitClass']>
-    }) => ClassType
+    submitClass?: (payload: UIClassPicker<Classes['submitClass']>) => ClassType
 
     /**
      * Style to apply to the submit button
@@ -222,9 +214,7 @@ export type IFormProps<Classes extends UIClassSet['form'] = UIResolvedClasses['f
     /**
      * Class to apply to the controls container
      */
-    controlsClass?: (payload: {
-      defaults: UIClassPicker<Classes['controlsClass']>
-    }) => ClassType
+    controlsClass?: (payload: UIClassPicker<Classes['controlsClass']>) => ClassType
 
     /**
      * Style to apply to the controls container
@@ -234,9 +224,7 @@ export type IFormProps<Classes extends UIClassSet['form'] = UIResolvedClasses['f
     /**
      *  Class to apply to the submit button wrapper (which might have the Cancel button and slots)
      */
-    submitWrapperClass?: (payload: {
-      defaults: UIClassPicker<Classes['submitWrapperClass']>
-    }) => ClassType
+    submitWrapperClass?: (payload: UIClassPicker<Classes['submitWrapperClass']>) => ClassType
 
     /**
      * Style to apply to the submit button wrapper (which might have the Cancel button and slots)

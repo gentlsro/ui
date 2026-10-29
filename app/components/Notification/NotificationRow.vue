@@ -104,9 +104,9 @@ watch(notificationCounter, async () => {
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return mergedProps.value?.ui?.containerClass?.(withClassPicker({
     defaults: NOTIFICATION_ROW_DEFAULT_PROPS.ui.containerClass(),
-  })
+  }))
 })
 
 const containerStyle = computed(() => {
@@ -115,9 +115,9 @@ const containerStyle = computed(() => {
 
 // Styles - title row
 const titleRowClass = computed(() => {
-  return mergedProps.value?.ui?.titleRowClass?.({
+  return mergedProps.value?.ui?.titleRowClass?.(withClassPicker({
     defaults: NOTIFICATION_ROW_DEFAULT_PROPS.ui.titleRowClass(),
-  })
+  }))
 })
 
 const titleRowStyle = computed(() => {
@@ -126,9 +126,9 @@ const titleRowStyle = computed(() => {
 
 // Styles - icon
 const iconClass = computed(() => {
-  return mergedProps.value?.ui?.iconClass?.({
+  return mergedProps.value?.ui?.iconClass?.(withClassPicker({
     defaults: NOTIFICATION_ROW_DEFAULT_PROPS.ui.iconClass(),
-  })
+  }))
 })
 
 const iconStyle = computed(() => {
@@ -137,9 +137,9 @@ const iconStyle = computed(() => {
 
 // Styles - title
 const titleClass = computed(() => {
-  return mergedProps.value?.ui?.titleClass?.({
+  return mergedProps.value?.ui?.titleClass?.(withClassPicker({
     defaults: NOTIFICATION_ROW_DEFAULT_PROPS.ui.titleClass(),
-  })
+  }))
 })
 
 const titleStyle = computed(() => {
@@ -148,9 +148,9 @@ const titleStyle = computed(() => {
 
 // Styles - title text
 const titleTextClass = computed(() => {
-  return mergedProps.value?.ui?.titleTextClass?.({
+  return mergedProps.value?.ui?.titleTextClass?.(withClassPicker({
     defaults: NOTIFICATION_ROW_DEFAULT_PROPS.ui.titleTextClass(),
-  })
+  }))
 })
 
 const titleTextStyle = computed(() => {
@@ -159,9 +159,9 @@ const titleTextStyle = computed(() => {
 
 // Styles - subtitle
 const subtitleClass = computed(() => {
-  return mergedProps.value?.ui?.subtitleClass?.({
+  return mergedProps.value?.ui?.subtitleClass?.(withClassPicker({
     defaults: NOTIFICATION_ROW_DEFAULT_PROPS.ui.subtitleClass(),
-  })
+  }))
 })
 
 const subtitleStyle = computed(() => {
@@ -170,9 +170,9 @@ const subtitleStyle = computed(() => {
 
 // Styles - subtitle item
 const subtitleItemClass = computed(() => {
-  return mergedProps.value?.ui?.subtitleItemClass?.({
+  return mergedProps.value?.ui?.subtitleItemClass?.(withClassPicker({
     defaults: NOTIFICATION_ROW_DEFAULT_PROPS.ui.subtitleItemClass(),
-  })
+  }))
 })
 
 const subtitleItemStyle = computed(() => {
@@ -181,9 +181,9 @@ const subtitleItemStyle = computed(() => {
 
 // Styles - counter
 const counterClass = computed(() => {
-  return mergedProps.value?.ui?.counterClass?.({
+  return mergedProps.value?.ui?.counterClass?.(withClassPicker({
     defaults: NOTIFICATION_ROW_DEFAULT_PROPS.ui.counterClass(),
-  })
+  }))
 })
 
 const counterStyle = computed(() => {

@@ -112,11 +112,11 @@ function handleKey(ev: KeyboardEvent) {
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return mergedProps.value?.ui?.containerClass?.(withClassPicker({
     defaults: CHECKBOX_DEFAULT_PROPS.ui.containerClass({
       size: props.size ?? 'md',
     }),
-  })
+  }))
 })
 
 const containerStyle = computed(() => {
@@ -125,12 +125,12 @@ const containerStyle = computed(() => {
 
 // Styles - checkbox
 const checkboxClass = computed(() => {
-  return mergedProps.value?.ui?.checkboxClass?.({
+  return mergedProps.value?.ui?.checkboxClass?.(withClassPicker({
     defaults: CHECKBOX_DEFAULT_PROPS.ui.checkboxClass({
       size: props.size ?? 'md',
       color: props.color ?? 'primary',
     }),
-  })
+  }))
 })
 
 const checkboxStyle = computed(() => {
@@ -139,11 +139,11 @@ const checkboxStyle = computed(() => {
 
 // Styles - label
 const labelClassComputed = computed(() => {
-  return mergedProps.value?.ui?.labelClass?.({
+  return mergedProps.value?.ui?.labelClass?.(withClassPicker({
     defaults: CHECKBOX_DEFAULT_PROPS.ui.labelClass({
       size: props.size ?? 'md',
     }),
-  })
+  }))
 })
 
 const labelStyle = computed(() => {
@@ -152,9 +152,9 @@ const labelStyle = computed(() => {
 
 // Styles - focus helper
 const focusHelperClass = computed(() => {
-  return mergedProps.value?.ui?.focusHelperClass?.({
+  return mergedProps.value?.ui?.focusHelperClass?.(withClassPicker({
     defaults: CHECKBOX_DEFAULT_PROPS.ui.focusHelperClass(),
-  })
+  }))
 })
 
 const focusHelperStyle = computed(() => {

@@ -114,9 +114,9 @@ function addEventListener() {
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return mergedProps.value?.ui?.containerClass?.(withClassPicker({
     defaults: YEAR_SELECTOR_DEFAULT_PROPS.ui.containerClass(),
-  })
+  }))
 })
 
 const containerStyle = computed(() => {
@@ -125,9 +125,9 @@ const containerStyle = computed(() => {
 
 // Styles - previous button
 const previousBtnClass = computed(() => {
-  return mergedProps.value?.ui?.previousBtnClass?.({
+  return mergedProps.value?.ui?.previousBtnClass?.(withClassPicker({
     defaults: YEAR_SELECTOR_DEFAULT_PROPS.ui.previousBtnClass(),
-  })
+  }))
 })
 
 const previousBtnStyle = computed(() => {
@@ -136,9 +136,9 @@ const previousBtnStyle = computed(() => {
 
 // Styles - next button
 const nextBtnClass = computed(() => {
-  return mergedProps.value?.ui?.nextBtnClass?.({
+  return mergedProps.value?.ui?.nextBtnClass?.(withClassPicker({
     defaults: YEAR_SELECTOR_DEFAULT_PROPS.ui.nextBtnClass(),
-  })
+  }))
 })
 
 const nextBtnStyle = computed(() => {
@@ -147,9 +147,9 @@ const nextBtnStyle = computed(() => {
 
 // Styles - menu container
 const menuContainerClass = computed(() => {
-  return mergedProps.value?.ui?.menuContainerClass?.({
+  return mergedProps.value?.ui?.menuContainerClass?.(withClassPicker({
     defaults: YEAR_SELECTOR_DEFAULT_PROPS.ui.menuContainerClass(),
-  })
+  }))
 })
 
 const menuContainerStyle = computed(() => {
@@ -158,9 +158,9 @@ const menuContainerStyle = computed(() => {
 
 // Styles - year button
 const yearBtnClass = computed(() => {
-  return mergedProps.value?.ui?.yearBtnClass?.({
+  return mergedProps.value?.ui?.yearBtnClass?.(withClassPicker({
     defaults: YEAR_SELECTOR_DEFAULT_PROPS.ui.yearBtnClass(),
-  })
+  }))
 })
 
 const yearBtnStyle = computed(() => {

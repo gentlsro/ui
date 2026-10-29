@@ -60,9 +60,9 @@ useResizeObserver(scrollEl, () => {
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return mergedProps.value?.ui?.containerClass?.(withClassPicker({
     defaults: SCROLLER_DEFAULT_PROPS.ui.horizontalContainerClass(),
-  })
+  }))
 })
 
 const containerStyle = computed(() => {
@@ -71,9 +71,9 @@ const containerStyle = computed(() => {
 
 // Styles - content
 const contentClass = computed(() => {
-  return mergedProps.value?.ui?.contentClass?.({
+  return mergedProps.value?.ui?.contentClass?.(withClassPicker({
     defaults: SCROLLER_DEFAULT_PROPS.ui.contentClass(),
-  })
+  }))
 })
 
 const contentStyle = computed(() => {
@@ -82,9 +82,9 @@ const contentStyle = computed(() => {
 
 // Styles - arrow
 const arrowClass = computed(() => {
-  return mergedProps.value?.ui?.arrowClass?.({
+  return mergedProps.value?.ui?.arrowClass?.(withClassPicker({
     defaults: SCROLLER_DEFAULT_PROPS.ui.arrowClass(),
-  })
+  }))
 })
 
 const arrowStyle = computed(() => {

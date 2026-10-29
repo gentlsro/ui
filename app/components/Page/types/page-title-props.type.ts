@@ -1,3 +1,4 @@
+import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
 // Constants
@@ -16,9 +17,9 @@ export type IPageTitleProps = {
     /**
      * Class to apply to the container
      */
-    containerClass?: (payload: {
+    containerClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof PAGE_TITLE_DEFAULT_PROPS['ui']['containerClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the container
@@ -28,9 +29,9 @@ export type IPageTitleProps = {
     /**
      * Class to apply to the page-title element
      */
-    pageTitleClass?: (payload: {
+    pageTitleClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof PAGE_TITLE_DEFAULT_PROPS['ui']['pageTitleClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the page-title element
@@ -40,9 +41,9 @@ export type IPageTitleProps = {
     /**
      * Class to apply to the title
      */
-    titleClass?: (payload: {
+    titleClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof PAGE_TITLE_DEFAULT_PROPS['ui']['titleClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the title

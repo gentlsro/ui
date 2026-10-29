@@ -104,9 +104,9 @@ function handleKeyDown(e: KeyboardEvent) {
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return mergedProps.value?.ui?.containerClass?.(withClassPicker({
     defaults: TOGGLE_DEFAULT_PROPS.ui.containerClass(),
-  })
+  }))
 })
 
 const containerStyle = computed(() => {
@@ -115,12 +115,12 @@ const containerStyle = computed(() => {
 
 // Styles - toggle
 const toggleClass = computed(() => {
-  return mergedProps.value?.ui?.toggleClass?.({
+  return mergedProps.value?.ui?.toggleClass?.(withClassPicker({
     defaults: TOGGLE_DEFAULT_PROPS.ui.toggleClass({
       size: props.size ?? 'sm',
       contained: props.contained ?? false,
     }),
-  })
+  }))
 })
 
 const toggleStyle = computed(() => {
@@ -129,12 +129,12 @@ const toggleStyle = computed(() => {
 
 // Styles - bullet
 const bulletClass = computed(() => {
-  return mergedProps.value?.ui?.bulletClass?.({
+  return mergedProps.value?.ui?.bulletClass?.(withClassPicker({
     defaults: TOGGLE_DEFAULT_PROPS.ui.bulletClass({
       size: props.size ?? 'sm',
       contained: props.contained ?? false,
     }),
-  })
+  }))
 })
 
 const bulletStyle = computed(() => {
@@ -143,11 +143,11 @@ const bulletStyle = computed(() => {
 
 // Styles - label
 const labelClass = computed(() => {
-  return mergedProps.value?.ui?.labelClass?.({
+  return mergedProps.value?.ui?.labelClass?.(withClassPicker({
     defaults: TOGGLE_DEFAULT_PROPS.ui.labelClass({
       size: props.size ?? 'sm',
     }),
-  })
+  }))
 })
 
 const labelStyle = computed(() => {
@@ -156,9 +156,9 @@ const labelStyle = computed(() => {
 
 // Styles - icon
 const iconClass = computed(() => {
-  return mergedProps.value?.ui?.iconClass?.({
+  return mergedProps.value?.ui?.iconClass?.(withClassPicker({
     defaults: TOGGLE_DEFAULT_PROPS.ui.iconClass(),
-  })
+  }))
 })
 
 const iconStyle = computed(() => {
@@ -167,9 +167,9 @@ const iconStyle = computed(() => {
 
 // Styles - focus helper
 const focusHelperClass = computed(() => {
-  return mergedProps.value?.ui?.focusHelperClass?.({
+  return mergedProps.value?.ui?.focusHelperClass?.(withClassPicker({
     defaults: TOGGLE_DEFAULT_PROPS.ui.focusHelperClass(),
-  })
+  }))
 })
 
 const focusHelperStyle = computed(() => {

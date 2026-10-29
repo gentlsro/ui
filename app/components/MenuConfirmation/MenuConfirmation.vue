@@ -70,9 +70,9 @@ defineExpose({
 
 // Styles - confirmBtn
 const confirmBtnClass = computed(() => {
-  return mergedProps.value?.ui?.confirmBtnClass?.({
+  return mergedProps.value?.ui?.confirmBtnClass?.(withClassPicker({
     defaults: MENU_CONFIRMATION_DEFAULT_PROPS.ui.confirmBtnClass(),
-  })
+  }))
 })
 
 const confirmBtnStyle = computed(() => {
@@ -81,9 +81,9 @@ const confirmBtnStyle = computed(() => {
 
 // Styles - confirmationText
 const confirmationTextClass = computed(() => {
-  return mergedProps.value?.ui?.confirmationTextClass?.({
+  return mergedProps.value?.ui?.confirmationTextClass?.(withClassPicker({
     defaults: MENU_CONFIRMATION_DEFAULT_PROPS.ui.confirmationTextClass(),
-  })
+  }))
 })
 
 const confirmationTextStyle = computed(() => {

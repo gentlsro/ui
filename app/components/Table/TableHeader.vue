@@ -33,9 +33,9 @@ const contentClass = computed(() => {
 })
 
 const headerClass = computed(() => {
-  return props.ui?.headerClass?.({
+  return props.ui?.headerClass?.(withClassPicker({
     defaults: TABLE_DEFAULT_PROPS.ui.headerClass(),
-  })
+  }))
 })
 
 const headerStyle = computed(() => {
@@ -44,7 +44,7 @@ const headerStyle = computed(() => {
 
 const rowActionsHeaderClass = computed(() => {
   const defaults = TABLE_DEFAULT_PROPS.ui.rowActionsHeaderClass()
-  return props.ui?.rowActionsHeaderClass?.({ defaults }) ?? defaults.all
+  return props.ui?.rowActionsHeaderClass?.(withClassPicker({ defaults })) ?? defaults.all
 })
 
 function getSplitterLeft(splitter: ITableSplitter) {

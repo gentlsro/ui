@@ -11,51 +11,51 @@ export const TOOLTIP_DEFAULT_PROPS = {
       const font = 'font-rem-13 color-ca'
       const noInheritFontStyle = '[&.no-inherit-font-style]:(font-normal normal-case leading-normal font-rem-13)'
 
-      return withClassPicker({
+      return {
         base,
         bg,
         font,
         noInheritFontStyle,
         all: `${base} ${bg} ${font} ${noInheritFontStyle}`,
-      } as const)
+      } as const
     },
 
     contentClass() {
       const base = 'flex flex-col gap-2px'
       const maxWidth = 'max-w-60'
 
-      return withClassPicker({
+      return {
         base,
         maxWidth,
         all: `${base} ${maxWidth}`,
-      } as const)
+      } as const
     },
 
     titleClass() {
       const base = 'font-rem-14 font-semibold'
 
-      return withClassPicker({
+      return {
         base,
         all: `${base}`,
-      } as const)
+      } as const
     },
 
     descriptionClass() {
       const base = 'font-rem-12 text-caption leading-tight'
 
-      return withClassPicker({
+      return {
         base,
         all: `${base}`,
-      } as const)
+      } as const
     },
 
     arrowClass() {
       const base = 'absolute w-2 h-2 rotate-45 bg-inherit'
 
-      return withClassPicker({
+      return {
         base,
         all: `${base}`,
-      } as const)
+      } as const
     },
   },
 } satisfies ITooltipProps

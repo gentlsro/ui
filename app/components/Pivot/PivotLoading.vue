@@ -20,9 +20,9 @@ const loadingStyle = computed(() => {
 })
 
 const loadingClass = computed(() => {
-  return props.ui?.loadingClass?.({
+  return props.ui?.loadingClass?.(withClassPicker({
     defaults: PIVOT_DEFAULT_PROPS.ui.loadingClass(),
-  })
+  }))
 })
 </script>
 

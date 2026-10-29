@@ -26,9 +26,9 @@ const { searchEl, isLoading, items, addItemArk } = useListStore()
 const search = defineModel<string>('search')
 
 const searchClass = computed(() => {
-  return props.ui?.searchClass?.({
+  return props.ui?.searchClass?.(withClassPicker({
     defaults: LIST_DEFAULT_PROPS.ui.searchClass(),
-  })
+  }))
 })
 
 const searchStyle = computed(() => {

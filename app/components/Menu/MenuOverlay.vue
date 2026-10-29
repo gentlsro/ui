@@ -20,9 +20,9 @@ const { zIndex, model } = useMenuStore()
 
 // Styles - overlay
 const overlayClass = computed(() => {
-  return props.ui?.overlayClass?.({
+  return props.ui?.overlayClass?.(withClassPicker({
     defaults: MENU_DEFAULT_PROPS.ui.overlayClass(),
-  })
+  }))
 })
 
 const overlayStyle = computed(() => {

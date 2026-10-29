@@ -49,7 +49,7 @@ export const BTN_DEFAULT_PROPS = {
 
       size = sizes[sizeProp]
 
-      return withClassPicker({
+      return {
         base,
         webkit,
         interactive,
@@ -88,7 +88,7 @@ export const BTN_DEFAULT_PROPS = {
           props.disabled && props.disableStyle === 'flat' && disabledFlat,
           !hasLabel && noLabel,
         ].filter(Boolean).join(' '),
-      } as const)
+      } as const
     },
 
     iconClass(payload: {
@@ -119,11 +119,11 @@ export const BTN_DEFAULT_PROPS = {
 
       size = sizes[sizeProp]
 
-      return withClassPicker({
+      return {
         base,
         sizes,
         all: `${base} ${size}`,
-      } as const)
+      } as const
     },
 
     labelClass(payload: Pick<ButtonStyleProps, 'size' | 'align'>) {
@@ -157,34 +157,34 @@ export const BTN_DEFAULT_PROPS = {
 
       size = sizes[sizeProp]
 
-      return withClassPicker({
+      return {
         base,
         alignLeft,
         alignCenter,
         alignRight,
         sizes,
         all: [base, size, align === 'left' && alignLeft, align === 'center' && alignCenter, align === 'right' && alignRight].filter(Boolean).join(' '),
-      } as const)
+      } as const
     },
 
     focusHelperClass() {
       const base = 'absolute z-3 cursor-pointer rounded-inherit inset-0 pointer-events-none'
       const hover = 'group-hover/btn:bg-current group-hover/btn:opacity-10'
 
-      return withClassPicker({
+      return {
         base,
         hover,
         all: `${base} ${hover}`,
-      } as const)
+      } as const
     },
 
     loadingClass() {
       const base = 'absolute flex flex-center fit top-0 left-0 z-4 bg-white dark:bg-dark opacity-95 rounded-inherit cursor-wait'
 
-      return withClassPicker({
+      return {
         base,
         all: base,
-      } as const)
+      } as const
     },
 
     loaderClass(payload: {
@@ -215,11 +215,11 @@ export const BTN_DEFAULT_PROPS = {
 
       size = sizes[sizeProp]
 
-      return withClassPicker({
+      return {
         base,
         sizes,
         all: `${base} ${size}`,
-      } as const)
+      } as const
     },
   },
 }

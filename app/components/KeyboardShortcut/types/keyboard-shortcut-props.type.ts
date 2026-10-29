@@ -1,3 +1,4 @@
+import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
 // Constants
@@ -47,9 +48,9 @@ export type IKeyboardShortcutProps = {
     /**
      * Class to apply to the container
      */
-    containerClass?: (payload: {
+    containerClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof KEYBOARD_SHORTCUT_DEFAULT_PROPS['ui']['containerClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the container
@@ -59,9 +60,9 @@ export type IKeyboardShortcutProps = {
     /**
      * Class to apply to each key wrapper
      */
-    wrapperClass?: (payload: {
+    wrapperClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof KEYBOARD_SHORTCUT_DEFAULT_PROPS['ui']['wrapperClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to each key wrapper
@@ -71,9 +72,9 @@ export type IKeyboardShortcutProps = {
     /**
      * Class to apply to the icons
      */
-    iconClass?: (payload: {
+    iconClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof KEYBOARD_SHORTCUT_DEFAULT_PROPS['ui']['iconClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the icons

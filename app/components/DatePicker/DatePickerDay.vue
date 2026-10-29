@@ -45,42 +45,42 @@ const styleState = computed(() => ({
   disabled: props.disabled,
 }))
 
-const dayClass = computed(() => mergedProps.value.ui?.dayClass?.({
+const dayClass = computed(() => mergedProps.value.ui?.dayClass?.(withClassPicker({
   defaults: DATE_PICKER_DEFAULT_PROPS.ui.dayClass(styleState.value),
   ...styleState.value,
-}))
+})))
 const dayStyle = computed(() => mergedProps.value.ui?.dayStyle?.())
 
-const dayNumberClass = computed(() => mergedProps.value.ui?.dayNumberClass?.({
+const dayNumberClass = computed(() => mergedProps.value.ui?.dayNumberClass?.(withClassPicker({
   defaults: DATE_PICKER_DEFAULT_PROPS.ui.dayNumberClass(styleState.value),
   ...styleState.value,
-}))
+})))
 const dayNumberStyle = computed(() => mergedProps.value.ui?.dayNumberStyle?.())
 
-const dayEdgeClass = computed(() => mergedProps.value.ui?.dayEdgeClass?.({
+const dayEdgeClass = computed(() => mergedProps.value.ui?.dayEdgeClass?.(withClassPicker({
   defaults: DATE_PICKER_DEFAULT_PROPS.ui.dayEdgeClass(styleState.value),
   ...styleState.value,
-}))
+})))
 const dayEdgeStyle = computed(() => mergedProps.value.ui?.dayEdgeStyle?.())
 
-const dayNumberWrapperClass = computed(() => mergedProps.value.ui?.dayNumberWrapperClass?.({
+const dayNumberWrapperClass = computed(() => mergedProps.value.ui?.dayNumberWrapperClass?.(withClassPicker({
   defaults: DATE_PICKER_DEFAULT_PROPS.ui.dayNumberWrapperClass(),
-}))
+})))
 const dayNumberWrapperStyle = computed(() => mergedProps.value.ui?.dayNumberWrapperStyle?.())
 
-const dayEventsClass = computed(() => mergedProps.value.ui?.dayEventsClass?.({
+const dayEventsClass = computed(() => mergedProps.value.ui?.dayEventsClass?.(withClassPicker({
   defaults: DATE_PICKER_DEFAULT_PROPS.ui.dayEventsClass(),
-}))
+})))
 const dayEventsStyle = computed(() => mergedProps.value.ui?.dayEventsStyle?.())
 
-const dayEventsContainerClass = computed(() => mergedProps.value.ui?.dayEventsContainerClass?.({
+const dayEventsContainerClass = computed(() => mergedProps.value.ui?.dayEventsContainerClass?.(withClassPicker({
   defaults: DATE_PICKER_DEFAULT_PROPS.ui.dayEventsContainerClass(),
-}))
+})))
 const dayEventsContainerStyle = computed(() => mergedProps.value.ui?.dayEventsContainerStyle?.())
 
-const dayEventClass = computed(() => mergedProps.value.ui?.dayEventClass?.({
+const dayEventClass = computed(() => mergedProps.value.ui?.dayEventClass?.(withClassPicker({
   defaults: DATE_PICKER_DEFAULT_PROPS.ui.dayEventClass(),
-}))
+})))
 const dayEventStyle = computed(() => mergedProps.value.ui?.dayEventStyle?.())
 </script>
 

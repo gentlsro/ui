@@ -197,9 +197,9 @@ function bounce() {
 
 // Styles - backdrop
 const backdropClass = computed(() => {
-  return mergedProps.value?.ui?.backdropClass?.({
+  return mergedProps.value?.ui?.backdropClass?.(withClassPicker({
     defaults: DIALOG_DEFAULT_PROPS.ui.backdropClass(),
-  })
+  }))
 })
 
 const backdropStyle = computed(() => {
@@ -208,9 +208,9 @@ const backdropStyle = computed(() => {
 
 // Styles - wrapper
 const wrapperClass = computed(() => {
-  return mergedProps.value?.ui?.wrapperClass?.({
+  return mergedProps.value?.ui?.wrapperClass?.(withClassPicker({
     defaults: DIALOG_DEFAULT_PROPS.ui.wrapperClass(),
-  })
+  }))
 })
 
 const wrapperStyle = computed(() => {
@@ -219,11 +219,11 @@ const wrapperStyle = computed(() => {
 
 // Styles - dialog
 const dialogClass = computed(() => {
-  return mergedProps.value?.ui?.dialogClass?.({
+  return mergedProps.value?.ui?.dialogClass?.(withClassPicker({
     defaults: DIALOG_DEFAULT_PROPS.ui.dialogClass({
       position: props.position ?? 'center',
     }),
-  })
+  }))
 })
 
 const dialogStyle = computed(() => {
@@ -232,9 +232,9 @@ const dialogStyle = computed(() => {
 
 // Styles - header
 const headerClass = computed(() => {
-  return mergedProps.value?.ui?.headerClass?.({
+  return mergedProps.value?.ui?.headerClass?.(withClassPicker({
     defaults: DIALOG_DEFAULT_PROPS.ui.headerClass(),
-  })
+  }))
 })
 
 const headerStyle = computed(() => {
@@ -243,9 +243,9 @@ const headerStyle = computed(() => {
 
 // Styles - title
 const titleClass = computed(() => {
-  return mergedProps.value?.ui?.titleClass?.({
+  return mergedProps.value?.ui?.titleClass?.(withClassPicker({
     defaults: DIALOG_DEFAULT_PROPS.ui.titleClass(),
-  })
+  }))
 })
 
 const titleStyle = computed(() => {
@@ -254,9 +254,9 @@ const titleStyle = computed(() => {
 
 // Styles - content
 const contentClass = computed(() => {
-  return mergedProps.value?.ui?.contentClass?.({
+  return mergedProps.value?.ui?.contentClass?.(withClassPicker({
     defaults: DIALOG_DEFAULT_PROPS.ui.contentClass(),
-  })
+  }))
 })
 
 const contentStyle = computed(() => {

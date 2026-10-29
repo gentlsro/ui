@@ -1,3 +1,4 @@
+import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
 // Constants
@@ -26,9 +27,9 @@ export type IYearSelectorProps = {
     /**
      * Class to apply to the container
      */
-    containerClass?: (payload: {
+    containerClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof YEAR_SELECTOR_DEFAULT_PROPS['ui']['containerClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the container
@@ -38,9 +39,9 @@ export type IYearSelectorProps = {
     /**
      * Class to apply to the previous button
      */
-    previousBtnClass?: (payload: {
+    previousBtnClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof YEAR_SELECTOR_DEFAULT_PROPS['ui']['previousBtnClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the previous button
@@ -50,9 +51,9 @@ export type IYearSelectorProps = {
     /**
      * Class to apply to the next button
      */
-    nextBtnClass?: (payload: {
+    nextBtnClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof YEAR_SELECTOR_DEFAULT_PROPS['ui']['nextBtnClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the next button
@@ -62,9 +63,9 @@ export type IYearSelectorProps = {
     /**
      * Class to apply to the menu container
      */
-    menuContainerClass?: (payload: {
+    menuContainerClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof YEAR_SELECTOR_DEFAULT_PROPS['ui']['menuContainerClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the menu container
@@ -74,9 +75,9 @@ export type IYearSelectorProps = {
     /**
      * Class to apply to each year button
      */
-    yearBtnClass?: (payload: {
+    yearBtnClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof YEAR_SELECTOR_DEFAULT_PROPS['ui']['yearBtnClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to each year button

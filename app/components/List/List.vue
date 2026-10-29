@@ -84,9 +84,9 @@ const isSearchInputVisible = computed(() => {
 })
 
 const containerClass = computed(() => {
-  return mergedProps.value.ui?.containerClass?.({
+  return mergedProps.value.ui?.containerClass?.(withClassPicker({
     defaults: LIST_DEFAULT_PROPS.ui.containerClass(),
-  })
+  }))
 })
 
 const containerStyle = computed(() => {

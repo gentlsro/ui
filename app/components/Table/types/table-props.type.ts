@@ -1,3 +1,4 @@
+import type { WithClassPicker } from '../../../functions/with-class-picker'
 // Types
 import type { CSSProperties } from 'vue'
 import type { NuxtLinkProps } from '#app'
@@ -647,30 +648,30 @@ export type ITableProps<
    */
   ui?: {
     /** Class applied to the action area in card and desktop rows. */
-    rowActionsClass?: (payload: {
+    rowActionsClass?: (payload: WithClassPicker<{
       row: IItem
       defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['rowActionsClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /** Class applied to the desktop action-column header. */
-    rowActionsHeaderClass?: (payload: {
+    rowActionsHeaderClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['rowActionsHeaderClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Class applied to the alternate row
      */
-    alternateRowClass?: (payload: {
+    alternateRowClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['alternateRowClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Class applied to the header cell
      */
-    headerCellClass?: (payload: {
+    headerCellClass?: (payload: WithClassPicker<{
       column: TableColumn
       defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['headerCellClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style applied to the header cell
@@ -682,10 +683,10 @@ export type ITableProps<
     /**
      * Class applied to the header cell inner container (the `span` element)
      */
-    headerCellInnerClass?: (payload: {
+    headerCellInnerClass?: (payload: WithClassPicker<{
       column: TableColumn
       defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['headerCellInnerClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style applied to the header cell inner container (the `span` element)
@@ -697,10 +698,10 @@ export type ITableProps<
     /**
      * Class applied to the cell
      */
-    rowClass?: (payload: {
+    rowClass?: (payload: WithClassPicker<{
       row: IItem
       defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['rowClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style applied to the cell
@@ -712,11 +713,11 @@ export type ITableProps<
     /**
      * Class applied to the cell
      */
-    cellClass?: (payload: {
+    cellClass?: (payload: WithClassPicker<{
       row: IItem
       column: TableColumn
       defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['cellClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style applied to the cell
@@ -729,11 +730,11 @@ export type ITableProps<
     /**
      * Class applied to the inner cell element (most likely the `span` element)
      */
-    cellInnerClass?: (payload: {
+    cellInnerClass?: (payload: WithClassPicker<{
       row: IItem
       column: TableColumn
       defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['cellInnerClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style applied to the inner cell element (most likely the `span` element)
@@ -746,9 +747,9 @@ export type ITableProps<
     /**
      * Class applied to the table content
      */
-    contentClass?: (payload: {
+    contentClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['contentClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style applied to the table content
@@ -758,9 +759,9 @@ export type ITableProps<
     /**
      * Class applied to the header
      */
-    headerClass?: (payload: {
+    headerClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['headerClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style applied to the header
@@ -770,9 +771,9 @@ export type ITableProps<
     /**
      * Class applied to the TableToolbar
      */
-    toolbarClass?: (payload: {
+    toolbarClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['toolbarClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style applied to the TableToolbar
@@ -782,9 +783,9 @@ export type ITableProps<
     /**
      * Class applied to the TableTop
      */
-    topClass?: (payload: {
+    topClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['topClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style applied to the TableTop
@@ -794,9 +795,9 @@ export type ITableProps<
     /**
      * Class applied to the TableBottom
      */
-    bottomClass?: (payload: {
+    bottomClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['bottomClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style applied to the TableBottom
@@ -806,9 +807,9 @@ export type ITableProps<
     /**
      * Class applied to the table itself
      */
-    containerClass?: (payload: {
+    containerClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['containerClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style applied to the table itself
@@ -818,10 +819,10 @@ export type ITableProps<
     /**
      * Class applied to the cell
      */
-    totalsCellClass?: (payload: {
+    totalsCellClass?: (payload: WithClassPicker<{
       column: TableColumn
       defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['totalsCellClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style applied to the cell

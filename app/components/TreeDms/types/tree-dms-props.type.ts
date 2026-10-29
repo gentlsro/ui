@@ -1,3 +1,4 @@
+import type { WithClassPicker } from '../../../functions/with-class-picker'
 // Types
 import type { CSSProperties } from 'vue'
 import type { ITreeProps } from '../../Tree/types/tree-props.type'
@@ -148,9 +149,9 @@ export type ITreeDmsProps<T extends IItem = IItem> = {
     /**
      * Class to apply to the label
      */
-    labelClass?: (payload: {
+    labelClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof TREE_DMS_DEFAULT_PROPS['ui']['labelClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the label

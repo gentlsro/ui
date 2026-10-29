@@ -1,3 +1,4 @@
+import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 import type { TableColumn } from '../../Table/models/table-column.model'
 
@@ -87,9 +88,9 @@ export type IVirtualScrollerProps<T, C extends IVirtualScrollerColumn = TableCol
     /**
      * Class applied to the container
      */
-    containerClass?: (payload: {
+    containerClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof VIRTUAL_SCROLLER_DEFAULT_PROPS['ui']['containerClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style applied to the container
@@ -99,9 +100,9 @@ export type IVirtualScrollerProps<T, C extends IVirtualScrollerColumn = TableCol
     /**
      * Class applied to the content
      */
-    contentClass?: (payload: {
+    contentClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof VIRTUAL_SCROLLER_DEFAULT_PROPS['ui']['contentClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style applied to the content
@@ -111,9 +112,9 @@ export type IVirtualScrollerProps<T, C extends IVirtualScrollerColumn = TableCol
     /**
      * Class applied to the row
      */
-    rowClass?: (payload: {
+    rowClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof VIRTUAL_SCROLLER_DEFAULT_PROPS['ui']['rowClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style applied to the row

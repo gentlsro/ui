@@ -32,9 +32,9 @@ const classes = computed(() => {
 
 // Styles - Input Container
 const inputContainerClass = computed(() => {
-  return props.ui?.inputContainerClass?.({
+  return props.ui?.inputContainerClass?.(withClassPicker({
     defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.inputContainerClass(),
-  })
+  }))
 })
 
 const inputContainerStyle = computed(() => {
@@ -50,9 +50,9 @@ const inputContainerStyle = computed(() => {
 
 // Styles - Input Inner Container
 const inputInnerContainerClass = computed(() => {
-  return props.ui?.inputInnerContainerClass?.({
+  return props.ui?.inputInnerContainerClass?.(withClassPicker({
     defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.inputInnerContainerClass(),
-  })
+  }))
 })
 
 const inputInnerContainerStyle = computed(() => {

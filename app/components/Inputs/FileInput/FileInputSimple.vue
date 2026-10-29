@@ -53,9 +53,9 @@ function handleOpenDialog(ev?: PointerEvent | FocusEvent) {
 
 // Styles - append
 const appendClass = computed(() => {
-  return mergedProps.value.ui?.appendClass?.({
+  return mergedProps.value.ui?.appendClass?.(withClassPicker({
     defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.appendClass(),
-  })
+  }))
 })
 
 // Styles - append

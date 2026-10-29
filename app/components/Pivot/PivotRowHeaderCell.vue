@@ -26,9 +26,9 @@ const headerLabel = computed(() => {
 })
 
 const rowHeaderCellClass = computed(() => {
-  return ui.value?.rowHeaderCellClass?.({
+  return ui.value?.rowHeaderCellClass?.(withClassPicker({
     defaults: PIVOT_DEFAULT_PROPS.ui.rowHeaderCellClass(),
-  })
+  }))
 })
 
 const rowHeaderCellStyle = computed(() => {

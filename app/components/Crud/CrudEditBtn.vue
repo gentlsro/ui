@@ -39,9 +39,9 @@ syncRef(isEditing, isEditingStore)
 
 // Styles - wrapper
 const wrapperClass = computed(() => {
-  return mergedProps.value?.ui?.wrapperClass?.({
+  return mergedProps.value?.ui?.wrapperClass?.(withClassPicker({
     defaults: CRUD_EDIT_BTN_DEFAULT_PROPS.ui.wrapperClass(),
-  })
+  }))
 })
 
 const wrapperStyle = computed(() => {
@@ -50,9 +50,9 @@ const wrapperStyle = computed(() => {
 
 // Styles - button
 const btnClass = computed(() => {
-  return mergedProps.value?.ui?.btnClass?.({
+  return mergedProps.value?.ui?.btnClass?.(withClassPicker({
     defaults: CRUD_EDIT_BTN_DEFAULT_PROPS.ui.btnClass(),
-  })
+  }))
 })
 
 const btnStyle = computed(() => {

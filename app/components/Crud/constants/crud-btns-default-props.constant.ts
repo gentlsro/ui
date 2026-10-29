@@ -11,12 +11,12 @@ export const CRUD_BTNS_DEFAULT_PROPS = {
       // Nested button styles
       const btnStyles = '[&_.btn]:(lt-lg:p-x-1) [&_.btn-label]:(lt-lg:hidden)'
 
-      return withClassPicker({
+      return {
         base,
         hasLabels,
         btnStyles,
         all: `${base} ${hasLabels} ${btnStyles}`,
-      } as const)
+      } as const
     },
   },
 }
@@ -26,10 +26,10 @@ export const CRUD_EDIT_BTN_DEFAULT_PROPS = {
     wrapperClass() {
       const base = 'absolute inset-block-0 right-0 flex flex-center rounded-inherit bg-white dark:bg-darker min-w-full'
 
-      return withClassPicker({
+      return {
         base,
         all: base,
-      } as const)
+      } as const
     },
 
     btnClass() {
@@ -38,11 +38,11 @@ export const CRUD_EDIT_BTN_DEFAULT_PROPS = {
       // State styling via CSS selectors
       const activeState = '[&:not(.is-archived):not(.is-disabled)]:(bg-primary color-white)'
 
-      return withClassPicker({
+      return {
         base,
         activeState,
         all: `${base} ${activeState}`,
-      } as const)
+      } as const
     },
   },
 }

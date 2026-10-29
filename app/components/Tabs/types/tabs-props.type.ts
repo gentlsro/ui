@@ -1,3 +1,4 @@
+import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties, KeepAliveProps } from 'vue'
 
 // Types
@@ -29,9 +30,9 @@ export type ITabsProps = {
     /**
      * Class to apply to the container
      */
-    containerClass?: (payload: {
+    containerClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof TABS_DEFAULT_PROPS['ui']['containerClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the container
@@ -41,9 +42,9 @@ export type ITabsProps = {
     /**
      * Class to apply to the navigation
      */
-    navigationClass?: (payload: {
+    navigationClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof TABS_DEFAULT_PROPS['ui']['navigationClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the navigation
@@ -53,9 +54,9 @@ export type ITabsProps = {
     /**
      * Class to apply to the navigation content (inner class of the `HorizontalScroller`)
      */
-    navigationContentClass?: (payload: {
+    navigationContentClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof TABS_DEFAULT_PROPS['ui']['navigationContentClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the navigation content (inner style of the `HorizontalScroller`)
@@ -65,9 +66,9 @@ export type ITabsProps = {
     /**
      * Class to apply to the content
      */
-    tabClass?: (payload: {
+    tabClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof TABS_DEFAULT_PROPS['ui']['tabClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the content
@@ -78,9 +79,9 @@ export type ITabsProps = {
      * Class to apply to the tab's navigation button
      * Note: Use `is-active` CSS selector for active state styling
      */
-    tabNavBtnClass?: (payload: {
+    tabNavBtnClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof TABS_DEFAULT_PROPS['ui']['tabNavBtnClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the tab's navigation button

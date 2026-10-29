@@ -6,47 +6,47 @@ export const SCROLLER_DEFAULT_PROPS = {
     horizontalContainerClass() {
       const base = 'flex relative overflow-hidden'
 
-      return withClassPicker({
+      return {
         base,
         all: base,
-      } as const)
+      } as const
     },
 
     // Vertical scroller container
     verticalContainerClass() {
       const base = 'flex flex-col relative items-center overflow-hidden'
 
-      return withClassPicker({
+      return {
         base,
         all: base,
-      } as const)
+      } as const
     },
 
     contentClass() {
       const base = 'flex grow overflow-auto'
 
-      return withClassPicker({
+      return {
         base,
         all: base,
-      } as const)
+      } as const
     },
 
     verticalContentClass() {
       const base = 'flex flex-col flex-1 overflow-auto w-full'
 
-      return withClassPicker({
+      return {
         base,
         all: base,
-      } as const)
+      } as const
     },
 
     arrowClass() {
       const base = 'color-ca dark:hover:color-white hover:color-black'
 
-      return withClassPicker({
+      return {
         base,
         all: base,
-      } as const)
+      } as const
     },
   },
 }

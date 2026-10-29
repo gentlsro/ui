@@ -63,9 +63,9 @@ function hasText(step: IStepperStep) {
 
 // Styles - navigation
 const navigationClass = computed(() => {
-  return stepper.ui.value?.navigationClass?.({
+  return stepper.ui.value?.navigationClass?.(withClassPicker({
     defaults: STEPPER_DEFAULT_PROPS.ui.navigationClass({ layout: stepper.layout.value }),
-  })
+  }))
 })
 
 const navigationStyle = computed(() => {
@@ -74,9 +74,9 @@ const navigationStyle = computed(() => {
 
 // Styles - item
 const itemClass = computed(() => {
-  return stepper.ui.value?.itemClass?.({
+  return stepper.ui.value?.itemClass?.(withClassPicker({
     defaults: STEPPER_DEFAULT_PROPS.ui.itemClass({ layout: stepper.layout.value }),
-  })
+  }))
 })
 
 const itemStyle = computed(() => {
@@ -85,9 +85,9 @@ const itemStyle = computed(() => {
 
 // Styles - trigger
 const triggerClass = computed(() => {
-  return stepper.ui.value?.triggerClass?.({
+  return stepper.ui.value?.triggerClass?.(withClassPicker({
     defaults: STEPPER_DEFAULT_PROPS.ui.triggerClass({ layout: stepper.layout.value }),
-  })
+  }))
 })
 
 const triggerStyle = computed(() => {
@@ -96,9 +96,9 @@ const triggerStyle = computed(() => {
 
 // Styles - indicator
 const indicatorClass = computed(() => {
-  return stepper.ui.value?.indicatorClass?.({
+  return stepper.ui.value?.indicatorClass?.(withClassPicker({
     defaults: STEPPER_DEFAULT_PROPS.ui.indicatorClass({ size: stepper.size.value }),
-  })
+  }))
 })
 
 const indicatorStyle = computed(() => {
@@ -107,9 +107,9 @@ const indicatorStyle = computed(() => {
 
 // Styles - icon
 const iconClass = computed(() => {
-  return stepper.ui.value?.iconClass?.({
+  return stepper.ui.value?.iconClass?.(withClassPicker({
     defaults: STEPPER_DEFAULT_PROPS.ui.iconClass({ size: stepper.size.value }),
-  })
+  }))
 })
 
 const iconStyle = computed(() => {
@@ -118,9 +118,9 @@ const iconStyle = computed(() => {
 
 // Styles - separator
 const separatorClass = computed(() => {
-  return stepper.ui.value?.separatorClass?.({
+  return stepper.ui.value?.separatorClass?.(withClassPicker({
     defaults: STEPPER_DEFAULT_PROPS.ui.separatorClass({ layout: stepper.layout.value }),
-  })
+  }))
 })
 
 const separatorStyle = computed(() => {
@@ -129,9 +129,9 @@ const separatorStyle = computed(() => {
 
 // Styles - text
 const textClass = computed(() => {
-  return stepper.ui.value?.textClass?.({
+  return stepper.ui.value?.textClass?.(withClassPicker({
     defaults: STEPPER_DEFAULT_PROPS.ui.textClass({ layout: stepper.layout.value }),
-  })
+  }))
 })
 
 const textStyle = computed(() => {
@@ -140,9 +140,9 @@ const textStyle = computed(() => {
 
 // Styles - label
 const labelClass = computed(() => {
-  return stepper.ui.value?.labelClass?.({
+  return stepper.ui.value?.labelClass?.(withClassPicker({
     defaults: STEPPER_DEFAULT_PROPS.ui.labelClass({ size: stepper.size.value }),
-  })
+  }))
 })
 
 const labelStyle = computed(() => {
@@ -151,9 +151,9 @@ const labelStyle = computed(() => {
 
 // Styles - description
 const descriptionClass = computed(() => {
-  return stepper.ui.value?.descriptionClass?.({
+  return stepper.ui.value?.descriptionClass?.(withClassPicker({
     defaults: STEPPER_DEFAULT_PROPS.ui.descriptionClass({ size: stepper.size.value }),
-  })
+  }))
 })
 
 const descriptionStyle = computed(() => {

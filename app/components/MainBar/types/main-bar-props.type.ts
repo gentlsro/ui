@@ -1,3 +1,4 @@
+import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
 // Types
@@ -50,9 +51,9 @@ export type IMainBarProps = {
     /**
      * Class to apply to the container
      */
-    containerClass?: (payload: {
+    containerClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof MAIN_BAR_DEFAULT_PROPS['ui']['containerClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the container
@@ -62,9 +63,9 @@ export type IMainBarProps = {
     /**
      * Class to apply to the content wrapper
      */
-    contentClass?: (payload: {
+    contentClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof MAIN_BAR_DEFAULT_PROPS['ui']['contentClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the content wrapper
@@ -74,9 +75,9 @@ export type IMainBarProps = {
     /**
      * Class to apply to the title wrapper
      */
-    titleWrapperClass?: (payload: {
+    titleWrapperClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof MAIN_BAR_DEFAULT_PROPS['ui']['titleWrapperClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the title wrapper
@@ -86,9 +87,9 @@ export type IMainBarProps = {
     /**
      * Class to apply to the title (Heading component)
      */
-    titleClass?: (payload: {
+    titleClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof MAIN_BAR_DEFAULT_PROPS['ui']['titleClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the title
@@ -98,9 +99,9 @@ export type IMainBarProps = {
     /**
      * Class to apply to the subtitle
      */
-    subtitleClass?: (payload: {
+    subtitleClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof MAIN_BAR_DEFAULT_PROPS['ui']['subtitleClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the subtitle
@@ -110,9 +111,9 @@ export type IMainBarProps = {
     /**
      * Class to apply to the actions wrapper
      */
-    actionsClass?: (payload: {
+    actionsClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof MAIN_BAR_DEFAULT_PROPS['ui']['actionsClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the actions wrapper
