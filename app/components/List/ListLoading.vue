@@ -19,7 +19,7 @@ const loadingStyle = computed(() => {
 })
 
 const loadingClass = computed(() => {
-  return props.ui?.loadingClass?.({
+  return resolveUIClass(props.ui?.loadingClass, {
     defaults: LIST_DEFAULT_PROPS.ui.loadingClass(),
   })
 })

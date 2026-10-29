@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { CSSProperties } from 'vue'
 import type { Boundary, OffsetOptions, Placement } from '@floating-ui/dom'
 
@@ -200,7 +201,7 @@ export type IMenuProps = {
     resizable?: boolean
   }
 
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class to apply to the `menu` itself
      */
@@ -260,5 +261,5 @@ export type IMenuProps = {
      * Style to apply to the `title`
      */
     titleStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['menu']>
 }

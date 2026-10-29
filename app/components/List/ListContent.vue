@@ -53,7 +53,7 @@ function handleVirtualScroll(ev: IVirtualScrollEvent) {
 }
 
 const contentClass = computed(() => {
-  return props.ui?.contentClass?.({
+  return resolveUIClass(props.ui?.contentClass, {
     hasSearch: searchConfig.value?.enabled,
     defaults: LIST_DEFAULT_PROPS.ui.contentClass({ hasSearch: searchConfig.value?.enabled }),
   })

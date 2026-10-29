@@ -13,7 +13,7 @@ const isConfigurationOpen = ref(false)
 
 // Styles - top
 const topClass = computed(() => {
-  return ui.value?.topClass?.({
+  return resolveUIClass(ui.value?.topClass, {
     defaults: PIVOT_DEFAULT_PROPS.ui.topClass(),
   })
 })
@@ -24,7 +24,7 @@ const topStyle = computed(() => {
 
 // Styles - title
 const titleClass = computed(() => {
-  return ui.value?.titleClass?.({
+  return resolveUIClass(ui.value?.titleClass, {
     defaults: PIVOT_DEFAULT_PROPS.ui.titleClass(),
   })
 })

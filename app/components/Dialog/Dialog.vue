@@ -197,7 +197,7 @@ function bounce() {
 
 // Styles - backdrop
 const backdropClass = computed(() => {
-  return mergedProps.value?.ui?.backdropClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.backdropClass, {
     defaults: DIALOG_DEFAULT_PROPS.ui.backdropClass(),
   })
 })
@@ -208,7 +208,7 @@ const backdropStyle = computed(() => {
 
 // Styles - wrapper
 const wrapperClass = computed(() => {
-  return mergedProps.value?.ui?.wrapperClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.wrapperClass, {
     defaults: DIALOG_DEFAULT_PROPS.ui.wrapperClass(),
   })
 })
@@ -219,7 +219,7 @@ const wrapperStyle = computed(() => {
 
 // Styles - dialog
 const dialogClass = computed(() => {
-  return mergedProps.value?.ui?.dialogClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.dialogClass, {
     defaults: DIALOG_DEFAULT_PROPS.ui.dialogClass({
       position: props.position ?? 'center',
     }),
@@ -232,7 +232,7 @@ const dialogStyle = computed(() => {
 
 // Styles - header
 const headerClass = computed(() => {
-  return mergedProps.value?.ui?.headerClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.headerClass, {
     defaults: DIALOG_DEFAULT_PROPS.ui.headerClass(),
   })
 })
@@ -243,7 +243,7 @@ const headerStyle = computed(() => {
 
 // Styles - title
 const titleClass = computed(() => {
-  return mergedProps.value?.ui?.titleClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.titleClass, {
     defaults: DIALOG_DEFAULT_PROPS.ui.titleClass(),
   })
 })
@@ -254,7 +254,7 @@ const titleStyle = computed(() => {
 
 // Styles - content
 const contentClass = computed(() => {
-  return mergedProps.value?.ui?.contentClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.contentClass, {
     defaults: DIALOG_DEFAULT_PROPS.ui.contentClass(),
   })
 })

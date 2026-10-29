@@ -1,8 +1,9 @@
+import type { UIClasses, UIResolvedClasses } from '../../../../types/ui-config.type'
 // Types
 import type { IMenuProps } from '../../../Menu/types/menu-props.type'
 import type { IInputProps } from '../../types/input-props.type'
 
-export type ITextAreaInputProps = IInputProps & {
+export type ITextAreaInputProps = Omit<IInputProps, 'ui'> & {
   /**
    * Whether the textarea should automatically grow
    */
@@ -24,4 +25,4 @@ export type ITextAreaInputProps = IInputProps & {
    * The props that should be passed to the tooltip
    */
   tooltipProps?: IMenuProps
-}
+} & { ui?: UIClasses<NonNullable<(IInputProps)['ui']>, UIResolvedClasses['textArea']> }

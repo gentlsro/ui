@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { CSSProperties } from 'vue'
 
 // Constants
@@ -71,7 +72,7 @@ export type ICollapseProps = {
   /**
    * Visual configuration of the `Collapse`
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class for the container of the `Collapse`
      */
@@ -179,7 +180,7 @@ export type ICollapseProps = {
      * Style that will be applied to the text part of the header (where `title` and `subtitle` are placed)
      */
     textStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['collapse']>
 
   /**
    * Functions that gets called before the collapse is shown

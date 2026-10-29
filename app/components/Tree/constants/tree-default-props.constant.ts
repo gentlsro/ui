@@ -1,8 +1,5 @@
 // @unocss-include
 
-// Types
-import type { ITreeProps } from '../types/tree-props.type'
-
 export const TREE_DEFAULT_PROPS = {
   ui: {
     containerClass() {
@@ -110,4 +107,4 @@ export const TREE_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies ITreeProps
+}

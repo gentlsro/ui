@@ -1,6 +1,6 @@
 // @unocss-include
 
-import type { IUIConfig } from './types/ui-config.type'
+import type { IUIConfig, UIConfigClasses } from './types/ui-config.type'
 import { extendUIConfig } from './utils/extend-ui-config'
 
 // Constants
@@ -469,6 +469,7 @@ export const defaultComponentsConfig = {
         focusInputOnLabelClick: false,
       },
     },
+    merge: ['ui'],
   },
 
   // FileInput
@@ -1809,6 +1810,6 @@ export const defaultComponentsConfig = {
       },
     },
   },
-} satisfies IUIConfig
+} satisfies IUIConfig<UIConfigClasses>
 
 export default extendUIConfig(defaultComponentsConfig)

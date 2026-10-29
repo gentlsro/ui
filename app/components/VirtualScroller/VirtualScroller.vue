@@ -364,11 +364,11 @@ onMounted(() => {
 })
 
 // Styles
-const containerClass = computed(() => mergedProps.value.ui?.containerClass?.({
+const containerClass = computed(() => resolveUIClass(mergedProps.value.ui?.containerClass, {
   defaults: VIRTUAL_SCROLLER_DEFAULT_PROPS.ui.containerClass(),
 }))
 const containerStyle = computed(() => mergedProps.value.ui?.containerStyle?.())
-const contentClass = computed(() => mergedProps.value.ui?.contentClass?.({
+const contentClass = computed(() => resolveUIClass(mergedProps.value.ui?.contentClass, {
   defaults: VIRTUAL_SCROLLER_DEFAULT_PROPS.ui.contentClass(),
 }))
 const contentStyle = computed(() => ({
@@ -376,7 +376,7 @@ const contentStyle = computed(() => ({
   minHeight: `${totalHeight.value}px`,
   ...(totalWidth.value === undefined ? {} : { width: `${totalWidth.value}px` }),
 }))
-const rowClass = computed(() => mergedProps.value.ui?.rowClass?.({
+const rowClass = computed(() => resolveUIClass(mergedProps.value.ui?.rowClass, {
   defaults: VIRTUAL_SCROLLER_DEFAULT_PROPS.ui.rowClass(),
 }))
 const rowStyle = computed(() => ({

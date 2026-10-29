@@ -64,7 +64,7 @@ const formattedLabel = computed(() => {
 
 const valueHeaderCellClass = computed(() => {
   return [
-    ui.value?.valueHeaderCellClass?.({
+    resolveUIClass(ui.value?.valueHeaderCellClass, {
       defaults: PIVOT_DEFAULT_PROPS.ui.valueHeaderCellClass(),
     }),
     {

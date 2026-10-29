@@ -62,7 +62,7 @@ function handleMouseLeave() {
 
 // Styles - Node
 const nodeClass = computed(() => {
-  return props.ui?.nodeClass?.({
+  return resolveUIClass(props.ui?.nodeClass, {
     defaults: TREE_DEFAULT_PROPS.ui.nodeClass(),
     node: node.value as any,
     index: props.index,
@@ -78,7 +78,7 @@ const nodeStyle = computed(() => {
 
 // Styles - Node Content
 const nodeContentClass = computed(() => {
-  return props.ui?.nodeContentClass?.({
+  return resolveUIClass(props.ui?.nodeContentClass, {
     defaults: TREE_DEFAULT_PROPS.ui.nodeContentClass(),
     node: node.value as any,
     index: props.index,

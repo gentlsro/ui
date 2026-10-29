@@ -1,8 +1,5 @@
 // @unocss-include
 
-// Types
-import type { IPageWrapperProps } from '../types/page-wrapper-props.type'
-
 export const PAGE_WRAPPER_DEFAULT_PROPS = {
   ui: {
     containerClass() {
@@ -27,4 +24,4 @@ export const PAGE_WRAPPER_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies IPageWrapperProps
+}

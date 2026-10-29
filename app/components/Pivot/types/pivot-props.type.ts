@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { CSSProperties } from 'vue'
 
 // Store
@@ -124,7 +125,7 @@ export type IPivotProps<T = IItem> = {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class to apply to the container
      */
@@ -339,5 +340,5 @@ export type IPivotProps<T = IItem> = {
      * Style to apply to the loading area
      */
     loadingStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['pivot']>
 }

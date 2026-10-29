@@ -33,7 +33,7 @@ const strokeDasharray = computed(() => `${props.progress * 100 / 100}, 100`)
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.containerClass, {
     defaults: CIRCLE_PROGRESS_DEFAULT_PROPS.ui.containerClass(),
   })
 })
@@ -44,7 +44,7 @@ const containerStyle = computed(() => {
 
 // Styles - svg
 const svgClass = computed(() => {
-  return mergedProps.value?.ui?.svgClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.svgClass, {
     defaults: CIRCLE_PROGRESS_DEFAULT_PROPS.ui.svgClass(),
   })
 })
@@ -55,7 +55,7 @@ const svgStyle = computed(() => {
 
 // Styles - circleBg
 const circleBgClass = computed(() => {
-  return mergedProps.value?.ui?.circleBgClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.circleBgClass, {
     defaults: CIRCLE_PROGRESS_DEFAULT_PROPS.ui.circleBgClass(),
   })
 })
@@ -66,7 +66,7 @@ const circleBgStyle = computed(() => {
 
 // Styles - circle
 const circleClass = computed(() => {
-  return mergedProps.value?.ui?.circleClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.circleClass, {
     defaults: CIRCLE_PROGRESS_DEFAULT_PROPS.ui.circleClass(),
   })
 })
@@ -77,7 +77,7 @@ const circleStyle = computed(() => {
 
 // Styles - text
 const textClass = computed(() => {
-  return mergedProps.value?.ui?.textClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.textClass, {
     defaults: CIRCLE_PROGRESS_DEFAULT_PROPS.ui.textClass(),
   })
 })

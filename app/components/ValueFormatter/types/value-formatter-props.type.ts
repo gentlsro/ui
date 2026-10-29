@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { CSSProperties } from 'vue'
 
 import type { PredictDataTypeOptions } from '#layers/utilities/app/types/predict-data-type-options.type'
@@ -67,7 +68,7 @@ export type IValueFormatterProps = {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class for the container
      */
@@ -79,5 +80,5 @@ export type IValueFormatterProps = {
      * Style for the container
      */
     containerStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['valueFormatter']>
 }

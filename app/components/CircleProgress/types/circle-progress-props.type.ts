@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { CSSProperties } from 'vue'
 
 // Types
@@ -26,7 +27,7 @@ export type ICircleProgressProps = {
    */
   noProgressText?: boolean
 
-  ui?: {
+  ui?: UIClasses<{
     containerClass?: (payload: {
       defaults: ReturnType<typeof CIRCLE_PROGRESS_DEFAULT_PROPS['ui']['containerClass']>
     }) => ClassType
@@ -56,5 +57,5 @@ export type ICircleProgressProps = {
     }) => ClassType
 
     textStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['circleProgress']>
 }

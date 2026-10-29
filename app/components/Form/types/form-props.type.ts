@@ -1,7 +1,6 @@
-import type { AllowedComponentProps, CSSProperties } from 'vue'
-
-// Constants
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { FORM_DEFAULT_PROPS } from '../constants/form-default-props.constant'
+import type { AllowedComponentProps, CSSProperties } from 'vue'
 
 // Types - placeholder until components are migrated
 // TODO: Section type somehow fucks the types
@@ -172,13 +171,11 @@ export type IFormProps = {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class to apply to the cancel button
      */
-    cancelClass?: (payload: {
-      defaults: ReturnType<typeof FORM_DEFAULT_PROPS['ui']['cancelClass']>
-    }) => ClassType
+    cancelClass?: (payload: { defaults: ReturnType<typeof FORM_DEFAULT_PROPS.ui.cancelClass> }) => ClassType
 
     /**
      * Style to apply to the cancel button
@@ -188,9 +185,7 @@ export type IFormProps = {
     /**
      * Class to apply to the form itself
      */
-    containerClass?: (payload: {
-      defaults: ReturnType<typeof FORM_DEFAULT_PROPS['ui']['containerClass']>
-    }) => ClassType
+    containerClass?: (payload: { defaults: ReturnType<typeof FORM_DEFAULT_PROPS.ui.containerClass> }) => ClassType
 
     /**
      * Style to apply to the form itself
@@ -200,9 +195,7 @@ export type IFormProps = {
     /**
      * Class to apply to the content
      */
-    contentClass?: (payload: {
-      defaults: ReturnType<typeof FORM_DEFAULT_PROPS['ui']['contentClass']>
-    }) => ClassType
+    contentClass?: (payload: { defaults: ReturnType<typeof FORM_DEFAULT_PROPS.ui.contentClass> }) => ClassType
 
     /**
      * Style to apply to the content
@@ -212,9 +205,7 @@ export type IFormProps = {
     /**
      * Class to apply to the submit button
      */
-    submitClass?: (payload: {
-      defaults: ReturnType<typeof FORM_DEFAULT_PROPS['ui']['submitClass']>
-    }) => ClassType
+    submitClass?: (payload: { defaults: ReturnType<typeof FORM_DEFAULT_PROPS.ui.submitClass> }) => ClassType
 
     /**
      * Style to apply to the submit button
@@ -224,9 +215,7 @@ export type IFormProps = {
     /**
      * Class to apply to the controls container
      */
-    controlsClass?: (payload: {
-      defaults: ReturnType<typeof FORM_DEFAULT_PROPS['ui']['controlsClass']>
-    }) => ClassType
+    controlsClass?: (payload: { defaults: ReturnType<typeof FORM_DEFAULT_PROPS.ui.controlsClass> }) => ClassType
 
     /**
      * Style to apply to the controls container
@@ -236,13 +225,11 @@ export type IFormProps = {
     /**
      *  Class to apply to the submit button wrapper (which might have the Cancel button and slots)
      */
-    submitWrapperClass?: (payload: {
-      defaults: ReturnType<typeof FORM_DEFAULT_PROPS['ui']['submitWrapperClass']>
-    }) => ClassType
+    submitWrapperClass?: (payload: { defaults: ReturnType<typeof FORM_DEFAULT_PROPS.ui.submitWrapperClass> }) => ClassType
 
     /**
      * Style to apply to the submit button wrapper (which might have the Cancel button and slots)
      */
     submitWrapperStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['form']>
 }

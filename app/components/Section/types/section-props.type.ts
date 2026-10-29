@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { CSSProperties } from 'vue'
 
 // Types
@@ -45,7 +46,7 @@ export type ISectionProps = {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class for the container
      */
@@ -105,5 +106,5 @@ export type ISectionProps = {
      * Style for the loading state
      */
     loadingStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['section']>
 }

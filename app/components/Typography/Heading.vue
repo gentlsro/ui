@@ -22,7 +22,7 @@ const classes = computed(() => {
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.containerClass, {
     defaults: HEADING_DEFAULT_PROPS.ui.containerClass(),
   })
 })

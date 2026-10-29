@@ -120,15 +120,15 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
     }))
 
     // Presentation shared by every row / cell instance; resolved once here instead of per rendered cell
-    const rowItemCellUiClass = computed(() => ui.value?.rowItemCellClass?.({
+    const rowItemCellUiClass = computed(() => resolveUIClass(ui.value?.rowItemCellClass, {
       defaults: PIVOT_DEFAULT_PROPS.ui.rowItemCellClass(),
     }))
     const rowItemCellUiStyle = computed(() => ui.value?.rowItemCellStyle?.())
-    const valueItemUiClass = computed(() => ui.value?.valueItemClass?.({
+    const valueItemUiClass = computed(() => resolveUIClass(ui.value?.valueItemClass, {
       defaults: PIVOT_DEFAULT_PROPS.ui.valueItemClass(),
     }))
     const valueItemUiStyle = computed(() => ui.value?.valueItemStyle?.())
-    const valueItemCellUiClass = computed(() => ui.value?.valueItemCellClass?.({
+    const valueItemCellUiClass = computed(() => resolveUIClass(ui.value?.valueItemCellClass, {
       defaults: PIVOT_DEFAULT_PROPS.ui.valueItemCellClass(),
     }))
     const valueItemCellUiStyle = computed(() => ui.value?.valueItemCellStyle?.())

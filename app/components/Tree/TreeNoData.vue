@@ -11,7 +11,7 @@ const props = defineProps<IProps>()
 
 // Styles - No Data
 const noDataClass = computed(() => {
-  return props.ui?.noDataClass?.({
+  return resolveUIClass(props.ui?.noDataClass, {
     defaults: TREE_DEFAULT_PROPS.ui.noDataClass(),
   })
 })

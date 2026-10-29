@@ -113,7 +113,7 @@ watch(
 
 // Styles
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.containerClass, {
     defaults: DATE_PICKER_DEFAULT_PROPS.ui.containerClass(),
   })
 })
@@ -123,7 +123,7 @@ const containerStyle = computed(() => {
 })
 
 const daysGridClass = computed(() => {
-  return mergedProps.value?.ui?.daysGridClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.daysGridClass, {
     defaults: DATE_PICKER_DEFAULT_PROPS.ui.daysGridClass(),
   })
 })
@@ -133,7 +133,7 @@ const daysGridStyle = computed(() => {
 })
 
 const controlsClass = computed(() => {
-  return mergedProps.value?.ui?.controlsClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.controlsClass, {
     defaults: DATE_PICKER_DEFAULT_PROPS.ui.controlsClass(),
   })
 })

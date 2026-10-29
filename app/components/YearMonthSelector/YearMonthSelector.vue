@@ -104,7 +104,7 @@ const ignoredEls = computed(() => [
 
 // Styles - append
 const appendClass = computed(() => {
-  return mergedProps.value.ui?.appendClass?.({
+  return resolveUIClass(mergedProps.value.ui?.appendClass, {
     defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.appendClass(),
   })
 })
@@ -115,7 +115,7 @@ const appendStyle = computed(() => {
 
 // Styles - picker icon
 const pickerIconClass = computed(() => {
-  return mergedProps.value.ui?.pickerIconClass?.({
+  return resolveUIClass(mergedProps.value.ui?.pickerIconClass, {
     defaults: YEAR_MONTH_SELECTOR_DEFAULT_PROPS.ui.pickerIconClass(),
   })
 })

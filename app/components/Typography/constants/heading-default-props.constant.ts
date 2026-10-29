@@ -1,8 +1,5 @@
 // @unocss-include
 
-// Types
-import type { IHeadingProps } from '../types/heading-props.type'
-
 export const HEADING_DEFAULT_PROPS = {
   ui: {
     containerClass() {
@@ -16,4 +13,4 @@ export const HEADING_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies IHeadingProps
+}

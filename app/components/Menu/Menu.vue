@@ -179,7 +179,7 @@ defineExpose(menuGetExposed({
 
 // Styles - menu
 const menuClassComputed = computed(() => {
-  return mergedProps.value?.ui?.menuClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.menuClass, {
     defaults: MENU_DEFAULT_PROPS.ui.menuClass(),
   })
 })
@@ -190,7 +190,7 @@ const menuStyleComputed = computed(() => {
 
 // Styles - content
 const contentClass = computed(() => {
-  return mergedProps.value?.ui?.contentClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.contentClass, {
     defaults: MENU_DEFAULT_PROPS.ui.contentClass(),
   })
 })

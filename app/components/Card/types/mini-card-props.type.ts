@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { CSSProperties } from 'vue'
 
 // Types
@@ -7,7 +8,7 @@ import type { IValueFormatterProps } from '../../ValueFormatter/types/value-form
 import type { NavigateToOptions } from '#layers/utilities/app/types/navigate-to.type'
 import type { MINI_CARD_DEFAULT_PROPS } from '../constants/mini-card-default-props.constant'
 
-export type IMiniCardProps = IValueFormatterProps & {
+export type IMiniCardProps = Omit<IValueFormatterProps, 'ui'> & {
   /**
    * The label of the card
    */
@@ -51,7 +52,7 @@ export type IMiniCardProps = IValueFormatterProps & {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Base class for the container
      */
@@ -135,5 +136,5 @@ export type IMiniCardProps = IValueFormatterProps & {
      * Style to apply to the previous value
      */
     previousValueStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['miniCard']>
 }

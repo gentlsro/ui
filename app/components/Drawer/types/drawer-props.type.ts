@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { CSSProperties } from 'vue'
 
 // Types
@@ -97,7 +98,7 @@ export type IDrawerProps = {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class applied to the container
      */
@@ -121,5 +122,5 @@ export type IDrawerProps = {
      * Style applied to the title
      */
     titleStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['drawer']>
 }

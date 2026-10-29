@@ -24,7 +24,7 @@ const promotedLevels = computed(() => {
 // Styles - row item
 const rowItemClass = computed(() => {
   return [
-    ui.value?.rowItemClass?.({
+    resolveUIClass(ui.value?.rowItemClass, {
       defaults: PIVOT_DEFAULT_PROPS.ui.rowItemClass(),
     }),
     {

@@ -104,7 +104,7 @@ watch(notificationCounter, async () => {
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.containerClass, {
     defaults: NOTIFICATION_ROW_DEFAULT_PROPS.ui.containerClass(),
   })
 })
@@ -115,7 +115,7 @@ const containerStyle = computed(() => {
 
 // Styles - title row
 const titleRowClass = computed(() => {
-  return mergedProps.value?.ui?.titleRowClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.titleRowClass, {
     defaults: NOTIFICATION_ROW_DEFAULT_PROPS.ui.titleRowClass(),
   })
 })
@@ -126,7 +126,7 @@ const titleRowStyle = computed(() => {
 
 // Styles - icon
 const iconClass = computed(() => {
-  return mergedProps.value?.ui?.iconClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.iconClass, {
     defaults: NOTIFICATION_ROW_DEFAULT_PROPS.ui.iconClass(),
   })
 })
@@ -137,7 +137,7 @@ const iconStyle = computed(() => {
 
 // Styles - title
 const titleClass = computed(() => {
-  return mergedProps.value?.ui?.titleClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.titleClass, {
     defaults: NOTIFICATION_ROW_DEFAULT_PROPS.ui.titleClass(),
   })
 })
@@ -148,7 +148,7 @@ const titleStyle = computed(() => {
 
 // Styles - title text
 const titleTextClass = computed(() => {
-  return mergedProps.value?.ui?.titleTextClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.titleTextClass, {
     defaults: NOTIFICATION_ROW_DEFAULT_PROPS.ui.titleTextClass(),
   })
 })
@@ -159,7 +159,7 @@ const titleTextStyle = computed(() => {
 
 // Styles - subtitle
 const subtitleClass = computed(() => {
-  return mergedProps.value?.ui?.subtitleClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.subtitleClass, {
     defaults: NOTIFICATION_ROW_DEFAULT_PROPS.ui.subtitleClass(),
   })
 })
@@ -170,7 +170,7 @@ const subtitleStyle = computed(() => {
 
 // Styles - subtitle item
 const subtitleItemClass = computed(() => {
-  return mergedProps.value?.ui?.subtitleItemClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.subtitleItemClass, {
     defaults: NOTIFICATION_ROW_DEFAULT_PROPS.ui.subtitleItemClass(),
   })
 })
@@ -181,7 +181,7 @@ const subtitleItemStyle = computed(() => {
 
 // Styles - counter
 const counterClass = computed(() => {
-  return mergedProps.value?.ui?.counterClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.counterClass, {
     defaults: NOTIFICATION_ROW_DEFAULT_PROPS.ui.counterClass(),
   })
 })

@@ -82,7 +82,7 @@ defineExpose({
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.containerClass, {
     defaults: BTN_DEFAULT_PROPS.ui.containerClass({
       align: props.align,
       noUppercase: props.noUppercase,
@@ -106,7 +106,7 @@ const containerStyle = computed(() => {
 
 // Styles - icon
 const iconClass = computed(() => {
-  return mergedProps.value?.ui?.iconClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.iconClass, {
     defaults: BTN_DEFAULT_PROPS.ui.iconClass({
       size: props.size ?? 'md',
     }),
@@ -119,7 +119,7 @@ const iconStyle = computed(() => {
 
 // Styles - label
 const labelClass = computed(() => {
-  return mergedProps.value?.ui?.labelClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.labelClass, {
     defaults: BTN_DEFAULT_PROPS.ui.labelClass({
       align: props.align,
       size: props.size ?? 'md',
@@ -136,7 +136,7 @@ const labelStyle = computed(() => {
 
 // Styles - focus helper
 const focusHelperClass = computed(() => {
-  return mergedProps.value?.ui?.focusHelperClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.focusHelperClass, {
     defaults: BTN_DEFAULT_PROPS.ui.focusHelperClass(),
   })
 })
@@ -174,7 +174,7 @@ const focusHelperStyle = computed(() => {
 
 // Styles - loading
 const loadingClass = computed(() => {
-  return mergedProps.value?.ui?.loadingClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.loadingClass, {
     defaults: BTN_DEFAULT_PROPS.ui.loadingClass(),
   })
 })
@@ -185,7 +185,7 @@ const loadingStyle = computed(() => {
 
 // Styles - loader
 const loaderClass = computed(() => {
-  return mergedProps.value?.ui?.loaderClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.loaderClass, {
     defaults: BTN_DEFAULT_PROPS.ui.loaderClass({
       size: props.size ?? 'md',
     }),

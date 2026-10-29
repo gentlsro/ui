@@ -1,7 +1,8 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 // Types
 import type { IInputProps } from '../../Inputs/types/input-props.type'
 
-export type IFieldProps = IInputProps & {
+export type IFieldProps = Omit<IInputProps, 'ui'> & {
   /**
    * The value
    */
@@ -36,4 +37,4 @@ export type IFieldProps = IInputProps & {
       ...args: any[]
     ) => { shouldFocus?: boolean, shouldHideFloating?: boolean } | undefined
   }
-}
+} & { ui?: UIClasses<NonNullable<(IInputProps)['ui']>, UIResolvedClasses['field']> }

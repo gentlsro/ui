@@ -33,7 +33,7 @@ const isTableTopVisible = computed(() => {
 })
 
 const topClass = computed(() => {
-  return props.ui?.topClass?.({
+  return resolveUIClass(props.ui?.topClass, {
     defaults: TABLE_DEFAULT_PROPS.ui.topClass(),
   })
 })

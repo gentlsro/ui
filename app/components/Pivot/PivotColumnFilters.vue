@@ -8,7 +8,7 @@ import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
 const { columns, ui } = usePivotStore()
 
 const columnFiltersClass = computed(() => {
-  return ui.value?.columnFiltersClass?.({
+  return resolveUIClass(ui.value?.columnFiltersClass, {
     defaults: PIVOT_DEFAULT_PROPS.ui.columnFiltersClass(),
   })
 })

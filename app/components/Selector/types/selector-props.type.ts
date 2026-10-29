@@ -1,17 +1,17 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { RouteLocationRaw } from '#vue-router'
 import type { AllowedComponentProps, CSSProperties } from 'vue'
 
 // Types
 import type { IChipProps } from '../../Chip/types/chip-props.type'
 import type { IListProps } from '../../List/types/list-props.type'
-import type { IMenuProps } from '../../Menu/types/menu-props.type'
+import type { IFloatingUIProps } from '../../../types/floating-ui-props.type'
 import type { IFieldProps } from '../../Field/types/field-props.type'
-import type { IDialogProps } from '../../Dialog/types/dialog-props.type'
 
 // Constants
 import type { SELECTOR_DEFAULT_PROPS } from '../constants/selector-default-props'
 
-export type ISelectorProps = IFieldProps & {
+export type ISelectorProps = Omit<IFieldProps, 'ui'> & {
   /**
    * Whether the Selector can be cleared -> will emit `emptyValue`
    */
@@ -168,7 +168,7 @@ export type ISelectorProps = IFieldProps & {
   /**
    * Props to be passed to the Menu
    */
-  menuProps?: IDialogProps & IMenuProps & AllowedComponentProps
+  menuProps?: IFloatingUIProps & AllowedComponentProps
 
   /**
    * Props to be passed to the List
@@ -183,7 +183,7 @@ export type ISelectorProps = IFieldProps & {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<NonNullable<(IFieldProps)['ui']> & {
     /**
      * Class to apply to the actual content inside the wrapper
      */
@@ -195,5 +195,5 @@ export type ISelectorProps = IFieldProps & {
      * Style to apply to the actual content inside the wrapper
      */
     innerStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['selector']>
 }

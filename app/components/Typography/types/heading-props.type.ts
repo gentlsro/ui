@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { CSSProperties } from 'vue'
 
 // Constants
@@ -16,7 +17,7 @@ export type IHeadingProps = {
    */
   highlighted?: boolean
 
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class for the container
      */
@@ -28,5 +29,5 @@ export type IHeadingProps = {
      * Style for the container
      */
     containerStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['heading']>
 }

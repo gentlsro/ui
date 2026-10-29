@@ -57,7 +57,7 @@ const hasFreezeBtn = computed(() => {
 // Visuals
 const headerClass = computed(() => {
   return [
-    props.ui?.headerCellClass?.({
+    resolveUIClass(props.ui?.headerCellClass, {
       column: props.column,
       defaults: TABLE_DEFAULT_PROPS.ui.headerCellClass(),
     }),
@@ -84,7 +84,7 @@ const headerStyle = computed(() => {
 
 const headerInnerCellClass = computed(() => {
   return [
-    props.ui?.headerCellInnerClass?.({
+    resolveUIClass(props.ui?.headerCellInnerClass, {
       column: props.column,
       defaults: TABLE_DEFAULT_PROPS.ui.headerCellInnerClass(),
     }),

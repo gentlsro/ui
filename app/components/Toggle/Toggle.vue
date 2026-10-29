@@ -104,7 +104,7 @@ function handleKeyDown(e: KeyboardEvent) {
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.containerClass, {
     defaults: TOGGLE_DEFAULT_PROPS.ui.containerClass(),
   })
 })
@@ -115,7 +115,7 @@ const containerStyle = computed(() => {
 
 // Styles - toggle
 const toggleClass = computed(() => {
-  return mergedProps.value?.ui?.toggleClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.toggleClass, {
     defaults: TOGGLE_DEFAULT_PROPS.ui.toggleClass({
       size: props.size ?? 'sm',
       contained: props.contained ?? false,
@@ -129,7 +129,7 @@ const toggleStyle = computed(() => {
 
 // Styles - bullet
 const bulletClass = computed(() => {
-  return mergedProps.value?.ui?.bulletClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.bulletClass, {
     defaults: TOGGLE_DEFAULT_PROPS.ui.bulletClass({
       size: props.size ?? 'sm',
       contained: props.contained ?? false,
@@ -143,7 +143,7 @@ const bulletStyle = computed(() => {
 
 // Styles - label
 const labelClass = computed(() => {
-  return mergedProps.value?.ui?.labelClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.labelClass, {
     defaults: TOGGLE_DEFAULT_PROPS.ui.labelClass({
       size: props.size ?? 'sm',
     }),
@@ -156,7 +156,7 @@ const labelStyle = computed(() => {
 
 // Styles - icon
 const iconClass = computed(() => {
-  return mergedProps.value?.ui?.iconClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.iconClass, {
     defaults: TOGGLE_DEFAULT_PROPS.ui.iconClass(),
   })
 })
@@ -167,7 +167,7 @@ const iconStyle = computed(() => {
 
 // Styles - focus helper
 const focusHelperClass = computed(() => {
-  return mergedProps.value?.ui?.focusHelperClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.focusHelperClass, {
     defaults: TOGGLE_DEFAULT_PROPS.ui.focusHelperClass(),
   })
 })

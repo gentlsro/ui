@@ -39,7 +39,7 @@ syncRef(isEditing, isEditingStore)
 
 // Styles - wrapper
 const wrapperClass = computed(() => {
-  return mergedProps.value?.ui?.wrapperClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.wrapperClass, {
     defaults: CRUD_EDIT_BTN_DEFAULT_PROPS.ui.wrapperClass(),
   })
 })
@@ -50,7 +50,7 @@ const wrapperStyle = computed(() => {
 
 // Styles - button
 const btnClass = computed(() => {
-  return mergedProps.value?.ui?.btnClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.btnClass, {
     defaults: CRUD_EDIT_BTN_DEFAULT_PROPS.ui.btnClass(),
   })
 })

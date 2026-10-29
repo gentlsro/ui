@@ -58,7 +58,7 @@ function handleMonthSelect(month: Pick<Month, 'idx'>, callback?: () => void) {
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.containerClass, {
     defaults: MONTH_SELECTOR_DEFAULT_PROPS.ui.containerClass(),
   })
 })
@@ -69,7 +69,7 @@ const containerStyle = computed(() => {
 
 // Styles - previous button
 const previousBtnClass = computed(() => {
-  return mergedProps.value?.ui?.previousBtnClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.previousBtnClass, {
     defaults: MONTH_SELECTOR_DEFAULT_PROPS.ui.previousBtnClass(),
   })
 })
@@ -80,7 +80,7 @@ const previousBtnStyle = computed(() => {
 
 // Styles - current button
 const currentBtnClass = computed(() => {
-  return mergedProps.value?.ui?.currentBtnClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.currentBtnClass, {
     defaults: MONTH_SELECTOR_DEFAULT_PROPS.ui.currentBtnClass(),
   })
 })
@@ -91,7 +91,7 @@ const currentBtnStyle = computed(() => {
 
 // Styles - next button
 const nextBtnClass = computed(() => {
-  return mergedProps.value?.ui?.nextBtnClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.nextBtnClass, {
     defaults: MONTH_SELECTOR_DEFAULT_PROPS.ui.nextBtnClass(),
   })
 })
@@ -102,7 +102,7 @@ const nextBtnStyle = computed(() => {
 
 // Styles - grid container
 const gridContainerClass = computed(() => {
-  return mergedProps.value?.ui?.gridContainerClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.gridContainerClass, {
     defaults: MONTH_SELECTOR_DEFAULT_PROPS.ui.gridContainerClass(),
   })
 })
@@ -113,7 +113,7 @@ const gridContainerStyle = computed(() => {
 
 // Styles - month button
 const monthBtnClass = computed(() => {
-  return mergedProps.value?.ui?.monthBtnClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.monthBtnClass, {
     defaults: MONTH_SELECTOR_DEFAULT_PROPS.ui.monthBtnClass(),
   })
 })

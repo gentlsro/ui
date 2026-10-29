@@ -82,7 +82,7 @@ useMutationObserver(scrollArea, () => {
 
 // Styles
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.containerClass, {
     defaults: SCROLL_AREA_DEFAULT_PROPS.ui.containerClass(),
   })
 })

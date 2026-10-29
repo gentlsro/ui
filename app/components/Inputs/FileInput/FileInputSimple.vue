@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 // Types
 import type { IFileInputProps } from './types/file-input-props.type'
 import type { IFileInputEmits } from './types/file-input-emits.type'
@@ -10,7 +11,7 @@ import { useFieldUtils } from '../../Field/functions/useFieldUtils'
 // Constants
 import { INPUT_WRAPPER_DEFAULT_PROPS } from '../../InputWrapper/constants/input-wrapper-default-props'
 
-const props = withDefaults(defineProps<IFileInputProps>(), {
+const props = withDefaults(defineProps<Omit<IFileInputProps, 'ui'> & { ui?: UIClasses<NonNullable<IFileInputProps['ui']>, UIResolvedClasses['fileInputSimple']> }>(), {
   ...getComponentProps('fileInputSimple'),
 })
 
@@ -53,7 +54,7 @@ function handleOpenDialog(ev?: PointerEvent | FocusEvent) {
 
 // Styles - append
 const appendClass = computed(() => {
-  return mergedProps.value.ui?.appendClass?.({
+  return resolveUIClass(mergedProps.value.ui?.appendClass, {
     defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.appendClass(),
   })
 })

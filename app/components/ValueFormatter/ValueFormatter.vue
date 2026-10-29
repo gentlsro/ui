@@ -50,7 +50,7 @@ const isEmptyValue = computed(() => {
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.containerClass, {
     defaults: VALUE_FORMATTER_DEFAULT_PROPS.ui.containerClass(),
   })
 })
