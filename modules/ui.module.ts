@@ -106,28 +106,75 @@ export default uiConfig
 
 // Form callbacks are read without executing application code. Static return
 // expressions become type expressions over the preceding layer's defaults.
-function formClassTypes(configPath: string, previous: string) {
-  const source = ts.createSourceFile(configPath, readFileSync(`${configPath}.ts`, 'utf8'), ts.ScriptTarget.Latest, true)
-  const bindings = new Map<string, ts.Expression>()
+function formClassTypes(configPath: string, previous: string, dependencies: Set<string>) {
+  const sources = new Map<string, ts.SourceFile>()
+  function readSource(path: string) {
+    let source = sources.get(path)
+    if (!source) {
+      source = ts.createSourceFile(path, readFileSync(path, 'utf8'), ts.ScriptTarget.Latest, true)
+      sources.set(path, source)
+      dependencies.add(path)
+    }
 
-  for (const statement of source.statements) {
-    if (ts.isVariableStatement(statement) && (statement.declarationList.flags & ts.NodeFlags.Const)) {
-      for (const declaration of statement.declarationList.declarations) {
-        if (ts.isIdentifier(declaration.name) && declaration.initializer) {
-          bindings.set(declaration.name.text, declaration.initializer)
+    return source
+  }
+
+  const source = readSource(`${configPath}.ts`)
+  function binding(node: ts.Identifier): ts.Expression | undefined {
+    const source = node.getSourceFile()
+    for (const statement of source.statements) {
+      if (ts.isVariableStatement(statement) && (statement.declarationList.flags & ts.NodeFlags.Const)) {
+        const declaration = statement.declarationList.declarations.find(declaration =>
+          ts.isIdentifier(declaration.name) && declaration.name.text === node.text)
+        if (declaration?.initializer) {
+          return declaration.initializer
+        }
+      }
+      if (!ts.isImportDeclaration(statement) || !ts.isStringLiteral(statement.moduleSpecifier)) {
+        continue
+      }
+      const clause = statement.importClause
+      const imports = clause?.namedBindings
+      const named = imports && ts.isNamedImports(imports)
+        ? imports.elements.find(element => element.name.text === node.text)
+        : undefined
+      const exportedName = named ? (named.propertyName ?? named.name).text : clause?.name?.text === node.text ? 'default' : undefined
+      if (!exportedName) {
+        continue
+      }
+      const resolved = ts.resolveModuleName(statement.moduleSpecifier.text, source.fileName, {}, ts.sys).resolvedModule
+      if (!resolved || resolved.isExternalLibraryImport) {
+        return undefined
+      }
+      const imported = readSource(resolved.resolvedFileName)
+      if (exportedName === 'default') {
+        return imported.statements.find(ts.isExportAssignment)?.expression
+      }
+      for (const declaration of imported.statements) {
+        if (ts.isVariableStatement(declaration) && declaration.modifiers?.some(modifier => modifier.kind === ts.SyntaxKind.ExportKeyword)) {
+          const value = declaration.declarationList.declarations.find(value =>
+            ts.isIdentifier(value.name) && value.name.text === exportedName)
+          if (value?.initializer) {
+            return value.initializer
+          }
         }
       }
     }
+
+    return undefined
   }
 
   function unwrap(node: ts.Expression, resolveBindings = true): ts.Expression {
     if (ts.isAsExpression(node) || ts.isSatisfiesExpression(node) || ts.isParenthesizedExpression(node)) {
       return unwrap(node.expression, resolveBindings)
     }
-    if (resolveBindings && ts.isIdentifier(node) && bindings.has(node.text)) {
-      return unwrap(bindings.get(node.text)!)
+    if (resolveBindings && ts.isIdentifier(node)) {
+      const value = binding(node)
+      if (value) {
+        return unwrap(value)
+      }
     }
-    if (ts.isCallExpression(node) && node.expression.getText(source) === 'extendUIConfig' && node.arguments[0]) {
+    if (ts.isCallExpression(node) && node.expression.getText() === 'extendUIConfig' && node.arguments[0]) {
       return unwrap(node.arguments[0])
     }
 
@@ -144,7 +191,7 @@ function formClassTypes(configPath: string, previous: string) {
       return unknown
     }
     for (const field of [...value.properties].reverse()) {
-      if (ts.isPropertyAssignment(field) && field.name.getText(source).replaceAll(/['"]/g, '') === key) {
+      if (ts.isPropertyAssignment(field) && field.name.getText().replaceAll(/['"]/g, '') === key) {
         return field.initializer
       }
       if (ts.isSpreadAssignment(field)) {
@@ -184,7 +231,7 @@ function formClassTypes(configPath: string, previous: string) {
       Object.assign(result, Object.fromEntries(surfaces.map(surface => [surface, 'string'])))
       continue
     }
-    const surface = field.name.getText(source).replaceAll(/['"]/g, '')
+    const surface = field.name.getText().replaceAll(/['"]/g, '')
     if (!surface.endsWith('Class')) {
       continue
     }
@@ -195,7 +242,7 @@ function formClassTypes(configPath: string, previous: string) {
     }
     const parameter = callback.parameters[0]?.name
     const defaults = parameter && ts.isObjectBindingPattern(parameter)
-      ? parameter.elements.find(element => (element.propertyName ?? element.name).getText(source) === 'defaults')?.name.getText(source)
+      ? parameter.elements.find(element => (element.propertyName ?? element.name).getText() === 'defaults')?.name.getText()
       : parameter && ts.isIdentifier(parameter) ? `${parameter.text}.defaults` : undefined
     const slots = `${previous}['form'][${JSON.stringify(surface)}]`
     const escape = (value: string) => value.replaceAll('\\', '\\\\').replaceAll('`', '\\`').replaceAll('${', '\\${')
@@ -213,16 +260,19 @@ function formClassTypes(configPath: string, previous: string) {
 
     function expressionType(node: ts.Expression): string {
       const value = unwrap(node, false)
-      if (ts.isIdentifier(value) && !localNames.has(value.text) && bindings.has(value.text)) {
-        return expressionType(bindings.get(value.text)!)
+      if (ts.isIdentifier(value) && !localNames.has(value.text)) {
+        const resolved = binding(value)
+        if (resolved) {
+          return expressionType(resolved)
+        }
       }
       if (ts.isStringLiteralLike(value)) {
         return JSON.stringify(value.text)
       }
-      if (defaults && ts.isPropertyAccessExpression(value) && value.expression.getText(source) === defaults) {
+      if (defaults && ts.isPropertyAccessExpression(value) && value.expression.getText() === defaults) {
         return `${slots}[${JSON.stringify(value.name.text)}]`
       }
-      if (defaults && ts.isCallExpression(value) && value.expression.getText(source) === `${defaults}.p`
+      if (defaults && ts.isCallExpression(value) && value.expression.getText() === `${defaults}.p`
         && value.arguments.every(ts.isStringLiteralLike)) {
         return `PickedClasses<UIClassPicker<${slots}>, [${value.arguments.map(argument => JSON.stringify((argument as ts.StringLiteral).text)).join(', ')}]>`
       }
@@ -262,9 +312,6 @@ export default defineNuxtModule({
       })
       .filter(({ path }) => existsSync(`${path}.ts`))
 
-    // Config edits must refresh both generated literal types and cached callbacks.
-    nuxt.options.watch.push(...configPaths.map(({ path }) => `${path}.ts`))
-
     const configCode = generateUIConfigCode(configPaths)
 
     addTemplate({
@@ -277,7 +324,10 @@ export default defineNuxtModule({
     const orderedConfigs = [...configPaths].reverse()
     const classTypesPath = resolve(currentDir, 'app/types/ui-config.type')
     const pickerTypesPath = resolve(currentDir, 'app/functions/with-class-picker')
-    const formTypes = orderedConfigs.map(({ path }, index) => formClassTypes(path, `Stage${index}`))
+    const configDependencies = new Set<string>()
+    const formTypes = orderedConfigs.map(({ path }, index) => formClassTypes(path, `Stage${index}`, configDependencies))
+    // Imported config edits must refresh generated types and cached callbacks too.
+    nuxt.options.watch.push(...configDependencies)
 
     addTypeTemplate({
       filename: 'types/ui-class-config.d.ts',
