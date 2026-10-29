@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
@@ -21,7 +22,7 @@ export type INotificationRowProps = {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class to apply to the container
      */
@@ -117,5 +118,5 @@ export type INotificationRowProps = {
      * Style to apply to the counter badge
      */
     counterStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['notificationRow']>
 }

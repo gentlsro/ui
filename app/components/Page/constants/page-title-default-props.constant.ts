@@ -32,4 +32,4 @@ export const PAGE_TITLE_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies IPageTitleProps
+} satisfies Omit<IPageTitleProps, 'ui'> & { ui: object }

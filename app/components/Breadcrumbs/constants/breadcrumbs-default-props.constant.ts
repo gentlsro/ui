@@ -27,4 +27,4 @@ export const BREADCRUMBS_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies IBreadcrumbsProps
+} satisfies Omit<IBreadcrumbsProps, 'ui'> & { ui: object }

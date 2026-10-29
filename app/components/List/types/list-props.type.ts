@@ -1,3 +1,4 @@
+import type { UIClasses, UIProps, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { AllowedComponentProps, ConcreteComponent, CSSProperties } from 'vue'
 
@@ -273,7 +274,7 @@ export type IListProps = {
     /**
      * The props that should be passed to the SearchInput
      */
-    inputProps?: ITextInputProps & AllowedComponentProps
+    inputProps?: UIProps<ITextInputProps, UIResolvedClasses['searchInput']> & AllowedComponentProps
 
     /**
      * When searching, we might need to normalize the values
@@ -377,7 +378,7 @@ export type IListProps = {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class to apply to the container
      */
@@ -524,7 +525,7 @@ export type IListProps = {
      * Style to apply to the search area
      */
     searchStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['list']>
 
   /**
    * Whether to use worker for the search, sort and grouping

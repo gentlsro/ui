@@ -22,11 +22,11 @@ const { emits, itemFocusedIdx } = useListStore()
 const item = toRef(props, 'item')
 
 const rowGroupClass = computed(() => {
-  return props.ui?.rowGroupClass?.(withClassPicker({
+  return resolveUIClass(props.ui?.rowGroupClass, {
     group: item.value,
     level: item.value.groupIdx,
     defaults: LIST_DEFAULT_PROPS.ui.rowGroupClass(),
-  }))
+  })
 })
 
 const rowGroupStyle = computed(() => {

@@ -12,4 +12,4 @@ export const VIRTUAL_SCROLLER_VERTICAL_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies Omit<IVirtualScrollerVerticalProps<any>, 'rows'>
+} satisfies Omit<Omit<IVirtualScrollerVerticalProps<any>, 'rows'>, 'ui'> & { ui: object }

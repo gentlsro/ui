@@ -51,9 +51,9 @@ function handleMonthSelect(month: number) {
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.containerClass, {
     defaults: MONTH_SELECTOR_GRID_DEFAULT_PROPS.ui.containerClass(),
-  }))
+  })
 })
 
 const containerStyle = computed(() => {
@@ -62,9 +62,9 @@ const containerStyle = computed(() => {
 
 // Styles - month button
 const monthBtnClass = computed(() => {
-  return mergedProps.value?.ui?.monthBtnClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.monthBtnClass, {
     defaults: MONTH_SELECTOR_GRID_DEFAULT_PROPS.ui.monthBtnClass(),
-  }))
+  })
 })
 
 const monthBtnStyle = computed(() => {

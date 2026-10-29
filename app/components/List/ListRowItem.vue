@@ -70,12 +70,12 @@ function handleClick() {
 
 // Styles - Row
 const rowClass = computed(() => {
-  return props.ui?.rowClass?.(withClassPicker({
+  return resolveUIClass(props.ui?.rowClass, {
     groupsCount: groupBy.value.length,
     row: item.value.ref,
     isLast: props.isLast,
     defaults: LIST_DEFAULT_PROPS.ui.rowClass(),
-  }))
+  })
 })
 
 const rowClassLocal = computed(() => {
@@ -111,12 +111,12 @@ const rowStyle = computed(() => {
 
 // Styles - Row Content
 const rowContentClass = computed(() => {
-  return props.ui?.rowContentClass?.(withClassPicker({
+  return resolveUIClass(props.ui?.rowContentClass, {
     row: item.value.ref,
     groupsCount: groupBy.value.length,
     isLast: props.isLast,
     defaults: LIST_DEFAULT_PROPS.ui.rowContentClass(),
-  }))
+  })
 })
 
 const rowContentStyle = computed(() => {

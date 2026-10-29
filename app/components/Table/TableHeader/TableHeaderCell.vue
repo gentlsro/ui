@@ -57,10 +57,10 @@ const hasFreezeBtn = computed(() => {
 // Visuals
 const headerClass = computed(() => {
   return [
-    props.ui?.headerCellClass?.(withClassPicker({
+    resolveUIClass(props.ui?.headerCellClass, {
       column: props.column,
       defaults: TABLE_DEFAULT_PROPS.ui.headerCellClass(),
-    })),
+    }),
     props.column.headerClass,
     {
       'is-helper-col': props.column.isHelperCol,
@@ -84,10 +84,10 @@ const headerStyle = computed(() => {
 
 const headerInnerCellClass = computed(() => {
   return [
-    props.ui?.headerCellInnerClass?.(withClassPicker({
+    resolveUIClass(props.ui?.headerCellInnerClass, {
       column: props.column,
       defaults: TABLE_DEFAULT_PROPS.ui.headerCellInnerClass(),
-    })),
+    }),
     { 'p-x-2': isCardView.value },
   ]
 })

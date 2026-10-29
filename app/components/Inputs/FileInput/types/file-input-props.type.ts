@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../../types/ui-config.type'
 import type { CSSProperties } from 'vue'
 
 // Types
@@ -49,7 +50,7 @@ export type IFileInputProps = {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<NonNullable<(IInputProps)['ui']> & {
     /**
      * Class to apply to the actual content inside the wrapper
      */
@@ -69,5 +70,5 @@ export type IFileInputProps = {
      * Style to apply to the chip
      */
     chipStyle?: CSSProperties
-  }
-} & IInputProps
+  }, UIResolvedClasses['fileInput']>
+} & Omit<IInputProps, 'ui'>

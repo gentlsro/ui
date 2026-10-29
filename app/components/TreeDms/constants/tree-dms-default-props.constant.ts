@@ -13,4 +13,4 @@ export const TREE_DMS_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies Pick<ITreeDmsProps<any>, 'ui'>
+} satisfies Omit<Pick<ITreeDmsProps<any>, 'ui'>, 'ui'> & { ui: object }

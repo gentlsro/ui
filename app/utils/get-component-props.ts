@@ -1,6 +1,6 @@
 import { uiConfig } from '$uiConfig'
 import type { IUIConfig as GeneratedConfig, UIConfigValues } from '$uiConfig'
-import type { IUIConfig } from '../types/ui-config.type'
+import type { BaseUIClasses, IUIConfig, UIProps } from '../types/ui-config.type'
 import { extendNestedComponentProps } from './extend-nested-component-props'
 
 type ComponentConfigs = {
@@ -31,8 +31,16 @@ type MergeKeys<Name extends ComponentMergeName>
     ? Extract<Key, keyof ComponentProps<Name>>
     : never
 
+// Wrapped callbacks accept base defaults here and resolve them before calling consumers.
+type ComponentRuntimeProps<Name extends ComponentName>
+  = Name extends keyof BaseUIClasses
+    ? UIProps<ComponentProps<Name>, {
+      [Surface in keyof BaseUIClasses[Name]]: Omit<BaseUIClasses[Name][Surface], 'all'> & { all: string }
+    }>
+    : ComponentProps<Name>
+
 type ComponentMergedProps<Name extends ComponentMergeName>
-  = Pick<ComponentProps<Name>, MergeKeys<Name>>
+  = Pick<ComponentRuntimeProps<Name>, Extract<MergeKeys<Name>, keyof ComponentRuntimeProps<Name>>>
 
 type ComponentMergeResult<Name extends ComponentMergeName>
   = ComponentConfigs[Name] extends { merge: readonly unknown[] }

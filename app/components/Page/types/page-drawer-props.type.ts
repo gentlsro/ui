@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { WithClassPicker } from '../../../functions/with-class-picker'
 // Types
 import type { CSSProperties } from 'vue'
@@ -74,7 +75,7 @@ export type IPageDrawerProps = {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class to apply to the container
      */
@@ -126,5 +127,5 @@ export type IPageDrawerProps = {
      * Style to apply to the filler (the top part of the drawer)
      */
     fillerStyle?: (payload: { isMini: boolean }) => CSSProperties
-  }
+  }, UIResolvedClasses['pageDrawer']>
 }

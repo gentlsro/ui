@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 import type { CONFIRMATION_DEFAULT_PROPS } from '../constants/confirmation-default-props.constant'
@@ -26,7 +27,7 @@ export type IConfirmationProps = {
   /**
    * UI customization
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class for the container element
      */
@@ -74,5 +75,5 @@ export type IConfirmationProps = {
      * Style for the actions element
      */
     actionsStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['confirmation']>
 }

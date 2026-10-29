@@ -179,9 +179,9 @@ defineExpose(menuGetExposed({
 
 // Styles - menu
 const menuClassComputed = computed(() => {
-  return mergedProps.value?.ui?.menuClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.menuClass, {
     defaults: MENU_DEFAULT_PROPS.ui.menuClass(),
-  }))
+  })
 })
 
 const menuStyleComputed = computed(() => {
@@ -190,9 +190,9 @@ const menuStyleComputed = computed(() => {
 
 // Styles - content
 const contentClass = computed(() => {
-  return mergedProps.value?.ui?.contentClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.contentClass, {
     defaults: MENU_DEFAULT_PROPS.ui.contentClass(),
-  }))
+  })
 })
 
 const contentStyle = computed(() => {

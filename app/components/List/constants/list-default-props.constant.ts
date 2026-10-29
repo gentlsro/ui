@@ -121,4 +121,4 @@ export const LIST_DEFAULT_PROPS = {
     },
 
   },
-} satisfies IListProps
+} satisfies Omit<IListProps, 'ui'> & { ui: object }

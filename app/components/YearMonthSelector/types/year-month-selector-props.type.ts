@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
@@ -9,7 +10,7 @@ import type { YEAR_MONTH_SELECTOR_DEFAULT_PROPS } from '../constants/year-month-
 
 export type YearMonthValueFormat = 'timestamp' | 'year-month'
 
-export type IYearMonthSelectorProps = IFieldProps & {
+export type IYearMonthSelectorProps = Omit<IFieldProps, 'ui'> & {
   clearable?: boolean
   emptyValue?: any
   modelValue?: Datetime
@@ -19,7 +20,7 @@ export type IYearMonthSelectorProps = IFieldProps & {
   /**
    * Visual configuration
    */
-  ui?: IFieldProps['ui'] & {
+  ui?: UIClasses<NonNullable<(IFieldProps)['ui']> & IFieldProps['ui'] & {
     /**
      * Class to apply to the picker icon
      */
@@ -31,5 +32,5 @@ export type IYearMonthSelectorProps = IFieldProps & {
      * Style to apply to the picker icon
      */
     pickerIconStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['yearMonthSelector']>
 }

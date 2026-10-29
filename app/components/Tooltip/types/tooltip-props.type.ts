@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 import type { MaybeElement } from '@floating-ui/vue'
@@ -80,7 +81,7 @@ export type ITooltipProps = {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class for the tooltip container
      */
@@ -140,5 +141,5 @@ export type ITooltipProps = {
      * Style for the arrow
      */
     arrowStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['tooltip']>
 }

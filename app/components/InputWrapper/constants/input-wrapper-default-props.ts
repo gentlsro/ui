@@ -76,4 +76,4 @@ export const INPUT_WRAPPER_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies IInputWrapperProps
+} satisfies Omit<IInputWrapperProps, 'ui'> & { ui: object }

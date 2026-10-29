@@ -159,7 +159,7 @@ function handleRowActionsClick(ev: MouseEvent) {
 function getRowActionsClass(row: IItem) {
   const defaults = TABLE_DEFAULT_PROPS.ui.rowActionsClass()
 
-  return props.ui?.rowActionsClass?.(withClassPicker({ row, defaults })) ?? defaults.all
+  return resolveUIClass(props.ui?.rowActionsClass, { row, defaults }) ?? defaults.all
 }
 
 // Checked before mounting the actions, so rows without any do not mount a component for them
@@ -258,18 +258,18 @@ const rowDataArray = computed(() => {
             ? col.cellClass(row)
             : col.cellClass
 
-          const uiCellClass = props.ui?.cellClass?.(withClassPicker({
+          const uiCellClass = resolveUIClass(props.ui?.cellClass, {
             row,
             column: col,
             defaults: TABLE_DEFAULT_PROPS.ui.cellClass(),
-          }))
+          })
 
           // Cell inner
-          const uiCellInnerClass = props.ui?.cellInnerClass?.(withClassPicker({
+          const uiCellInnerClass = resolveUIClass(props.ui?.cellInnerClass, {
             row,
             column: col,
             defaults: TABLE_DEFAULT_PROPS.ui.cellInnerClass(),
-          }))
+          })
 
           return {
             id: col.field,
@@ -299,9 +299,9 @@ const rowClassArray = computed(() => {
     ? props.row
     : [props.row]
 
-  const alternateRowClass = props.ui?.alternateRowClass?.(withClassPicker({
+  const alternateRowClass = resolveUIClass(props.ui?.alternateRowClass, {
     defaults: TABLE_DEFAULT_PROPS.ui.alternateRowClass(),
-  }))
+  })
 
   return rowArray.map((row, idx) => {
     const rowData = rowDataArray.value[idx]
@@ -309,10 +309,10 @@ const rowClassArray = computed(() => {
 
     return [
       typeof props.ui?.rowClass === 'function'
-        ? props.ui?.rowClass(withClassPicker({
+        ? resolveUIClass(props.ui?.rowClass, {
             row,
             defaults: TABLE_DEFAULT_PROPS.ui.rowClass(),
-          }))
+          })
         : undefined,
       {
         'is-card': isCardView.value,

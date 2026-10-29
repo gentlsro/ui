@@ -110,4 +110,4 @@ export const TREE_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies ITreeProps
+} satisfies Omit<ITreeProps, 'ui'> & { ui: object }

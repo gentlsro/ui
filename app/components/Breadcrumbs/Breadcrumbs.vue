@@ -24,9 +24,9 @@ const mergedProps = computed(() => {
 
 // Styles - wrapper
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.containerClass, {
     defaults: BREADCRUMBS_DEFAULT_PROPS.ui.containerClass(),
-  }))
+  })
 })
 
 const containerStyle = computed(() => {
@@ -35,9 +35,9 @@ const containerStyle = computed(() => {
 
 // Styles - breadcrumbs
 const breadcrumbsClass = computed(() => {
-  return mergedProps.value?.ui?.breadcrumbsClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.breadcrumbsClass, {
     defaults: BREADCRUMBS_DEFAULT_PROPS.ui.breadcrumbsClass(),
-  }))
+  })
 })
 
 const breadcrumbsStyle = computed(() => {

@@ -58,4 +58,4 @@ export const TOOLTIP_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies ITooltipProps
+} satisfies Omit<ITooltipProps, 'ui'> & { ui: object }

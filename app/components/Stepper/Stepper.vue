@@ -56,9 +56,9 @@ onMounted(stepper.syncOrder)
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.containerClass, {
     defaults: STEPPER_DEFAULT_PROPS.ui.containerClass({ layout: layout.value, size: size.value }),
-  }))
+  })
 })
 
 const containerStyle = computed(() => {
@@ -67,9 +67,9 @@ const containerStyle = computed(() => {
 
 // Styles - panels
 const panelsClass = computed(() => {
-  return mergedProps.value?.ui?.panelsClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.panelsClass, {
     defaults: STEPPER_DEFAULT_PROPS.ui.panelsClass({ layout: layout.value }),
-  }))
+  })
 })
 
 const panelsStyle = computed(() => {

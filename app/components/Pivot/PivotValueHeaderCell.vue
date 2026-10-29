@@ -64,9 +64,9 @@ const formattedLabel = computed(() => {
 
 const valueHeaderCellClass = computed(() => {
   return [
-    ui.value?.valueHeaderCellClass?.(withClassPicker({
+    resolveUIClass(ui.value?.valueHeaderCellClass, {
       defaults: PIVOT_DEFAULT_PROPS.ui.valueHeaderCellClass(),
-    })),
+    }),
     {
       'is-collapsible': isCollapsible.value,
     },

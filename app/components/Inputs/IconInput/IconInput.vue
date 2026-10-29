@@ -92,9 +92,9 @@ const iconSize = computed(() => {
 
 // Styles - append
 const appendClass = computed(() => {
-  return mergedProps.value.ui?.appendClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value.ui?.appendClass, {
     defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.appendClass(),
-  }))
+  })
 })
 
 // Styles - append

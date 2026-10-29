@@ -15,13 +15,14 @@ function setAliasPaths(nuxt: Nuxt, alias: string, tsPath: string) {
   nuxt.options.typescript.tsConfig.compilerOptions.paths[alias] = [tsPath]
 }
 
-function generateUIConfigCode(configPaths: { path: string }[]) {
-  return `import type { IFormProps } from '${resolve(currentDir, 'app/components/Form/types/form-props.type')}'
+function generateUIConfigCode(configPaths: { path: string }[], parents: Record<string, Record<string, string[]>>) {
+  return `import type { UIProps, UIResolvedClasses } from '${resolve(currentDir, 'app/types/ui-config.type')}'
 import { customDefu } from '#layers/utilities/app/utils/custom-defu'
 ${configPaths.map(({ path }, idx) => `import config${idx}, * as configModule${idx} from '${path}'`).join('\n')}
 
 const uiConfigMerged = customDefu(${configPaths.map((_, idx) => `config${idx}`).join(', ')})
 export const uiConfigLayers = [${configPaths.map((_, idx) => `configModule${idx}`).reverse().join(', ')}] as const
+export const uiClassParents: Record<string, Record<string, string[]>> = ${JSON.stringify(parents)}
 
 type WrappedValue<Value> = Value extends (...args: never[]) => unknown
   ? Value
@@ -49,9 +50,12 @@ function wrapObjects<T extends Record<string, any>>(obj: T): WrapObjects<T> {
   return result
 }
 
+type ResolvedProps<Props, Name> = Name extends keyof UIResolvedClasses
+  ? UIProps<Props, UIResolvedClasses[Name]> : Props
+
 type WrapProps<T> = {
   [K in keyof T]: T[K] extends { props: infer P }
-    ? { props: WrapObjects<P> } & Omit<T[K], "props">
+    ? { props: WrapObjects<ResolvedProps<P, K>> } & Omit<T[K], "props">
     : T[K];
 };
 
@@ -82,21 +86,7 @@ function wrapProps<T extends Record<string, any>>(obj: T): WrapProps<T> {
   return result;
 }
 
-// Class callbacks have been consumed by Form's defaults resolver. Component
-// overrides now receive those resolved defaults, rather than replaying config.
-const formUI: Record<string, unknown> = { ...uiConfigMerged.form.props.ui }
-for (const key of Object.keys(formUI)) {
-  if (key.endsWith('Class') && typeof formUI[key] === 'function') {
-    formUI[key] = ({ defaults }: { defaults: { all: string } }) => defaults.all
-  }
-}
-export const uiConfig = wrapProps({
-  ...uiConfigMerged,
-  form: { ...uiConfigMerged.form, props: {
-    ...uiConfigMerged.form.props,
-    ui: formUI as NonNullable<IFormProps['ui']>,
-  } },
-})
+export const uiConfig = wrapProps(uiConfigMerged)
 
 export type UIConfigValues = typeof uiConfigMerged
 export type IUIConfig = typeof uiConfig
@@ -104,9 +94,14 @@ export default uiConfig
 `
 }
 
-// Form callbacks are read without executing application code. Static return
+// Class callbacks are read without executing application code. Static return
 // expressions become type expressions over the preceding layer's defaults.
-function formClassTypes(configPath: string, previous: string, dependencies: Set<string>) {
+function componentClassTypes(configPath: string, context: {
+  previous: string
+  dependencies: Set<string>
+  classes: Record<string, string[]>
+}) {
+  const { previous, dependencies, classes } = context
   const sources = new Map<string, ts.SourceFile>()
   function readSource(path: string) {
     let source = sources.get(path)
@@ -182,17 +177,28 @@ function formClassTypes(configPath: string, previous: string, dependencies: Set<
   }
 
   const unknown = Symbol('dynamic config')
-  function property(node: ts.Expression | undefined | typeof unknown, key: string): ts.Expression | undefined | typeof unknown {
+  function property(node: ts.Expression | ts.MethodDeclaration | undefined | typeof unknown, key: string): ts.Expression | ts.MethodDeclaration | undefined | typeof unknown {
     if (!node || node === unknown) {
       return node
+    }
+    if (ts.isMethodDeclaration(node)) {
+      return unknown
     }
     const value = unwrap(node)
     if (!ts.isObjectLiteralExpression(value)) {
       return unknown
     }
     for (const field of [...value.properties].reverse()) {
-      if (ts.isPropertyAssignment(field) && field.name.getText().replaceAll(/['"]/g, '') === key) {
-        return field.initializer
+      if (ts.isPropertyAssignment(field) || ts.isShorthandPropertyAssignment(field) || ts.isMethodDeclaration(field)) {
+        const name = ts.isComputedPropertyName(field.name)
+          ? ts.isStringLiteralLike(field.name.expression) ? field.name.expression.text : undefined
+          : field.name.getText().replaceAll(/['"]/g, '')
+        if (!name) {
+          return unknown
+        }
+        if (name === key) {
+          return ts.isMethodDeclaration(field) ? field : ts.isShorthandPropertyAssignment(field) ? field.name : field.initializer
+        }
       }
       if (ts.isSpreadAssignment(field)) {
         const inherited = property(field.expression, key)
@@ -206,97 +212,90 @@ function formClassTypes(configPath: string, previous: string, dependencies: Set<
   }
 
   const exported = source.statements.find(ts.isExportAssignment)
-  const ui = exported && property(property(property(exported.expression, 'form'), 'props'), 'ui')
-  const result: Record<string, string> = {}
-  const surfaces = ['containerClass', 'contentClass', 'controlsClass', 'submitWrapperClass', 'submitClass', 'cancelClass']
-  if (ui === unknown) {
-    return Object.fromEntries(surfaces.map(surface => [surface, 'string']))
-  }
-  const values = ui && unwrap(ui)
-  if (!values) {
-    return result
-  }
-  if (!ts.isObjectLiteralExpression(values)) {
-    return Object.fromEntries(surfaces.map(surface => [surface, 'string']))
-  }
-
-  for (const field of values.properties) {
-    if (ts.isSpreadAssignment(field)) {
-      Object.assign(result, Object.fromEntries(surfaces.map(surface => [surface, 'string'])))
-    }
-    if (!ts.isPropertyAssignment(field) && !ts.isMethodDeclaration(field) && !ts.isShorthandPropertyAssignment(field)) {
+  const result: Record<string, Record<string, string>> = {}
+  for (const [component, surfaces] of Object.entries(classes)) {
+    const ui = exported && property(property(property(exported.expression, component), 'props'), 'ui')
+    const fields: Record<string, string> = {}
+    result[component] = fields
+    if (ui === unknown) {
+      Object.assign(fields, Object.fromEntries(surfaces.map(surface => [surface, 'string'])))
       continue
     }
-    if (ts.isComputedPropertyName(field.name)) {
-      Object.assign(result, Object.fromEntries(surfaces.map(surface => [surface, 'string'])))
-      continue
-    }
-    const surface = field.name.getText().replaceAll(/['"]/g, '')
-    if (!surface.endsWith('Class')) {
-      continue
-    }
-    const callback = ts.isMethodDeclaration(field) ? field : unwrap(ts.isShorthandPropertyAssignment(field) ? field.name : field.initializer)
-    if (!ts.isArrowFunction(callback) && !ts.isFunctionExpression(callback) && !ts.isMethodDeclaration(callback)) {
-      result[surface] = 'string'
-      continue
-    }
-    const parameter = callback.parameters[0]?.name
-    const defaults = parameter && ts.isObjectBindingPattern(parameter)
-      ? parameter.elements.find(element => (element.propertyName ?? element.name).getText() === 'defaults')?.name.getText()
-      : parameter && ts.isIdentifier(parameter) ? `${parameter.text}.defaults` : undefined
-    const picker = parameter && ts.isObjectBindingPattern(parameter)
-      ? parameter.elements.find(element => (element.propertyName ?? element.name).getText() === 'p')?.name.getText()
-      : parameter && ts.isIdentifier(parameter) ? `${parameter.text}.p` : undefined
-    const slots = `${previous}['form'][${JSON.stringify(surface)}]`
-    const escape = (value: string) => value.replaceAll('\\', '\\\\').replaceAll('`', '\\`').replaceAll('${', '\\${')
-
-    const localNames = new Set<string>()
-    function collectNames(node: ts.Node) {
-      if (ts.isIdentifier(node)) {
-        localNames.add(node.text)
+    for (const surface of surfaces) {
+      const value = property(ui, surface)
+      if (!value) {
+        continue
       }
-      ts.forEachChild(node, collectNames)
-    }
-    for (const parameter of callback.parameters) {
-      collectNames(parameter.name)
-    }
+      if (value === unknown) {
+        fields[surface] = 'string'
+        continue
+      }
+      const callback = ts.isMethodDeclaration(value) ? value : unwrap(value)
+      if (!ts.isArrowFunction(callback) && !ts.isFunctionExpression(callback) && !ts.isMethodDeclaration(callback)) {
+        fields[surface] = 'string'
+        continue
+      }
+      const parameter = callback.parameters[0]?.name
+      const defaults = parameter && ts.isObjectBindingPattern(parameter)
+        ? parameter.elements.find(element => (element.propertyName ?? element.name).getText() === 'defaults')?.name.getText()
+        : parameter && ts.isIdentifier(parameter) ? `${parameter.text}.defaults` : undefined
+      const picker = parameter && ts.isObjectBindingPattern(parameter)
+        ? parameter.elements.find(element => (element.propertyName ?? element.name).getText() === 'p')?.name.getText()
+        : parameter && ts.isIdentifier(parameter) ? `${parameter.text}.p` : undefined
+      const slots = `${previous}[${JSON.stringify(component)}][${JSON.stringify(surface)}]`
+      const escape = (value: string) => value.replaceAll('\\', '\\\\').replaceAll('`', '\\`').replaceAll('${', '\\${')
 
-    function expressionType(node: ts.Expression): string {
-      const value = unwrap(node, false)
-      if (ts.isIdentifier(value) && !localNames.has(value.text)) {
-        const resolved = binding(value)
-        if (resolved) {
-          return expressionType(resolved)
+      const localNames = new Set<string>()
+      function collectNames(node: ts.Node) {
+        if (ts.isIdentifier(node)) {
+          localNames.add(node.text)
         }
+        ts.forEachChild(node, collectNames)
       }
-      if (ts.isStringLiteralLike(value)) {
-        return JSON.stringify(value.text)
-      }
-      if (defaults && ts.isPropertyAccessExpression(value) && value.expression.getText() === defaults) {
-        return `${slots}[${JSON.stringify(value.name.text)}]`
-      }
-      if (picker && ts.isCallExpression(value) && value.expression.getText() === picker
-        && value.arguments.every(ts.isStringLiteralLike)) {
-        return `PickedClasses<${slots}, [${value.arguments.map(argument => JSON.stringify((argument as ts.StringLiteral).text)).join(', ')}]>`
-      }
-      if (ts.isTemplateExpression(value)) {
-        return `\`${escape(value.head.text)}${value.templateSpans.map(span => `\${${expressionType(span.expression)}}${escape(span.literal.text)}`).join('')}\``
-      }
-      if (ts.isBinaryExpression(value) && value.operatorToken.kind === ts.SyntaxKind.PlusToken) {
-        return `\`\${${expressionType(value.left)}}\${${expressionType(value.right)}}\``
-      }
-      if (ts.isConditionalExpression(value)) {
-        return `(${expressionType(value.whenTrue)} | ${expressionType(value.whenFalse)})`
+      for (const parameter of callback.parameters) {
+        collectNames(parameter.name)
       }
 
-      return 'string'
+      function expressionType(node: ts.Expression): string {
+        const value = unwrap(node, false)
+        if (ts.isIdentifier(value) && !localNames.has(value.text)) {
+          const resolved = binding(value)
+          if (resolved) {
+            return expressionType(resolved)
+          }
+        }
+        if (ts.isArrayLiteralExpression(value) && !value.elements.some(ts.isSpreadElement)) {
+          return `ClassList<[${value.elements.map(element => expressionType(element as ts.Expression)).join(', ')}]>`
+        }
+        if (ts.isStringLiteralLike(value)) {
+          return JSON.stringify(value.text)
+        }
+        if (defaults && ts.isPropertyAccessExpression(value) && value.expression.getText() === defaults) {
+          return `${slots}[${JSON.stringify(value.name.text)}]`
+        }
+        if (picker && ts.isCallExpression(value) && value.expression.getText() === picker
+          && value.arguments.every(ts.isStringLiteralLike)) {
+          return `PickedClasses<${slots}, [${value.arguments.map(argument => JSON.stringify((argument as ts.StringLiteral).text)).join(', ')}]>`
+        }
+        if (ts.isTemplateExpression(value)) {
+          return `\`${escape(value.head.text)}${value.templateSpans.map(span => `\${${expressionType(span.expression)}}${escape(span.literal.text)}`).join('')}\``
+        }
+        if (ts.isBinaryExpression(value) && value.operatorToken.kind === ts.SyntaxKind.PlusToken) {
+          return `\`\${${expressionType(value.left)}}\${${expressionType(value.right)}}\``
+        }
+        if (ts.isConditionalExpression(value)) {
+          return `(${expressionType(value.whenTrue)} | ${expressionType(value.whenFalse)})`
+        }
+
+        return 'string'
+      }
+
+      const body = callback.body
+      const returned = body && ts.isBlock(body)
+        ? body.statements.length === 1 && body.statements[0] && ts.isReturnStatement(body.statements[0]) ? body.statements[0].expression : undefined
+        : body
+      fields[surface] = returned ? expressionType(returned) : 'string'
     }
-
-    const body = callback.body
-    const returned = body && ts.isBlock(body)
-      ? body.statements.length === 1 && body.statements[0] && ts.isReturnStatement(body.statements[0]) ? body.statements[0].expression : undefined
-      : body
-    result[surface] = returned ? expressionType(returned) : 'string'
   }
 
   return result
@@ -315,7 +314,67 @@ export default defineNuxtModule({
       })
       .filter(({ path }) => existsSync(`${path}.ts`))
 
-    const configCode = generateUIConfigCode(configPaths)
+    // Build class types from the existing configuration callbacks, independently of their inferred types.
+    const orderedConfigs = [...configPaths].reverse()
+    const classTypesPath = resolve(currentDir, 'app/types/ui-config.type')
+    const pickerTypesPath = resolve(currentDir, 'app/functions/with-class-picker')
+    const configDependencies = new Set<string>()
+    const registry = ts.createSourceFile(classTypesPath, readFileSync(`${classTypesPath}.ts`, 'utf8'), ts.ScriptTarget.Latest, true)
+    const factories = registry.statements.find(statement => ts.isTypeAliasDeclaration(statement) && statement.name.text === 'UIClassFactories') as ts.TypeAliasDeclaration
+    const parents: Record<string, Record<string, string[]>> = {}
+    const classes = Object.fromEntries((factories.type as ts.TypeLiteralNode).members.map(member => {
+      const component = (member as ts.PropertySignature).name.getText()
+      const surfaces = new Set<string>()
+      parents[component] = {}
+      function collect(node: ts.Node) {
+        if (ts.isTypeReferenceNode(node) && node.typeName.getText() === 'Pick') {
+          const [source, keys] = node.typeArguments!
+          const names: string[] = []
+          function collectKeys(node: ts.Node) {
+            if (ts.isLiteralTypeNode(node) && ts.isStringLiteral(node.literal)) {
+              names.push(node.literal.text)
+              surfaces.add(node.literal.text)
+            }
+            ts.forEachChild(node, collectKeys)
+          }
+          collectKeys(keys!)
+          if (source && ts.isIndexedAccessTypeNode(source) && ts.isLiteralTypeNode(source.indexType) && ts.isStringLiteral(source.indexType.literal)) {
+            for (const surface of names) {
+              parents[component]![surface] = [source.indexType.literal.text]
+            }
+          }
+
+          return
+        }
+        if (ts.isPropertySignature(node) && node.name.getText().endsWith('Class')) {
+          const surface = node.name.getText()
+          surfaces.add(surface)
+          const sources: string[] = []
+          function collectParents(node: ts.Node) {
+            if (ts.isIndexedAccessTypeNode(node) && node.objectType.getText() === 'UIClassFactories' && ts.isLiteralTypeNode(node.indexType) && ts.isStringLiteral(node.indexType.literal)) {
+              sources.push(node.indexType.literal.text)
+            }
+            ts.forEachChild(node, collectParents)
+          }
+          ts.forEachChild(node, collectParents)
+          if (sources.length) {
+            parents[component]![surface] = sources
+          }
+
+          return
+        }
+        ts.forEachChild(node, collect)
+      }
+      ts.forEachChild(member, collect)
+
+      return [component, [...surfaces]]
+    }))
+    const classTypes = orderedConfigs.map(({ path }, index) => componentClassTypes(path, {
+      previous: `Stage${index}`,
+      dependencies: configDependencies,
+      classes,
+    }))
+    const configCode = generateUIConfigCode(configPaths, parents)
 
     addTemplate({
       filename: 'uiConfig.ts',
@@ -323,12 +382,6 @@ export default defineNuxtModule({
       getContents: () => configCode,
     })
 
-    // Build Form types from the existing configuration callbacks, independently of their inferred types.
-    const orderedConfigs = [...configPaths].reverse()
-    const classTypesPath = resolve(currentDir, 'app/types/ui-config.type')
-    const pickerTypesPath = resolve(currentDir, 'app/functions/with-class-picker')
-    const configDependencies = new Set<string>()
-    const formTypes = orderedConfigs.map(({ path }, index) => formClassTypes(path, `Stage${index}`, configDependencies))
     // Imported config edits must refresh generated types and cached callbacks too.
     nuxt.options.watch.push(...configDependencies)
 
@@ -337,19 +390,28 @@ export default defineNuxtModule({
       getContents: () => `import type { BaseUIClasses } from '${classTypesPath}'
 import type { PickedClasses } from '${pickerTypesPath}'
 
-type Stage0 = BaseUIClasses
-${orderedConfigs.map((_, idx) => {
-  const fields = Object.entries(formTypes[idx]!)
+type TrimClass<Value extends string> = Value extends \` \${infer Rest}\` | \`\\n\${infer Rest}\` | \`\\t\${infer Rest}\` | \`\\r\${infer Rest}\`
+  ? TrimClass<Rest> : Value extends \`\${infer Rest} \` | \`\${infer Rest}\\n\` | \`\${infer Rest}\\t\` | \`\${infer Rest}\\r\`
+    ? TrimClass<Rest> : Value
+type ClassList<Values extends readonly string[]> = Values extends readonly [infer Head extends string, ...infer Tail extends string[]]
+  ? TrimClass<Head> extends infer Part extends string
+    ? Part extends '' ? ClassList<Tail> : ClassList<Tail> extends '' ? Part : \`\${Part} \${ClassList<Tail>}\`
+    : never
+  : ''
 
-  return `${fields.length
-    ? `type FormAll${idx} = { ${fields.map(([key, value]) => `${JSON.stringify(key)}: ${value}`).join('; ')} }
-type Stage${idx + 1} = Omit<Stage${idx}, 'form'> & {
-  form: { [Surface in keyof Stage${idx}['form']]: Surface extends keyof FormAll${idx}
-    ? Omit<Stage${idx}['form'][Surface], 'all'> & { all: FormAll${idx}[Surface] }
-    : Stage${idx}['form'][Surface] }
-}`
-    : `type Stage${idx + 1} = Stage${idx}`}`
-}).join('\n')}
+type Stage0 = Omit<BaseUIClasses, ${Object.entries(parents).filter(([, surfaces]) => Object.keys(surfaces).length).map(([component]) => JSON.stringify(component)).join(' | ') || 'never'}> & {
+${Object.entries(parents).filter(([, surfaces]) => Object.keys(surfaces).length).map(([component, surfaces]) => `  ${JSON.stringify(component)}: Omit<BaseUIClasses[${JSON.stringify(component)}], ${Object.keys(surfaces).map(surface => JSON.stringify(surface)).join(' | ')}> & { ${Object.entries(surfaces).map(([surface, sources]) => `${JSON.stringify(surface)}: ${sources.map(parent => `Stage${orderedConfigs.length}[${JSON.stringify(parent)}][${JSON.stringify(surface)}]`).join(' | ')}`).join('; ')} }`).join('\n')}
+}
+${orderedConfigs.map((_, idx) => `type ClassAll${idx} = { ${Object.entries(classTypes[idx]!).map(([component, fields]) => `${JSON.stringify(component)}: { ${Object.entries(fields).map(([surface, type]) => `${JSON.stringify(surface)}: ${type}`).join('; ')} }`).join('; ')} }
+type Stage${idx + 1} = {
+  [Component in keyof Stage${idx}]: {
+    [Surface in keyof Stage${idx}[Component]]: Component extends keyof ClassAll${idx}
+      ? Surface extends keyof ClassAll${idx}[Component]
+        ? Omit<Stage${idx}[Component][Surface], 'all'> & { all: ClassAll${idx}[Component][Surface] }
+        : Stage${idx}[Component][Surface]
+      : Stage${idx}[Component][Surface]
+  }
+}`).join('\n')}
 
 declare module '${classTypesPath}' {
   interface UIClassRegistry {

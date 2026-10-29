@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 // Types
 import type { ITextInputProps } from './types/text-input-props.type'
 
-const props = withDefaults(defineProps<ITextInputProps>(), {
+const props = withDefaults(defineProps<Omit<ITextInputProps, 'ui'> & { ui?: UIClasses<NonNullable<ITextInputProps['ui']>, UIResolvedClasses['searchInput']> }>(), {
   ...getComponentProps('searchInput'),
 })
 

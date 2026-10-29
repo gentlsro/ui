@@ -27,4 +27,4 @@ export const CHIP_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies IChipProps
+} satisfies Omit<IChipProps, 'ui'> & { ui: object }

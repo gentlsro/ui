@@ -52,4 +52,4 @@ export const SECTION_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies ISectionProps
+} satisfies Omit<ISectionProps, 'ui'> & { ui: object }

@@ -16,9 +16,9 @@ const mergedProps = computed(() => {
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.containerClass, {
     defaults: PROGRESS_BAR_DEFAULT_PROPS.ui.containerClass(),
-  }))
+  })
 })
 
 const containerStyle = computed(() => {
@@ -27,9 +27,9 @@ const containerStyle = computed(() => {
 
 // Styles - inner
 const innerClass = computed(() => {
-  return mergedProps.value?.ui?.innerClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.innerClass, {
     defaults: PROGRESS_BAR_DEFAULT_PROPS.ui.innerClass(),
-  }))
+  })
 })
 
 const innerStyle = computed(() => {
@@ -38,9 +38,9 @@ const innerStyle = computed(() => {
 
 // Styles - color
 const colorClass = computed(() => {
-  return mergedProps.value?.ui?.colorClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.colorClass, {
     defaults: PROGRESS_BAR_DEFAULT_PROPS.ui.colorClass(),
-  }))
+  })
 })
 
 const colorStyle = computed(() => {
@@ -49,9 +49,9 @@ const colorStyle = computed(() => {
 
 // Styles - white background
 const whiteBgClass = computed(() => {
-  return mergedProps.value?.ui?.whiteBgClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.whiteBgClass, {
     defaults: PROGRESS_BAR_DEFAULT_PROPS.ui.whiteBgClass(),
-  }))
+  })
 })
 
 const whiteBgStyle = computed(() => {
@@ -60,9 +60,9 @@ const whiteBgStyle = computed(() => {
 
 // Styles - black background (progress)
 const blackBgClass = computed(() => {
-  return mergedProps.value?.ui?.blackBgClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.blackBgClass, {
     defaults: PROGRESS_BAR_DEFAULT_PROPS.ui.blackBgClass(),
-  }))
+  })
 })
 
 const blackBgStyle = computed(() => {
@@ -71,9 +71,9 @@ const blackBgStyle = computed(() => {
 
 // Styles - text
 const textClass = computed(() => {
-  return mergedProps.value?.ui?.textClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.textClass, {
     defaults: PROGRESS_BAR_DEFAULT_PROPS.ui.textClass(),
-  }))
+  })
 })
 
 const textStyle = computed(() => {

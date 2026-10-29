@@ -10,9 +10,9 @@ type IProps = Pick<IListProps, 'ui'>
 const props = defineProps<IProps>()
 
 const moveHandleClass = computed(() => {
-  return props.ui?.moveHandleClass?.(withClassPicker({
+  return resolveUIClass(props.ui?.moveHandleClass, {
     defaults: LIST_DEFAULT_PROPS.ui.moveHandleClass(),
-  }))
+  })
 })
 
 const moveHandleStyle = computed(() => {
@@ -20,9 +20,9 @@ const moveHandleStyle = computed(() => {
 })
 
 const moveHandleIconClass = computed(() => {
-  return props.ui?.moveHandleIconClass?.(withClassPicker({
+  return resolveUIClass(props.ui?.moveHandleIconClass, {
     defaults: LIST_DEFAULT_PROPS.ui.moveHandleIconClass(),
-  }))
+  })
 })
 
 const moveHandleIconStyle = computed(() => {

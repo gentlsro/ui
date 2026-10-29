@@ -13,9 +13,9 @@ const mergedProps = computed(() => getComponentMergedProps('item', props))
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.containerClass, {
     defaults: ITEM_DEFAULT_PROPS.ui.containerClass(),
-  }))
+  })
 })
 
 const containerStyle = computed(() => {
@@ -24,9 +24,9 @@ const containerStyle = computed(() => {
 
 // Styles - focus helper
 const focusHelperClass = computed(() => {
-  return mergedProps.value?.ui?.focusHelperClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.focusHelperClass, {
     defaults: ITEM_DEFAULT_PROPS.ui.focusHelperClass(),
-  }))
+  })
 })
 
 const focusHelperStyle = computed(() => {

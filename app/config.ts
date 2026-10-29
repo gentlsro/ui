@@ -469,6 +469,7 @@ export const defaultComponentsConfig = {
         focusInputOnLabelClick: false,
       },
     },
+    merge: ['ui'],
   },
 
   // FileInput
@@ -1809,6 +1810,6 @@ export const defaultComponentsConfig = {
       },
     },
   },
-} satisfies IUIConfig<UIConfigClasses['form']>
+} satisfies IUIConfig<UIConfigClasses>
 
 export default extendUIConfig(defaultComponentsConfig)

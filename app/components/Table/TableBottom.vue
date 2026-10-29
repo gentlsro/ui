@@ -31,9 +31,9 @@ const isLimitReached = computed(() => {
 })
 
 const bottomClass = computed(() => {
-  return props.ui?.bottomClass?.(withClassPicker({
+  return resolveUIClass(props.ui?.bottomClass, {
     defaults: TABLE_DEFAULT_PROPS.ui.bottomClass(),
-  }))
+  })
 })
 
 const bottomStyle = computed(() => {

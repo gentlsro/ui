@@ -62,9 +62,9 @@ const labelProps = computed(() => {
 })
 
 const wrapperClass = computed(() => {
-  const wrapperClass = mergedProps.value.ui?.wrapperClass?.(withClassPicker({
+  const wrapperClass = resolveUIClass(mergedProps.value.ui?.wrapperClass, {
     defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.wrapperClass(),
-  }))
+  })
 
   return [
     wrapperClass,
@@ -91,9 +91,9 @@ const contentClassLocal = computed(() => {
 })
 
 const contentClass = computed(() => {
-  return mergedProps.value.ui?.contentClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value.ui?.contentClass, {
     defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.contentClass(),
-  }))
+  })
 })
 
 const contentStyle = computed(() => {
@@ -102,9 +102,9 @@ const contentStyle = computed(() => {
 
 // Styles - Input
 const inputClass = computed(() => {
-  return mergedProps.value.ui?.inputClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value.ui?.inputClass, {
     defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.inputClass(),
-  }))
+  })
 })
 
 const inputStyle = computed(() => {
@@ -152,9 +152,9 @@ const isInputRequired = computed(() => {
 
 // Styles - Hint
 const hintClass = computed(() => {
-  return mergedProps.value.ui?.hintClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value.ui?.hintClass, {
     defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.hintClass(),
-  }))
+  })
 })
 
 const hintStyle = computed(() => {
@@ -163,9 +163,9 @@ const hintStyle = computed(() => {
 
 // Styles - Error
 const errorClass = computed(() => {
-  return mergedProps.value.ui?.errorClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value.ui?.errorClass, {
     defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.errorClass(),
-  }))
+  })
 })
 
 const errorStyle = computed(() => {

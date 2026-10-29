@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
@@ -52,7 +53,7 @@ export type IMiniCardProps = Omit<IValueFormatterProps, 'ui'> & {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Base class for the container
      */
@@ -136,5 +137,5 @@ export type IMiniCardProps = Omit<IValueFormatterProps, 'ui'> & {
      * Style to apply to the previous value
      */
     previousValueStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['miniCard']>
 }

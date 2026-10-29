@@ -31,4 +31,4 @@ export const NAVIGATION_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies INavigationProps
+} satisfies Omit<INavigationProps, 'ui'> & { ui: object }

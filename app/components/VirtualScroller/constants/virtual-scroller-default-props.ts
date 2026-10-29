@@ -29,4 +29,4 @@ export const VIRTUAL_SCROLLER_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies IVirtualScrollerProps<any>
+} satisfies Omit<IVirtualScrollerProps<any>, 'ui'> & { ui: object }

@@ -103,9 +103,9 @@ provide(formSubmitKey, handleSubmit)
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.containerClass, {
     defaults: FORM_DEFAULT_PROPS.ui.containerClass(),
-  }))
+  })
 })
 
 const containerStyle = computed(() => {
@@ -114,9 +114,9 @@ const containerStyle = computed(() => {
 
 // Styles - content
 const contentClass = computed(() => {
-  return mergedProps.value?.ui?.contentClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.contentClass, {
     defaults: FORM_DEFAULT_PROPS.ui.contentClass(),
-  }))
+  })
 })
 
 const contentStyle = computed(() => {
@@ -125,9 +125,9 @@ const contentStyle = computed(() => {
 
 // Styles - controls
 const controlsClass = computed(() => {
-  return mergedProps.value?.ui?.controlsClass?.(withClassPicker({
+  return resolveUIClass(mergedProps.value?.ui?.controlsClass, {
     defaults: FORM_DEFAULT_PROPS.ui.controlsClass(),
-  }))
+  })
 })
 
 const controlsStyle = computed(() => {

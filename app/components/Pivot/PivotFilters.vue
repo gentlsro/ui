@@ -12,9 +12,9 @@ const customFilters = computed(() => {
 })
 
 const filtersClass = computed(() => {
-  return ui.value?.filtersClass?.(withClassPicker({
+  return resolveUIClass(ui.value?.filtersClass, {
     defaults: PIVOT_DEFAULT_PROPS.ui.filtersClass(),
-  }))
+  })
 })
 
 const filtersStyle = computed(() => {

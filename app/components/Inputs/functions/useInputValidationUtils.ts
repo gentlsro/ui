@@ -3,7 +3,7 @@ import { escape } from 'lodash-es'
 // Types
 import type { IInputWrapperProps } from '../../InputWrapper/types/input-wrapper-props.type'
 
-export function useInputValidationUtils(props: IInputWrapperProps) {
+export function useInputValidationUtils(props: Pick<IInputWrapperProps, 'validationPath' | 'validation' | 'errors'>) {
   const path = computed(() => {
     if (props.validationPath) {
       if (typeof props.validationPath === 'string') {
