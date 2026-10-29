@@ -23,9 +23,9 @@ const styleProps = computed(() => ({ variant: props.variant }))
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return mergedProps.value?.ui?.containerClass?.(withClassPicker({
     defaults: BUTTON_GROUP_DEFAULT_PROPS.ui.containerClass(styleProps.value),
-  })
+  }))
 })
 
 const containerStyle = computed(() => {
@@ -34,16 +34,16 @@ const containerStyle = computed(() => {
 
 // Styles - button
 const buttonClass = computed(() => {
-  return mergedProps.value?.ui?.buttonClass?.({
+  return mergedProps.value?.ui?.buttonClass?.(withClassPicker({
     defaults: BUTTON_GROUP_DEFAULT_PROPS.ui.buttonClass(styleProps.value),
-  })
+  }))
 })
 
 // Styles - active button
 const activeClass = computed(() => {
-  return mergedProps.value?.ui?.activeClass?.({
+  return mergedProps.value?.ui?.activeClass?.(withClassPicker({
     defaults: BUTTON_GROUP_DEFAULT_PROPS.ui.activeClass(styleProps.value),
-  })
+  }))
 })
 
 const activeStyle = computed(() => {

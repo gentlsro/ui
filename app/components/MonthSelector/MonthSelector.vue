@@ -58,9 +58,9 @@ function handleMonthSelect(month: Pick<Month, 'idx'>, callback?: () => void) {
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return mergedProps.value?.ui?.containerClass?.(withClassPicker({
     defaults: MONTH_SELECTOR_DEFAULT_PROPS.ui.containerClass(),
-  })
+  }))
 })
 
 const containerStyle = computed(() => {
@@ -69,9 +69,9 @@ const containerStyle = computed(() => {
 
 // Styles - previous button
 const previousBtnClass = computed(() => {
-  return mergedProps.value?.ui?.previousBtnClass?.({
+  return mergedProps.value?.ui?.previousBtnClass?.(withClassPicker({
     defaults: MONTH_SELECTOR_DEFAULT_PROPS.ui.previousBtnClass(),
-  })
+  }))
 })
 
 const previousBtnStyle = computed(() => {
@@ -80,9 +80,9 @@ const previousBtnStyle = computed(() => {
 
 // Styles - current button
 const currentBtnClass = computed(() => {
-  return mergedProps.value?.ui?.currentBtnClass?.({
+  return mergedProps.value?.ui?.currentBtnClass?.(withClassPicker({
     defaults: MONTH_SELECTOR_DEFAULT_PROPS.ui.currentBtnClass(),
-  })
+  }))
 })
 
 const currentBtnStyle = computed(() => {
@@ -91,9 +91,9 @@ const currentBtnStyle = computed(() => {
 
 // Styles - next button
 const nextBtnClass = computed(() => {
-  return mergedProps.value?.ui?.nextBtnClass?.({
+  return mergedProps.value?.ui?.nextBtnClass?.(withClassPicker({
     defaults: MONTH_SELECTOR_DEFAULT_PROPS.ui.nextBtnClass(),
-  })
+  }))
 })
 
 const nextBtnStyle = computed(() => {
@@ -102,9 +102,9 @@ const nextBtnStyle = computed(() => {
 
 // Styles - grid container
 const gridContainerClass = computed(() => {
-  return mergedProps.value?.ui?.gridContainerClass?.({
+  return mergedProps.value?.ui?.gridContainerClass?.(withClassPicker({
     defaults: MONTH_SELECTOR_DEFAULT_PROPS.ui.gridContainerClass(),
-  })
+  }))
 })
 
 const gridContainerStyle = computed(() => {
@@ -113,9 +113,9 @@ const gridContainerStyle = computed(() => {
 
 // Styles - month button
 const monthBtnClass = computed(() => {
-  return mergedProps.value?.ui?.monthBtnClass?.({
+  return mergedProps.value?.ui?.monthBtnClass?.(withClassPicker({
     defaults: MONTH_SELECTOR_DEFAULT_PROPS.ui.monthBtnClass(),
-  })
+  }))
 })
 
 const monthBtnStyle = computed(() => {

@@ -16,9 +16,9 @@ const mergedProps = computed(() => {
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return mergedProps.value?.ui?.containerClass?.(withClassPicker({
     defaults: MARQUEE_DEFAULT_PROPS.ui.containerClass(),
-  })
+  }))
 })
 
 const containerStyle = computed(() => {
@@ -32,14 +32,14 @@ const containerStyle = computed(() => {
 const contentClass = computed(() => {
   return [
     props.vertical ? 'animate-marquee-vertical' : 'animate-marquee',
-    mergedProps.value?.ui?.contentClass?.({
+    mergedProps.value?.ui?.contentClass?.(withClassPicker({
       defaults: MARQUEE_DEFAULT_PROPS.ui.contentClass({
         pauseOnHover: props.pauseOnHover ?? false,
         vertical: props.vertical ?? false,
       }),
       pauseOnHover: props.pauseOnHover ?? false,
       vertical: props.vertical ?? false,
-    }),
+    })),
   ]
 })
 

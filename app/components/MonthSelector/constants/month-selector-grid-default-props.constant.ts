@@ -5,10 +5,10 @@ export const MONTH_SELECTOR_GRID_DEFAULT_PROPS = {
     containerClass() {
       const base = 'grid grid-cols-2 xm:grid-cols-3 gap-1'
 
-      return withClassPicker({
+      return {
         base,
         all: base,
-      } as const)
+      } as const
     },
 
     monthBtnClass() {
@@ -18,12 +18,12 @@ export const MONTH_SELECTOR_GRID_DEFAULT_PROPS = {
       const selected = '[&.is-selected]:(bg-primary color-white)'
       const current = '[&.is-current]:(shadow-coolGray shadow-[0px_0px_0px_2px_var(--un-shadow-color)])'
 
-      return withClassPicker({
+      return {
         base,
         selected,
         current,
         all: `${base} ${selected} ${current}`,
-      } as const)
+      } as const
     },
   },
 }

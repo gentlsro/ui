@@ -364,21 +364,21 @@ onMounted(() => {
 })
 
 // Styles
-const containerClass = computed(() => mergedProps.value.ui?.containerClass?.({
+const containerClass = computed(() => mergedProps.value.ui?.containerClass?.(withClassPicker({
   defaults: VIRTUAL_SCROLLER_DEFAULT_PROPS.ui.containerClass(),
-}))
+})))
 const containerStyle = computed(() => mergedProps.value.ui?.containerStyle?.())
-const contentClass = computed(() => mergedProps.value.ui?.contentClass?.({
+const contentClass = computed(() => mergedProps.value.ui?.contentClass?.(withClassPicker({
   defaults: VIRTUAL_SCROLLER_DEFAULT_PROPS.ui.contentClass(),
-}))
+})))
 const contentStyle = computed(() => ({
   ...mergedProps.value.ui?.contentStyle?.(),
   minHeight: `${totalHeight.value}px`,
   ...(totalWidth.value === undefined ? {} : { width: `${totalWidth.value}px` }),
 }))
-const rowClass = computed(() => mergedProps.value.ui?.rowClass?.({
+const rowClass = computed(() => mergedProps.value.ui?.rowClass?.(withClassPicker({
   defaults: VIRTUAL_SCROLLER_DEFAULT_PROPS.ui.rowClass(),
-}))
+})))
 const rowStyle = computed(() => ({
   ...mergedProps.value.ui?.rowStyle?.(),
   ...(hasVirtualColumns.value ? columnPadding.value : {}),

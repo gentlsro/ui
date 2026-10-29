@@ -67,9 +67,9 @@ function handleRemove(idx: number) {
 
 // Styles - inner
 const innerClass = computed(() => {
-  return props.ui?.innerClass?.({
+  return props.ui?.innerClass?.(withClassPicker({
     defaults: SELECTOR_DEFAULT_PROPS.ui.innerClass(),
-  })
+  }))
 })
 
 const innerStyle = computed(() => {

@@ -50,9 +50,9 @@ const isEmptyValue = computed(() => {
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return mergedProps.value?.ui?.containerClass?.(withClassPicker({
     defaults: VALUE_FORMATTER_DEFAULT_PROPS.ui.containerClass(),
-  })
+  }))
 })
 
 const containerStyle = computed(() => {

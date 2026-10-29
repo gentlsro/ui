@@ -1,3 +1,4 @@
+import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
 // Types
@@ -103,9 +104,9 @@ export type IInputWrapperProps = IInputLabelProps & {
     /**
      * Class applied to the `append` slot
      */
-    appendClass?: (payload: {
+    appendClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof INPUT_WRAPPER_DEFAULT_PROPS['ui']['appendClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style applied to the `append` slot
@@ -149,9 +150,9 @@ export type IInputWrapperProps = IInputLabelProps & {
     /**
      * The class of the input wrapper (including label, ...)
      */
-    contentClass?: (payload: {
+    contentClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof INPUT_WRAPPER_DEFAULT_PROPS['ui']['contentClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * The style of the input container
@@ -161,9 +162,9 @@ export type IInputWrapperProps = IInputLabelProps & {
     /**
      * The class of the error container
      */
-    errorClass?: (payload: {
+    errorClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof INPUT_WRAPPER_DEFAULT_PROPS['ui']['errorClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * The style of the error container
@@ -173,9 +174,9 @@ export type IInputWrapperProps = IInputLabelProps & {
     /**
      * The class of the hint
      */
-    hintClass?: (payload: {
+    hintClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof INPUT_WRAPPER_DEFAULT_PROPS['ui']['hintClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * The style of the hint
@@ -187,9 +188,9 @@ export type IInputWrapperProps = IInputLabelProps & {
      *
      * Note: Primarily used for background color
      */
-    inputContainerClass?: (payload: {
+    inputContainerClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof INPUT_WRAPPER_DEFAULT_PROPS['ui']['inputContainerClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style of the input container
@@ -209,9 +210,9 @@ export type IInputWrapperProps = IInputLabelProps & {
     /**
      * Class of the inner container around the actual input tag
      */
-    inputInnerContainerClass?: (payload: {
+    inputInnerContainerClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof INPUT_WRAPPER_DEFAULT_PROPS['ui']['inputInnerContainerClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style of the inner container around the actual input tag
@@ -229,9 +230,9 @@ export type IInputWrapperProps = IInputLabelProps & {
     /**
      * The class of the input tag
      */
-    inputClass?: (payload: {
+    inputClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof INPUT_WRAPPER_DEFAULT_PROPS['ui']['inputClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * The style of the input tag
@@ -249,9 +250,9 @@ export type IInputWrapperProps = IInputLabelProps & {
     /**
      * The class of the InputWrapper container
      */
-    wrapperClass?: (payload: {
+    wrapperClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof INPUT_WRAPPER_DEFAULT_PROPS['ui']['wrapperClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * The style of the InputWrapper container

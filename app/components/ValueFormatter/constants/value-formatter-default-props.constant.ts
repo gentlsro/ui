@@ -8,10 +8,10 @@ export const VALUE_FORMATTER_DEFAULT_PROPS = {
     containerClass() {
       const base = ''
 
-      return withClassPicker({
+      return {
         base,
         all: `${base}`,
-      } as const)
+      } as const
     },
   },
 } satisfies Partial<IValueFormatterProps>

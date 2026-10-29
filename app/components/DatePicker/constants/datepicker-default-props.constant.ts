@@ -7,19 +7,19 @@ export const DATE_PICKER_DEFAULT_PROPS = {
     containerClass() {
       const base = 'flex flex-col overflow-auto bg-white color-slate-700 dark:bg-dark-950 dark:color-inherit'
 
-      return withClassPicker({
+      return {
         base,
         all: base,
-      } as const)
+      } as const
     },
 
     daysGridClass() {
       const base = 'grid grid-cols-7 gap-2px p-x-2 p-b-2'
 
-      return withClassPicker({
+      return {
         base,
         all: base,
-      } as const)
+      } as const
     },
 
     dayClass({ day, isSelected, disabled: isDisabled }: DatePickerDayState) {
@@ -32,7 +32,7 @@ export const DATE_PICKER_DEFAULT_PROPS = {
       const disabled = 'cursor-not-allowed color-true-gray-400 dark:color-true-gray-600'
       const interactive = 'cursor-pointer'
 
-      return withClassPicker({
+      return {
         base,
         hover,
         weekend,
@@ -51,7 +51,7 @@ export const DATE_PICKER_DEFAULT_PROPS = {
           isSelected && !isDisabled && color,
           isDisabled && disabled,
         ].filter(Boolean).join(' '),
-      } as const)
+      } as const
     },
 
     dayNumberClass({ day, isSelected }: DatePickerDayState) {
@@ -60,7 +60,7 @@ export const DATE_PICKER_DEFAULT_PROPS = {
       const outline = 'outline-primary'
       const selected = 'outline-white'
 
-      return withClassPicker({
+      return {
         base,
         today,
         outline,
@@ -71,7 +71,7 @@ export const DATE_PICKER_DEFAULT_PROPS = {
           day.isToday && !isSelected && outline,
           isSelected && selected,
         ].filter(Boolean).join(' '),
-      } as const)
+      } as const
     },
 
     dayEdgeClass({ isSelected }: DatePickerDayState) {
@@ -79,48 +79,48 @@ export const DATE_PICKER_DEFAULT_PROPS = {
       const color = 'color-slate-400 dark:color-true-gray-500'
       const selected = 'color-white/70'
 
-      return withClassPicker({
+      return {
         base,
         color,
         selected,
         all: `${base} ${isSelected ? selected : color}`,
-      } as const)
+      } as const
     },
 
     dayNumberWrapperClass() {
       const base = 'flex flex-center'
 
-      return withClassPicker({
+      return {
         base,
         all: base,
-      } as const)
+      } as const
     },
 
     dayEventsClass() {
       const base = 'flex flex-1 flex-center px-1 py-2px overflow-hidden'
 
-      return withClassPicker({
+      return {
         base,
         all: base,
-      } as const)
+      } as const
     },
 
     dayEventsContainerClass() {
       const base = 'flex flex-1 flex-wrap gap-px flex-center bg-white/20 dark:bg-dark-950/20 rounded-custom'
 
-      return withClassPicker({
+      return {
         base,
         all: base,
-      } as const)
+      } as const
     },
 
     dayEventClass() {
       const base = 'w-3 h-3 hover:scale-120 transition-transform-300'
 
-      return withClassPicker({
+      return {
         base,
         all: base,
-      } as const)
+      } as const
     },
 
     controlsClass() {
@@ -128,12 +128,12 @@ export const DATE_PICKER_DEFAULT_PROPS = {
       const bg = 'bg-white dark:bg-dark-950'
       const border = 'border-t-1 border-slate-100 dark:border-dark-700'
 
-      return withClassPicker({
+      return {
         base,
         bg,
         border,
         all: `${base} ${bg} ${border}`,
-      } as const)
+      } as const
     },
   },
 }

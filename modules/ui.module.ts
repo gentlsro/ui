@@ -244,6 +244,9 @@ function formClassTypes(configPath: string, previous: string, dependencies: Set<
     const defaults = parameter && ts.isObjectBindingPattern(parameter)
       ? parameter.elements.find(element => (element.propertyName ?? element.name).getText() === 'defaults')?.name.getText()
       : parameter && ts.isIdentifier(parameter) ? `${parameter.text}.defaults` : undefined
+    const picker = parameter && ts.isObjectBindingPattern(parameter)
+      ? parameter.elements.find(element => (element.propertyName ?? element.name).getText() === 'p')?.name.getText()
+      : parameter && ts.isIdentifier(parameter) ? `${parameter.text}.p` : undefined
     const slots = `${previous}['form'][${JSON.stringify(surface)}]`
     const escape = (value: string) => value.replaceAll('\\', '\\\\').replaceAll('`', '\\`').replaceAll('${', '\\${')
 
@@ -272,9 +275,9 @@ function formClassTypes(configPath: string, previous: string, dependencies: Set<
       if (defaults && ts.isPropertyAccessExpression(value) && value.expression.getText() === defaults) {
         return `${slots}[${JSON.stringify(value.name.text)}]`
       }
-      if (defaults && ts.isCallExpression(value) && value.expression.getText() === `${defaults}.p`
+      if (picker && ts.isCallExpression(value) && value.expression.getText() === picker
         && value.arguments.every(ts.isStringLiteralLike)) {
-        return `PickedClasses<UIClassPicker<${slots}>, [${value.arguments.map(argument => JSON.stringify((argument as ts.StringLiteral).text)).join(', ')}]>`
+        return `PickedClasses<${slots}, [${value.arguments.map(argument => JSON.stringify((argument as ts.StringLiteral).text)).join(', ')}]>`
       }
       if (ts.isTemplateExpression(value)) {
         return `\`${escape(value.head.text)}${value.templateSpans.map(span => `\${${expressionType(span.expression)}}${escape(span.literal.text)}`).join('')}\``
@@ -331,7 +334,7 @@ export default defineNuxtModule({
 
     addTypeTemplate({
       filename: 'types/ui-class-config.d.ts',
-      getContents: () => `import type { BaseUIClasses, UIClassPicker } from '${classTypesPath}'
+      getContents: () => `import type { BaseUIClasses } from '${classTypesPath}'
 import type { PickedClasses } from '${pickerTypesPath}'
 
 type Stage0 = BaseUIClasses

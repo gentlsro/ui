@@ -82,7 +82,7 @@ defineExpose({
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return mergedProps.value?.ui?.containerClass?.(withClassPicker({
     defaults: BTN_DEFAULT_PROPS.ui.containerClass({
       align: props.align,
       noUppercase: props.noUppercase,
@@ -97,7 +97,7 @@ const containerClass = computed(() => {
       hasLabel: !!(label.value || slots.label),
       size: props.size ?? 'md',
     }),
-  })
+  }))
 })
 
 const containerStyle = computed(() => {
@@ -106,11 +106,11 @@ const containerStyle = computed(() => {
 
 // Styles - icon
 const iconClass = computed(() => {
-  return mergedProps.value?.ui?.iconClass?.({
+  return mergedProps.value?.ui?.iconClass?.(withClassPicker({
     defaults: BTN_DEFAULT_PROPS.ui.iconClass({
       size: props.size ?? 'md',
     }),
-  })
+  }))
 })
 
 const iconStyle = computed(() => {
@@ -119,12 +119,12 @@ const iconStyle = computed(() => {
 
 // Styles - label
 const labelClass = computed(() => {
-  return mergedProps.value?.ui?.labelClass?.({
+  return mergedProps.value?.ui?.labelClass?.(withClassPicker({
     defaults: BTN_DEFAULT_PROPS.ui.labelClass({
       align: props.align,
       size: props.size ?? 'md',
     }),
-  })
+  }))
 })
 
 const labelStyle = computed(() => {
@@ -136,9 +136,9 @@ const labelStyle = computed(() => {
 
 // Styles - focus helper
 const focusHelperClass = computed(() => {
-  return mergedProps.value?.ui?.focusHelperClass?.({
+  return mergedProps.value?.ui?.focusHelperClass?.(withClassPicker({
     defaults: BTN_DEFAULT_PROPS.ui.focusHelperClass(),
-  })
+  }))
 })
 
 // The helper inherits the button's outer border radius, so it must cover the
@@ -174,9 +174,9 @@ const focusHelperStyle = computed(() => {
 
 // Styles - loading
 const loadingClass = computed(() => {
-  return mergedProps.value?.ui?.loadingClass?.({
+  return mergedProps.value?.ui?.loadingClass?.(withClassPicker({
     defaults: BTN_DEFAULT_PROPS.ui.loadingClass(),
-  })
+  }))
 })
 
 const loadingStyle = computed(() => {
@@ -185,11 +185,11 @@ const loadingStyle = computed(() => {
 
 // Styles - loader
 const loaderClass = computed(() => {
-  return mergedProps.value?.ui?.loaderClass?.({
+  return mergedProps.value?.ui?.loaderClass?.(withClassPicker({
     defaults: BTN_DEFAULT_PROPS.ui.loaderClass({
       size: props.size ?? 'md',
     }),
-  })
+  }))
 })
 
 const loaderStyle = computed(() => {

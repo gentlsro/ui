@@ -47,15 +47,15 @@ watch(model, isOpen => {
 
 // Styles
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return mergedProps.value?.ui?.containerClass?.(withClassPicker({
     defaults: BURGER_DEFAULT_PROPS.ui.containerClass({ size: size.value }),
-  })
+  }))
 })
 
 const burgerClass = computed(() => {
-  return mergedProps.value?.ui?.burgerClass?.({
+  return mergedProps.value?.ui?.burgerClass?.(withClassPicker({
     defaults: BURGER_DEFAULT_PROPS.ui.burgerClass({ size: size.value }),
-  })
+  }))
 })
 </script>
 

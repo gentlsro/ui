@@ -1,3 +1,4 @@
+import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
 // Constants
@@ -26,9 +27,9 @@ export type ISeparatorProps = {
     /**
      * Class to apply to the container
      */
-    containerClass?: (payload: {
+    containerClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof SEPARATOR_DEFAULT_PROPS['ui']['containerClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the container

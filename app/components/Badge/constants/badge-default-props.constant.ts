@@ -15,7 +15,7 @@ export const BADGE_DEFAULT_PROPS = {
       const inline = `${base} ${font} ${border} min-w-5 p-x-1.5 p-y-2px` as const
       const topRight = `${base} ${position} ${border} font-rem-10 min-w-18px leading-10px p-2px` as const
 
-      return withClassPicker({
+      return {
         base,
         font,
         position,
@@ -24,7 +24,7 @@ export const BADGE_DEFAULT_PROPS = {
         topRight,
         noPosition: `${base} ${font} ${border} min-w-5 p-x-1.5 p-y-2px`,
         all: `${base} ${font} ${position} ${border}`,
-      } as const)
+      } as const
     },
   },
 } satisfies IBadgeProps

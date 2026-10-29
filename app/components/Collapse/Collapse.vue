@@ -47,9 +47,9 @@ async function handleToggle() {
 
 // Styles - Container
 const containerClass = computed(() => {
-  return mergedProps.value.ui?.containerClass?.({
+  return mergedProps.value.ui?.containerClass?.(withClassPicker({
     defaults: COLLAPSE_DEFAULT_PROPS.ui.containerClass(),
-  })
+  }))
 })
 
 const containerStyle = computed(() => {

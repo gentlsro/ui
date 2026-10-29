@@ -19,9 +19,9 @@ const model = defineModel<string | number>()
 
 // Styles - navigation
 const navigationClass = computed(() => {
-  return props.ui?.navigationClass?.({
+  return props.ui?.navigationClass?.(withClassPicker({
     defaults: TABS_DEFAULT_PROPS.ui.navigationClass(),
-  })
+  }))
 })
 
 const navigationStyle = computed(() => {
@@ -30,9 +30,9 @@ const navigationStyle = computed(() => {
 
 // Styles - navigation content
 const navigationContentClass = computed(() => {
-  return props.ui?.navigationContentClass?.({
+  return props.ui?.navigationContentClass?.(withClassPicker({
     defaults: TABS_DEFAULT_PROPS.ui.navigationContentClass(),
-  })
+  }))
 })
 
 const navigationContentStyle = computed(() => {
@@ -41,9 +41,9 @@ const navigationContentStyle = computed(() => {
 
 // Styles - tab nav btn
 const tabNavBtnClass = computed(() => {
-  return props.ui?.tabNavBtnClass?.({
+  return props.ui?.tabNavBtnClass?.(withClassPicker({
     defaults: TABS_DEFAULT_PROPS.ui.tabNavBtnClass(),
-  })
+  }))
 })
 
 const tabNavBtnStyle = computed(() => {

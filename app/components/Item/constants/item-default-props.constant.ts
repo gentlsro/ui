@@ -9,12 +9,12 @@ export const ITEM_DEFAULT_PROPS = {
       const readonly = '[&.is-readonly]:(cursor-default)'
       const disabled = '[&.is-disabled]:(cursor-not-allowed opacity-50)'
 
-      return withClassPicker({
+      return {
         base,
         readonly,
         disabled,
         all: `${base} ${readonly} ${disabled}`,
-      } as const)
+      } as const
     },
 
     focusHelperClass() {
@@ -23,11 +23,11 @@ export const ITEM_DEFAULT_PROPS = {
       // Hover effect (via CSS group selector - container must have item class)
       const hover = '[.item:hover_&]:(bg-current opacity-10)'
 
-      return withClassPicker({
+      return {
         base,
         hover,
         all: `${base} ${hover}`,
-      } as const)
+      } as const
     },
   },
 }

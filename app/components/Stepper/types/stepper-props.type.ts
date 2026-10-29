@@ -1,3 +1,4 @@
+import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
 // Constants
@@ -67,9 +68,9 @@ export type IStepperProps = {
     /**
      * Class to apply to the container
      */
-    containerClass?: (payload: {
+    containerClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof STEPPER_DEFAULT_PROPS['ui']['containerClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the container
@@ -79,9 +80,9 @@ export type IStepperProps = {
     /**
      * Class to apply to the navigation (the list of steps)
      */
-    navigationClass?: (payload: {
+    navigationClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof STEPPER_DEFAULT_PROPS['ui']['navigationClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the navigation (the list of steps)
@@ -91,9 +92,9 @@ export type IStepperProps = {
     /**
      * Class to apply to each step in the navigation
      */
-    itemClass?: (payload: {
+    itemClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof STEPPER_DEFAULT_PROPS['ui']['itemClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to each step in the navigation
@@ -103,9 +104,9 @@ export type IStepperProps = {
     /**
      * Class to apply to the step's trigger (the clickable indicator and text)
      */
-    triggerClass?: (payload: {
+    triggerClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof STEPPER_DEFAULT_PROPS['ui']['triggerClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the step's trigger (the clickable indicator and text)
@@ -115,9 +116,9 @@ export type IStepperProps = {
     /**
      * Class to apply to the step's indicator
      */
-    indicatorClass?: (payload: {
+    indicatorClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof STEPPER_DEFAULT_PROPS['ui']['indicatorClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the step's indicator
@@ -127,9 +128,9 @@ export type IStepperProps = {
     /**
      * Class to apply to the icon inside the step's indicator
      */
-    iconClass?: (payload: {
+    iconClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof STEPPER_DEFAULT_PROPS['ui']['iconClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the icon inside the step's indicator
@@ -139,9 +140,9 @@ export type IStepperProps = {
     /**
      * Class to apply to the separator between steps
      */
-    separatorClass?: (payload: {
+    separatorClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof STEPPER_DEFAULT_PROPS['ui']['separatorClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the separator between steps
@@ -151,9 +152,9 @@ export type IStepperProps = {
     /**
      * Class to apply to the wrapper of the step's label and description
      */
-    textClass?: (payload: {
+    textClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof STEPPER_DEFAULT_PROPS['ui']['textClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the wrapper of the step's label and description
@@ -163,9 +164,9 @@ export type IStepperProps = {
     /**
      * Class to apply to the step's label
      */
-    labelClass?: (payload: {
+    labelClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof STEPPER_DEFAULT_PROPS['ui']['labelClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the step's label
@@ -175,9 +176,9 @@ export type IStepperProps = {
     /**
      * Class to apply to the step's description
      */
-    descriptionClass?: (payload: {
+    descriptionClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof STEPPER_DEFAULT_PROPS['ui']['descriptionClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the step's description
@@ -187,9 +188,9 @@ export type IStepperProps = {
     /**
      * Class to apply to the wrapper of the steps' content
      */
-    panelsClass?: (payload: {
+    panelsClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof STEPPER_DEFAULT_PROPS['ui']['panelsClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the wrapper of the steps' content
@@ -199,9 +200,9 @@ export type IStepperProps = {
     /**
      * Class to apply to the content of the active step (the `Step` component)
      */
-    stepClass?: (payload: {
+    stepClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof STEPPER_DEFAULT_PROPS['ui']['stepClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the content of the active step (the `Step` component)

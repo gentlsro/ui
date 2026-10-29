@@ -34,9 +34,9 @@ const classes = computed(() => {
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return mergedProps.value?.ui?.containerClass?.(withClassPicker({
     defaults: SECTION_DEFAULT_PROPS.ui.containerClass(),
-  })
+  }))
 })
 
 const containerStyle = computed(() => {
@@ -45,9 +45,9 @@ const containerStyle = computed(() => {
 
 // Styles - title
 const titleClass = computed(() => {
-  return mergedProps.value?.ui?.titleClass?.({
+  return mergedProps.value?.ui?.titleClass?.(withClassPicker({
     defaults: SECTION_DEFAULT_PROPS.ui.titleClass(),
-  })
+  }))
 })
 
 const titleStyle = computed(() => {
@@ -56,9 +56,9 @@ const titleStyle = computed(() => {
 
 // Styles - subtitle
 const subtitleClass = computed(() => {
-  return mergedProps.value?.ui?.subtitleClass?.({
+  return mergedProps.value?.ui?.subtitleClass?.(withClassPicker({
     defaults: SECTION_DEFAULT_PROPS.ui.subtitleClass(),
-  })
+  }))
 })
 
 const subtitleStyle = computed(() => {
@@ -67,9 +67,9 @@ const subtitleStyle = computed(() => {
 
 // Styles - content
 const contentClass = computed(() => {
-  return mergedProps.value?.ui?.contentClass?.({
+  return mergedProps.value?.ui?.contentClass?.(withClassPicker({
     defaults: SECTION_DEFAULT_PROPS.ui.contentClass(),
-  })
+  }))
 })
 
 const contentStyle = computed(() => {
@@ -78,9 +78,9 @@ const contentStyle = computed(() => {
 
 // Styles - loading
 const loadingClass = computed(() => {
-  return mergedProps.value?.ui?.loadingClass?.({
+  return mergedProps.value?.ui?.loadingClass?.(withClassPicker({
     defaults: SECTION_DEFAULT_PROPS.ui.loadingClass(),
-  })
+  }))
 })
 
 const loadingStyle = computed(() => {

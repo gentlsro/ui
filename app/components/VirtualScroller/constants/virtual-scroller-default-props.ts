@@ -7,26 +7,26 @@ export const VIRTUAL_SCROLLER_DEFAULT_PROPS = {
     containerClass() {
       const base = ''
 
-      return withClassPicker({
+      return {
         base,
         all: `${base}`,
-      } as const)
+      } as const
     },
     contentClass() {
       const base = 'h-full'
 
-      return withClassPicker({
+      return {
         base,
         all: `${base}`,
-      } as const)
+      } as const
     },
     rowClass() {
       const base = ''
 
-      return withClassPicker({
+      return {
         base,
         all: `${base}`,
-      } as const)
+      } as const
     },
   },
 } satisfies IVirtualScrollerProps<any>

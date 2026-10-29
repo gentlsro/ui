@@ -10,21 +10,21 @@ export const PAGE_WRAPPER_DEFAULT_PROPS = {
       const scrollable = '[&:not(.is-scrollable)]:(overflow-auto flex flex-col)'
       const padded = '[&.is-padded]:m-t-$navHeight'
 
-      return withClassPicker({
+      return {
         base,
         scrollable,
         padded,
         all: `${base} ${scrollable} ${padded}`,
-      } as const)
+      } as const
     },
 
     contentClass() {
       const base = 'flex flex-col grow overflow-y-auto overflow-x-hidden'
 
-      return withClassPicker({
+      return {
         base,
         all: `${base}`,
-      } as const)
+      } as const
     },
   },
 } satisfies IPageWrapperProps

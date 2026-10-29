@@ -1,3 +1,4 @@
+import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
 // Store
@@ -128,9 +129,9 @@ export type IPivotProps<T = IItem> = {
     /**
      * Class to apply to the container
      */
-    containerClass?: (payload: {
+    containerClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof PIVOT_DEFAULT_PROPS['ui']['containerClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the container
@@ -140,16 +141,16 @@ export type IPivotProps<T = IItem> = {
     /**
      * Class to apply to the content
      */
-    contentClass?: (payload: {
+    contentClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof PIVOT_DEFAULT_PROPS['ui']['contentClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Class to apply to the top area
      */
-    topClass?: (payload: {
+    topClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof PIVOT_DEFAULT_PROPS['ui']['topClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the top area
@@ -159,9 +160,9 @@ export type IPivotProps<T = IItem> = {
     /**
      * Class to apply to the header
      */
-    headerClass?: (payload: {
+    headerClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof PIVOT_DEFAULT_PROPS['ui']['headerClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the header
@@ -171,9 +172,9 @@ export type IPivotProps<T = IItem> = {
     /**
      * Class to apply to the title
      */
-    titleClass?: (payload: {
+    titleClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof PIVOT_DEFAULT_PROPS['ui']['titleClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the title
@@ -183,9 +184,9 @@ export type IPivotProps<T = IItem> = {
     /**
      * Class to apply to the column filters area
      */
-    columnFiltersClass?: (payload: {
+    columnFiltersClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof PIVOT_DEFAULT_PROPS['ui']['columnFiltersClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the column filters area
@@ -195,9 +196,9 @@ export type IPivotProps<T = IItem> = {
     /**
      * Class to apply to the filters area
      */
-    filtersClass?: (payload: {
+    filtersClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof PIVOT_DEFAULT_PROPS['ui']['filtersClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the filters area
@@ -207,9 +208,9 @@ export type IPivotProps<T = IItem> = {
     /**
      * Class to apply to the row header
      */
-    rowHeaderClass?: (payload: {
+    rowHeaderClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof PIVOT_DEFAULT_PROPS['ui']['rowHeaderClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the row header
@@ -219,9 +220,9 @@ export type IPivotProps<T = IItem> = {
     /**
      * Class to apply to the row header cell
      */
-    rowHeaderCellClass?: (payload: {
+    rowHeaderCellClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof PIVOT_DEFAULT_PROPS['ui']['rowHeaderCellClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the row header cell
@@ -236,9 +237,9 @@ export type IPivotProps<T = IItem> = {
     /**
      * Class to apply to the row item
      */
-    rowItemClass?: (payload: {
+    rowItemClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof PIVOT_DEFAULT_PROPS['ui']['rowItemClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the row item
@@ -248,9 +249,9 @@ export type IPivotProps<T = IItem> = {
     /**
      * Class to apply to the row item cell
      */
-    rowItemCellClass?: (payload: {
+    rowItemCellClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof PIVOT_DEFAULT_PROPS['ui']['rowItemCellClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the row item cell
@@ -260,9 +261,9 @@ export type IPivotProps<T = IItem> = {
     /**
      * Class to apply to the value header
      */
-    valueHeaderClass?: (payload: {
+    valueHeaderClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof PIVOT_DEFAULT_PROPS['ui']['valueHeaderClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the value header
@@ -272,9 +273,9 @@ export type IPivotProps<T = IItem> = {
     /**
      * Class to apply to the value header cell
      */
-    valueHeaderCellClass?: (payload: {
+    valueHeaderCellClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof PIVOT_DEFAULT_PROPS['ui']['valueHeaderCellClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the value header cell
@@ -284,9 +285,9 @@ export type IPivotProps<T = IItem> = {
     /**
      * Class to apply to the value item
      */
-    valueItemClass?: (payload: {
+    valueItemClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof PIVOT_DEFAULT_PROPS['ui']['valueItemClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the value item
@@ -296,9 +297,9 @@ export type IPivotProps<T = IItem> = {
     /**
      * Class to apply to the value item cell
      */
-    valueItemCellClass?: (payload: {
+    valueItemCellClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof PIVOT_DEFAULT_PROPS['ui']['valueItemCellClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the value item cell
@@ -308,32 +309,32 @@ export type IPivotProps<T = IItem> = {
     /**
      * Class to apply to the values virtual scroller
      */
-    valuesScrollerClass?: (payload: {
+    valuesScrollerClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof PIVOT_DEFAULT_PROPS['ui']['valuesScrollerClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Class to apply to the rows wrapper
      *
      * This wrapper is primarily here to overcome issues with scrollbars
      */
-    rowsWrapperClass?: (payload: {
+    rowsWrapperClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof PIVOT_DEFAULT_PROPS['ui']['rowsWrapperClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Class to apply to the rows virtual scroller
      */
-    rowsScrollerClass?: (payload: {
+    rowsScrollerClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof PIVOT_DEFAULT_PROPS['ui']['rowsScrollerClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Class to apply to the loading area
      */
-    loadingClass?: (payload: {
+    loadingClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof PIVOT_DEFAULT_PROPS['ui']['loadingClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the loading area

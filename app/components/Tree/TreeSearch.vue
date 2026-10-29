@@ -20,9 +20,9 @@ const search = defineModel<string>('search')
 
 // Styles - Search
 const searchClass = computed(() => {
-  return props.ui?.searchClass?.({
+  return props.ui?.searchClass?.(withClassPicker({
     defaults: TREE_DEFAULT_PROPS.ui.searchClass(),
-  })
+  }))
 })
 
 const searchStyle = computed(() => {

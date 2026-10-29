@@ -9,11 +9,11 @@ export const YEAR_MONTH_SELECTOR_DEFAULT_PROPS = {
       // When parent is editable (not readonly and not disabled), make cursor pointer
       const editable = '[.year-month-selector:not(.is-readonly):not(.is-disabled)_&]:(cursor-pointer)'
 
-      return withClassPicker({
+      return {
         base,
         editable,
         all: `${base} ${editable}`,
-      } as const)
+      } as const
     },
   },
 }

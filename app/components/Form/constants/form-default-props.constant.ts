@@ -2,7 +2,7 @@
 
 import { uiConfigLayers } from '$uiConfig'
 import { normalizeClass } from 'vue'
-import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-config.type'
+import type { UIResolvedClasses } from '../../../types/ui-config.type'
 
 export const FORM_BASE_DEFAULTS = {
   ui: {
@@ -10,11 +10,11 @@ export const FORM_BASE_DEFAULTS = {
       const base = 'flex flex-col gap-2 grow overflow-auto'
       const gap = 'gap-2'
 
-      return withClassPicker({
+      return {
         base,
         gap,
         all: `${base} ${gap}`,
-      } as const)
+      } as const
     },
 
     contentClass() {
@@ -22,12 +22,12 @@ export const FORM_BASE_DEFAULTS = {
       const gap = 'gap-2'
       const padding = 'p-2'
 
-      return withClassPicker({
+      return {
         base,
         gap,
         padding,
         all: `${base} ${gap} ${padding}`,
-      } as const)
+      } as const
     },
 
     controlsClass() {
@@ -36,13 +36,13 @@ export const FORM_BASE_DEFAULTS = {
       const background = 'bg-white dark:bg-dark-950'
       const padding = 'p-y-1 p-x-2'
 
-      return withClassPicker({
+      return {
         base,
         border,
         background,
         padding,
         all: `${base} ${border} ${background} ${padding}`,
-      } as const)
+      } as const
     },
 
     submitWrapperClass() {
@@ -51,11 +51,11 @@ export const FORM_BASE_DEFAULTS = {
       // Presets
       const fullWidth = `${base} grow`
 
-      return withClassPicker({
+      return {
         base,
         fullWidth,
         all: `${base} m-l-auto`,
-      } as const)
+      } as const
     },
 
     submitClass() {
@@ -64,20 +64,20 @@ export const FORM_BASE_DEFAULTS = {
       // Presets
       const fullWidth = `${base} grow`
 
-      return withClassPicker({
+      return {
         base,
         fullWidth,
         all: `${base} w-40`,
-      } as const)
+      } as const
     },
 
     cancelClass() {
       const base = 'w-auto'
 
-      return withClassPicker({
+      return {
         base,
         all: `${base}`,
-      } as const)
+      } as const
     },
   },
 }
@@ -85,7 +85,7 @@ export const FORM_BASE_DEFAULTS = {
 type FormFactories = typeof FORM_BASE_DEFAULTS.ui
 type Surface = keyof FormFactories
 type Resolvers = {
-  [Key in Surface]: () => UIClassPicker<UIResolvedClasses['form'][Key]>
+  [Key in Surface]: () => UIResolvedClasses['form'][Key]
 }
 
 type ConfigLayer = {
@@ -104,17 +104,17 @@ function resolveFormDefaults(): Resolvers {
     for (const surface of surfaces) {
       const baseFactory = factories[surface]
       const callbacks = layers.map(layer => layer.default?.form?.props?.ui?.[surface])
-        .filter((callback): callback is (payload: { defaults: object }) => unknown => typeof callback === 'function')
+        .filter((callback): callback is (payload: { defaults: object, p: (...keys: never[]) => string }) => unknown => typeof callback === 'function')
       const factory = callbacks.length
         ? () => {
             let defaults: { all: string } = baseFactory()
 
             for (const callback of callbacks) {
-              const value = callback({ defaults })
+              const value = callback(withClassPicker({ defaults }))
               const all = typeof value === 'string' ? value : normalizeClass(value)
 
               if (all !== defaults.all) {
-                defaults = withClassPicker({ ...defaults, all })
+                defaults = { ...defaults, all }
               }
             }
 

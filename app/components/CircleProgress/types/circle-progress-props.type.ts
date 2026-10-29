@@ -1,3 +1,4 @@
+import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
 // Types
@@ -27,33 +28,33 @@ export type ICircleProgressProps = {
   noProgressText?: boolean
 
   ui?: {
-    containerClass?: (payload: {
+    containerClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof CIRCLE_PROGRESS_DEFAULT_PROPS['ui']['containerClass']>
-    }) => ClassType
+    }>) => ClassType
 
     containerStyle?: () => CSSProperties
 
-    svgClass?: (payload: {
+    svgClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof CIRCLE_PROGRESS_DEFAULT_PROPS['ui']['svgClass']>
-    }) => ClassType
+    }>) => ClassType
 
     svgStyle?: () => CSSProperties
 
-    circleBgClass?: (payload: {
+    circleBgClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof CIRCLE_PROGRESS_DEFAULT_PROPS['ui']['circleBgClass']>
-    }) => ClassType
+    }>) => ClassType
 
     circleBgStyle?: () => CSSProperties
 
-    circleClass?: (payload: {
+    circleClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof CIRCLE_PROGRESS_DEFAULT_PROPS['ui']['circleClass']>
-    }) => ClassType
+    }>) => ClassType
 
     circleStyle?: () => CSSProperties
 
-    textClass?: (payload: {
+    textClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof CIRCLE_PROGRESS_DEFAULT_PROPS['ui']['textClass']>
-    }) => ClassType
+    }>) => ClassType
 
     textStyle?: () => CSSProperties
   }

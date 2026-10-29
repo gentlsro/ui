@@ -1,3 +1,4 @@
+import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { AllowedComponentProps, CSSProperties } from 'vue'
 
 // Types
@@ -46,9 +47,9 @@ export type IMenuConfirmationProps = IMenuProps & {
     /**
      * Class to apply to the 'confirm' button
      */
-    confirmBtnClass?: (payload: {
+    confirmBtnClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof MENU_CONFIRMATION_DEFAULT_PROPS['ui']['confirmBtnClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the 'confirm' button
@@ -63,8 +64,8 @@ export type IMenuConfirmationProps = IMenuProps & {
     /**
      * Class to apply to the confirmation text
      */
-    confirmationTextClass?: (payload: {
+    confirmationTextClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof MENU_CONFIRMATION_DEFAULT_PROPS['ui']['confirmationTextClass']>
-    }) => ClassType
+    }>) => ClassType
   }
 }

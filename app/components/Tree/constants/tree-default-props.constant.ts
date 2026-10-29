@@ -8,19 +8,19 @@ export const TREE_DEFAULT_PROPS = {
     containerClass() {
       const base = 'relative p-1'
 
-      return withClassPicker({
+      return {
         base,
         all: `${base}`,
-      } as const)
+      } as const
     },
 
     contentClass() {
       const base = 'p-y-2.5 grow min-h-12'
 
-      return withClassPicker({
+      return {
         base,
         all: `${base}`,
-      } as const)
+      } as const
     },
 
     nodeClass() {
@@ -44,7 +44,7 @@ export const TREE_DEFAULT_PROPS = {
       // Focus while selected
       const focusSelected = '[&.is-focused.is-selected:not(.uses-checkbox)]:(outline-1 outline-dashed outline-offset--1 outline-primary dark:(outline-blue-400))'
 
-      return withClassPicker({
+      return {
         base,
         hover,
         hovered,
@@ -53,7 +53,7 @@ export const TREE_DEFAULT_PROPS = {
         focus,
         focusSelected,
         all: `${base} ${hover} ${focus} ${hovered} ${selectionNoCheckbox} ${selectionMultiCheckbox} ${focusSelected}`,
-      } as const)
+      } as const
     },
 
     nodeContentClass() {
@@ -74,40 +74,40 @@ export const TREE_DEFAULT_PROPS = {
       // // Focus while selected
       // const focusSelected = '[&.is-focused.is-selected:not(.uses-checkbox)]:(outline-1 outline-dashed outline-offset--1 outline-primary dark:(outline-blue-400))'
 
-      return withClassPicker({
+      return {
         base,
         hover,
         collapsible,
         all: `${base} ${hover} ${collapsible}`,
-      } as const)
+      } as const
     },
 
     noDataClass() {
       const base = 'absolute left-0 top-0 p-x-3 p-y-2 color-ca font-rem-14'
 
-      return withClassPicker({
+      return {
         base,
         all: `${base}`,
-      } as const)
+      } as const
     },
 
     actionsClass() {
       // Beside the search, which gives way first: the buttons keep their size
       const base = 'flex gap-1 items-center shrink-0'
 
-      return withClassPicker({
+      return {
         base,
         all: `${base}`,
-      } as const)
+      } as const
     },
 
     searchClass() {
       const base = 'flex'
 
-      return withClassPicker({
+      return {
         base,
         all: `${base}`,
-      } as const)
+      } as const
     },
   },
 } satisfies ITreeProps

@@ -25,44 +25,44 @@ const title = computed(() => typeof props.title === 'function' ? props.title() :
 const subtitle = computed(() => typeof props.subtitle === 'function' ? props.subtitle() : props.subtitle)
 
 // Styles - Header
-const headerClass = computed(() => props.ui?.headerClass?.({
+const headerClass = computed(() => props.ui?.headerClass?.(withClassPicker({
   defaults: COLLAPSE_DEFAULT_PROPS.ui.headerClass(),
-}))
+})))
 
 const headerStyle = computed(() => props.ui?.headerStyle?.())
 
 // Styles - Title
-const titleClass = computed(() => props.ui?.titleClass?.({
+const titleClass = computed(() => props.ui?.titleClass?.(withClassPicker({
   defaults: COLLAPSE_DEFAULT_PROPS.ui.titleClass(),
-}))
+})))
 
 const titleStyle = computed(() => props.ui?.titleStyle?.())
 
 // Styles - Subtitle
-const subtitleClass = computed(() => props.ui?.subtitleClass?.({
+const subtitleClass = computed(() => props.ui?.subtitleClass?.(withClassPicker({
   defaults: COLLAPSE_DEFAULT_PROPS.ui.subtitleClass(),
-}))
+})))
 
 const subtitleStyle = computed(() => props.ui?.subtitleStyle?.())
 
 // Styles - Expand icon
-const expandIconClass = computed(() => props.ui?.expandIconClass?.({
+const expandIconClass = computed(() => props.ui?.expandIconClass?.(withClassPicker({
   defaults: COLLAPSE_DEFAULT_PROPS.ui.expandIconClass(),
-}))
+})))
 
 const expandIconStyle = computed(() => props.ui?.expandIconStyle?.())
 
 // Styles - Header right
-const headerRightClass = computed(() => props.ui?.headerRightClass?.({
+const headerRightClass = computed(() => props.ui?.headerRightClass?.(withClassPicker({
   defaults: COLLAPSE_DEFAULT_PROPS.ui.headerRightClass(),
-}))
+})))
 
 const headerRightStyle = computed(() => props.ui?.headerRightStyle?.())
 
 // Styles - Text
-const textClass = computed(() => props.ui?.textClass?.({
+const textClass = computed(() => props.ui?.textClass?.(withClassPicker({
   defaults: COLLAPSE_DEFAULT_PROPS.ui.textClass(),
-}))
+})))
 
 const textStyle = computed(() => props.ui?.textStyle?.())
 </script>

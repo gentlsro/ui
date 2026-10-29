@@ -18,13 +18,13 @@ export const SKELETON_DEFAULT_PROPS = {
 
       const activeVariant = variants[variant]
 
-      return withClassPicker({
+      return {
         base,
         pulse,
         wave,
         blink,
         all: `${base} ${activeVariant}`,
-      } as const)
+      } as const
     },
   },
 }

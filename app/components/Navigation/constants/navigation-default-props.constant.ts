@@ -12,23 +12,23 @@ export const NAVIGATION_DEFAULT_PROPS = {
       const fixed = '[&:not(.is-sticky)]:(fixed)'
       const sticky = '[&.is-sticky]:(sticky)'
 
-      return withClassPicker({
+      return {
         base,
         shadow,
         hidden,
         fixed,
         sticky,
         all: `${base} ${shadow} ${hidden} ${fixed} ${sticky}`,
-      } as const)
+      } as const
     },
 
     navigationClass() {
       const base = 'flex items-center bg-white dark:bg-black w-full'
 
-      return withClassPicker({
+      return {
         base,
         all: `${base}`,
-      } as const)
+      } as const
     },
   },
 } satisfies INavigationProps

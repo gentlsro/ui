@@ -1,3 +1,4 @@
+import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
 // Constants
@@ -21,9 +22,9 @@ export type IProgressBarProps = {
     /**
      * Class to apply to the container
      */
-    containerClass?: (payload: {
+    containerClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof PROGRESS_BAR_DEFAULT_PROPS['ui']['containerClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the container
@@ -33,9 +34,9 @@ export type IProgressBarProps = {
     /**
      * Class to apply to inner elements
      */
-    innerClass?: (payload: {
+    innerClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof PROGRESS_BAR_DEFAULT_PROPS['ui']['innerClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to inner elements
@@ -45,9 +46,9 @@ export type IProgressBarProps = {
     /**
      * Class to apply to the color overlay
      */
-    colorClass?: (payload: {
+    colorClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof PROGRESS_BAR_DEFAULT_PROPS['ui']['colorClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the color overlay
@@ -57,9 +58,9 @@ export type IProgressBarProps = {
     /**
      * Class to apply to the white background
      */
-    whiteBgClass?: (payload: {
+    whiteBgClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof PROGRESS_BAR_DEFAULT_PROPS['ui']['whiteBgClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the white background
@@ -69,9 +70,9 @@ export type IProgressBarProps = {
     /**
      * Class to apply to the black background (progress indicator)
      */
-    blackBgClass?: (payload: {
+    blackBgClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof PROGRESS_BAR_DEFAULT_PROPS['ui']['blackBgClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the black background (progress indicator)
@@ -81,9 +82,9 @@ export type IProgressBarProps = {
     /**
      * Class to apply to the text
      */
-    textClass?: (payload: {
+    textClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof PROGRESS_BAR_DEFAULT_PROPS['ui']['textClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the text

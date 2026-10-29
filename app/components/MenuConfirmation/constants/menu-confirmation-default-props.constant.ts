@@ -9,19 +9,19 @@ export const MENU_CONFIRMATION_DEFAULT_PROPS = {
     confirmBtnClass() {
       const base = ''
 
-      return withClassPicker({
+      return {
         base,
         all: `${base}`,
-      } as const)
+      } as const
     },
 
     confirmationTextClass() {
       const base = 'color-ca font-rem-14 text-center p-x-4 p-y-2'
 
-      return withClassPicker({
+      return {
         base,
         all: base,
-      } as const)
+      } as const
     },
   },
 } satisfies IMenuConfirmationProps

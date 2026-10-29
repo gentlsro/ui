@@ -40,9 +40,9 @@ const selectionCount = computed(() => {
 })
 
 const toolbarClass = computed(() => {
-  return props.ui?.toolbarClass?.({
+  return props.ui?.toolbarClass?.(withClassPicker({
     defaults: TABLE_DEFAULT_PROPS.ui.toolbarClass(),
-  })
+  }))
 })
 
 const toolbarStyle = computed(() => {

@@ -30,13 +30,13 @@ export const CHECKBOX_DEFAULT_PROPS = {
 
       size = sizes[sizeProp]
 
-      return withClassPicker({
+      return {
         base,
         readonly,
         disabled,
         sizes,
         all: `${base} ${readonly} ${disabled} ${size}`,
-      } as const)
+      } as const
     },
 
     checkboxClass(payload: {
@@ -101,7 +101,7 @@ export const CHECKBOX_DEFAULT_PROPS = {
       // Disabled state - grayed out
       const disabled = 'group-[.is-disabled]/checkbox:(bg-true-gray border-true-gray)'
 
-      return withClassPicker({
+      return {
         base,
         unchecked,
         readonly,
@@ -110,7 +110,7 @@ export const CHECKBOX_DEFAULT_PROPS = {
         colors,
         sizes,
         all: `${base} ${unchecked} ${readonly} ${disabled} ${color} ${size} ${focus}`,
-      } as const)
+      } as const
     },
 
     labelClass(payload: {
@@ -137,22 +137,22 @@ export const CHECKBOX_DEFAULT_PROPS = {
 
       size = sizes[sizeProp]
 
-      return withClassPicker({
+      return {
         base,
         sizes,
         all: `${base} ${size}`,
-      } as const)
+      } as const
     },
 
     focusHelperClass() {
       const base = 'absolute fit z-3 cursor-pointer rounded-inherit inset-0 pointer-events-none'
       const hover = 'group-hover/checkbox:bg-current group-hover/checkbox:opacity-10'
 
-      return withClassPicker({
+      return {
         base,
         hover,
         all: `${base} ${hover}`,
-      } as const)
+      } as const
     },
   },
 }

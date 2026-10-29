@@ -1,3 +1,4 @@
+import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
 // Constants
@@ -79,9 +80,9 @@ export type IToggleProps = {
     /**
      * Class to apply to the container (label element)
      */
-    containerClass?: (payload: {
+    containerClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof TOGGLE_DEFAULT_PROPS['ui']['containerClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the container
@@ -91,9 +92,9 @@ export type IToggleProps = {
     /**
      * Class to apply to the toggle itself
      */
-    toggleClass?: (payload: {
+    toggleClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof TOGGLE_DEFAULT_PROPS['ui']['toggleClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the toggle itself
@@ -103,9 +104,9 @@ export type IToggleProps = {
     /**
      * Class to apply to the toggle bullet (the circle)
      */
-    bulletClass?: (payload: {
+    bulletClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof TOGGLE_DEFAULT_PROPS['ui']['bulletClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the toggle bullet (the circle)
@@ -115,9 +116,9 @@ export type IToggleProps = {
     /**
      * Class to apply to the toggle label
      */
-    labelClass?: (payload: {
+    labelClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof TOGGLE_DEFAULT_PROPS['ui']['labelClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style to apply to the toggle label
@@ -127,9 +128,9 @@ export type IToggleProps = {
     /**
      * Class for the icon inside the bullet
      */
-    iconClass?: (payload: {
+    iconClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof TOGGLE_DEFAULT_PROPS['ui']['iconClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style for the icon inside the bullet
@@ -139,9 +140,9 @@ export type IToggleProps = {
     /**
      * Class for the focus/hover helper overlay
      */
-    focusHelperClass?: (payload: {
+    focusHelperClass?: (payload: WithClassPicker<{
       defaults: ReturnType<typeof TOGGLE_DEFAULT_PROPS['ui']['focusHelperClass']>
-    }) => ClassType
+    }>) => ClassType
 
     /**
      * Style for the focus/hover helper overlay

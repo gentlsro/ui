@@ -5,10 +5,10 @@ export const SCROLL_AREA_DEFAULT_PROPS = {
     containerClass() {
       const base = 'overflow-hidden'
 
-      return withClassPicker({
+      return {
         base,
         all: base,
-      } as const)
+      } as const
     },
   },
 }

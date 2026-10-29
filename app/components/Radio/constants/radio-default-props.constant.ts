@@ -24,14 +24,14 @@ export const RADIO_DEFAULT_PROPS = {
       const checked = ''
       const disabled = '[&.is-disabled]:(cursor-not-allowed op-50)'
 
-      return withClassPicker({
+      return {
         base,
         tapHighlight,
         sizes,
         checked,
         disabled,
         all: `${base} ${tapHighlight} ${sizeClass} ${checked} ${disabled}`,
-      } as const)
+      } as const
     },
 
     radioClass(payload: {
@@ -67,12 +67,12 @@ export const RADIO_DEFAULT_PROPS = {
 
       const colorClass = colors[color]
 
-      return withClassPicker({
+      return {
         base,
         sizes,
         colors,
         all: `${base} ${sizeClass} ${colorClass}`,
-      } as const)
+      } as const
     },
 
     labelClass(payload: {
@@ -92,22 +92,22 @@ export const RADIO_DEFAULT_PROPS = {
 
       const sizeClass = sizes[size]
 
-      return withClassPicker({
+      return {
         base,
         sizes,
         all: `${base} ${sizeClass}`,
-      } as const)
+      } as const
     },
 
     focusHelperClass() {
       const base = 'absolute inset-0 z-3 cursor-pointer rounded-inherit'
       const hover = 'hover:bg-current hover:opacity-10'
 
-      return withClassPicker({
+      return {
         base,
         hover,
         all: `${base} ${hover}`,
-      } as const)
+      } as const
     },
   },
 }
