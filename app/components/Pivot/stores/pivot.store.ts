@@ -43,8 +43,8 @@ import {
   PIVOT_DEFAULT_MEASURE_COLUMN_WIDTH,
   PIVOT_MEASURE_ROW_FIELD,
 } from '../constants/pivot-measure-row.constant'
-import { PIVOT_DEFAULT_PROPS } from '../constants/pivot-default-props.constant'
 import type { IPivotLabels } from '../constants/pivot-labels.constant'
+import { PIVOT_LAYERED_CLASSES } from '../constants/pivot-layered-classes.constant'
 
 export const PIVOT_ID_KEY = Symbol('__pivotId')
 
@@ -121,15 +121,15 @@ function createStore<T extends IItem = IItem>(injectionKey?: string) {
 
     // Presentation shared by every row / cell instance; resolved once here instead of per rendered cell
     const rowItemCellUiClass = computed(() => ui.value?.rowItemCellClass?.({
-      defaults: PIVOT_DEFAULT_PROPS.ui.rowItemCellClass(),
+      defaults: PIVOT_LAYERED_CLASSES.rowItemCellClass(),
     }))
     const rowItemCellUiStyle = computed(() => ui.value?.rowItemCellStyle?.())
     const valueItemUiClass = computed(() => ui.value?.valueItemClass?.({
-      defaults: PIVOT_DEFAULT_PROPS.ui.valueItemClass(),
+      defaults: PIVOT_LAYERED_CLASSES.valueItemClass(),
     }))
     const valueItemUiStyle = computed(() => ui.value?.valueItemStyle?.())
     const valueItemCellUiClass = computed(() => ui.value?.valueItemCellClass?.({
-      defaults: PIVOT_DEFAULT_PROPS.ui.valueItemCellClass(),
+      defaults: PIVOT_LAYERED_CLASSES.valueItemCellClass(),
     }))
     const valueItemCellUiStyle = computed(() => ui.value?.valueItemCellStyle?.())
 

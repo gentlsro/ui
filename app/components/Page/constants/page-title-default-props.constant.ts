@@ -2,35 +2,26 @@
 
 // Types
 import type { IPageTitleProps } from '../types/page-title-props.type'
+import { PAGE_TITLE_CLASS_COMPOSERS, PAGE_TITLE_CLASS_SLOTS } from './page-title-class-slots.constant'
 
 export const PAGE_TITLE_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'flex flex-col gap-6 max-w-screen-lg p-y-4 m-b-2 m-l-2'
+      const slots = PAGE_TITLE_CLASS_SLOTS.containerClass()
 
-      return {
-        base,
-        all: `${base}`,
-      } as const
+      return withClassPicker({ ...slots, all: PAGE_TITLE_CLASS_COMPOSERS.containerClass(slots) } as const)
     },
 
     pageTitleClass() {
-      const base = 'flex gap-2'
+      const slots = PAGE_TITLE_CLASS_SLOTS.pageTitleClass()
 
-      return {
-        base,
-        all: `${base}`,
-      } as const
+      return withClassPicker({ ...slots, all: PAGE_TITLE_CLASS_COMPOSERS.pageTitleClass(slots) } as const)
     },
 
     titleClass() {
-      const base = 'grow m-b-0 font-700'
+      const slots = PAGE_TITLE_CLASS_SLOTS.titleClass()
 
-      return {
-        base,
-        all: `${base}`,
-      } as const
+      return withClassPicker({ ...slots, all: PAGE_TITLE_CLASS_COMPOSERS.titleClass(slots) } as const)
     },
   },
 } satisfies IPageTitleProps
-

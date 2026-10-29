@@ -1,46 +1,48 @@
-// @ts-nocheck
-
 import { uiConfig } from '$uiConfig'
-import type { IUIConfig } from '$uiConfig'
-import type { IUIConfig as IUIGenericConfig } from '../types/ui-config.type'
+import type {
+  ComponentConfigs,
+  ComponentMergeName,
+  ComponentMergeResult,
+  ComponentName,
+  ComponentPropOverrides,
+  ComponentProps,
+} from '../types/component-config-props.type'
 
 // Functions
 import { extendNestedComponentProps } from './extend-nested-component-props'
 
-type ConfigWithPropsKeys<T> = {
-  [K in keyof T]: T[K] extends { props: any } ? K : never
-}[keyof T]
+export function getComponentProps<Name extends ComponentName>(
+  componentName: Name,
+): ComponentConfigs[Name]['props'] {
+  const config: ComponentConfigs[Name] = uiConfig[componentName]
 
-type ConfigWithMergeKeys<T> = {
-  [K in keyof T]: T[K] extends { merge: any } ? K : never
-}[keyof T]
-
-type PickProps<T, Keys extends readonly (keyof T)[]> = {
-  [K in Keys[number]]: GetValue<T[K]>;
+  return config.props
 }
 
-type GetValue<T> = T extends (...args: any[]) => any ? ReturnType<T> : T
+export function getComponentMergedProps<Name extends ComponentMergeName>(
+  componentName: Name,
+  props: object,
+): ComponentMergeResult<Name> {
+  // Vue's resolved generic props can be narrower than the config schema. Only
+  // the configured keys are read; their public contracts define the result.
+  const overrides = props as {
+    [Key in keyof ComponentProps<Name>]?: ComponentPropOverrides<ComponentProps<Name>[Key]>
+  }
+  const config = uiConfig[componentName] as {
+    merge?: readonly (keyof ComponentProps<Name>)[]
+  }
 
-export function getComponentProps<T extends ConfigWithPropsKeys<IUIConfig>>(
-  componentName: T,
-) {
-  return uiConfig[componentName].props as IUIConfig[T]['props']
-}
+  const merged = config.merge?.reduce<Partial<ComponentProps<Name>>>((merged, propName) => {
+    merged[propName] = extendNestedComponentProps(
+      componentName,
+      propName,
+      overrides[propName],
+    )
 
-export function getComponentMergedProps<
-  T extends ConfigWithMergeKeys<IUIConfig>,
->(
-  componentName: T,
-  props: IItem,
-) {
-  const propsToMerge = uiConfig[componentName].merge as IUIConfig[T]['merge']
+    return merged
+  }, {})
 
-  return propsToMerge?.reduce((agg, propName) => {
-    // @ts-expect-error
-    agg[propName] = extendNestedComponentProps(componentName, propName, props[propName])
-
-    return agg
-
-    // @ts-expect-error
-  }, {} as PickProps<IUIGenericConfig[T]['props'], typeof propsToMerge>)
+  // The loop populates exactly the configured subset; TS cannot track dynamic
+  // keys through reduce or correlate an optional merge list with its result.
+  return merged as ComponentMergeResult<Name>
 }

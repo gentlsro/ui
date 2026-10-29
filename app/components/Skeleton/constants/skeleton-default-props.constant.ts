@@ -1,30 +1,13 @@
+import { SKELETON_CLASS_COMPOSERS, SKELETON_CLASS_SLOTS } from './skeleton-class-slots.constant'
+
 // @unocss-include
 
 export const SKELETON_DEFAULT_PROPS = {
   ui: {
-    containerClass(payload: {
-      variant: 'wave' | 'pulse' | 'blink'
-    }) {
-      const { variant } = payload
+    containerClass(payload: Parameters<typeof SKELETON_CLASS_SLOTS.containerClass>[0]) {
+      const slots = SKELETON_CLASS_SLOTS.containerClass(payload)
 
-      const base = 'relative cursor-wait bg-ca'
-
-      // Variant states via CSS selectors
-      const pulse = '[&.variant--pulse]:(animate-pulse)'
-      const wave = '[&.variant--wave]:(overflow-hidden z-1)'
-      const blink = '[&.variant--blink]:(overflow-hidden z-1)'
-
-      const variants = { pulse, wave, blink }
-
-      const activeVariant = variants[variant]
-
-      return {
-        base,
-        pulse,
-        wave,
-        blink,
-        all: `${base} ${activeVariant}`,
-      } as const
+      return withClassPicker({ ...slots, all: SKELETON_CLASS_COMPOSERS.containerClass(slots, payload) } as const)
     },
   },
 }

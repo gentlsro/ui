@@ -1,56 +1,37 @@
+import { TABS_CLASS_COMPOSERS, TABS_CLASS_SLOTS } from './tabs-class-slots.constant'
+
 // @unocss-include
 
 export const TABS_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'flex flex-col'
+      const slots = TABS_CLASS_SLOTS.containerClass()
 
-      return {
-        base,
-        all: base,
-      } as const
+      return withClassPicker({ ...slots, all: TABS_CLASS_COMPOSERS.containerClass(slots) } as const)
     },
 
     navigationClass() {
-      const base = 'shrink-0'
+      const slots = TABS_CLASS_SLOTS.navigationClass()
 
-      return {
-        base,
-        all: base,
-      } as const
+      return withClassPicker({ ...slots, all: TABS_CLASS_COMPOSERS.navigationClass(slots) } as const)
     },
 
     navigationContentClass() {
-      const base = 'flex gap-1'
+      const slots = TABS_CLASS_SLOTS.navigationContentClass()
 
-      return {
-        base,
-        all: base,
-      } as const
+      return withClassPicker({ ...slots, all: TABS_CLASS_COMPOSERS.navigationContentClass(slots) } as const)
     },
 
     tabClass() {
-      const base = 'fit rounded-b-custom'
+      const slots = TABS_CLASS_SLOTS.tabClass()
 
-      return {
-        base,
-        all: base,
-      } as const
+      return withClassPicker({ ...slots, all: TABS_CLASS_COMPOSERS.tabClass(slots) } as const)
     },
 
     tabNavBtnClass() {
-      const base = ''
+      const slots = TABS_CLASS_SLOTS.tabNavBtnClass()
 
-      // State styling via CSS selectors
-      const active = '[&.is-active]:(bg-primary color-white)'
-      const inactive = '[&:not(.is-active)]:(color-ca)'
-
-      return {
-        base,
-        active,
-        inactive,
-        all: `${base} ${active} ${inactive}`,
-      } as const
+      return withClassPicker({ ...slots, all: TABS_CLASS_COMPOSERS.tabNavBtnClass(slots) } as const)
     },
   },
 }

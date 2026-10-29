@@ -5,7 +5,7 @@ import { useFormStore } from './stores/form.store'
 import type { IFormProps } from './types/form-props.type'
 
 // Constants
-import { FORM_DEFAULT_PROPS } from './constants/form-default-props.constant'
+import { FORM_LAYERED_CLASSES } from './constants/form-layered-classes.constant'
 
 type IProps = {}
   & Pick<
@@ -41,7 +41,7 @@ const editControls = computed(() => {
 // Styles - submit wrapper
 const submitWrapperClass = computed(() => {
   return props.ui?.submitWrapperClass?.({
-    defaults: FORM_DEFAULT_PROPS.ui.submitWrapperClass(),
+    defaults: FORM_LAYERED_CLASSES.submitWrapperClass(),
   })
 })
 
@@ -52,7 +52,7 @@ const submitWrapperStyle = computed(() => {
 // Styles - submit
 const submitClass = computed(() => {
   return props.ui?.submitClass?.({
-    defaults: FORM_DEFAULT_PROPS.ui.submitClass(),
+    defaults: FORM_LAYERED_CLASSES.submitClass(),
   })
 })
 
@@ -63,7 +63,7 @@ const submitStyle = computed(() => {
 // Styles - cancel
 const cancelClass = computed(() => {
   return props.ui?.cancelClass?.({
-    defaults: FORM_DEFAULT_PROPS.ui.cancelClass(),
+    defaults: FORM_LAYERED_CLASSES.cancelClass(),
   })
 })
 

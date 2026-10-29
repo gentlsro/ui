@@ -14,8 +14,8 @@ import { treeGetExposed } from './functions/tree-get-exposed'
 import { useTreeStore } from './stores/tree.store'
 
 // Constants
+import { TREE_LAYERED_CLASSES } from './constants/tree-layered-classes.constant'
 import { TREE_INJECTION_KEY } from './constants/tree-injection-key.constant'
-import { TREE_DEFAULT_PROPS } from './constants/tree-default-props.constant'
 
 const props = withDefaults(
   defineProps<ITreeProps<T>>(),
@@ -93,7 +93,7 @@ await init()
 // Styles - Container
 const containerClass = computed(() => {
   return mergedProps.value.ui?.containerClass?.({
-    defaults: TREE_DEFAULT_PROPS.ui.containerClass(),
+    defaults: TREE_LAYERED_CLASSES.containerClass(),
   })
 })
 
@@ -104,7 +104,7 @@ const containerStyle = computed(() => {
 // Styles - Content
 const contentClass = computed(() => {
   return mergedProps.value.ui?.contentClass?.({
-    defaults: TREE_DEFAULT_PROPS.ui.contentClass(),
+    defaults: TREE_LAYERED_CLASSES.contentClass(),
   })
 })
 

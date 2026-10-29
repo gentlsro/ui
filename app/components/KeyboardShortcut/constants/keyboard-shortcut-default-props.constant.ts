@@ -1,33 +1,25 @@
+import { KEYBOARD_SHORTCUT_CLASS_COMPOSERS, KEYBOARD_SHORTCUT_CLASS_SLOTS } from './keyboard-shortcut-class-slots.constant'
+
 // @unocss-include
 
 export const KEYBOARD_SHORTCUT_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'flex gap-1 items-center font-mono color-ca leading-none'
+      const slots = KEYBOARD_SHORTCUT_CLASS_SLOTS.containerClass()
 
-      return {
-        base,
-        all: base,
-      } as const
+      return withClassPicker({ ...slots, all: KEYBOARD_SHORTCUT_CLASS_COMPOSERS.containerClass(slots) } as const)
     },
 
     wrapperClass() {
-      const base = 'flex flex-center border-1 border-ca rounded-1 min-w-4.5 min-h-4.5 bg-white color-darker dark:(bg-darker color-white)'
+      const slots = KEYBOARD_SHORTCUT_CLASS_SLOTS.wrapperClass()
 
-      return {
-        base,
-        all: base,
-      } as const
+      return withClassPicker({ ...slots, all: KEYBOARD_SHORTCUT_CLASS_COMPOSERS.wrapperClass(slots) } as const)
     },
 
     iconClass() {
-      const base = 'h-4 w-4'
+      const slots = KEYBOARD_SHORTCUT_CLASS_SLOTS.iconClass()
 
-      return {
-        base,
-        all: base,
-      } as const
+      return withClassPicker({ ...slots, all: KEYBOARD_SHORTCUT_CLASS_COMPOSERS.iconClass(slots) } as const)
     },
   },
 }
-

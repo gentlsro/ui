@@ -1,14 +1,13 @@
+import { NOTIFICATIONS_CLASS_COMPOSERS, NOTIFICATIONS_CLASS_SLOTS } from './notifications-class-slots.constant'
+
 // @unocss-include
 
 export const NOTIFICATIONS_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'flex flex-col gap-y-1 transition-transform fixed z-$zMax min-w-240px max-w-320px lt-xm:max-w-280px flex-center'
+      const slots = NOTIFICATIONS_CLASS_SLOTS.containerClass()
 
-      return {
-        base,
-        all: base,
-      } as const
+      return withClassPicker({ ...slots, all: NOTIFICATIONS_CLASS_COMPOSERS.containerClass(slots) } as const)
     },
   },
 }

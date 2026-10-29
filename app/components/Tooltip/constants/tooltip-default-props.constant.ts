@@ -2,60 +2,38 @@
 
 // Types
 import type { ITooltipProps } from '../types/tooltip-props.type'
+import { TOOLTIP_CLASS_COMPOSERS, TOOLTIP_CLASS_SLOTS } from './tooltip-class-slots.constant'
 
 export const TOOLTIP_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'p-x-2 p-y-1 rounded-custom border-custom border-ca'
-      const bg = 'dark:bg-dark-950 bg-white'
-      const font = 'font-rem-13 color-ca'
-      const noInheritFontStyle = '[&.no-inherit-font-style]:(font-normal normal-case leading-normal font-rem-13)'
+      const slots = TOOLTIP_CLASS_SLOTS.containerClass()
 
-      return {
-        base,
-        bg,
-        font,
-        noInheritFontStyle,
-        all: `${base} ${bg} ${font} ${noInheritFontStyle}`,
-      } as const
+      return withClassPicker({ ...slots, all: TOOLTIP_CLASS_COMPOSERS.containerClass(slots) } as const)
     },
 
     contentClass() {
-      const base = 'flex flex-col gap-2px'
-      const maxWidth = 'max-w-60'
+      const slots = TOOLTIP_CLASS_SLOTS.contentClass()
 
-      return {
-        base,
-        maxWidth,
-        all: `${base} ${maxWidth}`,
-      } as const
+      return withClassPicker({ ...slots, all: TOOLTIP_CLASS_COMPOSERS.contentClass(slots) } as const)
     },
 
     titleClass() {
-      const base = 'font-rem-14 font-semibold'
+      const slots = TOOLTIP_CLASS_SLOTS.titleClass()
 
-      return {
-        base,
-        all: `${base}`,
-      } as const
+      return withClassPicker({ ...slots, all: TOOLTIP_CLASS_COMPOSERS.titleClass(slots) } as const)
     },
 
     descriptionClass() {
-      const base = 'font-rem-12 text-caption leading-tight'
+      const slots = TOOLTIP_CLASS_SLOTS.descriptionClass()
 
-      return {
-        base,
-        all: `${base}`,
-      } as const
+      return withClassPicker({ ...slots, all: TOOLTIP_CLASS_COMPOSERS.descriptionClass(slots) } as const)
     },
 
     arrowClass() {
-      const base = 'absolute w-2 h-2 rotate-45 bg-inherit'
+      const slots = TOOLTIP_CLASS_SLOTS.arrowClass()
 
-      return {
-        base,
-        all: `${base}`,
-      } as const
+      return withClassPicker({ ...slots, all: TOOLTIP_CLASS_COMPOSERS.arrowClass(slots) } as const)
     },
   },
 } satisfies ITooltipProps

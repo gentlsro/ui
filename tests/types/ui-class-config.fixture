@@ -1,0 +1,141 @@
+import { defineUIClasses } from '__DEFINE_UI_CLASSES__'
+import type * as Legacy from './ui-class-legacy'
+import type * as Theme from './ui-class-theme'
+import type * as Application from './ui-class-app'
+import { uiClasses as layer } from './ui-class-theme'
+import type { ApplyUIClassConfig, BaseUIClasses, UIClassesFromModule, UIClassPicker, UIResolvedClasses } from '__UI_CLASS_TYPES__'
+import type { IBtnProps } from '__BUTTON_PROPS__'
+import type { IUIConfig } from '__UI_CONFIG__'
+
+declare module '__UI_CLASS_TYPES__' {
+  interface UILayerClassRegistry {
+    'fixture-layer': ApplyUIClassConfig<BaseUIClasses, UIClassesFromModule<typeof Legacy>>
+    'fixture-app': ApplyUIClassConfig<UILayerClassRegistry['fixture-layer'], UIClassesFromModule<typeof Theme>>
+  }
+  interface UIClassRegistry {
+    defaults: ApplyUIClassConfig<UILayerClassRegistry['fixture-app'], UIClassesFromModule<typeof Application>>
+  }
+}
+
+declare const layerIcon: ApplyUIClassConfig<BaseUIClasses, typeof layer>['button']['iconClass']
+const literalObjectPatch: 'layer-icon' = layerIcon.base
+const untouchedNested: 'h-4.5 w-4.5' = layerIcon.sizes.sm
+
+declare const final: UIResolvedClasses['button']['containerClass']
+const winner: 'app-base' = final.base
+const added: 'app-only' = final.appOnly
+const inherited: 'layer-only' = final.layerOnly
+const inheritedNested: 'layer-sm' = final.sizes.sm
+// @ts-expect-error Unknown final keys remain rejected.
+final.notConfigured
+
+declare const picked: UIClassPicker<typeof final>
+picked.p('base', 'layerOnly', 'appOnly', 'all')
+// @ts-expect-error Nested maps are not string class keys.
+picked.p('sizes')
+// @ts-expect-error Unknown picker keys remain rejected.
+picked.p('notConfigured')
+
+const local: IBtnProps = {
+  ui: {
+    containerClass: ({ defaults }) => {
+      const winner: 'app-base' = defaults.base
+      defaults.p('appOnly', 'layerOnly')
+      return defaults.all
+    },
+  },
+}
+
+defineUIClasses('fixture-layer')({ button: {
+  // @ts-expect-error all is derived after merging, never a configurable slot.
+  containerClass: { all: 'stale' },
+} })
+defineUIClasses('fixture-layer')({ button: {
+  // @ts-expect-error p is derived after merging, never a configurable slot.
+  containerClass: { p: 'stale' },
+} })
+
+type IsAny<T> = 0 extends (1 & T) ? true : false
+type Assert<T extends true> = T
+type ExactFinal = Assert<IsAny<typeof final> extends false ? true : false>
+
+defineUIClasses('fixture-layer')({ button: {
+  // @ts-expect-error Existing string slots cannot become nested maps.
+  containerClass: { base: { unexpected: 'shape' } },
+} })
+defineUIClasses('fixture-layer')({ button: {
+  // @ts-expect-error Existing variant maps cannot become strings.
+  iconClass: { sizes: 'wrong-shape' },
+} })
+defineUIClasses('fixture-layer')({ button: {
+  // @ts-expect-error Callback patches obey the same shape constraints.
+  iconClass: () => ({ sizes: 'wrong-shape' } as const),
+} })
+
+declare const maybePatch: { base?: 'maybe-base', optionalSlot?: 'maybe-slot' }
+const optionalConfig = defineUIClasses('fixture-layer')({
+  button: { containerClass: maybePatch },
+})
+declare const optional: ApplyUIClassConfig<BaseUIClasses, typeof optionalConfig>['button']['containerClass']
+const optionalBase: 'flex items-center tracking-wide relative select-none' | 'maybe-base' = optional.base
+const optionalAdded: 'maybe-slot' | undefined = optional.optionalSlot
+// @ts-expect-error A conditional patch cannot promise that the override was present.
+const requiredOverride: 'maybe-base' = optional.base
+
+declare const optionalPicker: UIClassPicker<typeof optional>
+// @ts-expect-error Optional string slots cannot be picked without an existence check.
+optionalPicker.p('optionalSlot')
+// @ts-expect-error Picker keys never include undefined.
+optionalPicker.p(undefined)
+
+optionalConfig.compose({ button: { containerClass: slots => {
+  const optionalString: string | undefined = slots.optionalSlot
+  // @ts-expect-error Future overrides may change an optional slot's literal value.
+  const optionalLiteral: 'maybe-slot' | undefined = slots.optionalSlot
+  return slots.base
+} } })
+
+type MaybeConfig = { classDefaults?: { button?: { containerClass: { base: 'maybe-config' } } } }
+declare const maybeConfigResult: ApplyUIClassConfig<BaseUIClasses, MaybeConfig>['button']['containerClass']
+const maybeConfigBase: 'flex items-center tracking-wide relative select-none' | 'maybe-config' = maybeConfigResult.base
+// @ts-expect-error An optional component config may be absent at runtime.
+const definiteConfigBase: 'maybe-config' = maybeConfigResult.base
+
+
+const legacy: Partial<IUIConfig> = { button: { props: { ui: {
+  containerClass: ({ defaults }) => {
+    const configuredValue: string = defaults.base
+    // @ts-expect-error Legacy authoring cannot assume a built-in literal survives consumer overrides.
+    const staleValue: 'flex items-center tracking-wide relative select-none' = defaults.base
+    defaults.p('base', 'webkit')
+    return defaults.all
+  },
+} } } }
+
+
+declare const listDefaults: UIResolvedClasses['list']['rowClass']
+const listWinner: 'app-list' = listDefaults.base
+const listTheme: 'theme-list' = listDefaults.themeList
+const listApp: 'app-list-extra' = listDefaults.appList
+
+declare const cardDefaults: UIResolvedClasses['miniCard']['containerClass']
+const cardWinner: 'app-card' = cardDefaults.base
+const cardTheme: 'theme-card' = cardDefaults.themeCard
+const cardApp: 'app-card-extra' = cardDefaults.appCard
+
+import type { IListProps } from '__LIST_PROPS__'
+import type { IMiniCardProps } from '__MINI_CARD_PROPS__'
+const localList: IListProps = { ui: { rowClass: ({ defaults, row, groupsCount }) => {
+  const exact: 'app-list' = defaults.base
+  defaults.p('themeList', 'appList', 'focus')
+  // @ts-expect-error Component keys cannot leak into other component pickers.
+  defaults.p('appCard')
+  return defaults.all
+} } }
+const localCard: IMiniCardProps = { label: 'Fixture card', value: 1, ui: { containerClass: ({ defaults }) => {
+  const exact: 'app-card' = defaults.base
+  defaults.p('themeCard', 'appCard')
+  // @ts-expect-error Component keys cannot leak into other component pickers.
+  defaults.p('appList')
+  return defaults.all
+} } }

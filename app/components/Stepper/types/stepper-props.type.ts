@@ -1,7 +1,5 @@
+import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { CSSProperties } from 'vue'
-
-// Constants
-import type { STEPPER_DEFAULT_PROPS } from '../constants/stepper-default-props.constant'
 
 export type IStepperProps = {
   /**
@@ -68,7 +66,7 @@ export type IStepperProps = {
      * Class to apply to the container
      */
     containerClass?: (payload: {
-      defaults: ReturnType<typeof STEPPER_DEFAULT_PROPS['ui']['containerClass']>
+      defaults: UIClassPicker<UIResolvedClasses['stepper']['containerClass']>
     }) => ClassType
 
     /**
@@ -80,7 +78,7 @@ export type IStepperProps = {
      * Class to apply to the navigation (the list of steps)
      */
     navigationClass?: (payload: {
-      defaults: ReturnType<typeof STEPPER_DEFAULT_PROPS['ui']['navigationClass']>
+      defaults: UIClassPicker<UIResolvedClasses['stepper']['navigationClass']>
     }) => ClassType
 
     /**
@@ -92,7 +90,7 @@ export type IStepperProps = {
      * Class to apply to each step in the navigation
      */
     itemClass?: (payload: {
-      defaults: ReturnType<typeof STEPPER_DEFAULT_PROPS['ui']['itemClass']>
+      defaults: UIClassPicker<UIResolvedClasses['stepper']['itemClass']>
     }) => ClassType
 
     /**
@@ -104,7 +102,7 @@ export type IStepperProps = {
      * Class to apply to the step's trigger (the clickable indicator and text)
      */
     triggerClass?: (payload: {
-      defaults: ReturnType<typeof STEPPER_DEFAULT_PROPS['ui']['triggerClass']>
+      defaults: UIClassPicker<UIResolvedClasses['stepper']['triggerClass']>
     }) => ClassType
 
     /**
@@ -116,7 +114,7 @@ export type IStepperProps = {
      * Class to apply to the step's indicator
      */
     indicatorClass?: (payload: {
-      defaults: ReturnType<typeof STEPPER_DEFAULT_PROPS['ui']['indicatorClass']>
+      defaults: UIClassPicker<UIResolvedClasses['stepper']['indicatorClass']>
     }) => ClassType
 
     /**
@@ -128,7 +126,7 @@ export type IStepperProps = {
      * Class to apply to the icon inside the step's indicator
      */
     iconClass?: (payload: {
-      defaults: ReturnType<typeof STEPPER_DEFAULT_PROPS['ui']['iconClass']>
+      defaults: UIClassPicker<UIResolvedClasses['stepper']['iconClass']>
     }) => ClassType
 
     /**
@@ -140,7 +138,7 @@ export type IStepperProps = {
      * Class to apply to the separator between steps
      */
     separatorClass?: (payload: {
-      defaults: ReturnType<typeof STEPPER_DEFAULT_PROPS['ui']['separatorClass']>
+      defaults: UIClassPicker<UIResolvedClasses['stepper']['separatorClass']>
     }) => ClassType
 
     /**
@@ -152,7 +150,7 @@ export type IStepperProps = {
      * Class to apply to the wrapper of the step's label and description
      */
     textClass?: (payload: {
-      defaults: ReturnType<typeof STEPPER_DEFAULT_PROPS['ui']['textClass']>
+      defaults: UIClassPicker<UIResolvedClasses['stepper']['textClass']>
     }) => ClassType
 
     /**
@@ -164,7 +162,7 @@ export type IStepperProps = {
      * Class to apply to the step's label
      */
     labelClass?: (payload: {
-      defaults: ReturnType<typeof STEPPER_DEFAULT_PROPS['ui']['labelClass']>
+      defaults: UIClassPicker<UIResolvedClasses['stepper']['labelClass']>
     }) => ClassType
 
     /**
@@ -176,7 +174,7 @@ export type IStepperProps = {
      * Class to apply to the step's description
      */
     descriptionClass?: (payload: {
-      defaults: ReturnType<typeof STEPPER_DEFAULT_PROPS['ui']['descriptionClass']>
+      defaults: UIClassPicker<UIResolvedClasses['stepper']['descriptionClass']>
     }) => ClassType
 
     /**
@@ -188,7 +186,7 @@ export type IStepperProps = {
      * Class to apply to the wrapper of the steps' content
      */
     panelsClass?: (payload: {
-      defaults: ReturnType<typeof STEPPER_DEFAULT_PROPS['ui']['panelsClass']>
+      defaults: UIClassPicker<UIResolvedClasses['stepper']['panelsClass']>
     }) => ClassType
 
     /**
@@ -200,7 +198,7 @@ export type IStepperProps = {
      * Class to apply to the content of the active step (the `Step` component)
      */
     stepClass?: (payload: {
-      defaults: ReturnType<typeof STEPPER_DEFAULT_PROPS['ui']['stepClass']>
+      defaults: UIClassPicker<UIResolvedClasses['stepper']['stepClass']>
     }) => ClassType
 
     /**

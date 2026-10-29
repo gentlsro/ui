@@ -6,7 +6,7 @@ import type { ITableProps } from './types/table-props.type'
 import { useTableStore } from './stores/table.store'
 
 // Constants
-import { TABLE_DEFAULT_PROPS } from './constants/table-default-props.constant'
+import { TABLE_LAYERED_CLASSES } from './constants/table-layered-classes.constant'
 
 type IProps = Pick<ITableProps, 'ui'>
 
@@ -32,7 +32,7 @@ const isLimitReached = computed(() => {
 
 const bottomClass = computed(() => {
   return props.ui?.bottomClass?.({
-    defaults: TABLE_DEFAULT_PROPS.ui.bottomClass(),
+    defaults: TABLE_LAYERED_CLASSES.bottomClass(),
   })
 })
 

@@ -3,7 +3,7 @@
 import type { ITreeProps } from './types/tree-props.type'
 
 // Constants
-import { TREE_DEFAULT_PROPS } from './constants/tree-default-props.constant'
+import { TREE_LAYERED_CLASSES } from './constants/tree-layered-classes.constant'
 
 type IProps = Pick<ITreeProps<T>, 'ui'>
 
@@ -12,7 +12,7 @@ const props = defineProps<IProps>()
 // Styles - No Data
 const noDataClass = computed(() => {
   return props.ui?.noDataClass?.({
-    defaults: TREE_DEFAULT_PROPS.ui.noDataClass(),
+    defaults: TREE_LAYERED_CLASSES.noDataClass(),
   })
 })
 

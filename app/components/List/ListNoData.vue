@@ -8,7 +8,7 @@ import type { IListProps } from './types/list-props.type'
 import { useListStore } from './stores/list.store'
 
 // Constants
-import { LIST_DEFAULT_PROPS } from './constants/list-default-props.constant'
+import { LIST_LAYERED_CLASSES } from './constants/list-layered-classes.constant'
 
 type IProps = Pick<IListProps, 'ui'>
 
@@ -34,7 +34,7 @@ const shouldShowSearchMinChars = computed(() => {
 
 const noDataClass = computed(() => {
   return props.ui?.noDataClass?.({
-    defaults: LIST_DEFAULT_PROPS.ui.noDataClass(),
+    defaults: LIST_LAYERED_CLASSES.noDataClass(),
   })
 })
 

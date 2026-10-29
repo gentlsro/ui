@@ -3,7 +3,7 @@
 import type { ISectionProps } from './types/section-props.type'
 
 // Constants
-import { SECTION_DEFAULT_PROPS } from './constants/section-default-props.constant'
+import { SECTION_LAYERED_CLASSES } from './constants/section-layered-classes.constant'
 
 // Components
 import Heading from '../Typography/Heading.vue'
@@ -35,7 +35,7 @@ const classes = computed(() => {
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: SECTION_DEFAULT_PROPS.ui.containerClass(),
+    defaults: SECTION_LAYERED_CLASSES.containerClass(),
   })
 })
 
@@ -46,7 +46,7 @@ const containerStyle = computed(() => {
 // Styles - title
 const titleClass = computed(() => {
   return mergedProps.value?.ui?.titleClass?.({
-    defaults: SECTION_DEFAULT_PROPS.ui.titleClass(),
+    defaults: SECTION_LAYERED_CLASSES.titleClass(),
   })
 })
 
@@ -57,7 +57,7 @@ const titleStyle = computed(() => {
 // Styles - subtitle
 const subtitleClass = computed(() => {
   return mergedProps.value?.ui?.subtitleClass?.({
-    defaults: SECTION_DEFAULT_PROPS.ui.subtitleClass(),
+    defaults: SECTION_LAYERED_CLASSES.subtitleClass(),
   })
 })
 
@@ -68,7 +68,7 @@ const subtitleStyle = computed(() => {
 // Styles - content
 const contentClass = computed(() => {
   return mergedProps.value?.ui?.contentClass?.({
-    defaults: SECTION_DEFAULT_PROPS.ui.contentClass(),
+    defaults: SECTION_LAYERED_CLASSES.contentClass(),
   })
 })
 
@@ -79,7 +79,7 @@ const contentStyle = computed(() => {
 // Styles - loading
 const loadingClass = computed(() => {
   return mergedProps.value?.ui?.loadingClass?.({
-    defaults: SECTION_DEFAULT_PROPS.ui.loadingClass(),
+    defaults: SECTION_LAYERED_CLASSES.loadingClass(),
   })
 })
 

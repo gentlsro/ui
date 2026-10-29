@@ -1,8 +1,8 @@
+import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { CSSProperties } from 'vue'
 
 // Types
 import type { BREAKPOINTS } from '../../../constants/breakpoints'
-import type { DRAWER_DEFAULT_PROPS } from '../constants/drawer-default-props.constant'
 import type { IResizableConfig } from './resizable-config.type'
 
 export type IDrawerProps = {
@@ -102,7 +102,7 @@ export type IDrawerProps = {
      * Class applied to the container
      */
     containerClass?: (payload: {
-      defaults: ReturnType<typeof DRAWER_DEFAULT_PROPS['ui']['containerClass']>
+      defaults: UIClassPicker<UIResolvedClasses['drawer']['containerClass']>
     }) => ClassType
 
     /**
@@ -114,7 +114,7 @@ export type IDrawerProps = {
      * Class applied to the title
      */
     titleClass?: (payload: {
-      defaults: ReturnType<typeof DRAWER_DEFAULT_PROPS['ui']['titleClass']>
+      defaults: UIClassPicker<UIResolvedClasses['drawer']['titleClass']>
     }) => ClassType
 
     /**

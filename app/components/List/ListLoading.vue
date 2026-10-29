@@ -6,7 +6,7 @@ import type { IListProps } from './types/list-props.type'
 import { useListStore } from './stores/list.store'
 
 // Constants
-import { LIST_DEFAULT_PROPS } from './constants/list-default-props.constant'
+import { LIST_LAYERED_CLASSES } from './constants/list-layered-classes.constant'
 
 type IProps = Pick<IListProps, 'ui'>
 
@@ -20,7 +20,7 @@ const loadingStyle = computed(() => {
 
 const loadingClass = computed(() => {
   return props.ui?.loadingClass?.({
-    defaults: LIST_DEFAULT_PROPS.ui.loadingClass(),
+    defaults: LIST_LAYERED_CLASSES.loadingClass(),
   })
 })
 </script>

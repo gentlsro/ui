@@ -2,72 +2,50 @@
 
 // Types
 import type { IMiniCardProps } from '../types/mini-card-props.type'
+import { MINI_CARD_CLASS_COMPOSERS, MINI_CARD_CLASS_SLOTS } from './mini-card-class-slots.constant'
 
 export const MINI_CARD_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'flex rounded-custom p-x-2 p-y-1.5 gap-3'
+      const slots = MINI_CARD_CLASS_SLOTS.containerClass()
 
-      return {
-        base,
-        all: `${base}`,
-      } as const
+      return withClassPicker({ ...slots, all: MINI_CARD_CLASS_COMPOSERS.containerClass(slots) } as const)
     },
 
     iconContainerClass() {
-      const base = 'shrink-0 m-t-.5'
+      const slots = MINI_CARD_CLASS_SLOTS.iconContainerClass()
 
-      return {
-        base,
-        all: `${base}`,
-      } as const
+      return withClassPicker({ ...slots, all: MINI_CARD_CLASS_COMPOSERS.iconContainerClass(slots) } as const)
     },
 
     iconClass() {
-      const base = 'h-5 w-5 m-t-1'
+      const slots = MINI_CARD_CLASS_SLOTS.iconClass()
 
-      return {
-        base,
-        all: `${base}`,
-      } as const
+      return withClassPicker({ ...slots, all: MINI_CARD_CLASS_COMPOSERS.iconClass(slots) } as const)
     },
 
     contentClass() {
-      const base = 'w-full leading-4.5 flex flex-col'
+      const slots = MINI_CARD_CLASS_SLOTS.contentClass()
 
-      return {
-        base,
-        all: `${base}`,
-      } as const
+      return withClassPicker({ ...slots, all: MINI_CARD_CLASS_COMPOSERS.contentClass(slots) } as const)
     },
 
     labelClass() {
-      const base = 'text-caption color-slate-600 dark:color-slate-300 font-rem-12 p-b-1'
+      const slots = MINI_CARD_CLASS_SLOTS.labelClass()
 
-      return {
-        base,
-        all: `${base}`,
-      } as const
+      return withClassPicker({ ...slots, all: MINI_CARD_CLASS_COMPOSERS.labelClass(slots) } as const)
     },
 
     valueClass() {
-      const base = 'font-rem-14 text-wrap break-words whitespace-pre-line'
-      const modified = '[&.is-modified]:(p-l-1 rounded-custom)'
+      const slots = MINI_CARD_CLASS_SLOTS.valueClass()
 
-      return {
-        base,
-        modified,
-        all: `${base} ${modified}`,
-      } as const
+      return withClassPicker({ ...slots, all: MINI_CARD_CLASS_COMPOSERS.valueClass(slots) } as const)
     },
 
     previousValueClass() {
-      const base = 'color-purple-500 dark:color-purple-600 font-rem-16 overflow-wrap-break-word whitespace-pre-line'
+      const slots = MINI_CARD_CLASS_SLOTS.previousValueClass()
 
-      return {
-        base,
-        all: `${base}`,
-      } as const
+      return withClassPicker({ ...slots, all: MINI_CARD_CLASS_COMPOSERS.previousValueClass(slots) } as const)
     },
   },
 }

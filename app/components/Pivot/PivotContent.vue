@@ -6,7 +6,7 @@ import { usePivotScrollSync } from './composables/usePivotScrollSync'
 import { usePivotStore } from './stores/pivot.store'
 
 // Constants
-import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
+import { PIVOT_LAYERED_CLASSES } from './constants/pivot-layered-classes.constant'
 
 // (the table's row height, so a pivot beside a table reads as the same component)
 const PIVOT_ROW_HEIGHT = 36
@@ -41,7 +41,7 @@ function handleMouseLeave() {
 // Styles - Content
 const contentClass = computed(() => {
   return ui.value?.contentClass?.({
-    defaults: PIVOT_DEFAULT_PROPS.ui.contentClass(),
+    defaults: PIVOT_LAYERED_CLASSES.contentClass(),
   })
 })
 
@@ -52,14 +52,14 @@ const contentStyle = computed(() => {
 // Styles - Values
 const valuesScrollerClass = computed(() => {
   return ui.value?.valuesScrollerClass?.({
-    defaults: PIVOT_DEFAULT_PROPS.ui.valuesScrollerClass(),
+    defaults: PIVOT_LAYERED_CLASSES.valuesScrollerClass(),
   })
 })
 
 // Styles - Rows
 const rowsScrollerClass = computed(() => {
   return ui.value?.rowsScrollerClass?.({
-    defaults: PIVOT_DEFAULT_PROPS.ui.rowsScrollerClass(),
+    defaults: PIVOT_LAYERED_CLASSES.rowsScrollerClass(),
   })
 })
 
@@ -69,7 +69,7 @@ const rowsWrapperStyle = computed(() => {
 
 const rowsWrapperClass = computed(() => {
   return ui.value?.rowsWrapperClass?.({
-    defaults: PIVOT_DEFAULT_PROPS.ui.rowsWrapperClass(),
+    defaults: PIVOT_LAYERED_CLASSES.rowsWrapperClass(),
   })
 })
 

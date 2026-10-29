@@ -3,13 +3,13 @@
 import { usePivotStore } from './stores/pivot.store'
 
 // Constants
-import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
+import { PIVOT_LAYERED_CLASSES } from './constants/pivot-layered-classes.constant'
 
 const { rows, visibleValueColumns, ui } = usePivotStore()
 
 const headerClass = computed(() => {
   return ui.value?.headerClass?.({
-    defaults: PIVOT_DEFAULT_PROPS.ui.headerClass(),
+    defaults: PIVOT_LAYERED_CLASSES.headerClass(),
   })
 })
 

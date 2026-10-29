@@ -1,7 +1,5 @@
+import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { CSSProperties } from 'vue'
-
-// Constants
-import type { PROGRESS_BAR_DEFAULT_PROPS } from '../constants/progress-bar-default-props.constant'
 
 export type IProgressBarProps = {
   /**
@@ -22,7 +20,7 @@ export type IProgressBarProps = {
      * Class to apply to the container
      */
     containerClass?: (payload: {
-      defaults: ReturnType<typeof PROGRESS_BAR_DEFAULT_PROPS['ui']['containerClass']>
+      defaults: UIClassPicker<UIResolvedClasses['progressBar']['containerClass']>
     }) => ClassType
 
     /**
@@ -34,7 +32,7 @@ export type IProgressBarProps = {
      * Class to apply to inner elements
      */
     innerClass?: (payload: {
-      defaults: ReturnType<typeof PROGRESS_BAR_DEFAULT_PROPS['ui']['innerClass']>
+      defaults: UIClassPicker<UIResolvedClasses['progressBar']['innerClass']>
     }) => ClassType
 
     /**
@@ -46,7 +44,7 @@ export type IProgressBarProps = {
      * Class to apply to the color overlay
      */
     colorClass?: (payload: {
-      defaults: ReturnType<typeof PROGRESS_BAR_DEFAULT_PROPS['ui']['colorClass']>
+      defaults: UIClassPicker<UIResolvedClasses['progressBar']['colorClass']>
     }) => ClassType
 
     /**
@@ -58,7 +56,7 @@ export type IProgressBarProps = {
      * Class to apply to the white background
      */
     whiteBgClass?: (payload: {
-      defaults: ReturnType<typeof PROGRESS_BAR_DEFAULT_PROPS['ui']['whiteBgClass']>
+      defaults: UIClassPicker<UIResolvedClasses['progressBar']['whiteBgClass']>
     }) => ClassType
 
     /**
@@ -70,7 +68,7 @@ export type IProgressBarProps = {
      * Class to apply to the black background (progress indicator)
      */
     blackBgClass?: (payload: {
-      defaults: ReturnType<typeof PROGRESS_BAR_DEFAULT_PROPS['ui']['blackBgClass']>
+      defaults: UIClassPicker<UIResolvedClasses['progressBar']['blackBgClass']>
     }) => ClassType
 
     /**
@@ -82,7 +80,7 @@ export type IProgressBarProps = {
      * Class to apply to the text
      */
     textClass?: (payload: {
-      defaults: ReturnType<typeof PROGRESS_BAR_DEFAULT_PROPS['ui']['textClass']>
+      defaults: UIClassPicker<UIResolvedClasses['progressBar']['textClass']>
     }) => ClassType
 
     /**

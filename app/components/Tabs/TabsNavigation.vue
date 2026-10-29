@@ -4,7 +4,7 @@ import type { ITabProps } from './types/tab-props.type'
 import type { ITabsProps } from './types/tabs-props.type'
 
 // Constants
-import { TABS_DEFAULT_PROPS } from './constants/tabs-default-props.constant'
+import { TABS_LAYERED_CLASSES } from './constants/tabs-layered-classes.constant'
 
 type IProps = {
   modelValue?: string | number
@@ -20,7 +20,7 @@ const model = defineModel<string | number>()
 // Styles - navigation
 const navigationClass = computed(() => {
   return props.ui?.navigationClass?.({
-    defaults: TABS_DEFAULT_PROPS.ui.navigationClass(),
+    defaults: TABS_LAYERED_CLASSES.navigationClass(),
   })
 })
 
@@ -31,7 +31,7 @@ const navigationStyle = computed(() => {
 // Styles - navigation content
 const navigationContentClass = computed(() => {
   return props.ui?.navigationContentClass?.({
-    defaults: TABS_DEFAULT_PROPS.ui.navigationContentClass(),
+    defaults: TABS_LAYERED_CLASSES.navigationContentClass(),
   })
 })
 
@@ -42,7 +42,7 @@ const navigationContentStyle = computed(() => {
 // Styles - tab nav btn
 const tabNavBtnClass = computed(() => {
   return props.ui?.tabNavBtnClass?.({
-    defaults: TABS_DEFAULT_PROPS.ui.tabNavBtnClass(),
+    defaults: TABS_LAYERED_CLASSES.tabNavBtnClass(),
   })
 })
 

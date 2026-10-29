@@ -1,7 +1,7 @@
+import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { CSSProperties } from 'vue'
 
 // Types
-import type { CIRCLE_PROGRESS_DEFAULT_PROPS } from '../constants/circle-progress-default-props.constant'
 
 export type ICircleProgressProps = {
   /**
@@ -28,31 +28,31 @@ export type ICircleProgressProps = {
 
   ui?: {
     containerClass?: (payload: {
-      defaults: ReturnType<typeof CIRCLE_PROGRESS_DEFAULT_PROPS['ui']['containerClass']>
+      defaults: UIClassPicker<UIResolvedClasses['circleProgress']['containerClass']>
     }) => ClassType
 
     containerStyle?: () => CSSProperties
 
     svgClass?: (payload: {
-      defaults: ReturnType<typeof CIRCLE_PROGRESS_DEFAULT_PROPS['ui']['svgClass']>
+      defaults: UIClassPicker<UIResolvedClasses['circleProgress']['svgClass']>
     }) => ClassType
 
     svgStyle?: () => CSSProperties
 
     circleBgClass?: (payload: {
-      defaults: ReturnType<typeof CIRCLE_PROGRESS_DEFAULT_PROPS['ui']['circleBgClass']>
+      defaults: UIClassPicker<UIResolvedClasses['circleProgress']['circleBgClass']>
     }) => ClassType
 
     circleBgStyle?: () => CSSProperties
 
     circleClass?: (payload: {
-      defaults: ReturnType<typeof CIRCLE_PROGRESS_DEFAULT_PROPS['ui']['circleClass']>
+      defaults: UIClassPicker<UIResolvedClasses['circleProgress']['circleClass']>
     }) => ClassType
 
     circleStyle?: () => CSSProperties
 
     textClass?: (payload: {
-      defaults: ReturnType<typeof CIRCLE_PROGRESS_DEFAULT_PROPS['ui']['textClass']>
+      defaults: UIClassPicker<UIResolvedClasses['circleProgress']['textClass']>
     }) => ClassType
 
     textStyle?: () => CSSProperties

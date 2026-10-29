@@ -1,7 +1,5 @@
+import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { CSSProperties } from 'vue'
-
-// Constants
-import type { SKELETON_DEFAULT_PROPS } from '../constants/skeleton-default-props.constant'
 
 export type ISkeletonProps = {
   /**
@@ -22,7 +20,7 @@ export type ISkeletonProps = {
      * Class to apply to the container
      */
     containerClass?: (payload: {
-      defaults: ReturnType<typeof SKELETON_DEFAULT_PROPS['ui']['containerClass']>
+      defaults: UIClassPicker<UIResolvedClasses['skeleton']['containerClass']>
     }) => ClassType
 
     /**

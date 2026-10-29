@@ -1,9 +1,7 @@
+import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 // Types
 import type { CSSProperties } from 'vue'
 import type { ITreeProps } from '../../Tree/types/tree-props.type'
-
-// Constants
-import type { TREE_DMS_DEFAULT_PROPS } from '../constants/tree-dms-default-props.constant'
 
 export type ITreeDmsProps<T extends IItem = IItem> = {
   /**
@@ -149,7 +147,7 @@ export type ITreeDmsProps<T extends IItem = IItem> = {
      * Class to apply to the label
      */
     labelClass?: (payload: {
-      defaults: ReturnType<typeof TREE_DMS_DEFAULT_PROPS['ui']['labelClass']>
+      defaults: UIClassPicker<UIResolvedClasses['treeDms']['labelClass']>
     }) => ClassType
 
     /**

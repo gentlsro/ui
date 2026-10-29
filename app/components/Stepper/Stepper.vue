@@ -7,7 +7,7 @@ import type { IStepperSlotProps } from './composables/useStepperUtils'
 import { stepperContextKey, useStepperUtils } from './composables/useStepperUtils'
 
 // Constants
-import { STEPPER_DEFAULT_PROPS } from './constants/stepper-default-props.constant'
+import { STEPPER_LAYERED_CLASSES } from './constants/stepper-layered-classes.constant'
 
 const props = withDefaults(defineProps<IStepperProps>(), {
   ...getComponentProps('stepper'),
@@ -57,7 +57,7 @@ onMounted(stepper.syncOrder)
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: STEPPER_DEFAULT_PROPS.ui.containerClass({ layout: layout.value, size: size.value }),
+    defaults: STEPPER_LAYERED_CLASSES.containerClass({ layout: layout.value, size: size.value }),
   })
 })
 
@@ -68,7 +68,7 @@ const containerStyle = computed(() => {
 // Styles - panels
 const panelsClass = computed(() => {
   return mergedProps.value?.ui?.panelsClass?.({
-    defaults: STEPPER_DEFAULT_PROPS.ui.panelsClass({ layout: layout.value }),
+    defaults: STEPPER_LAYERED_CLASSES.panelsClass({ layout: layout.value }),
   })
 })
 

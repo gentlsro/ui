@@ -3,7 +3,7 @@
 import type { IKeyboardShortcutProps } from './types/keyboard-shortcut-props.type'
 
 // Constants
-import { KEYBOARD_SHORTCUT_DEFAULT_PROPS } from './constants/keyboard-shortcut-default-props.constant'
+import { KEYBOARD_SHORTCUT_LAYERED_CLASSES } from './constants/keyboard-shortcut-layered-classes.constant'
 
 const props = withDefaults(defineProps<IKeyboardShortcutProps>(), {
   ...getComponentProps('keyboardShortcut'),
@@ -35,7 +35,7 @@ const isVisible = computed(() => {
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: KEYBOARD_SHORTCUT_DEFAULT_PROPS.ui.containerClass(),
+    defaults: KEYBOARD_SHORTCUT_LAYERED_CLASSES.containerClass(),
   })
 })
 
@@ -46,7 +46,7 @@ const containerStyle = computed(() => {
 // Styles - wrapper
 const wrapperClass = computed(() => {
   return mergedProps.value?.ui?.wrapperClass?.({
-    defaults: KEYBOARD_SHORTCUT_DEFAULT_PROPS.ui.wrapperClass(),
+    defaults: KEYBOARD_SHORTCUT_LAYERED_CLASSES.wrapperClass(),
   })
 })
 
@@ -57,7 +57,7 @@ const wrapperStyle = computed(() => {
 // Styles - icon
 const iconClass = computed(() => {
   return mergedProps.value?.ui?.iconClass?.({
-    defaults: KEYBOARD_SHORTCUT_DEFAULT_PROPS.ui.iconClass(),
+    defaults: KEYBOARD_SHORTCUT_LAYERED_CLASSES.iconClass(),
   })
 })
 

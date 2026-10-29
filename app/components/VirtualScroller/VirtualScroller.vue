@@ -6,7 +6,7 @@ import type { Range, VirtualItem } from '@tanstack/vue-virtual'
 import type { IVirtualScrollEvent } from './types/virtual-scroll-event.type'
 import type { IVirtualScrollerColumn, IVirtualScrollerProps } from './types/virtual-scroller-props.type'
 import { getElementSize } from '#layers/utilities/app/functions/get-element-size'
-import { VIRTUAL_SCROLLER_DEFAULT_PROPS } from './constants/virtual-scroller-default-props'
+import { VIRTUAL_SCROLLER_LAYERED_CLASSES } from './constants/virtual-scroller-layered-classes.constant'
 import {
   addActiveStickyIndex,
   getActiveStickyIndex,
@@ -365,11 +365,11 @@ onMounted(() => {
 
 // Styles
 const containerClass = computed(() => mergedProps.value.ui?.containerClass?.({
-  defaults: VIRTUAL_SCROLLER_DEFAULT_PROPS.ui.containerClass(),
+  defaults: VIRTUAL_SCROLLER_LAYERED_CLASSES.containerClass(),
 }))
 const containerStyle = computed(() => mergedProps.value.ui?.containerStyle?.())
 const contentClass = computed(() => mergedProps.value.ui?.contentClass?.({
-  defaults: VIRTUAL_SCROLLER_DEFAULT_PROPS.ui.contentClass(),
+  defaults: VIRTUAL_SCROLLER_LAYERED_CLASSES.contentClass(),
 }))
 const contentStyle = computed(() => ({
   ...mergedProps.value.ui?.contentStyle?.(),
@@ -377,7 +377,7 @@ const contentStyle = computed(() => ({
   ...(totalWidth.value === undefined ? {} : { width: `${totalWidth.value}px` }),
 }))
 const rowClass = computed(() => mergedProps.value.ui?.rowClass?.({
-  defaults: VIRTUAL_SCROLLER_DEFAULT_PROPS.ui.rowClass(),
+  defaults: VIRTUAL_SCROLLER_LAYERED_CLASSES.rowClass(),
 }))
 const rowStyle = computed(() => ({
   ...mergedProps.value.ui?.rowStyle?.(),

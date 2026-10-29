@@ -6,7 +6,7 @@ import type { IStepProps } from './types/step-props.type'
 import { stepperContextKey } from './composables/useStepperUtils'
 
 // Constants
-import { STEPPER_DEFAULT_PROPS } from './constants/stepper-default-props.constant'
+import { STEPPER_LAYERED_CLASSES } from './constants/stepper-layered-classes.constant'
 
 defineOptions({ name: 'Step' })
 
@@ -32,7 +32,7 @@ onScopeDispose(() => {
 // Styles - step
 const stepClass = computed(() => {
   return stepper?.ui.value?.stepClass?.({
-    defaults: STEPPER_DEFAULT_PROPS.ui.stepClass(),
+    defaults: STEPPER_LAYERED_CLASSES.stepClass(),
   })
 })
 

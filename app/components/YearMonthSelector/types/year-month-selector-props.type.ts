@@ -1,10 +1,8 @@
+import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { CSSProperties } from 'vue'
 
 // Types
 import type { IFieldProps } from '../../Field/types/field-props.type'
-
-// Constants
-import type { YEAR_MONTH_SELECTOR_DEFAULT_PROPS } from '../constants/year-month-selector-default-props.constant'
 
 export type YearMonthValueFormat = 'timestamp' | 'year-month'
 
@@ -23,7 +21,7 @@ export type IYearMonthSelectorProps = IFieldProps & {
      * Class to apply to the picker icon
      */
     pickerIconClass?: (payload: {
-      defaults: ReturnType<typeof YEAR_MONTH_SELECTOR_DEFAULT_PROPS['ui']['pickerIconClass']>
+      defaults: UIClassPicker<UIResolvedClasses['yearMonthSelector']['pickerIconClass']>
     }) => ClassType
 
     /**

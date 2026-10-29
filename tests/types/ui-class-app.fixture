@@ -1,0 +1,28 @@
+import { defineUIClasses } from '__DEFINE_UI_CLASSES__'
+import { extendUIConfig } from '__EXTEND_UI_CONFIG__'
+
+export const uiClasses = defineUIClasses('fixture-app')({
+  list: { rowClass: ({ defaults }) => {
+    const preceding: 'layer-list' = defaults.base
+    const theme: 'theme-list' = defaults.themeList
+    // @ts-expect-error Current layer additions are not preceding defaults.
+    defaults.appList
+    return { base: 'app-list', appList: 'app-list-extra' } as const
+  } },
+  miniCard: { containerClass: { base: 'app-card', appCard: 'app-card-extra' } },
+  button: {
+    containerClass: ({ defaults }) => {
+      const preceding: 'layer-base' = defaults.base
+      const inherited: 'layer-only' = defaults.layerOnly
+      // @ts-expect-error A layer never receives its own additions as predecessors.
+      defaults.appOnly
+      return { base: 'app-base', appOnly: 'app-only' } as const
+    },
+  },
+})
+
+export default extendUIConfig({
+  form: { props: { submitBtnProps: { size: 'sm', ui: {
+    containerClass: ({ defaults }) => defaults.p('appOnly', 'base'),
+  } } } },
+})

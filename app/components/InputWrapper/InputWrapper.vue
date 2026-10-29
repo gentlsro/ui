@@ -12,7 +12,7 @@ import InputWrapperInside from './InputWrapperInside.vue'
 import InputWrapperRegular from './InputWrapperRegular.vue'
 
 // Constants
-import { INPUT_WRAPPER_DEFAULT_PROPS } from './constants/input-wrapper-default-props'
+import { INPUT_WRAPPER_LAYERED_CLASSES } from './constants/input-wrapper-layered-classes.constant'
 
 const props = withDefaults(defineProps<IInputWrapperProps>(), {
   ...getComponentProps('inputWrapper'),
@@ -63,7 +63,7 @@ const labelProps = computed(() => {
 
 const wrapperClass = computed(() => {
   const wrapperClass = mergedProps.value.ui?.wrapperClass?.({
-    defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.wrapperClass(),
+    defaults: INPUT_WRAPPER_LAYERED_CLASSES.wrapperClass(),
   })
 
   return [
@@ -92,7 +92,7 @@ const contentClassLocal = computed(() => {
 
 const contentClass = computed(() => {
   return mergedProps.value.ui?.contentClass?.({
-    defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.contentClass(),
+    defaults: INPUT_WRAPPER_LAYERED_CLASSES.contentClass(),
   })
 })
 
@@ -103,7 +103,7 @@ const contentStyle = computed(() => {
 // Styles - Input
 const inputClass = computed(() => {
   return mergedProps.value.ui?.inputClass?.({
-    defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.inputClass(),
+    defaults: INPUT_WRAPPER_LAYERED_CLASSES.inputClass(),
   })
 })
 
@@ -153,7 +153,7 @@ const isInputRequired = computed(() => {
 // Styles - Hint
 const hintClass = computed(() => {
   return mergedProps.value.ui?.hintClass?.({
-    defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.hintClass(),
+    defaults: INPUT_WRAPPER_LAYERED_CLASSES.hintClass(),
   })
 })
 
@@ -164,7 +164,7 @@ const hintStyle = computed(() => {
 // Styles - Error
 const errorClass = computed(() => {
   return mergedProps.value.ui?.errorClass?.({
-    defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.errorClass(),
+    defaults: INPUT_WRAPPER_LAYERED_CLASSES.errorClass(),
   })
 })
 

@@ -2,112 +2,50 @@
 
 // Types
 import type { ITreeProps } from '../types/tree-props.type'
+import { TREE_CLASS_COMPOSERS, TREE_CLASS_SLOTS } from './tree-class-slots.constant'
 
 export const TREE_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'relative p-1'
+      const slots = TREE_CLASS_SLOTS.containerClass()
 
-      return {
-        base,
-        all: `${base}`,
-      } as const
+      return withClassPicker({ ...slots, all: TREE_CLASS_COMPOSERS.containerClass(slots) } as const)
     },
 
     contentClass() {
-      const base = 'p-y-2.5 grow min-h-12'
+      const slots = TREE_CLASS_SLOTS.contentClass()
 
-      return {
-        base,
-        all: `${base}`,
-      } as const
+      return withClassPicker({ ...slots, all: TREE_CLASS_COMPOSERS.contentClass(slots) } as const)
     },
 
     nodeClass() {
-      const base = 'flex items-center gap-1 p-x-1 rounded-custom overflow-auto w-full m-b-px'
+      const slots = TREE_CLASS_SLOTS.nodeClass()
 
-      // Hover
-      const hover = 'hover:bg-slate-100 dark:hover:bg-slate-800'
-
-      // Focus
-      const focus = '[&.is-focused]:(bg-slate-100 dark:bg-slate-800)'
-
-      // Hovered
-      const hovered = '[&.is-hovered]:(bg-slate-100 dark:bg-slate-800)'
-
-      // Selection - single
-      const selectionNoCheckbox = '[&.is-selected:not(.uses-checkbox)]:(bg-slate-200 color-primary dark:(bg-slate-800 color-blue-400))'
-
-      // Selection - multi (with checkbox)
-      const selectionMultiCheckbox = ''
-
-      // Focus while selected
-      const focusSelected = '[&.is-focused.is-selected:not(.uses-checkbox)]:(outline-1 outline-dashed outline-offset--1 outline-primary dark:(outline-blue-400))'
-
-      return {
-        base,
-        hover,
-        hovered,
-        selectionNoCheckbox,
-        selectionMultiCheckbox,
-        focus,
-        focusSelected,
-        all: `${base} ${hover} ${focus} ${hovered} ${selectionNoCheckbox} ${selectionMultiCheckbox} ${focusSelected}`,
-      } as const
+      return withClassPicker({ ...slots, all: TREE_CLASS_COMPOSERS.nodeClass(slots) } as const)
     },
 
     nodeContentClass() {
-      const base = 'overflow-hidden flex flex-col grow leading-20px p-y-1.5'
+      const slots = TREE_CLASS_SLOTS.nodeContentClass()
 
-      // Hover
-      const hover = '[.node:hover_&]:bg-slate-100 dark:([.node:hover_&]:bg-slate-800)'
-
-      // Collapsible
-      const collapsible = '[.node.is-padded_&]:m-l-28px'
-
-      // // Selection - single
-      // const selectionNoCheckbox = '[&.is-selected:not(.uses-checkbox)]:(bg-slate-200 color-primary dark:(bg-slate-800 color-blue-400))'
-
-      // // Selection - multi (with checkbox)
-      // const selectionMultiCheckbox = ''
-
-      // // Focus while selected
-      // const focusSelected = '[&.is-focused.is-selected:not(.uses-checkbox)]:(outline-1 outline-dashed outline-offset--1 outline-primary dark:(outline-blue-400))'
-
-      return {
-        base,
-        hover,
-        collapsible,
-        all: `${base} ${hover} ${collapsible}`,
-      } as const
+      return withClassPicker({ ...slots, all: TREE_CLASS_COMPOSERS.nodeContentClass(slots) } as const)
     },
 
     noDataClass() {
-      const base = 'absolute left-0 top-0 p-x-3 p-y-2 color-ca font-rem-14'
+      const slots = TREE_CLASS_SLOTS.noDataClass()
 
-      return {
-        base,
-        all: `${base}`,
-      } as const
+      return withClassPicker({ ...slots, all: TREE_CLASS_COMPOSERS.noDataClass(slots) } as const)
     },
 
     actionsClass() {
-      // Beside the search, which gives way first: the buttons keep their size
-      const base = 'flex gap-1 items-center shrink-0'
+      const slots = TREE_CLASS_SLOTS.actionsClass()
 
-      return {
-        base,
-        all: `${base}`,
-      } as const
+      return withClassPicker({ ...slots, all: TREE_CLASS_COMPOSERS.actionsClass(slots) } as const)
     },
 
     searchClass() {
-      const base = 'flex'
+      const slots = TREE_CLASS_SLOTS.searchClass()
 
-      return {
-        base,
-        all: `${base}`,
-      } as const
+      return withClassPicker({ ...slots, all: TREE_CLASS_COMPOSERS.searchClass(slots) } as const)
     },
   },
 } satisfies ITreeProps

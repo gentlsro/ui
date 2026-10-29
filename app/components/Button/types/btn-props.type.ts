@@ -6,7 +6,8 @@ import type { NavigateToOptions } from '#layers/utilities/app/types/navigate-to.
 
 // Constants
 import type { ButtonPresetDefaults } from '../constants/button-preset.constant'
-import type { BTN_DEFAULT_PROPS, BTN_LABEL_BREAKPOINTS } from '../constants/btn-default-props.constant'
+import type { BTN_LABEL_BREAKPOINTS } from '../constants/btn-default-props.constant'
+import type { UIClassPicker, UIClassSet, UIResolvedClasses } from '../../../types/ui-class-config.type'
 
 export type CustomPresets = Record<string, { icon: string, color: string }>
 
@@ -46,7 +47,10 @@ export type IBtnNavigationProps = INavigation & {
   type?: 'button' | 'submit' | 'reset'
 }
 
-export type IBtnProps<T extends CustomPresets = Record<string, never>> = IBtnNavigationProps & {
+export type IBtnProps<
+  T extends CustomPresets = Record<string, never>,
+  Classes extends UIClassSet['button'] = UIResolvedClasses['button'],
+> = IBtnNavigationProps & {
   /**
    * Alignment of the button content
    */
@@ -186,7 +190,7 @@ export type IBtnProps<T extends CustomPresets = Record<string, never>> = IBtnNav
      * Class applied to the container (button element)
      */
     containerClass?: (payload: {
-      defaults: ReturnType<typeof BTN_DEFAULT_PROPS['ui']['containerClass']>
+      defaults: UIClassPicker<Classes['containerClass']>
     }) => ClassType
 
     /**
@@ -198,7 +202,7 @@ export type IBtnProps<T extends CustomPresets = Record<string, never>> = IBtnNav
      * Classes applied to the icon
      */
     iconClass?: (payload: {
-      defaults: ReturnType<typeof BTN_DEFAULT_PROPS['ui']['iconClass']>
+      defaults: UIClassPicker<Classes['iconClass']>
     }) => ClassType
 
     /**
@@ -210,7 +214,7 @@ export type IBtnProps<T extends CustomPresets = Record<string, never>> = IBtnNav
      * Classes applied to the label
      */
     labelClass?: (payload: {
-      defaults: ReturnType<typeof BTN_DEFAULT_PROPS['ui']['labelClass']>
+      defaults: UIClassPicker<Classes['labelClass']>
     }) => ClassType
 
     /**
@@ -230,7 +234,7 @@ export type IBtnProps<T extends CustomPresets = Record<string, never>> = IBtnNav
      * Classes applied to the focus helper
      */
     focusHelperClass?: (payload: {
-      defaults: ReturnType<typeof BTN_DEFAULT_PROPS['ui']['focusHelperClass']>
+      defaults: UIClassPicker<Classes['focusHelperClass']>
     }) => ClassType
 
     /**
@@ -242,7 +246,7 @@ export type IBtnProps<T extends CustomPresets = Record<string, never>> = IBtnNav
      * Classes applied to the loading overlay
      */
     loadingClass?: (payload: {
-      defaults: ReturnType<typeof BTN_DEFAULT_PROPS['ui']['loadingClass']>
+      defaults: UIClassPicker<Classes['loadingClass']>
     }) => ClassType
 
     /**
@@ -254,7 +258,7 @@ export type IBtnProps<T extends CustomPresets = Record<string, never>> = IBtnNav
      * Classes applied to the loader
      */
     loaderClass?: (payload: {
-      defaults: ReturnType<typeof BTN_DEFAULT_PROPS['ui']['loaderClass']>
+      defaults: UIClassPicker<Classes['loaderClass']>
     }) => ClassType
 
     /**

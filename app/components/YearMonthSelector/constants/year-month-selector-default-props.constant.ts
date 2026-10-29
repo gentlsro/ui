@@ -1,19 +1,13 @@
+import { YEAR_MONTH_SELECTOR_CLASS_COMPOSERS, YEAR_MONTH_SELECTOR_CLASS_SLOTS } from './year-month-selector-class-slots.constant'
+
 // @unocss-include
 
 export const YEAR_MONTH_SELECTOR_DEFAULT_PROPS = {
   ui: {
     pickerIconClass() {
-      const base = 'h-5.5 w-5.5 color-ca cursor-default'
+      const slots = YEAR_MONTH_SELECTOR_CLASS_SLOTS.pickerIconClass()
 
-      // State-based styling via CSS selectors
-      // When parent is editable (not readonly and not disabled), make cursor pointer
-      const editable = '[.year-month-selector:not(.is-readonly):not(.is-disabled)_&]:(cursor-pointer)'
-
-      return {
-        base,
-        editable,
-        all: `${base} ${editable}`,
-      } as const
+      return withClassPicker({ ...slots, all: YEAR_MONTH_SELECTOR_CLASS_COMPOSERS.pickerIconClass(slots) } as const)
     },
   },
 }

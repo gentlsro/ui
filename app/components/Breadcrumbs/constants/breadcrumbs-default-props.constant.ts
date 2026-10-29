@@ -2,29 +2,20 @@
 
 // Types
 import type { IBreadcrumbsProps } from '../types/breadcrumbs-props.type'
+import { BREADCRUMBS_CLASS_COMPOSERS, BREADCRUMBS_CLASS_SLOTS } from './breadcrumbs-class-slots.constant'
 
 export const BREADCRUMBS_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'flex gap-1 items-center'
+      const slots = BREADCRUMBS_CLASS_SLOTS.containerClass()
 
-      return {
-        base,
-        all: `${base}`,
-      } as const
+      return withClassPicker({ ...slots, all: BREADCRUMBS_CLASS_COMPOSERS.containerClass(slots) } as const)
     },
 
     breadcrumbsClass() {
-      const base = 'flex gap-x-1 items-center text-sm overflow-auto'
-      const responsive = 'lt-lg:(m-t-2px m-b-2px)'
-      const mainBar = '[.main-bar_&]:(m-t-0)'
+      const slots = BREADCRUMBS_CLASS_SLOTS.breadcrumbsClass()
 
-      return {
-        base,
-        responsive,
-        mainBar,
-        all: `${base} ${responsive} ${mainBar}`,
-      } as const
+      return withClassPicker({ ...slots, all: BREADCRUMBS_CLASS_COMPOSERS.breadcrumbsClass(slots) } as const)
     },
   },
 } satisfies IBreadcrumbsProps

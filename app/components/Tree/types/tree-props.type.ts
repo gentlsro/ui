@@ -1,3 +1,4 @@
+import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { AllowedComponentProps, CSSProperties } from 'vue'
 
 // Types
@@ -7,10 +8,7 @@ import type { IBtnProps } from '../../Button/types/btn-props.type'
 import type { ITreeDragMeta } from './tree-drag-meta.type'
 import type { ICheckboxProps } from '../../Checkbox/types/checkbox-props.type'
 import type { ITextInputProps } from '../../Inputs/TextInput/types/text-input-props.type'
-import type { IVirtualScrollerVerticalProps } from '../../VirtualScroller/types/virtual-scroller-vertical-props.type'
-
-// Constants
-import type { TREE_DEFAULT_PROPS } from '../constants/tree-default-props.constant'
+import type { IVirtualScrollerProps } from '../../VirtualScroller/types/virtual-scroller-props.type'
 
 export type ITreeProps<T extends IItem = IItem> = {
   /**
@@ -97,7 +95,7 @@ export type ITreeProps<T extends IItem = IItem> = {
   /**
    * Scroller configuration
    */
-  scrollerConfig?: Partial<IVirtualScrollerVerticalProps<T>>
+  scrollerConfig?: Partial<IVirtualScrollerProps<T>>
 
   /**
    * The search value
@@ -430,7 +428,7 @@ export type ITreeProps<T extends IItem = IItem> = {
      * Class to apply to the tree container
      */
     containerClass?: (payload: {
-      defaults: ReturnType<typeof TREE_DEFAULT_PROPS['ui']['containerClass']>
+      defaults: UIClassPicker<UIResolvedClasses['tree']['containerClass']>
     }) => ClassType
 
     /**
@@ -442,7 +440,7 @@ export type ITreeProps<T extends IItem = IItem> = {
      * Class to apply to the tree content (the section containing the nodes)
      */
     contentClass?: (payload: {
-      defaults: ReturnType<typeof TREE_DEFAULT_PROPS['ui']['contentClass']>
+      defaults: UIClassPicker<UIResolvedClasses['tree']['contentClass']>
     }) => ClassType
 
     /**
@@ -456,7 +454,7 @@ export type ITreeProps<T extends IItem = IItem> = {
     nodeClass?: ((payload: {
       node: T
       index: number
-      defaults: ReturnType<typeof TREE_DEFAULT_PROPS['ui']['nodeClass']>
+      defaults: UIClassPicker<UIResolvedClasses['tree']['nodeClass']>
     }) => ClassType)
 
     /**
@@ -473,7 +471,7 @@ export type ITreeProps<T extends IItem = IItem> = {
     nodeContentClass?: ((payload: {
       node: T
       index: number
-      defaults: ReturnType<typeof TREE_DEFAULT_PROPS['ui']['nodeContentClass']>
+      defaults: UIClassPicker<UIResolvedClasses['tree']['nodeContentClass']>
     }) => ClassType)
 
     /**
@@ -488,7 +486,7 @@ export type ITreeProps<T extends IItem = IItem> = {
      * Class to apply to the no data component
      */
     noDataClass?: (payload: {
-      defaults: ReturnType<typeof TREE_DEFAULT_PROPS['ui']['noDataClass']>
+      defaults: UIClassPicker<UIResolvedClasses['tree']['noDataClass']>
     }) => ClassType
 
     /**
@@ -500,7 +498,7 @@ export type ITreeProps<T extends IItem = IItem> = {
      * Class to apply to the tree actions (wrapper)
      */
     actionsClass?: (payload: {
-      defaults: ReturnType<typeof TREE_DEFAULT_PROPS['ui']['actionsClass']>
+      defaults: UIClassPicker<UIResolvedClasses['tree']['actionsClass']>
     }) => ClassType
 
     /**
@@ -512,7 +510,7 @@ export type ITreeProps<T extends IItem = IItem> = {
      * Class to apply to the tree search
      */
     searchClass?: (payload: {
-      defaults: ReturnType<typeof TREE_DEFAULT_PROPS['ui']['searchClass']>
+      defaults: UIClassPicker<UIResolvedClasses['tree']['searchClass']>
     }) => ClassType
 
     /**

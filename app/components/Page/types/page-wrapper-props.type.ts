@@ -1,10 +1,8 @@
+import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { CSSProperties } from 'vue'
 
 // Types
 import type { IPageTitleProps } from './page-title-props.type'
-
-// Constants
-import type { PAGE_WRAPPER_DEFAULT_PROPS } from '../constants/page-wrapper-default-props.constant'
 
 export type IPageWrapperProps = {
   /**
@@ -40,7 +38,7 @@ export type IPageWrapperProps = {
      * Class to apply to the container
      */
     containerClass?: (payload: {
-      defaults: ReturnType<typeof PAGE_WRAPPER_DEFAULT_PROPS['ui']['containerClass']>
+      defaults: UIClassPicker<UIResolvedClasses['pageWrapper']['containerClass']>
     }) => ClassType
 
     /**
@@ -52,7 +50,7 @@ export type IPageWrapperProps = {
      * Class to apply to the content
      */
     contentClass?: (payload: {
-      defaults: ReturnType<typeof PAGE_WRAPPER_DEFAULT_PROPS['ui']['contentClass']>
+      defaults: UIClassPicker<UIResolvedClasses['pageWrapper']['contentClass']>
     }) => ClassType
 
     /**

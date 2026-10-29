@@ -3,7 +3,7 @@
 import type { IToggleProps } from './types/toggle-props.type'
 
 // Constants
-import { TOGGLE_DEFAULT_PROPS } from './constants/toggle-default-props.constant'
+import { TOGGLE_LAYERED_CLASSES } from './constants/toggle-layered-classes.constant'
 
 const props = withDefaults(defineProps<IToggleProps>(), {
   ...getComponentProps('toggle'),
@@ -105,7 +105,7 @@ function handleKeyDown(e: KeyboardEvent) {
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: TOGGLE_DEFAULT_PROPS.ui.containerClass(),
+    defaults: TOGGLE_LAYERED_CLASSES.containerClass(),
   })
 })
 
@@ -116,7 +116,7 @@ const containerStyle = computed(() => {
 // Styles - toggle
 const toggleClass = computed(() => {
   return mergedProps.value?.ui?.toggleClass?.({
-    defaults: TOGGLE_DEFAULT_PROPS.ui.toggleClass({
+    defaults: TOGGLE_LAYERED_CLASSES.toggleClass({
       size: props.size ?? 'sm',
       contained: props.contained ?? false,
     }),
@@ -130,7 +130,7 @@ const toggleStyle = computed(() => {
 // Styles - bullet
 const bulletClass = computed(() => {
   return mergedProps.value?.ui?.bulletClass?.({
-    defaults: TOGGLE_DEFAULT_PROPS.ui.bulletClass({
+    defaults: TOGGLE_LAYERED_CLASSES.bulletClass({
       size: props.size ?? 'sm',
       contained: props.contained ?? false,
     }),
@@ -144,7 +144,7 @@ const bulletStyle = computed(() => {
 // Styles - label
 const labelClass = computed(() => {
   return mergedProps.value?.ui?.labelClass?.({
-    defaults: TOGGLE_DEFAULT_PROPS.ui.labelClass({
+    defaults: TOGGLE_LAYERED_CLASSES.labelClass({
       size: props.size ?? 'sm',
     }),
   })
@@ -157,7 +157,7 @@ const labelStyle = computed(() => {
 // Styles - icon
 const iconClass = computed(() => {
   return mergedProps.value?.ui?.iconClass?.({
-    defaults: TOGGLE_DEFAULT_PROPS.ui.iconClass(),
+    defaults: TOGGLE_LAYERED_CLASSES.iconClass(),
   })
 })
 
@@ -168,7 +168,7 @@ const iconStyle = computed(() => {
 // Styles - focus helper
 const focusHelperClass = computed(() => {
   return mergedProps.value?.ui?.focusHelperClass?.({
-    defaults: TOGGLE_DEFAULT_PROPS.ui.focusHelperClass(),
+    defaults: TOGGLE_LAYERED_CLASSES.focusHelperClass(),
   })
 })
 

@@ -1,52 +1,39 @@
+import { SCROLLER_CLASS_COMPOSERS, SCROLLER_CLASS_SLOTS } from './scroller-class-slots.constant'
+
 // @unocss-include
 
 export const SCROLLER_DEFAULT_PROPS = {
   ui: {
     // Horizontal scroller container
     horizontalContainerClass() {
-      const base = 'flex relative overflow-hidden'
+      const slots = SCROLLER_CLASS_SLOTS.horizontalContainerClass()
 
-      return {
-        base,
-        all: base,
-      } as const
+      return withClassPicker({ ...slots, all: SCROLLER_CLASS_COMPOSERS.horizontalContainerClass(slots) } as const)
     },
 
     // Vertical scroller container
     verticalContainerClass() {
-      const base = 'flex flex-col relative items-center overflow-hidden'
+      const slots = SCROLLER_CLASS_SLOTS.verticalContainerClass()
 
-      return {
-        base,
-        all: base,
-      } as const
+      return withClassPicker({ ...slots, all: SCROLLER_CLASS_COMPOSERS.verticalContainerClass(slots) } as const)
     },
 
     contentClass() {
-      const base = 'flex grow overflow-auto'
+      const slots = SCROLLER_CLASS_SLOTS.contentClass()
 
-      return {
-        base,
-        all: base,
-      } as const
+      return withClassPicker({ ...slots, all: SCROLLER_CLASS_COMPOSERS.contentClass(slots) } as const)
     },
 
     verticalContentClass() {
-      const base = 'flex flex-col flex-1 overflow-auto w-full'
+      const slots = SCROLLER_CLASS_SLOTS.verticalContentClass()
 
-      return {
-        base,
-        all: base,
-      } as const
+      return withClassPicker({ ...slots, all: SCROLLER_CLASS_COMPOSERS.verticalContentClass(slots) } as const)
     },
 
     arrowClass() {
-      const base = 'color-ca dark:hover:color-white hover:color-black'
+      const slots = SCROLLER_CLASS_SLOTS.arrowClass()
 
-      return {
-        base,
-        all: base,
-      } as const
+      return withClassPicker({ ...slots, all: SCROLLER_CLASS_COMPOSERS.arrowClass(slots) } as const)
     },
   },
 }

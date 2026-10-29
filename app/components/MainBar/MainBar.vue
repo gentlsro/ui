@@ -3,7 +3,7 @@
 import type { IMainBarProps } from './types/main-bar-props.type'
 
 // Constants
-import { MAIN_BAR_DEFAULT_PROPS } from './constants/main-bar-default-props.constant'
+import { MAIN_BAR_LAYERED_CLASSES } from './constants/main-bar-layered-classes.constant'
 
 const props = withDefaults(defineProps<IMainBarProps>(), {
   ...getComponentProps('mainBar'),
@@ -42,7 +42,7 @@ const mergedProps = computed(() => {
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: MAIN_BAR_DEFAULT_PROPS.ui.containerClass(),
+    defaults: MAIN_BAR_LAYERED_CLASSES.containerClass(),
   })
 })
 
@@ -53,7 +53,7 @@ const containerStyle = computed(() => {
 // Styles - content
 const contentClass = computed(() => {
   return mergedProps.value?.ui?.contentClass?.({
-    defaults: MAIN_BAR_DEFAULT_PROPS.ui.contentClass(),
+    defaults: MAIN_BAR_LAYERED_CLASSES.contentClass(),
   })
 })
 
@@ -64,7 +64,7 @@ const contentStyle = computed(() => {
 // Styles - titleWrapper
 const titleWrapperClass = computed(() => {
   return mergedProps.value?.ui?.titleWrapperClass?.({
-    defaults: MAIN_BAR_DEFAULT_PROPS.ui.titleWrapperClass(),
+    defaults: MAIN_BAR_LAYERED_CLASSES.titleWrapperClass(),
   })
 })
 
@@ -75,7 +75,7 @@ const titleWrapperStyle = computed(() => {
 // Styles - title
 const titleClass = computed(() => {
   return mergedProps.value?.ui?.titleClass?.({
-    defaults: MAIN_BAR_DEFAULT_PROPS.ui.titleClass(),
+    defaults: MAIN_BAR_LAYERED_CLASSES.titleClass(),
   })
 })
 
@@ -86,7 +86,7 @@ const titleStyle = computed(() => {
 // Styles - subtitle
 const subtitleClass = computed(() => {
   return mergedProps.value?.ui?.subtitleClass?.({
-    defaults: MAIN_BAR_DEFAULT_PROPS.ui.subtitleClass(),
+    defaults: MAIN_BAR_LAYERED_CLASSES.subtitleClass(),
   })
 })
 
@@ -97,7 +97,7 @@ const subtitleStyle = computed(() => {
 // Styles - actions
 const actionsClass = computed(() => {
   return mergedProps.value?.ui?.actionsClass?.({
-    defaults: MAIN_BAR_DEFAULT_PROPS.ui.actionsClass(),
+    defaults: MAIN_BAR_LAYERED_CLASSES.actionsClass(),
   })
 })
 

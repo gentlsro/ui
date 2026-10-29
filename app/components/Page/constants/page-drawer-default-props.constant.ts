@@ -2,51 +2,32 @@
 
 // Types
 import type { IPageDrawerProps } from '../types/page-drawer-props.type'
+import { PAGE_DRAWER_CLASS_COMPOSERS, PAGE_DRAWER_CLASS_SLOTS } from './page-drawer-class-slots.constant'
 
 export const PAGE_DRAWER_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'h-full top-0 fixed flex flex-col z-$zPageDrawer pointer-events-none ease-out'
-      const print = 'print:hidden'
+      const slots = PAGE_DRAWER_CLASS_SLOTS.containerClass()
 
-      return {
-        base,
-        print,
-        all: `${base} ${print}`,
-      } as const
+      return withClassPicker({ ...slots, all: PAGE_DRAWER_CLASS_COMPOSERS.containerClass(slots) } as const)
     },
 
     contentClass() {
-      const base = 'flex flex-col flex-grow overflow-auto pointer-events-auto bg-white dark:bg-dark-950'
-      const border = 'dark:group-[.page-drawer--left]:(border-r-1 border-black) light:group-[.page-drawer--left]:(shadow-md shadow-ca)'
+      const slots = PAGE_DRAWER_CLASS_SLOTS.contentClass()
 
-      return {
-        base,
-        border,
-        all: `${base} ${border}`,
-      } as const
+      return withClassPicker({ ...slots, all: PAGE_DRAWER_CLASS_COMPOSERS.contentClass(slots) } as const)
     },
 
     bottomClass() {
-      const base = 'flex shrink-0 overflow-auto pointer-events-auto bg-white dark:bg-dark-950 p-1'
-      const border = 'dark:group-[.page-drawer--left]:(border-r-1 border-black) light:group-[.page-drawer--left]:(shadow-md shadow-ca)'
+      const slots = PAGE_DRAWER_CLASS_SLOTS.bottomClass()
 
-      return {
-        base,
-        border,
-        all: `${base} ${border}`,
-      } as const
+      return withClassPicker({ ...slots, all: PAGE_DRAWER_CLASS_COMPOSERS.bottomClass(slots) } as const)
     },
 
     fillerClass() {
-      const base = 'relative shrink-0'
-      const border = 'border-b-1 border-black'
+      const slots = PAGE_DRAWER_CLASS_SLOTS.fillerClass()
 
-      return {
-        base,
-        border,
-        all: `${base}`,
-      } as const
+      return withClassPicker({ ...slots, all: PAGE_DRAWER_CLASS_COMPOSERS.fillerClass(slots) } as const)
     },
   },
 } satisfies IPageDrawerProps

@@ -1,33 +1,33 @@
 import { uiConfig } from '$uiConfig'
-
-type ConfigWithPropsKeys<T> = {
-  [K in keyof T]: T[K] extends { props: infer P } ? K : never
-}[keyof T]
-
-type GetValue<T> = T extends (...args: any[]) => any ? ReturnType<T> : T
+import type {
+  ComponentName,
+  ComponentPropOverrides,
+  ComponentProps,
+} from '../types/component-config-props.type'
 
 export function extendNestedComponentProps<
-  T extends ConfigWithPropsKeys<typeof uiConfig>,
-  U extends typeof uiConfig[T]['props'],
-  // @ts-ignore
-  K extends GetValue<typeof uiConfig[T]['props'][keyof U]>,
+  Name extends ComponentName,
+  Key extends keyof ComponentProps<Name>,
 >(
-  componentName: T,
-  propName: keyof U,
-  overrides: K,
+  componentName: Name,
+  propName: Key,
+  overrides: ComponentPropOverrides<ComponentProps<Name>[Key]> | undefined,
   options?: {
-    mergeFnc?: (obj: K, override: Partial<K>) => K
+    mergeFnc?: (
+      defaults: ComponentProps<Name>[Key],
+      overrides: ComponentPropOverrides<ComponentProps<Name>[Key]> | undefined,
+    ) => NonNullable<ComponentProps<Name>[Key]>
   },
-): K {
-  const props = uiConfig[componentName].props as U
-  const defaultPropValue = typeof props[propName] === 'function'
-    ? props[propName]()
-    : props[propName]
+): NonNullable<ComponentProps<Name>[Key]> {
+  const props = uiConfig[componentName].props as Record<PropertyKey, unknown>
+  const value = props[propName]
+  const defaultPropValue = (typeof value === 'function' ? value.call(props) : value) as
+    ComponentProps<Name>[Key]
 
   // Merge using provided merge function or fallback to default merging
   const mergedProps = options?.mergeFnc
     ? options.mergeFnc(defaultPropValue, overrides)
     : { ...defaultPropValue, ...overrides }
 
-  return mergedProps
+  return mergedProps as NonNullable<ComponentProps<Name>[Key]>
 }

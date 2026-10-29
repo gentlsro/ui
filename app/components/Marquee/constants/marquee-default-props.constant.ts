@@ -1,34 +1,19 @@
+import { MARQUEE_CLASS_COMPOSERS, MARQUEE_CLASS_SLOTS } from './marquee-class-slots.constant'
+
 // @unocss-include
 
 export const MARQUEE_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'group flex gap-$gap overflow-hidden p-2'
-      const vertical = '[&.is-vertical]:(flex-col)'
+      const slots = MARQUEE_CLASS_SLOTS.containerClass()
 
-      return {
-        base,
-        vertical,
-        all: `${base} ${vertical}`,
-      } as const
+      return withClassPicker({ ...slots, all: MARQUEE_CLASS_COMPOSERS.containerClass(slots) } as const)
     },
 
-    contentClass(payload: {
-      pauseOnHover: boolean
-      vertical: boolean
-    }) {
-      const { pauseOnHover, vertical } = payload
+    contentClass(payload: Parameters<typeof MARQUEE_CLASS_SLOTS.contentClass>[0]) {
+      const slots = MARQUEE_CLASS_SLOTS.contentClass(payload)
 
-      const base = 'flex shrink-0 gap-$gap'
-      const verticalLayout = vertical ? 'flex-col' : ''
-      const paused = pauseOnHover ? 'group-hover:[animation-play-state:paused]' : ''
-
-      return {
-        base,
-        verticalLayout,
-        paused,
-        all: `${base} ${verticalLayout} ${paused}`.trim(),
-      } as const
+      return withClassPicker({ ...slots, all: MARQUEE_CLASS_COMPOSERS.contentClass(slots, payload) } as const)
     },
   },
 }

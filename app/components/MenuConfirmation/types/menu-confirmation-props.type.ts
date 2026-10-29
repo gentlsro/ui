@@ -1,11 +1,9 @@
+import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { AllowedComponentProps, CSSProperties } from 'vue'
 
 // Types
 import type { IBtnProps } from '../../Button/types/btn-props.type'
 import type { IMenuProps } from '../../Menu/types/menu-props.type'
-
-// Constants
-import type { MENU_CONFIRMATION_DEFAULT_PROPS } from '../constants/menu-confirmation-default-props.constant'
 
 export type IMenuConfirmationProps = IMenuProps & {
   /**
@@ -47,7 +45,7 @@ export type IMenuConfirmationProps = IMenuProps & {
      * Class to apply to the 'confirm' button
      */
     confirmBtnClass?: (payload: {
-      defaults: ReturnType<typeof MENU_CONFIRMATION_DEFAULT_PROPS['ui']['confirmBtnClass']>
+      defaults: UIClassPicker<UIResolvedClasses['menuConfirmation']['confirmBtnClass']>
     }) => ClassType
 
     /**
@@ -64,7 +62,7 @@ export type IMenuConfirmationProps = IMenuProps & {
      * Class to apply to the confirmation text
      */
     confirmationTextClass?: (payload: {
-      defaults: ReturnType<typeof MENU_CONFIRMATION_DEFAULT_PROPS['ui']['confirmationTextClass']>
+      defaults: UIClassPicker<UIResolvedClasses['menuConfirmation']['confirmationTextClass']>
     }) => ClassType
   }
 }

@@ -1,52 +1,37 @@
+import { YEAR_SELECTOR_CLASS_COMPOSERS, YEAR_SELECTOR_CLASS_SLOTS } from './year-selector-class-slots.constant'
+
 // @unocss-include
 
 export const YEAR_SELECTOR_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'flex gap-x-1 items-center'
+      const slots = YEAR_SELECTOR_CLASS_SLOTS.containerClass()
 
-      return {
-        base,
-        all: base,
-      } as const
+      return withClassPicker({ ...slots, all: YEAR_SELECTOR_CLASS_COMPOSERS.containerClass(slots) } as const)
     },
 
     previousBtnClass() {
-      const base = 'w-8 h-8 p-3 lt-xm:hidden'
+      const slots = YEAR_SELECTOR_CLASS_SLOTS.previousBtnClass()
 
-      return {
-        base,
-        all: base,
-      } as const
+      return withClassPicker({ ...slots, all: YEAR_SELECTOR_CLASS_COMPOSERS.previousBtnClass(slots) } as const)
     },
 
     nextBtnClass() {
-      const base = 'w-8 h-8 p-3 lt-xm:hidden'
+      const slots = YEAR_SELECTOR_CLASS_SLOTS.nextBtnClass()
 
-      return {
-        base,
-        all: base,
-      } as const
+      return withClassPicker({ ...slots, all: YEAR_SELECTOR_CLASS_COMPOSERS.nextBtnClass(slots) } as const)
     },
 
     menuContainerClass() {
-      const base = 'flex flex-col gap-1 grow'
+      const slots = YEAR_SELECTOR_CLASS_SLOTS.menuContainerClass()
 
-      return {
-        base,
-        all: base,
-      } as const
+      return withClassPicker({ ...slots, all: YEAR_SELECTOR_CLASS_COMPOSERS.menuContainerClass(slots) } as const)
     },
 
     yearBtnClass() {
-      // States (via CSS selectors)
-      const selected = '[&.is-selected]:(bg-primary color-white)'
+      const slots = YEAR_SELECTOR_CLASS_SLOTS.yearBtnClass()
 
-      return {
-        selected,
-        all: selected,
-      } as const
+      return withClassPicker({ ...slots, all: YEAR_SELECTOR_CLASS_COMPOSERS.yearBtnClass(slots) } as const)
     },
   },
 }
-

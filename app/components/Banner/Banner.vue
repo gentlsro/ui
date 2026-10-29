@@ -5,7 +5,7 @@
 import type { IBannerProps } from './types/banner-props.type'
 
 // Constants
-import { BANNER_DEFAULT_PROPS } from './constants/banner-default-props.constant'
+import { BANNER_LAYERED_CLASSES } from './constants/banner-layered-classes.constant'
 
 const props = withDefaults(defineProps<IBannerProps>(), {
   ...getComponentProps('banner'),
@@ -66,7 +66,7 @@ watch(counter, bounce)
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: BANNER_DEFAULT_PROPS.ui.containerClass({
+    defaults: BANNER_LAYERED_CLASSES.containerClass({
       variant: props.variant ?? 'none',
       outlined: props.outlined ?? false,
     }),
@@ -80,7 +80,7 @@ const containerStyle = computed(() => {
 // Styles - icon
 const iconClass = computed(() => {
   return mergedProps.value?.ui?.iconClass?.({
-    defaults: BANNER_DEFAULT_PROPS.ui.iconClass({
+    defaults: BANNER_LAYERED_CLASSES.iconClass({
       variant: props.variant ?? 'none',
     }),
   })
@@ -93,7 +93,7 @@ const iconStyle = computed(() => {
 // Styles - label
 const labelClass = computed(() => {
   return mergedProps.value?.ui?.labelClass?.({
-    defaults: BANNER_DEFAULT_PROPS.ui.labelClass(),
+    defaults: BANNER_LAYERED_CLASSES.labelClass(),
   })
 })
 
@@ -104,7 +104,7 @@ const labelStyle = computed(() => {
 // Styles - badge
 const badgeClass = computed(() => {
   return mergedProps.value?.ui?.badgeClass?.({
-    defaults: BANNER_DEFAULT_PROPS.ui.badgeClass({
+    defaults: BANNER_LAYERED_CLASSES.badgeClass({
       variant: props.variant ?? 'none',
     }),
   })
@@ -117,7 +117,7 @@ const badgeStyle = computed(() => {
 // Styles - dismiss
 const dismissClass = computed(() => {
   return mergedProps.value?.ui?.dismissClass?.({
-    defaults: BANNER_DEFAULT_PROPS.ui.dismissClass(),
+    defaults: BANNER_LAYERED_CLASSES.dismissClass(),
   })
 })
 

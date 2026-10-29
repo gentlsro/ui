@@ -1,5 +1,5 @@
+import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { CSSProperties } from 'vue'
-import type { SCROLLER_DEFAULT_PROPS } from '../constants/scroller-default-props.constant'
 
 type IScrollerBaseProps = {
   /**
@@ -23,7 +23,7 @@ export type IHorizontalScrollerProps = IScrollerBaseProps & {
      * Class to apply to the container
      */
     containerClass?: (payload: {
-      defaults: ReturnType<typeof SCROLLER_DEFAULT_PROPS['ui']['horizontalContainerClass']>
+      defaults: UIClassPicker<UIResolvedClasses['horizontalScroller']['containerClass']>
     }) => ClassType
 
     /**
@@ -35,7 +35,7 @@ export type IHorizontalScrollerProps = IScrollerBaseProps & {
      * Class to apply to the content
      */
     contentClass?: (payload: {
-      defaults: ReturnType<typeof SCROLLER_DEFAULT_PROPS['ui']['contentClass']>
+      defaults: UIClassPicker<UIResolvedClasses['horizontalScroller']['contentClass']>
     }) => ClassType
 
     /**
@@ -46,7 +46,7 @@ export type IHorizontalScrollerProps = IScrollerBaseProps & {
     contentStyle?: () => CSSProperties
 
     arrowClass?: (payload: {
-      defaults: ReturnType<typeof SCROLLER_DEFAULT_PROPS['ui']['arrowClass']>
+      defaults: UIClassPicker<UIResolvedClasses['horizontalScroller']['arrowClass']>
     }) => ClassType
 
     arrowStyle?: () => CSSProperties
@@ -59,7 +59,7 @@ export type IVerticalScrollerProps = IScrollerBaseProps & {
      * Class to apply to the container
      */
     containerClass?: (payload: {
-      defaults: ReturnType<typeof SCROLLER_DEFAULT_PROPS['ui']['verticalContainerClass']>
+      defaults: UIClassPicker<UIResolvedClasses['verticalScroller']['containerClass']>
     }) => ClassType
 
     /**
@@ -71,7 +71,7 @@ export type IVerticalScrollerProps = IScrollerBaseProps & {
      * Class to apply to the content
      */
     contentClass?: (payload: {
-      defaults: ReturnType<typeof SCROLLER_DEFAULT_PROPS['ui']['verticalContentClass']>
+      defaults: UIClassPicker<UIResolvedClasses['verticalScroller']['contentClass']>
     }) => ClassType
 
     /**
@@ -85,7 +85,7 @@ export type IVerticalScrollerProps = IScrollerBaseProps & {
      * Class to apply to the arrow
      */
     arrowClass?: (payload: {
-      defaults: ReturnType<typeof SCROLLER_DEFAULT_PROPS['ui']['arrowClass']>
+      defaults: UIClassPicker<UIResolvedClasses['verticalScroller']['arrowClass']>
     }) => ClassType
 
     arrowStyle?: () => CSSProperties

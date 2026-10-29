@@ -1,22 +1,13 @@
+import { CRUD_BTNS_CLASS_COMPOSERS, CRUD_BTNS_CLASS_SLOTS, CRUD_EDIT_BTN_CLASS_COMPOSERS, CRUD_EDIT_BTN_CLASS_SLOTS } from './crud-btns-class-slots.constant'
+
 // @unocss-include
 
 export const CRUD_BTNS_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'relative flex items-center gap-x-1 bg-white dark:bg-darker p-1 rounded-custom border-1 border-dashed border-ca hover:border-true-gray-400'
+      const slots = CRUD_BTNS_CLASS_SLOTS.containerClass()
 
-      // Label state via CSS selectors
-      const hasLabels = '[&.has-labels]:(gap-x-2)'
-
-      // Nested button styles
-      const btnStyles = '[&_.btn]:(lt-lg:p-x-1) [&_.btn-label]:(lt-lg:hidden)'
-
-      return {
-        base,
-        hasLabels,
-        btnStyles,
-        all: `${base} ${hasLabels} ${btnStyles}`,
-      } as const
+      return withClassPicker({ ...slots, all: CRUD_BTNS_CLASS_COMPOSERS.containerClass(slots) } as const)
     },
   },
 }
@@ -24,25 +15,15 @@ export const CRUD_BTNS_DEFAULT_PROPS = {
 export const CRUD_EDIT_BTN_DEFAULT_PROPS = {
   ui: {
     wrapperClass() {
-      const base = 'absolute inset-block-0 right-0 flex flex-center rounded-inherit bg-white dark:bg-darker min-w-full'
+      const slots = CRUD_EDIT_BTN_CLASS_SLOTS.wrapperClass()
 
-      return {
-        base,
-        all: base,
-      } as const
+      return withClassPicker({ ...slots, all: CRUD_EDIT_BTN_CLASS_COMPOSERS.wrapperClass(slots) } as const)
     },
 
     btnClass() {
-      const base = 'md:min-w-40 w-full'
+      const slots = CRUD_EDIT_BTN_CLASS_SLOTS.btnClass()
 
-      // State styling via CSS selectors
-      const activeState = '[&:not(.is-archived):not(.is-disabled)]:(bg-primary color-white)'
-
-      return {
-        base,
-        activeState,
-        all: `${base} ${activeState}`,
-      } as const
+      return withClassPicker({ ...slots, all: CRUD_EDIT_BTN_CLASS_COMPOSERS.btnClass(slots) } as const)
     },
   },
 }

@@ -6,8 +6,8 @@ import type { IPageDrawerProps } from './types/page-drawer-props.type'
 import { useLayoutStore } from '../../stores/layout.store'
 
 // Constants
+import { PAGE_DRAWER_LAYERED_CLASSES } from './constants/page-drawer-layered-classes.constant'
 import { $bp, BREAKPOINTS } from '../../constants/breakpoints'
-import { PAGE_DRAWER_DEFAULT_PROPS } from './constants/page-drawer-default-props.constant'
 
 const props = withDefaults(defineProps<IPageDrawerProps>(), {
   ...getComponentProps('pageDrawer'),
@@ -70,7 +70,7 @@ const styles = computed(() => {
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: PAGE_DRAWER_DEFAULT_PROPS.ui.containerClass(),
+    defaults: PAGE_DRAWER_LAYERED_CLASSES.containerClass(),
     isMini: isMini.value,
   })
 })
@@ -82,7 +82,7 @@ const containerStyle = computed(() => {
 // Styles - content
 const contentClass = computed(() => {
   return mergedProps.value?.ui?.contentClass?.({
-    defaults: PAGE_DRAWER_DEFAULT_PROPS.ui.contentClass(),
+    defaults: PAGE_DRAWER_LAYERED_CLASSES.contentClass(),
     isMini: isMini.value,
   })
 })
@@ -94,7 +94,7 @@ const contentStyle = computed(() => {
 // Styles - bottom
 const bottomClass = computed(() => {
   return mergedProps.value?.ui?.bottomClass?.({
-    defaults: PAGE_DRAWER_DEFAULT_PROPS.ui.bottomClass(),
+    defaults: PAGE_DRAWER_LAYERED_CLASSES.bottomClass(),
     isMini: isMini.value,
   })
 })
@@ -106,7 +106,7 @@ const bottomStyle = computed(() => {
 // Styles - filler
 const fillerClass = computed(() => {
   return mergedProps.value?.ui?.fillerClass?.({
-    defaults: PAGE_DRAWER_DEFAULT_PROPS.ui.fillerClass(),
+    defaults: PAGE_DRAWER_LAYERED_CLASSES.fillerClass(),
     isMini: isMini.value,
   })
 })

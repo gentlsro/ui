@@ -3,7 +3,7 @@
 import type { IValueFormatterProps } from './types/value-formatter-props.type'
 
 // Constants
-import { VALUE_FORMATTER_DEFAULT_PROPS } from './constants/value-formatter-default-props.constant'
+import { VALUE_FORMATTER_LAYERED_CLASSES } from './constants/value-formatter-layered-classes.constant'
 
 defineOptions({
   inheritAttrs: false,
@@ -21,8 +21,8 @@ const mergedProps = computed(() => {
 const { currentLocale } = useLocale()
 
 const formattedValue = computed(() => {
-	  return formatValue(props.value, props.row, {
-	    dataType: props.dataType,
+  return formatValue(props.value, props.row, {
+    dataType: props.dataType,
     format: props.format,
     emptyValue: props.emptyValue,
     predictDataType: props.predictDataType,
@@ -33,8 +33,8 @@ const formattedValue = computed(() => {
 })
 
 const formattedOriginalValue = computed(() => {
-	  return formatValue(props.previousValue, props.row, {
-	    dataType: props.dataType,
+  return formatValue(props.previousValue, props.row, {
+    dataType: props.dataType,
     format: props.format,
     emptyValue: props.emptyValue,
     predictDataType: props.predictDataType,
@@ -51,7 +51,7 @@ const isEmptyValue = computed(() => {
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: VALUE_FORMATTER_DEFAULT_PROPS.ui.containerClass(),
+    defaults: VALUE_FORMATTER_LAYERED_CLASSES.containerClass(),
   })
 })
 

@@ -3,8 +3,8 @@
 import type { IYearSelectorProps } from './types/year-selector-props.type'
 
 // Constants
+import { YEAR_SELECTOR_LAYERED_CLASSES } from './constants/year-selector-layered-classes.constant'
 import { $bp } from '../../constants/breakpoints'
-import { YEAR_SELECTOR_DEFAULT_PROPS } from './constants/year-selector-default-props.constant'
 
 // Components
 import type NumberInput from '../Inputs/NumberInput/NumberInput.vue'
@@ -115,7 +115,7 @@ function addEventListener() {
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: YEAR_SELECTOR_DEFAULT_PROPS.ui.containerClass(),
+    defaults: YEAR_SELECTOR_LAYERED_CLASSES.containerClass(),
   })
 })
 
@@ -126,7 +126,7 @@ const containerStyle = computed(() => {
 // Styles - previous button
 const previousBtnClass = computed(() => {
   return mergedProps.value?.ui?.previousBtnClass?.({
-    defaults: YEAR_SELECTOR_DEFAULT_PROPS.ui.previousBtnClass(),
+    defaults: YEAR_SELECTOR_LAYERED_CLASSES.previousBtnClass(),
   })
 })
 
@@ -137,7 +137,7 @@ const previousBtnStyle = computed(() => {
 // Styles - next button
 const nextBtnClass = computed(() => {
   return mergedProps.value?.ui?.nextBtnClass?.({
-    defaults: YEAR_SELECTOR_DEFAULT_PROPS.ui.nextBtnClass(),
+    defaults: YEAR_SELECTOR_LAYERED_CLASSES.nextBtnClass(),
   })
 })
 
@@ -148,7 +148,7 @@ const nextBtnStyle = computed(() => {
 // Styles - menu container
 const menuContainerClass = computed(() => {
   return mergedProps.value?.ui?.menuContainerClass?.({
-    defaults: YEAR_SELECTOR_DEFAULT_PROPS.ui.menuContainerClass(),
+    defaults: YEAR_SELECTOR_LAYERED_CLASSES.menuContainerClass(),
   })
 })
 
@@ -159,7 +159,7 @@ const menuContainerStyle = computed(() => {
 // Styles - year button
 const yearBtnClass = computed(() => {
   return mergedProps.value?.ui?.yearBtnClass?.({
-    defaults: YEAR_SELECTOR_DEFAULT_PROPS.ui.yearBtnClass(),
+    defaults: YEAR_SELECTOR_LAYERED_CLASSES.yearBtnClass(),
   })
 })
 

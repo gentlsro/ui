@@ -2,54 +2,38 @@
 
 // Types
 import type { ISectionProps } from '../types/section-props.type'
+import { SECTION_CLASS_COMPOSERS, SECTION_CLASS_SLOTS } from './section-class-slots.constant'
 
 export const SECTION_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'relative flex flex-col'
-      const dense = '[&.is-dense]:(!p-0)'
+      const slots = SECTION_CLASS_SLOTS.containerClass()
 
-      return {
-        base,
-        dense,
-        all: `${base} ${dense}`,
-      } as const
+      return withClassPicker({ ...slots, all: SECTION_CLASS_COMPOSERS.containerClass(slots) } as const)
     },
 
     titleClass() {
-      const base = 'relative font-semibold m-b-0 p-b-0.5'
+      const slots = SECTION_CLASS_SLOTS.titleClass()
 
-      return {
-        base,
-        all: `${base}`,
-      } as const
+      return withClassPicker({ ...slots, all: SECTION_CLASS_COMPOSERS.titleClass(slots) } as const)
     },
 
     subtitleClass() {
-      const base = 'font-rem-14 font-400'
+      const slots = SECTION_CLASS_SLOTS.subtitleClass()
 
-      return {
-        base,
-        all: `${base}`,
-      } as const
+      return withClassPicker({ ...slots, all: SECTION_CLASS_COMPOSERS.subtitleClass(slots) } as const)
     },
 
     contentClass() {
-      const base = ''
+      const slots = SECTION_CLASS_SLOTS.contentClass()
 
-      return {
-        base,
-        all: `${base}`,
-      } as const
+      return withClassPicker({ ...slots, all: SECTION_CLASS_COMPOSERS.contentClass(slots) } as const)
     },
 
     loadingClass() {
-      const base = 'absolute! inset-0 rounded-custom'
+      const slots = SECTION_CLASS_SLOTS.loadingClass()
 
-      return {
-        base,
-        all: `${base}`,
-      } as const
+      return withClassPicker({ ...slots, all: SECTION_CLASS_COMPOSERS.loadingClass(slots) } as const)
     },
   },
 } satisfies ISectionProps

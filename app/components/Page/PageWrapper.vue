@@ -6,7 +6,7 @@ import type { IPageWrapperProps } from './types/page-wrapper-props.type'
 import { useLayoutStore } from '../../stores/layout.store'
 
 // Constants
-import { PAGE_WRAPPER_DEFAULT_PROPS } from './constants/page-wrapper-default-props.constant'
+import { PAGE_WRAPPER_LAYERED_CLASSES } from './constants/page-wrapper-layered-classes.constant'
 
 const props = withDefaults(defineProps<IPageWrapperProps>(), {
   ...getComponentProps('pageWrapper'),
@@ -57,7 +57,7 @@ onMounted(() => {
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: PAGE_WRAPPER_DEFAULT_PROPS.ui.containerClass(),
+    defaults: PAGE_WRAPPER_LAYERED_CLASSES.containerClass(),
   })
 })
 
@@ -68,7 +68,7 @@ const containerStyle = computed(() => {
 // Styles - content
 const contentClass = computed(() => {
   return mergedProps.value?.ui?.contentClass?.({
-    defaults: PAGE_WRAPPER_DEFAULT_PROPS.ui.contentClass(),
+    defaults: PAGE_WRAPPER_LAYERED_CLASSES.contentClass(),
   })
 })
 

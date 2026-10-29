@@ -1,59 +1,43 @@
+import { PROGRESS_BAR_CLASS_COMPOSERS, PROGRESS_BAR_CLASS_SLOTS } from './progress-bar-class-slots.constant'
+
 // @unocss-include
 
 export const PROGRESS_BAR_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'flex relative h-8 rounded-custom'
+      const slots = PROGRESS_BAR_CLASS_SLOTS.containerClass()
 
-      return {
-        base,
-        all: base,
-      } as const
+      return withClassPicker({ ...slots, all: PROGRESS_BAR_CLASS_COMPOSERS.containerClass(slots) } as const)
     },
 
     innerClass() {
-      const base = 'absolute h-full'
+      const slots = PROGRESS_BAR_CLASS_SLOTS.innerClass()
 
-      return {
-        base,
-        all: base,
-      } as const
+      return withClassPicker({ ...slots, all: PROGRESS_BAR_CLASS_COMPOSERS.innerClass(slots) } as const)
     },
 
     colorClass() {
-      const base = 'bg-positive mix-blend-screen w-full z-4'
+      const slots = PROGRESS_BAR_CLASS_SLOTS.colorClass()
 
-      return {
-        base,
-        all: base,
-      } as const
+      return withClassPicker({ ...slots, all: PROGRESS_BAR_CLASS_COMPOSERS.colorClass(slots) } as const)
     },
 
     whiteBgClass() {
-      const base = 'bg-white w-full z-1'
+      const slots = PROGRESS_BAR_CLASS_SLOTS.whiteBgClass()
 
-      return {
-        base,
-        all: base,
-      } as const
+      return withClassPicker({ ...slots, all: PROGRESS_BAR_CLASS_COMPOSERS.whiteBgClass(slots) } as const)
     },
 
     blackBgClass() {
-      const base = 'bg-black z-2'
+      const slots = PROGRESS_BAR_CLASS_SLOTS.blackBgClass()
 
-      return {
-        base,
-        all: base,
-      } as const
+      return withClassPicker({ ...slots, all: PROGRESS_BAR_CLASS_COMPOSERS.blackBgClass(slots) } as const)
     },
 
     textClass() {
-      const base = 'absolute left-1/2 top-1/2 translate--50% mix-blend-difference color-white z-3 text-nowrap whitespace-nowrap'
+      const slots = PROGRESS_BAR_CLASS_SLOTS.textClass()
 
-      return {
-        base,
-        all: base,
-      } as const
+      return withClassPicker({ ...slots, all: PROGRESS_BAR_CLASS_COMPOSERS.textClass(slots) } as const)
     },
   },
 }

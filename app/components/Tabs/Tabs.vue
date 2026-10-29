@@ -9,7 +9,7 @@ import type { ITabsProps } from './types/tabs-props.type'
 import { useTabsUtils } from './composables/useTabsUtils'
 
 // Constants
-import { TABS_DEFAULT_PROPS } from './constants/tabs-default-props.constant'
+import { TABS_LAYERED_CLASSES } from './constants/tabs-layered-classes.constant'
 
 type ITabPropsPassthrough = {
   id: string | number
@@ -84,7 +84,7 @@ const activeTab = computed(() => {
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: TABS_DEFAULT_PROPS.ui.containerClass(),
+    defaults: TABS_LAYERED_CLASSES.containerClass(),
   })
 })
 
@@ -95,7 +95,7 @@ const containerStyle = computed(() => {
 // Styles - tab
 const tabClass = computed(() => {
   return mergedProps.value?.ui?.tabClass?.({
-    defaults: TABS_DEFAULT_PROPS.ui.tabClass(),
+    defaults: TABS_LAYERED_CLASSES.tabClass(),
   })
 })
 

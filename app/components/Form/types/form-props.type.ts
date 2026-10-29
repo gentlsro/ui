@@ -1,7 +1,5 @@
+import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { AllowedComponentProps, CSSProperties } from 'vue'
-
-// Constants
-import type { FORM_DEFAULT_PROPS } from '../constants/form-default-props.constant'
 
 // Types - placeholder until components are migrated
 // TODO: Section type somehow fucks the types
@@ -177,7 +175,7 @@ export type IFormProps = {
      * Class to apply to the cancel button
      */
     cancelClass?: (payload: {
-      defaults: ReturnType<typeof FORM_DEFAULT_PROPS['ui']['cancelClass']>
+      defaults: UIClassPicker<UIResolvedClasses['form']['cancelClass']>
     }) => ClassType
 
     /**
@@ -189,7 +187,7 @@ export type IFormProps = {
      * Class to apply to the form itself
      */
     containerClass?: (payload: {
-      defaults: ReturnType<typeof FORM_DEFAULT_PROPS['ui']['containerClass']>
+      defaults: UIClassPicker<UIResolvedClasses['form']['containerClass']>
     }) => ClassType
 
     /**
@@ -201,7 +199,7 @@ export type IFormProps = {
      * Class to apply to the content
      */
     contentClass?: (payload: {
-      defaults: ReturnType<typeof FORM_DEFAULT_PROPS['ui']['contentClass']>
+      defaults: UIClassPicker<UIResolvedClasses['form']['contentClass']>
     }) => ClassType
 
     /**
@@ -213,7 +211,7 @@ export type IFormProps = {
      * Class to apply to the submit button
      */
     submitClass?: (payload: {
-      defaults: ReturnType<typeof FORM_DEFAULT_PROPS['ui']['submitClass']>
+      defaults: UIClassPicker<UIResolvedClasses['form']['submitClass']>
     }) => ClassType
 
     /**
@@ -225,7 +223,7 @@ export type IFormProps = {
      * Class to apply to the controls container
      */
     controlsClass?: (payload: {
-      defaults: ReturnType<typeof FORM_DEFAULT_PROPS['ui']['controlsClass']>
+      defaults: UIClassPicker<UIResolvedClasses['form']['controlsClass']>
     }) => ClassType
 
     /**
@@ -237,7 +235,7 @@ export type IFormProps = {
      *  Class to apply to the submit button wrapper (which might have the Cancel button and slots)
      */
     submitWrapperClass?: (payload: {
-      defaults: ReturnType<typeof FORM_DEFAULT_PROPS['ui']['submitWrapperClass']>
+      defaults: UIClassPicker<UIResolvedClasses['form']['submitWrapperClass']>
     }) => ClassType
 
     /**

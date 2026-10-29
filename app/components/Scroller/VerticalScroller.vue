@@ -6,7 +6,7 @@ import type { IVerticalScrollerProps } from './types/scroller-props.type'
 import { useScrollerScroll } from './composables/useScrollerScroll'
 
 // Constants
-import { SCROLLER_DEFAULT_PROPS } from './constants/scroller-default-props.constant'
+import { VERTICAL_SCROLLER_LAYERED_CLASSES } from './constants/scroller-layered-classes.constant'
 
 import './styles/scroll-fade.css'
 
@@ -52,7 +52,7 @@ useResizeObserver(scrollEl, () => {
 // Styles
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: SCROLLER_DEFAULT_PROPS.ui.verticalContainerClass(),
+    defaults: VERTICAL_SCROLLER_LAYERED_CLASSES.containerClass(),
   })
 })
 
@@ -62,7 +62,7 @@ const containerStyle = computed(() => {
 
 const contentClass = computed(() => {
   return mergedProps.value?.ui?.contentClass?.({
-    defaults: SCROLLER_DEFAULT_PROPS.ui.verticalContentClass(),
+    defaults: VERTICAL_SCROLLER_LAYERED_CLASSES.contentClass(),
   })
 })
 
@@ -72,7 +72,7 @@ const contentStyle = computed(() => {
 
 const arrowClass = computed(() => {
   return mergedProps.value?.ui?.arrowClass?.({
-    defaults: SCROLLER_DEFAULT_PROPS.ui.arrowClass(),
+    defaults: VERTICAL_SCROLLER_LAYERED_CLASSES.arrowClass(),
   })
 })
 

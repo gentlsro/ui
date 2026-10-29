@@ -10,8 +10,8 @@ import { useInputValidationUtils } from '../functions/useInputValidationUtils'
 import { createDateTimeMask } from './functions/masked-datetime'
 
 // Constants
+import { INPUT_WRAPPER_LAYERED_CLASSES } from '../../InputWrapper/constants/input-wrapper-layered-classes.constant'
 import { $bp } from '../../../constants/breakpoints'
-import { INPUT_WRAPPER_DEFAULT_PROPS } from '../../InputWrapper/constants/input-wrapper-default-props'
 
 const props = withDefaults(defineProps<IDateTimeFullInputProps>(), {
   ...getComponentProps('dateTimeFullInput'),
@@ -280,7 +280,7 @@ const wrapperClass = computed(() => {
 // Styles - append
 const appendClass = computed(() => {
   return mergedProps.value.ui?.appendClass?.({
-    defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.appendClass(),
+    defaults: INPUT_WRAPPER_LAYERED_CLASSES.appendClass(),
   })
 })
 
