@@ -6,7 +6,7 @@ import type { IChipProps } from './types/chip-props.type'
 import { vRipple } from '../../directives/ripple.directive'
 
 // Constants
-import { CHIP_LAYERED_CLASSES } from './constants/chip-layered-classes.constant'
+import { CHIP_DEFAULT_PROPS } from './constants/chip-default-props.constant'
 
 const props = withDefaults(defineProps<IChipProps>(), {
   ...getComponentProps('chip'),
@@ -44,7 +44,7 @@ const classes = computed(() => {
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: CHIP_LAYERED_CLASSES.containerClass(),
+    defaults: CHIP_DEFAULT_PROPS.ui.containerClass(),
   })
 })
 
@@ -55,7 +55,7 @@ const containerStyle = computed(() => {
 // Styles - label
 const labelClass = computed(() => {
   return mergedProps.value?.ui?.labelClass?.({
-    defaults: CHIP_LAYERED_CLASSES.labelClass(),
+    defaults: CHIP_DEFAULT_PROPS.ui.labelClass(),
   })
 })
 

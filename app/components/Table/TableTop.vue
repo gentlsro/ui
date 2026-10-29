@@ -5,7 +5,7 @@ import type { TableFeature } from './types/table-feature.type'
 import type { IQueryBuilderRow } from '../QueryBuilder/types/query-builder-row-props.type'
 
 // Constants
-import { TABLE_LAYERED_CLASSES } from './constants/table-layered-classes.constant'
+import { TABLE_DEFAULT_PROPS } from './constants/table-default-props.constant'
 
 type IProps = Pick<ITableProps, 'queryBuilder' | 'queryBuilderProps' | 'search' | 'features' | 'ui'>
   & { forceVisibility?: boolean }
@@ -34,7 +34,7 @@ const isTableTopVisible = computed(() => {
 
 const topClass = computed(() => {
   return props.ui?.topClass?.({
-    defaults: TABLE_LAYERED_CLASSES.topClass(),
+    defaults: TABLE_DEFAULT_PROPS.ui.topClass(),
   })
 })
 

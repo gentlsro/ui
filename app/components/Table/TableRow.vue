@@ -24,7 +24,7 @@ import { tableIsNumericColumn } from './functions/table-is-numeric-column'
 import { useTableRowEditing } from './composables/useTableRowEditing'
 
 // Constants
-import { TABLE_LAYERED_CLASSES } from './constants/table-layered-classes.constant'
+import { TABLE_DEFAULT_PROPS } from './constants/table-default-props.constant'
 
 // Store
 import { useTableStore } from './stores/table.store'
@@ -157,7 +157,7 @@ function handleRowActionsClick(ev: MouseEvent) {
 }
 
 function getRowActionsClass(row: IItem) {
-  const defaults = TABLE_LAYERED_CLASSES.rowActionsClass()
+  const defaults = TABLE_DEFAULT_PROPS.ui.rowActionsClass()
 
   return props.ui?.rowActionsClass?.({ row, defaults }) ?? defaults.all
 }
@@ -261,14 +261,14 @@ const rowDataArray = computed(() => {
           const uiCellClass = props.ui?.cellClass?.({
             row,
             column: col,
-            defaults: TABLE_LAYERED_CLASSES.cellClass(),
+            defaults: TABLE_DEFAULT_PROPS.ui.cellClass(),
           })
 
           // Cell inner
           const uiCellInnerClass = props.ui?.cellInnerClass?.({
             row,
             column: col,
-            defaults: TABLE_LAYERED_CLASSES.cellInnerClass(),
+            defaults: TABLE_DEFAULT_PROPS.ui.cellInnerClass(),
           })
 
           return {
@@ -300,7 +300,7 @@ const rowClassArray = computed(() => {
     : [props.row]
 
   const alternateRowClass = props.ui?.alternateRowClass?.({
-    defaults: TABLE_LAYERED_CLASSES.alternateRowClass(),
+    defaults: TABLE_DEFAULT_PROPS.ui.alternateRowClass(),
   })
 
   return rowArray.map((row, idx) => {
@@ -311,7 +311,7 @@ const rowClassArray = computed(() => {
       typeof props.ui?.rowClass === 'function'
         ? props.ui?.rowClass({
             row,
-            defaults: TABLE_LAYERED_CLASSES.rowClass(),
+            defaults: TABLE_DEFAULT_PROPS.ui.rowClass(),
           })
         : undefined,
       {

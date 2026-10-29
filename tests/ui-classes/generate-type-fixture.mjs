@@ -35,16 +35,16 @@ for (const [key, directory, parent] of [
   write(`${directory}/app/ui-config.ts`, `export const uiClasses = defineUIClasses(${JSON.stringify(key)})(${JSON.stringify(components, null, 2)})\nexport default extendUIConfig({})`)
 }
 write('uno.config.ts', `export { default } from ${fixtureImport('uno.config')}`)
-const runtimeImports = [...new Set(cases.map(({ layeredFile, layeredSymbol }) =>
-  `import { ${layeredSymbol} } from ${JSON.stringify(`#layers/ui/app/components/${layeredFile.replace(/\.ts$/, '')}`)}`))]
-const runtimeChecks = cases.map(({ component, surface, layeredSymbol, acceptsProps }) => {
+const runtimeImports = [...new Set(cases.map(({ defaultsFile, defaultsSymbol }) =>
+  `import { ${defaultsSymbol} } from ${JSON.stringify(`#layers/ui/app/components/${defaultsFile.replace(/\.ts$/, '')}`)}`))]
+const runtimeChecks = cases.map(({ component, surface, defaultsSymbol, acceptsProps }) => {
   const props = component === 'buttonGroup'
     ? "{ ...payload, variant: 'pill' as const }"
     : component === 'skeleton'
       ? "{ ...payload, variant: 'wave' as const }"
       : 'payload'
 
-  return `  inspect(${JSON.stringify(component)}, ${JSON.stringify(surface)}, ${layeredSymbol}.${surface}(${acceptsProps ? props : ''}))`
+  return `  inspect(${JSON.stringify(component)}, ${JSON.stringify(surface)}, ${defaultsSymbol}.ui.${surface}(${acceptsProps ? props : ''}))`
 })
 write('app/app.vue', `<script setup lang="ts">
 import { Day } from '#layers/utilities/app/models/day.model'
@@ -81,7 +81,9 @@ ${runtimeChecks.join(',\n')}
     <pre data-testid="catalog-results">{{ JSON.stringify(catalog, null, 2) }}</pre>
   </main>
 </template>`)
-const checks = cases.map(({ component, surface, maps }, index) => `
+const checks = cases.map(({ component, surface, maps, defaultsSymbol, defaultsFile }, index) => `
+type Factory${index} = ReturnType<typeof import(${JSON.stringify(`#layers/ui/app/components/${defaultsFile.replace(/\.ts$/, '')}`)})[${JSON.stringify(defaultsSymbol)}]['ui'][${JSON.stringify(surface)}]>
+export type FactoryContract${index} = Assert<Equal<Factory${index}, UIClassPicker<UIResolvedClasses[${JSON.stringify(component)}][${JSON.stringify(surface)}]>>>
 export function verify${index}(defaults: UIClassPicker<UIResolvedClasses[${JSON.stringify(component)}][${JSON.stringify(surface)}]>) {
   const winner: ${JSON.stringify(`app-${component}-${surface}`)} = defaults.verificationValue
   const inheritedTheme: 'theme-only' = defaults.verificationTheme

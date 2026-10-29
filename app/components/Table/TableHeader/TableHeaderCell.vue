@@ -13,7 +13,7 @@ import { getListItemKey } from '../../List/functions/helpers'
 import { tableIsNumericColumn } from '../functions/table-is-numeric-column'
 
 // Constants
-import { TABLE_LAYERED_CLASSES } from '../constants/table-layered-classes.constant'
+import { TABLE_DEFAULT_PROPS } from '../constants/table-default-props.constant'
 
 type IProps = Pick<ITableProps, 'ui'> & {
   column: TableColumn
@@ -59,7 +59,7 @@ const headerClass = computed(() => {
   return [
     props.ui?.headerCellClass?.({
       column: props.column,
-      defaults: TABLE_LAYERED_CLASSES.headerCellClass(),
+      defaults: TABLE_DEFAULT_PROPS.ui.headerCellClass(),
     }),
     props.column.headerClass,
     {
@@ -86,7 +86,7 @@ const headerInnerCellClass = computed(() => {
   return [
     props.ui?.headerCellInnerClass?.({
       column: props.column,
-      defaults: TABLE_LAYERED_CLASSES.headerCellInnerClass(),
+      defaults: TABLE_DEFAULT_PROPS.ui.headerCellInnerClass(),
     }),
     { 'p-x-2': isCardView.value },
   ]

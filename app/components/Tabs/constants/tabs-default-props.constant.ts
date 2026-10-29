@@ -1,37 +1,85 @@
-import { TABS_CLASS_COMPOSERS, TABS_CLASS_SLOTS } from './tabs-class-slots.constant'
-
 // @unocss-include
 
-export const TABS_DEFAULT_PROPS = {
-  ui: {
-    containerClass() {
-      const slots = TABS_CLASS_SLOTS.containerClass()
+import type { WidenClassSlots } from '../../../types/ui-class-config.type'
+import { uiClassLayers } from '$uiConfig'
+import { createUIClassResolver } from '../../../utils/create-ui-class-resolver'
 
-      return withClassPicker({ ...slots, all: TABS_CLASS_COMPOSERS.containerClass(slots) } as const)
-    },
+export const TABS_CLASS_SLOTS = {
+  containerClass() {
+    const base = 'flex flex-col'
 
-    navigationClass() {
-      const slots = TABS_CLASS_SLOTS.navigationClass()
-
-      return withClassPicker({ ...slots, all: TABS_CLASS_COMPOSERS.navigationClass(slots) } as const)
-    },
-
-    navigationContentClass() {
-      const slots = TABS_CLASS_SLOTS.navigationContentClass()
-
-      return withClassPicker({ ...slots, all: TABS_CLASS_COMPOSERS.navigationContentClass(slots) } as const)
-    },
-
-    tabClass() {
-      const slots = TABS_CLASS_SLOTS.tabClass()
-
-      return withClassPicker({ ...slots, all: TABS_CLASS_COMPOSERS.tabClass(slots) } as const)
-    },
-
-    tabNavBtnClass() {
-      const slots = TABS_CLASS_SLOTS.tabNavBtnClass()
-
-      return withClassPicker({ ...slots, all: TABS_CLASS_COMPOSERS.tabNavBtnClass(slots) } as const)
-    },
+    return {
+      base,
+    } as const
   },
+
+  navigationClass() {
+    const base = 'shrink-0'
+
+    return {
+      base,
+    } as const
+  },
+
+  navigationContentClass() {
+    const base = 'flex gap-1'
+
+    return {
+      base,
+    } as const
+  },
+
+  tabClass() {
+    const base = 'fit rounded-b-custom'
+
+    return {
+      base,
+    } as const
+  },
+
+  tabNavBtnClass() {
+    const base = ''
+
+    // State styling via CSS selectors
+    const active = '[&.is-active]:(bg-primary color-white)'
+    const inactive = '[&:not(.is-active)]:(color-ca)'
+
+    return {
+      base,
+      active,
+      inactive,
+    } as const
+  },
+}
+
+type TabsSlots<K extends keyof typeof TABS_CLASS_SLOTS>
+  = WidenClassSlots<ReturnType<typeof TABS_CLASS_SLOTS[K]>>
+
+export const TABS_CLASS_COMPOSERS = {
+  containerClass(slots: TabsSlots<'containerClass'>) {
+    return slots.base
+  },
+
+  navigationClass(slots: TabsSlots<'navigationClass'>) {
+    return slots.base
+  },
+
+  navigationContentClass(slots: TabsSlots<'navigationContentClass'>) {
+    return slots.base
+  },
+
+  tabClass(slots: TabsSlots<'tabClass'>) {
+    return slots.base
+  },
+
+  tabNavBtnClass(slots: TabsSlots<'tabNavBtnClass'>) {
+    return `${slots.base} ${slots.active} ${slots.inactive}`
+  },
+}
+
+export const TABS_DEFAULT_PROPS = {
+  ui: createUIClassResolver('tabs', {
+    slots: TABS_CLASS_SLOTS,
+    compose: TABS_CLASS_COMPOSERS,
+  }, () => uiClassLayers),
 }

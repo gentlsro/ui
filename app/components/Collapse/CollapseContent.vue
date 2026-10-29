@@ -3,7 +3,7 @@
 import type { ICollapseProps } from './types/collapse-props.type'
 
 // Constants
-import { COLLAPSE_LAYERED_CLASSES } from './constants/collapse-layered-classes.constant'
+import { COLLAPSE_DEFAULT_PROPS } from './constants/collapse-default-props.constant'
 
 type IProps = Pick<ICollapseProps, 'ui' | 'floating' | 'noTransition' | 'noHeightCalculation' | 'contentHeight' | 'maxContentHeight' | 'autoAdjustHeight'>
   & { isOpen: boolean }
@@ -89,7 +89,7 @@ if (props.autoAdjustHeight) {
 
 const contentClass = computed(() => {
   return props.ui?.contentClass?.({
-    defaults: COLLAPSE_LAYERED_CLASSES.contentClass(),
+    defaults: COLLAPSE_DEFAULT_PROPS.ui.contentClass(),
   })
 })
 
@@ -99,7 +99,7 @@ const contentStyle = computed(() => {
 
 const contentInnerClass = computed(() => {
   return props.ui?.contentInnerClass?.({
-    defaults: COLLAPSE_LAYERED_CLASSES.contentInnerClass(),
+    defaults: COLLAPSE_DEFAULT_PROPS.ui.contentInnerClass(),
   })
 })
 

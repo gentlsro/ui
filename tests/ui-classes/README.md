@@ -16,7 +16,9 @@ Evidence is saved under `test-results/ui-classes/representative`: SSR HTML, JSON
 
 Failure modes are written into the fixture before the rollout: wrong layer precedence, obsolete literal types, missing inherited picker keys, stale derived values, a lost nested-map entry, missing state payloads, and loss of configuration when a component delegates to another UI component.
 
-The exhaustive type fixture checks every catalog component and class surface. Generate it from the committed surface inventory, then prepare its independent Nuxt layer graph:
+Class slots, composition, and the public `DEFAULT_PROPS.ui.*` factories live together in each existing defaults file. A shared lazy resolver handles layering and picking; components do not need separate class modules. Horizontal and vertical Scroller share a defaults file, with separate exports for their independent layer keys and the original shared Scroller export retained.
+
+The exhaustive type fixture checks every catalog component and class surface. It also requires each public defaults factory to return exactly the resolved class-picker type. Generate it from the committed surface inventory, then prepare its independent Nuxt layer graph:
 
 ```sh
 node tests/ui-classes/generate-type-fixture.mjs
@@ -27,7 +29,7 @@ node tests/ui-classes/run-e2e.mjs --catalog
 
 Each surface receives three overriding literals across theme, brand, and app. The checks require the application literal, retain both inherited added keys, reject the old literal, and reject `p`, missing keys, and nested map names in `p()`. Coverage assertions fail if the catalog gains or loses a component or surface without updating the inventory.
 
-The generated page also imports every component's actual layered resolver. Its runtime check evaluates all 251 surfaces across 58 component keys, including originally empty maps, on the server and in Chrome. Valid component payloads include a real `Day` for DatePicker. The browser verifies every winning value and picker result, inherited theme/brand fields, and string `all` output. It runs on port 3117 and saves the complete `catalog.json`, SSR HTML, screenshot, trace, and result under `test-results/ui-classes/catalog`.
+The generated page imports every component's existing defaults module and calls its `DEFAULT_PROPS.ui.*` API. Its runtime check evaluates all 251 surfaces across 58 component keys, including originally empty maps, on the server and in Chrome. Valid component payloads include a real `Day` for DatePicker. The browser verifies every winning value and picker result, inherited theme/brand fields, and string `all` output. It runs on port 3117 and saves the complete `catalog.json`, SSR HTML, screenshot, trace, and result under `test-results/ui-classes/catalog`.
 
 The fixture type graph currently reaches three existing diagnostics: `ListSearch.vue` TS2345, `list.store.ts` TS2322, and `pivot-transform-data.bench.ts` TS2724. The full `vue-tsc` commands therefore exit nonzero while those remain; fixture assertions and new diagnostics must be assessed separately. Saved `typecheck.log` and `typecheck-result.json` record that distinction.
 

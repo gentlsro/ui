@@ -3,7 +3,7 @@
 import type { IMarqueeProps } from './types/marquee-props.type'
 
 // Constants
-import { MARQUEE_LAYERED_CLASSES } from './constants/marquee-layered-classes.constant'
+import { MARQUEE_DEFAULT_PROPS } from './constants/marquee-default-props.constant'
 
 const props = withDefaults(defineProps<IMarqueeProps>(), {
   ...getComponentProps('marquee'),
@@ -17,7 +17,7 @@ const mergedProps = computed(() => {
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: MARQUEE_LAYERED_CLASSES.containerClass(),
+    defaults: MARQUEE_DEFAULT_PROPS.ui.containerClass(),
   })
 })
 
@@ -33,7 +33,7 @@ const contentClass = computed(() => {
   return [
     props.vertical ? 'animate-marquee-vertical' : 'animate-marquee',
     mergedProps.value?.ui?.contentClass?.({
-      defaults: MARQUEE_LAYERED_CLASSES.contentClass({
+      defaults: MARQUEE_DEFAULT_PROPS.ui.contentClass({
         pauseOnHover: props.pauseOnHover ?? false,
         vertical: props.vertical ?? false,
       }),

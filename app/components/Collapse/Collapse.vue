@@ -3,7 +3,7 @@
 import type { ICollapseProps } from './types/collapse-props.type'
 
 // Constants
-import { COLLAPSE_LAYERED_CLASSES } from './constants/collapse-layered-classes.constant'
+import { COLLAPSE_DEFAULT_PROPS } from './constants/collapse-default-props.constant'
 
 const props = withDefaults(defineProps<ICollapseProps>(), {
   ...getComponentProps('collapse'),
@@ -48,7 +48,7 @@ async function handleToggle() {
 // Styles - Container
 const containerClass = computed(() => {
   return mergedProps.value.ui?.containerClass?.({
-    defaults: COLLAPSE_LAYERED_CLASSES.containerClass(),
+    defaults: COLLAPSE_DEFAULT_PROPS.ui.containerClass(),
   })
 })
 

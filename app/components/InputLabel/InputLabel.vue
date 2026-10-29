@@ -4,7 +4,7 @@ import type { IInputLabelProps } from './types/input-label-props.type'
 import type { ITooltipProps } from '../Tooltip/types/tooltip-props.type'
 
 // Constants
-import { INPUT_LABEL_LAYERED_CLASSES } from './constants/input-label-layered-classes.constant'
+import { INPUT_LABEL_DEFAULT_PROPS } from './constants/input-label-default-props'
 import { $bp } from '../../constants/breakpoints'
 
 const props = withDefaults(defineProps<IInputLabelProps>(), {
@@ -70,7 +70,7 @@ const labelClassLocal = computed(() => {
 
 const labelClass = computed(() => {
   return mergedProps.value.ui?.labelClass?.({
-    defaults: INPUT_LABEL_LAYERED_CLASSES.labelClass(),
+    defaults: INPUT_LABEL_DEFAULT_PROPS.ui.labelClass(),
   })
 })
 

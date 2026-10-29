@@ -6,7 +6,7 @@ import { usePivotStore } from './stores/pivot.store'
 import { usePivotRowResizing } from './composables/usePivotRowResizing'
 
 // Constants
-import { PIVOT_LAYERED_CLASSES } from './constants/pivot-layered-classes.constant'
+import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
 import { PIVOT_MEASURE_ROW_FIELD } from './constants/pivot-measure-row.constant'
 
 const { displayRowFields, showMeasureColumn, rowHeaderEl, ui, resolvedLeftPanelWidth } = usePivotStore<T>()
@@ -20,7 +20,7 @@ const {
 
 const rowHeaderClass = computed(() => {
   return ui.value?.rowHeaderClass?.({
-    defaults: PIVOT_LAYERED_CLASSES.rowHeaderClass(),
+    defaults: PIVOT_DEFAULT_PROPS.ui.rowHeaderClass(),
   })
 })
 

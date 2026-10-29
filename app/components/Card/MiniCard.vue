@@ -3,7 +3,7 @@
 import type { IMiniCardProps } from './types/mini-card-props.type'
 
 // Constants
-import { MINI_CARD_LAYERED_CLASSES } from './constants/mini-card-layered-classes.constant'
+import { MINI_CARD_DEFAULT_PROPS } from './constants/mini-card-default-props.constant'
 
 // Functions
 import { useValueFormatterUtils } from '../ValueFormatter/functions/useValueFormatterUtils'
@@ -48,7 +48,7 @@ const isModified = computed(() => {
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: MINI_CARD_LAYERED_CLASSES.containerClass(),
+    defaults: MINI_CARD_DEFAULT_PROPS.ui.containerClass(),
   })
 })
 
@@ -59,7 +59,7 @@ const containerStyle = computed(() => {
 // Styles - icon container
 const iconContainerClass = computed(() => {
   return mergedProps.value?.ui?.iconContainerClass?.({
-    defaults: MINI_CARD_LAYERED_CLASSES.iconContainerClass(),
+    defaults: MINI_CARD_DEFAULT_PROPS.ui.iconContainerClass(),
   })
 })
 
@@ -70,7 +70,7 @@ const iconContainerStyle = computed(() => {
 // Styles - icon
 const iconClass = computed(() => {
   return mergedProps.value?.ui?.iconClass?.({
-    defaults: MINI_CARD_LAYERED_CLASSES.iconClass(),
+    defaults: MINI_CARD_DEFAULT_PROPS.ui.iconClass(),
   })
 })
 
@@ -81,7 +81,7 @@ const iconStyle = computed(() => {
 // Styles - content
 const contentClass = computed(() => {
   return mergedProps.value?.ui?.contentClass?.({
-    defaults: MINI_CARD_LAYERED_CLASSES.contentClass(),
+    defaults: MINI_CARD_DEFAULT_PROPS.ui.contentClass(),
   })
 })
 
@@ -92,7 +92,7 @@ const contentStyle = computed(() => {
 // Styles - label
 const labelClass = computed(() => {
   return mergedProps.value?.ui?.labelClass?.({
-    defaults: MINI_CARD_LAYERED_CLASSES.labelClass(),
+    defaults: MINI_CARD_DEFAULT_PROPS.ui.labelClass(),
   })
 })
 
@@ -103,7 +103,7 @@ const labelStyle = computed(() => {
 // Styles - value
 const valueClass = computed(() => {
   return mergedProps.value?.ui?.valueClass?.({
-    defaults: MINI_CARD_LAYERED_CLASSES.valueClass(),
+    defaults: MINI_CARD_DEFAULT_PROPS.ui.valueClass(),
   })
 })
 
@@ -114,7 +114,7 @@ const valueStyle = computed(() => {
 // Styles - previous value
 const previousValueClass = computed(() => {
   return mergedProps.value?.ui?.previousValueClass?.({
-    defaults: MINI_CARD_LAYERED_CLASSES.previousValueClass(),
+    defaults: MINI_CARD_DEFAULT_PROPS.ui.previousValueClass(),
   })
 })
 

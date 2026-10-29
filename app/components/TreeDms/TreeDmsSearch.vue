@@ -8,7 +8,7 @@ import { useTreeStore } from '../Tree/stores/tree.store'
 import { useTreeDmsStore } from './stores/tree-dms.store'
 
 // Constants
-import { TREE_DMS_LAYERED_CLASSES } from './constants/tree-dms-layered-classes.constant'
+import { TREE_DMS_DEFAULT_PROPS } from './constants/tree-dms-default-props.constant'
 
 type IProps = Pick<ITreeProps<T>, 'search' | 'searchConfig' | 'ui' | 'actionsConfig'>
   & { label?: string | (() => string) }
@@ -32,7 +32,7 @@ const label = computed(() => {
 
 const labelClass = computed(() => {
   return props.dmsUi?.labelClass?.({
-    defaults: TREE_DMS_LAYERED_CLASSES.labelClass(),
+    defaults: TREE_DMS_DEFAULT_PROPS.ui.labelClass(),
   })
 })
 

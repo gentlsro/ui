@@ -3,7 +3,7 @@
 import type { ICollapseProps } from './types/collapse-props.type'
 
 // Constants
-import { COLLAPSE_LAYERED_CLASSES } from './constants/collapse-layered-classes.constant'
+import { COLLAPSE_DEFAULT_PROPS } from './constants/collapse-default-props.constant'
 
 type IProps = Pick<ICollapseProps, 'title' | 'subtitle' | 'icon' | 'loading' | 'ui' | 'noExpandIcon'>
   & { isOpen: boolean }
@@ -26,42 +26,42 @@ const subtitle = computed(() => typeof props.subtitle === 'function' ? props.sub
 
 // Styles - Header
 const headerClass = computed(() => props.ui?.headerClass?.({
-  defaults: COLLAPSE_LAYERED_CLASSES.headerClass(),
+  defaults: COLLAPSE_DEFAULT_PROPS.ui.headerClass(),
 }))
 
 const headerStyle = computed(() => props.ui?.headerStyle?.())
 
 // Styles - Title
 const titleClass = computed(() => props.ui?.titleClass?.({
-  defaults: COLLAPSE_LAYERED_CLASSES.titleClass(),
+  defaults: COLLAPSE_DEFAULT_PROPS.ui.titleClass(),
 }))
 
 const titleStyle = computed(() => props.ui?.titleStyle?.())
 
 // Styles - Subtitle
 const subtitleClass = computed(() => props.ui?.subtitleClass?.({
-  defaults: COLLAPSE_LAYERED_CLASSES.subtitleClass(),
+  defaults: COLLAPSE_DEFAULT_PROPS.ui.subtitleClass(),
 }))
 
 const subtitleStyle = computed(() => props.ui?.subtitleStyle?.())
 
 // Styles - Expand icon
 const expandIconClass = computed(() => props.ui?.expandIconClass?.({
-  defaults: COLLAPSE_LAYERED_CLASSES.expandIconClass(),
+  defaults: COLLAPSE_DEFAULT_PROPS.ui.expandIconClass(),
 }))
 
 const expandIconStyle = computed(() => props.ui?.expandIconStyle?.())
 
 // Styles - Header right
 const headerRightClass = computed(() => props.ui?.headerRightClass?.({
-  defaults: COLLAPSE_LAYERED_CLASSES.headerRightClass(),
+  defaults: COLLAPSE_DEFAULT_PROPS.ui.headerRightClass(),
 }))
 
 const headerRightStyle = computed(() => props.ui?.headerRightStyle?.())
 
 // Styles - Text
 const textClass = computed(() => props.ui?.textClass?.({
-  defaults: COLLAPSE_LAYERED_CLASSES.textClass(),
+  defaults: COLLAPSE_DEFAULT_PROPS.ui.textClass(),
 }))
 
 const textStyle = computed(() => props.ui?.textStyle?.())

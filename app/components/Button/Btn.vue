@@ -7,7 +7,7 @@ import type { CustomPresets, IBtnProps } from './types/btn-props.type'
 import { useBtnUtils } from './functions/useBtnUtils'
 
 // Constants
-import { BTN_LAYERED_CLASSES } from './constants/button-layered-classes.constant'
+import { BTN_DEFAULT_PROPS } from './constants/btn-default-props.constant'
 
 // Components
 import BtnOrNuxtLinkResolver from './BtnOrNuxtLinkResolver.vue'
@@ -83,7 +83,7 @@ defineExpose({
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: BTN_LAYERED_CLASSES.containerClass({
+    defaults: BTN_DEFAULT_PROPS.ui.containerClass({
       align: props.align,
       noUppercase: props.noUppercase,
       noBold: props.noBold,
@@ -107,7 +107,7 @@ const containerStyle = computed(() => {
 // Styles - icon
 const iconClass = computed(() => {
   return mergedProps.value?.ui?.iconClass?.({
-    defaults: BTN_LAYERED_CLASSES.iconClass({
+    defaults: BTN_DEFAULT_PROPS.ui.iconClass({
       size: props.size ?? 'md',
     }),
   })
@@ -120,7 +120,7 @@ const iconStyle = computed(() => {
 // Styles - label
 const labelClass = computed(() => {
   return mergedProps.value?.ui?.labelClass?.({
-    defaults: BTN_LAYERED_CLASSES.labelClass({
+    defaults: BTN_DEFAULT_PROPS.ui.labelClass({
       align: props.align,
       size: props.size ?? 'md',
     }),
@@ -137,7 +137,7 @@ const labelStyle = computed(() => {
 // Styles - focus helper
 const focusHelperClass = computed(() => {
   return mergedProps.value?.ui?.focusHelperClass?.({
-    defaults: BTN_LAYERED_CLASSES.focusHelperClass(),
+    defaults: BTN_DEFAULT_PROPS.ui.focusHelperClass(),
   })
 })
 
@@ -175,7 +175,7 @@ const focusHelperStyle = computed(() => {
 // Styles - loading
 const loadingClass = computed(() => {
   return mergedProps.value?.ui?.loadingClass?.({
-    defaults: BTN_LAYERED_CLASSES.loadingClass(),
+    defaults: BTN_DEFAULT_PROPS.ui.loadingClass(),
   })
 })
 
@@ -186,7 +186,7 @@ const loadingStyle = computed(() => {
 // Styles - loader
 const loaderClass = computed(() => {
   return mergedProps.value?.ui?.loaderClass?.({
-    defaults: BTN_LAYERED_CLASSES.loaderClass({
+    defaults: BTN_DEFAULT_PROPS.ui.loaderClass({
       size: props.size ?? 'md',
     }),
   })
@@ -199,7 +199,7 @@ const loaderStyle = computed(() => {
 const loaderSize = computed(() => {
   const size = props.size ?? 'md'
 
-  return BTN_LAYERED_CLASSES.loaderClass({ size }).sizes[size] || undefined
+  return BTN_DEFAULT_PROPS.ui.loaderClass({ size }).sizes[size] || undefined
 })
 
 const iconValue = computed(() => {

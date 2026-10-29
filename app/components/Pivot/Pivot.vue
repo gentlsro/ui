@@ -8,7 +8,7 @@ import { pivotGetExposed } from './functions/pivot-get-exposed'
 import { shouldFetchPivotData } from './functions/pivot-should-fetch-data'
 
 // Constants
-import { PIVOT_LAYERED_CLASSES } from './constants/pivot-layered-classes.constant'
+import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
 
 // Store
 import { PIVOT_ID_KEY, usePivotStore } from './stores/pivot.store'
@@ -70,7 +70,7 @@ if (isImmediate) {
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: PIVOT_LAYERED_CLASSES.containerClass(),
+    defaults: PIVOT_DEFAULT_PROPS.ui.containerClass(),
   })
 })
 

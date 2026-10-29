@@ -6,7 +6,7 @@ import type { IPivotValueHeaderCell } from './types/pivot-value-column-item.type
 import { usePivotStore } from './stores/pivot.store'
 
 // Constants
-import { PIVOT_LAYERED_CLASSES } from './constants/pivot-layered-classes.constant'
+import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
 
 type IPlacedHeaderCell = {
   cell: IPivotValueHeaderCell
@@ -26,7 +26,7 @@ const {
 
 const valueHeaderClass = computed(() => {
   return ui.value?.valueHeaderClass?.({
-    defaults: PIVOT_LAYERED_CLASSES.valueHeaderClass(),
+    defaults: PIVOT_DEFAULT_PROPS.ui.valueHeaderClass(),
   })
 })
 

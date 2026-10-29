@@ -3,7 +3,7 @@
 import type { IBadgeProps } from './types/badge-props.type'
 
 // Constants
-import { BADGE_LAYERED_CLASSES } from './constants/badge-layered-classes.constant'
+import { BADGE_DEFAULT_PROPS } from './constants/badge-default-props.constant'
 
 const props = withDefaults(defineProps<IBadgeProps>(), {
   ...getComponentProps('badge'),
@@ -17,7 +17,7 @@ const mergedProps = computed(() => {
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: BADGE_LAYERED_CLASSES.containerClass(),
+    defaults: BADGE_DEFAULT_PROPS.ui.containerClass(),
   })
 })
 

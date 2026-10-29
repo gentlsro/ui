@@ -7,7 +7,7 @@ import type { IVirtualScrollEvent } from './types/virtual-scroll-event.type'
 import type { IVirtualScrollerVerticalProps } from './types/virtual-scroller-vertical-props.type'
 
 // Constants
-import { VIRTUAL_SCROLLER_VERTICAL_LAYERED_CLASSES } from './constants/virtual-scroller-vertical-layered-classes.constant'
+import { VIRTUAL_SCROLLER_VERTICAL_DEFAULT_PROPS } from './constants/virtual-scroller-vertical-default-props'
 
 const props = withDefaults(
   defineProps<IVirtualScrollerVerticalProps<T>>(),
@@ -171,7 +171,7 @@ watchThrottled(
 // Styles - Row
 const rowClass = computed(() => {
   return mergedProps.value.ui?.rowClass?.({
-    defaults: VIRTUAL_SCROLLER_VERTICAL_LAYERED_CLASSES.rowClass(),
+    defaults: VIRTUAL_SCROLLER_VERTICAL_DEFAULT_PROPS.ui.rowClass(),
   })
 })
 

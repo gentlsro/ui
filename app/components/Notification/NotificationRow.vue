@@ -3,7 +3,7 @@
 import type { INotificationRowProps } from './types/notification-row-props.type'
 
 // Constants
-import { NOTIFICATION_ROW_LAYERED_CLASSES } from './constants/notification-row-layered-classes.constant'
+import { NOTIFICATION_ROW_DEFAULT_PROPS } from './constants/notification-row-default-props.constant'
 
 const props = withDefaults(defineProps<INotificationRowProps>(), {
   ...getComponentProps('notificationRow'),
@@ -105,7 +105,7 @@ watch(notificationCounter, async () => {
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: NOTIFICATION_ROW_LAYERED_CLASSES.containerClass(),
+    defaults: NOTIFICATION_ROW_DEFAULT_PROPS.ui.containerClass(),
   })
 })
 
@@ -116,7 +116,7 @@ const containerStyle = computed(() => {
 // Styles - title row
 const titleRowClass = computed(() => {
   return mergedProps.value?.ui?.titleRowClass?.({
-    defaults: NOTIFICATION_ROW_LAYERED_CLASSES.titleRowClass(),
+    defaults: NOTIFICATION_ROW_DEFAULT_PROPS.ui.titleRowClass(),
   })
 })
 
@@ -127,7 +127,7 @@ const titleRowStyle = computed(() => {
 // Styles - icon
 const iconClass = computed(() => {
   return mergedProps.value?.ui?.iconClass?.({
-    defaults: NOTIFICATION_ROW_LAYERED_CLASSES.iconClass(),
+    defaults: NOTIFICATION_ROW_DEFAULT_PROPS.ui.iconClass(),
   })
 })
 
@@ -138,7 +138,7 @@ const iconStyle = computed(() => {
 // Styles - title
 const titleClass = computed(() => {
   return mergedProps.value?.ui?.titleClass?.({
-    defaults: NOTIFICATION_ROW_LAYERED_CLASSES.titleClass(),
+    defaults: NOTIFICATION_ROW_DEFAULT_PROPS.ui.titleClass(),
   })
 })
 
@@ -149,7 +149,7 @@ const titleStyle = computed(() => {
 // Styles - title text
 const titleTextClass = computed(() => {
   return mergedProps.value?.ui?.titleTextClass?.({
-    defaults: NOTIFICATION_ROW_LAYERED_CLASSES.titleTextClass(),
+    defaults: NOTIFICATION_ROW_DEFAULT_PROPS.ui.titleTextClass(),
   })
 })
 
@@ -160,7 +160,7 @@ const titleTextStyle = computed(() => {
 // Styles - subtitle
 const subtitleClass = computed(() => {
   return mergedProps.value?.ui?.subtitleClass?.({
-    defaults: NOTIFICATION_ROW_LAYERED_CLASSES.subtitleClass(),
+    defaults: NOTIFICATION_ROW_DEFAULT_PROPS.ui.subtitleClass(),
   })
 })
 
@@ -171,7 +171,7 @@ const subtitleStyle = computed(() => {
 // Styles - subtitle item
 const subtitleItemClass = computed(() => {
   return mergedProps.value?.ui?.subtitleItemClass?.({
-    defaults: NOTIFICATION_ROW_LAYERED_CLASSES.subtitleItemClass(),
+    defaults: NOTIFICATION_ROW_DEFAULT_PROPS.ui.subtitleItemClass(),
   })
 })
 
@@ -182,7 +182,7 @@ const subtitleItemStyle = computed(() => {
 // Styles - counter
 const counterClass = computed(() => {
   return mergedProps.value?.ui?.counterClass?.({
-    defaults: NOTIFICATION_ROW_LAYERED_CLASSES.counterClass(),
+    defaults: NOTIFICATION_ROW_DEFAULT_PROPS.ui.counterClass(),
   })
 })
 

@@ -8,7 +8,7 @@ import type { IBreadcrumbsProps } from './types/breadcrumbs-props.type'
 import { useBreadcrumbs } from './functions/useBreadcrumbs'
 
 // Constants
-import { BREADCRUMBS_LAYERED_CLASSES } from './constants/breadcrumbs-layered-classes.constant'
+import { BREADCRUMBS_DEFAULT_PROPS } from './constants/breadcrumbs-default-props.constant'
 import { BUTTON_PRESET } from '../Button/constants/button-preset.constant'
 
 const props = withDefaults(defineProps<IBreadcrumbsProps>(), {
@@ -25,7 +25,7 @@ const mergedProps = computed(() => {
 // Styles - wrapper
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: BREADCRUMBS_LAYERED_CLASSES.containerClass(),
+    defaults: BREADCRUMBS_DEFAULT_PROPS.ui.containerClass(),
   })
 })
 
@@ -36,7 +36,7 @@ const containerStyle = computed(() => {
 // Styles - breadcrumbs
 const breadcrumbsClass = computed(() => {
   return mergedProps.value?.ui?.breadcrumbsClass?.({
-    defaults: BREADCRUMBS_LAYERED_CLASSES.breadcrumbsClass(),
+    defaults: BREADCRUMBS_DEFAULT_PROPS.ui.breadcrumbsClass(),
   })
 })
 

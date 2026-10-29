@@ -9,7 +9,7 @@ import { useListStore } from './stores/list.store'
 import { useListKeyboard } from './composables/useListKeyboard'
 
 // Constants
-import { LIST_LAYERED_CLASSES } from './constants/list-layered-classes.constant'
+import { LIST_DEFAULT_PROPS } from './constants/list-default-props.constant'
 
 type IProps = Pick<IListProps, 'ui' | 'noHover' | 'reorderable' | 'disabledFnc' | 'scrollerConfig' | 'moveHandleTarget' | 'moveHandleTakesSpace' | 'dense'>
 
@@ -55,7 +55,7 @@ function handleVirtualScroll(ev: IVirtualScrollEvent) {
 const contentClass = computed(() => {
   return props.ui?.contentClass?.({
     hasSearch: searchConfig.value?.enabled,
-    defaults: LIST_LAYERED_CLASSES.contentClass({ hasSearch: searchConfig.value?.enabled }),
+    defaults: LIST_DEFAULT_PROPS.ui.contentClass({ hasSearch: searchConfig.value?.enabled }),
   })
 })
 
