@@ -1,5 +1,7 @@
-import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { CSSProperties } from 'vue'
+
+// Constants
+import type { BANNER_DEFAULT_PROPS } from '../constants/banner-default-props.constant'
 
 export type IBannerProps = {
   /**
@@ -51,7 +53,7 @@ export type IBannerProps = {
      * Class for the counter badge
      */
     badgeClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['banner']['badgeClass']>
+      defaults: ReturnType<typeof BANNER_DEFAULT_PROPS['ui']['badgeClass']>
     }) => ClassType
 
     /**
@@ -63,7 +65,7 @@ export type IBannerProps = {
      * Class for the container
      */
     containerClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['banner']['containerClass']>
+      defaults: ReturnType<typeof BANNER_DEFAULT_PROPS['ui']['containerClass']>
     }) => ClassType
 
     /**
@@ -75,7 +77,7 @@ export type IBannerProps = {
      * Class for the label
      */
     labelClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['banner']['labelClass']>
+      defaults: ReturnType<typeof BANNER_DEFAULT_PROPS['ui']['labelClass']>
     }) => ClassType
 
     /**
@@ -87,7 +89,7 @@ export type IBannerProps = {
      * Class for the icon
      */
     iconClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['banner']['iconClass']>
+      defaults: ReturnType<typeof BANNER_DEFAULT_PROPS['ui']['iconClass']>
     }) => ClassType
 
     /**
@@ -99,7 +101,7 @@ export type IBannerProps = {
      * Class for the dismiss indicator (shown when `dismissable`)
      */
     dismissClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['banner']['dismissClass']>
+      defaults: ReturnType<typeof BANNER_DEFAULT_PROPS['ui']['dismissClass']>
     }) => ClassType
 
     /**

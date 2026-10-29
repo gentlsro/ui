@@ -1,4 +1,3 @@
-import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { AllowedComponentProps, ConcreteComponent, CSSProperties } from 'vue'
 
 // Types
@@ -11,6 +10,7 @@ import type { ITextInputProps } from '../../Inputs/TextInput/types/text-input-pr
 import type { IVirtualScrollerProps } from '../../VirtualScroller/types/virtual-scroller-props.type'
 
 // Constants
+import type { LIST_DEFAULT_PROPS } from '../constants/list-default-props.constant'
 import type { Type } from 'arktype'
 
 export type IListProps = {
@@ -381,7 +381,7 @@ export type IListProps = {
      * Class to apply to the container
      */
     containerClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['list']['containerClass']>
+      defaults: ReturnType<typeof LIST_DEFAULT_PROPS['ui']['containerClass']>
     }) => ClassType
 
     /**
@@ -394,7 +394,7 @@ export type IListProps = {
      */
     contentClass?: (payload: {
       hasSearch?: boolean
-      defaults: UIClassPicker<UIResolvedClasses['list']['contentClass']>
+      defaults: ReturnType<typeof LIST_DEFAULT_PROPS['ui']['contentClass']>
     }) => ClassType
 
     /**
@@ -408,7 +408,7 @@ export type IListProps = {
      * Class to apply to the move handle
      */
     moveHandleClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['list']['moveHandleClass']>
+      defaults: ReturnType<typeof LIST_DEFAULT_PROPS['ui']['moveHandleClass']>
     }) => ClassType
 
     /**
@@ -420,7 +420,7 @@ export type IListProps = {
      * Class to apply to the move handle icon
      */
     moveHandleIconClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['list']['moveHandleIconClass']>
+      defaults: ReturnType<typeof LIST_DEFAULT_PROPS['ui']['moveHandleIconClass']>
     }) => ClassType
 
     /**
@@ -432,7 +432,7 @@ export type IListProps = {
      * Class to apply to the loading area
      */
     loadingClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['list']['loadingClass']>
+      defaults: ReturnType<typeof LIST_DEFAULT_PROPS['ui']['loadingClass']>
     }) => ClassType
 
     /**
@@ -444,7 +444,7 @@ export type IListProps = {
      * Class to apply to the `Banner` when there are no items
      */
     noDataClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['list']['noDataClass']>
+      defaults: ReturnType<typeof LIST_DEFAULT_PROPS['ui']['noDataClass']>
     }) => ClassType
 
     /**
@@ -459,7 +459,7 @@ export type IListProps = {
       row: IItem
       groupsCount: number
       isLast: boolean
-      defaults: UIClassPicker<UIResolvedClasses['list']['rowClass']>
+      defaults: ReturnType<typeof LIST_DEFAULT_PROPS['ui']['rowClass']>
     },
     ) => ClassType
 
@@ -480,7 +480,7 @@ export type IListProps = {
         row: any
         groupsCount: number
         isLast: boolean
-        defaults: UIClassPicker<UIResolvedClasses['list']['rowContentClass']>
+        defaults: ReturnType<typeof LIST_DEFAULT_PROPS['ui']['rowContentClass']>
       },
     ) => ClassType
 
@@ -501,7 +501,7 @@ export type IListProps = {
     rowGroupClass?: (payload: {
       group: IGroupRow
       level: number
-      defaults: UIClassPicker<UIResolvedClasses['list']['rowGroupClass']>
+      defaults: ReturnType<typeof LIST_DEFAULT_PROPS['ui']['rowGroupClass']>
     }) => ClassType
 
     /**
@@ -516,7 +516,7 @@ export type IListProps = {
      * Class to apply to the search area
      */
     searchClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['list']['searchClass']>
+      defaults: ReturnType<typeof LIST_DEFAULT_PROPS['ui']['searchClass']>
     }) => ClassType
 
     /**

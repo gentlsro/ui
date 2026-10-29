@@ -1,7 +1,7 @@
-import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { CSSProperties, KeepAliveProps } from 'vue'
 
 // Types
+import type { TABS_DEFAULT_PROPS } from '../constants/tabs-default-props.constant'
 
 export type ITabsProps = {
   /**
@@ -30,7 +30,7 @@ export type ITabsProps = {
      * Class to apply to the container
      */
     containerClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['tabs']['containerClass']>
+      defaults: ReturnType<typeof TABS_DEFAULT_PROPS['ui']['containerClass']>
     }) => ClassType
 
     /**
@@ -42,7 +42,7 @@ export type ITabsProps = {
      * Class to apply to the navigation
      */
     navigationClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['tabs']['navigationClass']>
+      defaults: ReturnType<typeof TABS_DEFAULT_PROPS['ui']['navigationClass']>
     }) => ClassType
 
     /**
@@ -54,7 +54,7 @@ export type ITabsProps = {
      * Class to apply to the navigation content (inner class of the `HorizontalScroller`)
      */
     navigationContentClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['tabs']['navigationContentClass']>
+      defaults: ReturnType<typeof TABS_DEFAULT_PROPS['ui']['navigationContentClass']>
     }) => ClassType
 
     /**
@@ -66,7 +66,7 @@ export type ITabsProps = {
      * Class to apply to the content
      */
     tabClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['tabs']['tabClass']>
+      defaults: ReturnType<typeof TABS_DEFAULT_PROPS['ui']['tabClass']>
     }) => ClassType
 
     /**
@@ -79,7 +79,7 @@ export type ITabsProps = {
      * Note: Use `is-active` CSS selector for active state styling
      */
     tabNavBtnClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['tabs']['tabNavBtnClass']>
+      defaults: ReturnType<typeof TABS_DEFAULT_PROPS['ui']['tabNavBtnClass']>
     }) => ClassType
 
     /**

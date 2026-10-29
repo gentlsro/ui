@@ -1,9 +1,11 @@
-import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { CSSProperties } from 'vue'
 
 // Types
 import type { CrudAction } from '../../Crud/types/crud-action.type'
 import type { IHeadingProps } from '../../Typography/types/heading-props.type'
+
+// Constants
+import type { MAIN_BAR_DEFAULT_PROPS } from '../constants/main-bar-default-props.constant'
 
 export type IMainBarProps = {
   /**
@@ -49,7 +51,7 @@ export type IMainBarProps = {
      * Class to apply to the container
      */
     containerClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['mainBar']['containerClass']>
+      defaults: ReturnType<typeof MAIN_BAR_DEFAULT_PROPS['ui']['containerClass']>
     }) => ClassType
 
     /**
@@ -61,7 +63,7 @@ export type IMainBarProps = {
      * Class to apply to the content wrapper
      */
     contentClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['mainBar']['contentClass']>
+      defaults: ReturnType<typeof MAIN_BAR_DEFAULT_PROPS['ui']['contentClass']>
     }) => ClassType
 
     /**
@@ -73,7 +75,7 @@ export type IMainBarProps = {
      * Class to apply to the title wrapper
      */
     titleWrapperClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['mainBar']['titleWrapperClass']>
+      defaults: ReturnType<typeof MAIN_BAR_DEFAULT_PROPS['ui']['titleWrapperClass']>
     }) => ClassType
 
     /**
@@ -85,7 +87,7 @@ export type IMainBarProps = {
      * Class to apply to the title (Heading component)
      */
     titleClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['mainBar']['titleClass']>
+      defaults: ReturnType<typeof MAIN_BAR_DEFAULT_PROPS['ui']['titleClass']>
     }) => ClassType
 
     /**
@@ -97,7 +99,7 @@ export type IMainBarProps = {
      * Class to apply to the subtitle
      */
     subtitleClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['mainBar']['subtitleClass']>
+      defaults: ReturnType<typeof MAIN_BAR_DEFAULT_PROPS['ui']['subtitleClass']>
     }) => ClassType
 
     /**
@@ -109,7 +111,7 @@ export type IMainBarProps = {
      * Class to apply to the actions wrapper
      */
     actionsClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['mainBar']['actionsClass']>
+      defaults: ReturnType<typeof MAIN_BAR_DEFAULT_PROPS['ui']['actionsClass']>
     }) => ClassType
 
     /**

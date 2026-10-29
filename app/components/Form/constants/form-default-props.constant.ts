@@ -1,121 +1,146 @@
 // @unocss-include
 
-import type { IFormProps } from '../types/form-props.type'
-import type { WidenClassSlots } from '../../../types/ui-class-config.type'
-import { uiClassLayers } from '$uiConfig'
-import { createUIClassResolver } from '../../../utils/create-ui-class-resolver'
+import { uiConfigLayers } from '$uiConfig'
+import { normalizeClass } from 'vue'
+import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-config.type'
 
-export const FORM_CLASS_SLOTS = {
-  containerClass() {
-    const base = 'flex flex-col gap-2 grow overflow-auto'
-    const gap = 'gap-2'
+export const FORM_BASE_DEFAULTS = {
+  ui: {
+    containerClass() {
+      const base = 'flex flex-col gap-2 grow overflow-auto'
+      const gap = 'gap-2'
 
-    return {
-      base,
-      gap,
-    } as const
-  },
+      return withClassPicker({
+        base,
+        gap,
+        all: `${base} ${gap}`,
+      } as const)
+    },
 
-  contentClass() {
-    const base = 'relative flex flex-col grow overflow-auto'
-    const gap = 'gap-2'
-    const padding = 'p-2'
+    contentClass() {
+      const base = 'relative flex flex-col grow overflow-auto'
+      const gap = 'gap-2'
+      const padding = 'p-2'
 
-    return {
-      base,
-      gap,
-      padding,
-    } as const
-  },
+      return withClassPicker({
+        base,
+        gap,
+        padding,
+        all: `${base} ${gap} ${padding}`,
+      } as const)
+    },
 
-  controlsClass() {
-    const base = 'sticky flex items-center shrink-0 gap-2 bottom-0 z-1 rounded-b-custom'
-    const border = 'border-t-1 border-ca [&.is-controls-on-top]:(order-first border-t-0 border-b-1 rounded-b-0 rounded-t-custom)'
-    const background = 'bg-white dark:bg-dark-950'
-    const padding = 'p-y-1 p-x-2'
+    controlsClass() {
+      const base = 'sticky flex items-center shrink-0 gap-2 bottom-0 z-1 rounded-b-custom'
+      const border = 'border-t-1 border-ca [&.is-controls-on-top]:(order-first border-t-0 border-b-1 rounded-b-0 rounded-t-custom)'
+      const background = 'bg-white dark:bg-dark-950'
+      const padding = 'p-y-1 p-x-2'
 
-    return {
-      base,
-      border,
-      background,
-      padding,
-    } as const
-  },
+      return withClassPicker({
+        base,
+        border,
+        background,
+        padding,
+        all: `${base} ${border} ${background} ${padding}`,
+      } as const)
+    },
 
-  submitWrapperClass() {
-    const base = 'flex gap-2 relative'
+    submitWrapperClass() {
+      const base = 'flex gap-2 relative'
 
-    return {
-      base,
-      fullWidth: (`${base} grow`) as string,
-    } as const
-  },
+      // Presets
+      const fullWidth = `${base} grow`
 
-  submitClass() {
-    const base = 'bg-primary color-white'
+      return withClassPicker({
+        base,
+        fullWidth,
+        all: `${base} m-l-auto`,
+      } as const)
+    },
 
-    return {
-      base,
-      fullWidth: (`${base} grow`) as string,
-    } as const
-  },
+    submitClass() {
+      const base = 'bg-primary color-white'
 
-  cancelClass() {
-    const base = 'w-auto'
+      // Presets
+      const fullWidth = `${base} grow`
 
-    return {
-      base,
-    } as const
+      return withClassPicker({
+        base,
+        fullWidth,
+        all: `${base} w-40`,
+      } as const)
+    },
+
+    cancelClass() {
+      const base = 'w-auto'
+
+      return withClassPicker({
+        base,
+        all: `${base}`,
+      } as const)
+    },
   },
 }
 
-type FormSlots<K extends keyof typeof FORM_CLASS_SLOTS>
-  = WidenClassSlots<ReturnType<typeof FORM_CLASS_SLOTS[K]>>
-
-export const FORM_CLASS_COMPOSERS = {
-  containerClass(slots: FormSlots<'containerClass'>) {
-    return `${slots.base} ${slots.gap}`
-  },
-
-  contentClass(slots: FormSlots<'contentClass'>) {
-    return `${slots.base} ${slots.gap} ${slots.padding}`
-  },
-
-  controlsClass(slots: FormSlots<'controlsClass'>) {
-    return `${slots.base} ${slots.border} ${slots.background} ${slots.padding}`
-  },
-
-  submitWrapperClass(slots: FormSlots<'submitWrapperClass'>) {
-    return `${slots.base} m-l-auto`
-  },
-
-  submitClass(slots: FormSlots<'submitClass'>) {
-    return `${slots.base} w-40`
-  },
-
-  cancelClass(slots: FormSlots<'cancelClass'>) {
-    return `${slots.base}`
-  },
+type FormFactories = typeof FORM_BASE_DEFAULTS.ui
+type Surface = keyof FormFactories
+type Resolvers = {
+  [Key in Surface]: () => UIClassPicker<UIResolvedClasses['form'][Key]>
 }
 
-/** Recompute named slots after layer patches without accessor allocation. */
-export const FORM_CLASS_DERIVED = {
-  submitWrapperClass: {
-    fullWidth(slots: FormSlots<'submitWrapperClass'>): string {
-      return `${slots.base} grow`
-    },
-  },
-  submitClass: {
-    fullWidth(slots: FormSlots<'submitClass'>): string {
-      return `${slots.base} grow`
-    },
-  },
+type ConfigLayer = {
+  default?: { form?: { props?: { ui?: Record<string, unknown> } } }
+}
+
+/** Prepare Form's existing config callbacks once, on first use. */
+function resolveFormDefaults(): Resolvers {
+  const factories = FORM_BASE_DEFAULTS.ui
+  const resolved = {} as Resolvers
+  const surfaces = Object.keys(factories) as Surface[]
+
+  function prepare() {
+    const layers = uiConfigLayers as readonly ConfigLayer[]
+
+    for (const surface of surfaces) {
+      const baseFactory = factories[surface]
+      const callbacks = layers.map(layer => layer.default?.form?.props?.ui?.[surface])
+        .filter((callback): callback is (payload: { defaults: object }) => unknown => typeof callback === 'function')
+      const factory = callbacks.length
+        ? () => {
+            let defaults: { all: string } = baseFactory()
+
+            for (const callback of callbacks) {
+              const value = callback({ defaults })
+              const all = typeof value === 'string' ? value : normalizeClass(value)
+
+              if (all !== defaults.all) {
+                defaults = withClassPicker({ ...defaults, all })
+              }
+            }
+
+            return defaults
+          }
+        : baseFactory
+
+      Object.defineProperty(resolved, surface, { value: factory, enumerable: true, configurable: true })
+    }
+  }
+
+  for (const surface of surfaces) {
+    Object.defineProperty(resolved, surface, {
+      enumerable: true,
+      configurable: true,
+      get() {
+        prepare()
+
+        return resolved[surface]
+      },
+    })
+  }
+
+  return resolved
 }
 
 export const FORM_DEFAULT_PROPS = {
-  ui: createUIClassResolver('form', {
-    slots: FORM_CLASS_SLOTS,
-    compose: FORM_CLASS_COMPOSERS,
-    derive: FORM_CLASS_DERIVED,
-  }, () => uiClassLayers),
-} satisfies IFormProps
+  ui: resolveFormDefaults(),
+}

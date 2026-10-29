@@ -1,9 +1,11 @@
-import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { AllowedComponentProps, CSSProperties } from 'vue'
 
 // Types
 import type { IBtnProps, INavigation } from '../../Button/types/btn-props.type'
 import type { ITooltipProps } from '../../Tooltip/types/tooltip-props.type'
+
+// Constants
+import type { CHIP_DEFAULT_PROPS } from '../constants/chip-default-props.constant'
 
 export type IChipProps = INavigation & {
   /**
@@ -57,7 +59,7 @@ export type IChipProps = INavigation & {
      * The chip's container class
      */
     containerClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['chip']['containerClass']>
+      defaults: ReturnType<typeof CHIP_DEFAULT_PROPS['ui']['containerClass']>
     }) => ClassType
 
     /**
@@ -69,7 +71,7 @@ export type IChipProps = INavigation & {
      * The chip's label class
      */
     labelClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['chip']['labelClass']>
+      defaults: ReturnType<typeof CHIP_DEFAULT_PROPS['ui']['labelClass']>
     }) => ClassType
 
     /**

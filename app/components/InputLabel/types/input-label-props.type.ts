@@ -1,8 +1,10 @@
-import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { AllowedComponentProps, CSSProperties } from 'vue'
 
 // Types
 import type { ITooltipProps } from '../../Tooltip/types/tooltip-props.type'
+
+// Constants
+import type { INPUT_LABEL_DEFAULT_PROPS } from '../constants/input-label-default-props'
 
 export type IInputLabelProps = {
   /**
@@ -73,7 +75,7 @@ export type IInputLabelProps = {
      * Class applied to the label
      */
     labelClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['inputLabel']['labelClass']>
+      defaults: ReturnType<typeof INPUT_LABEL_DEFAULT_PROPS['ui']['labelClass']>
     }) => ClassType
 
     /**

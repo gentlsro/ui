@@ -1,7 +1,9 @@
-import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { CSSProperties } from 'vue'
 
 import type { PredictDataTypeOptions } from '#layers/utilities/app/types/predict-data-type-options.type'
+
+// Constants
+import type { VALUE_FORMATTER_DEFAULT_PROPS } from '../constants/value-formatter-default-props.constant'
 
 // Types
 import type { ExtendedDataType } from '$dataType'
@@ -70,7 +72,7 @@ export type IValueFormatterProps = {
      * Class for the container
      */
     containerClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['valueFormatter']['containerClass']>
+      defaults: ReturnType<typeof VALUE_FORMATTER_DEFAULT_PROPS['ui']['containerClass']>
     }) => ClassType
 
     /**

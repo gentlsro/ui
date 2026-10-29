@@ -6,8 +6,7 @@ import type { NavigateToOptions } from '#layers/utilities/app/types/navigate-to.
 
 // Constants
 import type { ButtonPresetDefaults } from '../constants/button-preset.constant'
-import type { BTN_LABEL_BREAKPOINTS } from '../constants/btn-default-props.constant'
-import type { UIClassPicker, UIClassSet, UIResolvedClasses } from '../../../types/ui-class-config.type'
+import type { BTN_DEFAULT_PROPS, BTN_LABEL_BREAKPOINTS } from '../constants/btn-default-props.constant'
 
 export type CustomPresets = Record<string, { icon: string, color: string }>
 
@@ -47,10 +46,7 @@ export type IBtnNavigationProps = INavigation & {
   type?: 'button' | 'submit' | 'reset'
 }
 
-export type IBtnProps<
-  T extends CustomPresets = Record<string, never>,
-  Classes extends UIClassSet['button'] = UIResolvedClasses['button'],
-> = IBtnNavigationProps & {
+export type IBtnProps<T extends CustomPresets = Record<string, never>> = IBtnNavigationProps & {
   /**
    * Alignment of the button content
    */
@@ -190,7 +186,7 @@ export type IBtnProps<
      * Class applied to the container (button element)
      */
     containerClass?: (payload: {
-      defaults: UIClassPicker<Classes['containerClass']>
+      defaults: ReturnType<typeof BTN_DEFAULT_PROPS['ui']['containerClass']>
     }) => ClassType
 
     /**
@@ -202,7 +198,7 @@ export type IBtnProps<
      * Classes applied to the icon
      */
     iconClass?: (payload: {
-      defaults: UIClassPicker<Classes['iconClass']>
+      defaults: ReturnType<typeof BTN_DEFAULT_PROPS['ui']['iconClass']>
     }) => ClassType
 
     /**
@@ -214,7 +210,7 @@ export type IBtnProps<
      * Classes applied to the label
      */
     labelClass?: (payload: {
-      defaults: UIClassPicker<Classes['labelClass']>
+      defaults: ReturnType<typeof BTN_DEFAULT_PROPS['ui']['labelClass']>
     }) => ClassType
 
     /**
@@ -234,7 +230,7 @@ export type IBtnProps<
      * Classes applied to the focus helper
      */
     focusHelperClass?: (payload: {
-      defaults: UIClassPicker<Classes['focusHelperClass']>
+      defaults: ReturnType<typeof BTN_DEFAULT_PROPS['ui']['focusHelperClass']>
     }) => ClassType
 
     /**
@@ -246,7 +242,7 @@ export type IBtnProps<
      * Classes applied to the loading overlay
      */
     loadingClass?: (payload: {
-      defaults: UIClassPicker<Classes['loadingClass']>
+      defaults: ReturnType<typeof BTN_DEFAULT_PROPS['ui']['loadingClass']>
     }) => ClassType
 
     /**
@@ -258,7 +254,7 @@ export type IBtnProps<
      * Classes applied to the loader
      */
     loaderClass?: (payload: {
-      defaults: UIClassPicker<Classes['loaderClass']>
+      defaults: ReturnType<typeof BTN_DEFAULT_PROPS['ui']['loaderClass']>
     }) => ClassType
 
     /**

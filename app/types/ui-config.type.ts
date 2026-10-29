@@ -1,3 +1,6 @@
+import type { FORM_BASE_DEFAULTS } from '../components/Form/constants/form-default-props.constant'
+import type { withClassPicker } from '../functions/with-class-picker'
+
 import type { IUIState } from './ui-state.type'
 
 // Component types
@@ -82,12 +85,12 @@ type IConfigItem<T> = {
   merge?: Array<keyof T>
 }
 
-export type IUIConfig = {
+export type IUIConfig<FormClasses extends UIClassSet['form'] = UIResolvedClasses['form']> = {
   badge: IConfigItem<IBadgeProps>
   banner: IConfigItem<IBannerProps>
   button: IConfigItem<IBtnProps>
   dialog: IConfigItem<IDialogProps>
-  form: IConfigItem<IFormProps> & {
+  form: IConfigItem<IFormProps<FormClasses>> & {
     confirmationInit?: { enabled?: boolean, required?: boolean, editable?: boolean }
   }
   menu: IConfigItem<IMenuProps>
@@ -177,3 +180,32 @@ export type IUIConfig = {
     uiState?: Partial<IUIState>
   }
 }
+
+type FormFactories = typeof FORM_BASE_DEFAULTS.ui
+
+export type BaseUIClasses = {
+  form: { [Surface in keyof FormFactories]: Omit<ReturnType<FormFactories[Surface]>, 'p'> }
+}
+
+export type UIClassSet = {
+  form: { [Surface in keyof FormFactories]: object }
+}
+
+// Generated from the application's existing props.ui callbacks.
+// eslint-disable-next-line ts/consistent-type-definitions
+export interface UIClassRegistry {}
+
+export type UIResolvedClasses = UIClassRegistry extends {
+  defaults: infer Defaults extends UIClassSet
+}
+  ? Defaults
+  : BaseUIClasses
+
+export type UIConfigClasses = UIClassRegistry extends {
+  configDefaults: infer Defaults extends UIClassSet
+}
+  ? Defaults
+  : BaseUIClasses
+
+export type UIClassPicker<Slots extends object>
+  = ReturnType<typeof withClassPicker<Slots & { all: string }>>

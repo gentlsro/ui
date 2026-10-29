@@ -1,65 +1,45 @@
 // @unocss-include
 
-import type { WidenClassSlots } from '../../../types/ui-class-config.type'
-import { uiClassLayers } from '$uiConfig'
-import { createUIClassResolver } from '../../../utils/create-ui-class-resolver'
-
-export const DRAWER_CLASS_SLOTS = {
-  containerClass() {
-    const base = 'flex flex-col gap-1 top-0 bg-white/85 dark:bg-dark-950/95 z-$zDrawer max-w-full overflow-auto'
-
-    // Side positioning (overlay modes only ~ in the `relative` mode the drawer sits in the document flow)
-    const right = '[&.drawer--right:not(.is-relative)]:(right-0 translate-x-100%)'
-    const left = '[&.drawer--left:not(.is-relative)]:(left-0 translate-x--100%)'
-
-    // State
-    const open = '[&.is-open]:(!translate-x-0 opacity-100)'
-    const closed = 'opacity-0'
-
-    // Positioning modes
-    const fixed = '[&:not(.is-absolute):not(.is-relative)]:(fixed h-full)'
-    const absolute = '[&.is-absolute]:(absolute bottom-0)'
-    const relative = '[&.is-relative]:(relative shrink-0 overflow-x-hidden)'
-    const notFullHeightFixed = '[&:not(.is-full-height):not(.is-absolute):not(.is-relative)]:(m-t-$navHeight)'
-
-    return {
-      base,
-      right,
-      left,
-      open,
-      closed,
-      fixed,
-      absolute,
-      relative,
-      notFullHeightFixed,
-    } as const
-  },
-
-  titleClass() {
-    const base = 'flex gap-2 items-center p-1 m-1 rounded-custom bg-slate-100 dark:bg-dark-950'
-
-    return {
-      base,
-    } as const
-  },
-}
-
-type DrawerSlots<K extends keyof typeof DRAWER_CLASS_SLOTS>
-  = WidenClassSlots<ReturnType<typeof DRAWER_CLASS_SLOTS[K]>>
-
-export const DRAWER_CLASS_COMPOSERS = {
-  containerClass(slots: DrawerSlots<'containerClass'>) {
-    return `${slots.base} ${slots.right} ${slots.left} ${slots.open} ${slots.closed} ${slots.fixed} ${slots.absolute} ${slots.relative} ${slots.notFullHeightFixed}`
-  },
-
-  titleClass(slots: DrawerSlots<'titleClass'>) {
-    return slots.base
-  },
-}
-
 export const DRAWER_DEFAULT_PROPS = {
-  ui: createUIClassResolver('drawer', {
-    slots: DRAWER_CLASS_SLOTS,
-    compose: DRAWER_CLASS_COMPOSERS,
-  }, () => uiClassLayers),
+  ui: {
+    containerClass() {
+      const base = 'flex flex-col gap-1 top-0 bg-white/85 dark:bg-dark-950/95 z-$zDrawer max-w-full overflow-auto'
+
+      // Side positioning (overlay modes only ~ in the `relative` mode the drawer sits in the document flow)
+      const right = '[&.drawer--right:not(.is-relative)]:(right-0 translate-x-100%)'
+      const left = '[&.drawer--left:not(.is-relative)]:(left-0 translate-x--100%)'
+
+      // State
+      const open = '[&.is-open]:(!translate-x-0 opacity-100)'
+      const closed = 'opacity-0'
+
+      // Positioning modes
+      const fixed = '[&:not(.is-absolute):not(.is-relative)]:(fixed h-full)'
+      const absolute = '[&.is-absolute]:(absolute bottom-0)'
+      const relative = '[&.is-relative]:(relative shrink-0 overflow-x-hidden)'
+      const notFullHeightFixed = '[&:not(.is-full-height):not(.is-absolute):not(.is-relative)]:(m-t-$navHeight)'
+
+      return withClassPicker({
+        base,
+        right,
+        left,
+        open,
+        closed,
+        fixed,
+        absolute,
+        relative,
+        notFullHeightFixed,
+        all: `${base} ${right} ${left} ${open} ${closed} ${fixed} ${absolute} ${relative} ${notFullHeightFixed}`,
+      } as const)
+    },
+
+    titleClass() {
+      const base = 'flex gap-2 items-center p-1 m-1 rounded-custom bg-slate-100 dark:bg-dark-950'
+
+      return withClassPicker({
+        base,
+        all: base,
+      } as const)
+    },
+  },
 }

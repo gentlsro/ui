@@ -3,7 +3,7 @@ import type {
   ComponentName,
   ComponentPropOverrides,
   ComponentProps,
-} from '../types/component-config-props.type'
+} from './get-component-props'
 
 export function extendNestedComponentProps<
   Name extends ComponentName,

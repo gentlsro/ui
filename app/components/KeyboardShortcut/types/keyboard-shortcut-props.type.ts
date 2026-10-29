@@ -1,5 +1,7 @@
-import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { CSSProperties } from 'vue'
+
+// Constants
+import type { KEYBOARD_SHORTCUT_DEFAULT_PROPS } from '../constants/keyboard-shortcut-default-props.constant'
 
 export type IKeyboardShortcutProps = {
   /**
@@ -46,7 +48,7 @@ export type IKeyboardShortcutProps = {
      * Class to apply to the container
      */
     containerClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['keyboardShortcut']['containerClass']>
+      defaults: ReturnType<typeof KEYBOARD_SHORTCUT_DEFAULT_PROPS['ui']['containerClass']>
     }) => ClassType
 
     /**
@@ -58,7 +60,7 @@ export type IKeyboardShortcutProps = {
      * Class to apply to each key wrapper
      */
     wrapperClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['keyboardShortcut']['wrapperClass']>
+      defaults: ReturnType<typeof KEYBOARD_SHORTCUT_DEFAULT_PROPS['ui']['wrapperClass']>
     }) => ClassType
 
     /**
@@ -70,7 +72,7 @@ export type IKeyboardShortcutProps = {
      * Class to apply to the icons
      */
     iconClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['keyboardShortcut']['iconClass']>
+      defaults: ReturnType<typeof KEYBOARD_SHORTCUT_DEFAULT_PROPS['ui']['iconClass']>
     }) => ClassType
 
     /**

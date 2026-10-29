@@ -1,9 +1,9 @@
-import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 // Types
 import type { CSSProperties } from 'vue'
 import type { BREAKPOINTS } from '../../../constants/breakpoints'
 
 // Constants
+import type { PAGE_DRAWER_DEFAULT_PROPS } from '../constants/page-drawer-default-props.constant'
 import type { IResizableConfig } from '../../Drawer/types/resizable-config.type'
 
 export type IPageDrawerProps = {
@@ -78,7 +78,7 @@ export type IPageDrawerProps = {
      * Class to apply to the container
      */
     containerClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['pageDrawer']['containerClass']>
+      defaults: ReturnType<typeof PAGE_DRAWER_DEFAULT_PROPS['ui']['containerClass']>
       isMini: boolean
     }) => ClassType
 
@@ -91,7 +91,7 @@ export type IPageDrawerProps = {
      * Class to apply to the content
      */
     contentClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['pageDrawer']['contentClass']>
+      defaults: ReturnType<typeof PAGE_DRAWER_DEFAULT_PROPS['ui']['contentClass']>
       isMini: boolean
     }) => ClassType
 
@@ -104,7 +104,7 @@ export type IPageDrawerProps = {
      * Class to apply to the bottom part of the drawer
      */
     bottomClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['pageDrawer']['bottomClass']>
+      defaults: ReturnType<typeof PAGE_DRAWER_DEFAULT_PROPS['ui']['bottomClass']>
       isMini: boolean
     }) => ClassType
 
@@ -117,7 +117,7 @@ export type IPageDrawerProps = {
      * Class to apply to the filler (the top part of the drawer)
      */
     fillerClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['pageDrawer']['fillerClass']>
+      defaults: ReturnType<typeof PAGE_DRAWER_DEFAULT_PROPS['ui']['fillerClass']>
       isMini: boolean
     }) => ClassType
 

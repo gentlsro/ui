@@ -6,7 +6,7 @@ import type { IHorizontalScrollerProps } from './types/scroller-props.type'
 import { useScrollerScroll } from './composables/useScrollerScroll'
 
 // Constants
-import { HORIZONTAL_SCROLLER_DEFAULT_PROPS } from './constants/scroller-default-props.constant'
+import { SCROLLER_DEFAULT_PROPS } from './constants/scroller-default-props.constant'
 
 import './styles/scroll-fade.css'
 
@@ -61,7 +61,7 @@ useResizeObserver(scrollEl, () => {
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: HORIZONTAL_SCROLLER_DEFAULT_PROPS.ui.containerClass(),
+    defaults: SCROLLER_DEFAULT_PROPS.ui.horizontalContainerClass(),
   })
 })
 
@@ -72,7 +72,7 @@ const containerStyle = computed(() => {
 // Styles - content
 const contentClass = computed(() => {
   return mergedProps.value?.ui?.contentClass?.({
-    defaults: HORIZONTAL_SCROLLER_DEFAULT_PROPS.ui.contentClass(),
+    defaults: SCROLLER_DEFAULT_PROPS.ui.contentClass(),
   })
 })
 
@@ -83,7 +83,7 @@ const contentStyle = computed(() => {
 // Styles - arrow
 const arrowClass = computed(() => {
   return mergedProps.value?.ui?.arrowClass?.({
-    defaults: HORIZONTAL_SCROLLER_DEFAULT_PROPS.ui.arrowClass(),
+    defaults: SCROLLER_DEFAULT_PROPS.ui.arrowClass(),
   })
 })
 
