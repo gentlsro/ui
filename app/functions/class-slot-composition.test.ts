@@ -1,10 +1,12 @@
-import { describe, expect, it } from 'vitest'
-import { BANNER_CLASS_COMPOSERS, BANNER_CLASS_SLOTS } from '../components/Banner/constants/banner-class-slots.constant'
-import { BADGE_CLASS_DERIVED, BADGE_CLASS_SLOTS } from '../components/Badge/constants/badge-class-slots.constant'
-import { CHECKBOX_CLASS_COMPOSERS, CHECKBOX_CLASS_SLOTS } from '../components/Checkbox/constants/checkbox-class-slots.constant'
-import { DATE_PICKER_CLASS_COMPOSERS, DATE_PICKER_CLASS_SLOTS } from '../components/DatePicker/constants/datepicker-class-slots.constant'
-import { STEPPER_CLASS_COMPOSERS, STEPPER_CLASS_SLOTS } from '../components/Stepper/constants/stepper-class-slots.constant'
-import { TOGGLE_CLASS_COMPOSERS, TOGGLE_CLASS_DERIVED, TOGGLE_CLASS_SLOTS } from '../components/Toggle/constants/toggle-class-slots.constant'
+import { describe, expect, it, vi } from 'vitest'
+import { BANNER_CLASS_COMPOSERS, BANNER_CLASS_SLOTS } from '../components/Banner/constants/banner-default-props.constant'
+import { BADGE_CLASS_DERIVED, BADGE_CLASS_SLOTS } from '../components/Badge/constants/badge-default-props.constant'
+import { CHECKBOX_CLASS_COMPOSERS, CHECKBOX_CLASS_SLOTS } from '../components/Checkbox/constants/checkbox-default-props.constant'
+import { DATE_PICKER_CLASS_COMPOSERS, DATE_PICKER_CLASS_SLOTS } from '../components/DatePicker/constants/datepicker-default-props.constant'
+import { STEPPER_CLASS_COMPOSERS, STEPPER_CLASS_SLOTS } from '../components/Stepper/constants/stepper-default-props.constant'
+import { TOGGLE_CLASS_COMPOSERS, TOGGLE_CLASS_DERIVED, TOGGLE_CLASS_SLOTS } from '../components/Toggle/constants/toggle-default-props.constant'
+
+vi.mock('$uiConfig', () => ({ uiClassLayers: [] }))
 
 // Failure modes: captured original slots, stale selected map values, derived
 // slots ignoring patches, and state branches losing their selection rules.

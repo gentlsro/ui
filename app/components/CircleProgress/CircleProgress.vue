@@ -3,7 +3,7 @@
 import type { ICircleProgressProps } from './types/circle-progress-props.type'
 
 // Constants
-import { CIRCLE_PROGRESS_LAYERED_CLASSES } from './constants/circle-progress-layered-classes.constant'
+import { CIRCLE_PROGRESS_DEFAULT_PROPS } from './constants/circle-progress-default-props.constant'
 
 const props = withDefaults(defineProps<ICircleProgressProps>(), {
   color: 'stroke-primary',
@@ -34,7 +34,7 @@ const strokeDasharray = computed(() => `${props.progress * 100 / 100}, 100`)
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: CIRCLE_PROGRESS_LAYERED_CLASSES.containerClass(),
+    defaults: CIRCLE_PROGRESS_DEFAULT_PROPS.ui.containerClass(),
   })
 })
 
@@ -45,7 +45,7 @@ const containerStyle = computed(() => {
 // Styles - svg
 const svgClass = computed(() => {
   return mergedProps.value?.ui?.svgClass?.({
-    defaults: CIRCLE_PROGRESS_LAYERED_CLASSES.svgClass(),
+    defaults: CIRCLE_PROGRESS_DEFAULT_PROPS.ui.svgClass(),
   })
 })
 
@@ -56,7 +56,7 @@ const svgStyle = computed(() => {
 // Styles - circleBg
 const circleBgClass = computed(() => {
   return mergedProps.value?.ui?.circleBgClass?.({
-    defaults: CIRCLE_PROGRESS_LAYERED_CLASSES.circleBgClass(),
+    defaults: CIRCLE_PROGRESS_DEFAULT_PROPS.ui.circleBgClass(),
   })
 })
 
@@ -67,7 +67,7 @@ const circleBgStyle = computed(() => {
 // Styles - circle
 const circleClass = computed(() => {
   return mergedProps.value?.ui?.circleClass?.({
-    defaults: CIRCLE_PROGRESS_LAYERED_CLASSES.circleClass(),
+    defaults: CIRCLE_PROGRESS_DEFAULT_PROPS.ui.circleClass(),
   })
 })
 
@@ -78,7 +78,7 @@ const circleStyle = computed(() => {
 // Styles - text
 const textClass = computed(() => {
   return mergedProps.value?.ui?.textClass?.({
-    defaults: CIRCLE_PROGRESS_LAYERED_CLASSES.textClass(),
+    defaults: CIRCLE_PROGRESS_DEFAULT_PROPS.ui.textClass(),
   })
 })
 

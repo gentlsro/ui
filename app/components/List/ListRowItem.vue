@@ -11,7 +11,7 @@ import { useListStore } from './stores/list.store'
 import { useListDragAndDrop } from './composables/useListDragAndDrop'
 
 // Constants
-import { LIST_LAYERED_CLASSES } from './constants/list-layered-classes.constant'
+import { LIST_DEFAULT_PROPS } from './constants/list-default-props.constant'
 
 type IProps = Pick<IListProps, 'ui' | 'noHover' | 'reorderable' | 'disabledFnc' | 'moveHandleTarget' | 'moveHandleTakesSpace'> & {
   item: IListItem
@@ -74,7 +74,7 @@ const rowClass = computed(() => {
     groupsCount: groupBy.value.length,
     row: item.value.ref,
     isLast: props.isLast,
-    defaults: LIST_LAYERED_CLASSES.rowClass(),
+    defaults: LIST_DEFAULT_PROPS.ui.rowClass(),
   })
 })
 
@@ -115,7 +115,7 @@ const rowContentClass = computed(() => {
     row: item.value.ref,
     groupsCount: groupBy.value.length,
     isLast: props.isLast,
-    defaults: LIST_LAYERED_CLASSES.rowContentClass(),
+    defaults: LIST_DEFAULT_PROPS.ui.rowContentClass(),
   })
 })
 

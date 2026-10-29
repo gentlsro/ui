@@ -3,7 +3,7 @@
 import type { IMenuProps } from './types/menu-props.type'
 
 // Constants
-import { MENU_LAYERED_CLASSES } from './constants/menu-layered-classes.constant'
+import { MENU_DEFAULT_PROPS } from './constants/menu-default-props.constant'
 
 // Store
 import { useMenuStore } from './store/menu.store'
@@ -23,7 +23,7 @@ const isMovable = computed(() => {
 // Styles - header
 const headerClass = computed(() => {
   return props.ui?.headerClass?.({
-    defaults: MENU_LAYERED_CLASSES.headerClass(),
+    defaults: MENU_DEFAULT_PROPS.ui.headerClass(),
   })
 })
 
@@ -34,7 +34,7 @@ const headerStyle = computed(() => {
 // Styles - title
 const titleClass = computed(() => {
   return props.ui?.titleClass?.({
-    defaults: MENU_LAYERED_CLASSES.titleClass(),
+    defaults: MENU_DEFAULT_PROPS.ui.titleClass(),
   })
 })
 

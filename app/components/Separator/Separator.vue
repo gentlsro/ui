@@ -3,7 +3,7 @@
 import type { ISeparatorProps } from './types/separator-props.type'
 
 // Constants
-import { SEPARATOR_LAYERED_CLASSES } from './constants/separator-layered-classes.constant'
+import { SEPARATOR_DEFAULT_PROPS } from './constants/separator-default-props.constant'
 
 const props = withDefaults(defineProps<ISeparatorProps>(), {
   ...getComponentProps('separator'),
@@ -15,7 +15,7 @@ const mergedProps = computed(() => getComponentMergedProps('separator', props))
 // Styles
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: SEPARATOR_LAYERED_CLASSES.containerClass(),
+    defaults: SEPARATOR_DEFAULT_PROPS.ui.containerClass(),
   })
 })
 

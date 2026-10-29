@@ -11,7 +11,7 @@ import { useTreeDragAndDrop } from './composables/useTreeDragAndDrop'
 import { selectNode } from './functions/select-node'
 
 // Constants
-import { TREE_LAYERED_CLASSES } from './constants/tree-layered-classes.constant'
+import { TREE_DEFAULT_PROPS } from './constants/tree-default-props.constant'
 
 defineOptions({ inheritAttrs: false })
 const props = defineProps<ITreeNodeProps<T>>()
@@ -63,7 +63,7 @@ function handleMouseLeave() {
 // Styles - Node
 const nodeClass = computed(() => {
   return props.ui?.nodeClass?.({
-    defaults: TREE_LAYERED_CLASSES.nodeClass(),
+    defaults: TREE_DEFAULT_PROPS.ui.nodeClass(),
     node: node.value as any,
     index: props.index,
   })
@@ -79,7 +79,7 @@ const nodeStyle = computed(() => {
 // Styles - Node Content
 const nodeContentClass = computed(() => {
   return props.ui?.nodeContentClass?.({
-    defaults: TREE_LAYERED_CLASSES.nodeContentClass(),
+    defaults: TREE_DEFAULT_PROPS.ui.nodeContentClass(),
     node: node.value as any,
     index: props.index,
   })

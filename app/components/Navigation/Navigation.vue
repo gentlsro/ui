@@ -8,7 +8,7 @@ import type { INavigationProps } from './types/navigation-props.type'
 import { useLayoutStore } from '../../stores/layout.store'
 
 // Constants
-import { NAVIGATION_LAYERED_CLASSES } from './constants/navigation-layered-classes.constant'
+import { NAVIGATION_DEFAULT_PROPS } from './constants/navigation-default-props.constant'
 
 const props = withDefaults(defineProps<INavigationProps>(), {
   ...getComponentProps('navigation'),
@@ -104,7 +104,7 @@ const classes = computed(() => {
 // Styles - header
 const headerClass = computed(() => {
   return mergedProps.value?.ui?.headerClass?.({
-    defaults: NAVIGATION_LAYERED_CLASSES.headerClass(),
+    defaults: NAVIGATION_DEFAULT_PROPS.ui.headerClass(),
   })
 })
 
@@ -115,7 +115,7 @@ const headerStyle = computed(() => {
 // Styles - navigation
 const navigationClass = computed(() => {
   return mergedProps.value?.ui?.navigationClass?.({
-    defaults: NAVIGATION_LAYERED_CLASSES.navigationClass(),
+    defaults: NAVIGATION_DEFAULT_PROPS.ui.navigationClass(),
   })
 })
 

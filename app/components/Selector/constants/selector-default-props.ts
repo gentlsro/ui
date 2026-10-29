@@ -1,8 +1,28 @@
 // @unocss-include
 
-// Types
 import type { ISelectorProps } from '../types/selector-props.type'
-import { SELECTOR_CLASS_COMPOSERS, SELECTOR_CLASS_SLOTS } from './selector-class-slots.constant'
+import type { WidenClassSlots } from '../../../types/ui-class-config.type'
+import { uiClassLayers } from '$uiConfig'
+import { createUIClassResolver } from '../../../utils/create-ui-class-resolver'
+
+export const SELECTOR_CLASS_SLOTS = {
+  innerClass() {
+    const base = ''
+
+    return {
+      base,
+    } as const
+  },
+}
+
+type SelectorSlots<K extends keyof typeof SELECTOR_CLASS_SLOTS>
+  = WidenClassSlots<ReturnType<typeof SELECTOR_CLASS_SLOTS[K]>>
+
+export const SELECTOR_CLASS_COMPOSERS = {
+  innerClass(slots: SelectorSlots<'innerClass'>) {
+    return `${slots.base}`
+  },
+}
 
 export const SELECTOR_DEFAULT_PROPS = {
   listProps: {
@@ -28,11 +48,8 @@ export const SELECTOR_DEFAULT_PROPS = {
     },
   },
 
-  ui: {
-    innerClass() {
-      const slots = SELECTOR_CLASS_SLOTS.innerClass()
-
-      return withClassPicker({ ...slots, all: SELECTOR_CLASS_COMPOSERS.innerClass(slots) } as const)
-    },
-  },
+  ui: createUIClassResolver('selector', {
+    slots: SELECTOR_CLASS_SLOTS,
+    compose: SELECTOR_CLASS_COMPOSERS,
+  }, () => uiClassLayers),
 } satisfies ISelectorProps

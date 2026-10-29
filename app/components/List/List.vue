@@ -15,7 +15,7 @@ import { getListItemKey } from './functions/helpers/get-list-item-key'
 import { LIST_ID_KEY, useListStore } from './stores/list.store'
 
 // Constants
-import { LIST_LAYERED_CLASSES } from './constants/list-layered-classes.constant'
+import { LIST_DEFAULT_PROPS } from './constants/list-default-props.constant'
 
 const props = withDefaults(defineProps<IListProps>(), {
   ...getComponentProps('list'),
@@ -85,7 +85,7 @@ const isSearchInputVisible = computed(() => {
 
 const containerClass = computed(() => {
   return mergedProps.value.ui?.containerClass?.({
-    defaults: LIST_LAYERED_CLASSES.containerClass(),
+    defaults: LIST_DEFAULT_PROPS.ui.containerClass(),
   })
 })
 

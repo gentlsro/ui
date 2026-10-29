@@ -3,7 +3,7 @@
 import type { IMenuConfirmationProps } from './types/menu-confirmation-props.type'
 
 // Constants
-import { MENU_CONFIRMATION_LAYERED_CLASSES } from './constants/menu-confirmation-layered-classes.constant'
+import { MENU_CONFIRMATION_DEFAULT_PROPS } from './constants/menu-confirmation-default-props.constant'
 
 // Functions
 import { useMenuUtils } from '../Menu/composables/useMenuUtils'
@@ -71,7 +71,7 @@ defineExpose({
 // Styles - confirmBtn
 const confirmBtnClass = computed(() => {
   return mergedProps.value?.ui?.confirmBtnClass?.({
-    defaults: MENU_CONFIRMATION_LAYERED_CLASSES.confirmBtnClass(),
+    defaults: MENU_CONFIRMATION_DEFAULT_PROPS.ui.confirmBtnClass(),
   })
 })
 
@@ -82,7 +82,7 @@ const confirmBtnStyle = computed(() => {
 // Styles - confirmationText
 const confirmationTextClass = computed(() => {
   return mergedProps.value?.ui?.confirmationTextClass?.({
-    defaults: MENU_CONFIRMATION_LAYERED_CLASSES.confirmationTextClass(),
+    defaults: MENU_CONFIRMATION_DEFAULT_PROPS.ui.confirmationTextClass(),
   })
 })
 

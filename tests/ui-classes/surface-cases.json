@@ -3,9 +3,9 @@
     "component": "badge",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "Badge/constants/badge-layered-classes.constant.ts",
-    "layeredSymbol": "BADGE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Badge/constants/badge-default-props.constant.ts",
+    "defaultsSymbol": "BADGE_DEFAULT_PROPS"
   },
   {
     "component": "banner",
@@ -13,9 +13,9 @@
     "maps": [
       "variants"
     ],
-    "layeredFile": "Banner/constants/banner-layered-classes.constant.ts",
-    "layeredSymbol": "BANNER_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "Banner/constants/banner-default-props.constant.ts",
+    "defaultsSymbol": "BANNER_DEFAULT_PROPS"
   },
   {
     "component": "banner",
@@ -23,9 +23,9 @@
     "maps": [
       "variants"
     ],
-    "layeredFile": "Banner/constants/banner-layered-classes.constant.ts",
-    "layeredSymbol": "BANNER_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "Banner/constants/banner-default-props.constant.ts",
+    "defaultsSymbol": "BANNER_DEFAULT_PROPS"
   },
   {
     "component": "banner",
@@ -33,41 +33,41 @@
     "maps": [
       "icons"
     ],
-    "layeredFile": "Banner/constants/banner-layered-classes.constant.ts",
-    "layeredSymbol": "BANNER_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "Banner/constants/banner-default-props.constant.ts",
+    "defaultsSymbol": "BANNER_DEFAULT_PROPS"
   },
   {
     "component": "banner",
     "surface": "labelClass",
     "maps": [],
-    "layeredFile": "Banner/constants/banner-layered-classes.constant.ts",
-    "layeredSymbol": "BANNER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Banner/constants/banner-default-props.constant.ts",
+    "defaultsSymbol": "BANNER_DEFAULT_PROPS"
   },
   {
     "component": "banner",
     "surface": "dismissClass",
     "maps": [],
-    "layeredFile": "Banner/constants/banner-layered-classes.constant.ts",
-    "layeredSymbol": "BANNER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Banner/constants/banner-default-props.constant.ts",
+    "defaultsSymbol": "BANNER_DEFAULT_PROPS"
   },
   {
     "component": "breadcrumbs",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "Breadcrumbs/constants/breadcrumbs-layered-classes.constant.ts",
-    "layeredSymbol": "BREADCRUMBS_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Breadcrumbs/constants/breadcrumbs-default-props.constant.ts",
+    "defaultsSymbol": "BREADCRUMBS_DEFAULT_PROPS"
   },
   {
     "component": "breadcrumbs",
     "surface": "breadcrumbsClass",
     "maps": [],
-    "layeredFile": "Breadcrumbs/constants/breadcrumbs-layered-classes.constant.ts",
-    "layeredSymbol": "BREADCRUMBS_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Breadcrumbs/constants/breadcrumbs-default-props.constant.ts",
+    "defaultsSymbol": "BREADCRUMBS_DEFAULT_PROPS"
   },
   {
     "component": "burger",
@@ -75,9 +75,9 @@
     "maps": [
       "sizes"
     ],
-    "layeredFile": "Burger/constants/burger-layered-classes.constant.ts",
-    "layeredSymbol": "BURGER_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "Burger/constants/burger-default-props.constant.ts",
+    "defaultsSymbol": "BURGER_DEFAULT_PROPS"
   },
   {
     "component": "burger",
@@ -85,137 +85,137 @@
     "maps": [
       "sizes"
     ],
-    "layeredFile": "Burger/constants/burger-layered-classes.constant.ts",
-    "layeredSymbol": "BURGER_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "Burger/constants/burger-default-props.constant.ts",
+    "defaultsSymbol": "BURGER_DEFAULT_PROPS"
   },
   {
     "component": "button",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "Button/constants/button-layered-classes.constant.ts",
-    "layeredSymbol": "BTN_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "Button/constants/btn-default-props.constant.ts",
+    "defaultsSymbol": "BTN_DEFAULT_PROPS"
   },
   {
     "component": "button",
     "surface": "iconClass",
     "maps": [],
-    "layeredFile": "Button/constants/button-layered-classes.constant.ts",
-    "layeredSymbol": "BTN_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "Button/constants/btn-default-props.constant.ts",
+    "defaultsSymbol": "BTN_DEFAULT_PROPS"
   },
   {
     "component": "button",
     "surface": "labelClass",
     "maps": [],
-    "layeredFile": "Button/constants/button-layered-classes.constant.ts",
-    "layeredSymbol": "BTN_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "Button/constants/btn-default-props.constant.ts",
+    "defaultsSymbol": "BTN_DEFAULT_PROPS"
   },
   {
     "component": "button",
     "surface": "focusHelperClass",
     "maps": [],
-    "layeredFile": "Button/constants/button-layered-classes.constant.ts",
-    "layeredSymbol": "BTN_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Button/constants/btn-default-props.constant.ts",
+    "defaultsSymbol": "BTN_DEFAULT_PROPS"
   },
   {
     "component": "button",
     "surface": "loadingClass",
     "maps": [],
-    "layeredFile": "Button/constants/button-layered-classes.constant.ts",
-    "layeredSymbol": "BTN_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Button/constants/btn-default-props.constant.ts",
+    "defaultsSymbol": "BTN_DEFAULT_PROPS"
   },
   {
     "component": "button",
     "surface": "loaderClass",
     "maps": [],
-    "layeredFile": "Button/constants/button-layered-classes.constant.ts",
-    "layeredSymbol": "BTN_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "Button/constants/btn-default-props.constant.ts",
+    "defaultsSymbol": "BTN_DEFAULT_PROPS"
   },
   {
     "component": "buttonGroup",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "ButtonGroup/constants/button-group-layered-classes.constant.ts",
-    "layeredSymbol": "BUTTON_GROUP_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "ButtonGroup/constants/button-group-default-props.constant.ts",
+    "defaultsSymbol": "BUTTON_GROUP_DEFAULT_PROPS"
   },
   {
     "component": "buttonGroup",
     "surface": "buttonClass",
     "maps": [],
-    "layeredFile": "ButtonGroup/constants/button-group-layered-classes.constant.ts",
-    "layeredSymbol": "BUTTON_GROUP_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "ButtonGroup/constants/button-group-default-props.constant.ts",
+    "defaultsSymbol": "BUTTON_GROUP_DEFAULT_PROPS"
   },
   {
     "component": "buttonGroup",
     "surface": "activeClass",
     "maps": [],
-    "layeredFile": "ButtonGroup/constants/button-group-layered-classes.constant.ts",
-    "layeredSymbol": "BUTTON_GROUP_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "ButtonGroup/constants/button-group-default-props.constant.ts",
+    "defaultsSymbol": "BUTTON_GROUP_DEFAULT_PROPS"
   },
   {
     "component": "miniCard",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "Card/constants/mini-card-layered-classes.constant.ts",
-    "layeredSymbol": "MINI_CARD_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Card/constants/mini-card-default-props.constant.ts",
+    "defaultsSymbol": "MINI_CARD_DEFAULT_PROPS"
   },
   {
     "component": "miniCard",
     "surface": "iconContainerClass",
     "maps": [],
-    "layeredFile": "Card/constants/mini-card-layered-classes.constant.ts",
-    "layeredSymbol": "MINI_CARD_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Card/constants/mini-card-default-props.constant.ts",
+    "defaultsSymbol": "MINI_CARD_DEFAULT_PROPS"
   },
   {
     "component": "miniCard",
     "surface": "iconClass",
     "maps": [],
-    "layeredFile": "Card/constants/mini-card-layered-classes.constant.ts",
-    "layeredSymbol": "MINI_CARD_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Card/constants/mini-card-default-props.constant.ts",
+    "defaultsSymbol": "MINI_CARD_DEFAULT_PROPS"
   },
   {
     "component": "miniCard",
     "surface": "contentClass",
     "maps": [],
-    "layeredFile": "Card/constants/mini-card-layered-classes.constant.ts",
-    "layeredSymbol": "MINI_CARD_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Card/constants/mini-card-default-props.constant.ts",
+    "defaultsSymbol": "MINI_CARD_DEFAULT_PROPS"
   },
   {
     "component": "miniCard",
     "surface": "labelClass",
     "maps": [],
-    "layeredFile": "Card/constants/mini-card-layered-classes.constant.ts",
-    "layeredSymbol": "MINI_CARD_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Card/constants/mini-card-default-props.constant.ts",
+    "defaultsSymbol": "MINI_CARD_DEFAULT_PROPS"
   },
   {
     "component": "miniCard",
     "surface": "valueClass",
     "maps": [],
-    "layeredFile": "Card/constants/mini-card-layered-classes.constant.ts",
-    "layeredSymbol": "MINI_CARD_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Card/constants/mini-card-default-props.constant.ts",
+    "defaultsSymbol": "MINI_CARD_DEFAULT_PROPS"
   },
   {
     "component": "miniCard",
     "surface": "previousValueClass",
     "maps": [],
-    "layeredFile": "Card/constants/mini-card-layered-classes.constant.ts",
-    "layeredSymbol": "MINI_CARD_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Card/constants/mini-card-default-props.constant.ts",
+    "defaultsSymbol": "MINI_CARD_DEFAULT_PROPS"
   },
   {
     "component": "checkbox",
@@ -223,9 +223,9 @@
     "maps": [
       "sizes"
     ],
-    "layeredFile": "Checkbox/constants/checkbox-layered-classes.constant.ts",
-    "layeredSymbol": "CHECKBOX_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "Checkbox/constants/checkbox-default-props.constant.ts",
+    "defaultsSymbol": "CHECKBOX_DEFAULT_PROPS"
   },
   {
     "component": "checkbox",
@@ -234,9 +234,9 @@
       "colors",
       "sizes"
     ],
-    "layeredFile": "Checkbox/constants/checkbox-layered-classes.constant.ts",
-    "layeredSymbol": "CHECKBOX_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "Checkbox/constants/checkbox-default-props.constant.ts",
+    "defaultsSymbol": "CHECKBOX_DEFAULT_PROPS"
   },
   {
     "component": "checkbox",
@@ -244,297 +244,297 @@
     "maps": [
       "sizes"
     ],
-    "layeredFile": "Checkbox/constants/checkbox-layered-classes.constant.ts",
-    "layeredSymbol": "CHECKBOX_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "Checkbox/constants/checkbox-default-props.constant.ts",
+    "defaultsSymbol": "CHECKBOX_DEFAULT_PROPS"
   },
   {
     "component": "checkbox",
     "surface": "focusHelperClass",
     "maps": [],
-    "layeredFile": "Checkbox/constants/checkbox-layered-classes.constant.ts",
-    "layeredSymbol": "CHECKBOX_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Checkbox/constants/checkbox-default-props.constant.ts",
+    "defaultsSymbol": "CHECKBOX_DEFAULT_PROPS"
   },
   {
     "component": "chip",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "Chip/constants/chip-layered-classes.constant.ts",
-    "layeredSymbol": "CHIP_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Chip/constants/chip-default-props.constant.ts",
+    "defaultsSymbol": "CHIP_DEFAULT_PROPS"
   },
   {
     "component": "chip",
     "surface": "labelClass",
     "maps": [],
-    "layeredFile": "Chip/constants/chip-layered-classes.constant.ts",
-    "layeredSymbol": "CHIP_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Chip/constants/chip-default-props.constant.ts",
+    "defaultsSymbol": "CHIP_DEFAULT_PROPS"
   },
   {
     "component": "circleProgress",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "CircleProgress/constants/circle-progress-layered-classes.constant.ts",
-    "layeredSymbol": "CIRCLE_PROGRESS_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "CircleProgress/constants/circle-progress-default-props.constant.ts",
+    "defaultsSymbol": "CIRCLE_PROGRESS_DEFAULT_PROPS"
   },
   {
     "component": "circleProgress",
     "surface": "svgClass",
     "maps": [],
-    "layeredFile": "CircleProgress/constants/circle-progress-layered-classes.constant.ts",
-    "layeredSymbol": "CIRCLE_PROGRESS_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "CircleProgress/constants/circle-progress-default-props.constant.ts",
+    "defaultsSymbol": "CIRCLE_PROGRESS_DEFAULT_PROPS"
   },
   {
     "component": "circleProgress",
     "surface": "circleBgClass",
     "maps": [],
-    "layeredFile": "CircleProgress/constants/circle-progress-layered-classes.constant.ts",
-    "layeredSymbol": "CIRCLE_PROGRESS_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "CircleProgress/constants/circle-progress-default-props.constant.ts",
+    "defaultsSymbol": "CIRCLE_PROGRESS_DEFAULT_PROPS"
   },
   {
     "component": "circleProgress",
     "surface": "circleClass",
     "maps": [],
-    "layeredFile": "CircleProgress/constants/circle-progress-layered-classes.constant.ts",
-    "layeredSymbol": "CIRCLE_PROGRESS_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "CircleProgress/constants/circle-progress-default-props.constant.ts",
+    "defaultsSymbol": "CIRCLE_PROGRESS_DEFAULT_PROPS"
   },
   {
     "component": "circleProgress",
     "surface": "textClass",
     "maps": [],
-    "layeredFile": "CircleProgress/constants/circle-progress-layered-classes.constant.ts",
-    "layeredSymbol": "CIRCLE_PROGRESS_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "CircleProgress/constants/circle-progress-default-props.constant.ts",
+    "defaultsSymbol": "CIRCLE_PROGRESS_DEFAULT_PROPS"
   },
   {
     "component": "collapse",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "Collapse/constants/collapse-layered-classes.constant.ts",
-    "layeredSymbol": "COLLAPSE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Collapse/constants/collapse-default-props.constant.ts",
+    "defaultsSymbol": "COLLAPSE_DEFAULT_PROPS"
   },
   {
     "component": "collapse",
     "surface": "headerClass",
     "maps": [],
-    "layeredFile": "Collapse/constants/collapse-layered-classes.constant.ts",
-    "layeredSymbol": "COLLAPSE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Collapse/constants/collapse-default-props.constant.ts",
+    "defaultsSymbol": "COLLAPSE_DEFAULT_PROPS"
   },
   {
     "component": "collapse",
     "surface": "headerRightClass",
     "maps": [],
-    "layeredFile": "Collapse/constants/collapse-layered-classes.constant.ts",
-    "layeredSymbol": "COLLAPSE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Collapse/constants/collapse-default-props.constant.ts",
+    "defaultsSymbol": "COLLAPSE_DEFAULT_PROPS"
   },
   {
     "component": "collapse",
     "surface": "titleClass",
     "maps": [],
-    "layeredFile": "Collapse/constants/collapse-layered-classes.constant.ts",
-    "layeredSymbol": "COLLAPSE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Collapse/constants/collapse-default-props.constant.ts",
+    "defaultsSymbol": "COLLAPSE_DEFAULT_PROPS"
   },
   {
     "component": "collapse",
     "surface": "subtitleClass",
     "maps": [],
-    "layeredFile": "Collapse/constants/collapse-layered-classes.constant.ts",
-    "layeredSymbol": "COLLAPSE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Collapse/constants/collapse-default-props.constant.ts",
+    "defaultsSymbol": "COLLAPSE_DEFAULT_PROPS"
   },
   {
     "component": "collapse",
     "surface": "expandIconClass",
     "maps": [],
-    "layeredFile": "Collapse/constants/collapse-layered-classes.constant.ts",
-    "layeredSymbol": "COLLAPSE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Collapse/constants/collapse-default-props.constant.ts",
+    "defaultsSymbol": "COLLAPSE_DEFAULT_PROPS"
   },
   {
     "component": "collapse",
     "surface": "textClass",
     "maps": [],
-    "layeredFile": "Collapse/constants/collapse-layered-classes.constant.ts",
-    "layeredSymbol": "COLLAPSE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Collapse/constants/collapse-default-props.constant.ts",
+    "defaultsSymbol": "COLLAPSE_DEFAULT_PROPS"
   },
   {
     "component": "collapse",
     "surface": "contentClass",
     "maps": [],
-    "layeredFile": "Collapse/constants/collapse-layered-classes.constant.ts",
-    "layeredSymbol": "COLLAPSE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Collapse/constants/collapse-default-props.constant.ts",
+    "defaultsSymbol": "COLLAPSE_DEFAULT_PROPS"
   },
   {
     "component": "collapse",
     "surface": "contentInnerClass",
     "maps": [],
-    "layeredFile": "Collapse/constants/collapse-layered-classes.constant.ts",
-    "layeredSymbol": "COLLAPSE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Collapse/constants/collapse-default-props.constant.ts",
+    "defaultsSymbol": "COLLAPSE_DEFAULT_PROPS"
   },
   {
     "component": "confirmation",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "Confirmation/constants/confirmation-layered-classes.constant.ts",
-    "layeredSymbol": "CONFIRMATION_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Confirmation/constants/confirmation-default-props.constant.ts",
+    "defaultsSymbol": "CONFIRMATION_DEFAULT_PROPS"
   },
   {
     "component": "confirmation",
     "surface": "checkmarkClass",
     "maps": [],
-    "layeredFile": "Confirmation/constants/confirmation-layered-classes.constant.ts",
-    "layeredSymbol": "CONFIRMATION_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Confirmation/constants/confirmation-default-props.constant.ts",
+    "defaultsSymbol": "CONFIRMATION_DEFAULT_PROPS"
   },
   {
     "component": "confirmation",
     "surface": "textClass",
     "maps": [],
-    "layeredFile": "Confirmation/constants/confirmation-layered-classes.constant.ts",
-    "layeredSymbol": "CONFIRMATION_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Confirmation/constants/confirmation-default-props.constant.ts",
+    "defaultsSymbol": "CONFIRMATION_DEFAULT_PROPS"
   },
   {
     "component": "confirmation",
     "surface": "actionsClass",
     "maps": [],
-    "layeredFile": "Confirmation/constants/confirmation-layered-classes.constant.ts",
-    "layeredSymbol": "CONFIRMATION_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Confirmation/constants/confirmation-default-props.constant.ts",
+    "defaultsSymbol": "CONFIRMATION_DEFAULT_PROPS"
   },
   {
     "component": "crudBtns",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "Crud/constants/crud-btns-layered-classes.constant.ts",
-    "layeredSymbol": "CRUD_BTNS_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Crud/constants/crud-btns-default-props.constant.ts",
+    "defaultsSymbol": "CRUD_BTNS_DEFAULT_PROPS"
   },
   {
     "component": "crudEditBtn",
     "surface": "wrapperClass",
     "maps": [],
-    "layeredFile": "Crud/constants/crud-btns-layered-classes.constant.ts",
-    "layeredSymbol": "CRUD_EDIT_BTN_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Crud/constants/crud-btns-default-props.constant.ts",
+    "defaultsSymbol": "CRUD_EDIT_BTN_DEFAULT_PROPS"
   },
   {
     "component": "crudEditBtn",
     "surface": "btnClass",
     "maps": [],
-    "layeredFile": "Crud/constants/crud-btns-layered-classes.constant.ts",
-    "layeredSymbol": "CRUD_EDIT_BTN_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Crud/constants/crud-btns-default-props.constant.ts",
+    "defaultsSymbol": "CRUD_EDIT_BTN_DEFAULT_PROPS"
   },
   {
     "component": "datePicker",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "DatePicker/constants/datepicker-layered-classes.constant.ts",
-    "layeredSymbol": "DATE_PICKER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "DatePicker/constants/datepicker-default-props.constant.ts",
+    "defaultsSymbol": "DATE_PICKER_DEFAULT_PROPS"
   },
   {
     "component": "datePicker",
     "surface": "daysGridClass",
     "maps": [],
-    "layeredFile": "DatePicker/constants/datepicker-layered-classes.constant.ts",
-    "layeredSymbol": "DATE_PICKER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "DatePicker/constants/datepicker-default-props.constant.ts",
+    "defaultsSymbol": "DATE_PICKER_DEFAULT_PROPS"
   },
   {
     "component": "datePicker",
     "surface": "dayClass",
     "maps": [],
-    "layeredFile": "DatePicker/constants/datepicker-layered-classes.constant.ts",
-    "layeredSymbol": "DATE_PICKER_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "DatePicker/constants/datepicker-default-props.constant.ts",
+    "defaultsSymbol": "DATE_PICKER_DEFAULT_PROPS"
   },
   {
     "component": "datePicker",
     "surface": "dayNumberClass",
     "maps": [],
-    "layeredFile": "DatePicker/constants/datepicker-layered-classes.constant.ts",
-    "layeredSymbol": "DATE_PICKER_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "DatePicker/constants/datepicker-default-props.constant.ts",
+    "defaultsSymbol": "DATE_PICKER_DEFAULT_PROPS"
   },
   {
     "component": "datePicker",
     "surface": "dayEdgeClass",
     "maps": [],
-    "layeredFile": "DatePicker/constants/datepicker-layered-classes.constant.ts",
-    "layeredSymbol": "DATE_PICKER_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "DatePicker/constants/datepicker-default-props.constant.ts",
+    "defaultsSymbol": "DATE_PICKER_DEFAULT_PROPS"
   },
   {
     "component": "datePicker",
     "surface": "dayNumberWrapperClass",
     "maps": [],
-    "layeredFile": "DatePicker/constants/datepicker-layered-classes.constant.ts",
-    "layeredSymbol": "DATE_PICKER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "DatePicker/constants/datepicker-default-props.constant.ts",
+    "defaultsSymbol": "DATE_PICKER_DEFAULT_PROPS"
   },
   {
     "component": "datePicker",
     "surface": "dayEventsClass",
     "maps": [],
-    "layeredFile": "DatePicker/constants/datepicker-layered-classes.constant.ts",
-    "layeredSymbol": "DATE_PICKER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "DatePicker/constants/datepicker-default-props.constant.ts",
+    "defaultsSymbol": "DATE_PICKER_DEFAULT_PROPS"
   },
   {
     "component": "datePicker",
     "surface": "dayEventsContainerClass",
     "maps": [],
-    "layeredFile": "DatePicker/constants/datepicker-layered-classes.constant.ts",
-    "layeredSymbol": "DATE_PICKER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "DatePicker/constants/datepicker-default-props.constant.ts",
+    "defaultsSymbol": "DATE_PICKER_DEFAULT_PROPS"
   },
   {
     "component": "datePicker",
     "surface": "dayEventClass",
     "maps": [],
-    "layeredFile": "DatePicker/constants/datepicker-layered-classes.constant.ts",
-    "layeredSymbol": "DATE_PICKER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "DatePicker/constants/datepicker-default-props.constant.ts",
+    "defaultsSymbol": "DATE_PICKER_DEFAULT_PROPS"
   },
   {
     "component": "datePicker",
     "surface": "controlsClass",
     "maps": [],
-    "layeredFile": "DatePicker/constants/datepicker-layered-classes.constant.ts",
-    "layeredSymbol": "DATE_PICKER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "DatePicker/constants/datepicker-default-props.constant.ts",
+    "defaultsSymbol": "DATE_PICKER_DEFAULT_PROPS"
   },
   {
     "component": "dialog",
     "surface": "backdropClass",
     "maps": [],
-    "layeredFile": "Dialog/constants/dialog-layered-classes.constant.ts",
-    "layeredSymbol": "DIALOG_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Dialog/constants/dialog-default-props.constant.ts",
+    "defaultsSymbol": "DIALOG_DEFAULT_PROPS"
   },
   {
     "component": "dialog",
     "surface": "wrapperClass",
     "maps": [],
-    "layeredFile": "Dialog/constants/dialog-layered-classes.constant.ts",
-    "layeredSymbol": "DIALOG_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Dialog/constants/dialog-default-props.constant.ts",
+    "defaultsSymbol": "DIALOG_DEFAULT_PROPS"
   },
   {
     "component": "dialog",
@@ -542,833 +542,833 @@
     "maps": [
       "positions"
     ],
-    "layeredFile": "Dialog/constants/dialog-layered-classes.constant.ts",
-    "layeredSymbol": "DIALOG_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "Dialog/constants/dialog-default-props.constant.ts",
+    "defaultsSymbol": "DIALOG_DEFAULT_PROPS"
   },
   {
     "component": "dialog",
     "surface": "headerClass",
     "maps": [],
-    "layeredFile": "Dialog/constants/dialog-layered-classes.constant.ts",
-    "layeredSymbol": "DIALOG_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Dialog/constants/dialog-default-props.constant.ts",
+    "defaultsSymbol": "DIALOG_DEFAULT_PROPS"
   },
   {
     "component": "dialog",
     "surface": "titleClass",
     "maps": [],
-    "layeredFile": "Dialog/constants/dialog-layered-classes.constant.ts",
-    "layeredSymbol": "DIALOG_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Dialog/constants/dialog-default-props.constant.ts",
+    "defaultsSymbol": "DIALOG_DEFAULT_PROPS"
   },
   {
     "component": "dialog",
     "surface": "contentClass",
     "maps": [],
-    "layeredFile": "Dialog/constants/dialog-layered-classes.constant.ts",
-    "layeredSymbol": "DIALOG_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Dialog/constants/dialog-default-props.constant.ts",
+    "defaultsSymbol": "DIALOG_DEFAULT_PROPS"
   },
   {
     "component": "drawer",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "Drawer/constants/drawer-layered-classes.constant.ts",
-    "layeredSymbol": "DRAWER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Drawer/constants/drawer-default-props.constant.ts",
+    "defaultsSymbol": "DRAWER_DEFAULT_PROPS"
   },
   {
     "component": "drawer",
     "surface": "titleClass",
     "maps": [],
-    "layeredFile": "Drawer/constants/drawer-layered-classes.constant.ts",
-    "layeredSymbol": "DRAWER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Drawer/constants/drawer-default-props.constant.ts",
+    "defaultsSymbol": "DRAWER_DEFAULT_PROPS"
   },
   {
     "component": "form",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "Form/constants/form-layered-classes.constant.ts",
-    "layeredSymbol": "FORM_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Form/constants/form-default-props.constant.ts",
+    "defaultsSymbol": "FORM_DEFAULT_PROPS"
   },
   {
     "component": "form",
     "surface": "contentClass",
     "maps": [],
-    "layeredFile": "Form/constants/form-layered-classes.constant.ts",
-    "layeredSymbol": "FORM_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Form/constants/form-default-props.constant.ts",
+    "defaultsSymbol": "FORM_DEFAULT_PROPS"
   },
   {
     "component": "form",
     "surface": "controlsClass",
     "maps": [],
-    "layeredFile": "Form/constants/form-layered-classes.constant.ts",
-    "layeredSymbol": "FORM_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Form/constants/form-default-props.constant.ts",
+    "defaultsSymbol": "FORM_DEFAULT_PROPS"
   },
   {
     "component": "form",
     "surface": "submitWrapperClass",
     "maps": [],
-    "layeredFile": "Form/constants/form-layered-classes.constant.ts",
-    "layeredSymbol": "FORM_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Form/constants/form-default-props.constant.ts",
+    "defaultsSymbol": "FORM_DEFAULT_PROPS"
   },
   {
     "component": "form",
     "surface": "submitClass",
     "maps": [],
-    "layeredFile": "Form/constants/form-layered-classes.constant.ts",
-    "layeredSymbol": "FORM_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Form/constants/form-default-props.constant.ts",
+    "defaultsSymbol": "FORM_DEFAULT_PROPS"
   },
   {
     "component": "form",
     "surface": "cancelClass",
     "maps": [],
-    "layeredFile": "Form/constants/form-layered-classes.constant.ts",
-    "layeredSymbol": "FORM_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Form/constants/form-default-props.constant.ts",
+    "defaultsSymbol": "FORM_DEFAULT_PROPS"
   },
   {
     "component": "inputLabel",
     "surface": "labelClass",
     "maps": [],
-    "layeredFile": "InputLabel/constants/input-label-layered-classes.constant.ts",
-    "layeredSymbol": "INPUT_LABEL_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "InputLabel/constants/input-label-default-props.ts",
+    "defaultsSymbol": "INPUT_LABEL_DEFAULT_PROPS"
   },
   {
     "component": "inputWrapper",
     "surface": "wrapperClass",
     "maps": [],
-    "layeredFile": "InputWrapper/constants/input-wrapper-layered-classes.constant.ts",
-    "layeredSymbol": "INPUT_WRAPPER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "InputWrapper/constants/input-wrapper-default-props.ts",
+    "defaultsSymbol": "INPUT_WRAPPER_DEFAULT_PROPS"
   },
   {
     "component": "inputWrapper",
     "surface": "appendClass",
     "maps": [],
-    "layeredFile": "InputWrapper/constants/input-wrapper-layered-classes.constant.ts",
-    "layeredSymbol": "INPUT_WRAPPER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "InputWrapper/constants/input-wrapper-default-props.ts",
+    "defaultsSymbol": "INPUT_WRAPPER_DEFAULT_PROPS"
   },
   {
     "component": "inputWrapper",
     "surface": "contentClass",
     "maps": [],
-    "layeredFile": "InputWrapper/constants/input-wrapper-layered-classes.constant.ts",
-    "layeredSymbol": "INPUT_WRAPPER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "InputWrapper/constants/input-wrapper-default-props.ts",
+    "defaultsSymbol": "INPUT_WRAPPER_DEFAULT_PROPS"
   },
   {
     "component": "inputWrapper",
     "surface": "errorClass",
     "maps": [],
-    "layeredFile": "InputWrapper/constants/input-wrapper-layered-classes.constant.ts",
-    "layeredSymbol": "INPUT_WRAPPER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "InputWrapper/constants/input-wrapper-default-props.ts",
+    "defaultsSymbol": "INPUT_WRAPPER_DEFAULT_PROPS"
   },
   {
     "component": "inputWrapper",
     "surface": "hintClass",
     "maps": [],
-    "layeredFile": "InputWrapper/constants/input-wrapper-layered-classes.constant.ts",
-    "layeredSymbol": "INPUT_WRAPPER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "InputWrapper/constants/input-wrapper-default-props.ts",
+    "defaultsSymbol": "INPUT_WRAPPER_DEFAULT_PROPS"
   },
   {
     "component": "inputWrapper",
     "surface": "inputContainerClass",
     "maps": [],
-    "layeredFile": "InputWrapper/constants/input-wrapper-layered-classes.constant.ts",
-    "layeredSymbol": "INPUT_WRAPPER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "InputWrapper/constants/input-wrapper-default-props.ts",
+    "defaultsSymbol": "INPUT_WRAPPER_DEFAULT_PROPS"
   },
   {
     "component": "inputWrapper",
     "surface": "inputInnerContainerClass",
     "maps": [],
-    "layeredFile": "InputWrapper/constants/input-wrapper-layered-classes.constant.ts",
-    "layeredSymbol": "INPUT_WRAPPER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "InputWrapper/constants/input-wrapper-default-props.ts",
+    "defaultsSymbol": "INPUT_WRAPPER_DEFAULT_PROPS"
   },
   {
     "component": "inputWrapper",
     "surface": "inputClass",
     "maps": [],
-    "layeredFile": "InputWrapper/constants/input-wrapper-layered-classes.constant.ts",
-    "layeredSymbol": "INPUT_WRAPPER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "InputWrapper/constants/input-wrapper-default-props.ts",
+    "defaultsSymbol": "INPUT_WRAPPER_DEFAULT_PROPS"
   },
   {
     "component": "item",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "Item/constants/item-layered-classes.constant.ts",
-    "layeredSymbol": "ITEM_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Item/constants/item-default-props.constant.ts",
+    "defaultsSymbol": "ITEM_DEFAULT_PROPS"
   },
   {
     "component": "item",
     "surface": "focusHelperClass",
     "maps": [],
-    "layeredFile": "Item/constants/item-layered-classes.constant.ts",
-    "layeredSymbol": "ITEM_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Item/constants/item-default-props.constant.ts",
+    "defaultsSymbol": "ITEM_DEFAULT_PROPS"
   },
   {
     "component": "keyboardShortcut",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "KeyboardShortcut/constants/keyboard-shortcut-layered-classes.constant.ts",
-    "layeredSymbol": "KEYBOARD_SHORTCUT_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "KeyboardShortcut/constants/keyboard-shortcut-default-props.constant.ts",
+    "defaultsSymbol": "KEYBOARD_SHORTCUT_DEFAULT_PROPS"
   },
   {
     "component": "keyboardShortcut",
     "surface": "wrapperClass",
     "maps": [],
-    "layeredFile": "KeyboardShortcut/constants/keyboard-shortcut-layered-classes.constant.ts",
-    "layeredSymbol": "KEYBOARD_SHORTCUT_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "KeyboardShortcut/constants/keyboard-shortcut-default-props.constant.ts",
+    "defaultsSymbol": "KEYBOARD_SHORTCUT_DEFAULT_PROPS"
   },
   {
     "component": "keyboardShortcut",
     "surface": "iconClass",
     "maps": [],
-    "layeredFile": "KeyboardShortcut/constants/keyboard-shortcut-layered-classes.constant.ts",
-    "layeredSymbol": "KEYBOARD_SHORTCUT_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "KeyboardShortcut/constants/keyboard-shortcut-default-props.constant.ts",
+    "defaultsSymbol": "KEYBOARD_SHORTCUT_DEFAULT_PROPS"
   },
   {
     "component": "list",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "List/constants/list-layered-classes.constant.ts",
-    "layeredSymbol": "LIST_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "List/constants/list-default-props.constant.ts",
+    "defaultsSymbol": "LIST_DEFAULT_PROPS"
   },
   {
     "component": "list",
     "surface": "searchClass",
     "maps": [],
-    "layeredFile": "List/constants/list-layered-classes.constant.ts",
-    "layeredSymbol": "LIST_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "List/constants/list-default-props.constant.ts",
+    "defaultsSymbol": "LIST_DEFAULT_PROPS"
   },
   {
     "component": "list",
     "surface": "rowClass",
     "maps": [],
-    "layeredFile": "List/constants/list-layered-classes.constant.ts",
-    "layeredSymbol": "LIST_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "List/constants/list-default-props.constant.ts",
+    "defaultsSymbol": "LIST_DEFAULT_PROPS"
   },
   {
     "component": "list",
     "surface": "rowContentClass",
     "maps": [],
-    "layeredFile": "List/constants/list-layered-classes.constant.ts",
-    "layeredSymbol": "LIST_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "List/constants/list-default-props.constant.ts",
+    "defaultsSymbol": "LIST_DEFAULT_PROPS"
   },
   {
     "component": "list",
     "surface": "rowGroupClass",
     "maps": [],
-    "layeredFile": "List/constants/list-layered-classes.constant.ts",
-    "layeredSymbol": "LIST_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "List/constants/list-default-props.constant.ts",
+    "defaultsSymbol": "LIST_DEFAULT_PROPS"
   },
   {
     "component": "list",
     "surface": "moveHandleClass",
     "maps": [],
-    "layeredFile": "List/constants/list-layered-classes.constant.ts",
-    "layeredSymbol": "LIST_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "List/constants/list-default-props.constant.ts",
+    "defaultsSymbol": "LIST_DEFAULT_PROPS"
   },
   {
     "component": "list",
     "surface": "moveHandleIconClass",
     "maps": [],
-    "layeredFile": "List/constants/list-layered-classes.constant.ts",
-    "layeredSymbol": "LIST_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "List/constants/list-default-props.constant.ts",
+    "defaultsSymbol": "LIST_DEFAULT_PROPS"
   },
   {
     "component": "list",
     "surface": "loadingClass",
     "maps": [],
-    "layeredFile": "List/constants/list-layered-classes.constant.ts",
-    "layeredSymbol": "LIST_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "List/constants/list-default-props.constant.ts",
+    "defaultsSymbol": "LIST_DEFAULT_PROPS"
   },
   {
     "component": "list",
     "surface": "contentClass",
     "maps": [],
-    "layeredFile": "List/constants/list-layered-classes.constant.ts",
-    "layeredSymbol": "LIST_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "List/constants/list-default-props.constant.ts",
+    "defaultsSymbol": "LIST_DEFAULT_PROPS"
   },
   {
     "component": "list",
     "surface": "noDataClass",
     "maps": [],
-    "layeredFile": "List/constants/list-layered-classes.constant.ts",
-    "layeredSymbol": "LIST_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "List/constants/list-default-props.constant.ts",
+    "defaultsSymbol": "LIST_DEFAULT_PROPS"
   },
   {
     "component": "mainBar",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "MainBar/constants/main-bar-layered-classes.constant.ts",
-    "layeredSymbol": "MAIN_BAR_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "MainBar/constants/main-bar-default-props.constant.ts",
+    "defaultsSymbol": "MAIN_BAR_DEFAULT_PROPS"
   },
   {
     "component": "mainBar",
     "surface": "contentClass",
     "maps": [],
-    "layeredFile": "MainBar/constants/main-bar-layered-classes.constant.ts",
-    "layeredSymbol": "MAIN_BAR_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "MainBar/constants/main-bar-default-props.constant.ts",
+    "defaultsSymbol": "MAIN_BAR_DEFAULT_PROPS"
   },
   {
     "component": "mainBar",
     "surface": "titleWrapperClass",
     "maps": [],
-    "layeredFile": "MainBar/constants/main-bar-layered-classes.constant.ts",
-    "layeredSymbol": "MAIN_BAR_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "MainBar/constants/main-bar-default-props.constant.ts",
+    "defaultsSymbol": "MAIN_BAR_DEFAULT_PROPS"
   },
   {
     "component": "mainBar",
     "surface": "titleClass",
     "maps": [],
-    "layeredFile": "MainBar/constants/main-bar-layered-classes.constant.ts",
-    "layeredSymbol": "MAIN_BAR_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "MainBar/constants/main-bar-default-props.constant.ts",
+    "defaultsSymbol": "MAIN_BAR_DEFAULT_PROPS"
   },
   {
     "component": "mainBar",
     "surface": "subtitleClass",
     "maps": [],
-    "layeredFile": "MainBar/constants/main-bar-layered-classes.constant.ts",
-    "layeredSymbol": "MAIN_BAR_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "MainBar/constants/main-bar-default-props.constant.ts",
+    "defaultsSymbol": "MAIN_BAR_DEFAULT_PROPS"
   },
   {
     "component": "mainBar",
     "surface": "actionsClass",
     "maps": [],
-    "layeredFile": "MainBar/constants/main-bar-layered-classes.constant.ts",
-    "layeredSymbol": "MAIN_BAR_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "MainBar/constants/main-bar-default-props.constant.ts",
+    "defaultsSymbol": "MAIN_BAR_DEFAULT_PROPS"
   },
   {
     "component": "marquee",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "Marquee/constants/marquee-layered-classes.constant.ts",
-    "layeredSymbol": "MARQUEE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Marquee/constants/marquee-default-props.constant.ts",
+    "defaultsSymbol": "MARQUEE_DEFAULT_PROPS"
   },
   {
     "component": "marquee",
     "surface": "contentClass",
     "maps": [],
-    "layeredFile": "Marquee/constants/marquee-layered-classes.constant.ts",
-    "layeredSymbol": "MARQUEE_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "Marquee/constants/marquee-default-props.constant.ts",
+    "defaultsSymbol": "MARQUEE_DEFAULT_PROPS"
   },
   {
     "component": "menu",
     "surface": "menuClass",
     "maps": [],
-    "layeredFile": "Menu/constants/menu-layered-classes.constant.ts",
-    "layeredSymbol": "MENU_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Menu/constants/menu-default-props.constant.ts",
+    "defaultsSymbol": "MENU_DEFAULT_PROPS"
   },
   {
     "component": "menu",
     "surface": "contentClass",
     "maps": [],
-    "layeredFile": "Menu/constants/menu-layered-classes.constant.ts",
-    "layeredSymbol": "MENU_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Menu/constants/menu-default-props.constant.ts",
+    "defaultsSymbol": "MENU_DEFAULT_PROPS"
   },
   {
     "component": "menu",
     "surface": "headerClass",
     "maps": [],
-    "layeredFile": "Menu/constants/menu-layered-classes.constant.ts",
-    "layeredSymbol": "MENU_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Menu/constants/menu-default-props.constant.ts",
+    "defaultsSymbol": "MENU_DEFAULT_PROPS"
   },
   {
     "component": "menu",
     "surface": "titleClass",
     "maps": [],
-    "layeredFile": "Menu/constants/menu-layered-classes.constant.ts",
-    "layeredSymbol": "MENU_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Menu/constants/menu-default-props.constant.ts",
+    "defaultsSymbol": "MENU_DEFAULT_PROPS"
   },
   {
     "component": "menu",
     "surface": "overlayClass",
     "maps": [],
-    "layeredFile": "Menu/constants/menu-layered-classes.constant.ts",
-    "layeredSymbol": "MENU_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Menu/constants/menu-default-props.constant.ts",
+    "defaultsSymbol": "MENU_DEFAULT_PROPS"
   },
   {
     "component": "menuConfirmation",
     "surface": "confirmBtnClass",
     "maps": [],
-    "layeredFile": "MenuConfirmation/constants/menu-confirmation-layered-classes.constant.ts",
-    "layeredSymbol": "MENU_CONFIRMATION_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "MenuConfirmation/constants/menu-confirmation-default-props.constant.ts",
+    "defaultsSymbol": "MENU_CONFIRMATION_DEFAULT_PROPS"
   },
   {
     "component": "menuConfirmation",
     "surface": "confirmationTextClass",
     "maps": [],
-    "layeredFile": "MenuConfirmation/constants/menu-confirmation-layered-classes.constant.ts",
-    "layeredSymbol": "MENU_CONFIRMATION_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "MenuConfirmation/constants/menu-confirmation-default-props.constant.ts",
+    "defaultsSymbol": "MENU_CONFIRMATION_DEFAULT_PROPS"
   },
   {
     "component": "monthSelector",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "MonthSelector/constants/month-selector-layered-classes.constant.ts",
-    "layeredSymbol": "MONTH_SELECTOR_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "MonthSelector/constants/month-selector-default-props.constant.ts",
+    "defaultsSymbol": "MONTH_SELECTOR_DEFAULT_PROPS"
   },
   {
     "component": "monthSelector",
     "surface": "previousBtnClass",
     "maps": [],
-    "layeredFile": "MonthSelector/constants/month-selector-layered-classes.constant.ts",
-    "layeredSymbol": "MONTH_SELECTOR_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "MonthSelector/constants/month-selector-default-props.constant.ts",
+    "defaultsSymbol": "MONTH_SELECTOR_DEFAULT_PROPS"
   },
   {
     "component": "monthSelector",
     "surface": "currentBtnClass",
     "maps": [],
-    "layeredFile": "MonthSelector/constants/month-selector-layered-classes.constant.ts",
-    "layeredSymbol": "MONTH_SELECTOR_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "MonthSelector/constants/month-selector-default-props.constant.ts",
+    "defaultsSymbol": "MONTH_SELECTOR_DEFAULT_PROPS"
   },
   {
     "component": "monthSelector",
     "surface": "nextBtnClass",
     "maps": [],
-    "layeredFile": "MonthSelector/constants/month-selector-layered-classes.constant.ts",
-    "layeredSymbol": "MONTH_SELECTOR_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "MonthSelector/constants/month-selector-default-props.constant.ts",
+    "defaultsSymbol": "MONTH_SELECTOR_DEFAULT_PROPS"
   },
   {
     "component": "monthSelector",
     "surface": "gridContainerClass",
     "maps": [],
-    "layeredFile": "MonthSelector/constants/month-selector-layered-classes.constant.ts",
-    "layeredSymbol": "MONTH_SELECTOR_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "MonthSelector/constants/month-selector-default-props.constant.ts",
+    "defaultsSymbol": "MONTH_SELECTOR_DEFAULT_PROPS"
   },
   {
     "component": "monthSelector",
     "surface": "monthBtnClass",
     "maps": [],
-    "layeredFile": "MonthSelector/constants/month-selector-layered-classes.constant.ts",
-    "layeredSymbol": "MONTH_SELECTOR_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "MonthSelector/constants/month-selector-default-props.constant.ts",
+    "defaultsSymbol": "MONTH_SELECTOR_DEFAULT_PROPS"
   },
   {
     "component": "monthSelectorGrid",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "MonthSelector/constants/month-selector-grid-layered-classes.constant.ts",
-    "layeredSymbol": "MONTH_SELECTOR_GRID_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "MonthSelector/constants/month-selector-grid-default-props.constant.ts",
+    "defaultsSymbol": "MONTH_SELECTOR_GRID_DEFAULT_PROPS"
   },
   {
     "component": "monthSelectorGrid",
     "surface": "monthBtnClass",
     "maps": [],
-    "layeredFile": "MonthSelector/constants/month-selector-grid-layered-classes.constant.ts",
-    "layeredSymbol": "MONTH_SELECTOR_GRID_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "MonthSelector/constants/month-selector-grid-default-props.constant.ts",
+    "defaultsSymbol": "MONTH_SELECTOR_GRID_DEFAULT_PROPS"
   },
   {
     "component": "navigation",
     "surface": "headerClass",
     "maps": [],
-    "layeredFile": "Navigation/constants/navigation-layered-classes.constant.ts",
-    "layeredSymbol": "NAVIGATION_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Navigation/constants/navigation-default-props.constant.ts",
+    "defaultsSymbol": "NAVIGATION_DEFAULT_PROPS"
   },
   {
     "component": "navigation",
     "surface": "navigationClass",
     "maps": [],
-    "layeredFile": "Navigation/constants/navigation-layered-classes.constant.ts",
-    "layeredSymbol": "NAVIGATION_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Navigation/constants/navigation-default-props.constant.ts",
+    "defaultsSymbol": "NAVIGATION_DEFAULT_PROPS"
   },
   {
     "component": "notificationRow",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "Notification/constants/notification-row-layered-classes.constant.ts",
-    "layeredSymbol": "NOTIFICATION_ROW_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Notification/constants/notification-row-default-props.constant.ts",
+    "defaultsSymbol": "NOTIFICATION_ROW_DEFAULT_PROPS"
   },
   {
     "component": "notificationRow",
     "surface": "titleRowClass",
     "maps": [],
-    "layeredFile": "Notification/constants/notification-row-layered-classes.constant.ts",
-    "layeredSymbol": "NOTIFICATION_ROW_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Notification/constants/notification-row-default-props.constant.ts",
+    "defaultsSymbol": "NOTIFICATION_ROW_DEFAULT_PROPS"
   },
   {
     "component": "notificationRow",
     "surface": "iconClass",
     "maps": [],
-    "layeredFile": "Notification/constants/notification-row-layered-classes.constant.ts",
-    "layeredSymbol": "NOTIFICATION_ROW_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Notification/constants/notification-row-default-props.constant.ts",
+    "defaultsSymbol": "NOTIFICATION_ROW_DEFAULT_PROPS"
   },
   {
     "component": "notificationRow",
     "surface": "titleClass",
     "maps": [],
-    "layeredFile": "Notification/constants/notification-row-layered-classes.constant.ts",
-    "layeredSymbol": "NOTIFICATION_ROW_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Notification/constants/notification-row-default-props.constant.ts",
+    "defaultsSymbol": "NOTIFICATION_ROW_DEFAULT_PROPS"
   },
   {
     "component": "notificationRow",
     "surface": "titleTextClass",
     "maps": [],
-    "layeredFile": "Notification/constants/notification-row-layered-classes.constant.ts",
-    "layeredSymbol": "NOTIFICATION_ROW_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Notification/constants/notification-row-default-props.constant.ts",
+    "defaultsSymbol": "NOTIFICATION_ROW_DEFAULT_PROPS"
   },
   {
     "component": "notificationRow",
     "surface": "subtitleClass",
     "maps": [],
-    "layeredFile": "Notification/constants/notification-row-layered-classes.constant.ts",
-    "layeredSymbol": "NOTIFICATION_ROW_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Notification/constants/notification-row-default-props.constant.ts",
+    "defaultsSymbol": "NOTIFICATION_ROW_DEFAULT_PROPS"
   },
   {
     "component": "notificationRow",
     "surface": "subtitleItemClass",
     "maps": [],
-    "layeredFile": "Notification/constants/notification-row-layered-classes.constant.ts",
-    "layeredSymbol": "NOTIFICATION_ROW_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Notification/constants/notification-row-default-props.constant.ts",
+    "defaultsSymbol": "NOTIFICATION_ROW_DEFAULT_PROPS"
   },
   {
     "component": "notificationRow",
     "surface": "counterClass",
     "maps": [],
-    "layeredFile": "Notification/constants/notification-row-layered-classes.constant.ts",
-    "layeredSymbol": "NOTIFICATION_ROW_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Notification/constants/notification-row-default-props.constant.ts",
+    "defaultsSymbol": "NOTIFICATION_ROW_DEFAULT_PROPS"
   },
   {
     "component": "notifications",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "Notification/constants/notifications-layered-classes.constant.ts",
-    "layeredSymbol": "NOTIFICATIONS_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Notification/constants/notifications-default-props.constant.ts",
+    "defaultsSymbol": "NOTIFICATIONS_DEFAULT_PROPS"
   },
   {
     "component": "pageDrawer",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "Page/constants/page-drawer-layered-classes.constant.ts",
-    "layeredSymbol": "PAGE_DRAWER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Page/constants/page-drawer-default-props.constant.ts",
+    "defaultsSymbol": "PAGE_DRAWER_DEFAULT_PROPS"
   },
   {
     "component": "pageDrawer",
     "surface": "contentClass",
     "maps": [],
-    "layeredFile": "Page/constants/page-drawer-layered-classes.constant.ts",
-    "layeredSymbol": "PAGE_DRAWER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Page/constants/page-drawer-default-props.constant.ts",
+    "defaultsSymbol": "PAGE_DRAWER_DEFAULT_PROPS"
   },
   {
     "component": "pageDrawer",
     "surface": "bottomClass",
     "maps": [],
-    "layeredFile": "Page/constants/page-drawer-layered-classes.constant.ts",
-    "layeredSymbol": "PAGE_DRAWER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Page/constants/page-drawer-default-props.constant.ts",
+    "defaultsSymbol": "PAGE_DRAWER_DEFAULT_PROPS"
   },
   {
     "component": "pageDrawer",
     "surface": "fillerClass",
     "maps": [],
-    "layeredFile": "Page/constants/page-drawer-layered-classes.constant.ts",
-    "layeredSymbol": "PAGE_DRAWER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Page/constants/page-drawer-default-props.constant.ts",
+    "defaultsSymbol": "PAGE_DRAWER_DEFAULT_PROPS"
   },
   {
     "component": "pageTitle",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "Page/constants/page-title-layered-classes.constant.ts",
-    "layeredSymbol": "PAGE_TITLE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Page/constants/page-title-default-props.constant.ts",
+    "defaultsSymbol": "PAGE_TITLE_DEFAULT_PROPS"
   },
   {
     "component": "pageTitle",
     "surface": "pageTitleClass",
     "maps": [],
-    "layeredFile": "Page/constants/page-title-layered-classes.constant.ts",
-    "layeredSymbol": "PAGE_TITLE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Page/constants/page-title-default-props.constant.ts",
+    "defaultsSymbol": "PAGE_TITLE_DEFAULT_PROPS"
   },
   {
     "component": "pageTitle",
     "surface": "titleClass",
     "maps": [],
-    "layeredFile": "Page/constants/page-title-layered-classes.constant.ts",
-    "layeredSymbol": "PAGE_TITLE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Page/constants/page-title-default-props.constant.ts",
+    "defaultsSymbol": "PAGE_TITLE_DEFAULT_PROPS"
   },
   {
     "component": "pageWrapper",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "Page/constants/page-wrapper-layered-classes.constant.ts",
-    "layeredSymbol": "PAGE_WRAPPER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Page/constants/page-wrapper-default-props.constant.ts",
+    "defaultsSymbol": "PAGE_WRAPPER_DEFAULT_PROPS"
   },
   {
     "component": "pageWrapper",
     "surface": "contentClass",
     "maps": [],
-    "layeredFile": "Page/constants/page-wrapper-layered-classes.constant.ts",
-    "layeredSymbol": "PAGE_WRAPPER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Page/constants/page-wrapper-default-props.constant.ts",
+    "defaultsSymbol": "PAGE_WRAPPER_DEFAULT_PROPS"
   },
   {
     "component": "pivot",
     "surface": "topClass",
     "maps": [],
-    "layeredFile": "Pivot/constants/pivot-layered-classes.constant.ts",
-    "layeredSymbol": "PIVOT_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Pivot/constants/pivot-default-props.constant.ts",
+    "defaultsSymbol": "PIVOT_DEFAULT_PROPS"
   },
   {
     "component": "pivot",
     "surface": "headerClass",
     "maps": [],
-    "layeredFile": "Pivot/constants/pivot-layered-classes.constant.ts",
-    "layeredSymbol": "PIVOT_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Pivot/constants/pivot-default-props.constant.ts",
+    "defaultsSymbol": "PIVOT_DEFAULT_PROPS"
   },
   {
     "component": "pivot",
     "surface": "titleClass",
     "maps": [],
-    "layeredFile": "Pivot/constants/pivot-layered-classes.constant.ts",
-    "layeredSymbol": "PIVOT_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Pivot/constants/pivot-default-props.constant.ts",
+    "defaultsSymbol": "PIVOT_DEFAULT_PROPS"
   },
   {
     "component": "pivot",
     "surface": "columnFiltersClass",
     "maps": [],
-    "layeredFile": "Pivot/constants/pivot-layered-classes.constant.ts",
-    "layeredSymbol": "PIVOT_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Pivot/constants/pivot-default-props.constant.ts",
+    "defaultsSymbol": "PIVOT_DEFAULT_PROPS"
   },
   {
     "component": "pivot",
     "surface": "filtersClass",
     "maps": [],
-    "layeredFile": "Pivot/constants/pivot-layered-classes.constant.ts",
-    "layeredSymbol": "PIVOT_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Pivot/constants/pivot-default-props.constant.ts",
+    "defaultsSymbol": "PIVOT_DEFAULT_PROPS"
   },
   {
     "component": "pivot",
     "surface": "rowHeaderClass",
     "maps": [],
-    "layeredFile": "Pivot/constants/pivot-layered-classes.constant.ts",
-    "layeredSymbol": "PIVOT_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Pivot/constants/pivot-default-props.constant.ts",
+    "defaultsSymbol": "PIVOT_DEFAULT_PROPS"
   },
   {
     "component": "pivot",
     "surface": "rowHeaderCellClass",
     "maps": [],
-    "layeredFile": "Pivot/constants/pivot-layered-classes.constant.ts",
-    "layeredSymbol": "PIVOT_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Pivot/constants/pivot-default-props.constant.ts",
+    "defaultsSymbol": "PIVOT_DEFAULT_PROPS"
   },
   {
     "component": "pivot",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "Pivot/constants/pivot-layered-classes.constant.ts",
-    "layeredSymbol": "PIVOT_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Pivot/constants/pivot-default-props.constant.ts",
+    "defaultsSymbol": "PIVOT_DEFAULT_PROPS"
   },
   {
     "component": "pivot",
     "surface": "contentClass",
     "maps": [],
-    "layeredFile": "Pivot/constants/pivot-layered-classes.constant.ts",
-    "layeredSymbol": "PIVOT_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Pivot/constants/pivot-default-props.constant.ts",
+    "defaultsSymbol": "PIVOT_DEFAULT_PROPS"
   },
   {
     "component": "pivot",
     "surface": "rowItemClass",
     "maps": [],
-    "layeredFile": "Pivot/constants/pivot-layered-classes.constant.ts",
-    "layeredSymbol": "PIVOT_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Pivot/constants/pivot-default-props.constant.ts",
+    "defaultsSymbol": "PIVOT_DEFAULT_PROPS"
   },
   {
     "component": "pivot",
     "surface": "rowItemCellClass",
     "maps": [],
-    "layeredFile": "Pivot/constants/pivot-layered-classes.constant.ts",
-    "layeredSymbol": "PIVOT_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Pivot/constants/pivot-default-props.constant.ts",
+    "defaultsSymbol": "PIVOT_DEFAULT_PROPS"
   },
   {
     "component": "pivot",
     "surface": "valueHeaderClass",
     "maps": [],
-    "layeredFile": "Pivot/constants/pivot-layered-classes.constant.ts",
-    "layeredSymbol": "PIVOT_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Pivot/constants/pivot-default-props.constant.ts",
+    "defaultsSymbol": "PIVOT_DEFAULT_PROPS"
   },
   {
     "component": "pivot",
     "surface": "valueHeaderCellClass",
     "maps": [],
-    "layeredFile": "Pivot/constants/pivot-layered-classes.constant.ts",
-    "layeredSymbol": "PIVOT_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Pivot/constants/pivot-default-props.constant.ts",
+    "defaultsSymbol": "PIVOT_DEFAULT_PROPS"
   },
   {
     "component": "pivot",
     "surface": "valueItemClass",
     "maps": [],
-    "layeredFile": "Pivot/constants/pivot-layered-classes.constant.ts",
-    "layeredSymbol": "PIVOT_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Pivot/constants/pivot-default-props.constant.ts",
+    "defaultsSymbol": "PIVOT_DEFAULT_PROPS"
   },
   {
     "component": "pivot",
     "surface": "valueItemCellClass",
     "maps": [],
-    "layeredFile": "Pivot/constants/pivot-layered-classes.constant.ts",
-    "layeredSymbol": "PIVOT_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Pivot/constants/pivot-default-props.constant.ts",
+    "defaultsSymbol": "PIVOT_DEFAULT_PROPS"
   },
   {
     "component": "pivot",
     "surface": "valuesScrollerClass",
     "maps": [],
-    "layeredFile": "Pivot/constants/pivot-layered-classes.constant.ts",
-    "layeredSymbol": "PIVOT_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Pivot/constants/pivot-default-props.constant.ts",
+    "defaultsSymbol": "PIVOT_DEFAULT_PROPS"
   },
   {
     "component": "pivot",
     "surface": "rowsScrollerClass",
     "maps": [],
-    "layeredFile": "Pivot/constants/pivot-layered-classes.constant.ts",
-    "layeredSymbol": "PIVOT_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Pivot/constants/pivot-default-props.constant.ts",
+    "defaultsSymbol": "PIVOT_DEFAULT_PROPS"
   },
   {
     "component": "pivot",
     "surface": "rowsWrapperClass",
     "maps": [],
-    "layeredFile": "Pivot/constants/pivot-layered-classes.constant.ts",
-    "layeredSymbol": "PIVOT_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Pivot/constants/pivot-default-props.constant.ts",
+    "defaultsSymbol": "PIVOT_DEFAULT_PROPS"
   },
   {
     "component": "pivot",
     "surface": "loadingClass",
     "maps": [],
-    "layeredFile": "Pivot/constants/pivot-layered-classes.constant.ts",
-    "layeredSymbol": "PIVOT_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Pivot/constants/pivot-default-props.constant.ts",
+    "defaultsSymbol": "PIVOT_DEFAULT_PROPS"
   },
   {
     "component": "progressBar",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "ProgressBar/constants/progress-bar-layered-classes.constant.ts",
-    "layeredSymbol": "PROGRESS_BAR_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "ProgressBar/constants/progress-bar-default-props.constant.ts",
+    "defaultsSymbol": "PROGRESS_BAR_DEFAULT_PROPS"
   },
   {
     "component": "progressBar",
     "surface": "innerClass",
     "maps": [],
-    "layeredFile": "ProgressBar/constants/progress-bar-layered-classes.constant.ts",
-    "layeredSymbol": "PROGRESS_BAR_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "ProgressBar/constants/progress-bar-default-props.constant.ts",
+    "defaultsSymbol": "PROGRESS_BAR_DEFAULT_PROPS"
   },
   {
     "component": "progressBar",
     "surface": "colorClass",
     "maps": [],
-    "layeredFile": "ProgressBar/constants/progress-bar-layered-classes.constant.ts",
-    "layeredSymbol": "PROGRESS_BAR_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "ProgressBar/constants/progress-bar-default-props.constant.ts",
+    "defaultsSymbol": "PROGRESS_BAR_DEFAULT_PROPS"
   },
   {
     "component": "progressBar",
     "surface": "whiteBgClass",
     "maps": [],
-    "layeredFile": "ProgressBar/constants/progress-bar-layered-classes.constant.ts",
-    "layeredSymbol": "PROGRESS_BAR_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "ProgressBar/constants/progress-bar-default-props.constant.ts",
+    "defaultsSymbol": "PROGRESS_BAR_DEFAULT_PROPS"
   },
   {
     "component": "progressBar",
     "surface": "blackBgClass",
     "maps": [],
-    "layeredFile": "ProgressBar/constants/progress-bar-layered-classes.constant.ts",
-    "layeredSymbol": "PROGRESS_BAR_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "ProgressBar/constants/progress-bar-default-props.constant.ts",
+    "defaultsSymbol": "PROGRESS_BAR_DEFAULT_PROPS"
   },
   {
     "component": "progressBar",
     "surface": "textClass",
     "maps": [],
-    "layeredFile": "ProgressBar/constants/progress-bar-layered-classes.constant.ts",
-    "layeredSymbol": "PROGRESS_BAR_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "ProgressBar/constants/progress-bar-default-props.constant.ts",
+    "defaultsSymbol": "PROGRESS_BAR_DEFAULT_PROPS"
   },
   {
     "component": "radio",
@@ -1376,9 +1376,9 @@
     "maps": [
       "sizes"
     ],
-    "layeredFile": "Radio/constants/radio-layered-classes.constant.ts",
-    "layeredSymbol": "RADIO_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "Radio/constants/radio-default-props.constant.ts",
+    "defaultsSymbol": "RADIO_DEFAULT_PROPS"
   },
   {
     "component": "radio",
@@ -1387,9 +1387,9 @@
       "sizes",
       "colors"
     ],
-    "layeredFile": "Radio/constants/radio-layered-classes.constant.ts",
-    "layeredSymbol": "RADIO_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "Radio/constants/radio-default-props.constant.ts",
+    "defaultsSymbol": "RADIO_DEFAULT_PROPS"
   },
   {
     "component": "radio",
@@ -1397,137 +1397,137 @@
     "maps": [
       "sizes"
     ],
-    "layeredFile": "Radio/constants/radio-layered-classes.constant.ts",
-    "layeredSymbol": "RADIO_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "Radio/constants/radio-default-props.constant.ts",
+    "defaultsSymbol": "RADIO_DEFAULT_PROPS"
   },
   {
     "component": "radio",
     "surface": "focusHelperClass",
     "maps": [],
-    "layeredFile": "Radio/constants/radio-layered-classes.constant.ts",
-    "layeredSymbol": "RADIO_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Radio/constants/radio-default-props.constant.ts",
+    "defaultsSymbol": "RADIO_DEFAULT_PROPS"
   },
   {
     "component": "scrollArea",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "ScrollArea/constants/scroll-area-layered-classes.constant.ts",
-    "layeredSymbol": "SCROLL_AREA_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "ScrollArea/constants/scroll-area-default-props.constant.ts",
+    "defaultsSymbol": "SCROLL_AREA_DEFAULT_PROPS"
   },
   {
     "component": "horizontalScroller",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "Scroller/constants/scroller-layered-classes.constant.ts",
-    "layeredSymbol": "HORIZONTAL_SCROLLER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Scroller/constants/scroller-default-props.constant.ts",
+    "defaultsSymbol": "HORIZONTAL_SCROLLER_DEFAULT_PROPS"
   },
   {
     "component": "horizontalScroller",
     "surface": "contentClass",
     "maps": [],
-    "layeredFile": "Scroller/constants/scroller-layered-classes.constant.ts",
-    "layeredSymbol": "HORIZONTAL_SCROLLER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Scroller/constants/scroller-default-props.constant.ts",
+    "defaultsSymbol": "HORIZONTAL_SCROLLER_DEFAULT_PROPS"
   },
   {
     "component": "horizontalScroller",
     "surface": "arrowClass",
     "maps": [],
-    "layeredFile": "Scroller/constants/scroller-layered-classes.constant.ts",
-    "layeredSymbol": "HORIZONTAL_SCROLLER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Scroller/constants/scroller-default-props.constant.ts",
+    "defaultsSymbol": "HORIZONTAL_SCROLLER_DEFAULT_PROPS"
   },
   {
     "component": "verticalScroller",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "Scroller/constants/scroller-layered-classes.constant.ts",
-    "layeredSymbol": "VERTICAL_SCROLLER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Scroller/constants/scroller-default-props.constant.ts",
+    "defaultsSymbol": "VERTICAL_SCROLLER_DEFAULT_PROPS"
   },
   {
     "component": "verticalScroller",
     "surface": "contentClass",
     "maps": [],
-    "layeredFile": "Scroller/constants/scroller-layered-classes.constant.ts",
-    "layeredSymbol": "VERTICAL_SCROLLER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Scroller/constants/scroller-default-props.constant.ts",
+    "defaultsSymbol": "VERTICAL_SCROLLER_DEFAULT_PROPS"
   },
   {
     "component": "verticalScroller",
     "surface": "arrowClass",
     "maps": [],
-    "layeredFile": "Scroller/constants/scroller-layered-classes.constant.ts",
-    "layeredSymbol": "VERTICAL_SCROLLER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Scroller/constants/scroller-default-props.constant.ts",
+    "defaultsSymbol": "VERTICAL_SCROLLER_DEFAULT_PROPS"
   },
   {
     "component": "section",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "Section/constants/section-layered-classes.constant.ts",
-    "layeredSymbol": "SECTION_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Section/constants/section-default-props.constant.ts",
+    "defaultsSymbol": "SECTION_DEFAULT_PROPS"
   },
   {
     "component": "section",
     "surface": "titleClass",
     "maps": [],
-    "layeredFile": "Section/constants/section-layered-classes.constant.ts",
-    "layeredSymbol": "SECTION_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Section/constants/section-default-props.constant.ts",
+    "defaultsSymbol": "SECTION_DEFAULT_PROPS"
   },
   {
     "component": "section",
     "surface": "subtitleClass",
     "maps": [],
-    "layeredFile": "Section/constants/section-layered-classes.constant.ts",
-    "layeredSymbol": "SECTION_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Section/constants/section-default-props.constant.ts",
+    "defaultsSymbol": "SECTION_DEFAULT_PROPS"
   },
   {
     "component": "section",
     "surface": "contentClass",
     "maps": [],
-    "layeredFile": "Section/constants/section-layered-classes.constant.ts",
-    "layeredSymbol": "SECTION_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Section/constants/section-default-props.constant.ts",
+    "defaultsSymbol": "SECTION_DEFAULT_PROPS"
   },
   {
     "component": "section",
     "surface": "loadingClass",
     "maps": [],
-    "layeredFile": "Section/constants/section-layered-classes.constant.ts",
-    "layeredSymbol": "SECTION_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Section/constants/section-default-props.constant.ts",
+    "defaultsSymbol": "SECTION_DEFAULT_PROPS"
   },
   {
     "component": "selector",
     "surface": "innerClass",
     "maps": [],
-    "layeredFile": "Selector/constants/selector-layered-classes.constant.ts",
-    "layeredSymbol": "SELECTOR_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Selector/constants/selector-default-props.ts",
+    "defaultsSymbol": "SELECTOR_DEFAULT_PROPS"
   },
   {
     "component": "separator",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "Separator/constants/separator-layered-classes.constant.ts",
-    "layeredSymbol": "SEPARATOR_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Separator/constants/separator-default-props.constant.ts",
+    "defaultsSymbol": "SEPARATOR_DEFAULT_PROPS"
   },
   {
     "component": "skeleton",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "Skeleton/constants/skeleton-layered-classes.constant.ts",
-    "layeredSymbol": "SKELETON_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "Skeleton/constants/skeleton-default-props.constant.ts",
+    "defaultsSymbol": "SKELETON_DEFAULT_PROPS"
   },
   {
     "component": "stepper",
@@ -1536,9 +1536,9 @@
       "layouts",
       "sizes"
     ],
-    "layeredFile": "Stepper/constants/stepper-layered-classes.constant.ts",
-    "layeredSymbol": "STEPPER_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "Stepper/constants/stepper-default-props.constant.ts",
+    "defaultsSymbol": "STEPPER_DEFAULT_PROPS"
   },
   {
     "component": "stepper",
@@ -1546,9 +1546,9 @@
     "maps": [
       "layouts"
     ],
-    "layeredFile": "Stepper/constants/stepper-layered-classes.constant.ts",
-    "layeredSymbol": "STEPPER_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "Stepper/constants/stepper-default-props.constant.ts",
+    "defaultsSymbol": "STEPPER_DEFAULT_PROPS"
   },
   {
     "component": "stepper",
@@ -1556,9 +1556,9 @@
     "maps": [
       "layouts"
     ],
-    "layeredFile": "Stepper/constants/stepper-layered-classes.constant.ts",
-    "layeredSymbol": "STEPPER_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "Stepper/constants/stepper-default-props.constant.ts",
+    "defaultsSymbol": "STEPPER_DEFAULT_PROPS"
   },
   {
     "component": "stepper",
@@ -1566,9 +1566,9 @@
     "maps": [
       "layouts"
     ],
-    "layeredFile": "Stepper/constants/stepper-layered-classes.constant.ts",
-    "layeredSymbol": "STEPPER_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "Stepper/constants/stepper-default-props.constant.ts",
+    "defaultsSymbol": "STEPPER_DEFAULT_PROPS"
   },
   {
     "component": "stepper",
@@ -1576,9 +1576,9 @@
     "maps": [
       "sizes"
     ],
-    "layeredFile": "Stepper/constants/stepper-layered-classes.constant.ts",
-    "layeredSymbol": "STEPPER_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "Stepper/constants/stepper-default-props.constant.ts",
+    "defaultsSymbol": "STEPPER_DEFAULT_PROPS"
   },
   {
     "component": "stepper",
@@ -1586,9 +1586,9 @@
     "maps": [
       "sizes"
     ],
-    "layeredFile": "Stepper/constants/stepper-layered-classes.constant.ts",
-    "layeredSymbol": "STEPPER_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "Stepper/constants/stepper-default-props.constant.ts",
+    "defaultsSymbol": "STEPPER_DEFAULT_PROPS"
   },
   {
     "component": "stepper",
@@ -1596,9 +1596,9 @@
     "maps": [
       "layouts"
     ],
-    "layeredFile": "Stepper/constants/stepper-layered-classes.constant.ts",
-    "layeredSymbol": "STEPPER_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "Stepper/constants/stepper-default-props.constant.ts",
+    "defaultsSymbol": "STEPPER_DEFAULT_PROPS"
   },
   {
     "component": "stepper",
@@ -1606,9 +1606,9 @@
     "maps": [
       "layouts"
     ],
-    "layeredFile": "Stepper/constants/stepper-layered-classes.constant.ts",
-    "layeredSymbol": "STEPPER_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "Stepper/constants/stepper-default-props.constant.ts",
+    "defaultsSymbol": "STEPPER_DEFAULT_PROPS"
   },
   {
     "component": "stepper",
@@ -1616,9 +1616,9 @@
     "maps": [
       "sizes"
     ],
-    "layeredFile": "Stepper/constants/stepper-layered-classes.constant.ts",
-    "layeredSymbol": "STEPPER_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "Stepper/constants/stepper-default-props.constant.ts",
+    "defaultsSymbol": "STEPPER_DEFAULT_PROPS"
   },
   {
     "component": "stepper",
@@ -1626,9 +1626,9 @@
     "maps": [
       "sizes"
     ],
-    "layeredFile": "Stepper/constants/stepper-layered-classes.constant.ts",
-    "layeredSymbol": "STEPPER_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "Stepper/constants/stepper-default-props.constant.ts",
+    "defaultsSymbol": "STEPPER_DEFAULT_PROPS"
   },
   {
     "component": "stepper",
@@ -1636,185 +1636,185 @@
     "maps": [
       "layouts"
     ],
-    "layeredFile": "Stepper/constants/stepper-layered-classes.constant.ts",
-    "layeredSymbol": "STEPPER_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "Stepper/constants/stepper-default-props.constant.ts",
+    "defaultsSymbol": "STEPPER_DEFAULT_PROPS"
   },
   {
     "component": "stepper",
     "surface": "stepClass",
     "maps": [],
-    "layeredFile": "Stepper/constants/stepper-layered-classes.constant.ts",
-    "layeredSymbol": "STEPPER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Stepper/constants/stepper-default-props.constant.ts",
+    "defaultsSymbol": "STEPPER_DEFAULT_PROPS"
   },
   {
     "component": "table",
     "surface": "alternateRowClass",
     "maps": [],
-    "layeredFile": "Table/constants/table-layered-classes.constant.ts",
-    "layeredSymbol": "TABLE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Table/constants/table-default-props.constant.ts",
+    "defaultsSymbol": "TABLE_DEFAULT_PROPS"
   },
   {
     "component": "table",
     "surface": "headerCellClass",
     "maps": [],
-    "layeredFile": "Table/constants/table-layered-classes.constant.ts",
-    "layeredSymbol": "TABLE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Table/constants/table-default-props.constant.ts",
+    "defaultsSymbol": "TABLE_DEFAULT_PROPS"
   },
   {
     "component": "table",
     "surface": "headerCellInnerClass",
     "maps": [],
-    "layeredFile": "Table/constants/table-layered-classes.constant.ts",
-    "layeredSymbol": "TABLE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Table/constants/table-default-props.constant.ts",
+    "defaultsSymbol": "TABLE_DEFAULT_PROPS"
   },
   {
     "component": "table",
     "surface": "rowClass",
     "maps": [],
-    "layeredFile": "Table/constants/table-layered-classes.constant.ts",
-    "layeredSymbol": "TABLE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Table/constants/table-default-props.constant.ts",
+    "defaultsSymbol": "TABLE_DEFAULT_PROPS"
   },
   {
     "component": "table",
     "surface": "rowActionsClass",
     "maps": [],
-    "layeredFile": "Table/constants/table-layered-classes.constant.ts",
-    "layeredSymbol": "TABLE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Table/constants/table-default-props.constant.ts",
+    "defaultsSymbol": "TABLE_DEFAULT_PROPS"
   },
   {
     "component": "table",
     "surface": "rowActionsHeaderClass",
     "maps": [],
-    "layeredFile": "Table/constants/table-layered-classes.constant.ts",
-    "layeredSymbol": "TABLE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Table/constants/table-default-props.constant.ts",
+    "defaultsSymbol": "TABLE_DEFAULT_PROPS"
   },
   {
     "component": "table",
     "surface": "cellClass",
     "maps": [],
-    "layeredFile": "Table/constants/table-layered-classes.constant.ts",
-    "layeredSymbol": "TABLE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Table/constants/table-default-props.constant.ts",
+    "defaultsSymbol": "TABLE_DEFAULT_PROPS"
   },
   {
     "component": "table",
     "surface": "cellInnerClass",
     "maps": [],
-    "layeredFile": "Table/constants/table-layered-classes.constant.ts",
-    "layeredSymbol": "TABLE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Table/constants/table-default-props.constant.ts",
+    "defaultsSymbol": "TABLE_DEFAULT_PROPS"
   },
   {
     "component": "table",
     "surface": "contentClass",
     "maps": [],
-    "layeredFile": "Table/constants/table-layered-classes.constant.ts",
-    "layeredSymbol": "TABLE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Table/constants/table-default-props.constant.ts",
+    "defaultsSymbol": "TABLE_DEFAULT_PROPS"
   },
   {
     "component": "table",
     "surface": "headerClass",
     "maps": [],
-    "layeredFile": "Table/constants/table-layered-classes.constant.ts",
-    "layeredSymbol": "TABLE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Table/constants/table-default-props.constant.ts",
+    "defaultsSymbol": "TABLE_DEFAULT_PROPS"
   },
   {
     "component": "table",
     "surface": "toolbarClass",
     "maps": [],
-    "layeredFile": "Table/constants/table-layered-classes.constant.ts",
-    "layeredSymbol": "TABLE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Table/constants/table-default-props.constant.ts",
+    "defaultsSymbol": "TABLE_DEFAULT_PROPS"
   },
   {
     "component": "table",
     "surface": "topClass",
     "maps": [],
-    "layeredFile": "Table/constants/table-layered-classes.constant.ts",
-    "layeredSymbol": "TABLE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Table/constants/table-default-props.constant.ts",
+    "defaultsSymbol": "TABLE_DEFAULT_PROPS"
   },
   {
     "component": "table",
     "surface": "bottomClass",
     "maps": [],
-    "layeredFile": "Table/constants/table-layered-classes.constant.ts",
-    "layeredSymbol": "TABLE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Table/constants/table-default-props.constant.ts",
+    "defaultsSymbol": "TABLE_DEFAULT_PROPS"
   },
   {
     "component": "table",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "Table/constants/table-layered-classes.constant.ts",
-    "layeredSymbol": "TABLE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Table/constants/table-default-props.constant.ts",
+    "defaultsSymbol": "TABLE_DEFAULT_PROPS"
   },
   {
     "component": "table",
     "surface": "totalsCellClass",
     "maps": [],
-    "layeredFile": "Table/constants/table-layered-classes.constant.ts",
-    "layeredSymbol": "TABLE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Table/constants/table-default-props.constant.ts",
+    "defaultsSymbol": "TABLE_DEFAULT_PROPS"
   },
   {
     "component": "tabs",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "Tabs/constants/tabs-layered-classes.constant.ts",
-    "layeredSymbol": "TABS_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Tabs/constants/tabs-default-props.constant.ts",
+    "defaultsSymbol": "TABS_DEFAULT_PROPS"
   },
   {
     "component": "tabs",
     "surface": "navigationClass",
     "maps": [],
-    "layeredFile": "Tabs/constants/tabs-layered-classes.constant.ts",
-    "layeredSymbol": "TABS_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Tabs/constants/tabs-default-props.constant.ts",
+    "defaultsSymbol": "TABS_DEFAULT_PROPS"
   },
   {
     "component": "tabs",
     "surface": "navigationContentClass",
     "maps": [],
-    "layeredFile": "Tabs/constants/tabs-layered-classes.constant.ts",
-    "layeredSymbol": "TABS_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Tabs/constants/tabs-default-props.constant.ts",
+    "defaultsSymbol": "TABS_DEFAULT_PROPS"
   },
   {
     "component": "tabs",
     "surface": "tabClass",
     "maps": [],
-    "layeredFile": "Tabs/constants/tabs-layered-classes.constant.ts",
-    "layeredSymbol": "TABS_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Tabs/constants/tabs-default-props.constant.ts",
+    "defaultsSymbol": "TABS_DEFAULT_PROPS"
   },
   {
     "component": "tabs",
     "surface": "tabNavBtnClass",
     "maps": [],
-    "layeredFile": "Tabs/constants/tabs-layered-classes.constant.ts",
-    "layeredSymbol": "TABS_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Tabs/constants/tabs-default-props.constant.ts",
+    "defaultsSymbol": "TABS_DEFAULT_PROPS"
   },
   {
     "component": "toggle",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "Toggle/constants/toggle-layered-classes.constant.ts",
-    "layeredSymbol": "TOGGLE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Toggle/constants/toggle-default-props.constant.ts",
+    "defaultsSymbol": "TOGGLE_DEFAULT_PROPS"
   },
   {
     "component": "toggle",
@@ -1822,9 +1822,9 @@
     "maps": [
       "sizes"
     ],
-    "layeredFile": "Toggle/constants/toggle-layered-classes.constant.ts",
-    "layeredSymbol": "TOGGLE_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "Toggle/constants/toggle-default-props.constant.ts",
+    "defaultsSymbol": "TOGGLE_DEFAULT_PROPS"
   },
   {
     "component": "toggle",
@@ -1832,9 +1832,9 @@
     "maps": [
       "sizes"
     ],
-    "layeredFile": "Toggle/constants/toggle-layered-classes.constant.ts",
-    "layeredSymbol": "TOGGLE_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "Toggle/constants/toggle-default-props.constant.ts",
+    "defaultsSymbol": "TOGGLE_DEFAULT_PROPS"
   },
   {
     "component": "toggle",
@@ -1842,224 +1842,224 @@
     "maps": [
       "sizes"
     ],
-    "layeredFile": "Toggle/constants/toggle-layered-classes.constant.ts",
-    "layeredSymbol": "TOGGLE_LAYERED_CLASSES",
-    "acceptsProps": true
+    "acceptsProps": true,
+    "defaultsFile": "Toggle/constants/toggle-default-props.constant.ts",
+    "defaultsSymbol": "TOGGLE_DEFAULT_PROPS"
   },
   {
     "component": "toggle",
     "surface": "iconClass",
     "maps": [],
-    "layeredFile": "Toggle/constants/toggle-layered-classes.constant.ts",
-    "layeredSymbol": "TOGGLE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Toggle/constants/toggle-default-props.constant.ts",
+    "defaultsSymbol": "TOGGLE_DEFAULT_PROPS"
   },
   {
     "component": "toggle",
     "surface": "focusHelperClass",
     "maps": [],
-    "layeredFile": "Toggle/constants/toggle-layered-classes.constant.ts",
-    "layeredSymbol": "TOGGLE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Toggle/constants/toggle-default-props.constant.ts",
+    "defaultsSymbol": "TOGGLE_DEFAULT_PROPS"
   },
   {
     "component": "tooltip",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "Tooltip/constants/tooltip-layered-classes.constant.ts",
-    "layeredSymbol": "TOOLTIP_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Tooltip/constants/tooltip-default-props.constant.ts",
+    "defaultsSymbol": "TOOLTIP_DEFAULT_PROPS"
   },
   {
     "component": "tooltip",
     "surface": "contentClass",
     "maps": [],
-    "layeredFile": "Tooltip/constants/tooltip-layered-classes.constant.ts",
-    "layeredSymbol": "TOOLTIP_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Tooltip/constants/tooltip-default-props.constant.ts",
+    "defaultsSymbol": "TOOLTIP_DEFAULT_PROPS"
   },
   {
     "component": "tooltip",
     "surface": "titleClass",
     "maps": [],
-    "layeredFile": "Tooltip/constants/tooltip-layered-classes.constant.ts",
-    "layeredSymbol": "TOOLTIP_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Tooltip/constants/tooltip-default-props.constant.ts",
+    "defaultsSymbol": "TOOLTIP_DEFAULT_PROPS"
   },
   {
     "component": "tooltip",
     "surface": "descriptionClass",
     "maps": [],
-    "layeredFile": "Tooltip/constants/tooltip-layered-classes.constant.ts",
-    "layeredSymbol": "TOOLTIP_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Tooltip/constants/tooltip-default-props.constant.ts",
+    "defaultsSymbol": "TOOLTIP_DEFAULT_PROPS"
   },
   {
     "component": "tooltip",
     "surface": "arrowClass",
     "maps": [],
-    "layeredFile": "Tooltip/constants/tooltip-layered-classes.constant.ts",
-    "layeredSymbol": "TOOLTIP_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Tooltip/constants/tooltip-default-props.constant.ts",
+    "defaultsSymbol": "TOOLTIP_DEFAULT_PROPS"
   },
   {
     "component": "tree",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "Tree/constants/tree-layered-classes.constant.ts",
-    "layeredSymbol": "TREE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Tree/constants/tree-default-props.constant.ts",
+    "defaultsSymbol": "TREE_DEFAULT_PROPS"
   },
   {
     "component": "tree",
     "surface": "contentClass",
     "maps": [],
-    "layeredFile": "Tree/constants/tree-layered-classes.constant.ts",
-    "layeredSymbol": "TREE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Tree/constants/tree-default-props.constant.ts",
+    "defaultsSymbol": "TREE_DEFAULT_PROPS"
   },
   {
     "component": "tree",
     "surface": "nodeClass",
     "maps": [],
-    "layeredFile": "Tree/constants/tree-layered-classes.constant.ts",
-    "layeredSymbol": "TREE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Tree/constants/tree-default-props.constant.ts",
+    "defaultsSymbol": "TREE_DEFAULT_PROPS"
   },
   {
     "component": "tree",
     "surface": "nodeContentClass",
     "maps": [],
-    "layeredFile": "Tree/constants/tree-layered-classes.constant.ts",
-    "layeredSymbol": "TREE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Tree/constants/tree-default-props.constant.ts",
+    "defaultsSymbol": "TREE_DEFAULT_PROPS"
   },
   {
     "component": "tree",
     "surface": "noDataClass",
     "maps": [],
-    "layeredFile": "Tree/constants/tree-layered-classes.constant.ts",
-    "layeredSymbol": "TREE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Tree/constants/tree-default-props.constant.ts",
+    "defaultsSymbol": "TREE_DEFAULT_PROPS"
   },
   {
     "component": "tree",
     "surface": "actionsClass",
     "maps": [],
-    "layeredFile": "Tree/constants/tree-layered-classes.constant.ts",
-    "layeredSymbol": "TREE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Tree/constants/tree-default-props.constant.ts",
+    "defaultsSymbol": "TREE_DEFAULT_PROPS"
   },
   {
     "component": "tree",
     "surface": "searchClass",
     "maps": [],
-    "layeredFile": "Tree/constants/tree-layered-classes.constant.ts",
-    "layeredSymbol": "TREE_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Tree/constants/tree-default-props.constant.ts",
+    "defaultsSymbol": "TREE_DEFAULT_PROPS"
   },
   {
     "component": "treeDms",
     "surface": "labelClass",
     "maps": [],
-    "layeredFile": "TreeDms/constants/tree-dms-layered-classes.constant.ts",
-    "layeredSymbol": "TREE_DMS_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "TreeDms/constants/tree-dms-default-props.constant.ts",
+    "defaultsSymbol": "TREE_DMS_DEFAULT_PROPS"
   },
   {
     "component": "heading",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "Typography/constants/heading-layered-classes.constant.ts",
-    "layeredSymbol": "HEADING_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "Typography/constants/heading-default-props.constant.ts",
+    "defaultsSymbol": "HEADING_DEFAULT_PROPS"
   },
   {
     "component": "valueFormatter",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "ValueFormatter/constants/value-formatter-layered-classes.constant.ts",
-    "layeredSymbol": "VALUE_FORMATTER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "ValueFormatter/constants/value-formatter-default-props.constant.ts",
+    "defaultsSymbol": "VALUE_FORMATTER_DEFAULT_PROPS"
   },
   {
     "component": "virtualScroller",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "VirtualScroller/constants/virtual-scroller-layered-classes.constant.ts",
-    "layeredSymbol": "VIRTUAL_SCROLLER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "VirtualScroller/constants/virtual-scroller-default-props.ts",
+    "defaultsSymbol": "VIRTUAL_SCROLLER_DEFAULT_PROPS"
   },
   {
     "component": "virtualScroller",
     "surface": "contentClass",
     "maps": [],
-    "layeredFile": "VirtualScroller/constants/virtual-scroller-layered-classes.constant.ts",
-    "layeredSymbol": "VIRTUAL_SCROLLER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "VirtualScroller/constants/virtual-scroller-default-props.ts",
+    "defaultsSymbol": "VIRTUAL_SCROLLER_DEFAULT_PROPS"
   },
   {
     "component": "virtualScroller",
     "surface": "rowClass",
     "maps": [],
-    "layeredFile": "VirtualScroller/constants/virtual-scroller-layered-classes.constant.ts",
-    "layeredSymbol": "VIRTUAL_SCROLLER_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "VirtualScroller/constants/virtual-scroller-default-props.ts",
+    "defaultsSymbol": "VIRTUAL_SCROLLER_DEFAULT_PROPS"
   },
   {
     "component": "virtualScrollerVertical",
     "surface": "rowClass",
     "maps": [],
-    "layeredFile": "VirtualScroller/constants/virtual-scroller-vertical-layered-classes.constant.ts",
-    "layeredSymbol": "VIRTUAL_SCROLLER_VERTICAL_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "VirtualScroller/constants/virtual-scroller-vertical-default-props.ts",
+    "defaultsSymbol": "VIRTUAL_SCROLLER_VERTICAL_DEFAULT_PROPS"
   },
   {
     "component": "yearMonthSelector",
     "surface": "pickerIconClass",
     "maps": [],
-    "layeredFile": "YearMonthSelector/constants/year-month-selector-layered-classes.constant.ts",
-    "layeredSymbol": "YEAR_MONTH_SELECTOR_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "YearMonthSelector/constants/year-month-selector-default-props.constant.ts",
+    "defaultsSymbol": "YEAR_MONTH_SELECTOR_DEFAULT_PROPS"
   },
   {
     "component": "yearSelector",
     "surface": "containerClass",
     "maps": [],
-    "layeredFile": "YearSelector/constants/year-selector-layered-classes.constant.ts",
-    "layeredSymbol": "YEAR_SELECTOR_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "YearSelector/constants/year-selector-default-props.constant.ts",
+    "defaultsSymbol": "YEAR_SELECTOR_DEFAULT_PROPS"
   },
   {
     "component": "yearSelector",
     "surface": "previousBtnClass",
     "maps": [],
-    "layeredFile": "YearSelector/constants/year-selector-layered-classes.constant.ts",
-    "layeredSymbol": "YEAR_SELECTOR_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "YearSelector/constants/year-selector-default-props.constant.ts",
+    "defaultsSymbol": "YEAR_SELECTOR_DEFAULT_PROPS"
   },
   {
     "component": "yearSelector",
     "surface": "nextBtnClass",
     "maps": [],
-    "layeredFile": "YearSelector/constants/year-selector-layered-classes.constant.ts",
-    "layeredSymbol": "YEAR_SELECTOR_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "YearSelector/constants/year-selector-default-props.constant.ts",
+    "defaultsSymbol": "YEAR_SELECTOR_DEFAULT_PROPS"
   },
   {
     "component": "yearSelector",
     "surface": "menuContainerClass",
     "maps": [],
-    "layeredFile": "YearSelector/constants/year-selector-layered-classes.constant.ts",
-    "layeredSymbol": "YEAR_SELECTOR_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "YearSelector/constants/year-selector-default-props.constant.ts",
+    "defaultsSymbol": "YEAR_SELECTOR_DEFAULT_PROPS"
   },
   {
     "component": "yearSelector",
     "surface": "yearBtnClass",
     "maps": [],
-    "layeredFile": "YearSelector/constants/year-selector-layered-classes.constant.ts",
-    "layeredSymbol": "YEAR_SELECTOR_LAYERED_CLASSES",
-    "acceptsProps": false
+    "acceptsProps": false,
+    "defaultsFile": "YearSelector/constants/year-selector-default-props.constant.ts",
+    "defaultsSymbol": "YEAR_SELECTOR_DEFAULT_PROPS"
   }
 ]

@@ -3,7 +3,7 @@
 import type { IValueFormatterProps } from './types/value-formatter-props.type'
 
 // Constants
-import { VALUE_FORMATTER_LAYERED_CLASSES } from './constants/value-formatter-layered-classes.constant'
+import { VALUE_FORMATTER_DEFAULT_PROPS } from './constants/value-formatter-default-props.constant'
 
 defineOptions({
   inheritAttrs: false,
@@ -51,7 +51,7 @@ const isEmptyValue = computed(() => {
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: VALUE_FORMATTER_LAYERED_CLASSES.containerClass(),
+    defaults: VALUE_FORMATTER_DEFAULT_PROPS.ui.containerClass(),
   })
 })
 

@@ -1,3 +1,4 @@
+import { BTN_DEFAULT_PROPS } from '../../app/components/Button/constants/btn-default-props.constant'
 import type { IBtnProps } from '../../app/components/Button/types/btn-props.type'
 
 type Defaults = Parameters<NonNullable<NonNullable<IBtnProps['ui']>['containerClass']>>[0]['defaults']
@@ -26,4 +27,10 @@ export function verifyButtonDefaults(defaults: Defaults) {
   const oldBase: 'theme-base' = defaults.base
 
   return { base, inherited, branded, application, small, large, precedingBase, oldBase }
+}
+
+// The existing constants API must expose the same exact merged types as Btn.
+export type ExistingDefaultsAreTyped = Assert<IsAny<ReturnType<typeof BTN_DEFAULT_PROPS.ui.containerClass>> extends false ? true : false>
+export function verifyExistingDefaultsAPI() {
+  return verifyButtonDefaults(BTN_DEFAULT_PROPS.ui.containerClass({ size: 'sm', hasLabel: true }))
 }

@@ -12,7 +12,7 @@ import DatePickerCalendar from './DatePickerCalendar.vue'
 import DatePickerPeriodGrid from './DatePickerPeriodGrid.vue'
 
 // Constants
-import { DATE_PICKER_LAYERED_CLASSES } from './constants/datepicker-layered-classes.constant'
+import { DATE_PICKER_DEFAULT_PROPS } from './constants/datepicker-default-props.constant'
 
 const props = withDefaults(defineProps<IDatePickerProps>(), {
   ...getComponentProps('datePicker'),
@@ -114,7 +114,7 @@ watch(
 // Styles
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: DATE_PICKER_LAYERED_CLASSES.containerClass(),
+    defaults: DATE_PICKER_DEFAULT_PROPS.ui.containerClass(),
   })
 })
 
@@ -124,7 +124,7 @@ const containerStyle = computed(() => {
 
 const daysGridClass = computed(() => {
   return mergedProps.value?.ui?.daysGridClass?.({
-    defaults: DATE_PICKER_LAYERED_CLASSES.daysGridClass(),
+    defaults: DATE_PICKER_DEFAULT_PROPS.ui.daysGridClass(),
   })
 })
 
@@ -134,7 +134,7 @@ const daysGridStyle = computed(() => {
 
 const controlsClass = computed(() => {
   return mergedProps.value?.ui?.controlsClass?.({
-    defaults: DATE_PICKER_LAYERED_CLASSES.controlsClass(),
+    defaults: DATE_PICKER_DEFAULT_PROPS.ui.controlsClass(),
   })
 })
 

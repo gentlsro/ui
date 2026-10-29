@@ -1,17 +1,26 @@
-import { describe, expect, it } from 'vitest'
-import { createButtonClassResolver } from '../app/utils/create-button-class-resolver'
-import type { ButtonStyleProps } from '../app/components/Button/types/button-style-props.type'
-import { BTN_DEFAULT_PROPS } from '../app/components/Button/constants/btn-default-props.constant'
+import { describe, expect, it, vi } from 'vitest'
+import { createUIClassResolver } from '../app/utils/create-ui-class-resolver'
+import type { ButtonStyleProps } from '../app/components/Button/constants/btn-default-props.constant'
+import { BTN_CLASS_COMPOSERS, BTN_CLASS_SLOTS, BTN_DEFAULT_PROPS } from '../app/components/Button/constants/btn-default-props.constant'
 
-const resolveLayers = (layers: unknown[]) => createButtonClassResolver(layers.map(uiClasses => ({ uiClasses })))
+vi.mock('$uiConfig', () => ({ uiClassLayers: [] }))
+
+function resolveLayers(layers: unknown[]) {
+  return createUIClassResolver('button', {
+    slots: BTN_CLASS_SLOTS,
+    compose: BTN_CLASS_COMPOSERS,
+  }, () => layers.map(uiClasses => ({ uiClasses })))
+}
 
 // Failure modes: lost layer order/keys, stale all/p after slot overrides,
 // lost nested variants, stale reactive props, instance leaks, and default-path overhead.
 describe('button class layers', () => {
-  it('uses the existing factories directly when there are no class overrides', () => {
+  it('reuses prepared factories without class overrides', () => {
     const resolved = resolveLayers([{}, { button: { props: { size: 'sm' } } }])
-    expect(resolved.containerClass).toBe(BTN_DEFAULT_PROPS.ui.containerClass)
-    expect(resolved.iconClass).toBe(BTN_DEFAULT_PROPS.ui.iconClass)
+    const factory = resolved.containerClass
+    expect(resolved.containerClass).toBe(factory)
+    expect(factory({ hasLabel: true }).all).toBe(BTN_DEFAULT_PROPS.ui.containerClass({ hasLabel: true }).all)
+    expect(resolved.iconClass({ size: 'sm' }).all).toBe(BTN_DEFAULT_PROPS.ui.iconClass({ size: 'sm' }).all)
   })
 
   it('merges named and nested slots in layer order and recomposes all and p', () => {
@@ -38,7 +47,7 @@ describe('button class layers', () => {
     expect(small.all).toBe('application compact')
     expect(large.all).toBe('application large')
     expect(small.all).toBe('application compact')
-    expect(resolved.iconClass).toBe(BTN_DEFAULT_PROPS.ui.iconClass)
+    expect(resolved.iconClass({ size: 'sm' }).all).toBe(BTN_DEFAULT_PROPS.ui.iconClass({ size: 'sm' }).all)
   })
 
   it('keeps dynamic patches per evaluation and uses the last composer', () => {

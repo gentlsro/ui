@@ -20,7 +20,6 @@ type Resolvers<Component extends keyof UIClassDefinitions> = {
 type ClassDefinition = {
   slots: object
   compose: object
-  defaults: object
   derive?: object
 }
 
@@ -40,7 +39,7 @@ function mergeSlots(defaults: Slots, patch: Slots, inPlace = false): Slots {
   return result
 }
 
-/** Prepare each component once on first use; untouched surfaces retain their default factory. */
+/** Prepare each component once; untouched surfaces skip patch evaluation. */
 export function createUIClassResolver<Component extends keyof UIClassDefinitions>(
   component: Component,
   definition: ClassDefinition,
@@ -56,7 +55,6 @@ export function createUIClassResolver<Component extends keyof UIClassDefinitions
     const factories = definition.slots as Record<string, (props: unknown) => Slots>
     const composers = definition.compose as Record<string, Composer>
     const derivations = definition.derive as Record<string, Record<string, Composer>> | undefined
-    const defaults = definition.defaults as Record<string, (props: unknown) => object>
 
     for (const surface of surfaces) {
       const patches: Patch[] = []
@@ -84,7 +82,11 @@ export function createUIClassResolver<Component extends keyof UIClassDefinitions
       }
 
       const factory = !patches.length && compose === composers[surface]
-        ? defaults[surface]
+        ? (props: unknown) => {
+            const slots = makeSlots(props)
+
+            return withClassPicker({ ...slots, all: compose(slots, props) })
+          }
         : (props: unknown) => {
             let slots = makeSlots(props)
             const explicitDerived = derived.length ? new Set<string>() : undefined

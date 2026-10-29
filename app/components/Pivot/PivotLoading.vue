@@ -6,7 +6,7 @@ import type { IPivotProps } from './types/pivot-props.type'
 import { usePivotStore } from './stores/pivot.store'
 
 // Constants
-import { PIVOT_LAYERED_CLASSES } from './constants/pivot-layered-classes.constant'
+import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
 
 type IProps = Pick<IPivotProps, 'ui'>
 
@@ -21,7 +21,7 @@ const loadingStyle = computed(() => {
 
 const loadingClass = computed(() => {
   return props.ui?.loadingClass?.({
-    defaults: PIVOT_LAYERED_CLASSES.loadingClass(),
+    defaults: PIVOT_DEFAULT_PROPS.ui.loadingClass(),
   })
 })
 </script>

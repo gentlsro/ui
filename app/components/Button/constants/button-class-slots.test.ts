@@ -1,5 +1,7 @@
-import { describe, expect, it } from 'vitest'
-import { BTN_CLASS_COMPOSERS, BTN_CLASS_SLOTS } from './button-class-slots.constant'
+import { describe, expect, it, vi } from 'vitest'
+import { BTN_CLASS_COMPOSERS, BTN_CLASS_SLOTS } from './btn-default-props.constant'
+
+vi.mock('$uiConfig', () => ({ uiClassLayers: [] }))
 
 // Failure modes: all captures old slot values; nested size overrides are ignored;
 // conditional slots are lost or incorrectly included after merging.

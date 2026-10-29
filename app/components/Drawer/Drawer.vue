@@ -3,7 +3,7 @@
 import type { IDrawerProps } from './types/drawer-props.type'
 
 // Constants
-import { DRAWER_LAYERED_CLASSES } from './constants/drawer-layered-classes.constant'
+import { DRAWER_DEFAULT_PROPS } from './constants/drawer-default-props.constant'
 import { BREAKPOINTS } from '../../constants/breakpoints'
 
 const props = withDefaults(defineProps<IDrawerProps>(), {
@@ -80,7 +80,7 @@ const styles = computed(() => {
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: DRAWER_LAYERED_CLASSES.containerClass(),
+    defaults: DRAWER_DEFAULT_PROPS.ui.containerClass(),
   })
 })
 

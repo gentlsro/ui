@@ -10,7 +10,7 @@ import type { TableColumn } from './models/table-column.model'
 import { tableIsNumericColumn } from './functions/table-is-numeric-column'
 
 // Constants
-import { TABLE_LAYERED_CLASSES } from './constants/table-layered-classes.constant'
+import { TABLE_DEFAULT_PROPS } from './constants/table-default-props.constant'
 
 // Store
 import { useTableStore } from './stores/table.store'
@@ -30,7 +30,7 @@ const totalsCellClass = computed(() => {
   return [
     props.ui?.totalsCellClass?.({
       column: props.column,
-      defaults: TABLE_LAYERED_CLASSES.totalsCellClass(),
+      defaults: TABLE_DEFAULT_PROPS.ui.totalsCellClass(),
     }),
     props.column.totalsCellClass,
     { 'is-numeric': tableIsNumericColumn(props.column) },

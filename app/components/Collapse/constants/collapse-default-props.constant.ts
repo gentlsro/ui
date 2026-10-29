@@ -1,61 +1,147 @@
-import { COLLAPSE_CLASS_COMPOSERS, COLLAPSE_CLASS_SLOTS } from './collapse-class-slots.constant'
-
 // @unocss-include
 
-export const COLLAPSE_DEFAULT_PROPS = {
-  ui: {
-    containerClass() {
-      const slots = COLLAPSE_CLASS_SLOTS.containerClass()
+import type { WidenClassSlots } from '../../../types/ui-class-config.type'
+import { uiClassLayers } from '$uiConfig'
+import { createUIClassResolver } from '../../../utils/create-ui-class-resolver'
 
-      return withClassPicker({ ...slots, all: COLLAPSE_CLASS_COMPOSERS.containerClass(slots) } as const)
-    },
+export const COLLAPSE_CLASS_SLOTS = {
+  containerClass() {
+    const base = 'relative flex flex-col'
 
-    headerClass() {
-      const slots = COLLAPSE_CLASS_SLOTS.headerClass()
-
-      return withClassPicker({ ...slots, all: COLLAPSE_CLASS_COMPOSERS.headerClass(slots) } as const)
-    },
-
-    headerRightClass() {
-      const slots = COLLAPSE_CLASS_SLOTS.headerRightClass()
-
-      return withClassPicker({ ...slots, all: COLLAPSE_CLASS_COMPOSERS.headerRightClass(slots) } as const)
-    },
-
-    titleClass() {
-      const slots = COLLAPSE_CLASS_SLOTS.titleClass()
-
-      return withClassPicker({ ...slots, all: COLLAPSE_CLASS_COMPOSERS.titleClass(slots) } as const)
-    },
-
-    subtitleClass() {
-      const slots = COLLAPSE_CLASS_SLOTS.subtitleClass()
-
-      return withClassPicker({ ...slots, all: COLLAPSE_CLASS_COMPOSERS.subtitleClass(slots) } as const)
-    },
-
-    expandIconClass() {
-      const slots = COLLAPSE_CLASS_SLOTS.expandIconClass()
-
-      return withClassPicker({ ...slots, all: COLLAPSE_CLASS_COMPOSERS.expandIconClass(slots) } as const)
-    },
-
-    textClass() {
-      const slots = COLLAPSE_CLASS_SLOTS.textClass()
-
-      return withClassPicker({ ...slots, all: COLLAPSE_CLASS_COMPOSERS.textClass(slots) } as const)
-    },
-
-    contentClass() {
-      const slots = COLLAPSE_CLASS_SLOTS.contentClass()
-
-      return withClassPicker({ ...slots, all: COLLAPSE_CLASS_COMPOSERS.contentClass(slots) } as const)
-    },
-
-    contentInnerClass() {
-      const slots = COLLAPSE_CLASS_SLOTS.contentInnerClass()
-
-      return withClassPicker({ ...slots, all: COLLAPSE_CLASS_COMPOSERS.contentInnerClass(slots) } as const)
-    },
+    return {
+      base,
+    } as const
   },
+
+  headerClass() {
+    const base = 'flex items-center gap-2 p-2 rounded-custom cursor-pointer'
+    const bg = 'bg-white dark:bg-dark-950'
+
+    // State styling via CSS selectors - when parent container is open, remove bottom radius
+    const open = '[.collapse.is-open_&]:(rounded-b-0)'
+
+    const border = 'light:(border-1 border-slate-300) dark:(border-1 border-black)'
+
+    return {
+      base,
+      bg,
+      border,
+      open,
+    } as const
+  },
+
+  headerRightClass() {
+    const base = 'flex self-center items-center gap-1 items-center self-start shrink-0'
+
+    return {
+      base,
+    } as const
+  },
+
+  titleClass() {
+    const base = 'font-rem-14 font-semibold'
+    const color = 'color-slate-900 dark:color-slate-100'
+
+    return {
+      base,
+      color,
+    } as const
+  },
+
+  subtitleClass() {
+    const base = 'text-caption leading-tight font-rem-12'
+
+    return {
+      base,
+    } as const
+  },
+
+  expandIconClass() {
+    const base = 'i-majesticons:chevron-right transition-transform'
+    // State styling via CSS selectors - rotate when parent is open
+    const open = '[.collapse.is-open_&]:(rotate-90deg)'
+
+    return {
+      base,
+      open,
+    } as const
+  },
+
+  textClass() {
+    const base = 'flex flex-col grow'
+
+    return {
+      base,
+    } as const
+  },
+
+  contentClass() {
+    const base = 'flex flex-col overflow-auto rounded-b-custom'
+    const bg = 'bg-white dark:bg-dark-950'
+    const border = 'border-x-1 border-b-1 light:(border-slate-300) dark:(border-black)'
+    const floating = '[&.is-floating]:(absolute z-11 left-0 right-0 bottom-0 translate-y-full)'
+
+    return {
+      base,
+      bg,
+      floating,
+      border,
+    } as const
+  },
+
+  contentInnerClass() {
+    const base = 'flex flex-col p-2'
+
+    return {
+      base,
+    } as const
+  },
+}
+
+type CollapseSlots<K extends keyof typeof COLLAPSE_CLASS_SLOTS>
+  = WidenClassSlots<ReturnType<typeof COLLAPSE_CLASS_SLOTS[K]>>
+
+export const COLLAPSE_CLASS_COMPOSERS = {
+  containerClass(slots: CollapseSlots<'containerClass'>) {
+    return `${slots.base}`
+  },
+
+  headerClass(slots: CollapseSlots<'headerClass'>) {
+    return `${slots.base} ${slots.bg} ${slots.open} ${slots.border}`
+  },
+
+  headerRightClass(slots: CollapseSlots<'headerRightClass'>) {
+    return `${slots.base}`
+  },
+
+  titleClass(slots: CollapseSlots<'titleClass'>) {
+    return `${slots.base} ${slots.color}`
+  },
+
+  subtitleClass(slots: CollapseSlots<'subtitleClass'>) {
+    return `${slots.base}`
+  },
+
+  expandIconClass(slots: CollapseSlots<'expandIconClass'>) {
+    return `${slots.base} ${slots.open}`
+  },
+
+  textClass(slots: CollapseSlots<'textClass'>) {
+    return `${slots.base}`
+  },
+
+  contentClass(slots: CollapseSlots<'contentClass'>) {
+    return `${slots.base} ${slots.bg} ${slots.floating} ${slots.border}`
+  },
+
+  contentInnerClass(slots: CollapseSlots<'contentInnerClass'>) {
+    return slots.base
+  },
+}
+
+export const COLLAPSE_DEFAULT_PROPS = {
+  ui: createUIClassResolver('collapse', {
+    slots: COLLAPSE_CLASS_SLOTS,
+    compose: COLLAPSE_CLASS_COMPOSERS,
+  }, () => uiClassLayers),
 }

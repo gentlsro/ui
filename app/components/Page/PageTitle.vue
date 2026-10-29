@@ -3,7 +3,7 @@
 import type { IPageTitleProps } from './types/page-title-props.type'
 
 // Constants
-import { PAGE_TITLE_LAYERED_CLASSES } from './constants/page-title-layered-classes.constant'
+import { PAGE_TITLE_DEFAULT_PROPS } from './constants/page-title-default-props.constant'
 
 const props = withDefaults(defineProps<IPageTitleProps>(), {
   ...getComponentProps('pageTitle'),
@@ -43,7 +43,7 @@ const title = computed(() => {
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: PAGE_TITLE_LAYERED_CLASSES.containerClass(),
+    defaults: PAGE_TITLE_DEFAULT_PROPS.ui.containerClass(),
   })
 })
 
@@ -54,7 +54,7 @@ const containerStyle = computed(() => {
 // Styles - pageTitle
 const pageTitleClass = computed(() => {
   return mergedProps.value?.ui?.pageTitleClass?.({
-    defaults: PAGE_TITLE_LAYERED_CLASSES.pageTitleClass(),
+    defaults: PAGE_TITLE_DEFAULT_PROPS.ui.pageTitleClass(),
   })
 })
 
@@ -65,7 +65,7 @@ const pageTitleStyle = computed(() => {
 // Styles - title
 const titleClass = computed(() => {
   return mergedProps.value?.ui?.titleClass?.({
-    defaults: PAGE_TITLE_LAYERED_CLASSES.titleClass(),
+    defaults: PAGE_TITLE_DEFAULT_PROPS.ui.titleClass(),
   })
 })
 

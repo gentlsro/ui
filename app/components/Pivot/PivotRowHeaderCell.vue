@@ -3,7 +3,7 @@
 import type { PivotItem } from './models/pivot-item.model'
 
 // Constants
-import { PIVOT_LAYERED_CLASSES } from './constants/pivot-layered-classes.constant'
+import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
 
 // Store
 import { usePivotStore } from './stores/pivot.store'
@@ -27,7 +27,7 @@ const headerLabel = computed(() => {
 
 const rowHeaderCellClass = computed(() => {
   return ui.value?.rowHeaderCellClass?.({
-    defaults: PIVOT_LAYERED_CLASSES.rowHeaderCellClass(),
+    defaults: PIVOT_DEFAULT_PROPS.ui.rowHeaderCellClass(),
   })
 })
 

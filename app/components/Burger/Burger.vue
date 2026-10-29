@@ -3,7 +3,7 @@
 import type { IBurgerProps } from './types/burger-props.type'
 
 // Constants
-import { BURGER_LAYERED_CLASSES } from './constants/burger-layered-classes.constant'
+import { BURGER_DEFAULT_PROPS } from './constants/burger-default-props.constant'
 
 const props = withDefaults(defineProps<IBurgerProps>(), {
   ...getComponentProps('burger'),
@@ -47,13 +47,13 @@ watch(model, isOpen => {
 // Styles
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: BURGER_LAYERED_CLASSES.containerClass({ size: size.value }),
+    defaults: BURGER_DEFAULT_PROPS.ui.containerClass({ size: size.value }),
   })
 })
 
 const burgerClass = computed(() => {
   return mergedProps.value?.ui?.burgerClass?.({
-    defaults: BURGER_LAYERED_CLASSES.burgerClass({ size: size.value }),
+    defaults: BURGER_DEFAULT_PROPS.ui.burgerClass({ size: size.value }),
   })
 })
 </script>

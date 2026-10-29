@@ -1,43 +1,91 @@
-import { PROGRESS_BAR_CLASS_COMPOSERS, PROGRESS_BAR_CLASS_SLOTS } from './progress-bar-class-slots.constant'
-
 // @unocss-include
 
-export const PROGRESS_BAR_DEFAULT_PROPS = {
-  ui: {
-    containerClass() {
-      const slots = PROGRESS_BAR_CLASS_SLOTS.containerClass()
+import type { WidenClassSlots } from '../../../types/ui-class-config.type'
+import { uiClassLayers } from '$uiConfig'
+import { createUIClassResolver } from '../../../utils/create-ui-class-resolver'
 
-      return withClassPicker({ ...slots, all: PROGRESS_BAR_CLASS_COMPOSERS.containerClass(slots) } as const)
-    },
+export const PROGRESS_BAR_CLASS_SLOTS = {
+  containerClass() {
+    const base = 'flex relative h-8 rounded-custom'
 
-    innerClass() {
-      const slots = PROGRESS_BAR_CLASS_SLOTS.innerClass()
-
-      return withClassPicker({ ...slots, all: PROGRESS_BAR_CLASS_COMPOSERS.innerClass(slots) } as const)
-    },
-
-    colorClass() {
-      const slots = PROGRESS_BAR_CLASS_SLOTS.colorClass()
-
-      return withClassPicker({ ...slots, all: PROGRESS_BAR_CLASS_COMPOSERS.colorClass(slots) } as const)
-    },
-
-    whiteBgClass() {
-      const slots = PROGRESS_BAR_CLASS_SLOTS.whiteBgClass()
-
-      return withClassPicker({ ...slots, all: PROGRESS_BAR_CLASS_COMPOSERS.whiteBgClass(slots) } as const)
-    },
-
-    blackBgClass() {
-      const slots = PROGRESS_BAR_CLASS_SLOTS.blackBgClass()
-
-      return withClassPicker({ ...slots, all: PROGRESS_BAR_CLASS_COMPOSERS.blackBgClass(slots) } as const)
-    },
-
-    textClass() {
-      const slots = PROGRESS_BAR_CLASS_SLOTS.textClass()
-
-      return withClassPicker({ ...slots, all: PROGRESS_BAR_CLASS_COMPOSERS.textClass(slots) } as const)
-    },
+    return {
+      base,
+    } as const
   },
+
+  innerClass() {
+    const base = 'absolute h-full'
+
+    return {
+      base,
+    } as const
+  },
+
+  colorClass() {
+    const base = 'bg-positive mix-blend-screen w-full z-4'
+
+    return {
+      base,
+    } as const
+  },
+
+  whiteBgClass() {
+    const base = 'bg-white w-full z-1'
+
+    return {
+      base,
+    } as const
+  },
+
+  blackBgClass() {
+    const base = 'bg-black z-2'
+
+    return {
+      base,
+    } as const
+  },
+
+  textClass() {
+    const base = 'absolute left-1/2 top-1/2 translate--50% mix-blend-difference color-white z-3 text-nowrap whitespace-nowrap'
+
+    return {
+      base,
+    } as const
+  },
+}
+
+type ProgressBarSlots<K extends keyof typeof PROGRESS_BAR_CLASS_SLOTS>
+  = WidenClassSlots<ReturnType<typeof PROGRESS_BAR_CLASS_SLOTS[K]>>
+
+export const PROGRESS_BAR_CLASS_COMPOSERS = {
+  containerClass(slots: ProgressBarSlots<'containerClass'>) {
+    return slots.base
+  },
+
+  innerClass(slots: ProgressBarSlots<'innerClass'>) {
+    return slots.base
+  },
+
+  colorClass(slots: ProgressBarSlots<'colorClass'>) {
+    return slots.base
+  },
+
+  whiteBgClass(slots: ProgressBarSlots<'whiteBgClass'>) {
+    return slots.base
+  },
+
+  blackBgClass(slots: ProgressBarSlots<'blackBgClass'>) {
+    return slots.base
+  },
+
+  textClass(slots: ProgressBarSlots<'textClass'>) {
+    return slots.base
+  },
+}
+
+export const PROGRESS_BAR_DEFAULT_PROPS = {
+  ui: createUIClassResolver('progressBar', {
+    slots: PROGRESS_BAR_CLASS_SLOTS,
+    compose: PROGRESS_BAR_CLASS_COMPOSERS,
+  }, () => uiClassLayers),
 }

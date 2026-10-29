@@ -9,8 +9,8 @@ import { useFieldUtils } from '../Field/functions/useFieldUtils'
 import { getYearMonthModelValue } from './functions/get-year-month-model-value'
 
 // Constants
-import { INPUT_WRAPPER_LAYERED_CLASSES } from '../InputWrapper/constants/input-wrapper-layered-classes.constant'
-import { YEAR_MONTH_SELECTOR_LAYERED_CLASSES } from './constants/year-month-selector-layered-classes.constant'
+import { INPUT_WRAPPER_DEFAULT_PROPS } from '../InputWrapper/constants/input-wrapper-default-props'
+import { YEAR_MONTH_SELECTOR_DEFAULT_PROPS } from './constants/year-month-selector-default-props.constant'
 
 const props = withDefaults(defineProps<IYearMonthSelectorProps>(), {
   ...getComponentProps('yearMonthSelector'),
@@ -105,7 +105,7 @@ const ignoredEls = computed(() => [
 // Styles - append
 const appendClass = computed(() => {
   return mergedProps.value.ui?.appendClass?.({
-    defaults: INPUT_WRAPPER_LAYERED_CLASSES.appendClass(),
+    defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.appendClass(),
   })
 })
 
@@ -116,7 +116,7 @@ const appendStyle = computed(() => {
 // Styles - picker icon
 const pickerIconClass = computed(() => {
   return mergedProps.value.ui?.pickerIconClass?.({
-    defaults: YEAR_MONTH_SELECTOR_LAYERED_CLASSES.pickerIconClass(),
+    defaults: YEAR_MONTH_SELECTOR_DEFAULT_PROPS.ui.pickerIconClass(),
   })
 })
 

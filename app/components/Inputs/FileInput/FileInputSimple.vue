@@ -8,7 +8,7 @@ import { useFileInput } from './functions/useFileInput'
 import { useFieldUtils } from '../../Field/functions/useFieldUtils'
 
 // Constants
-import { INPUT_WRAPPER_LAYERED_CLASSES } from '../../InputWrapper/constants/input-wrapper-layered-classes.constant'
+import { INPUT_WRAPPER_DEFAULT_PROPS } from '../../InputWrapper/constants/input-wrapper-default-props'
 
 const props = withDefaults(defineProps<IFileInputProps>(), {
   ...getComponentProps('fileInputSimple'),
@@ -54,7 +54,7 @@ function handleOpenDialog(ev?: PointerEvent | FocusEvent) {
 // Styles - append
 const appendClass = computed(() => {
   return mergedProps.value.ui?.appendClass?.({
-    defaults: INPUT_WRAPPER_LAYERED_CLASSES.appendClass(),
+    defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.appendClass(),
   })
 })
 

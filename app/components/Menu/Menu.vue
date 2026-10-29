@@ -8,7 +8,7 @@ import { useMenu } from './composables/useMenu'
 import { useElementMovement } from '../ElementMovement/composables/useElementMovement'
 
 // Constants
-import { MENU_LAYERED_CLASSES } from './constants/menu-layered-classes.constant'
+import { MENU_DEFAULT_PROPS } from './constants/menu-default-props.constant'
 
 // Store
 import { MENU_INJECTION_KEY, useMenuStore } from './store/menu.store'
@@ -180,7 +180,7 @@ defineExpose(menuGetExposed({
 // Styles - menu
 const menuClassComputed = computed(() => {
   return mergedProps.value?.ui?.menuClass?.({
-    defaults: MENU_LAYERED_CLASSES.menuClass(),
+    defaults: MENU_DEFAULT_PROPS.ui.menuClass(),
   })
 })
 
@@ -191,7 +191,7 @@ const menuStyleComputed = computed(() => {
 // Styles - content
 const contentClass = computed(() => {
   return mergedProps.value?.ui?.contentClass?.({
-    defaults: MENU_LAYERED_CLASSES.contentClass(),
+    defaults: MENU_DEFAULT_PROPS.ui.contentClass(),
   })
 })
 

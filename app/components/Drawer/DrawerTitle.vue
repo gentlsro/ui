@@ -3,7 +3,7 @@
 import type { IDrawerProps } from './types/drawer-props.type'
 
 // Constants
-import { DRAWER_LAYERED_CLASSES } from './constants/drawer-layered-classes.constant'
+import { DRAWER_DEFAULT_PROPS } from './constants/drawer-default-props.constant'
 
 type IProps = Pick<IDrawerProps, 'modelValue' | 'title' | 'ui'>
 
@@ -12,7 +12,7 @@ const props = defineProps<IProps>()
 // Styles - title
 const titleClass = computed(() => {
   return props.ui?.titleClass?.({
-    defaults: DRAWER_LAYERED_CLASSES.titleClass(),
+    defaults: DRAWER_DEFAULT_PROPS.ui.titleClass(),
   })
 })
 

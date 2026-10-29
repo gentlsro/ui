@@ -6,7 +6,7 @@ import type { IListProps } from './types/list-props.type'
 import { useListStore } from './stores/list.store'
 
 // Constants
-import { LIST_LAYERED_CLASSES } from './constants/list-layered-classes.constant'
+import { LIST_DEFAULT_PROPS } from './constants/list-default-props.constant'
 
 type IProps = Pick<IListProps, 'ui' | 'search' | 'dense' | 'searchConfig'>
 
@@ -27,7 +27,7 @@ const search = defineModel<string>('search')
 
 const searchClass = computed(() => {
   return props.ui?.searchClass?.({
-    defaults: LIST_LAYERED_CLASSES.searchClass(),
+    defaults: LIST_DEFAULT_PROPS.ui.searchClass(),
   })
 })
 

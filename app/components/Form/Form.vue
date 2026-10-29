@@ -3,7 +3,7 @@
 import type { IFormProps } from './types/form-props.type'
 
 // Constants
-import { FORM_LAYERED_CLASSES } from './constants/form-layered-classes.constant'
+import { FORM_DEFAULT_PROPS } from './constants/form-default-props.constant'
 
 // Functions
 import { useForm } from './composables/useForm'
@@ -104,7 +104,7 @@ provide(formSubmitKey, handleSubmit)
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: FORM_LAYERED_CLASSES.containerClass(),
+    defaults: FORM_DEFAULT_PROPS.ui.containerClass(),
   })
 })
 
@@ -115,7 +115,7 @@ const containerStyle = computed(() => {
 // Styles - content
 const contentClass = computed(() => {
   return mergedProps.value?.ui?.contentClass?.({
-    defaults: FORM_LAYERED_CLASSES.contentClass(),
+    defaults: FORM_DEFAULT_PROPS.ui.contentClass(),
   })
 })
 
@@ -126,7 +126,7 @@ const contentStyle = computed(() => {
 // Styles - controls
 const controlsClass = computed(() => {
   return mergedProps.value?.ui?.controlsClass?.({
-    defaults: FORM_LAYERED_CLASSES.controlsClass(),
+    defaults: FORM_DEFAULT_PROPS.ui.controlsClass(),
   })
 })
 

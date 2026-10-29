@@ -1,37 +1,80 @@
-import { YEAR_SELECTOR_CLASS_COMPOSERS, YEAR_SELECTOR_CLASS_SLOTS } from './year-selector-class-slots.constant'
-
 // @unocss-include
 
-export const YEAR_SELECTOR_DEFAULT_PROPS = {
-  ui: {
-    containerClass() {
-      const slots = YEAR_SELECTOR_CLASS_SLOTS.containerClass()
+import type { WidenClassSlots } from '../../../types/ui-class-config.type'
+import { uiClassLayers } from '$uiConfig'
+import { createUIClassResolver } from '../../../utils/create-ui-class-resolver'
 
-      return withClassPicker({ ...slots, all: YEAR_SELECTOR_CLASS_COMPOSERS.containerClass(slots) } as const)
-    },
+export const YEAR_SELECTOR_CLASS_SLOTS = {
+  containerClass() {
+    const base = 'flex gap-x-1 items-center'
 
-    previousBtnClass() {
-      const slots = YEAR_SELECTOR_CLASS_SLOTS.previousBtnClass()
-
-      return withClassPicker({ ...slots, all: YEAR_SELECTOR_CLASS_COMPOSERS.previousBtnClass(slots) } as const)
-    },
-
-    nextBtnClass() {
-      const slots = YEAR_SELECTOR_CLASS_SLOTS.nextBtnClass()
-
-      return withClassPicker({ ...slots, all: YEAR_SELECTOR_CLASS_COMPOSERS.nextBtnClass(slots) } as const)
-    },
-
-    menuContainerClass() {
-      const slots = YEAR_SELECTOR_CLASS_SLOTS.menuContainerClass()
-
-      return withClassPicker({ ...slots, all: YEAR_SELECTOR_CLASS_COMPOSERS.menuContainerClass(slots) } as const)
-    },
-
-    yearBtnClass() {
-      const slots = YEAR_SELECTOR_CLASS_SLOTS.yearBtnClass()
-
-      return withClassPicker({ ...slots, all: YEAR_SELECTOR_CLASS_COMPOSERS.yearBtnClass(slots) } as const)
-    },
+    return {
+      base,
+    } as const
   },
+
+  previousBtnClass() {
+    const base = 'w-8 h-8 p-3 lt-xm:hidden'
+
+    return {
+      base,
+    } as const
+  },
+
+  nextBtnClass() {
+    const base = 'w-8 h-8 p-3 lt-xm:hidden'
+
+    return {
+      base,
+    } as const
+  },
+
+  menuContainerClass() {
+    const base = 'flex flex-col gap-1 grow'
+
+    return {
+      base,
+    } as const
+  },
+
+  yearBtnClass() {
+    // States (via CSS selectors)
+    const selected = '[&.is-selected]:(bg-primary color-white)'
+
+    return {
+      selected,
+    } as const
+  },
+}
+
+type YearSelectorSlots<K extends keyof typeof YEAR_SELECTOR_CLASS_SLOTS>
+  = WidenClassSlots<ReturnType<typeof YEAR_SELECTOR_CLASS_SLOTS[K]>>
+
+export const YEAR_SELECTOR_CLASS_COMPOSERS = {
+  containerClass(slots: YearSelectorSlots<'containerClass'>) {
+    return slots.base
+  },
+
+  previousBtnClass(slots: YearSelectorSlots<'previousBtnClass'>) {
+    return slots.base
+  },
+
+  nextBtnClass(slots: YearSelectorSlots<'nextBtnClass'>) {
+    return slots.base
+  },
+
+  menuContainerClass(slots: YearSelectorSlots<'menuContainerClass'>) {
+    return slots.base
+  },
+
+  yearBtnClass(slots: YearSelectorSlots<'yearBtnClass'>) {
+    return slots.selected
+  },
+}
+
+export const YEAR_SELECTOR_DEFAULT_PROPS = {
+  ui: createUIClassResolver('yearSelector', {
+    slots: YEAR_SELECTOR_CLASS_SLOTS,
+    compose: YEAR_SELECTOR_CLASS_COMPOSERS,
+  }, () => uiClassLayers),
 }

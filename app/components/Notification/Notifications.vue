@@ -3,7 +3,7 @@
 import type { INotificationsProps } from './types/notifications-props.type'
 
 // Constants
-import { NOTIFICATIONS_LAYERED_CLASSES } from './constants/notifications-layered-classes.constant'
+import { NOTIFICATIONS_DEFAULT_PROPS } from './constants/notifications-default-props.constant'
 
 // Store
 import { useNotificationStore } from './stores/notification.store'
@@ -55,7 +55,7 @@ const placementClass = computed(() => {
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: NOTIFICATIONS_LAYERED_CLASSES.containerClass(),
+    defaults: NOTIFICATIONS_DEFAULT_PROPS.ui.containerClass(),
   })
 })
 

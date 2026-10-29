@@ -3,7 +3,7 @@
 import type { ISkeletonProps } from './types/skeleton-props.type'
 
 // Constants
-import { SKELETON_LAYERED_CLASSES } from './constants/skeleton-layered-classes.constant'
+import { SKELETON_DEFAULT_PROPS } from './constants/skeleton-default-props.constant'
 
 const props = withDefaults(defineProps<ISkeletonProps>(), {
   ...getComponentProps('skeleton'),
@@ -17,7 +17,7 @@ const mergedProps = computed(() => {
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: SKELETON_LAYERED_CLASSES.containerClass({ variant: props.variant }),
+    defaults: SKELETON_DEFAULT_PROPS.ui.containerClass({ variant: props.variant }),
   })
 })
 

@@ -15,11 +15,10 @@ describe('shared UI class resolver', () => {
       },
     },
     compose: { toggleClass: (slots: { base: string, size: string }) => `${slots.base} ${slots.size}` },
-    defaults: { toggleClass: () => ({ base: 'base', all: 'default', p: () => 'base' }) },
     derive: { toggleClass: { size: (slots: { sizes: Record<string, string> }, props: { size: string }) => slots.sizes[props.size] } },
   }
 
-  it('reads layers once, on first use, and keeps direct default factories', () => {
+  it('reads layers once and reuses each prepared factory', () => {
     let reads = 0
     const resolved = createUIClassResolver('toggle', spec, () => {
       reads++
@@ -27,8 +26,9 @@ describe('shared UI class resolver', () => {
       return []
     })
     expect(reads).toBe(0)
-    expect(resolved.toggleClass).toBe(spec.defaults.toggleClass)
-    expect(resolved.toggleClass).toBe(spec.defaults.toggleClass)
+    const factory = resolved.toggleClass
+    expect(resolved.toggleClass).toBe(factory)
+    expect(factory({ size: 'sm', contained: false }).all).toBe('base small')
     expect(reads).toBe(1)
   })
 
