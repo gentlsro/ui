@@ -44,7 +44,6 @@ const headerStyle = computed(() => {
 
 const rowActionsHeaderClass = computed(() => {
   const defaults = TABLE_DEFAULT_PROPS.ui.rowActionsHeaderClass()
-
   return props.ui?.rowActionsHeaderClass?.({ defaults }) ?? defaults.all
 })
 

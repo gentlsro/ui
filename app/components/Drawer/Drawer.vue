@@ -3,8 +3,8 @@
 import type { IDrawerProps } from './types/drawer-props.type'
 
 // Constants
-import { DRAWER_DEFAULT_PROPS } from './constants/drawer-default-props.constant'
 import { BREAKPOINTS } from '../../constants/breakpoints'
+import { DRAWER_DEFAULT_PROPS } from './constants/drawer-default-props.constant'
 
 const props = withDefaults(defineProps<IDrawerProps>(), {
   ...getComponentProps('drawer'),

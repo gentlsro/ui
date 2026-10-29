@@ -9,8 +9,8 @@ import { useInputUtils } from '../functions/useInputUtils'
 import { useInputValidationUtils } from '../functions/useInputValidationUtils'
 
 // Constants
-import { INPUT_WRAPPER_DEFAULT_PROPS } from '../../InputWrapper/constants/input-wrapper-default-props'
 import { CURRENCY_DEFAULT } from '#layers/utilities/app/i18n'
+import { INPUT_WRAPPER_DEFAULT_PROPS } from '../../InputWrapper/constants/input-wrapper-default-props'
 
 const props = withDefaults(defineProps<ICurrencyInputProps>(), {
   ...getComponentProps('currencyInput'),

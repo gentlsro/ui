@@ -14,8 +14,8 @@ import { treeGetExposed } from './functions/tree-get-exposed'
 import { useTreeStore } from './stores/tree.store'
 
 // Constants
-import { TREE_DEFAULT_PROPS } from './constants/tree-default-props.constant'
 import { TREE_INJECTION_KEY } from './constants/tree-injection-key.constant'
+import { TREE_DEFAULT_PROPS } from './constants/tree-default-props.constant'
 
 const props = withDefaults(
   defineProps<ITreeProps<T>>(),

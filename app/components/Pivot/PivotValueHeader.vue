@@ -53,7 +53,7 @@ const placedCells = computed(() => {
 
   const rowCount = visibleValueHeaderRows.value.length
   const colCount = visibleValueColumns.value.length
-  const occupied = Array.from({ length: rowCount }, () => Array.from({ length: colCount }).fill(false))
+  const occupied = Array.from({ length: rowCount }, () => Array.from({ length: colCount }, () => false))
   const placed: IPlacedHeaderCell[] = []
 
   visibleValueHeaderRows.value.forEach((headerRow, rowIndex) => {

@@ -21,8 +21,8 @@ const mergedProps = computed(() => {
 const { currentLocale } = useLocale()
 
 const formattedValue = computed(() => {
-  return formatValue(props.value, props.row, {
-    dataType: props.dataType,
+	  return formatValue(props.value, props.row, {
+	    dataType: props.dataType,
     format: props.format,
     emptyValue: props.emptyValue,
     predictDataType: props.predictDataType,
@@ -33,8 +33,8 @@ const formattedValue = computed(() => {
 })
 
 const formattedOriginalValue = computed(() => {
-  return formatValue(props.previousValue, props.row, {
-    dataType: props.dataType,
+	  return formatValue(props.previousValue, props.row, {
+	    dataType: props.dataType,
     format: props.format,
     emptyValue: props.emptyValue,
     predictDataType: props.predictDataType,

@@ -38,7 +38,8 @@ watch(model, isOpen => {
   nextTick(() => {
     if (isOpen) {
       pathToX.value?.beginElement()
-    } else {
+    }
+    else {
       pathToBurger.value?.beginElement()
     }
   })

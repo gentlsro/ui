@@ -8,8 +8,8 @@ import type { IBreadcrumbsProps } from './types/breadcrumbs-props.type'
 import { useBreadcrumbs } from './functions/useBreadcrumbs'
 
 // Constants
-import { BREADCRUMBS_DEFAULT_PROPS } from './constants/breadcrumbs-default-props.constant'
 import { BUTTON_PRESET } from '../Button/constants/button-preset.constant'
+import { BREADCRUMBS_DEFAULT_PROPS } from './constants/breadcrumbs-default-props.constant'
 
 const props = withDefaults(defineProps<IBreadcrumbsProps>(), {
   ...getComponentProps('breadcrumbs'),
