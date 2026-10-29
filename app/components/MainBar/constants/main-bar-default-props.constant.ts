@@ -57,3 +57,4 @@ export const MAIN_BAR_DEFAULT_PROPS = {
     },
   },
 }
+

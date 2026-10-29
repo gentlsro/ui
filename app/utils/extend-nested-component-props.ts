@@ -58,9 +58,9 @@ function getClassCallbacks(componentName: string) {
       }
     }
   }
-  const layers = uiConfigLayers as readonly { default: Record<string, { props?: { ui?: Record<string, unknown> } }> }[]
+  const layers = uiConfigLayers as readonly Record<string, { props?: { ui?: Record<string, unknown> } }>[]
   for (const layer of layers) {
-    for (const [surface, callback] of Object.entries(layer.default[componentName]?.props?.ui ?? {})) {
+    for (const [surface, callback] of Object.entries(layer[componentName]?.props?.ui ?? {})) {
       if (surface.endsWith('Class') && typeof callback === 'function') {
         const chain = surfaces.get(surface) ?? { callbacks: [], owners: new Set([componentName]) }
         chain.callbacks.push(callback as ClassCallback)

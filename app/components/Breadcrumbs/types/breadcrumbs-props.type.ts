@@ -1,5 +1,4 @@
 import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
-import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
 // Types
@@ -28,9 +27,9 @@ export type IBreadcrumbsProps = {
     /**
      * Class to apply to the breadcrumbs wrapper
      */
-    containerClass?: (payload: WithClassPicker<{
+    containerClass?: (payload: {
       defaults: ReturnType<typeof BREADCRUMBS_DEFAULT_PROPS['ui']['containerClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the breadcrumbs wrapper
@@ -40,9 +39,9 @@ export type IBreadcrumbsProps = {
     /**
      * Class to apply to the breadcrumbs
      */
-    breadcrumbsClass?: (payload: WithClassPicker<{
+    breadcrumbsClass?: (payload: {
       defaults: ReturnType<typeof BREADCRUMBS_DEFAULT_PROPS['ui']['breadcrumbsClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the breadcrumbs

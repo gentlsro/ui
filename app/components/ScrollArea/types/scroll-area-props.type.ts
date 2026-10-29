@@ -1,5 +1,4 @@
 import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
-import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type PerfectScrollbar from 'perfect-scrollbar'
 import type { CSSProperties } from 'vue'
 import type { SCROLL_AREA_DEFAULT_PROPS } from '../constants/scroll-area-default-props.constant'
@@ -17,9 +16,9 @@ export type IScrollAreaProps = {
   immediate?: boolean
 
   ui?: UIClasses<{
-    containerClass?: (payload: WithClassPicker<{
+    containerClass?: (payload: {
       defaults: ReturnType<typeof SCROLL_AREA_DEFAULT_PROPS['ui']['containerClass']>
-    }>) => ClassType
+    }) => ClassType
 
     containerStyle?: () => CSSProperties
   }, UIResolvedClasses['scrollArea']>

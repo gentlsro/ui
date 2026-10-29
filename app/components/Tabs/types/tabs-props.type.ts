@@ -1,5 +1,4 @@
 import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
-import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties, KeepAliveProps } from 'vue'
 
 // Types
@@ -31,9 +30,9 @@ export type ITabsProps = {
     /**
      * Class to apply to the container
      */
-    containerClass?: (payload: WithClassPicker<{
+    containerClass?: (payload: {
       defaults: ReturnType<typeof TABS_DEFAULT_PROPS['ui']['containerClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the container
@@ -43,9 +42,9 @@ export type ITabsProps = {
     /**
      * Class to apply to the navigation
      */
-    navigationClass?: (payload: WithClassPicker<{
+    navigationClass?: (payload: {
       defaults: ReturnType<typeof TABS_DEFAULT_PROPS['ui']['navigationClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the navigation
@@ -55,9 +54,9 @@ export type ITabsProps = {
     /**
      * Class to apply to the navigation content (inner class of the `HorizontalScroller`)
      */
-    navigationContentClass?: (payload: WithClassPicker<{
+    navigationContentClass?: (payload: {
       defaults: ReturnType<typeof TABS_DEFAULT_PROPS['ui']['navigationContentClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the navigation content (inner style of the `HorizontalScroller`)
@@ -67,9 +66,9 @@ export type ITabsProps = {
     /**
      * Class to apply to the content
      */
-    tabClass?: (payload: WithClassPicker<{
+    tabClass?: (payload: {
       defaults: ReturnType<typeof TABS_DEFAULT_PROPS['ui']['tabClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the content
@@ -80,9 +79,9 @@ export type ITabsProps = {
      * Class to apply to the tab's navigation button
      * Note: Use `is-active` CSS selector for active state styling
      */
-    tabNavBtnClass?: (payload: WithClassPicker<{
+    tabNavBtnClass?: (payload: {
       defaults: ReturnType<typeof TABS_DEFAULT_PROPS['ui']['tabNavBtnClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the tab's navigation button

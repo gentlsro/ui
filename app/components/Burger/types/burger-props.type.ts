@@ -1,5 +1,4 @@
 import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
-import type { WithClassPicker } from '../../../functions/with-class-picker'
 // Constants
 import type { BURGER_DEFAULT_PROPS } from '../constants/burger-default-props.constant'
 
@@ -22,15 +21,15 @@ export type IBurgerProps = {
     /**
      * Class to apply to the wrapper button element
      */
-    containerClass?: (payload: WithClassPicker<{
+    containerClass?: (payload: {
       defaults: ReturnType<typeof BURGER_DEFAULT_PROPS['ui']['containerClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Class to apply to the burger icon container
      */
-    burgerClass?: (payload: WithClassPicker<{
+    burgerClass?: (payload: {
       defaults: ReturnType<typeof BURGER_DEFAULT_PROPS['ui']['burgerClass']>
-    }>) => ClassType
+    }) => ClassType
   }, UIResolvedClasses['burger']>
 }

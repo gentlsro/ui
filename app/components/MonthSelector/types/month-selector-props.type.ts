@@ -1,5 +1,4 @@
 import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
-import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
 // Constants
@@ -28,9 +27,9 @@ export type IMonthSelectorProps = {
     /**
      * Class to apply to the container
      */
-    containerClass?: (payload: WithClassPicker<{
+    containerClass?: (payload: {
       defaults: ReturnType<typeof MONTH_SELECTOR_DEFAULT_PROPS['ui']['containerClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the container
@@ -40,9 +39,9 @@ export type IMonthSelectorProps = {
     /**
      * Class to apply to the previous button
      */
-    previousBtnClass?: (payload: WithClassPicker<{
+    previousBtnClass?: (payload: {
       defaults: ReturnType<typeof MONTH_SELECTOR_DEFAULT_PROPS['ui']['previousBtnClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the previous button
@@ -52,9 +51,9 @@ export type IMonthSelectorProps = {
     /**
      * Class to apply to the current month button
      */
-    currentBtnClass?: (payload: WithClassPicker<{
+    currentBtnClass?: (payload: {
       defaults: ReturnType<typeof MONTH_SELECTOR_DEFAULT_PROPS['ui']['currentBtnClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the current month button
@@ -64,9 +63,9 @@ export type IMonthSelectorProps = {
     /**
      * Class to apply to the next button
      */
-    nextBtnClass?: (payload: WithClassPicker<{
+    nextBtnClass?: (payload: {
       defaults: ReturnType<typeof MONTH_SELECTOR_DEFAULT_PROPS['ui']['nextBtnClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the next button
@@ -76,9 +75,9 @@ export type IMonthSelectorProps = {
     /**
      * Class to apply to the grid container in the menu
      */
-    gridContainerClass?: (payload: WithClassPicker<{
+    gridContainerClass?: (payload: {
       defaults: ReturnType<typeof MONTH_SELECTOR_DEFAULT_PROPS['ui']['gridContainerClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the grid container in the menu
@@ -88,9 +87,9 @@ export type IMonthSelectorProps = {
     /**
      * Class to apply to each month button in the grid
      */
-    monthBtnClass?: (payload: WithClassPicker<{
+    monthBtnClass?: (payload: {
       defaults: ReturnType<typeof MONTH_SELECTOR_DEFAULT_PROPS['ui']['monthBtnClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to each month button in the grid

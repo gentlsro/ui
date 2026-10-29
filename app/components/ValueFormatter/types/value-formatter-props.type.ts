@@ -1,5 +1,4 @@
 import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
-import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
 import type { PredictDataTypeOptions } from '#layers/utilities/app/types/predict-data-type-options.type'
@@ -73,9 +72,9 @@ export type IValueFormatterProps = {
     /**
      * Class for the container
      */
-    containerClass?: (payload: WithClassPicker<{
+    containerClass?: (payload: {
       defaults: ReturnType<typeof VALUE_FORMATTER_DEFAULT_PROPS['ui']['containerClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style for the container

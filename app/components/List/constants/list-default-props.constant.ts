@@ -1,5 +1,4 @@
 // @unocss-include
-import type { IListProps } from '../types/list-props.type'
 
 export const LIST_DEFAULT_PROPS = {
   ui: {
@@ -121,4 +120,4 @@ export const LIST_DEFAULT_PROPS = {
     },
 
   },
-} satisfies Omit<IListProps, 'ui'> & { ui: object }
+}

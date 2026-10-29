@@ -1,8 +1,5 @@
 // @unocss-include
 
-// Types
-import type { ITooltipProps } from '../types/tooltip-props.type'
-
 export const TOOLTIP_DEFAULT_PROPS = {
   ui: {
     containerClass() {
@@ -58,4 +55,4 @@ export const TOOLTIP_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies Omit<ITooltipProps, 'ui'> & { ui: object }
+}

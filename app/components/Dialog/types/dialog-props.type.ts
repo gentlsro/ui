@@ -1,5 +1,4 @@
 import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
-import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
 // Constants
@@ -98,9 +97,9 @@ export type IDialogProps = {
     /**
      * Class to apply to the `backdrop`
      */
-    backdropClass?: (payload: WithClassPicker<{
+    backdropClass?: (payload: {
       defaults: ReturnType<typeof DIALOG_DEFAULT_PROPS['ui']['backdropClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the `backdrop`
@@ -110,9 +109,9 @@ export type IDialogProps = {
     /**
      * Class to apply to the `wrapper`
      */
-    wrapperClass?: (payload: WithClassPicker<{
+    wrapperClass?: (payload: {
       defaults: ReturnType<typeof DIALOG_DEFAULT_PROPS['ui']['wrapperClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the `wrapper`
@@ -122,9 +121,9 @@ export type IDialogProps = {
     /**
      * Class to apply to the `dialog` itself
      */
-    dialogClass?: (payload: WithClassPicker<{
+    dialogClass?: (payload: {
       defaults: ReturnType<typeof DIALOG_DEFAULT_PROPS['ui']['dialogClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the `dialog` itself
@@ -134,9 +133,9 @@ export type IDialogProps = {
     /**
      * Class to apply to the `header`
      */
-    headerClass?: (payload: WithClassPicker<{
+    headerClass?: (payload: {
       defaults: ReturnType<typeof DIALOG_DEFAULT_PROPS['ui']['headerClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the `header`
@@ -146,9 +145,9 @@ export type IDialogProps = {
     /**
      * Class to apply to the `title`
      */
-    titleClass?: (payload: WithClassPicker<{
+    titleClass?: (payload: {
       defaults: ReturnType<typeof DIALOG_DEFAULT_PROPS['ui']['titleClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the `title`
@@ -158,9 +157,9 @@ export type IDialogProps = {
     /**
      * Class to apply to the `content`
      */
-    contentClass?: (payload: WithClassPicker<{
+    contentClass?: (payload: {
       defaults: ReturnType<typeof DIALOG_DEFAULT_PROPS['ui']['contentClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the `content`

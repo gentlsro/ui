@@ -27,3 +27,4 @@ export const MONTH_SELECTOR_GRID_DEFAULT_PROPS = {
     },
   },
 }
+

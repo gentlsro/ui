@@ -2,7 +2,6 @@
 
 // Types
 import { MENU_DEFAULT_PROPS } from '../../Menu/constants/menu-default-props.constant'
-import type { IMenuConfirmationProps } from '../types/menu-confirmation-props.type'
 
 export const MENU_CONFIRMATION_DEFAULT_PROPS = {
   ui: {
@@ -24,4 +23,4 @@ export const MENU_CONFIRMATION_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies Omit<IMenuConfirmationProps, 'ui'> & { ui: object }
+}

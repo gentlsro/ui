@@ -1,8 +1,5 @@
 // @unocss-include
 
-// Types
-import type { ISectionProps } from '../types/section-props.type'
-
 export const SECTION_DEFAULT_PROPS = {
   ui: {
     containerClass() {
@@ -52,4 +49,4 @@ export const SECTION_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies Omit<ISectionProps, 'ui'> & { ui: object }
+}

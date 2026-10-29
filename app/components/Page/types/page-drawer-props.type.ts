@@ -1,5 +1,4 @@
 import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
-import type { WithClassPicker } from '../../../functions/with-class-picker'
 // Types
 import type { CSSProperties } from 'vue'
 import type { BREAKPOINTS } from '../../../constants/breakpoints'
@@ -79,10 +78,10 @@ export type IPageDrawerProps = {
     /**
      * Class to apply to the container
      */
-    containerClass?: (payload: WithClassPicker<{
+    containerClass?: (payload: {
       defaults: ReturnType<typeof PAGE_DRAWER_DEFAULT_PROPS['ui']['containerClass']>
       isMini: boolean
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the container
@@ -92,10 +91,10 @@ export type IPageDrawerProps = {
     /**
      * Class to apply to the content
      */
-    contentClass?: (payload: WithClassPicker<{
+    contentClass?: (payload: {
       defaults: ReturnType<typeof PAGE_DRAWER_DEFAULT_PROPS['ui']['contentClass']>
       isMini: boolean
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the content
@@ -105,10 +104,10 @@ export type IPageDrawerProps = {
     /**
      * Class to apply to the bottom part of the drawer
      */
-    bottomClass?: (payload: WithClassPicker<{
+    bottomClass?: (payload: {
       defaults: ReturnType<typeof PAGE_DRAWER_DEFAULT_PROPS['ui']['bottomClass']>
       isMini: boolean
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the bottom part of the drawer
@@ -118,10 +117,10 @@ export type IPageDrawerProps = {
     /**
      * Class to apply to the filler (the top part of the drawer)
      */
-    fillerClass?: (payload: WithClassPicker<{
+    fillerClass?: (payload: {
       defaults: ReturnType<typeof PAGE_DRAWER_DEFAULT_PROPS['ui']['fillerClass']>
       isMini: boolean
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the filler (the top part of the drawer)

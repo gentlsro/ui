@@ -1,5 +1,4 @@
 import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
-import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
 // Types
@@ -70,47 +69,47 @@ export type IDatePickerProps = {
    * Visual configuration
    */
   ui?: UIClasses<{
-    dayClass?: (payload: DatePickerDayState & WithClassPicker<{
+    dayClass?: (payload: DatePickerDayState & {
       defaults: ReturnType<typeof DATE_PICKER_DEFAULT_PROPS['ui']['dayClass']>
-    }>) => ClassType
+    }) => ClassType
     dayStyle?: () => CSSProperties
 
-    dayNumberClass?: (payload: DatePickerDayState & WithClassPicker<{
+    dayNumberClass?: (payload: DatePickerDayState & {
       defaults: ReturnType<typeof DATE_PICKER_DEFAULT_PROPS['ui']['dayNumberClass']>
-    }>) => ClassType
+    }) => ClassType
     dayNumberStyle?: () => CSSProperties
 
-    dayEdgeClass?: (payload: DatePickerDayState & WithClassPicker<{
+    dayEdgeClass?: (payload: DatePickerDayState & {
       defaults: ReturnType<typeof DATE_PICKER_DEFAULT_PROPS['ui']['dayEdgeClass']>
-    }>) => ClassType
+    }) => ClassType
     dayEdgeStyle?: () => CSSProperties
 
-    dayNumberWrapperClass?: (payload: WithClassPicker<{
+    dayNumberWrapperClass?: (payload: {
       defaults: ReturnType<typeof DATE_PICKER_DEFAULT_PROPS['ui']['dayNumberWrapperClass']>
-    }>) => ClassType
+    }) => ClassType
     dayNumberWrapperStyle?: () => CSSProperties
 
-    dayEventsClass?: (payload: WithClassPicker<{
+    dayEventsClass?: (payload: {
       defaults: ReturnType<typeof DATE_PICKER_DEFAULT_PROPS['ui']['dayEventsClass']>
-    }>) => ClassType
+    }) => ClassType
     dayEventsStyle?: () => CSSProperties
 
-    dayEventsContainerClass?: (payload: WithClassPicker<{
+    dayEventsContainerClass?: (payload: {
       defaults: ReturnType<typeof DATE_PICKER_DEFAULT_PROPS['ui']['dayEventsContainerClass']>
-    }>) => ClassType
+    }) => ClassType
     dayEventsContainerStyle?: () => CSSProperties
 
-    dayEventClass?: (payload: WithClassPicker<{
+    dayEventClass?: (payload: {
       defaults: ReturnType<typeof DATE_PICKER_DEFAULT_PROPS['ui']['dayEventClass']>
-    }>) => ClassType
+    }) => ClassType
     dayEventStyle?: () => CSSProperties
 
     /**
      * Class to apply to the container
      */
-    containerClass?: (payload: WithClassPicker<{
+    containerClass?: (payload: {
       defaults: ReturnType<typeof DATE_PICKER_DEFAULT_PROPS['ui']['containerClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the container
@@ -120,9 +119,9 @@ export type IDatePickerProps = {
     /**
      * Class to apply to the days grid
      */
-    daysGridClass?: (payload: WithClassPicker<{
+    daysGridClass?: (payload: {
       defaults: ReturnType<typeof DATE_PICKER_DEFAULT_PROPS['ui']['daysGridClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the days grid
@@ -132,9 +131,9 @@ export type IDatePickerProps = {
     /**
      * Class to apply to the controls
      */
-    controlsClass?: (payload: WithClassPicker<{
+    controlsClass?: (payload: {
       defaults: ReturnType<typeof DATE_PICKER_DEFAULT_PROPS['ui']['controlsClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the controls

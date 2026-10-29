@@ -1,5 +1,4 @@
 import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
-import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
 // Constants
@@ -81,9 +80,9 @@ export type IToggleProps = {
     /**
      * Class to apply to the container (label element)
      */
-    containerClass?: (payload: WithClassPicker<{
+    containerClass?: (payload: {
       defaults: ReturnType<typeof TOGGLE_DEFAULT_PROPS['ui']['containerClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the container
@@ -93,9 +92,9 @@ export type IToggleProps = {
     /**
      * Class to apply to the toggle itself
      */
-    toggleClass?: (payload: WithClassPicker<{
+    toggleClass?: (payload: {
       defaults: ReturnType<typeof TOGGLE_DEFAULT_PROPS['ui']['toggleClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the toggle itself
@@ -105,9 +104,9 @@ export type IToggleProps = {
     /**
      * Class to apply to the toggle bullet (the circle)
      */
-    bulletClass?: (payload: WithClassPicker<{
+    bulletClass?: (payload: {
       defaults: ReturnType<typeof TOGGLE_DEFAULT_PROPS['ui']['bulletClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the toggle bullet (the circle)
@@ -117,9 +116,9 @@ export type IToggleProps = {
     /**
      * Class to apply to the toggle label
      */
-    labelClass?: (payload: WithClassPicker<{
+    labelClass?: (payload: {
       defaults: ReturnType<typeof TOGGLE_DEFAULT_PROPS['ui']['labelClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style to apply to the toggle label
@@ -129,9 +128,9 @@ export type IToggleProps = {
     /**
      * Class for the icon inside the bullet
      */
-    iconClass?: (payload: WithClassPicker<{
+    iconClass?: (payload: {
       defaults: ReturnType<typeof TOGGLE_DEFAULT_PROPS['ui']['iconClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style for the icon inside the bullet
@@ -141,9 +140,9 @@ export type IToggleProps = {
     /**
      * Class for the focus/hover helper overlay
      */
-    focusHelperClass?: (payload: WithClassPicker<{
+    focusHelperClass?: (payload: {
       defaults: ReturnType<typeof TOGGLE_DEFAULT_PROPS['ui']['focusHelperClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style for the focus/hover helper overlay

@@ -1,8 +1,5 @@
 // @unocss-include
 
-// Types
-import type { IInputLabelProps } from '../types/input-label-props.type'
-
 export const INPUT_LABEL_DEFAULT_PROPS = {
   ui: {
     labelClass() {
@@ -23,4 +20,4 @@ export const INPUT_LABEL_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies Omit<IInputLabelProps, 'ui'> & { ui: object }
+}

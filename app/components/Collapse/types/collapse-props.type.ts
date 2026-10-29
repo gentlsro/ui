@@ -1,5 +1,4 @@
 import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
-import type { WithClassPicker } from '../../../functions/with-class-picker'
 import type { CSSProperties } from 'vue'
 
 // Constants
@@ -77,9 +76,9 @@ export type ICollapseProps = {
     /**
      * Class for the container of the `Collapse`
      */
-    containerClass?: (payload: WithClassPicker<{
+    containerClass?: (payload: {
       defaults: ReturnType<typeof COLLAPSE_DEFAULT_PROPS['ui']['containerClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style for the container of the `Collapse`
@@ -89,9 +88,9 @@ export type ICollapseProps = {
     /**
      * Class for the content of the `Collapse`
      */
-    contentClass?: (payload: WithClassPicker<{
+    contentClass?: (payload: {
       defaults: ReturnType<typeof COLLAPSE_DEFAULT_PROPS['ui']['contentClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style for the content of the `Collapse`
@@ -101,9 +100,9 @@ export type ICollapseProps = {
     /**
      * Class for the inner content wrapper of the `Collapse` (the padded area around the slot)
      */
-    contentInnerClass?: (payload: WithClassPicker<{
+    contentInnerClass?: (payload: {
       defaults: ReturnType<typeof COLLAPSE_DEFAULT_PROPS['ui']['contentInnerClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style for the inner content wrapper of the `Collapse`
@@ -113,9 +112,9 @@ export type ICollapseProps = {
     /**
      * Class for the header of the `Collapse`
      */
-    headerClass?: (payload: WithClassPicker<{
+    headerClass?: (payload: {
       defaults: ReturnType<typeof COLLAPSE_DEFAULT_PROPS['ui']['headerClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style for the header of the `Collapse`
@@ -125,9 +124,9 @@ export type ICollapseProps = {
     /**
      * Class that will be applied to the title
      */
-    titleClass?: (payload: WithClassPicker<{
+    titleClass?: (payload: {
       defaults: ReturnType<typeof COLLAPSE_DEFAULT_PROPS['ui']['titleClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style that will be applied to the title
@@ -137,9 +136,9 @@ export type ICollapseProps = {
     /**
      * Class that will be applied to the right side of the header (where `loader` and `expand icon` are placed)
      */
-    headerRightClass?: (payload: WithClassPicker<{
+    headerRightClass?: (payload: {
       defaults: ReturnType<typeof COLLAPSE_DEFAULT_PROPS['ui']['headerRightClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style that will be applied to the right side of the header (where `loader` and `expand icon` are placed)
@@ -149,9 +148,9 @@ export type ICollapseProps = {
     /**
      * Class that will be applied to the subtitle
      */
-    subtitleClass?: (payload: WithClassPicker<{
+    subtitleClass?: (payload: {
       defaults: ReturnType<typeof COLLAPSE_DEFAULT_PROPS['ui']['subtitleClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style that will be applied to the subtitle
@@ -161,9 +160,9 @@ export type ICollapseProps = {
     /**
      * Class that will be applied to the expand icon
      */
-    expandIconClass?: (payload: WithClassPicker<{
+    expandIconClass?: (payload: {
       defaults: ReturnType<typeof COLLAPSE_DEFAULT_PROPS['ui']['expandIconClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style that will be applied to the expand icon
@@ -173,9 +172,9 @@ export type ICollapseProps = {
     /**
      * Class that will be applied to the text part of the header (where `title` and `subtitle` are placed)
      */
-    textClass?: (payload: WithClassPicker<{
+    textClass?: (payload: {
       defaults: ReturnType<typeof COLLAPSE_DEFAULT_PROPS['ui']['textClass']>
-    }>) => ClassType
+    }) => ClassType
 
     /**
      * Style that will be applied to the text part of the header (where `title` and `subtitle` are placed)

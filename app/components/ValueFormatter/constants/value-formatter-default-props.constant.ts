@@ -1,8 +1,5 @@
 // @unocss-include
 
-// Types
-import type { IValueFormatterProps } from '../types/value-formatter-props.type'
-
 export const VALUE_FORMATTER_DEFAULT_PROPS = {
   ui: {
     containerClass() {
@@ -14,4 +11,4 @@ export const VALUE_FORMATTER_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies Omit<Partial<IValueFormatterProps>, 'ui'> & { ui: object }
+}

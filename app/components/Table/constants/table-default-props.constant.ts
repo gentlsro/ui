@@ -66,8 +66,8 @@ export const TABLE_DEFAULT_PROPS = {
     rowActionsClass() {
       const base = 'flex justify-end items-center flex-wrap gap-2 p-x-1 bg-inherit border-true-gray-200 dark:border-true-gray-800'
 
-      return {
-        base,
+      return { 
+        base, 
         all: base,
       } as const
     },
@@ -75,8 +75,8 @@ export const TABLE_DEFAULT_PROPS = {
     rowActionsHeaderClass() {
       const base = 'p-x-1 bg-white dark:bg-true-gray-900 border-true-gray-200 dark:border-true-gray-800'
 
-      return {
-        base,
+      return { 
+        base, 
         all: base,
       } as const
     },
