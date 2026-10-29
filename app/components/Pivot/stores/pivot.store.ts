@@ -43,8 +43,8 @@ import {
   PIVOT_DEFAULT_MEASURE_COLUMN_WIDTH,
   PIVOT_MEASURE_ROW_FIELD,
 } from '../constants/pivot-measure-row.constant'
-import type { IPivotLabels } from '../constants/pivot-labels.constant'
 import { PIVOT_DEFAULT_PROPS } from '../constants/pivot-default-props.constant'
+import type { IPivotLabels } from '../constants/pivot-labels.constant'
 
 export const PIVOT_ID_KEY = Symbol('__pivotId')
 

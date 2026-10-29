@@ -6,8 +6,8 @@ import type { IPageDrawerProps } from './types/page-drawer-props.type'
 import { useLayoutStore } from '../../stores/layout.store'
 
 // Constants
-import { PAGE_DRAWER_DEFAULT_PROPS } from './constants/page-drawer-default-props.constant'
 import { $bp, BREAKPOINTS } from '../../constants/breakpoints'
+import { PAGE_DRAWER_DEFAULT_PROPS } from './constants/page-drawer-default-props.constant'
 
 const props = withDefaults(defineProps<IPageDrawerProps>(), {
   ...getComponentProps('pageDrawer'),

@@ -10,8 +10,8 @@ import { useInputValidationUtils } from '../functions/useInputValidationUtils'
 import { createDateTimeMask } from './functions/masked-datetime'
 
 // Constants
-import { INPUT_WRAPPER_DEFAULT_PROPS } from '../../InputWrapper/constants/input-wrapper-default-props'
 import { $bp } from '../../../constants/breakpoints'
+import { INPUT_WRAPPER_DEFAULT_PROPS } from '../../InputWrapper/constants/input-wrapper-default-props'
 
 const props = withDefaults(defineProps<IDateTimeFullInputProps>(), {
   ...getComponentProps('dateTimeFullInput'),
