@@ -1,5 +1,7 @@
-import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { CSSProperties } from 'vue'
+
+// Constants
+import type { YEAR_SELECTOR_DEFAULT_PROPS } from '../constants/year-selector-default-props.constant'
 
 export type IYearSelectorProps = {
   /**
@@ -25,7 +27,7 @@ export type IYearSelectorProps = {
      * Class to apply to the container
      */
     containerClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['yearSelector']['containerClass']>
+      defaults: ReturnType<typeof YEAR_SELECTOR_DEFAULT_PROPS['ui']['containerClass']>
     }) => ClassType
 
     /**
@@ -37,7 +39,7 @@ export type IYearSelectorProps = {
      * Class to apply to the previous button
      */
     previousBtnClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['yearSelector']['previousBtnClass']>
+      defaults: ReturnType<typeof YEAR_SELECTOR_DEFAULT_PROPS['ui']['previousBtnClass']>
     }) => ClassType
 
     /**
@@ -49,7 +51,7 @@ export type IYearSelectorProps = {
      * Class to apply to the next button
      */
     nextBtnClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['yearSelector']['nextBtnClass']>
+      defaults: ReturnType<typeof YEAR_SELECTOR_DEFAULT_PROPS['ui']['nextBtnClass']>
     }) => ClassType
 
     /**
@@ -61,7 +63,7 @@ export type IYearSelectorProps = {
      * Class to apply to the menu container
      */
     menuContainerClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['yearSelector']['menuContainerClass']>
+      defaults: ReturnType<typeof YEAR_SELECTOR_DEFAULT_PROPS['ui']['menuContainerClass']>
     }) => ClassType
 
     /**
@@ -73,7 +75,7 @@ export type IYearSelectorProps = {
      * Class to apply to each year button
      */
     yearBtnClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['yearSelector']['yearBtnClass']>
+      defaults: ReturnType<typeof YEAR_SELECTOR_DEFAULT_PROPS['ui']['yearBtnClass']>
     }) => ClassType
 
     /**

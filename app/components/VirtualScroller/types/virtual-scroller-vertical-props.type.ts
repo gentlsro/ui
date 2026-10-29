@@ -1,6 +1,8 @@
-import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { CSSProperties } from 'vue'
 import type { VirtualizerOptions } from '@tanstack/vue-virtual'
+
+// Constants
+import type { VIRTUAL_SCROLLER_VERTICAL_DEFAULT_PROPS } from '../constants/virtual-scroller-vertical-default-props'
 
 export type IVirtualScrollerVerticalProps<T extends IItem = IItem> = {
   /**
@@ -45,7 +47,7 @@ export type IVirtualScrollerVerticalProps<T extends IItem = IItem> = {
      * Class applied to the row
      */
     rowClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['virtualScrollerVertical']['rowClass']>
+      defaults: ReturnType<typeof VIRTUAL_SCROLLER_VERTICAL_DEFAULT_PROPS['ui']['rowClass']>
     }) => ClassType
 
     /**

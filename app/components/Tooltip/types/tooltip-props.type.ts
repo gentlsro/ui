@@ -1,4 +1,3 @@
-import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { CSSProperties } from 'vue'
 import type { MaybeElement } from '@floating-ui/vue'
 
@@ -7,6 +6,9 @@ import type {
   Placement,
   ReferenceElement,
 } from '@floating-ui/dom'
+
+// Constants
+import type { TOOLTIP_DEFAULT_PROPS } from '../constants/tooltip-default-props.constant'
 
 export type ITooltipProps = {
   /**
@@ -82,7 +84,7 @@ export type ITooltipProps = {
      * Class for the tooltip container
      */
     containerClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['tooltip']['containerClass']>
+      defaults: ReturnType<typeof TOOLTIP_DEFAULT_PROPS['ui']['containerClass']>
     }) => ClassType
 
     /**
@@ -94,7 +96,7 @@ export type ITooltipProps = {
      * Class for the tooltip content
      */
     contentClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['tooltip']['contentClass']>
+      defaults: ReturnType<typeof TOOLTIP_DEFAULT_PROPS['ui']['contentClass']>
     }) => ClassType
 
     /**
@@ -106,7 +108,7 @@ export type ITooltipProps = {
      * Class for the tooltip title
      */
     titleClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['tooltip']['titleClass']>
+      defaults: ReturnType<typeof TOOLTIP_DEFAULT_PROPS['ui']['titleClass']>
     }) => ClassType
 
     /**
@@ -118,7 +120,7 @@ export type ITooltipProps = {
      * Class for the tooltip description
      */
     descriptionClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['tooltip']['descriptionClass']>
+      defaults: ReturnType<typeof TOOLTIP_DEFAULT_PROPS['ui']['descriptionClass']>
     }) => ClassType
 
     /**
@@ -130,7 +132,7 @@ export type ITooltipProps = {
      * Class for the arrow
      */
     arrowClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['tooltip']['arrowClass']>
+      defaults: ReturnType<typeof TOOLTIP_DEFAULT_PROPS['ui']['arrowClass']>
     }) => ClassType
 
     /**

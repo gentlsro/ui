@@ -1,4 +1,3 @@
-import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 // Types
 import type { CSSProperties } from 'vue'
 import type { NuxtLinkProps } from '#app'
@@ -37,6 +36,9 @@ import type { tableFilterValueChangeDebounce } from '../functions/table-filter-v
 import type { tableExtractPaginationFromUrl } from '../functions/table-extract-pagination-from-url'
 import type { tableSerializePagination } from '../functions/table-serialize-pagination'
 import type { tableGetLayoutMeta } from '../functions/table-get-layout-meta'
+
+// Constants
+import type { TABLE_DEFAULT_PROPS } from '../constants/table-default-props.constant'
 
 // Store
 import type { useTableStore } from '../stores/table.store'
@@ -647,19 +649,19 @@ export type ITableProps<
     /** Class applied to the action area in card and desktop rows. */
     rowActionsClass?: (payload: {
       row: IItem
-      defaults: UIClassPicker<UIResolvedClasses['table']['rowActionsClass']>
+      defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['rowActionsClass']>
     }) => ClassType
 
     /** Class applied to the desktop action-column header. */
     rowActionsHeaderClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['table']['rowActionsHeaderClass']>
+      defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['rowActionsHeaderClass']>
     }) => ClassType
 
     /**
      * Class applied to the alternate row
      */
     alternateRowClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['table']['alternateRowClass']>
+      defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['alternateRowClass']>
     }) => ClassType
 
     /**
@@ -667,7 +669,7 @@ export type ITableProps<
      */
     headerCellClass?: (payload: {
       column: TableColumn
-      defaults: UIClassPicker<UIResolvedClasses['table']['headerCellClass']>
+      defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['headerCellClass']>
     }) => ClassType
 
     /**
@@ -682,7 +684,7 @@ export type ITableProps<
      */
     headerCellInnerClass?: (payload: {
       column: TableColumn
-      defaults: UIClassPicker<UIResolvedClasses['table']['headerCellInnerClass']>
+      defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['headerCellInnerClass']>
     }) => ClassType
 
     /**
@@ -697,7 +699,7 @@ export type ITableProps<
      */
     rowClass?: (payload: {
       row: IItem
-      defaults: UIClassPicker<UIResolvedClasses['table']['rowClass']>
+      defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['rowClass']>
     }) => ClassType
 
     /**
@@ -713,7 +715,7 @@ export type ITableProps<
     cellClass?: (payload: {
       row: IItem
       column: TableColumn
-      defaults: UIClassPicker<UIResolvedClasses['table']['cellClass']>
+      defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['cellClass']>
     }) => ClassType
 
     /**
@@ -730,7 +732,7 @@ export type ITableProps<
     cellInnerClass?: (payload: {
       row: IItem
       column: TableColumn
-      defaults: UIClassPicker<UIResolvedClasses['table']['cellInnerClass']>
+      defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['cellInnerClass']>
     }) => ClassType
 
     /**
@@ -745,7 +747,7 @@ export type ITableProps<
      * Class applied to the table content
      */
     contentClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['table']['contentClass']>
+      defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['contentClass']>
     }) => ClassType
 
     /**
@@ -757,7 +759,7 @@ export type ITableProps<
      * Class applied to the header
      */
     headerClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['table']['headerClass']>
+      defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['headerClass']>
     }) => ClassType
 
     /**
@@ -769,7 +771,7 @@ export type ITableProps<
      * Class applied to the TableToolbar
      */
     toolbarClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['table']['toolbarClass']>
+      defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['toolbarClass']>
     }) => ClassType
 
     /**
@@ -781,7 +783,7 @@ export type ITableProps<
      * Class applied to the TableTop
      */
     topClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['table']['topClass']>
+      defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['topClass']>
     }) => ClassType
 
     /**
@@ -793,7 +795,7 @@ export type ITableProps<
      * Class applied to the TableBottom
      */
     bottomClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['table']['bottomClass']>
+      defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['bottomClass']>
     }) => ClassType
 
     /**
@@ -805,7 +807,7 @@ export type ITableProps<
      * Class applied to the table itself
      */
     containerClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['table']['containerClass']>
+      defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['containerClass']>
     }) => ClassType
 
     /**
@@ -818,7 +820,7 @@ export type ITableProps<
      */
     totalsCellClass?: (payload: {
       column: TableColumn
-      defaults: UIClassPicker<UIResolvedClasses['table']['totalsCellClass']>
+      defaults: ReturnType<typeof TABLE_DEFAULT_PROPS['ui']['totalsCellClass']>
     }) => ClassType
 
     /**

@@ -1,5 +1,5 @@
-import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { CSSProperties } from 'vue'
+import type { CONFIRMATION_DEFAULT_PROPS } from '../constants/confirmation-default-props.constant'
 
 export type IConfirmationProps = {
   /**
@@ -30,7 +30,7 @@ export type IConfirmationProps = {
      * Class for the container element
      */
     containerClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['confirmation']['containerClass']>
+      defaults: ReturnType<typeof CONFIRMATION_DEFAULT_PROPS['ui']['containerClass']>
     }) => ClassType
 
     /**
@@ -42,7 +42,7 @@ export type IConfirmationProps = {
      * Class for the checkmark wrapper element
      */
     checkmarkClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['confirmation']['checkmarkClass']>
+      defaults: ReturnType<typeof CONFIRMATION_DEFAULT_PROPS['ui']['checkmarkClass']>
     }) => ClassType
 
     /**
@@ -54,7 +54,7 @@ export type IConfirmationProps = {
      * Class for the text element
      */
     textClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['confirmation']['textClass']>
+      defaults: ReturnType<typeof CONFIRMATION_DEFAULT_PROPS['ui']['textClass']>
     }) => ClassType
 
     /**
@@ -66,7 +66,7 @@ export type IConfirmationProps = {
      * Class for the actions element
      */
     actionsClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['confirmation']['actionsClass']>
+      defaults: ReturnType<typeof CONFIRMATION_DEFAULT_PROPS['ui']['actionsClass']>
     }) => ClassType
 
     /**

@@ -1,8 +1,10 @@
-import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { AllowedComponentProps, CSSProperties } from 'vue'
 
 // Types
 import type { IBtnProps } from '../../Button/types/btn-props.type'
+
+// Constants
+import type { BUTTON_GROUP_DEFAULT_PROPS } from '../constants/button-group-default-props.constant'
 
 export type IButtonGroupProps = {
   /**
@@ -35,14 +37,14 @@ export type IButtonGroupProps = {
      * Base class for the container
      */
     containerClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['buttonGroup']['containerClass']>
+      defaults: ReturnType<typeof BUTTON_GROUP_DEFAULT_PROPS['ui']['containerClass']>
     }) => ClassType
 
     /**
      * Class applied to every button
      */
     buttonClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['buttonGroup']['buttonClass']>
+      defaults: ReturnType<typeof BUTTON_GROUP_DEFAULT_PROPS['ui']['buttonClass']>
     }) => ClassType
 
     /**
@@ -54,7 +56,7 @@ export type IButtonGroupProps = {
      * Class applied to the active button
      */
     activeClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['buttonGroup']['activeClass']>
+      defaults: ReturnType<typeof BUTTON_GROUP_DEFAULT_PROPS['ui']['activeClass']>
     }) => ClassType
 
     /**

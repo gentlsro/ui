@@ -1,5 +1,7 @@
-import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { CSSProperties } from 'vue'
+
+// Constants
+import type { HEADING_DEFAULT_PROPS } from '../constants/heading-default-props.constant'
 
 export type IHeadingProps = {
   /**
@@ -19,7 +21,7 @@ export type IHeadingProps = {
      * Class for the container
      */
     containerClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['heading']['containerClass']>
+      defaults: ReturnType<typeof HEADING_DEFAULT_PROPS['ui']['containerClass']>
     }) => ClassType
 
     /**

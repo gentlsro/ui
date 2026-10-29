@@ -1,5 +1,7 @@
-import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { CSSProperties } from 'vue'
+
+// Constants
+import type { BADGE_DEFAULT_PROPS } from '../constants/badge-default-props.constant'
 
 export type IBadgeProps = {
   /**
@@ -15,7 +17,7 @@ export type IBadgeProps = {
      * Class to apply to the badge
      */
     containerClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['badge']['containerClass']>
+      defaults: ReturnType<typeof BADGE_DEFAULT_PROPS['ui']['containerClass']>
     }) => ClassType
 
     /**

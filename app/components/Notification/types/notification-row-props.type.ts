@@ -1,8 +1,10 @@
-import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { CSSProperties } from 'vue'
 
 // Types
 import type { INotification } from './notification.type'
+
+// Constants
+import type { NOTIFICATION_ROW_DEFAULT_PROPS } from '../constants/notification-row-default-props.constant'
 
 export type INotificationRowProps = {
   /**
@@ -23,7 +25,7 @@ export type INotificationRowProps = {
      * Class to apply to the container
      */
     containerClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['notificationRow']['containerClass']>
+      defaults: ReturnType<typeof NOTIFICATION_ROW_DEFAULT_PROPS['ui']['containerClass']>
     }) => ClassType
 
     /**
@@ -35,7 +37,7 @@ export type INotificationRowProps = {
      * Class to apply to the title row wrapper
      */
     titleRowClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['notificationRow']['titleRowClass']>
+      defaults: ReturnType<typeof NOTIFICATION_ROW_DEFAULT_PROPS['ui']['titleRowClass']>
     }) => ClassType
 
     /**
@@ -47,7 +49,7 @@ export type INotificationRowProps = {
      * Class to apply to the icon
      */
     iconClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['notificationRow']['iconClass']>
+      defaults: ReturnType<typeof NOTIFICATION_ROW_DEFAULT_PROPS['ui']['iconClass']>
     }) => ClassType
 
     /**
@@ -59,7 +61,7 @@ export type INotificationRowProps = {
      * Class to apply to the title wrapper
      */
     titleClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['notificationRow']['titleClass']>
+      defaults: ReturnType<typeof NOTIFICATION_ROW_DEFAULT_PROPS['ui']['titleClass']>
     }) => ClassType
 
     /**
@@ -71,7 +73,7 @@ export type INotificationRowProps = {
      * Class to apply to the title text
      */
     titleTextClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['notificationRow']['titleTextClass']>
+      defaults: ReturnType<typeof NOTIFICATION_ROW_DEFAULT_PROPS['ui']['titleTextClass']>
     }) => ClassType
 
     /**
@@ -83,7 +85,7 @@ export type INotificationRowProps = {
      * Class to apply to the subtitle list
      */
     subtitleClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['notificationRow']['subtitleClass']>
+      defaults: ReturnType<typeof NOTIFICATION_ROW_DEFAULT_PROPS['ui']['subtitleClass']>
     }) => ClassType
 
     /**
@@ -95,7 +97,7 @@ export type INotificationRowProps = {
      * Class to apply to the subtitle list items
      */
     subtitleItemClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['notificationRow']['subtitleItemClass']>
+      defaults: ReturnType<typeof NOTIFICATION_ROW_DEFAULT_PROPS['ui']['subtitleItemClass']>
     }) => ClassType
 
     /**
@@ -107,7 +109,7 @@ export type INotificationRowProps = {
      * Class to apply to the counter badge
      */
     counterClass?: (payload: {
-      defaults: UIClassPicker<UIResolvedClasses['notificationRow']['counterClass']>
+      defaults: ReturnType<typeof NOTIFICATION_ROW_DEFAULT_PROPS['ui']['counterClass']>
     }) => ClassType
 
     /**
