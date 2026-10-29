@@ -1,10 +1,8 @@
+import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { CSSProperties } from 'vue'
 
 // Types
 import type { IBreadcrumb } from './breadcrumb.type'
-
-// Constants
-import type { BREADCRUMBS_DEFAULT_PROPS } from '../constants/breadcrumbs-default-props.constant'
 
 export type IBreadcrumbsProps = {
   /**
@@ -27,7 +25,7 @@ export type IBreadcrumbsProps = {
      * Class to apply to the breadcrumbs wrapper
      */
     containerClass?: (payload: {
-      defaults: ReturnType<typeof BREADCRUMBS_DEFAULT_PROPS['ui']['containerClass']>
+      defaults: UIClassPicker<UIResolvedClasses['breadcrumbs']['containerClass']>
     }) => ClassType
 
     /**
@@ -39,7 +37,7 @@ export type IBreadcrumbsProps = {
      * Class to apply to the breadcrumbs
      */
     breadcrumbsClass?: (payload: {
-      defaults: ReturnType<typeof BREADCRUMBS_DEFAULT_PROPS['ui']['breadcrumbsClass']>
+      defaults: UIClassPicker<UIResolvedClasses['breadcrumbs']['breadcrumbsClass']>
     }) => ClassType
 
     /**

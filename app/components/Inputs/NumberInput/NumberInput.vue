@@ -10,7 +10,7 @@ import { MaskedExactNumber } from './functions/masked-exact-number'
 import { useInputValidationUtils } from '../functions/useInputValidationUtils'
 
 // Constants
-import { INPUT_WRAPPER_DEFAULT_PROPS } from '../../InputWrapper/constants/input-wrapper-default-props'
+import { INPUT_WRAPPER_LAYERED_CLASSES } from '../../InputWrapper/constants/input-wrapper-layered-classes.constant'
 
 const props = withDefaults(defineProps<INumberInputProps>(), {
   ...getComponentProps('numberInput'),
@@ -102,7 +102,7 @@ const wrapperClass = computed(() => {
 // Styles - append
 const appendClass = computed(() => {
   return mergedProps.value.ui?.appendClass?.({
-    defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.appendClass(),
+    defaults: INPUT_WRAPPER_LAYERED_CLASSES.appendClass(),
   })
 })
 

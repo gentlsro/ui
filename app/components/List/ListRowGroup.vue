@@ -6,7 +6,7 @@ import type { IListProps } from './types/list-props.type'
 import { useListStore } from './stores/list.store'
 
 // Constants
-import { LIST_DEFAULT_PROPS } from './constants/list-default-props.constant'
+import { LIST_LAYERED_CLASSES } from './constants/list-layered-classes.constant'
 
 type IProps = {
   item: IGroupRow
@@ -25,7 +25,7 @@ const rowGroupClass = computed(() => {
   return props.ui?.rowGroupClass?.({
     group: item.value,
     level: item.value.groupIdx,
-    defaults: LIST_DEFAULT_PROPS.ui.rowGroupClass(),
+    defaults: LIST_LAYERED_CLASSES.rowGroupClass(),
   })
 })
 

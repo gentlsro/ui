@@ -3,7 +3,7 @@
 import type { IProgressBarProps } from './types/progress-bar-props.type'
 
 // Constants
-import { PROGRESS_BAR_DEFAULT_PROPS } from './constants/progress-bar-default-props.constant'
+import { PROGRESS_BAR_LAYERED_CLASSES } from './constants/progress-bar-layered-classes.constant'
 
 const props = withDefaults(defineProps<IProgressBarProps>(), {
   ...getComponentProps('progressBar'),
@@ -17,7 +17,7 @@ const mergedProps = computed(() => {
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: PROGRESS_BAR_DEFAULT_PROPS.ui.containerClass(),
+    defaults: PROGRESS_BAR_LAYERED_CLASSES.containerClass(),
   })
 })
 
@@ -28,7 +28,7 @@ const containerStyle = computed(() => {
 // Styles - inner
 const innerClass = computed(() => {
   return mergedProps.value?.ui?.innerClass?.({
-    defaults: PROGRESS_BAR_DEFAULT_PROPS.ui.innerClass(),
+    defaults: PROGRESS_BAR_LAYERED_CLASSES.innerClass(),
   })
 })
 
@@ -39,7 +39,7 @@ const innerStyle = computed(() => {
 // Styles - color
 const colorClass = computed(() => {
   return mergedProps.value?.ui?.colorClass?.({
-    defaults: PROGRESS_BAR_DEFAULT_PROPS.ui.colorClass(),
+    defaults: PROGRESS_BAR_LAYERED_CLASSES.colorClass(),
   })
 })
 
@@ -50,7 +50,7 @@ const colorStyle = computed(() => {
 // Styles - white background
 const whiteBgClass = computed(() => {
   return mergedProps.value?.ui?.whiteBgClass?.({
-    defaults: PROGRESS_BAR_DEFAULT_PROPS.ui.whiteBgClass(),
+    defaults: PROGRESS_BAR_LAYERED_CLASSES.whiteBgClass(),
   })
 })
 
@@ -61,7 +61,7 @@ const whiteBgStyle = computed(() => {
 // Styles - black background (progress)
 const blackBgClass = computed(() => {
   return mergedProps.value?.ui?.blackBgClass?.({
-    defaults: PROGRESS_BAR_DEFAULT_PROPS.ui.blackBgClass(),
+    defaults: PROGRESS_BAR_LAYERED_CLASSES.blackBgClass(),
   })
 })
 
@@ -72,7 +72,7 @@ const blackBgStyle = computed(() => {
 // Styles - text
 const textClass = computed(() => {
   return mergedProps.value?.ui?.textClass?.({
-    defaults: PROGRESS_BAR_DEFAULT_PROPS.ui.textClass(),
+    defaults: PROGRESS_BAR_LAYERED_CLASSES.textClass(),
   })
 })
 

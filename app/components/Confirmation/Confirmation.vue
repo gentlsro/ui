@@ -3,7 +3,7 @@
 import type { IConfirmationProps } from './types/confirmation-props.type'
 
 // Constants
-import { CONFIRMATION_DEFAULT_PROPS } from './constants/confirmation-default-props.constant'
+import { CONFIRMATION_LAYERED_CLASSES } from './constants/confirmation-layered-classes.constant'
 
 const props = withDefaults(defineProps<IConfirmationProps>(), {
   ...getComponentProps('confirmation'),
@@ -22,7 +22,7 @@ const mergedProps = computed(() => getComponentMergedProps('confirmation', props
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: CONFIRMATION_DEFAULT_PROPS.ui.containerClass(),
+    defaults: CONFIRMATION_LAYERED_CLASSES.containerClass(),
   })
 })
 
@@ -33,7 +33,7 @@ const containerStyle = computed(() => {
 // Styles - checkmark
 const checkmarkClass = computed(() => {
   return mergedProps.value?.ui?.checkmarkClass?.({
-    defaults: CONFIRMATION_DEFAULT_PROPS.ui.checkmarkClass(),
+    defaults: CONFIRMATION_LAYERED_CLASSES.checkmarkClass(),
   })
 })
 
@@ -44,7 +44,7 @@ const checkmarkStyle = computed(() => {
 // Styles - text
 const textClass = computed(() => {
   return mergedProps.value?.ui?.textClass?.({
-    defaults: CONFIRMATION_DEFAULT_PROPS.ui.textClass(),
+    defaults: CONFIRMATION_LAYERED_CLASSES.textClass(),
   })
 })
 
@@ -55,7 +55,7 @@ const textStyle = computed(() => {
 // Styles - actions
 const actionsClass = computed(() => {
   return mergedProps.value?.ui?.actionsClass?.({
-    defaults: CONFIRMATION_DEFAULT_PROPS.ui.actionsClass(),
+    defaults: CONFIRMATION_LAYERED_CLASSES.actionsClass(),
   })
 })
 

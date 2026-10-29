@@ -3,7 +3,7 @@
 import type { IListProps } from './types/list-props.type'
 
 // Constants
-import { LIST_DEFAULT_PROPS } from './constants/list-default-props.constant'
+import { LIST_LAYERED_CLASSES } from './constants/list-layered-classes.constant'
 
 type IProps = Pick<IListProps, 'ui'>
 
@@ -11,7 +11,7 @@ const props = defineProps<IProps>()
 
 const moveHandleClass = computed(() => {
   return props.ui?.moveHandleClass?.({
-    defaults: LIST_DEFAULT_PROPS.ui.moveHandleClass(),
+    defaults: LIST_LAYERED_CLASSES.moveHandleClass(),
   })
 })
 
@@ -21,7 +21,7 @@ const moveHandleStyle = computed(() => {
 
 const moveHandleIconClass = computed(() => {
   return props.ui?.moveHandleIconClass?.({
-    defaults: LIST_DEFAULT_PROPS.ui.moveHandleIconClass(),
+    defaults: LIST_LAYERED_CLASSES.moveHandleIconClass(),
   })
 })
 

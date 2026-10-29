@@ -3,7 +3,7 @@
 import type { IMenuProps } from './types/menu-props.type'
 
 // Constants
-import { MENU_DEFAULT_PROPS } from './constants/menu-default-props.constant'
+import { MENU_LAYERED_CLASSES } from './constants/menu-layered-classes.constant'
 
 // Store
 import { useMenuStore } from './store/menu.store'
@@ -21,7 +21,7 @@ const { zIndex, model } = useMenuStore()
 // Styles - overlay
 const overlayClass = computed(() => {
   return props.ui?.overlayClass?.({
-    defaults: MENU_DEFAULT_PROPS.ui.overlayClass(),
+    defaults: MENU_LAYERED_CLASSES.overlayClass(),
   })
 })
 

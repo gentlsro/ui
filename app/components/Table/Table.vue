@@ -15,7 +15,7 @@ import { tableGetExposed } from './functions/table-get-exposed'
 import { tableGetStorageKey } from './functions/table-get-storage-key'
 
 // Constants
-import { TABLE_DEFAULT_PROPS } from './constants/table-default-props.constant'
+import { TABLE_LAYERED_CLASSES } from './constants/table-layered-classes.constant'
 import { TABLE_EXPORTS_DEFAULT } from './constants/table-exports-default.constant'
 
 // Stores
@@ -82,7 +82,7 @@ const isLoading = defineModel<boolean>('isLoading', { default: false })
 const tableClass = computed(() => {
   return [
     mergedProps.value?.ui?.containerClass?.({
-      defaults: TABLE_DEFAULT_PROPS.ui.containerClass(),
+      defaults: TABLE_LAYERED_CLASSES.containerClass(),
     }),
     `separator--${props.separator}`,
     {

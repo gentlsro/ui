@@ -3,7 +3,7 @@
 import type { IButtonGroupProps } from './types/button-group-props.type'
 
 // Constants
-import { BUTTON_GROUP_DEFAULT_PROPS } from './constants/button-group-default-props.constant'
+import { BUTTON_GROUP_LAYERED_CLASSES } from './constants/button-group-layered-classes.constant'
 
 const props = withDefaults(defineProps<IButtonGroupProps>(), {
   ...getComponentProps('buttonGroup'),
@@ -24,7 +24,7 @@ const styleProps = computed(() => ({ variant: props.variant }))
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: BUTTON_GROUP_DEFAULT_PROPS.ui.containerClass(styleProps.value),
+    defaults: BUTTON_GROUP_LAYERED_CLASSES.containerClass(styleProps.value),
   })
 })
 
@@ -35,14 +35,14 @@ const containerStyle = computed(() => {
 // Styles - button
 const buttonClass = computed(() => {
   return mergedProps.value?.ui?.buttonClass?.({
-    defaults: BUTTON_GROUP_DEFAULT_PROPS.ui.buttonClass(styleProps.value),
+    defaults: BUTTON_GROUP_LAYERED_CLASSES.buttonClass(styleProps.value),
   })
 })
 
 // Styles - active button
 const activeClass = computed(() => {
   return mergedProps.value?.ui?.activeClass?.({
-    defaults: BUTTON_GROUP_DEFAULT_PROPS.ui.activeClass(styleProps.value),
+    defaults: BUTTON_GROUP_LAYERED_CLASSES.activeClass(styleProps.value),
   })
 })
 

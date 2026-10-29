@@ -8,7 +8,7 @@ import { useTableStore } from './stores/table.store'
 import { useTableColumnResizing } from './composables/useTableColumnResizing'
 
 // Constants
-import { TABLE_DEFAULT_PROPS } from './constants/table-default-props.constant'
+import { TABLE_LAYERED_CLASSES } from './constants/table-layered-classes.constant'
 
 type IProps = Pick<ITableProps, 'ui' | 'freeze'> & { hasRowActions?: boolean }
 
@@ -34,7 +34,7 @@ const contentClass = computed(() => {
 
 const headerClass = computed(() => {
   return props.ui?.headerClass?.({
-    defaults: TABLE_DEFAULT_PROPS.ui.headerClass(),
+    defaults: TABLE_LAYERED_CLASSES.headerClass(),
   })
 })
 
@@ -43,7 +43,8 @@ const headerStyle = computed(() => {
 })
 
 const rowActionsHeaderClass = computed(() => {
-  const defaults = TABLE_DEFAULT_PROPS.ui.rowActionsHeaderClass()
+  const defaults = TABLE_LAYERED_CLASSES.rowActionsHeaderClass()
+
   return props.ui?.rowActionsHeaderClass?.({ defaults }) ?? defaults.all
 })
 

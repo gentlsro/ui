@@ -7,7 +7,7 @@ import type { IPivotRowItemCell } from './types/pivot-row-item-cell.type'
 import { usePivotStore } from './stores/pivot.store'
 
 // Constants
-import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
+import { PIVOT_LAYERED_CLASSES } from './constants/pivot-layered-classes.constant'
 
 /**
  * The pinned row while rows scroll by underneath: only the labels of the groups the rows below belong to (in their
@@ -34,7 +34,7 @@ const cells = computed<IPivotRowItemCell<T>[]>(() => {
 
 const rowItemClass = computed(() => {
   return ui.value?.rowItemClass?.({
-    defaults: PIVOT_DEFAULT_PROPS.ui.rowItemClass(),
+    defaults: PIVOT_LAYERED_CLASSES.rowItemClass(),
   })
 })
 

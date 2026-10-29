@@ -1,29 +1,19 @@
+import { MONTH_SELECTOR_GRID_CLASS_COMPOSERS, MONTH_SELECTOR_GRID_CLASS_SLOTS } from './month-selector-grid-class-slots.constant'
+
 // @unocss-include
 
 export const MONTH_SELECTOR_GRID_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'grid grid-cols-2 xm:grid-cols-3 gap-1'
+      const slots = MONTH_SELECTOR_GRID_CLASS_SLOTS.containerClass()
 
-      return withClassPicker({
-        base,
-        all: base,
-      } as const)
+      return withClassPicker({ ...slots, all: MONTH_SELECTOR_GRID_CLASS_COMPOSERS.containerClass(slots) } as const)
     },
 
     monthBtnClass() {
-      const base = 'capitalize'
+      const slots = MONTH_SELECTOR_GRID_CLASS_SLOTS.monthBtnClass()
 
-      // States (via CSS selectors)
-      const selected = '[&.is-selected]:(bg-primary color-white)'
-      const current = '[&.is-current]:(shadow-coolGray shadow-[0px_0px_0px_2px_var(--un-shadow-color)])'
-
-      return withClassPicker({
-        base,
-        selected,
-        current,
-        all: `${base} ${selected} ${current}`,
-      } as const)
+      return withClassPicker({ ...slots, all: MONTH_SELECTOR_GRID_CLASS_COMPOSERS.monthBtnClass(slots) } as const)
     },
   },
 }

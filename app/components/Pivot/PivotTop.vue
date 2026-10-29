@@ -5,7 +5,7 @@ import PivotExportBtn from './PivotExportBtn.vue'
 import { usePivotStore } from './stores/pivot.store'
 
 // Constants
-import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
+import { PIVOT_LAYERED_CLASSES } from './constants/pivot-layered-classes.constant'
 
 const { title, ui, resolvedLeftPanelWidth } = usePivotStore()
 
@@ -14,7 +14,7 @@ const isConfigurationOpen = ref(false)
 // Styles - top
 const topClass = computed(() => {
   return ui.value?.topClass?.({
-    defaults: PIVOT_DEFAULT_PROPS.ui.topClass(),
+    defaults: PIVOT_LAYERED_CLASSES.topClass(),
   })
 })
 
@@ -25,7 +25,7 @@ const topStyle = computed(() => {
 // Styles - title
 const titleClass = computed(() => {
   return ui.value?.titleClass?.({
-    defaults: PIVOT_DEFAULT_PROPS.ui.titleClass(),
+    defaults: PIVOT_LAYERED_CLASSES.titleClass(),
   })
 })
 

@@ -1,41 +1,31 @@
+import { CONFIRMATION_CLASS_COMPOSERS, CONFIRMATION_CLASS_SLOTS } from './confirmation-class-slots.constant'
+
 // @unocss-include
 
 export const CONFIRMATION_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'flex flex-col inset-0 absolute bg-white dark:bg-dark-950 rounded-custom z-$zMax'
+      const slots = CONFIRMATION_CLASS_SLOTS.containerClass()
 
-      return withClassPicker({
-        base,
-        all: base,
-      } as const)
+      return withClassPicker({ ...slots, all: CONFIRMATION_CLASS_COMPOSERS.containerClass(slots) } as const)
     },
 
     checkmarkClass() {
-      const base = 'flex flex-col flex-center grow'
+      const slots = CONFIRMATION_CLASS_SLOTS.checkmarkClass()
 
-      return withClassPicker({
-        base,
-        all: base,
-      } as const)
+      return withClassPicker({ ...slots, all: CONFIRMATION_CLASS_COMPOSERS.checkmarkClass(slots) } as const)
     },
 
     textClass() {
-      const base = 'font-rem-14 text-center p-x-4'
+      const slots = CONFIRMATION_CLASS_SLOTS.textClass()
 
-      return withClassPicker({
-        base,
-        all: base,
-      } as const)
+      return withClassPicker({ ...slots, all: CONFIRMATION_CLASS_COMPOSERS.textClass(slots) } as const)
     },
 
     actionsClass() {
-      const base = 'flex items-center p-x-3 p-y-1 shrink-0 justify-end gap-x-3'
+      const slots = CONFIRMATION_CLASS_SLOTS.actionsClass()
 
-      return withClassPicker({
-        base,
-        all: base,
-      } as const)
+      return withClassPicker({ ...slots, all: CONFIRMATION_CLASS_COMPOSERS.actionsClass(slots) } as const)
     },
   },
 }

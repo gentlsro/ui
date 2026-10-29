@@ -1,7 +1,5 @@
+import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { CSSProperties } from 'vue'
-
-// Constants
-import type { CHECKBOX_DEFAULT_PROPS } from '../constants/checkbox-default-props.constant'
 
 export type ICheckboxProps = {
   /**
@@ -93,7 +91,7 @@ export type ICheckboxProps = {
      * Class for the container (label element)
      */
     containerClass?: (payload: {
-      defaults: ReturnType<typeof CHECKBOX_DEFAULT_PROPS['ui']['containerClass']>
+      defaults: UIClassPicker<UIResolvedClasses['checkbox']['containerClass']>
     }) => ClassType
 
     /**
@@ -105,7 +103,7 @@ export type ICheckboxProps = {
      * Class of the checkbox
      */
     checkboxClass?: (payload: {
-      defaults: ReturnType<typeof CHECKBOX_DEFAULT_PROPS['ui']['checkboxClass']>
+      defaults: UIClassPicker<UIResolvedClasses['checkbox']['checkboxClass']>
     }) => ClassType
 
     /**
@@ -117,7 +115,7 @@ export type ICheckboxProps = {
      * Class applied to the label text
      */
     labelClass?: (payload: {
-      defaults: ReturnType<typeof CHECKBOX_DEFAULT_PROPS['ui']['labelClass']>
+      defaults: UIClassPicker<UIResolvedClasses['checkbox']['labelClass']>
     }) => ClassType
 
     /**
@@ -129,7 +127,7 @@ export type ICheckboxProps = {
      * Class for the focus/hover helper overlay
      */
     focusHelperClass?: (payload: {
-      defaults: ReturnType<typeof CHECKBOX_DEFAULT_PROPS['ui']['focusHelperClass']>
+      defaults: UIClassPicker<UIResolvedClasses['checkbox']['focusHelperClass']>
     }) => ClassType
 
     /**

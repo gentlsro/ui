@@ -9,8 +9,8 @@ import { useInputUtils } from '../functions/useInputUtils'
 import { useInputValidationUtils } from '../functions/useInputValidationUtils'
 
 // Constants
+import { INPUT_WRAPPER_LAYERED_CLASSES } from '../../InputWrapper/constants/input-wrapper-layered-classes.constant'
 import { CURRENCY_DEFAULT } from '#layers/utilities/app/i18n'
-import { INPUT_WRAPPER_DEFAULT_PROPS } from '../../InputWrapper/constants/input-wrapper-default-props'
 
 const props = withDefaults(defineProps<ICurrencyInputProps>(), {
   ...getComponentProps('currencyInput'),
@@ -250,7 +250,7 @@ const wrapperClass = computed(() => {
 // Styles - append
 const appendClass = computed(() => {
   return mergedProps.value.ui?.appendClass?.({
-    defaults: INPUT_WRAPPER_DEFAULT_PROPS.ui.appendClass(),
+    defaults: INPUT_WRAPPER_LAYERED_CLASSES.appendClass(),
   })
 })
 

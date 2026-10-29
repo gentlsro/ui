@@ -1,0 +1,13 @@
+{
+  "extends": "./fixture/.nuxt/tsconfig.app.json",
+  "include": [
+    "./fixture/.nuxt/nuxt.d.ts",
+    "./fixture/.nuxt/imports.d.ts",
+    "./fixture/.nuxt/types/**/*.d.ts",
+    "./fixture/app/**/*.ts",
+    "./fixture/app/**/*.vue",
+    "./fixture/support/**/app/**/*.ts",
+    "./type-assertions.ts",
+    "./get-component-props-type-assertions.ts"
+  ]
+}

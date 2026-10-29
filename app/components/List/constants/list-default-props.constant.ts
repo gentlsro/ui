@@ -1,123 +1,67 @@
 // @unocss-include
 import type { IListProps } from '../types/list-props.type'
+import { LIST_CLASS_COMPOSERS, LIST_CLASS_SLOTS } from './list-class-slots.constant'
 
 export const LIST_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'flex flex-col overflow-auto rounded-custom'
+      const slots = LIST_CLASS_SLOTS.containerClass()
 
-      return withClassPicker({
-        base,
-        all: `${base}`,
-      } as const)
+      return withClassPicker({ ...slots, all: LIST_CLASS_COMPOSERS.containerClass(slots) } as const)
     },
 
     searchClass() {
-      const base = 'flex flex-col gap-1 p-2'
+      const slots = LIST_CLASS_SLOTS.searchClass()
 
-      return withClassPicker({
-        base,
-        all: `${base}`,
-      } as const)
+      return withClassPicker({ ...slots, all: LIST_CLASS_COMPOSERS.searchClass(slots) } as const)
     },
 
     rowClass() {
-      const base = 'gap-1 p-r-2 rounded-custom truncate font-rem-14 m-b-px w-full cursor-default'
-      const row = 'flex w-full items-center'
-      const col = 'flex flex-col'
+      const slots = LIST_CLASS_SLOTS.rowClass()
 
-      // Checkbox
-      const checkbox = '[&.uses-checkbox]:(flex items-center)'
-
-      // Focus
-      const focus = '[&.is-focused]:(bg-slate-100 dark:bg-slate-800)'
-
-      // Selection - single
-      const selectionNoCheckbox = '[&.is-selected:not(.uses-checkbox)]:(bg-slate-200 color-primary dark:(bg-slate-800 color-blue-400))'
-
-      // Selection - multi (with checkbox)
-      const selectionMultiCheckbox = ''
-
-      // Focus while selected
-      const focusSelected = '[&.is-focused.is-selected:not(.uses-checkbox)]:(outline-1 outline-dashed outline-offset--1 outline-primary dark:(outline-blue-400))'
-
-      return withClassPicker({
-        base,
-        checkbox,
-        selectionNoCheckbox,
-        selectionMultiCheckbox,
-        focus,
-        focusSelected,
-        row,
-        col,
-        all: `${base} ${focus} ${selectionNoCheckbox} ${selectionMultiCheckbox} ${focusSelected} ${row}`,
-      } as const)
+      return withClassPicker({ ...slots, all: LIST_CLASS_COMPOSERS.rowClass(slots) } as const)
     },
 
     rowContentClass() {
-      const base = 'overflow-auto flex flex-col gap-1 grow p-y-1.5 leading-20px'
+      const slots = LIST_CLASS_SLOTS.rowContentClass()
 
-      return withClassPicker({
-        base,
-        all: `${base}`,
-      } as const)
+      return withClassPicker({ ...slots, all: LIST_CLASS_COMPOSERS.rowContentClass(slots) } as const)
     },
 
     rowGroupClass() {
-      const base = 'relative flex gap-x-2 cursor-default select-none p-r-1 min-h-8 w-full'
-      const text = 'capitalize color-true-gray text-sm items-end p-b-0.5'
+      const slots = LIST_CLASS_SLOTS.rowGroupClass()
 
-      return withClassPicker({
-        base,
-        text,
-        all: `${base} ${text}`,
-      } as const)
+      return withClassPicker({ ...slots, all: LIST_CLASS_COMPOSERS.rowGroupClass(slots) } as const)
     },
 
     moveHandleClass() {
-      const base = 'flex flex-center shrink-0 touch-none cursor-grab self-start p-t-2 p-r-1 m-t-2px color-ca'
+      const slots = LIST_CLASS_SLOTS.moveHandleClass()
 
-      return withClassPicker({
-        base,
-        all: `${base}`,
-      } as const)
+      return withClassPicker({ ...slots, all: LIST_CLASS_COMPOSERS.moveHandleClass(slots) } as const)
     },
 
     moveHandleIconClass() {
-      const base = 'i-akar-icons:drag-vertical color-ca w-4 h-4 cursor-move'
+      const slots = LIST_CLASS_SLOTS.moveHandleIconClass()
 
-      return withClassPicker({
-        base,
-        all: `${base}`,
-      } as const)
+      return withClassPicker({ ...slots, all: LIST_CLASS_COMPOSERS.moveHandleIconClass(slots) } as const)
     },
 
     loadingClass() {
-      const base = 'flex flex-center p-y-3'
+      const slots = LIST_CLASS_SLOTS.loadingClass()
 
-      return withClassPicker({
-        base,
-        all: `${base}`,
-      } as const)
+      return withClassPicker({ ...slots, all: LIST_CLASS_COMPOSERS.loadingClass(slots) } as const)
     },
 
-    contentClass(payload: { hasSearch?: boolean }) {
-      const { hasSearch } = payload
-      const base = hasSearch ? 'p-x-2' : 'p-2'
+    contentClass(payload: Parameters<typeof LIST_CLASS_SLOTS.contentClass>[0]) {
+      const slots = LIST_CLASS_SLOTS.contentClass(payload)
 
-      return withClassPicker({
-        base,
-        all: `${base}`,
-      } as const)
+      return withClassPicker({ ...slots, all: LIST_CLASS_COMPOSERS.contentClass(slots, payload) } as const)
     },
 
     noDataClass() {
-      const base = 'p-x-3 p-t-2 p-b-4 color-ca font-rem-12'
+      const slots = LIST_CLASS_SLOTS.noDataClass()
 
-      return withClassPicker({
-        base,
-        all: `${base}`,
-      } as const)
+      return withClassPicker({ ...slots, all: LIST_CLASS_COMPOSERS.noDataClass(slots) } as const)
     },
 
   },

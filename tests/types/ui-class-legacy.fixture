@@ -1,0 +1,16 @@
+import { extendUIConfig } from '__EXTEND_UI_CONFIG__'
+
+// This module has no uiClasses export. The registry must not inspect its default.
+export default extendUIConfig({
+  buttonGroup: { props: { buttons: [{
+    label: 'Legacy button',
+    value: 1,
+    ui: { containerClass: ({ defaults }) => {
+      const final: 'app-base' = defaults.base
+      defaults.p('appOnly', 'layerOnly')
+      // @ts-expect-error Legacy nested buttons still reject unknown final keys.
+      defaults.p('notConfigured')
+      return defaults.all
+    } },
+  }] } },
+})

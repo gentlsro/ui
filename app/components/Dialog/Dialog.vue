@@ -6,7 +6,7 @@ import type { IDialogProps } from './types/dialog-props.type'
 import { useDialogLayout } from './functions/useDialogLayout'
 
 // Constants
-import { DIALOG_DEFAULT_PROPS } from './constants/dialog-default-props.constant'
+import { DIALOG_LAYERED_CLASSES } from './constants/dialog-layered-classes.constant'
 
 defineOptions({ inheritAttrs: false })
 
@@ -198,7 +198,7 @@ function bounce() {
 // Styles - backdrop
 const backdropClass = computed(() => {
   return mergedProps.value?.ui?.backdropClass?.({
-    defaults: DIALOG_DEFAULT_PROPS.ui.backdropClass(),
+    defaults: DIALOG_LAYERED_CLASSES.backdropClass(),
   })
 })
 
@@ -209,7 +209,7 @@ const backdropStyle = computed(() => {
 // Styles - wrapper
 const wrapperClass = computed(() => {
   return mergedProps.value?.ui?.wrapperClass?.({
-    defaults: DIALOG_DEFAULT_PROPS.ui.wrapperClass(),
+    defaults: DIALOG_LAYERED_CLASSES.wrapperClass(),
   })
 })
 
@@ -220,7 +220,7 @@ const wrapperStyle = computed(() => {
 // Styles - dialog
 const dialogClass = computed(() => {
   return mergedProps.value?.ui?.dialogClass?.({
-    defaults: DIALOG_DEFAULT_PROPS.ui.dialogClass({
+    defaults: DIALOG_LAYERED_CLASSES.dialogClass({
       position: props.position ?? 'center',
     }),
   })
@@ -233,7 +233,7 @@ const dialogStyle = computed(() => {
 // Styles - header
 const headerClass = computed(() => {
   return mergedProps.value?.ui?.headerClass?.({
-    defaults: DIALOG_DEFAULT_PROPS.ui.headerClass(),
+    defaults: DIALOG_LAYERED_CLASSES.headerClass(),
   })
 })
 
@@ -244,7 +244,7 @@ const headerStyle = computed(() => {
 // Styles - title
 const titleClass = computed(() => {
   return mergedProps.value?.ui?.titleClass?.({
-    defaults: DIALOG_DEFAULT_PROPS.ui.titleClass(),
+    defaults: DIALOG_LAYERED_CLASSES.titleClass(),
   })
 })
 
@@ -255,7 +255,7 @@ const titleStyle = computed(() => {
 // Styles - content
 const contentClass = computed(() => {
   return mergedProps.value?.ui?.contentClass?.({
-    defaults: DIALOG_DEFAULT_PROPS.ui.contentClass(),
+    defaults: DIALOG_LAYERED_CLASSES.contentClass(),
   })
 })
 

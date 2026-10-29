@@ -6,7 +6,7 @@ import type { ITreeProps } from './types/tree-props.type'
 import { useTreeStore } from './stores/tree.store'
 
 // Constants
-import { TREE_DEFAULT_PROPS } from './constants/tree-default-props.constant'
+import { TREE_LAYERED_CLASSES } from './constants/tree-layered-classes.constant'
 
 type IProps = Pick<ITreeProps<T>, 'search' | 'searchConfig' | 'ui' | 'actionsConfig'>
 
@@ -21,7 +21,7 @@ const search = defineModel<string>('search')
 // Styles - Search
 const searchClass = computed(() => {
   return props.ui?.searchClass?.({
-    defaults: TREE_DEFAULT_PROPS.ui.searchClass(),
+    defaults: TREE_LAYERED_CLASSES.searchClass(),
   })
 })
 

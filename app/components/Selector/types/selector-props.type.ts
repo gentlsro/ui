@@ -1,3 +1,4 @@
+import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { RouteLocationRaw } from '#vue-router'
 import type { AllowedComponentProps, CSSProperties } from 'vue'
 
@@ -7,9 +8,6 @@ import type { IListProps } from '../../List/types/list-props.type'
 import type { IMenuProps } from '../../Menu/types/menu-props.type'
 import type { IFieldProps } from '../../Field/types/field-props.type'
 import type { IDialogProps } from '../../Dialog/types/dialog-props.type'
-
-// Constants
-import type { SELECTOR_DEFAULT_PROPS } from '../constants/selector-default-props'
 
 export type ISelectorProps = IFieldProps & {
   /**
@@ -188,7 +186,7 @@ export type ISelectorProps = IFieldProps & {
      * Class to apply to the actual content inside the wrapper
      */
     innerClass?: (payload: {
-      defaults: ReturnType<typeof SELECTOR_DEFAULT_PROPS['ui']['innerClass']>
+      defaults: UIClassPicker<UIResolvedClasses['selector']['innerClass']>
     }) => ClassType
 
     /**

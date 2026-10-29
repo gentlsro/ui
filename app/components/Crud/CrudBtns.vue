@@ -4,8 +4,8 @@ import type { CrudAction } from './types/crud-action.type'
 import type { ICrudBtnProps, ICrudBtnsProps } from './types/crud-btn-props.type'
 
 // Constants
+import { CRUD_BTNS_LAYERED_CLASSES } from './constants/crud-btns-layered-classes.constant'
 import { $bp } from '../../constants/breakpoints'
-import { CRUD_BTNS_DEFAULT_PROPS } from './constants/crud-btns-default-props.constant'
 
 const props = withDefaults(defineProps<ICrudBtnsProps>(), {
   ...getComponentProps('crudBtns'),
@@ -78,7 +78,7 @@ const hasAnyAction = computed(() => {
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: CRUD_BTNS_DEFAULT_PROPS.ui.containerClass(),
+    defaults: CRUD_BTNS_LAYERED_CLASSES.containerClass(),
   })
 })
 

@@ -5,7 +5,7 @@ import { arrow, flip, offset, shift, useFloating } from '@floating-ui/vue'
 import type { ITooltipProps } from './types/tooltip-props.type'
 
 // Constants
-import { TOOLTIP_DEFAULT_PROPS } from './constants/tooltip-default-props.constant'
+import { TOOLTIP_LAYERED_CLASSES } from './constants/tooltip-layered-classes.constant'
 
 defineOptions({
   inheritAttrs: false,
@@ -169,7 +169,7 @@ onBeforeUnmount(() => {
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: TOOLTIP_DEFAULT_PROPS.ui.containerClass(),
+    defaults: TOOLTIP_LAYERED_CLASSES.containerClass(),
   })
 })
 
@@ -180,7 +180,7 @@ const containerStyle = computed(() => {
 // Styles - content
 const contentClass = computed(() => {
   return mergedProps.value?.ui?.contentClass?.({
-    defaults: TOOLTIP_DEFAULT_PROPS.ui.contentClass(),
+    defaults: TOOLTIP_LAYERED_CLASSES.contentClass(),
   })
 })
 
@@ -191,7 +191,7 @@ const contentStyle = computed(() => {
 // Styles - title
 const titleClass = computed(() => {
   return mergedProps.value?.ui?.titleClass?.({
-    defaults: TOOLTIP_DEFAULT_PROPS.ui.titleClass(),
+    defaults: TOOLTIP_LAYERED_CLASSES.titleClass(),
   })
 })
 
@@ -202,7 +202,7 @@ const titleStyle = computed(() => {
 // Styles - description
 const descriptionClass = computed(() => {
   return mergedProps.value?.ui?.descriptionClass?.({
-    defaults: TOOLTIP_DEFAULT_PROPS.ui.descriptionClass(),
+    defaults: TOOLTIP_LAYERED_CLASSES.descriptionClass(),
   })
 })
 
@@ -213,7 +213,7 @@ const descriptionStyle = computed(() => {
 // Styles - arrow
 const arrowClass = computed(() => {
   return mergedProps.value?.ui?.arrowClass?.({
-    defaults: TOOLTIP_DEFAULT_PROPS.ui.arrowClass(),
+    defaults: TOOLTIP_LAYERED_CLASSES.arrowClass(),
   })
 })
 

@@ -1,7 +1,5 @@
+import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { CSSProperties } from 'vue'
-
-// Constants
-import type { NOTIFICATIONS_DEFAULT_PROPS } from '../constants/notifications-default-props.constant'
 
 export type INotificationsProps = {
   /**
@@ -25,7 +23,7 @@ export type INotificationsProps = {
      * Class to apply to the container
      */
     containerClass?: (payload: {
-      defaults: ReturnType<typeof NOTIFICATIONS_DEFAULT_PROPS['ui']['containerClass']>
+      defaults: UIClassPicker<UIResolvedClasses['notifications']['containerClass']>
     }) => ClassType
 
     /**

@@ -1,11 +1,9 @@
+import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { AllowedComponentProps, CSSProperties } from 'vue'
 
 // Types
 import type { IBtnProps } from '../../Button/types/btn-props.type'
 import type { CrudAction } from './crud-action.type'
-
-// Constants
-import type { CRUD_BTNS_DEFAULT_PROPS, CRUD_EDIT_BTN_DEFAULT_PROPS } from '../constants/crud-btns-default-props.constant'
 
 export type ICrudBtnProps = {
   /**
@@ -74,7 +72,7 @@ export type ICrudBtnsProps = {
      * Class to apply to the container
      */
     containerClass?: (payload: {
-      defaults: ReturnType<typeof CRUD_BTNS_DEFAULT_PROPS['ui']['containerClass']>
+      defaults: UIClassPicker<UIResolvedClasses['crudBtns']['containerClass']>
     }) => ClassType
 
     /**
@@ -108,7 +106,7 @@ export type ICrudEditBtnProps = {
      * Class to apply to the wrapper
      */
     wrapperClass?: (payload: {
-      defaults: ReturnType<typeof CRUD_EDIT_BTN_DEFAULT_PROPS['ui']['wrapperClass']>
+      defaults: UIClassPicker<UIResolvedClasses['crudEditBtn']['wrapperClass']>
     }) => ClassType
 
     /**
@@ -120,7 +118,7 @@ export type ICrudEditBtnProps = {
      * Class to apply to the button
      */
     btnClass?: (payload: {
-      defaults: ReturnType<typeof CRUD_EDIT_BTN_DEFAULT_PROPS['ui']['btnClass']>
+      defaults: UIClassPicker<UIResolvedClasses['crudEditBtn']['btnClass']>
     }) => ClassType
 
     /**

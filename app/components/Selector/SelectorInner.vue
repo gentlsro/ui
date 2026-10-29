@@ -8,7 +8,7 @@ import { useSelectorStore } from './stores/selector.store'
 import { getListItem, getListItemLabel } from '../List/functions/helpers'
 
 // Constants
-import { SELECTOR_DEFAULT_PROPS } from './constants/selector-default-props'
+import { SELECTOR_LAYERED_CLASSES } from './constants/selector-layered-classes.constant'
 
 type IProps = Pick<
   ISelectorProps,
@@ -68,7 +68,7 @@ function handleRemove(idx: number) {
 // Styles - inner
 const innerClass = computed(() => {
   return props.ui?.innerClass?.({
-    defaults: SELECTOR_DEFAULT_PROPS.ui.innerClass(),
+    defaults: SELECTOR_LAYERED_CLASSES.innerClass(),
   })
 })
 

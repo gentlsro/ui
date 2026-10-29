@@ -1,8 +1,8 @@
+import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { CSSProperties } from 'vue'
 import type { TableColumn } from '../../Table/models/table-column.model'
 
 // Constants
-import type { VIRTUAL_SCROLLER_DEFAULT_PROPS } from '../constants/virtual-scroller-default-props'
 
 /** What horizontal virtualization needs from a column: its width (`_width` in px, or `width` like `120px`) */
 export type IVirtualScrollerColumn = {
@@ -88,7 +88,7 @@ export type IVirtualScrollerProps<T, C extends IVirtualScrollerColumn = TableCol
      * Class applied to the container
      */
     containerClass?: (payload: {
-      defaults: ReturnType<typeof VIRTUAL_SCROLLER_DEFAULT_PROPS['ui']['containerClass']>
+      defaults: UIClassPicker<UIResolvedClasses['virtualScroller']['containerClass']>
     }) => ClassType
 
     /**
@@ -100,7 +100,7 @@ export type IVirtualScrollerProps<T, C extends IVirtualScrollerColumn = TableCol
      * Class applied to the content
      */
     contentClass?: (payload: {
-      defaults: ReturnType<typeof VIRTUAL_SCROLLER_DEFAULT_PROPS['ui']['contentClass']>
+      defaults: UIClassPicker<UIResolvedClasses['virtualScroller']['contentClass']>
     }) => ClassType
 
     /**
@@ -112,7 +112,7 @@ export type IVirtualScrollerProps<T, C extends IVirtualScrollerColumn = TableCol
      * Class applied to the row
      */
     rowClass?: (payload: {
-      defaults: ReturnType<typeof VIRTUAL_SCROLLER_DEFAULT_PROPS['ui']['rowClass']>
+      defaults: UIClassPicker<UIResolvedClasses['virtualScroller']['rowClass']>
     }) => ClassType
 
     /**

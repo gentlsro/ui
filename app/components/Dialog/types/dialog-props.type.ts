@@ -1,7 +1,5 @@
+import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { CSSProperties } from 'vue'
-
-// Constants
-import type { DIALOG_DEFAULT_PROPS } from '../constants/dialog-default-props.constant'
 
 export type DialogPosition = 'center' | 'top' | 'bottom' | 'left' | 'right'
 
@@ -97,7 +95,7 @@ export type IDialogProps = {
      * Class to apply to the `backdrop`
      */
     backdropClass?: (payload: {
-      defaults: ReturnType<typeof DIALOG_DEFAULT_PROPS['ui']['backdropClass']>
+      defaults: UIClassPicker<UIResolvedClasses['dialog']['backdropClass']>
     }) => ClassType
 
     /**
@@ -109,7 +107,7 @@ export type IDialogProps = {
      * Class to apply to the `wrapper`
      */
     wrapperClass?: (payload: {
-      defaults: ReturnType<typeof DIALOG_DEFAULT_PROPS['ui']['wrapperClass']>
+      defaults: UIClassPicker<UIResolvedClasses['dialog']['wrapperClass']>
     }) => ClassType
 
     /**
@@ -121,7 +119,7 @@ export type IDialogProps = {
      * Class to apply to the `dialog` itself
      */
     dialogClass?: (payload: {
-      defaults: ReturnType<typeof DIALOG_DEFAULT_PROPS['ui']['dialogClass']>
+      defaults: UIClassPicker<UIResolvedClasses['dialog']['dialogClass']>
     }) => ClassType
 
     /**
@@ -133,7 +131,7 @@ export type IDialogProps = {
      * Class to apply to the `header`
      */
     headerClass?: (payload: {
-      defaults: ReturnType<typeof DIALOG_DEFAULT_PROPS['ui']['headerClass']>
+      defaults: UIClassPicker<UIResolvedClasses['dialog']['headerClass']>
     }) => ClassType
 
     /**
@@ -145,7 +143,7 @@ export type IDialogProps = {
      * Class to apply to the `title`
      */
     titleClass?: (payload: {
-      defaults: ReturnType<typeof DIALOG_DEFAULT_PROPS['ui']['titleClass']>
+      defaults: UIClassPicker<UIResolvedClasses['dialog']['titleClass']>
     }) => ClassType
 
     /**
@@ -157,7 +155,7 @@ export type IDialogProps = {
      * Class to apply to the `content`
      */
     contentClass?: (payload: {
-      defaults: ReturnType<typeof DIALOG_DEFAULT_PROPS['ui']['contentClass']>
+      defaults: UIClassPicker<UIResolvedClasses['dialog']['contentClass']>
     }) => ClassType
 
     /**

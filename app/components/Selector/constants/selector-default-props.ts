@@ -2,6 +2,7 @@
 
 // Types
 import type { ISelectorProps } from '../types/selector-props.type'
+import { SELECTOR_CLASS_COMPOSERS, SELECTOR_CLASS_SLOTS } from './selector-class-slots.constant'
 
 export const SELECTOR_DEFAULT_PROPS = {
   listProps: {
@@ -29,12 +30,9 @@ export const SELECTOR_DEFAULT_PROPS = {
 
   ui: {
     innerClass() {
-      const base = ''
+      const slots = SELECTOR_CLASS_SLOTS.innerClass()
 
-      return withClassPicker({
-        base,
-        all: `${base}`,
-      } as const)
+      return withClassPicker({ ...slots, all: SELECTOR_CLASS_COMPOSERS.innerClass(slots) } as const)
     },
   },
 } satisfies ISelectorProps

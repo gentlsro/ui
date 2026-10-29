@@ -3,7 +3,7 @@
 import type { ICheckboxProps } from './types/checkbox-props.type'
 
 // Constants
-import { CHECKBOX_DEFAULT_PROPS } from './constants/checkbox-default-props.constant'
+import { CHECKBOX_LAYERED_CLASSES } from './constants/checkbox-layered-classes.constant'
 
 const props = withDefaults(defineProps<ICheckboxProps>(), {
   ...getComponentProps('checkbox'),
@@ -113,7 +113,7 @@ function handleKey(ev: KeyboardEvent) {
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: CHECKBOX_DEFAULT_PROPS.ui.containerClass({
+    defaults: CHECKBOX_LAYERED_CLASSES.containerClass({
       size: props.size ?? 'md',
     }),
   })
@@ -126,7 +126,7 @@ const containerStyle = computed(() => {
 // Styles - checkbox
 const checkboxClass = computed(() => {
   return mergedProps.value?.ui?.checkboxClass?.({
-    defaults: CHECKBOX_DEFAULT_PROPS.ui.checkboxClass({
+    defaults: CHECKBOX_LAYERED_CLASSES.checkboxClass({
       size: props.size ?? 'md',
       color: props.color ?? 'primary',
     }),
@@ -140,7 +140,7 @@ const checkboxStyle = computed(() => {
 // Styles - label
 const labelClassComputed = computed(() => {
   return mergedProps.value?.ui?.labelClass?.({
-    defaults: CHECKBOX_DEFAULT_PROPS.ui.labelClass({
+    defaults: CHECKBOX_LAYERED_CLASSES.labelClass({
       size: props.size ?? 'md',
     }),
   })
@@ -153,7 +153,7 @@ const labelStyle = computed(() => {
 // Styles - focus helper
 const focusHelperClass = computed(() => {
   return mergedProps.value?.ui?.focusHelperClass?.({
-    defaults: CHECKBOX_DEFAULT_PROPS.ui.focusHelperClass(),
+    defaults: CHECKBOX_LAYERED_CLASSES.focusHelperClass(),
   })
 })
 

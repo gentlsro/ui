@@ -2,33 +2,20 @@
 
 // Types
 import type { INavigationProps } from '../types/navigation-props.type'
+import { NAVIGATION_CLASS_COMPOSERS, NAVIGATION_CLASS_SLOTS } from './navigation-class-slots.constant'
 
 export const NAVIGATION_DEFAULT_PROPS = {
   ui: {
     headerClass() {
-      const base = 'relative flex top-0 inset-inline-0 transition-transform ease-linear'
-      const shadow = '[&.has-shadow]:(shadow-md)'
-      const hidden = '[&.is-hidden]:(-translate-y-100%)'
-      const fixed = '[&:not(.is-sticky)]:(fixed)'
-      const sticky = '[&.is-sticky]:(sticky)'
+      const slots = NAVIGATION_CLASS_SLOTS.headerClass()
 
-      return withClassPicker({
-        base,
-        shadow,
-        hidden,
-        fixed,
-        sticky,
-        all: `${base} ${shadow} ${hidden} ${fixed} ${sticky}`,
-      } as const)
+      return withClassPicker({ ...slots, all: NAVIGATION_CLASS_COMPOSERS.headerClass(slots) } as const)
     },
 
     navigationClass() {
-      const base = 'flex items-center bg-white dark:bg-black w-full'
+      const slots = NAVIGATION_CLASS_SLOTS.navigationClass()
 
-      return withClassPicker({
-        base,
-        all: `${base}`,
-      } as const)
+      return withClassPicker({ ...slots, all: NAVIGATION_CLASS_COMPOSERS.navigationClass(slots) } as const)
     },
   },
 } satisfies INavigationProps

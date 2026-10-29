@@ -11,7 +11,7 @@ import { getPivotGroupKeyValue } from './functions/pivot-group-key'
 import { usePivotStore } from './stores/pivot.store'
 
 // Constants
-import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
+import { PIVOT_LAYERED_CLASSES } from './constants/pivot-layered-classes.constant'
 
 type IProps = {
   cell: IPivotValueHeaderCell
@@ -65,7 +65,7 @@ const formattedLabel = computed(() => {
 const valueHeaderCellClass = computed(() => {
   return [
     ui.value?.valueHeaderCellClass?.({
-      defaults: PIVOT_DEFAULT_PROPS.ui.valueHeaderCellClass(),
+      defaults: PIVOT_LAYERED_CLASSES.valueHeaderCellClass(),
     }),
     {
       'is-collapsible': isCollapsible.value,

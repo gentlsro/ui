@@ -1,7 +1,5 @@
+import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { CSSProperties } from 'vue'
-
-// Constants
-import type { TOGGLE_DEFAULT_PROPS } from '../constants/toggle-default-props.constant'
 
 export type ToggleState = 'checked' | 'unchecked' | 'indeterminate'
 
@@ -80,7 +78,7 @@ export type IToggleProps = {
      * Class to apply to the container (label element)
      */
     containerClass?: (payload: {
-      defaults: ReturnType<typeof TOGGLE_DEFAULT_PROPS['ui']['containerClass']>
+      defaults: UIClassPicker<UIResolvedClasses['toggle']['containerClass']>
     }) => ClassType
 
     /**
@@ -92,7 +90,7 @@ export type IToggleProps = {
      * Class to apply to the toggle itself
      */
     toggleClass?: (payload: {
-      defaults: ReturnType<typeof TOGGLE_DEFAULT_PROPS['ui']['toggleClass']>
+      defaults: UIClassPicker<UIResolvedClasses['toggle']['toggleClass']>
     }) => ClassType
 
     /**
@@ -104,7 +102,7 @@ export type IToggleProps = {
      * Class to apply to the toggle bullet (the circle)
      */
     bulletClass?: (payload: {
-      defaults: ReturnType<typeof TOGGLE_DEFAULT_PROPS['ui']['bulletClass']>
+      defaults: UIClassPicker<UIResolvedClasses['toggle']['bulletClass']>
     }) => ClassType
 
     /**
@@ -116,7 +114,7 @@ export type IToggleProps = {
      * Class to apply to the toggle label
      */
     labelClass?: (payload: {
-      defaults: ReturnType<typeof TOGGLE_DEFAULT_PROPS['ui']['labelClass']>
+      defaults: UIClassPicker<UIResolvedClasses['toggle']['labelClass']>
     }) => ClassType
 
     /**
@@ -128,7 +126,7 @@ export type IToggleProps = {
      * Class for the icon inside the bullet
      */
     iconClass?: (payload: {
-      defaults: ReturnType<typeof TOGGLE_DEFAULT_PROPS['ui']['iconClass']>
+      defaults: UIClassPicker<UIResolvedClasses['toggle']['iconClass']>
     }) => ClassType
 
     /**
@@ -140,7 +138,7 @@ export type IToggleProps = {
      * Class for the focus/hover helper overlay
      */
     focusHelperClass?: (payload: {
-      defaults: ReturnType<typeof TOGGLE_DEFAULT_PROPS['ui']['focusHelperClass']>
+      defaults: UIClassPicker<UIResolvedClasses['toggle']['focusHelperClass']>
     }) => ClassType
 
     /**

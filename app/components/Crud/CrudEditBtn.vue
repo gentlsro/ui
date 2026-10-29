@@ -5,7 +5,7 @@ import type { TransitionProps } from 'vue'
 import type { ICrudEditBtnProps } from './types/crud-btn-props.type'
 
 // Constants
-import { CRUD_EDIT_BTN_DEFAULT_PROPS } from './constants/crud-btns-default-props.constant'
+import { CRUD_EDIT_BTN_LAYERED_CLASSES } from './constants/crud-btns-layered-classes.constant'
 
 // Store
 import { useFormStore } from '../Form/stores/form.store'
@@ -40,7 +40,7 @@ syncRef(isEditing, isEditingStore)
 // Styles - wrapper
 const wrapperClass = computed(() => {
   return mergedProps.value?.ui?.wrapperClass?.({
-    defaults: CRUD_EDIT_BTN_DEFAULT_PROPS.ui.wrapperClass(),
+    defaults: CRUD_EDIT_BTN_LAYERED_CLASSES.wrapperClass(),
   })
 })
 
@@ -51,7 +51,7 @@ const wrapperStyle = computed(() => {
 // Styles - button
 const btnClass = computed(() => {
   return mergedProps.value?.ui?.btnClass?.({
-    defaults: CRUD_EDIT_BTN_DEFAULT_PROPS.ui.btnClass(),
+    defaults: CRUD_EDIT_BTN_LAYERED_CLASSES.btnClass(),
   })
 })
 

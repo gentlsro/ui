@@ -1,7 +1,5 @@
+import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { CSSProperties } from 'vue'
-
-// Constants
-import type { MONTH_SELECTOR_GRID_DEFAULT_PROPS } from '../constants/month-selector-grid-default-props.constant'
 
 export type IMonthSelectorGridProps = {
   /**
@@ -22,7 +20,7 @@ export type IMonthSelectorGridProps = {
      * Class to apply to the container
      */
     containerClass?: (payload: {
-      defaults: ReturnType<typeof MONTH_SELECTOR_GRID_DEFAULT_PROPS['ui']['containerClass']>
+      defaults: UIClassPicker<UIResolvedClasses['monthSelectorGrid']['containerClass']>
     }) => ClassType
 
     /**
@@ -34,7 +32,7 @@ export type IMonthSelectorGridProps = {
      * Class to apply to each month button
      */
     monthBtnClass?: (payload: {
-      defaults: ReturnType<typeof MONTH_SELECTOR_GRID_DEFAULT_PROPS['ui']['monthBtnClass']>
+      defaults: UIClassPicker<UIResolvedClasses['monthSelectorGrid']['monthBtnClass']>
     }) => ClassType
 
     /**
@@ -43,4 +41,3 @@ export type IMonthSelectorGridProps = {
     monthBtnStyle?: () => CSSProperties
   }
 }
-

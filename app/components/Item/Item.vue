@@ -3,7 +3,7 @@
 import type { IItemProps } from './types/item-props.type'
 
 // Constants
-import { ITEM_DEFAULT_PROPS } from './constants/item-default-props.constant'
+import { ITEM_LAYERED_CLASSES } from './constants/item-layered-classes.constant'
 
 const props = withDefaults(defineProps<IItemProps>(), {
   ...getComponentProps('item'),
@@ -14,7 +14,7 @@ const mergedProps = computed(() => getComponentMergedProps('item', props))
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: ITEM_DEFAULT_PROPS.ui.containerClass(),
+    defaults: ITEM_LAYERED_CLASSES.containerClass(),
   })
 })
 
@@ -25,7 +25,7 @@ const containerStyle = computed(() => {
 // Styles - focus helper
 const focusHelperClass = computed(() => {
   return mergedProps.value?.ui?.focusHelperClass?.({
-    defaults: ITEM_DEFAULT_PROPS.ui.focusHelperClass(),
+    defaults: ITEM_LAYERED_CLASSES.focusHelperClass(),
   })
 })
 

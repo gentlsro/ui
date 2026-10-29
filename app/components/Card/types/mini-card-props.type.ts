@@ -1,3 +1,4 @@
+import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { CSSProperties } from 'vue'
 
 // Types
@@ -5,9 +6,8 @@ import type { IValueFormatterProps } from '../../ValueFormatter/types/value-form
 
 // Constants
 import type { NavigateToOptions } from '#layers/utilities/app/types/navigate-to.type'
-import type { MINI_CARD_DEFAULT_PROPS } from '../constants/mini-card-default-props.constant'
 
-export type IMiniCardProps = IValueFormatterProps & {
+export type IMiniCardProps = Omit<IValueFormatterProps, 'ui'> & {
   /**
    * The label of the card
    */
@@ -56,7 +56,7 @@ export type IMiniCardProps = IValueFormatterProps & {
      * Base class for the container
      */
     containerClass?: (payload: {
-      defaults: ReturnType<typeof MINI_CARD_DEFAULT_PROPS['ui']['containerClass']>
+      defaults: UIClassPicker<UIResolvedClasses['miniCard']['containerClass']>
     }) => ClassType
 
     /**
@@ -68,7 +68,7 @@ export type IMiniCardProps = IValueFormatterProps & {
      * Class for the icon container
      */
     iconContainerClass?: (payload: {
-      defaults: ReturnType<typeof MINI_CARD_DEFAULT_PROPS['ui']['iconContainerClass']>
+      defaults: UIClassPicker<UIResolvedClasses['miniCard']['iconContainerClass']>
     }) => ClassType
 
     /**
@@ -80,7 +80,7 @@ export type IMiniCardProps = IValueFormatterProps & {
      * Class to apply to the icon
      */
     iconClass?: (payload: {
-      defaults: ReturnType<typeof MINI_CARD_DEFAULT_PROPS['ui']['iconClass']>
+      defaults: UIClassPicker<UIResolvedClasses['miniCard']['iconClass']>
     }) => ClassType
 
     /**
@@ -92,7 +92,7 @@ export type IMiniCardProps = IValueFormatterProps & {
      * Class for the content wrapper
      */
     contentClass?: (payload: {
-      defaults: ReturnType<typeof MINI_CARD_DEFAULT_PROPS['ui']['contentClass']>
+      defaults: UIClassPicker<UIResolvedClasses['miniCard']['contentClass']>
     }) => ClassType
 
     /**
@@ -104,7 +104,7 @@ export type IMiniCardProps = IValueFormatterProps & {
      * Class to apply to the label
      */
     labelClass?: (payload: {
-      defaults: ReturnType<typeof MINI_CARD_DEFAULT_PROPS['ui']['labelClass']>
+      defaults: UIClassPicker<UIResolvedClasses['miniCard']['labelClass']>
     }) => ClassType
 
     /**
@@ -116,7 +116,7 @@ export type IMiniCardProps = IValueFormatterProps & {
      * Class to apply to the value
      */
     valueClass?: (payload: {
-      defaults: ReturnType<typeof MINI_CARD_DEFAULT_PROPS['ui']['valueClass']>
+      defaults: UIClassPicker<UIResolvedClasses['miniCard']['valueClass']>
     }) => ClassType
 
     /**
@@ -128,7 +128,7 @@ export type IMiniCardProps = IValueFormatterProps & {
      * Class to apply to the previous value
      */
     previousValueClass?: (payload: {
-      defaults: ReturnType<typeof MINI_CARD_DEFAULT_PROPS['ui']['previousValueClass']>
+      defaults: UIClassPicker<UIResolvedClasses['miniCard']['previousValueClass']>
     }) => ClassType
 
     /**

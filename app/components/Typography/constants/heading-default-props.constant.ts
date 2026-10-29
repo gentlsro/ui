@@ -2,18 +2,14 @@
 
 // Types
 import type { IHeadingProps } from '../types/heading-props.type'
+import { HEADING_CLASS_COMPOSERS, HEADING_CLASS_SLOTS } from './heading-class-slots.constant'
 
 export const HEADING_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'flex items-center p-x-2 rounded-custom relative'
-      const filled = '[&.is-filled]:(p-x-4)'
+      const slots = HEADING_CLASS_SLOTS.containerClass()
 
-      return withClassPicker({
-        base,
-        filled,
-        all: `${base} ${filled}`,
-      } as const)
+      return withClassPicker({ ...slots, all: HEADING_CLASS_COMPOSERS.containerClass(slots) } as const)
     },
   },
 } satisfies IHeadingProps

@@ -1,7 +1,5 @@
+import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { CSSProperties } from 'vue'
-
-// Constants
-import type { PAGE_TITLE_DEFAULT_PROPS } from '../constants/page-title-default-props.constant'
 
 export type IPageTitleProps = {
   /**
@@ -17,7 +15,7 @@ export type IPageTitleProps = {
      * Class to apply to the container
      */
     containerClass?: (payload: {
-      defaults: ReturnType<typeof PAGE_TITLE_DEFAULT_PROPS['ui']['containerClass']>
+      defaults: UIClassPicker<UIResolvedClasses['pageTitle']['containerClass']>
     }) => ClassType
 
     /**
@@ -29,7 +27,7 @@ export type IPageTitleProps = {
      * Class to apply to the page-title element
      */
     pageTitleClass?: (payload: {
-      defaults: ReturnType<typeof PAGE_TITLE_DEFAULT_PROPS['ui']['pageTitleClass']>
+      defaults: UIClassPicker<UIResolvedClasses['pageTitle']['pageTitleClass']>
     }) => ClassType
 
     /**
@@ -41,7 +39,7 @@ export type IPageTitleProps = {
      * Class to apply to the title
      */
     titleClass?: (payload: {
-      defaults: ReturnType<typeof PAGE_TITLE_DEFAULT_PROPS['ui']['titleClass']>
+      defaults: UIClassPicker<UIResolvedClasses['pageTitle']['titleClass']>
     }) => ClassType
 
     /**

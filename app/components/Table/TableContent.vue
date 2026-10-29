@@ -9,7 +9,7 @@ import { useTableStore } from './stores/table.store'
 import { useTableCellNavigation } from './composables/useTableCellNavigation'
 
 // Constants
-import { TABLE_DEFAULT_PROPS } from './constants/table-default-props.constant'
+import { TABLE_LAYERED_CLASSES } from './constants/table-layered-classes.constant'
 
 // Components
 import VirtualScroller from '../VirtualScroller/VirtualScroller.vue'
@@ -81,7 +81,7 @@ const scrollerProps = computed(() => {
 
 const contentClass = computed(() => {
   return props.ui?.contentClass?.({
-    defaults: TABLE_DEFAULT_PROPS.ui.contentClass(),
+    defaults: TABLE_LAYERED_CLASSES.contentClass(),
   })
 })
 

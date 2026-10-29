@@ -10,7 +10,7 @@ import { treeExpandAll } from './functions/tree-expand-all'
 import { useTreeStore } from './stores/tree.store'
 
 // Constants
-import { TREE_DEFAULT_PROPS } from './constants/tree-default-props.constant'
+import { TREE_LAYERED_CLASSES } from './constants/tree-layered-classes.constant'
 
 type IProps = Pick<ITreeProps<T>, 'ui' | 'actionsConfig'>
 
@@ -22,7 +22,7 @@ const store = useTreeStore()
 // Styles - Actions
 const actionsClass = computed(() => {
   return props.ui?.actionsClass?.({
-    defaults: TREE_DEFAULT_PROPS.ui.actionsClass(),
+    defaults: TREE_LAYERED_CLASSES.actionsClass(),
   })
 })
 

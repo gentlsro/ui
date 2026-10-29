@@ -6,7 +6,7 @@ import type { IStepperSlotProps, IStepperStep } from './composables/useStepperUt
 import { stepperContextKey } from './composables/useStepperUtils'
 
 // Constants
-import { STEPPER_DEFAULT_PROPS } from './constants/stepper-default-props.constant'
+import { STEPPER_LAYERED_CLASSES } from './constants/stepper-layered-classes.constant'
 
 const slots = defineSlots<{
   indicator?: (props: IStepperSlotProps) => any
@@ -64,7 +64,7 @@ function hasText(step: IStepperStep) {
 // Styles - navigation
 const navigationClass = computed(() => {
   return stepper.ui.value?.navigationClass?.({
-    defaults: STEPPER_DEFAULT_PROPS.ui.navigationClass({ layout: stepper.layout.value }),
+    defaults: STEPPER_LAYERED_CLASSES.navigationClass({ layout: stepper.layout.value }),
   })
 })
 
@@ -75,7 +75,7 @@ const navigationStyle = computed(() => {
 // Styles - item
 const itemClass = computed(() => {
   return stepper.ui.value?.itemClass?.({
-    defaults: STEPPER_DEFAULT_PROPS.ui.itemClass({ layout: stepper.layout.value }),
+    defaults: STEPPER_LAYERED_CLASSES.itemClass({ layout: stepper.layout.value }),
   })
 })
 
@@ -86,7 +86,7 @@ const itemStyle = computed(() => {
 // Styles - trigger
 const triggerClass = computed(() => {
   return stepper.ui.value?.triggerClass?.({
-    defaults: STEPPER_DEFAULT_PROPS.ui.triggerClass({ layout: stepper.layout.value }),
+    defaults: STEPPER_LAYERED_CLASSES.triggerClass({ layout: stepper.layout.value }),
   })
 })
 
@@ -97,7 +97,7 @@ const triggerStyle = computed(() => {
 // Styles - indicator
 const indicatorClass = computed(() => {
   return stepper.ui.value?.indicatorClass?.({
-    defaults: STEPPER_DEFAULT_PROPS.ui.indicatorClass({ size: stepper.size.value }),
+    defaults: STEPPER_LAYERED_CLASSES.indicatorClass({ size: stepper.size.value }),
   })
 })
 
@@ -108,7 +108,7 @@ const indicatorStyle = computed(() => {
 // Styles - icon
 const iconClass = computed(() => {
   return stepper.ui.value?.iconClass?.({
-    defaults: STEPPER_DEFAULT_PROPS.ui.iconClass({ size: stepper.size.value }),
+    defaults: STEPPER_LAYERED_CLASSES.iconClass({ size: stepper.size.value }),
   })
 })
 
@@ -119,7 +119,7 @@ const iconStyle = computed(() => {
 // Styles - separator
 const separatorClass = computed(() => {
   return stepper.ui.value?.separatorClass?.({
-    defaults: STEPPER_DEFAULT_PROPS.ui.separatorClass({ layout: stepper.layout.value }),
+    defaults: STEPPER_LAYERED_CLASSES.separatorClass({ layout: stepper.layout.value }),
   })
 })
 
@@ -130,7 +130,7 @@ const separatorStyle = computed(() => {
 // Styles - text
 const textClass = computed(() => {
   return stepper.ui.value?.textClass?.({
-    defaults: STEPPER_DEFAULT_PROPS.ui.textClass({ layout: stepper.layout.value }),
+    defaults: STEPPER_LAYERED_CLASSES.textClass({ layout: stepper.layout.value }),
   })
 })
 
@@ -141,7 +141,7 @@ const textStyle = computed(() => {
 // Styles - label
 const labelClass = computed(() => {
   return stepper.ui.value?.labelClass?.({
-    defaults: STEPPER_DEFAULT_PROPS.ui.labelClass({ size: stepper.size.value }),
+    defaults: STEPPER_LAYERED_CLASSES.labelClass({ size: stepper.size.value }),
   })
 })
 
@@ -152,7 +152,7 @@ const labelStyle = computed(() => {
 // Styles - description
 const descriptionClass = computed(() => {
   return stepper.ui.value?.descriptionClass?.({
-    defaults: STEPPER_DEFAULT_PROPS.ui.descriptionClass({ size: stepper.size.value }),
+    defaults: STEPPER_LAYERED_CLASSES.descriptionClass({ size: stepper.size.value }),
   })
 })
 

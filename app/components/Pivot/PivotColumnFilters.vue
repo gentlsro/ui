@@ -3,13 +3,13 @@
 import { usePivotStore } from './stores/pivot.store'
 
 // Constants
-import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
+import { PIVOT_LAYERED_CLASSES } from './constants/pivot-layered-classes.constant'
 
 const { columns, ui } = usePivotStore()
 
 const columnFiltersClass = computed(() => {
   return ui.value?.columnFiltersClass?.({
-    defaults: PIVOT_DEFAULT_PROPS.ui.columnFiltersClass(),
+    defaults: PIVOT_LAYERED_CLASSES.columnFiltersClass(),
   })
 })
 

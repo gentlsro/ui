@@ -1,7 +1,5 @@
+import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { CSSProperties } from 'vue'
-
-// Constants
-import type { RADIO_DEFAULT_PROPS } from '../constants/radio-default-props.constant'
 
 export type IRadioProps = {
   /**
@@ -66,7 +64,7 @@ export type IRadioProps = {
      * Class to apply to the container (label element)
      */
     containerClass?: (payload: {
-      defaults: ReturnType<typeof RADIO_DEFAULT_PROPS['ui']['containerClass']>
+      defaults: UIClassPicker<UIResolvedClasses['radio']['containerClass']>
     }) => ClassType
 
     /**
@@ -78,7 +76,7 @@ export type IRadioProps = {
      * Class to apply to the radio button element
      */
     radioClass?: (payload: {
-      defaults: ReturnType<typeof RADIO_DEFAULT_PROPS['ui']['radioClass']>
+      defaults: UIClassPicker<UIResolvedClasses['radio']['radioClass']>
     }) => ClassType
 
     /**
@@ -90,7 +88,7 @@ export type IRadioProps = {
      * Class to apply to the radio label
      */
     labelClass?: (payload: {
-      defaults: ReturnType<typeof RADIO_DEFAULT_PROPS['ui']['labelClass']>
+      defaults: UIClassPicker<UIResolvedClasses['radio']['labelClass']>
     }) => ClassType
 
     /**
@@ -102,7 +100,7 @@ export type IRadioProps = {
      * Class for the focus/hover helper overlay
      */
     focusHelperClass?: (payload: {
-      defaults: ReturnType<typeof RADIO_DEFAULT_PROPS['ui']['focusHelperClass']>
+      defaults: UIClassPicker<UIResolvedClasses['radio']['focusHelperClass']>
     }) => ClassType
 
     /**

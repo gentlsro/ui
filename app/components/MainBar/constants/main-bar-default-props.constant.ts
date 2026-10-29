@@ -1,59 +1,43 @@
+import { MAIN_BAR_CLASS_COMPOSERS, MAIN_BAR_CLASS_SLOTS } from './main-bar-class-slots.constant'
+
 // @unocss-include
 
 export const MAIN_BAR_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'flex relative flex-col gap-x-2 p-t-2 z-$zMainBar w-full shrink-0 bg-white dark:bg-darker p-b-2'
+      const slots = MAIN_BAR_CLASS_SLOTS.containerClass()
 
-      return withClassPicker({
-        base,
-        all: base,
-      } as const)
+      return withClassPicker({ ...slots, all: MAIN_BAR_CLASS_COMPOSERS.containerClass(slots) } as const)
     },
 
     contentClass() {
-      const base = 'flex gap-x-4 grow items-center rounded-custom'
+      const slots = MAIN_BAR_CLASS_SLOTS.contentClass()
 
-      return withClassPicker({
-        base,
-        all: base,
-      } as const)
+      return withClassPicker({ ...slots, all: MAIN_BAR_CLASS_COMPOSERS.contentClass(slots) } as const)
     },
 
     titleWrapperClass() {
-      const base = 'flex flex-col grow overflow-auto relative rounded-custom'
+      const slots = MAIN_BAR_CLASS_SLOTS.titleWrapperClass()
 
-      return withClassPicker({
-        base,
-        all: base,
-      } as const)
+      return withClassPicker({ ...slots, all: MAIN_BAR_CLASS_COMPOSERS.titleWrapperClass(slots) } as const)
     },
 
     titleClass() {
-      const base = ''
+      const slots = MAIN_BAR_CLASS_SLOTS.titleClass()
 
-      return withClassPicker({
-        base,
-        all: base,
-      } as const)
+      return withClassPicker({ ...slots, all: MAIN_BAR_CLASS_COMPOSERS.titleClass(slots) } as const)
     },
 
     subtitleClass() {
-      const base = 'text-caption p-x-4 p-b-2 m-t--1'
+      const slots = MAIN_BAR_CLASS_SLOTS.subtitleClass()
 
-      return withClassPicker({
-        base,
-        all: base,
-      } as const)
+      return withClassPicker({ ...slots, all: MAIN_BAR_CLASS_COMPOSERS.subtitleClass(slots) } as const)
     },
 
     actionsClass() {
-      const base = 'flex flex-col self-start m-t-1 m-x-2'
+      const slots = MAIN_BAR_CLASS_SLOTS.actionsClass()
 
-      return withClassPicker({
-        base,
-        all: base,
-      } as const)
+      return withClassPicker({ ...slots, all: MAIN_BAR_CLASS_COMPOSERS.actionsClass(slots) } as const)
     },
   },
 }

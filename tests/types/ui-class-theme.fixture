@@ -1,0 +1,50 @@
+import { defineUIClasses } from '__DEFINE_UI_CLASSES__'
+import { extendUIConfig } from '__EXTEND_UI_CONFIG__'
+
+export const uiClasses = defineUIClasses('fixture-layer')({
+  list: { rowClass: { base: 'layer-list', themeList: 'theme-list' } },
+  miniCard: { containerClass: { base: 'layer-card', themeCard: 'theme-card' } },
+  button: {
+    containerClass: ({ defaults, props }) => {
+      const builtIn: 'flex items-center tracking-wide relative select-none' = defaults.base
+      const label: boolean = props.hasLabel
+      // @ts-expect-error Following layers must not enter preceding defaults.
+      defaults.appOnly
+      return { base: 'layer-base', layerOnly: 'layer-only', sizes: { sm: 'layer-sm' } } as const
+    },
+    iconClass: { base: 'layer-icon' },
+  },
+}).compose({
+  list: { rowClass: slots => {
+    const theme: string = slots.themeList
+    // @ts-expect-error Later layers may change composer slot values.
+    const fixed: 'layer-list' = slots.base
+    return `${slots.base} ${slots.focus} ${slots.themeList}`
+  } },
+  button: {
+    containerClass: (slots, props) => {
+      const own: string = slots.layerOnly
+      const inherited: string = slots.webkit
+      const size: string = slots.sizes.sm
+      const label: boolean = props.hasLabel
+      // @ts-expect-error Later layers can change composer input values.
+      const fixed: 'layer-base' = slots.base
+      // @ts-expect-error Future keys are unavailable here.
+      slots.appOnly
+      return [slots.base, slots.layerOnly, props.hasLabel ? slots.sizes.sm : ''].join(' ')
+    },
+  },
+})
+
+// Reading uiClasses from this module must never infer its unrelated default export.
+export default extendUIConfig({
+  buttonGroup: { props: { buttons: [{
+    label: 'Theme button',
+    value: 1,
+    ui: { containerClass: ({ defaults }) => {
+      const final: 'app-base' = defaults.base
+      defaults.p('layerOnly', 'appOnly')
+      return defaults.all
+    } },
+  }] } },
+})

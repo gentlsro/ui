@@ -1,30 +1,19 @@
 // @unocss-include
 import type { IChipProps } from '../types/chip-props.type'
+import { CHIP_CLASS_COMPOSERS, CHIP_CLASS_SLOTS } from './chip-class-slots.constant'
 
 export const CHIP_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'relative flex gap-2 items-center'
-      const border = 'border-px border-ca rounded-custom'
-      const size = 'h-5 p-y-3px p-l-2'
+      const slots = CHIP_CLASS_SLOTS.containerClass()
 
-      return withClassPicker({
-        base,
-        border,
-        size,
-        all: `${base} ${border} ${size}`,
-      } as const)
+      return withClassPicker({ ...slots, all: CHIP_CLASS_COMPOSERS.containerClass(slots) } as const)
     },
 
     labelClass() {
-      const base = 'leading-tight truncate grow'
-      const size = 'font-rem-12'
+      const slots = CHIP_CLASS_SLOTS.labelClass()
 
-      return withClassPicker({
-        base,
-        size,
-        all: `${base} ${size}`,
-      } as const)
+      return withClassPicker({ ...slots, all: CHIP_CLASS_COMPOSERS.labelClass(slots) } as const)
     },
   },
 } satisfies IChipProps

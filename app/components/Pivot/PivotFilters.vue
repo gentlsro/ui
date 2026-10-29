@@ -3,7 +3,7 @@
 import { usePivotStore } from './stores/pivot.store'
 
 // Constants
-import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
+import { PIVOT_LAYERED_CLASSES } from './constants/pivot-layered-classes.constant'
 
 const { filters, ui } = usePivotStore()
 
@@ -13,7 +13,7 @@ const customFilters = computed(() => {
 
 const filtersClass = computed(() => {
   return ui.value?.filtersClass?.({
-    defaults: PIVOT_DEFAULT_PROPS.ui.filtersClass(),
+    defaults: PIVOT_LAYERED_CLASSES.filtersClass(),
   })
 })
 

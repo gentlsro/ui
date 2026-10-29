@@ -3,7 +3,7 @@
 import type { IMonthSelectorProps } from './types/month-selector-props.type'
 
 // Constants
-import { MONTH_SELECTOR_DEFAULT_PROPS } from './constants/month-selector-default-props.constant'
+import { MONTH_SELECTOR_LAYERED_CLASSES } from './constants/month-selector-layered-classes.constant'
 import { $bp } from '../../constants/breakpoints'
 
 type Month = {
@@ -59,7 +59,7 @@ function handleMonthSelect(month: Pick<Month, 'idx'>, callback?: () => void) {
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: MONTH_SELECTOR_DEFAULT_PROPS.ui.containerClass(),
+    defaults: MONTH_SELECTOR_LAYERED_CLASSES.containerClass(),
   })
 })
 
@@ -70,7 +70,7 @@ const containerStyle = computed(() => {
 // Styles - previous button
 const previousBtnClass = computed(() => {
   return mergedProps.value?.ui?.previousBtnClass?.({
-    defaults: MONTH_SELECTOR_DEFAULT_PROPS.ui.previousBtnClass(),
+    defaults: MONTH_SELECTOR_LAYERED_CLASSES.previousBtnClass(),
   })
 })
 
@@ -81,7 +81,7 @@ const previousBtnStyle = computed(() => {
 // Styles - current button
 const currentBtnClass = computed(() => {
   return mergedProps.value?.ui?.currentBtnClass?.({
-    defaults: MONTH_SELECTOR_DEFAULT_PROPS.ui.currentBtnClass(),
+    defaults: MONTH_SELECTOR_LAYERED_CLASSES.currentBtnClass(),
   })
 })
 
@@ -92,7 +92,7 @@ const currentBtnStyle = computed(() => {
 // Styles - next button
 const nextBtnClass = computed(() => {
   return mergedProps.value?.ui?.nextBtnClass?.({
-    defaults: MONTH_SELECTOR_DEFAULT_PROPS.ui.nextBtnClass(),
+    defaults: MONTH_SELECTOR_LAYERED_CLASSES.nextBtnClass(),
   })
 })
 
@@ -103,7 +103,7 @@ const nextBtnStyle = computed(() => {
 // Styles - grid container
 const gridContainerClass = computed(() => {
   return mergedProps.value?.ui?.gridContainerClass?.({
-    defaults: MONTH_SELECTOR_DEFAULT_PROPS.ui.gridContainerClass(),
+    defaults: MONTH_SELECTOR_LAYERED_CLASSES.gridContainerClass(),
   })
 })
 
@@ -114,7 +114,7 @@ const gridContainerStyle = computed(() => {
 // Styles - month button
 const monthBtnClass = computed(() => {
   return mergedProps.value?.ui?.monthBtnClass?.({
-    defaults: MONTH_SELECTOR_DEFAULT_PROPS.ui.monthBtnClass(),
+    defaults: MONTH_SELECTOR_LAYERED_CLASSES.monthBtnClass(),
   })
 })
 

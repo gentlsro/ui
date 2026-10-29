@@ -3,7 +3,7 @@
 import type { IRadioProps } from './types/radio-props.type'
 
 // Constants
-import { RADIO_DEFAULT_PROPS } from './constants/radio-default-props.constant'
+import { RADIO_LAYERED_CLASSES } from './constants/radio-layered-classes.constant'
 
 const props = withDefaults(defineProps<IRadioProps>(), {
   ...getComponentProps('radio'),
@@ -38,7 +38,7 @@ function handleCheck(ev: Event) {
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: RADIO_DEFAULT_PROPS.ui.containerClass({
+    defaults: RADIO_LAYERED_CLASSES.containerClass({
       size: props.size ?? 'sm',
     }),
   })
@@ -51,7 +51,7 @@ const containerStyle = computed(() => {
 // Styles - radio
 const radioClass = computed(() => {
   return mergedProps.value?.ui?.radioClass?.({
-    defaults: RADIO_DEFAULT_PROPS.ui.radioClass({
+    defaults: RADIO_LAYERED_CLASSES.radioClass({
       size: props.size ?? 'sm',
       color: props.color ?? 'primary',
     }),
@@ -65,7 +65,7 @@ const radioStyle = computed(() => {
 // Styles - label
 const labelClass = computed(() => {
   return mergedProps.value?.ui?.labelClass?.({
-    defaults: RADIO_DEFAULT_PROPS.ui.labelClass({
+    defaults: RADIO_LAYERED_CLASSES.labelClass({
       size: props.size ?? 'sm',
     }),
   })
@@ -78,7 +78,7 @@ const labelStyle = computed(() => {
 // Styles - focus helper
 const focusHelperClass = computed(() => {
   return mergedProps.value?.ui?.focusHelperClass?.({
-    defaults: RADIO_DEFAULT_PROPS.ui.focusHelperClass(),
+    defaults: RADIO_LAYERED_CLASSES.focusHelperClass(),
   })
 })
 

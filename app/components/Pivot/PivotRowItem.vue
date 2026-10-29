@@ -7,7 +7,7 @@ import type { IPivotDataItem } from './types/pivot-data-item.type'
 import { usePivotStore } from './stores/pivot.store'
 
 // Constants
-import { PIVOT_DEFAULT_PROPS } from './constants/pivot-default-props.constant'
+import { PIVOT_LAYERED_CLASSES } from './constants/pivot-layered-classes.constant'
 
 type IProps = {
   row: IPivotDataItem<T>
@@ -25,7 +25,7 @@ const promotedLevels = computed(() => {
 const rowItemClass = computed(() => {
   return [
     ui.value?.rowItemClass?.({
-      defaults: PIVOT_DEFAULT_PROPS.ui.rowItemClass(),
+      defaults: PIVOT_LAYERED_CLASSES.rowItemClass(),
     }),
     {
       'is-subtotal': props.row.rowItem.kind === 'subtotal',

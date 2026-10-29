@@ -10,7 +10,7 @@ import { useTableStore } from './stores/table.store'
 import { tableSetColumnSort } from './functions/table-set-column-sort'
 
 // Constants
-import { TABLE_DEFAULT_PROPS } from './constants/table-default-props.constant'
+import { TABLE_LAYERED_CLASSES } from './constants/table-layered-classes.constant'
 
 type IProps = Pick<ITableProps, 'features' | 'ui'>
 
@@ -41,7 +41,7 @@ const selectionCount = computed(() => {
 
 const toolbarClass = computed(() => {
   return props.ui?.toolbarClass?.({
-    defaults: TABLE_DEFAULT_PROPS.ui.toolbarClass(),
+    defaults: TABLE_LAYERED_CLASSES.toolbarClass(),
   })
 })
 

@@ -1,139 +1,68 @@
 // @unocss-include
 
 import type { DatePickerDayState } from '../types/datepicker-props.type'
+import { DATE_PICKER_CLASS_COMPOSERS, DATE_PICKER_CLASS_SLOTS } from './datepicker-class-slots.constant'
 
 export const DATE_PICKER_DEFAULT_PROPS = {
   ui: {
     containerClass() {
-      const base = 'flex flex-col overflow-auto bg-white color-slate-700 dark:bg-dark-950 dark:color-inherit'
+      const slots = DATE_PICKER_CLASS_SLOTS.containerClass()
 
-      return withClassPicker({
-        base,
-        all: base,
-      } as const)
+      return withClassPicker({ ...slots, all: DATE_PICKER_CLASS_COMPOSERS.containerClass(slots) } as const)
     },
 
     daysGridClass() {
-      const base = 'grid grid-cols-7 gap-2px p-x-2 p-b-2'
+      const slots = DATE_PICKER_CLASS_SLOTS.daysGridClass()
 
-      return withClassPicker({
-        base,
-        all: base,
-      } as const)
+      return withClassPicker({ ...slots, all: DATE_PICKER_CLASS_COMPOSERS.daysGridClass(slots) } as const)
     },
 
-    dayClass({ day, isSelected, disabled: isDisabled }: DatePickerDayState) {
-      const base = 'relative flex flex-col justify-center font-medium select-none rounded-2'
-      const hover = 'hover:bg-slate-100 hover:color-slate-900 dark:hover:bg-true-gray-200/10 dark:hover:color-white'
-      const weekend = 'bg-slate-50 dark:bg-true-gray-200/3'
-      const outside = 'color-slate-400 dark:color-true-gray-500'
-      const selected = 'bg-primary font-semibold'
-      const color = 'color-white dark:color-white'
-      const disabled = 'cursor-not-allowed color-true-gray-400 dark:color-true-gray-600'
-      const interactive = 'cursor-pointer'
+    dayClass(payload: Parameters<typeof DATE_PICKER_CLASS_SLOTS.dayClass>[0]) {
+      const slots = DATE_PICKER_CLASS_SLOTS.dayClass(payload)
 
-      return withClassPicker({
-        base,
-        hover,
-        weekend,
-        outside,
-        selected,
-        color,
-        disabled,
-        interactive,
-        all: [
-          base,
-          !isDisabled && interactive,
-          !isDisabled && !isSelected && hover,
-          day.isWeekend && !isSelected && weekend,
-          day.isNotCurrent && !isSelected && !isDisabled && outside,
-          isSelected && selected,
-          isSelected && !isDisabled && color,
-          isDisabled && disabled,
-        ].filter(Boolean).join(' '),
-      } as const)
+      return withClassPicker({ ...slots, all: DATE_PICKER_CLASS_COMPOSERS.dayClass(slots, payload) } as const)
     },
 
-    dayNumberClass({ day, isSelected }: DatePickerDayState) {
-      const base = 'flex flex-center relative rounded-full font-rem-13 leading-none w-7 h-7'
-      const today = 'outline-1 outline-solid font-semibold'
-      const outline = 'outline-primary'
-      const selected = 'outline-white'
+    dayNumberClass(payload: Parameters<typeof DATE_PICKER_CLASS_SLOTS.dayNumberClass>[0]) {
+      const slots = DATE_PICKER_CLASS_SLOTS.dayNumberClass(payload)
 
-      return withClassPicker({
-        base,
-        today,
-        outline,
-        selected,
-        all: [
-          base,
-          day.isToday && today,
-          day.isToday && !isSelected && outline,
-          isSelected && selected,
-        ].filter(Boolean).join(' '),
-      } as const)
+      return withClassPicker({ ...slots, all: DATE_PICKER_CLASS_COMPOSERS.dayNumberClass(slots, payload) } as const)
     },
 
-    dayEdgeClass({ isSelected }: DatePickerDayState) {
-      const base = 'absolute top-.5 right-1 whitespace-nowrap font-rem-9 leading-none'
-      const color = 'color-slate-400 dark:color-true-gray-500'
-      const selected = 'color-white/70'
+    dayEdgeClass(payload: Parameters<typeof DATE_PICKER_CLASS_SLOTS.dayEdgeClass>[0]) {
+      const slots = DATE_PICKER_CLASS_SLOTS.dayEdgeClass(payload)
 
-      return withClassPicker({
-        base,
-        color,
-        selected,
-        all: `${base} ${isSelected ? selected : color}`,
-      } as const)
+      return withClassPicker({ ...slots, all: DATE_PICKER_CLASS_COMPOSERS.dayEdgeClass(slots, payload) } as const)
     },
 
     dayNumberWrapperClass() {
-      const base = 'flex flex-center'
+      const slots = DATE_PICKER_CLASS_SLOTS.dayNumberWrapperClass()
 
-      return withClassPicker({
-        base,
-        all: base,
-      } as const)
+      return withClassPicker({ ...slots, all: DATE_PICKER_CLASS_COMPOSERS.dayNumberWrapperClass(slots) } as const)
     },
 
     dayEventsClass() {
-      const base = 'flex flex-1 flex-center px-1 py-2px overflow-hidden'
+      const slots = DATE_PICKER_CLASS_SLOTS.dayEventsClass()
 
-      return withClassPicker({
-        base,
-        all: base,
-      } as const)
+      return withClassPicker({ ...slots, all: DATE_PICKER_CLASS_COMPOSERS.dayEventsClass(slots) } as const)
     },
 
     dayEventsContainerClass() {
-      const base = 'flex flex-1 flex-wrap gap-px flex-center bg-white/20 dark:bg-dark-950/20 rounded-custom'
+      const slots = DATE_PICKER_CLASS_SLOTS.dayEventsContainerClass()
 
-      return withClassPicker({
-        base,
-        all: base,
-      } as const)
+      return withClassPicker({ ...slots, all: DATE_PICKER_CLASS_COMPOSERS.dayEventsContainerClass(slots) } as const)
     },
 
     dayEventClass() {
-      const base = 'w-3 h-3 hover:scale-120 transition-transform-300'
+      const slots = DATE_PICKER_CLASS_SLOTS.dayEventClass()
 
-      return withClassPicker({
-        base,
-        all: base,
-      } as const)
+      return withClassPicker({ ...slots, all: DATE_PICKER_CLASS_COMPOSERS.dayEventClass(slots) } as const)
     },
 
     controlsClass() {
-      const base = 'flex items-center p-x-2 p-y-1 rounded-b-custom'
-      const bg = 'bg-white dark:bg-dark-950'
-      const border = 'border-t-1 border-slate-100 dark:border-dark-700'
+      const slots = DATE_PICKER_CLASS_SLOTS.controlsClass()
 
-      return withClassPicker({
-        base,
-        bg,
-        border,
-        all: `${base} ${bg} ${border}`,
-      } as const)
+      return withClassPicker({ ...slots, all: DATE_PICKER_CLASS_COMPOSERS.controlsClass(slots) } as const)
     },
   },
 }

@@ -3,7 +3,7 @@
 import type { IHeadingProps } from './types/heading-props.type'
 
 // Constants
-import { HEADING_DEFAULT_PROPS } from './constants/heading-default-props.constant'
+import { HEADING_LAYERED_CLASSES } from './constants/heading-layered-classes.constant'
 
 const props = withDefaults(defineProps<IHeadingProps>(), {
   ...getComponentProps('heading'),
@@ -23,7 +23,7 @@ const classes = computed(() => {
 // Styles - container
 const containerClass = computed(() => {
   return mergedProps.value?.ui?.containerClass?.({
-    defaults: HEADING_DEFAULT_PROPS.ui.containerClass(),
+    defaults: HEADING_LAYERED_CLASSES.containerClass(),
   })
 })
 

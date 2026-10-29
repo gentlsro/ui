@@ -2,42 +2,26 @@
 
 // Types
 import type { IButtonGroupProps } from '../types/button-group-props.type'
-
-type IButtonGroupStyleProps = Pick<IButtonGroupProps, 'variant'>
+import { BUTTON_GROUP_CLASS_COMPOSERS, BUTTON_GROUP_CLASS_SLOTS } from './button-group-class-slots.constant'
 
 export const BUTTON_GROUP_DEFAULT_PROPS = {
   ui: {
-    containerClass(props: IButtonGroupStyleProps = {}) {
-      const base = 'flex'
-      const pill = 'rounded-full border-1 border-ca [&>.is-first]:rounded-l-full! [&>.is-last]:rounded-r-full!'
-      const segmented = 'inline-flex w-fit max-w-full items-stretch min-h-7 p-0.5 gap-0.5 shrink-0 rounded-custom border-1 border-ca bg-slate-100 dark:bg-black'
+    containerClass(payload: Parameters<typeof BUTTON_GROUP_CLASS_SLOTS.containerClass>[0] = {}) {
+      const slots = BUTTON_GROUP_CLASS_SLOTS.containerClass(payload)
 
-      return withClassPicker({
-        base,
-        pill,
-        segmented,
-        all: props.variant === 'segmented' ? segmented : `${base} ${pill}`,
-      } as const)
+      return withClassPicker({ ...slots, all: BUTTON_GROUP_CLASS_COMPOSERS.containerClass(slots, payload) } as const)
     },
 
-    buttonClass(props: IButtonGroupStyleProps = {}) {
-      const segmented = 'p-x-2 rounded-1 font-rem-12 font-medium leading-none tracking-normal color-ca transition-colors hover:color-current'
+    buttonClass(payload: Parameters<typeof BUTTON_GROUP_CLASS_SLOTS.buttonClass>[0] = {}) {
+      const slots = BUTTON_GROUP_CLASS_SLOTS.buttonClass(payload)
 
-      return withClassPicker({
-        segmented,
-        all: props.variant === 'segmented' ? segmented : '',
-      } as const)
+      return withClassPicker({ ...slots, all: BUTTON_GROUP_CLASS_COMPOSERS.buttonClass(slots, payload) } as const)
     },
 
-    activeClass(props: IButtonGroupStyleProps = {}) {
-      const pill = 'bg-primary color-white'
-      const segmented = '!color-current bg-white dark:bg-white/12 shadow-sm'
+    activeClass(payload: Parameters<typeof BUTTON_GROUP_CLASS_SLOTS.activeClass>[0] = {}) {
+      const slots = BUTTON_GROUP_CLASS_SLOTS.activeClass(payload)
 
-      return withClassPicker({
-        pill,
-        segmented,
-        all: props.variant === 'segmented' ? segmented : pill,
-      } as const)
+      return withClassPicker({ ...slots, all: BUTTON_GROUP_CLASS_COMPOSERS.activeClass(slots, payload) } as const)
     },
   },
 }

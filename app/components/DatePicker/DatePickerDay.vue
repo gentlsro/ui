@@ -4,7 +4,7 @@ import type { DayEvent } from './types/DayEvent.type'
 import type { IDatePickerDayProps } from './types/datepicker-day-props.type'
 
 // Constants
-import { DATE_PICKER_DEFAULT_PROPS } from './constants/datepicker-default-props.constant'
+import { DATE_PICKER_LAYERED_CLASSES } from './constants/datepicker-layered-classes.constant'
 
 const props = withDefaults(defineProps<IDatePickerDayProps>(), {
   edge: true,
@@ -46,40 +46,40 @@ const styleState = computed(() => ({
 }))
 
 const dayClass = computed(() => mergedProps.value.ui?.dayClass?.({
-  defaults: DATE_PICKER_DEFAULT_PROPS.ui.dayClass(styleState.value),
+  defaults: DATE_PICKER_LAYERED_CLASSES.dayClass(styleState.value),
   ...styleState.value,
 }))
 const dayStyle = computed(() => mergedProps.value.ui?.dayStyle?.())
 
 const dayNumberClass = computed(() => mergedProps.value.ui?.dayNumberClass?.({
-  defaults: DATE_PICKER_DEFAULT_PROPS.ui.dayNumberClass(styleState.value),
+  defaults: DATE_PICKER_LAYERED_CLASSES.dayNumberClass(styleState.value),
   ...styleState.value,
 }))
 const dayNumberStyle = computed(() => mergedProps.value.ui?.dayNumberStyle?.())
 
 const dayEdgeClass = computed(() => mergedProps.value.ui?.dayEdgeClass?.({
-  defaults: DATE_PICKER_DEFAULT_PROPS.ui.dayEdgeClass(styleState.value),
+  defaults: DATE_PICKER_LAYERED_CLASSES.dayEdgeClass(styleState.value),
   ...styleState.value,
 }))
 const dayEdgeStyle = computed(() => mergedProps.value.ui?.dayEdgeStyle?.())
 
 const dayNumberWrapperClass = computed(() => mergedProps.value.ui?.dayNumberWrapperClass?.({
-  defaults: DATE_PICKER_DEFAULT_PROPS.ui.dayNumberWrapperClass(),
+  defaults: DATE_PICKER_LAYERED_CLASSES.dayNumberWrapperClass(),
 }))
 const dayNumberWrapperStyle = computed(() => mergedProps.value.ui?.dayNumberWrapperStyle?.())
 
 const dayEventsClass = computed(() => mergedProps.value.ui?.dayEventsClass?.({
-  defaults: DATE_PICKER_DEFAULT_PROPS.ui.dayEventsClass(),
+  defaults: DATE_PICKER_LAYERED_CLASSES.dayEventsClass(),
 }))
 const dayEventsStyle = computed(() => mergedProps.value.ui?.dayEventsStyle?.())
 
 const dayEventsContainerClass = computed(() => mergedProps.value.ui?.dayEventsContainerClass?.({
-  defaults: DATE_PICKER_DEFAULT_PROPS.ui.dayEventsContainerClass(),
+  defaults: DATE_PICKER_LAYERED_CLASSES.dayEventsContainerClass(),
 }))
 const dayEventsContainerStyle = computed(() => mergedProps.value.ui?.dayEventsContainerStyle?.())
 
 const dayEventClass = computed(() => mergedProps.value.ui?.dayEventClass?.({
-  defaults: DATE_PICKER_DEFAULT_PROPS.ui.dayEventClass(),
+  defaults: DATE_PICKER_LAYERED_CLASSES.dayEventClass(),
 }))
 const dayEventStyle = computed(() => mergedProps.value.ui?.dayEventStyle?.())
 </script>

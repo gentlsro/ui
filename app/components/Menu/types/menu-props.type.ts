@@ -1,11 +1,9 @@
+import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { CSSProperties } from 'vue'
 import type { Boundary, OffsetOptions, Placement } from '@floating-ui/dom'
 
 // Types
 import type { IElementMovementProps } from '../../ElementMovement/types/element-movement-props.type'
-
-// Constants
-import type { MENU_DEFAULT_PROPS } from '../constants/menu-default-props.constant'
 
 export type IMenuProps = {
   /**
@@ -205,7 +203,7 @@ export type IMenuProps = {
      * Class to apply to the `menu` itself
      */
     menuClass?: (payload: {
-      defaults: ReturnType<typeof MENU_DEFAULT_PROPS['ui']['menuClass']>
+      defaults: UIClassPicker<UIResolvedClasses['menu']['menuClass']>
     }) => ClassType
 
     /**
@@ -217,7 +215,7 @@ export type IMenuProps = {
      * Class to apply to the `overlay`
      */
     overlayClass?: (payload: {
-      defaults: ReturnType<typeof MENU_DEFAULT_PROPS['ui']['overlayClass']>
+      defaults: UIClassPicker<UIResolvedClasses['menu']['overlayClass']>
     }) => ClassType
 
     /**
@@ -229,7 +227,7 @@ export type IMenuProps = {
      * Class to apply to the `content`
      */
     contentClass?: (payload: {
-      defaults: ReturnType<typeof MENU_DEFAULT_PROPS['ui']['contentClass']>
+      defaults: UIClassPicker<UIResolvedClasses['menu']['contentClass']>
     }) => ClassType
 
     /**
@@ -241,7 +239,7 @@ export type IMenuProps = {
      * Class to apply to the `header`
      */
     headerClass?: (payload: {
-      defaults: ReturnType<typeof MENU_DEFAULT_PROPS['ui']['headerClass']>
+      defaults: UIClassPicker<UIResolvedClasses['menu']['headerClass']>
     }) => ClassType
 
     /**
@@ -253,7 +251,7 @@ export type IMenuProps = {
      * Class to apply to the `title`
      */
     titleClass?: (payload: {
-      defaults: ReturnType<typeof MENU_DEFAULT_PROPS['ui']['titleClass']>
+      defaults: UIClassPicker<UIResolvedClasses['menu']['titleClass']>
     }) => ClassType
 
     /**

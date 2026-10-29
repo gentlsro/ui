@@ -1,10 +1,8 @@
+import type { UIClassPicker, UIResolvedClasses } from '../../../types/ui-class-config.type'
 import type { CSSProperties } from 'vue'
 
 // Types
 import type { IHeadingProps } from '../../Typography/types/heading-props.type'
-
-// Constants
-import type { SECTION_DEFAULT_PROPS } from '../constants/section-default-props.constant'
 
 export type ISectionProps = {
   /**
@@ -50,7 +48,7 @@ export type ISectionProps = {
      * Class for the container
      */
     containerClass?: (payload: {
-      defaults: ReturnType<typeof SECTION_DEFAULT_PROPS['ui']['containerClass']>
+      defaults: UIClassPicker<UIResolvedClasses['section']['containerClass']>
     }) => ClassType
 
     /**
@@ -62,7 +60,7 @@ export type ISectionProps = {
      * Class for the content
      */
     contentClass?: (payload: {
-      defaults: ReturnType<typeof SECTION_DEFAULT_PROPS['ui']['contentClass']>
+      defaults: UIClassPicker<UIResolvedClasses['section']['contentClass']>
     }) => ClassType
 
     /**
@@ -74,7 +72,7 @@ export type ISectionProps = {
      * Class for the title
      */
     titleClass?: (payload: {
-      defaults: ReturnType<typeof SECTION_DEFAULT_PROPS['ui']['titleClass']>
+      defaults: UIClassPicker<UIResolvedClasses['section']['titleClass']>
     }) => ClassType
 
     /**
@@ -86,7 +84,7 @@ export type ISectionProps = {
      * Class for the subtitle
      */
     subtitleClass?: (payload: {
-      defaults: ReturnType<typeof SECTION_DEFAULT_PROPS['ui']['subtitleClass']>
+      defaults: UIClassPicker<UIResolvedClasses['section']['subtitleClass']>
     }) => ClassType
 
     /**
@@ -98,7 +96,7 @@ export type ISectionProps = {
      * Class for the loading state
      */
     loadingClass?: (payload: {
-      defaults: ReturnType<typeof SECTION_DEFAULT_PROPS['ui']['loadingClass']>
+      defaults: UIClassPicker<UIResolvedClasses['section']['loadingClass']>
     }) => ClassType
 
     /**
