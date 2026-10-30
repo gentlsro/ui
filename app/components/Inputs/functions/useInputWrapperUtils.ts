@@ -47,13 +47,14 @@ export function useInputWrapperUtils() {
       ? props.ui?.borderColor?.hover(isDark.value)
       : props.ui?.borderColor?.hover
 
-    const styleVariables = {
-      '--fontSize': '',
-      '--labelFontSize': '',
-      '--lineHeight': '',
-      '--padding': '',
-      '--margin': '',
-      '--bodyMargin': '',
+    // (a variable no size sets stays out: the server would write an empty one the browser's render drops)
+    const styleVariables: Record<string, string | undefined> = {
+      '--fontSize': undefined,
+      '--labelFontSize': undefined,
+      '--lineHeight': undefined,
+      '--padding': undefined,
+      '--margin': undefined,
+      '--bodyMargin': undefined,
       '--borderColorBase': borderColorBase,
       '--borderColorFocus': borderColorFocus || 'var(--color-primary)',
       '--borderColorHover': borderColorHover || borderColorBase,
