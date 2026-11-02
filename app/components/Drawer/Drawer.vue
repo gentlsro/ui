@@ -49,7 +49,7 @@ const isCollapsed = computed(() => isRelative.value && !model.value)
 // Resizing
 const width = defineModel<number>('width', { default: 480 })
 
-const { handleMouseDown, isResizing } = useDrawerResize({
+const { handlePointerDown, isResizing } = useDrawerResize({
   width,
   side: () => props.side,
 })
@@ -181,7 +181,7 @@ onClickOutside(drawerEl, handleClickOutside, {
         v-if="isResizable && !isCollapsed"
         :side="props.side"
         :is-resizing
-        @mousedown="handleMouseDown"
+        @pointerdown="handlePointerDown"
       />
     </aside>
   </Teleport>
