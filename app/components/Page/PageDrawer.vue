@@ -38,7 +38,7 @@ const drawerWidthRef = computed({
 
 syncRef(width, drawerWidthRef)
 
-const { handleMouseDown, isResizing } = useDrawerResize({
+const { handlePointerDown, isResizing } = useDrawerResize({
   width,
   side: () => props.side,
 })
@@ -240,7 +240,7 @@ useHead(() => {
       v-if="isResizable && !isMini && model"
       :side="props.side"
       :is-resizing
-      @mousedown="handleMouseDown"
+      @pointerdown="handlePointerDown"
     />
   </aside>
 </template>
