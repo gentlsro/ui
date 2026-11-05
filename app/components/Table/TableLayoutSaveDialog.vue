@@ -197,7 +197,7 @@ const { validation } = useArk({
         :label="$t('table.layoutName')"
         stack-label
         col=" md:span-2"
-        zod="layout.name"
+        :validation-path="{ path: 'name', scope: '_layoutSaveDialog' }"
       />
 
       <Separator class=" md:col-span-2 m-y-2" />
