@@ -23,7 +23,7 @@ const styleProps = computed(() => ({ variant: props.variant }))
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.containerClass, {
     defaults: BUTTON_GROUP_DEFAULT_PROPS.ui.containerClass(styleProps.value),
   })
 })
@@ -34,14 +34,14 @@ const containerStyle = computed(() => {
 
 // Styles - button
 const buttonClass = computed(() => {
-  return mergedProps.value?.ui?.buttonClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.buttonClass, {
     defaults: BUTTON_GROUP_DEFAULT_PROPS.ui.buttonClass(styleProps.value),
   })
 })
 
 // Styles - active button
 const activeClass = computed(() => {
-  return mergedProps.value?.ui?.activeClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.activeClass, {
     defaults: BUTTON_GROUP_DEFAULT_PROPS.ui.activeClass(styleProps.value),
   })
 })

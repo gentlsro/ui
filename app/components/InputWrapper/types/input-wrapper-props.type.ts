@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { CSSProperties } from 'vue'
 
 // Types
@@ -6,7 +7,7 @@ import type { IInputLabelProps } from '../../InputLabel/types/input-label-props.
 // Constants
 import type { INPUT_WRAPPER_DEFAULT_PROPS } from '../constants/input-wrapper-default-props'
 
-export type IInputWrapperProps = IInputLabelProps & {
+export type IInputWrapperProps = Omit<IInputLabelProps, 'ui'> & {
   /**
    * The cursor that will be shown when hovering over the input
    */
@@ -99,7 +100,7 @@ export type IInputWrapperProps = IInputLabelProps & {
   /**
    * Prop to handle the visuals of the component
    */
-  ui?: {
+  ui?: UIClasses<NonNullable<(IInputLabelProps)['ui']> & {
     /**
      * Class applied to the `append` slot
      */
@@ -257,7 +258,7 @@ export type IInputWrapperProps = IInputLabelProps & {
      * The style of the InputWrapper container
      */
     wrapperStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['inputWrapper']>
 
   /**
    * The input's appearance

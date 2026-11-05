@@ -4,7 +4,7 @@ import type { IInputWrapperProps } from '../../InputWrapper/types/input-wrapper-
 export function useInputWrapperUtils() {
   const { isDark } = useTheme()
 
-  function getInputWrapperProps(props: IInputWrapperProps) {
+  function getInputWrapperProps(props: Omit<IInputWrapperProps, 'ui'>) {
     return reactivePick(
       props,
       'disabled',

@@ -33,7 +33,7 @@ const shouldShowSearchMinChars = computed(() => {
 })
 
 const noDataClass = computed(() => {
-  return props.ui?.noDataClass?.({
+  return resolveUIClass(props.ui?.noDataClass, {
     defaults: LIST_DEFAULT_PROPS.ui.noDataClass(),
   })
 })

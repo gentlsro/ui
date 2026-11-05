@@ -69,7 +69,7 @@ const styles = computed(() => {
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.containerClass, {
     defaults: PAGE_DRAWER_DEFAULT_PROPS.ui.containerClass(),
     isMini: isMini.value,
   })
@@ -81,7 +81,7 @@ const containerStyle = computed(() => {
 
 // Styles - content
 const contentClass = computed(() => {
-  return mergedProps.value?.ui?.contentClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.contentClass, {
     defaults: PAGE_DRAWER_DEFAULT_PROPS.ui.contentClass(),
     isMini: isMini.value,
   })
@@ -93,7 +93,7 @@ const contentStyle = computed(() => {
 
 // Styles - bottom
 const bottomClass = computed(() => {
-  return mergedProps.value?.ui?.bottomClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.bottomClass, {
     defaults: PAGE_DRAWER_DEFAULT_PROPS.ui.bottomClass(),
     isMini: isMini.value,
   })
@@ -105,7 +105,7 @@ const bottomStyle = computed(() => {
 
 // Styles - filler
 const fillerClass = computed(() => {
-  return mergedProps.value?.ui?.fillerClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.fillerClass, {
     defaults: PAGE_DRAWER_DEFAULT_PROPS.ui.fillerClass(),
     isMini: isMini.value,
   })

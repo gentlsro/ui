@@ -28,7 +28,7 @@ const { getColumnWidth, getFrozenStyle } = useTableStore()
 
 const totalsCellClass = computed(() => {
   return [
-    props.ui?.totalsCellClass?.({
+    resolveUIClass(props.ui?.totalsCellClass, {
       column: props.column,
       defaults: TABLE_DEFAULT_PROPS.ui.totalsCellClass(),
     }),

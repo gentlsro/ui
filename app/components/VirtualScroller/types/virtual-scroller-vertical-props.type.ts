@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { CSSProperties } from 'vue'
 import type { VirtualizerOptions } from '@tanstack/vue-virtual'
 
@@ -42,7 +43,7 @@ export type IVirtualScrollerVerticalProps<T extends IItem = IItem> = {
   'overscan' | 'scrollMargin' | 'getScrollElement'
   >>
 
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class applied to the row
      */
@@ -54,5 +55,5 @@ export type IVirtualScrollerVerticalProps<T extends IItem = IItem> = {
      * Style applied to the row
      */
     rowStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['virtualScrollerVertical']>
 }

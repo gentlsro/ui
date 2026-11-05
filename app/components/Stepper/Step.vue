@@ -31,7 +31,7 @@ onScopeDispose(() => {
 
 // Styles - step
 const stepClass = computed(() => {
-  return stepper?.ui.value?.stepClass?.({
+  return resolveUIClass(stepper?.ui.value?.stepClass, {
     defaults: STEPPER_DEFAULT_PROPS.ui.stepClass(),
   })
 })

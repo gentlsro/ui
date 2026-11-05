@@ -43,7 +43,7 @@ const classes = computed(() => {
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.containerClass, {
     defaults: CHIP_DEFAULT_PROPS.ui.containerClass(),
   })
 })
@@ -54,7 +54,7 @@ const containerStyle = computed(() => {
 
 // Styles - label
 const labelClass = computed(() => {
-  return mergedProps.value?.ui?.labelClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.labelClass, {
     defaults: CHIP_DEFAULT_PROPS.ui.labelClass(),
   })
 })

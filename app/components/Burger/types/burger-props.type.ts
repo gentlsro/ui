@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 // Constants
 import type { BURGER_DEFAULT_PROPS } from '../constants/burger-default-props.constant'
 
@@ -16,7 +17,7 @@ export type IBurgerProps = {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class to apply to the wrapper button element
      */
@@ -30,5 +31,5 @@ export type IBurgerProps = {
     burgerClass?: (payload: {
       defaults: ReturnType<typeof BURGER_DEFAULT_PROPS['ui']['burgerClass']>
     }) => ClassType
-  }
+  }, UIResolvedClasses['burger']>
 }

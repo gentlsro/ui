@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { CSSProperties } from 'vue'
 
 // Constants
@@ -61,7 +62,7 @@ export type IRadioProps = {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class to apply to the container (label element)
      */
@@ -109,5 +110,5 @@ export type IRadioProps = {
      * Style for the focus/hover helper overlay
      */
     focusHelperStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['radio']>
 }

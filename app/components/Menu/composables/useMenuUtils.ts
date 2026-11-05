@@ -2,7 +2,7 @@
 import type { IMenuProps } from '../types/menu-props.type'
 
 export function useMenuUtils() {
-  function getMenuProps(props: IMenuProps) {
+  function getMenuProps(props: Omit<IMenuProps, 'ui'>) {
     return reactivePick(props, [
       'beforeHideFnc',
       'cover',

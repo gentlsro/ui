@@ -1,10 +1,11 @@
+import type { UIClasses, UIResolvedClasses } from '../../../../types/ui-config.type'
 import type { AllowedComponentProps } from 'vue'
 
 // Types
 import type { IInputProps } from '../../types/input-props.type'
 import type { IMenuProps } from '../../../Menu/types/menu-props.type'
 
-export type ITextInputProps = IInputProps & {
+export type ITextInputProps = Omit<IInputProps, 'ui'> & {
   /**
    * If true, the input has its own enter key handler
    */
@@ -34,4 +35,4 @@ export type ITextInputProps = IInputProps & {
    * The props that should be passed to the tooltip
    */
   tooltipProps?: IMenuProps & AllowedComponentProps
-}
+} & { ui?: UIClasses<NonNullable<(IInputProps)['ui']>, UIResolvedClasses['textInput']> }

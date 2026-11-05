@@ -16,7 +16,7 @@ const mergedProps = computed(() => {
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.containerClass, {
     defaults: MARQUEE_DEFAULT_PROPS.ui.containerClass(),
   })
 })
@@ -32,7 +32,7 @@ const containerStyle = computed(() => {
 const contentClass = computed(() => {
   return [
     props.vertical ? 'animate-marquee-vertical' : 'animate-marquee',
-    mergedProps.value?.ui?.contentClass?.({
+    resolveUIClass(mergedProps.value?.ui?.contentClass, {
       defaults: MARQUEE_DEFAULT_PROPS.ui.contentClass({
         pauseOnHover: props.pauseOnHover ?? false,
         vertical: props.vertical ?? false,

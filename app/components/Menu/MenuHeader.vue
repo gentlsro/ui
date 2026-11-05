@@ -22,7 +22,7 @@ const isMovable = computed(() => {
 
 // Styles - header
 const headerClass = computed(() => {
-  return props.ui?.headerClass?.({
+  return resolveUIClass(props.ui?.headerClass, {
     defaults: MENU_DEFAULT_PROPS.ui.headerClass(),
   })
 })
@@ -33,7 +33,7 @@ const headerStyle = computed(() => {
 
 // Styles - title
 const titleClass = computed(() => {
-  return props.ui?.titleClass?.({
+  return resolveUIClass(props.ui?.titleClass, {
     defaults: MENU_DEFAULT_PROPS.ui.titleClass(),
   })
 })

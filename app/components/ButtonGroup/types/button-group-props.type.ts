@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { AllowedComponentProps, CSSProperties } from 'vue'
 
 // Types
@@ -32,7 +33,7 @@ export type IButtonGroupProps = {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Base class for the container
      */
@@ -63,5 +64,5 @@ export type IButtonGroupProps = {
      * Style applied to the active button
      */
     activeStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['buttonGroup']>
 }

@@ -2,7 +2,7 @@
 import type { IFieldProps } from '../types/field-props.type'
 
 export function useFieldUtils(options?: {
-  props?: IFieldProps
+  props?: Omit<IFieldProps, 'ui'>
   menuElRef?: MaybeRefOrGetter
   onFocus?: (ev?: PointerEvent | FocusEvent) => void
   onBeforeFocus?: (ev?: PointerEvent | FocusEvent) => { shouldFocus?: boolean, shouldHideFloating?: boolean }
@@ -132,8 +132,10 @@ export function useFieldUtils(options?: {
     instance?.emit('blur', ev)
   }
 
-  function getFieldProps(props: IFieldProps) {
-    return reactivePick(props, [
+  function getFieldProps<Props extends Omit<IFieldProps, 'ui'> & { ui?: unknown }>(props: Props) {
+    const fieldProps: Omit<IFieldProps, 'ui'> & Pick<Props, 'ui'> = props
+
+    return reactivePick(fieldProps, [
       'cursor',
       'disabled',
       'errors',

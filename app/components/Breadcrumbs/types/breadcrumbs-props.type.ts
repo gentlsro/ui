@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { CSSProperties } from 'vue'
 
 // Types
@@ -22,7 +23,7 @@ export type IBreadcrumbsProps = {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class to apply to the breadcrumbs wrapper
      */
@@ -46,5 +47,5 @@ export type IBreadcrumbsProps = {
      * Style to apply to the breadcrumbs
      */
     breadcrumbsStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['breadcrumbs']>
 }

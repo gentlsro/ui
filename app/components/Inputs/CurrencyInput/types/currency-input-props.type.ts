@@ -1,7 +1,8 @@
+import type { UIClasses, UIResolvedClasses } from '../../../../types/ui-config.type'
 // Types
 import type { INumberInputProps } from '../../NumberInput/types/number-input-props.type'
 
-export type ICurrencyInputProps = INumberInputProps & {
+export type ICurrencyInputProps = Omit<INumberInputProps, 'ui'> & {
   /**
    * The currency symbol
    */
@@ -21,4 +22,4 @@ export type ICurrencyInputProps = INumberInputProps & {
    * Whether to show the currency symbol
    */
   noCurrency?: boolean
-}
+} & { ui?: UIClasses<NonNullable<(INumberInputProps)['ui']>, UIResolvedClasses['currencyInput']> }

@@ -1,9 +1,10 @@
+import type { UIClasses, UIResolvedClasses } from '../../../../types/ui-config.type'
 // @unocss-include
 
 // Types
 import type { IFieldProps } from '../../../Field/types/field-props.type'
 
-export type IColorInputProps = IFieldProps & {
+export type IColorInputProps = Omit<IFieldProps, 'ui'> & {
   /**
    * Whether the color picker should automatically close when a color is selected
    *
@@ -45,4 +46,4 @@ export type IColorInputProps = IFieldProps & {
    * When true, converts TW-like values (for example `blue-600`) to HEX on blur
    */
   transformTw?: boolean
-} & IFieldProps
+} & Omit<IFieldProps, 'ui'> & { ui?: UIClasses<NonNullable<(IFieldProps)['ui']> & NonNullable<(IFieldProps)['ui']>, UIResolvedClasses['colorInput']> }

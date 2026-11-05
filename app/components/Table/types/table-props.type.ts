@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 // Types
 import type { CSSProperties } from 'vue'
 import type { NuxtLinkProps } from '#app'
@@ -645,7 +646,7 @@ export type ITableProps<
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /** Class applied to the action area in card and desktop rows. */
     rowActionsClass?: (payload: {
       row: IItem
@@ -829,5 +830,5 @@ export type ITableProps<
     totalsCellStyle?: (payload: {
       column: TableColumn
     }) => CSSProperties
-  }
+  }, UIResolvedClasses['table']>
 }

@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { CSSProperties } from 'vue'
 import type { SCROLLER_DEFAULT_PROPS } from '../constants/scroller-default-props.constant'
 
@@ -18,7 +19,7 @@ export type IHorizontalScrollerProps = IScrollerBaseProps & {
   /** Disable vertical-wheel conversion to horizontal scrolling. Native horizontal gestures still work. */
   noWheelScroll?: boolean
 
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class to apply to the container
      */
@@ -50,11 +51,11 @@ export type IHorizontalScrollerProps = IScrollerBaseProps & {
     }) => ClassType
 
     arrowStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['horizontalScroller']>
 }
 
 export type IVerticalScrollerProps = IScrollerBaseProps & {
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class to apply to the container
      */
@@ -89,7 +90,7 @@ export type IVerticalScrollerProps = IScrollerBaseProps & {
     }) => ClassType
 
     arrowStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['verticalScroller']>
 }
 
 // Backwards compatibility alias

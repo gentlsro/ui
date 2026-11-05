@@ -41,7 +41,7 @@ const mergedProps = computed(() => {
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.containerClass, {
     defaults: MAIN_BAR_DEFAULT_PROPS.ui.containerClass(),
   })
 })
@@ -52,7 +52,7 @@ const containerStyle = computed(() => {
 
 // Styles - content
 const contentClass = computed(() => {
-  return mergedProps.value?.ui?.contentClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.contentClass, {
     defaults: MAIN_BAR_DEFAULT_PROPS.ui.contentClass(),
   })
 })
@@ -63,7 +63,7 @@ const contentStyle = computed(() => {
 
 // Styles - titleWrapper
 const titleWrapperClass = computed(() => {
-  return mergedProps.value?.ui?.titleWrapperClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.titleWrapperClass, {
     defaults: MAIN_BAR_DEFAULT_PROPS.ui.titleWrapperClass(),
   })
 })
@@ -74,7 +74,7 @@ const titleWrapperStyle = computed(() => {
 
 // Styles - title
 const titleClass = computed(() => {
-  return mergedProps.value?.ui?.titleClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.titleClass, {
     defaults: MAIN_BAR_DEFAULT_PROPS.ui.titleClass(),
   })
 })
@@ -85,7 +85,7 @@ const titleStyle = computed(() => {
 
 // Styles - subtitle
 const subtitleClass = computed(() => {
-  return mergedProps.value?.ui?.subtitleClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.subtitleClass, {
     defaults: MAIN_BAR_DEFAULT_PROPS.ui.subtitleClass(),
   })
 })
@@ -96,7 +96,7 @@ const subtitleStyle = computed(() => {
 
 // Styles - actions
 const actionsClass = computed(() => {
-  return mergedProps.value?.ui?.actionsClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.actionsClass, {
     defaults: MAIN_BAR_DEFAULT_PROPS.ui.actionsClass(),
   })
 })

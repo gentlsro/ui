@@ -1,8 +1,5 @@
 // @unocss-include
 
-// Types
-import type { IInputWrapperProps } from '../types/input-wrapper-props.type'
-
 export const INPUT_WRAPPER_DEFAULT_PROPS = {
   ui: {
     wrapperClass() {
@@ -76,4 +73,4 @@ export const INPUT_WRAPPER_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies IInputWrapperProps
+}

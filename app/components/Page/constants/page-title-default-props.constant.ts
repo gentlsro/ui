@@ -1,8 +1,5 @@
 // @unocss-include
 
-// Types
-import type { IPageTitleProps } from '../types/page-title-props.type'
-
 export const PAGE_TITLE_DEFAULT_PROPS = {
   ui: {
     containerClass() {
@@ -32,5 +29,5 @@ export const PAGE_TITLE_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies IPageTitleProps
+}
 

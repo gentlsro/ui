@@ -81,7 +81,7 @@ const isLoading = defineModel<boolean>('isLoading', { default: false })
 
 const tableClass = computed(() => {
   return [
-    mergedProps.value?.ui?.containerClass?.({
+    resolveUIClass(mergedProps.value?.ui?.containerClass, {
       defaults: TABLE_DEFAULT_PROPS.ui.containerClass(),
     }),
     `separator--${props.separator}`,

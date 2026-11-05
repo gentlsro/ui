@@ -21,7 +21,7 @@ const mergedProps = computed(() => getComponentMergedProps('confirmation', props
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.containerClass, {
     defaults: CONFIRMATION_DEFAULT_PROPS.ui.containerClass(),
   })
 })
@@ -32,7 +32,7 @@ const containerStyle = computed(() => {
 
 // Styles - checkmark
 const checkmarkClass = computed(() => {
-  return mergedProps.value?.ui?.checkmarkClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.checkmarkClass, {
     defaults: CONFIRMATION_DEFAULT_PROPS.ui.checkmarkClass(),
   })
 })
@@ -43,7 +43,7 @@ const checkmarkStyle = computed(() => {
 
 // Styles - text
 const textClass = computed(() => {
-  return mergedProps.value?.ui?.textClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.textClass, {
     defaults: CONFIRMATION_DEFAULT_PROPS.ui.textClass(),
   })
 })
@@ -54,7 +54,7 @@ const textStyle = computed(() => {
 
 // Styles - actions
 const actionsClass = computed(() => {
-  return mergedProps.value?.ui?.actionsClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.actionsClass, {
     defaults: CONFIRMATION_DEFAULT_PROPS.ui.actionsClass(),
   })
 })

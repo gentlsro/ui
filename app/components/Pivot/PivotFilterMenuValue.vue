@@ -2,7 +2,7 @@
 import utilsConfig from '$utilsConfig'
 
 // Types
-import type { IInputProps } from '../Inputs/types/input-props.type'
+import type { ITextInputProps } from '../Inputs/TextInput/types/text-input-props.type'
 import type { ITableFilterItem } from '../Table/types/table-filter-item.type'
 
 // Models
@@ -89,7 +89,7 @@ const inInputProps = computed(() => {
       mask: {
         mask: /^[0-9,.\s]+$/,
       },
-    } as IInputProps
+    } as ITextInputProps
   }
 
   return {}

@@ -26,7 +26,7 @@ const { searchEl, isLoading, items, addItemArk } = useListStore()
 const search = defineModel<string>('search')
 
 const searchClass = computed(() => {
-  return props.ui?.searchClass?.({
+  return resolveUIClass(props.ui?.searchClass, {
     defaults: LIST_DEFAULT_PROPS.ui.searchClass(),
   })
 })

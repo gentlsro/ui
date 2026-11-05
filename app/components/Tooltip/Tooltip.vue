@@ -168,7 +168,7 @@ onBeforeUnmount(() => {
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.containerClass, {
     defaults: TOOLTIP_DEFAULT_PROPS.ui.containerClass(),
   })
 })
@@ -179,7 +179,7 @@ const containerStyle = computed(() => {
 
 // Styles - content
 const contentClass = computed(() => {
-  return mergedProps.value?.ui?.contentClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.contentClass, {
     defaults: TOOLTIP_DEFAULT_PROPS.ui.contentClass(),
   })
 })
@@ -190,7 +190,7 @@ const contentStyle = computed(() => {
 
 // Styles - title
 const titleClass = computed(() => {
-  return mergedProps.value?.ui?.titleClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.titleClass, {
     defaults: TOOLTIP_DEFAULT_PROPS.ui.titleClass(),
   })
 })
@@ -201,7 +201,7 @@ const titleStyle = computed(() => {
 
 // Styles - description
 const descriptionClass = computed(() => {
-  return mergedProps.value?.ui?.descriptionClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.descriptionClass, {
     defaults: TOOLTIP_DEFAULT_PROPS.ui.descriptionClass(),
   })
 })
@@ -212,7 +212,7 @@ const descriptionStyle = computed(() => {
 
 // Styles - arrow
 const arrowClass = computed(() => {
-  return mergedProps.value?.ui?.arrowClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.arrowClass, {
     defaults: TOOLTIP_DEFAULT_PROPS.ui.arrowClass(),
   })
 })

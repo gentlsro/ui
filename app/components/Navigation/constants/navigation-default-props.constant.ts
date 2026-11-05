@@ -1,8 +1,5 @@
 // @unocss-include
 
-// Types
-import type { INavigationProps } from '../types/navigation-props.type'
-
 export const NAVIGATION_DEFAULT_PROPS = {
   ui: {
     headerClass() {
@@ -31,4 +28,4 @@ export const NAVIGATION_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies INavigationProps
+}

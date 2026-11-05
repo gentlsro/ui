@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { CSSProperties } from 'vue'
 
 // Constants
@@ -27,7 +28,7 @@ export type IItemProps = {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class to apply to the container element
      */
@@ -51,5 +52,5 @@ export type IItemProps = {
      * Style to apply to the focus helper overlay
      */
     focusHelperStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['item']>
 }

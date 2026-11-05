@@ -1,7 +1,8 @@
+import type { UIClasses, UIResolvedClasses } from '../../../../types/ui-config.type'
 // Types
 import type { IInputProps } from '../../types/input-props.type'
 
-export type IDateTimeFullInputProps = IInputProps & {
+export type IDateTimeFullInputProps = Omit<IInputProps, 'ui'> & {
   /**
    * An array or method that determines which days are allowed to be selected
    */
@@ -32,4 +33,4 @@ export type IDateTimeFullInputProps = IInputProps & {
    * NOTE: This will not modify the actual value => only affects the display value
    */
   utc?: boolean
-}
+} & { ui?: UIClasses<NonNullable<(IInputProps)['ui']>, UIResolvedClasses['dateTimeFullInput']> }

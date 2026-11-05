@@ -33,7 +33,7 @@ const cells = computed<IPivotRowItemCell<T>[]>(() => {
 })
 
 const rowItemClass = computed(() => {
-  return ui.value?.rowItemClass?.({
+  return resolveUIClass(ui.value?.rowItemClass, {
     defaults: PIVOT_DEFAULT_PROPS.ui.rowItemClass(),
   })
 })

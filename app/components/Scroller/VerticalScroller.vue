@@ -51,7 +51,7 @@ useResizeObserver(scrollEl, () => {
 
 // Styles
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.containerClass, {
     defaults: SCROLLER_DEFAULT_PROPS.ui.verticalContainerClass(),
   })
 })
@@ -61,7 +61,7 @@ const containerStyle = computed(() => {
 })
 
 const contentClass = computed(() => {
-  return mergedProps.value?.ui?.contentClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.contentClass, {
     defaults: SCROLLER_DEFAULT_PROPS.ui.verticalContentClass(),
   })
 })
@@ -71,7 +71,7 @@ const contentStyle = computed(() => {
 })
 
 const arrowClass = computed(() => {
-  return mergedProps.value?.ui?.arrowClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.arrowClass, {
     defaults: SCROLLER_DEFAULT_PROPS.ui.arrowClass(),
   })
 })

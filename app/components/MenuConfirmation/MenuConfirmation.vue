@@ -70,7 +70,7 @@ defineExpose({
 
 // Styles - confirmBtn
 const confirmBtnClass = computed(() => {
-  return mergedProps.value?.ui?.confirmBtnClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.confirmBtnClass, {
     defaults: MENU_CONFIRMATION_DEFAULT_PROPS.ui.confirmBtnClass(),
   })
 })
@@ -81,7 +81,7 @@ const confirmBtnStyle = computed(() => {
 
 // Styles - confirmationText
 const confirmationTextClass = computed(() => {
-  return mergedProps.value?.ui?.confirmationTextClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.confirmationTextClass, {
     defaults: MENU_CONFIRMATION_DEFAULT_PROPS.ui.confirmationTextClass(),
   })
 })

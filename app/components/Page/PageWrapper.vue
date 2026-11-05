@@ -56,7 +56,7 @@ onMounted(() => {
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.containerClass, {
     defaults: PAGE_WRAPPER_DEFAULT_PROPS.ui.containerClass(),
   })
 })
@@ -67,7 +67,7 @@ const containerStyle = computed(() => {
 
 // Styles - content
 const contentClass = computed(() => {
-  return mergedProps.value?.ui?.contentClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.contentClass, {
     defaults: PAGE_WRAPPER_DEFAULT_PROPS.ui.contentClass(),
   })
 })
