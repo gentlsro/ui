@@ -141,8 +141,12 @@ const contentStyle = computed(() => {
 </template>
 
 <style lang="scss" scoped>
+// A thin scrollbar: the default one crowds the controls at the end of the rows
 .list-content {
   @apply grow;
+
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, currentColor 35%, transparent) transparent;
 }
 
 .list-content.is-dense {
