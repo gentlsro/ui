@@ -7,7 +7,6 @@ const props = withDefaults(defineProps<ITextInputProps>(), {
 })
 
 defineEmits<{
-  (e: 'update:modelValue', val?: string | undefined | null): void
   (e: 'focus'): void
   (e: 'blur', ev: FocusEvent): void
   (e: 'enter', event: KeyboardEvent): void
@@ -21,6 +20,7 @@ const mergedProps = computed(() => {
 
 // Layout
 const searchEl = useTemplateRef('searchEl')
+const model = defineModel<ITextInputProps['modelValue']>()
 
 defineExpose({
   clear: (shouldFocusAfterClear?: boolean) => searchEl.value?.clear(shouldFocusAfterClear),
@@ -34,12 +34,12 @@ defineExpose({
   <TextInput
     ref="searchEl"
     v-bind="$props"
+    v-model="model"
     class="control"
     name="_search"
     :ui="mergedProps.ui"
     :placeholder="placeholder || $t('general.search')"
     clearable
-    @update:model-value="$emit('update:modelValue', $event)"
     @blur="$emit('blur', $event)"
     @focus="$emit('focus')"
     @clear="$emit('clear')"
