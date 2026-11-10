@@ -23,6 +23,14 @@ const mergedProps = computed(() => {
 const searchEl = useTemplateRef('searchEl')
 const model = ref<ITextInputProps['modelValue']>(props.modelValue)
 
+// The input keeps its own value (it reports changes debounced), so a value set
+// from outside later, e.g. a table's search read from the URL, has to be taken over
+watch(() => props.modelValue, value => {
+  if (value !== model.value) {
+    model.value = value
+  }
+})
+
 defineExpose({
   clear: (shouldFocusAfterClear?: boolean) => searchEl.value?.clear(shouldFocusAfterClear),
   focus: () => searchEl.value?.focus(),
