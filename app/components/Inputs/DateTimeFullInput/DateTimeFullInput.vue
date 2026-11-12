@@ -210,8 +210,7 @@ function placeCursorOnTime() {
     focusInputWithoutClosingPicker(input)
   }
 
-  // vue-imask exposes a readonly proxy; cursor writes on it are ignored.
-  toRaw(mask).updateCursor(getTimeCursorPosition())
+  mask.updateCursor(getTimeCursorPosition())
 }
 
 function handleDateSelect(val?: Datetime) {

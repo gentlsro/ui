@@ -89,7 +89,7 @@ export default defineNuxtConfig({
 
   build: {
     // No touchy or I cut fingers
-    transpile: ['imask', 'vue-imask'],
+    transpile: ['imask'],
   },
 
   future: {
