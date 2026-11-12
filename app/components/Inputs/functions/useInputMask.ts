@@ -1,7 +1,7 @@
 import type { Ref } from 'vue'
 import { useIMask } from 'vue-imask'
 import { createMask, Masked } from 'imask'
-import { computed, shallowRef, toRaw, watch } from 'vue'
+import { computed, onMounted, shallowRef, toRaw, watch } from 'vue'
 import type { FactoryOpts, InputMask } from 'imask'
 
 type InputMaskOptions = {
@@ -38,6 +38,15 @@ export function useInputMask(maskRef: Ref<FactoryOpts>, options: InputMaskOption
       }
     },
   })
+
+  // vue-imask creates its mask when the element arrives and again, unguarded, on mount. An update that waited for a
+  // lazily loaded component runs between the input's ref and the mounted hook (Vue queues it as a post effect) and
+  // flushes that watcher: the second mask left the first one bound to the input and wrote the typed value of an
+  // empty number mask (0) into the field. vue-imask gets the element once the component has mounted, so only its
+  // watcher creates the mask
+  const el = shallowRef<typeof binding.el.value>()
+
+  onMounted(() => watch(el, value => binding.el.value = value, { immediate: true, flush: 'sync' }))
 
   let headless = createMask({ mask: maskOptions.value.mask })
 
@@ -136,7 +145,7 @@ export function useInputMask(maskRef: Ref<FactoryOpts>, options: InputMaskOption
   })
 
   return {
-    el: binding.el,
+    el,
     mask: binding.mask,
     // Writable computed refs preserve the callback API without losing writes
     // of equal typed values. All setters go through the same adapter.
