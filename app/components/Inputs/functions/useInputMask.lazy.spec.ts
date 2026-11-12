@@ -32,6 +32,9 @@ import { useInputMask } from './useInputMask'
  * 5. The mask does not exist yet in the field's or a parent's mounted hook, or right after the app has mounted.
  * 6. A field mounted the usual way (no update while the chunk loads) changes.
  * 7. Unmounting leaves the mask bound to the input.
+ * 8. A populated pattern mask no longer reports `accept` and `complete` once after its component has mounted (vue-imask
+ *    did, by applying the options again; a date field writes its normalized value to the model then), or a number
+ *    mask starts to.
  */
 const apps: App[] = []
 
@@ -224,5 +227,41 @@ describe('a masked field mounted the usual way', () => {
 
     expect(probe.api!.mask.value, 'fM 7: no mask is left').toBeUndefined()
     expect(mask?.el, 'fM 7: the mask let go of the input').toBeUndefined()
+  })
+})
+
+describe('accept and complete after mounting', () => {
+  async function mountWith(mask: FactoryOpts, initialValue: unknown) {
+    const events: string[] = []
+    let isMounted = false
+    const Field = defineComponent({
+      setup() {
+        const api = useInputMask(shallowRef(mask), {
+          initialValue,
+          isEmptyValue: value => value == null,
+          onAccept: () => events.push(`accept ${isMounted ? 'after' : 'before'} mount`),
+          onComplete: () => events.push(`complete ${isMounted ? 'after' : 'before'} mount`),
+        })
+
+        onMounted(() => isMounted = true)
+
+        return () => h('input', { ref: api.el, value: api.masked.value })
+      },
+    })
+    const app = createApp(Field)
+
+    apps.push(app)
+    app.mount(document.body.appendChild(document.createElement('div')))
+    await settle()
+
+    return events
+  }
+
+  it('fM 8: a populated pattern mask reports both once, an incomplete one accept only, a number mask nothing', async () => {
+    expect(await mountWith({ mask: '00:00', lazy: false }, '1234')).toEqual(['accept after mount', 'complete after mount'])
+    expect(await mountWith({ mask: '+{420} 000 000 000' }, '77712')).toEqual(['accept after mount'])
+    expect(await mountWith({ mask: Number, thousandsSeparator: ' ' } as FactoryOpts, 1234.5)).toEqual([])
+    expect(await mountWith({ mask: Number } as FactoryOpts, null)).toEqual([])
+    expect(await mountWith({ mask: /^[a-z]*$/ }, 'abc')).toEqual([])
   })
 })
