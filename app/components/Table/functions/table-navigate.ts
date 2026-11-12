@@ -36,12 +36,6 @@ export function tableNavigate(payload: {
     currentParams.set(key, value)
   })
 
-  // Sentry throws errors here for some reason...
-  const query = currentParams.entries()?.reduce((agg, [key, value]) => {
-    agg[key] = decodeURIComponent(value)
-
-    return agg
-  }, {} as IItem) ?? {}
-
-  navigateTo({ query, replace: true })
+  // `URLSearchParams` values are already decoded, decoding them again breaks values like `100%`
+  navigateTo({ query: Object.fromEntries(currentParams), replace: true })
 }
