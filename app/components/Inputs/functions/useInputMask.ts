@@ -73,6 +73,11 @@ export function useInputMask(maskRef: Ref<FactoryOpts>, options: InputMaskOption
   watch(el, bind, { flush: 'sync' })
   onScopeDispose(() => bind(null))
 
+  // vue-imask applied the options once more in the flush after it had created the mask, which makes the mask's
+  // model the adapter's own. For a pattern mask that fires `accept` (and `complete`) after the component has mounted,
+  // and consumers follow it: a date field writes its normalized value to the model then. Kept, at the same point
+  watch(mask, live => live?.updateOptions({ mask: maskOptions.value.mask }), { once: true })
+
   function clear() {
     setUnmaskedValue('')
   }
