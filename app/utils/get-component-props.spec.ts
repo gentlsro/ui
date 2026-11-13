@@ -3,9 +3,9 @@ import { join, relative, resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { compileScript, parse } from 'vue/compiler-sfc'
 
-import { defaultComponentsConfig } from '../app/config'
+import { defaultComponentsConfig } from '../config'
 
-const COMPONENTS_DIR = resolve(__dirname, '../app/components')
+const COMPONENTS_DIR = resolve(__dirname, '../components')
 
 // Matches `...getComponentProps('section')` and `...getComponentProps('section', ['a', 'b'])`
 const SPREAD_REGEX = /\.\.\.getComponentProps\('(\w+)'(?:,\s*\[([^\]]*)\])?\)/g
