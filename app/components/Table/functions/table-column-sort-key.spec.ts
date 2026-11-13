@@ -4,7 +4,7 @@ import {
   TABLE_HELPER_COL_SORT,
   tableColumnSortKey,
   tableCompareColumnsBySort,
-} from '../app/components/Table/functions/table-column-sort-key'
+} from './table-column-sort-key'
 
 describe('table column sort key', () => {
   it('pins helper columns first regardless of `_internalSort`', () => {
