@@ -77,6 +77,7 @@ const [
       loadMetaData,
       loadData,
       queryBuilderProps,
+      columnSelectionDialogProps,
       autofitConfig,
       features,
       paginationConfig,
@@ -285,6 +286,7 @@ const [
   const loadMetaData = ref<ITableProps['loadMetaData']>(tableProps?.loadMetaData)
   const loadData = ref<ITableProps['loadData']>(tableProps?.loadData)
   const queryBuilderProps = ref(tableProps?.queryBuilderProps) as Ref<ITableProps['queryBuilderProps']>
+  const columnSelectionDialogProps = ref(tableProps?.columnSelectionDialogProps) as Ref<ITableProps['columnSelectionDialogProps']>
   const autofitConfig = ref<ITableProps['autoFit']>(tableProps?.autoFit)
   const features = ref<ITableProps['features']>(tableProps?.features ?? [])
   const paginationConfig = ref<NonNullable<ITableProps['paginationConfig']>>(
@@ -985,6 +987,7 @@ const [
     loadMetaData,
     loadData,
     queryBuilderProps,
+    columnSelectionDialogProps,
     autofitConfig,
     features,
     paginationConfig,
