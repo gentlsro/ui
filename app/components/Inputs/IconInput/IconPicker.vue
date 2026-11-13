@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { UIProps, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { CSSProperties } from 'vue'
 
 // Types
@@ -10,7 +11,7 @@ type IProps = {
   search?: string
   noSearch?: boolean
   minSearchLength?: number
-  searchInputProps?: ITextInputProps
+  searchInputProps?: UIProps<ITextInputProps, UIResolvedClasses['searchInput']>
   ui?: {
     searchClass?: ClassType
     searchStyle?: CSSProperties

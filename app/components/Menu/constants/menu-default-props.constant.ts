@@ -1,8 +1,5 @@
 // @unocss-include
 
-// Types
-import type { IMenuProps } from '../types/menu-props.type'
-
 export const MENU_DEFAULT_PROPS = {
   ui: {
     menuClass() {
@@ -70,4 +67,4 @@ export const MENU_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies IMenuProps
+}

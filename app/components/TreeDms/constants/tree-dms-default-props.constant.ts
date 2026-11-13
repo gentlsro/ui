@@ -1,7 +1,5 @@
 // @unocss-include
 
-import type { ITreeDmsProps } from '../types/tree-dms-props.type'
-
 export const TREE_DMS_DEFAULT_PROPS = {
   ui: {
     labelClass() {
@@ -13,4 +11,4 @@ export const TREE_DMS_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies Pick<ITreeDmsProps<any>, 'ui'>
+}

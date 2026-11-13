@@ -1,7 +1,8 @@
+import type { UIClasses, UIResolvedClasses } from '../../../../types/ui-config.type'
 // Types
 import type { IInputProps } from '../../types/input-props.type'
 
-export type INumberInputProps = IInputProps & {
+export type INumberInputProps = Omit<IInputProps, 'ui'> & {
   /**
    * The number of decimal places to display
    */
@@ -34,4 +35,4 @@ export type INumberInputProps = IInputProps & {
    * NOTE - use `null` to remove the step
    */
   step?: number | 'auto' | null
-}
+} & { ui?: UIClasses<NonNullable<(IInputProps)['ui']>, UIResolvedClasses['numberInput']> }

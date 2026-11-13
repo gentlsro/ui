@@ -1,13 +1,4 @@
 // @unocss-include
-import type { IListProps } from '../types/list-props.type'
-
-function p<T>(keys: (keyof T)[], value: T) {
-  return keys.reduce((agg, key) => {
-    agg[key] = value[key]
-
-    return agg
-  }, {} as Record<keyof T, any>)
-}
 
 export const LIST_DEFAULT_PROPS = {
   ui: {
@@ -49,7 +40,7 @@ export const LIST_DEFAULT_PROPS = {
       // Focus while selected
       const focusSelected = '[&.is-focused.is-selected:not(.uses-checkbox)]:(outline-1 outline-dashed outline-offset--1 outline-primary dark:(outline-blue-400))'
 
-      const classes = {
+      return {
         base,
         checkbox,
         selectionNoCheckbox,
@@ -60,10 +51,6 @@ export const LIST_DEFAULT_PROPS = {
         col,
         all: `${base} ${focus} ${selectionNoCheckbox} ${selectionMultiCheckbox} ${focusSelected} ${row}`,
       } as const
-
-      return Object.assign(classes, {
-        p: (...keys: (keyof typeof classes)[]) => keys.map(k => classes[k]).join(' '),
-      })
     },
 
     rowContentClass() {
@@ -133,4 +120,4 @@ export const LIST_DEFAULT_PROPS = {
     },
 
   },
-} satisfies IListProps
+}

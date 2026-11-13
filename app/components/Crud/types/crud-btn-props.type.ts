@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { AllowedComponentProps, CSSProperties } from 'vue'
 
 // Types
@@ -69,7 +70,7 @@ export type ICrudBtnsProps = {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class to apply to the container
      */
@@ -81,7 +82,7 @@ export type ICrudBtnsProps = {
      * Style to apply to the container
      */
     containerStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['crudBtns']>
 }
 
 export type ICrudEditBtnProps = {
@@ -103,7 +104,7 @@ export type ICrudEditBtnProps = {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class to apply to the wrapper
      */
@@ -127,5 +128,5 @@ export type ICrudEditBtnProps = {
      * Style to apply to the button
      */
     btnStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['crudEditBtn']>
 }

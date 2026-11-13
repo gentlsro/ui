@@ -114,7 +114,7 @@ function addEventListener() {
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.containerClass, {
     defaults: YEAR_SELECTOR_DEFAULT_PROPS.ui.containerClass(),
   })
 })
@@ -125,7 +125,7 @@ const containerStyle = computed(() => {
 
 // Styles - previous button
 const previousBtnClass = computed(() => {
-  return mergedProps.value?.ui?.previousBtnClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.previousBtnClass, {
     defaults: YEAR_SELECTOR_DEFAULT_PROPS.ui.previousBtnClass(),
   })
 })
@@ -136,7 +136,7 @@ const previousBtnStyle = computed(() => {
 
 // Styles - next button
 const nextBtnClass = computed(() => {
-  return mergedProps.value?.ui?.nextBtnClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.nextBtnClass, {
     defaults: YEAR_SELECTOR_DEFAULT_PROPS.ui.nextBtnClass(),
   })
 })
@@ -147,7 +147,7 @@ const nextBtnStyle = computed(() => {
 
 // Styles - menu container
 const menuContainerClass = computed(() => {
-  return mergedProps.value?.ui?.menuContainerClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.menuContainerClass, {
     defaults: YEAR_SELECTOR_DEFAULT_PROPS.ui.menuContainerClass(),
   })
 })
@@ -158,7 +158,7 @@ const menuContainerStyle = computed(() => {
 
 // Styles - year button
 const yearBtnClass = computed(() => {
-  return mergedProps.value?.ui?.yearBtnClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.yearBtnClass, {
     defaults: YEAR_SELECTOR_DEFAULT_PROPS.ui.yearBtnClass(),
   })
 })

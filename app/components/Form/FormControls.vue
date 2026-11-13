@@ -40,7 +40,7 @@ const editControls = computed(() => {
 
 // Styles - submit wrapper
 const submitWrapperClass = computed(() => {
-  return props.ui?.submitWrapperClass?.({
+  return resolveUIClass(props.ui?.submitWrapperClass, {
     defaults: FORM_DEFAULT_PROPS.ui.submitWrapperClass(),
   })
 })
@@ -51,7 +51,7 @@ const submitWrapperStyle = computed(() => {
 
 // Styles - submit
 const submitClass = computed(() => {
-  return props.ui?.submitClass?.({
+  return resolveUIClass(props.ui?.submitClass, {
     defaults: FORM_DEFAULT_PROPS.ui.submitClass(),
   })
 })
@@ -62,7 +62,7 @@ const submitStyle = computed(() => {
 
 // Styles - cancel
 const cancelClass = computed(() => {
-  return props.ui?.cancelClass?.({
+  return resolveUIClass(props.ui?.cancelClass, {
     defaults: FORM_DEFAULT_PROPS.ui.cancelClass(),
   })
 })

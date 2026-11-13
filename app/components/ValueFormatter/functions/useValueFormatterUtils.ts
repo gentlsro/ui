@@ -2,7 +2,7 @@
 import type { IValueFormatterProps } from '../types/value-formatter-props.type'
 
 export function useValueFormatterUtils() {
-  function getValueFormatterProps(props: IValueFormatterProps) {
+  function getValueFormatterProps(props: Omit<IValueFormatterProps, 'ui'>) {
     return reactivePick(props, [
       'value',
       'dataType',

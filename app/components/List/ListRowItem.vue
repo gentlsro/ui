@@ -70,7 +70,7 @@ function handleClick() {
 
 // Styles - Row
 const rowClass = computed(() => {
-  return props.ui?.rowClass?.({
+  return resolveUIClass(props.ui?.rowClass, {
     groupsCount: groupBy.value.length,
     row: item.value.ref,
     isLast: props.isLast,
@@ -111,7 +111,7 @@ const rowStyle = computed(() => {
 
 // Styles - Row Content
 const rowContentClass = computed(() => {
-  return props.ui?.rowContentClass?.({
+  return resolveUIClass(props.ui?.rowContentClass, {
     row: item.value.ref,
     groupsCount: groupBy.value.length,
     isLast: props.isLast,

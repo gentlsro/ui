@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { CSSProperties } from 'vue'
 
 // Constants
@@ -12,7 +13,7 @@ export type IPageTitleProps = {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class to apply to the container
      */
@@ -48,5 +49,5 @@ export type IPageTitleProps = {
      * Style to apply to the title
      */
     titleStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['pageTitle']>
 }

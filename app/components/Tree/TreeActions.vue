@@ -21,7 +21,7 @@ const store = useTreeStore()
 
 // Styles - Actions
 const actionsClass = computed(() => {
-  return props.ui?.actionsClass?.({
+  return resolveUIClass(props.ui?.actionsClass, {
     defaults: TREE_DEFAULT_PROPS.ui.actionsClass(),
   })
 })

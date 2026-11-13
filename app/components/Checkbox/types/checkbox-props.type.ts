@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { CSSProperties } from 'vue'
 
 // Constants
@@ -88,7 +89,7 @@ export type ICheckboxProps = {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class for the container (label element)
      */
@@ -136,7 +137,7 @@ export type ICheckboxProps = {
      * Style for the focus/hover helper overlay
      */
     focusHelperStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['checkbox']>
 
   /**
    * The props that should be passed to the input tag (<input>)

@@ -2,7 +2,7 @@
 // Types
 import type { INumberInputProps } from './types/number-input-props.type'
 
-const props = defineProps<INumberInputProps>()
+const props = defineProps<Omit<INumberInputProps, 'ui'> & { ui?: unknown }>()
 
 // Layout
 const model = defineModel<INumberInputProps['modelValue']>()

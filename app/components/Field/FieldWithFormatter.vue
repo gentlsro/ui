@@ -9,6 +9,7 @@ const props = withDefaults(defineProps<IFieldWithFormatterProps>(), {
   ...getComponentProps('fieldWithFormatter'),
 })
 
+const mergedProps = computed(() => getComponentMergedProps('fieldWithFormatter', props))
 const { getFieldProps } = useFieldUtils()
 const fieldProps = getFieldProps(props)
 </script>
@@ -17,10 +18,11 @@ const fieldProps = getFieldProps(props)
   <Field
     v-bind="fieldProps"
     has-content
-    :ui
+    :ui="mergedProps.ui"
     :model-value
   >
     <ValueFormatter
+      :ui="mergedProps.ui"
       :value="modelValue"
       :data-type
     />

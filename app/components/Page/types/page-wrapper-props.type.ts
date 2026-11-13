@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { CSSProperties } from 'vue'
 
 // Types
@@ -35,7 +36,7 @@ export type IPageWrapperProps = {
    */
   pageTitleProps?: Partial<IPageTitleProps>
 
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class to apply to the container
      */
@@ -59,5 +60,5 @@ export type IPageWrapperProps = {
      * Style to apply to the content
      */
     contentStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['pageWrapper']>
 }

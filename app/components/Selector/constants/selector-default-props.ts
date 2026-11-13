@@ -37,4 +37,4 @@ export const SELECTOR_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies ISelectorProps
+} satisfies Omit<ISelectorProps, 'ui'> & { ui: object }

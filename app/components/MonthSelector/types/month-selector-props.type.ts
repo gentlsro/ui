@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { CSSProperties } from 'vue'
 
 // Constants
@@ -22,7 +23,7 @@ export type IMonthSelectorProps = {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class to apply to the container
      */
@@ -94,5 +95,5 @@ export type IMonthSelectorProps = {
      * Style to apply to each month button in the grid
      */
     monthBtnStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['monthSelector']>
 }

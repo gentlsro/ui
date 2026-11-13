@@ -80,7 +80,7 @@ const scrollerProps = computed(() => {
 })
 
 const contentClass = computed(() => {
-  return props.ui?.contentClass?.({
+  return resolveUIClass(props.ui?.contentClass, {
     defaults: TABLE_DEFAULT_PROPS.ui.contentClass(),
   })
 })

@@ -1,8 +1,5 @@
 // @unocss-include
 
-// Types
-import type { IFormProps } from '../types/form-props.type'
-
 export const FORM_DEFAULT_PROPS = {
   ui: {
     containerClass() {
@@ -79,4 +76,4 @@ export const FORM_DEFAULT_PROPS = {
       } as const
     },
   },
-} satisfies IFormProps
+}

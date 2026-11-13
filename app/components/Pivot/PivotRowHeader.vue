@@ -19,7 +19,7 @@ const {
 } = usePivotRowResizing<T>()
 
 const rowHeaderClass = computed(() => {
-  return ui.value?.rowHeaderClass?.({
+  return resolveUIClass(ui.value?.rowHeaderClass, {
     defaults: PIVOT_DEFAULT_PROPS.ui.rowHeaderClass(),
   })
 })

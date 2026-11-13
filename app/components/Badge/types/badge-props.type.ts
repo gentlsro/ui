@@ -1,3 +1,4 @@
+import type { UIClasses, UIResolvedClasses } from '../../../types/ui-config.type'
 import type { CSSProperties } from 'vue'
 
 // Constants
@@ -12,7 +13,7 @@ export type IBadgeProps = {
   /**
    * Visual configuration
    */
-  ui?: {
+  ui?: UIClasses<{
     /**
      * Class to apply to the badge
      */
@@ -24,5 +25,5 @@ export type IBadgeProps = {
      * Style to apply to the container
      */
     containerStyle?: () => CSSProperties
-  }
+  }, UIResolvedClasses['badge']>
 }

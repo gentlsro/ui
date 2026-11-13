@@ -83,7 +83,7 @@ const activeTab = computed(() => {
 
 // Styles - container
 const containerClass = computed(() => {
-  return mergedProps.value?.ui?.containerClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.containerClass, {
     defaults: TABS_DEFAULT_PROPS.ui.containerClass(),
   })
 })
@@ -94,7 +94,7 @@ const containerStyle = computed(() => {
 
 // Styles - tab
 const tabClass = computed(() => {
-  return mergedProps.value?.ui?.tabClass?.({
+  return resolveUIClass(mergedProps.value?.ui?.tabClass, {
     defaults: TABS_DEFAULT_PROPS.ui.tabClass(),
   })
 })
