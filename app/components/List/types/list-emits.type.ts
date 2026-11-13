@@ -1,9 +1,13 @@
 // Types
 import type { IListItem } from './list-item.type'
 import type { IListItemToAdd } from './list-item-to-add.type'
+import type { IListProps } from './list-props.type'
 
 export type IListEmits = {
   (e: 'submit'): void
+  (e: 'update:search', search: IListProps['search']): void
+  (e: 'update:addedItems', addedItems: IListProps['addedItems']): void
+  (e: 'update:selection', selection: IListProps['selection']): void
   (e: 'select:item', item: IListItem): void
   (e: 'unselect:item', item: IListItem): void
   (e: 'add:item', item: IListItemToAdd): void
