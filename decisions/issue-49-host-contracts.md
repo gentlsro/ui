@@ -2,6 +2,8 @@
 
 Status: part 1 implemented (safe guard); parts 2 and 3 need a maintainer decision
 Base: `origin/2.3` @ `6855bfda` (the issue cites `50ad5f6`, an ancestor; the relevant lines are unchanged)
+Re-checked against `origin/2.3` @ `9cd99e37` on 2026-11-14: all three contracts are still there. The locale
+requirements and the icon advice below were corrected, and the limits of the `DocumentationBtn` override were added.
 
 ## Problem
 
@@ -10,7 +12,7 @@ setup, and a custom icon directory at a specific path. None of this is documente
 
 ## 1. `DocumentationBtn` referenced but never shipped: confirmed, fixed here
 
-- `app/components/Table/TableColumnSelectionBtn.vue:154` renders `<DocumentationBtn path="columnSelection" />`.
+- `app/components/Table/TableColumnSelectionBtn.vue:174` renders `<DocumentationBtn path="columnSelection" />`.
 - Before this PR, no component with that name existed in the layer, and the same was true on `master`
   (`client/components/Table/TableColumnSelectionBtn.vue:152`). It also does not exist anywhere in the monorepo:
   LC, GentlCore, ExtendedUI and DynamicGrid have no `DocumentationBtn`. So the monorepo apps hit the same
@@ -28,6 +30,18 @@ component priority, and when names collide the higher-priority component silentl
 This makes `DocumentationBtn` a documented override point instead of an accidental dependency. The only prop the
 layer passes today is `path` (a documentation key, currently `'columnSelection'`).
 
+**The override has to be a component file.** Overriding means a component named `DocumentationBtn` in a components
+directory of the host, or of a layer closer to the host. Two other ways of providing it worked while the layer
+shipped nothing, and lose to the stub now (from reading the Nuxt 4.5 source, not run):
+
+- A plugin calling `vueApp.component('DocumentationBtn', …)`. Once a component of that name is registered by the
+  scan, Nuxt's loader rewrites `resolveComponent('DocumentationBtn')` into a direct import of it, so the global
+  registration is never consulted.
+- A module calling `addComponent()` without a `priority`. Its default priority is 0, the layer's scanned directory
+  is at least 1, and the lower one is skipped.
+
+No monorepo app does either, but the migration notes should say it.
+
 ## 2. The layer registers its own i18n locales into the host: confirmed, with nuances
 
 - `nuxt.config.ts:146-172`: `strategy: 'prefix_and_default'`, `detectBrowserLanguage` (cookie `lang`),
@@ -41,11 +55,16 @@ layer passes today is `path` (a documentation key, currently `'columnSelection'`
   hosts, but a host can override it.
 - **Not mentioned in the issue:**
   - The locales are not only cosmetic. The layer's own UI strings (`i18n/en-US_ui.json`, `cs-CZ_ui.json`, for
-    example `table.customizeColumns`) are keyed by these locale codes. A host using `en` instead of `en-US` gets
-    untranslated keys in layer components unless it also loads the layer's messages under its own code.
-  - The base layer **Utilities** declares the same two locales, plus `language`, and reads the custom
-    `dateFormat` locale property (`packages/Utilities/app/composables/useLocale.ts`, `getLocaleDateFormat`). Dropping
-    the locales from UI alone would not remove them from the host.
+    example `table.customizeColumns`) are keyed by these locale codes. A host using `en` instead of `en-US` still
+    gets the **English** strings, because Utilities sets `fallbackLocale: 'en-US'`
+    (`packages/Utilities/i18n.config.ts:13`). A host locale with no layer messages (say `de`) therefore shows
+    English in layer components, not raw keys. To get translated layer strings, the host has to load messages under
+    its own code.
+  - The base layer **Utilities** declares the same two locales, plus `language`. Dropping the locales from UI alone
+    would not remove them from the host.
+  - The extra locale properties are optional. `dateFormat` is read by `getLocaleDateFormat`
+    (`packages/Utilities/app/composables/useLocale.ts:27`) and falls back to `YYYY-MM-DD` when missing. Nothing in
+    Utilities reads a `currency` property from the locale object.
   - `uno.config.ts:151-155` safelists the two flag icons for these locales.
 
 Monorepo: `apps/lc/nuxt.config.ts` declares the same `en-US` / `cs-CZ` locales and `defaultLocale: 'en-US'`
@@ -62,17 +81,18 @@ monorepo. However, LC does **not** set `strategy`, so it relies on this layer's 
   `client/assets/icons`. Nuxt 4 hosts keep assets in `app/assets`, and in the monorepo the cwd is `apps/lc`, where no
   `client/` exists. A missing directory quietly yields no icons, so `i-custom:*` resolves to nothing and there is no
   error.
-- Monorepo: no `i-custom:` usage anywhere, apart from a unit test (`app/functions/resolve-icon-value.spec.ts:66-67`)
-  that only checks class-string passthrough.
+- Monorepo: no `i-custom:` usage anywhere. (The unit test that mentioned it,
+  `app/functions/resolve-icon-value.spec.ts`, was deleted on 2.3 in `b5c4cd4c`.)
 
 ## Options
 
 ### i18n
 
 1. **Keep the layer locales, but document them (recommended short-term).** State that the layer ships `en-US` and
-   `cs-CZ` messages, and that the Utilities layer requires `dateFormat` / `currency` on locale objects. Hosts must
-   use these codes or map the messages themselves. Also document the fallthrough of `strategy`, `defaultLocale` and
-   `detectBrowserLanguage`.
+   `cs-CZ` messages, that other host locales fall back to `en-US` for layer strings, and that `dateFormat` on a
+   locale object is optional (default `YYYY-MM-DD`). Hosts that want layer strings in another language load the
+   messages under their own code; they do not have to rename their locales. Also document the fallthrough of
+   `strategy`, `defaultLocale` and `detectBrowserLanguage`.
 2. **Stop setting routing options in the layer.** Remove `strategy` and `detectBrowserLanguage` from the layer so they
    fall back to `@nuxtjs/i18n` defaults (or to the host's settings), and keep only `locales` / `langDir`. This changes
    routing for hosts that did not set `strategy`. **That includes LC.** `apps/lc/nuxt.config.ts` sets no `strategy`,
@@ -80,14 +100,20 @@ monorepo. However, LC does **not** set `strategy`, so it relies on this layer's 
    lands. No other monorepo layer sets `strategy`.
 3. **Contribute messages without locales.** Use the `i18n:registerModule` hook, or a documented helper, so that the
    layer only adds messages to whatever locales the host declares. This is the cleanest for foreign hosts, but it is a
-   bigger change and it has to be done in Utilities too.
+   bigger change and it has to be done in Utilities too. To check first: locales registered through that hook may be
+   added to the host's list the same way layer locales are, in which case they need filtering against the host's
+   own locales.
 
 ### Icon collection
 
 1. **Make the host path explicit (recommended).** Resolve relative to the host `srcDir` (`app/assets/icons`), for
    example by reading `NUXT_…` / layer config. Alternatively, document that hosts wanting `i-custom:*` should add
    their own `presetIcons({ collections: { custom: … } })` in their `uno.config.ts`, and remove the collection from
-   the layer.
+   the layer. The host's preset has to come **before** the layer config in `mergeConfigs`: UnoCSS keeps the first
+   preset of each name (verified on `@unocss/core@66.10.0`), so one appended after the layer config is dropped, and
+   removing only the layer's `custom` collection does not change that. A host preset placed first replaces the
+   layer's whole `presetIcons` instance, so it must repeat the options it wants to keep (`scale`, `unit`,
+   `extraProperties`).
 2. **Ship an icon directory inside the layer** (`resolve('./app/assets/icons')` relative to the layer) if the layer
    ever needs its own custom icons. It needs none today.
 3. **Leave the line and document it.** This is the weakest option, because the default path no longer matches Nuxt 4.
@@ -97,7 +123,7 @@ monorepo. However, LC does **not** set `strategy`, so it relies on this layer's 
 - Merge the `DocumentationBtn` stub.
 - i18n: take option 1 now. Consider option 2 in coordination with Utilities and LC.
 - Icons: remove the `custom` collection from the layer's `uno.config.ts` (it resolves nothing for any known host) and
-  document the host-side `uno.config.ts` snippet. If the maintainer wants to keep it, point it at the host `srcDir`
+  document the host-side `uno.config.ts` snippet, with the host preset placed before the layer config. If the maintainer wants to keep it, point it at the host `srcDir`
   (`app/assets/icons`) instead of the cwd-relative `./client/assets/icons`.
 
 ## Decisions needed

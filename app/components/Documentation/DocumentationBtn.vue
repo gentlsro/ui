@@ -7,9 +7,10 @@
  * selection dialog). The layer itself has no documentation to link to, so this
  * default renders nothing.
  *
- * To show a real button, define a component named `DocumentationBtn` in the host
- * app (e.g. `app/components/DocumentationBtn.vue`). Nuxt gives host components
- * priority over layer components with the same name, so it replaces this one.
+ * To show a real button, add a component file named `DocumentationBtn` to the host
+ * app's components directory (e.g. `app/components/DocumentationBtn.vue`). Nuxt gives
+ * host components priority over layer components with the same name, so it replaces
+ * this one. Registering it from a plugin (`vueApp.component`) does not replace it.
  */
 defineProps<{
   /**
