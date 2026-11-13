@@ -21,10 +21,40 @@ type PickProps<T, Keys extends readonly (keyof T)[]> = {
 
 type GetValue<T> = T extends (...args: any[]) => any ? ReturnType<T> : T
 
+/**
+ * Returns the configured default props of a component.
+ *
+ * When `keys` is provided, only those props are returned. Use it when the component
+ * declares just a subset of the config section's props, because Vue warns about every
+ * default key that has no corresponding prop declaration.
+ */
 export function getComponentProps<T extends ConfigWithPropsKeys<IUIConfig>>(
   componentName: T,
+): IUIConfig[T]['props']
+export function getComponentProps<
+  T extends ConfigWithPropsKeys<IUIConfig>,
+  K extends keyof IUIConfig[T]['props'],
+>(
+  componentName: T,
+  keys: readonly K[],
+): Pick<IUIConfig[T]['props'], K>
+export function getComponentProps<T extends ConfigWithPropsKeys<IUIConfig>>(
+  componentName: T,
+  keys?: readonly PropertyKey[],
 ) {
-  return uiConfig[componentName].props as IUIConfig[T]['props']
+  const props = uiConfig[componentName].props as IUIConfig[T]['props']
+
+  if (!keys) {
+    return props
+  }
+
+  return keys.reduce((agg, key) => {
+    if (key in props) {
+      agg[key] = props[key]
+    }
+
+    return agg
+  }, {} as IItem)
 }
 
 export function getComponentMergedProps<

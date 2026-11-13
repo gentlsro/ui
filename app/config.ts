@@ -255,6 +255,7 @@ export const defaultComponentsConfig = {
   crudBtns: {
     props: {
       actions: undefined,
+      btnProps: undefined,
       labels: undefined,
       loading: undefined,
       btnConfirmationPosition: 'bottom',

@@ -3,7 +3,7 @@
 import type { ICrudBtnProps } from './types/crud-btn-props.type'
 
 const props = withDefaults(defineProps<ICrudBtnProps>(), {
-  ...getComponentProps('crudBtns'),
+  ...getComponentProps('crudBtns', ['btnProps', 'loading']),
 })
 
 defineEmits<{
