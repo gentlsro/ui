@@ -1,5 +1,6 @@
 import { createVNode, render } from 'vue'
 import { defu } from 'defu'
+import { klona } from 'klona/full'
 import { skipHydrate } from 'pinia'
 import type { CSSProperties } from 'vue'
 import { uiConfig } from '$uiConfig'
@@ -36,8 +37,10 @@ export const useUIStore = defineStore('__ui', () => {
   // / BroadcastChannel sync, `refreshCookie`), so we restore the default synchronously
   // to keep `uiState.value` safe to dereference for every reader
   watch(uiState, state => {
-    if (state == null) {
-      uiState.value = getDefaultUIState()
+    if (isNil(state)) {
+      // Cloned, as `defu` keeps references into `uiConfig` ~ writing a preference
+      // would otherwise change the configured defaults
+      uiState.value = klona(getDefaultUIState())
     }
   }, { flush: 'sync' })
 
