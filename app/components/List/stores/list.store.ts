@@ -375,12 +375,13 @@ function createStore(injectionKey?: string) {
     }) {
       isFetchMore.value = hasMore.value && !!payload?.isFetchMore
       const res = await fetchData(payload)
-      totalRows.value = res?.totalRows ?? 0
 
+      // Nothing was fetched (skipped or superseded request) ~ keep the current data
       if (!res) {
         return
       }
 
+      totalRows.value = res.totalRows ?? 0
       hasMore.value = res?.hasMore
       items.value = res.items ? [...res.items] : []
     }
