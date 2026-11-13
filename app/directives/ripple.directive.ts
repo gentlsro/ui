@@ -64,7 +64,10 @@ export function listenToRipples() {
     if (el) {
       playRipple(el as HTMLElement, ev)
     }
-  })
+
+    // Capture phase ~ a `@click.stop` on the element (or between it and the document)
+    // would otherwise keep the click from ever reaching this listener
+  }, true)
 }
 
 function toggleRipple(el: HTMLElement, value: unknown) {
