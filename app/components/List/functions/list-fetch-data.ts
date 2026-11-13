@@ -56,9 +56,14 @@ export async function listFetchData(payload: {
     return !isNew
   })
 
+  let signal: AbortSignal | undefined
+
   const res = await fn(async abortController => {
+    const controller = abortController()
+    signal = controller.signal
+
     return fnc({
-      abortController: abortController(),
+      abortController: controller,
       search,
       options: {
         lastRow: lastRow as unknown as IListItem,
@@ -69,6 +74,12 @@ export async function listFetchData(payload: {
       },
     })
   })
+
+  // NOTE: A superseded request may swallow its abort and still resolve; its
+  // result must not replace what the newer request has set
+  if (signal?.aborted) {
+    return
+  }
 
   const itemsFetched = payloadKey ? get(res, payloadKey) : res
 
@@ -90,9 +101,13 @@ export async function listFetchData(payload: {
     _count = totalRows
   }
 
+  // NOTE: Fetching more and getting nothing back means there is nothing left,
+  // whatever the count says ~ otherwise the list would keep asking for more
+  const isExhausted = !!isFetchMore && !_items.length
+
   emits?.fetchData({
     itemsFetched: _items,
-    hasMore: _count > _items.length,
+    hasMore: !isExhausted && _count > _items.length,
     isFetchMore,
     currentItems: items,
     totalRows: _count,
@@ -114,7 +129,7 @@ export async function listFetchData(payload: {
   }
 
   return {
-    hasMore: _count > _items.length,
+    hasMore: !isExhausted && _count > _items.length,
     items: _items,
     totalRows: _count,
   }
