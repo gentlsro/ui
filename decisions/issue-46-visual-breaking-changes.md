@@ -2,11 +2,14 @@
 
 Status: needs a maintainer decision (documentation only in this PR)
 Base: `origin/2.3` @ `6855bfda` (the issue cites `50ad5f6`, an ancestor; the relevant lines are unchanged)
+Re-checked against `origin/2.3` @ `9cd99e37` on 2026-11-14: the three defaults are unchanged. The opt-outs and the
+script example below were corrected after running them against `@unocss/core@66.10.0`.
 
 ## Problem
 
 Upgrading a host from `master` (1.x layout, `client/`) to `2.3` changes three defaults that restyle the app. None
-of them is noted anywhere: the layer has no CHANGELOG or migration notes (`README.md`, `docs/en-US/index.md`).
+of them is noted anywhere. Since `fec64864` the layer has a `CHANGELOG.md` with a Breaking / Migration table, but it
+does not list these three changes, and neither do `README.md` or `docs/en-US/index.md`.
 
 ## Claims verified
 
@@ -19,10 +22,15 @@ of them is noted anywhere: the layer has no CHANGELOG or migration notes (`READM
   through.
 - So a host that relied on the default gets a white or dark-950 drawer, and its text changes from white to the
   inherited colour.
-- The `ui.*Class` signature also changed. It is now `({ defaults, isMini }) => …` (`app/components/Page/PageDrawer.vue:71-113`)
-  instead of `() => string`. Old overrides keep working because they ignore the argument, but they replace
-  `defaults.all` entirely. That includes the layout classes (`flex flex-col flex-grow overflow-auto pointer-events-auto`),
-  so a 1.x-style override like `() => 'bg-primary color-white'` now also drops the drawer's layout.
+- The `ui.*Class` signature also changed. On `master` it was `(isMini: boolean) => ClassType`
+  (`client/components/Page/types/page-drawer-props.type.ts:61-81`). It is now `({ defaults, isMini }) => …`
+  (`app/components/Page/PageDrawer.vue`).
+  - An override that ignores its argument, like `() => 'bg-primary color-white'`, keeps running, but it replaces
+    `defaults.all` entirely. That includes the layout classes
+    (`flex flex-col flex-grow overflow-auto pointer-events-auto`), so it now also drops the drawer's layout.
+  - An override that reads its argument, like `isMini => isMini ? a : b`, now receives an object, which is always
+    truthy, so it always takes the mini branch. TypeScript hosts get a type error; JavaScript hosts get the wrong
+    classes silently.
 
 ### 2. `presetIcons` gained `unit: 'rem'`: confirmed
 
@@ -42,14 +50,24 @@ of them is noted anywhere: the layer has no CHANGELOG or migration notes (`READM
     `md:(p-2 m-1)` still expands.
   - default separators: it expands to `hover-bg-red hover-color-white`, and rules are generated.
 - The layer uses `unocss.nuxtLayers: true` (`nuxt.config.ts:183-185`), so the layer config is merged into the host's
-  config. `mergeConfigs` concatenates `transformers`, so a host can add its own `transformerVariantGroup()` to get
-  `-` groups back.
+  config. `mergeConfigs` concatenates `transformers`, but `resolveConfig` then removes duplicates by name and keeps
+  the **first** one (`uniqueBy` in `@unocss/core`). The usual host config is `mergeConfigs([config, { … }])`, with
+  the layer config first, so a `transformerVariantGroup()` added by the host is dropped silently and `-` groups stay
+  off. Presets are de-duplicated the same way. See "Host opt-outs" below for the form that works.
 
 ### Why the separator was probably narrowed
 
-The `-` separator is not free. The same reproduction shows the transformer rewriting script code in processed
-files: `const w = x-(y)` becomes `const w = x-y`. UnoCSS transformers run on whole `.vue` files, including
-`<script>`, so a `-(` in JS (for example `a-(b+c)`) gets silently corrupted. Restricting to `:` removes that hazard.
+The `-` separator is not free. UnoCSS transformers run on whole `.vue` files, including `<script>`, so a `-(` in
+JS can be rewritten. Checked with `expandVariantGroup` and the default separators:
+
+| Source | Result | Effect |
+| --- | --- | --- |
+| `x-(y)` | `x-y` | Rewritten, same value |
+| `a-(b+c)` | unchanged | `+` is not in the group pattern |
+| `a-(b-c)` | `a-b-c` | **Different value** |
+| `a-(b c)` | `a-b a-c` | **Syntax broken** |
+
+Restricting to `:` removes that hazard.
 
 ## Monorepo impact
 
@@ -74,10 +92,8 @@ the monorepo itself.
    - PageDrawer: `extendUIConfig({ pageDrawer: { props: { ui: { contentClass: ({ defaults }) => \`${defaults.base} bg-primary color-white\`, bottomClass: ({ defaults }) => \`${defaults.base} bg-primary color-white\` } } } })`.
      Note that `defaults.base` includes `bg-white`, so the host class must win. Use `bg-primary!`, or build from
      the layout classes.
-   - Icons: in the host `uno.config.ts`, `mergeConfigs([config, { presets: [presetIcons({ scale: 1.2 })] }])`. This
-     needs verifying: preset de-duplication by name may keep the layer's instance.
-   - Variant groups: in the host `uno.config.ts`, add `transformers: [transformerVariantGroup()]`. It works because
-     transformers are concatenated. Warn about the `x-(y)` script hazard.
+   - Icons and variant groups: see "Host opt-outs" below. Appending the host's preset or transformer after the layer
+     config does **not** work.
 2. **Restore the `master` defaults.** This is compatible for 1.x hosts but a visual break for the monorepo (see
    above). The `-` separator would also bring back the script-rewrite hazard.
 3. **Make them configurable at the layer level.** For example, export the UnoCSS options from a small
@@ -87,18 +103,46 @@ the monorepo itself.
    `defaults.color = 'bg-white dark:bg-dark-950'`) so hosts can swap only the colour. This is additive, but it changes
    the shape of `defaults`.
 
+## Host opt-outs
+
+UnoCSS keeps the first preset and the first transformer of each name. Verified with `resolveConfig` on
+`@unocss/core@66.10.0`:
+
+| Host config | Variant-group transformer used | Icon unit |
+| --- | --- | --- |
+| `mergeConfigs([layerConfig, hostConfig])` (the usual order) | Layer's (`:` only) | `rem` |
+| `mergeConfigs([hostConfig, layerConfig])` | Host's | Host's (`em` by default) |
+
+So a host that wants `em` icons or `-` groups has to put its own entries **before** the layer config:
+
+```ts
+export default mergeConfigs([
+  {
+    presets: [presetIcons({ scale: 1.2 })],
+    transformers: [transformerVariantGroup()],
+  },
+  config,
+])
+```
+
+Two things to say next to the snippet:
+
+- The host's `presetIcons` replaces the layer's whole instance, including its `collections` and `extraProperties`,
+  not only the unit.
+- Enabling `-` groups brings back the script-rewrite hazard from the table above.
+
 ## Recommendation
 
 Option 1. Keep the 2.3 defaults, which the monorepo depends on. Publish migration notes that also cover the other
 silent 2.3 changes reported separately (#47 global CSS, #51 `modifiers.exportData`). Option 4 is a cheap follow-up
-if hosts often only want to recolour the drawer. The icon opt-out in option 1 should be verified before it is
-documented.
+if hosts often only want to recolour the drawer. The notes should also cover the `PageDrawer` signature change,
+because an override that reads `isMini` breaks without any error in a JavaScript host.
 
 ## Decisions needed
 
 - Are the 2.3 defaults (white drawer, `rem` icons, `:`-only variant groups) intentional and final?
-- Where should the migration notes live (README section, `docs/en-US`, a CHANGELOG)? Should they cover all 1.x → 2.3
-  breaks in one place?
+- Should the migration notes go into the existing `CHANGELOG.md` Breaking table, or into a separate 1.x → 2.3 guide
+  that covers all the breaks in one place?
 - Should `PageDrawer`'s `defaults` expose colour separately (`defaults.color`) so hosts can override just the colour?
 - Should the layer offer supported knobs for icon unit and variant-group separators, or only document the
   host-side `uno.config.ts` overrides?
