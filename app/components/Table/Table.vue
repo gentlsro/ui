@@ -308,6 +308,12 @@ onMounted(() => {
       <!-- Cell, `row-actions` and `row-inside` slots are rendered by the rows themselves -->
     </TableContent>
 
+    <!-- Initial load placeholder (the loading overlay is rendered below) -->
+    <div
+      v-else-if="isInitialLoad"
+      class="grow"
+    />
+
     <!-- Empty -->
     <slot
       v-else

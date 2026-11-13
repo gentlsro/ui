@@ -328,7 +328,14 @@ const [
   // because of column merging and possibly other things. For that reason,
   // we set the `isInitialLoad` flag to true at the start and trigger the first data fetch
   // manually (from `Table.vue`)
+  // It stays true until that first fetch settles, so the table shows its loading
+  // state instead of "No data" while the first rows are on their way
   const isInitialLoad = ref(true)
+
+  // Unlike `isInitialLoad`, this only holds back the fetches that would run
+  // before the first one ~ once it started, a query change may supersede it
+  let hasFirstFetchStarted = false
+  const isAwaitingFirstFetch = () => isInitialLoad.value && !hasFirstFetchStarted
 
   const rowsColumnCount = computed(() => {
     const _tableWidth = tableWidth.value || Number.MAX_SAFE_INTEGER
@@ -787,7 +794,7 @@ const [
    * order). A sort restored with the table's saved state keeps the saved page
    */
   watch(sortingSerialized, () => {
-    if (!isInitialLoad.value && currentPage.value > 1) {
+    if (!isAwaitingFirstFetch() && currentPage.value > 1) {
       currentPage.value = 1
     }
   })
@@ -863,7 +870,7 @@ const [
   }) {
     const isInvalidFetchMore = payload?.isFetchMore && !hasMore.value
     const isOverLimit = rows.value.length >= rowsLimit.value
-    const isInitial = isInitialLoad.value && !payload?.force
+    const isInitial = isAwaitingFirstFetch() && !payload?.force
 
     // Fetching more rows waits for the request in flight (~ no double fetch while scrolling),
     // while a query change supersedes it, so the latest query wins
@@ -873,7 +880,7 @@ const [
       return
     }
 
-    isInitialLoad.value = false
+    hasFirstFetchStarted = true
     isFetchMore.value = hasMore.value && !!payload?.isFetchMore
 
     if (isOverLimit && isFetchMore.value) {
@@ -912,6 +919,8 @@ const [
         return
       }
 
+      isInitialLoad.value = false
+
       throw error
     }
 
@@ -919,6 +928,10 @@ const [
     if (!isLatestRequest()) {
       return
     }
+
+    // Only the request whose result is shown ends the initial load ~ a superseded
+    // one would reveal "No data" while the newer request is still running
+    isInitialLoad.value = false
 
     const resModified = loadData.value?.onFetch?.({ res, getStore }) ?? res
     const { payloadKey, countKey = 'count' } = loadData.value ?? {}

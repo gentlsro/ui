@@ -51,9 +51,9 @@ export function tableInitialize() {
         tableStore.fetchAndSetData({ force: true })
           .then(() => {
             // Fit columns even when the table is empty.
+            // NOTE: `isInitialLoad` is cleared by the store once the request
+            // whose result is shown settles
             autoFit()
-
-            isInitialLoad.value = false
           })
       } else {
         autoFit()
