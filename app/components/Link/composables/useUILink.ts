@@ -37,7 +37,7 @@ export function useUILink(props: IUILinkProps, element: Ref<HTMLElement | null |
 
     return value && !['javascript', 'vbscript', 'data'].includes(scheme ?? '') ? value : undefined
   })
-  const linkTarget = computed(() => props.target ?? props.navigateToOptions?.target ?? props.navigateToOptions?.open?.target)
+  const linkTarget = computed(() => props.target ?? props.navigateToOptions?.open?.target)
   const isExactActive = computed(() => internal.value && routerLink.isExactActive.value)
   const isActive = computed(() => internal.value && routerLink.isActive.value)
   const prefetched = ref(false)
@@ -115,7 +115,7 @@ export function useUILink(props: IUILinkProps, element: Ref<HTMLElement | null |
   const attrs = computed(() => ({
     'href': href.value,
     'target': linkTarget.value,
-    'rel': props.noRel ? undefined : props.rel ?? props.navigateToOptions?.rel ?? ((linkTarget.value && linkTarget.value !== '_self') || external.value ? 'noopener noreferrer' : undefined),
+    'rel': props.noRel ? undefined : props.rel ?? ((linkTarget.value && linkTarget.value !== '_self') || external.value ? 'noopener noreferrer' : undefined),
     'aria-current': isExactActive.value ? props.ariaCurrentValue ?? 'page' : undefined,
     'class': {
       [props.activeClass ?? 'router-link-active']: isActive.value,

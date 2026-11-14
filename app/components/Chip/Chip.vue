@@ -102,6 +102,7 @@ const resolvedIcon = computed(() => {
         v-if="to"
         v-bind="navigateToOptions"
         :to
+        :target
         class="link"
         :class="labelClass"
         :style="labelStyle"
