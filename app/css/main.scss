@@ -23,8 +23,15 @@ body {
   // overflow-x: hidden;
 }
 
+// The browser draws its own parts (scrollbars, form controls, the canvas) to match
+html.light {
+  color-scheme: light;
+}
+
 html.dark {
   @apply bg-darker color-white;
+
+  color-scheme: dark;
 }
 
 html.is-dialog-open,
