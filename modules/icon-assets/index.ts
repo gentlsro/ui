@@ -3,7 +3,7 @@ import { resolve } from 'node:path'
 import process from 'node:process'
 import { defineNuxtModule } from 'nuxt/kit'
 
-import { ICON_ASSETS_BASE_URL, ICON_ASSETS_DIRECTORY_ENV } from './processor'
+import { ICON_ASSETS_BASE_URL, ICON_ASSETS_DIRECTORY_ENV } from './processor.ts'
 
 const ONE_YEAR = 60 * 60 * 24 * 365
 
