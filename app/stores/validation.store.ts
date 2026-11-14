@@ -72,10 +72,14 @@ function createStore(injectionKey?: string) {
 
     const errorsByScope = computed(() => {
       return validationParts.value
-        .reduce((agg, { scope = 'base', componentName, schema, state }) => {
+        .reduce((agg, { scope = 'base', componentName, schema: partSchema, state }) => {
           if (agg[scope] === undefined) {
             agg[scope]! = []
           }
+
+          // A part added without `useZod` may still hold a reactive schema,
+          // which must not be called through its proxy
+          const schema = toRaw(partSchema)
 
           if (schema && state) {
             // Handle both ArkType and Zod schemas
