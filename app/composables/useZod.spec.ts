@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { defineComponent, h, ref } from 'vue'
+import { createSSRApp, defineComponent, h, ref } from 'vue'
+import { renderToString } from 'vue/server-renderer'
 import { z } from 'zod'
 
 import { useZod } from './useZod'
@@ -8,7 +8,8 @@ import { useZod } from './useZod'
 async function validateWith(name: string) {
   let result: ReturnType<ReturnType<typeof useZod>['validate']> | undefined
 
-  await mountSuspended(defineComponent({
+  // (a component's setup without a DOM or a Nuxt app: rendered once to a string)
+  await renderToString(createSSRApp(defineComponent({
     setup() {
       const { validate } = useZod({
         state: ref({ name }),
@@ -19,7 +20,7 @@ async function validateWith(name: string) {
 
       return () => h('div')
     },
-  }))
+  })))
 
   return result
 }
