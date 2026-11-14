@@ -48,11 +48,13 @@ export function useZod<Validation extends z.ZodType = z.ZodType>(payload?: IPayl
   } = useValidationStore()
 
   // Add validation part
+  // NOTE: The schema must not become reactive ~ zod (>= 4.5) reads its internals
+  // through `this`, and a reactive proxy cannot hand out those read-only properties
   validationParts.value = [
     ...validationParts.value,
     {
       state,
-      schema,
+      schema: schema ? markRaw(schema) : undefined,
       componentName,
       scope,
     },

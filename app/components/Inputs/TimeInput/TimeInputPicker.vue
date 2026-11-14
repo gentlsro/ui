@@ -12,7 +12,7 @@ const props = defineProps<ITimeInputPickerProps>()
 const emits = defineEmits<{
   (e: 'update:used-touch', val: boolean): void
   (e: 'update:is-am', val: boolean): void
-  (e: 'update:update:prevent-next-is-am-change', val: boolean): void
+  (e: 'update:prevent-next-is-am-change', val: boolean): void
 }>()
 
 // Utils

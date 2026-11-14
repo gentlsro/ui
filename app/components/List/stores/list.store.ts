@@ -375,12 +375,13 @@ function createStore(injectionKey?: string) {
     }) {
       isFetchMore.value = hasMore.value && !!payload?.isFetchMore
       const res = await fetchData(payload)
-      totalRows.value = res?.totalRows ?? 0
 
+      // Nothing was fetched (skipped or superseded request) ~ keep the current data
       if (!res) {
         return
       }
 
+      totalRows.value = res.totalRows ?? 0
       hasMore.value = res?.hasMore
       items.value = res.items ? [...res.items] : []
     }
@@ -507,7 +508,7 @@ function createStore(injectionKey?: string) {
 }
 
 export function useListStore(payload?: IConfig) {
-  let injectionKey = payload?.injectionKey ?? injectLocal(LIST_ID_KEY)
+  let injectionKey = payload?.injectionKey ?? injectLocal(LIST_ID_KEY, undefined)
 
   if (!injectionKey) {
     const uuid = generateUUID()

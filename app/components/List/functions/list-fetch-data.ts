@@ -56,9 +56,14 @@ export async function listFetchData(payload: {
     return !isNew
   })
 
+  let signal: AbortSignal | undefined
+
   const res = await fn(async abortController => {
+    const controller = abortController()
+    signal = controller.signal
+
     return fnc({
-      abortController: abortController(),
+      abortController: controller,
       search,
       options: {
         lastRow: lastRow as unknown as IListItem,
@@ -70,7 +75,21 @@ export async function listFetchData(payload: {
     })
   })
 
-  let _items = payloadKey ? get(res, payloadKey) : res
+  // NOTE: A superseded request may swallow its abort and still resolve; its
+  // result must not replace what the newer request has set
+  if (signal?.aborted) {
+    return
+  }
+
+  const itemsFetched = payloadKey ? get(res, payloadKey) : res
+
+  if (import.meta.dev && payloadKey && !isNil(res) && isNil(itemsFetched)) {
+    console.warn(`[UI] List: \`loadData.payloadKey\` "${payloadKey}" was not found in the \`loadData.fnc\` response`, res)
+  }
+
+  // NOTE: A missing payload (no response, or a response not matching `payloadKey`)
+  // degrades to an empty list instead of throwing
+  let _items = itemsFetched ?? []
   let _count = _items.length
   const hasCount = countKey && !isNil(get(res, countKey))
 
@@ -82,9 +101,13 @@ export async function listFetchData(payload: {
     _count = totalRows
   }
 
+  // NOTE: Fetching more and getting nothing back means there is nothing left,
+  // whatever the count says ~ otherwise the list would keep asking for more
+  const isExhausted = !!isFetchMore && !_items.length
+
   emits?.fetchData({
     itemsFetched: _items,
-    hasMore: _count > _items.length,
+    hasMore: !isExhausted && _count > _items.length,
     isFetchMore,
     currentItems: items,
     totalRows: _count,
@@ -106,7 +129,7 @@ export async function listFetchData(payload: {
   }
 
   return {
-    hasMore: _count > _items.length,
+    hasMore: !isExhausted && _count > _items.length,
     items: _items,
     totalRows: _count,
   }

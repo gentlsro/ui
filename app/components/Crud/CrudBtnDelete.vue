@@ -12,7 +12,7 @@ type IProps = ICrudBtnProps & {
 }
 
 const props = withDefaults(defineProps<IProps>(), {
-  ...getComponentProps('crudBtns'),
+  ...getComponentProps('crudBtns', ['btnProps', 'loading']),
 })
 
 defineEmits<{

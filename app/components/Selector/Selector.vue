@@ -254,8 +254,12 @@ if (props.immediateFetch && mergedProps.value.loadData?.fnc) {
     loadData: merge(mergedListPropsLoadData.loadData, mergedProps.value.loadData),
     items: [],
     modifiers: mergedProps.value.listProps?.modifiers,
-  }).then(({ items }) => {
-    options.value = items
+  }).then(res => {
+    if (!res) {
+      return
+    }
+
+    options.value = res.items
     preselectFirst()
   })
 }

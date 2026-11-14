@@ -1,7 +1,7 @@
 // @unocss-include
 import { createResolver } from 'nuxt/kit'
 import { writeFile } from 'node:fs/promises'
-import { prepareLocalNuxtLayers } from './prepare-layers'
+import { prepareLocalNuxtLayers } from './prepare-layers.ts'
 
 const { resolve } = createResolver(import.meta.url)
 

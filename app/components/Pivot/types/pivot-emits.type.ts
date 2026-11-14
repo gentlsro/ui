@@ -1,6 +1,7 @@
 import type { IPivotDataItem } from './pivot-data-item.type'
 import type { IPivotValueColumnItem } from './pivot-value-column-item.type'
 import type { IPivotValueItemCell } from './pivot-value-item-cell.type'
+import type { IPivotProps } from './pivot-props.type'
 
 export type IPivotInteractionEvent = MouseEvent | KeyboardEvent
 
@@ -20,6 +21,9 @@ export type IPivotEmitFncs<T = IItem> = {
 }
 
 export type IPivotEmits<T = IItem> = {
+  (e: 'update:config', config: IPivotProps<T>['config']): void
+  (e: 'update:data', data: IPivotProps<T>['data']): void
+  (e: 'update:items', items: IPivotProps<T>['items']): void
   (e: 'click:row', payload: IPivotRowClickPayload<T>): void
   (e: 'click:cell', payload: IPivotCellClickPayload<T>): void
 }

@@ -17,6 +17,7 @@ const props = withDefaults(defineProps<ITextAreaInputProps>(), {
 })
 
 defineEmits<{
+  (e: 'update:modelValue', val?: string | undefined | null): void
   (e: 'blur'): void
   (e: 'focus'): void
 }>()
