@@ -330,10 +330,11 @@ const { validation } = useArk({ scope: '_qb' })
   }
 }
 
+// (`::before`: a Btn's `::after` is its ripple)
 .is-last-child:not(.is-root) {
   @apply relative;
 
-  &::after {
+  &::before {
     @apply absolute -right-2 text-6 leading-none font-normal;
 
     content: '\2773';

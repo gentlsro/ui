@@ -286,10 +286,11 @@ function handleRemoveGroup() {
   }
 }
 
+// (`::before`: a Btn's `::after` is its ripple)
 .last-child-bracket {
   @apply relative self-center m-r-2;
 
-  &::after {
+  &::before {
     @apply absolute -right-2 text-6 leading-none font-normal;
 
     content: '\2773';
