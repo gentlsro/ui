@@ -66,12 +66,8 @@ const {
   inputId,
   model,
   masked,
-  typed,
-  setTypedValue,
-  unmasked,
   wrapperProps,
   hasNoValue,
-  lastValidValue,
   hasClearableBtn,
   label,
   isTouched,
@@ -88,49 +84,11 @@ const {
 } = useInputUtils({
   props,
   maskRef: mask,
-  maskEventHandlers: {
-    onAccept: (_, ev, refs) => {
-      if (!ev) {
-        return
-      }
-
-      const input = el.value as HTMLInputElement
-
-      if (!input) {
-        return
-      }
-
-      if (refs) {
-        const [_, decimals] = refs.masked.value.split(separators.value.decimalSeparator)
-
-        // We make sure we have the correct number of fraction digits
-        // and recalculate the typed value
-        if (!decimals || decimals?.length < props.fractionDigits) {
-          const sliceRange = -1 * props.fractionDigits
-          const digits = decimals ? props.fractionDigits - decimals.length : props.fractionDigits
-
-          const val = (refs?.typed.value ?? 0).toFixed(digits).replace(/\./g, '')
-          const typedValue = Number(`${val.slice(0, sliceRange)}.${val.slice(sliceRange)}`)
-
-          setTypedValue(typedValue)
-
-          // When no decimals are provided, we need to reset the input focus for mask to refresh
-          if (!decimals) {
-            blur()
-            nextTick(() => focus())
-          }
-        }
-      }
-    },
-  },
 })
 
 const { path } = useInputValidationUtils(props)
 
 const isEditable = computed(() => !props.readonly && !props.disabled)
-
-// Input handling
-const ALLOWED_CHARS = /[0-9-]/
 
 const currency = computed(() => {
   if (props.noCurrency) {
@@ -159,88 +117,6 @@ const currencyVisibility = computed(() => {
     ? 'prepend'
     : 'append'
 })
-
-function handleBeforeInput(ev: Event) {
-  const input = el.value as HTMLInputElement
-
-  if (!input || !(ev instanceof InputEvent)) {
-    return
-  }
-
-  const isAllSelected = input.selectionStart === 0
-    && input.selectionEnd === input.value.length
-    && input.value.length > 0
-
-  const isAtEnd = input.selectionStart === input.value.length
-
-  // When the entire text is selected and we're adding a digit, we need to
-  // initialize the value to `0.0` and add the digit
-  if (isAllSelected && ev.data) {
-    if (ev.data.length === 1 && isNumeric(ev.data)) {
-      setTypedValue(Number(`0.0${ev.data}`))
-    } else if (ev.data.length === 1 && ev.data === '-') {
-      setTypedValue(typed.value * -1)
-    }
-  }
-
-  // When the entire text is selected and we're not providing any data (for example backspace/delete),
-  // we reset the value to the `emptyValue`
-  else if (isAllSelected) {
-    setTypedValue(props.emptyValue)
-  }
-
-  // When providing data (typing or pasting) while we are at the end of the input,
-  // we "shift" the value to the right and add the new digit
-  else if (ev.data && isAtEnd) {
-    if (!ALLOWED_CHARS.test(ev.data)) {
-      return
-    }
-
-    const isValNumeric = isNumeric(ev.data)
-    const sliceRange = -1 * props.fractionDigits
-    let val = (lastValidValue.value ?? 0).toFixed(props.fractionDigits).replace(/\./g, '')
-
-    if (isValNumeric) {
-      val += ev.data
-    }
-
-    val = Number(`${val.slice(0, sliceRange)}.${val.slice(sliceRange)}`)
-
-    // Handle negative values
-    const isMinus = ev.data === '-'
-
-    // When the `masked` value has been preset to `-0.00` and the input is a numeric value,
-    // we set the value and negate it
-    if (unmasked.value === '-0' && isValNumeric) {
-      val = val * -1
-    }
-
-    // When input is `-` and the value is `0`, we preset the `masked` value to `-0.00`
-    else if (val === 0 && isMinus) {
-      masked.value = '-0.00'
-
-      return
-    }
-
-    // When input is `-` and the value is not `0`, we negate the value
-    else if (val !== 0 && isMinus) {
-      val = val * -1
-    }
-
-    // When inputting an actual 0
-    else if (val === 0) {
-      setTypedValue(0)
-
-      return
-    }
-
-    setTypedValue(val)
-
-    ev.preventDefault()
-    ev.stopPropagation()
-    ev.stopImmediatePropagation()
-  }
-}
 
 // Wrapper class
 const wrapperClass = computed(() => {
@@ -312,7 +188,7 @@ defineExpose({
         ref="el"
         flex="1"
         :value="masked"
-        inputmode="numeric"
+        inputmode="decimal"
         :placeholder
         :readonly
         :disabled
@@ -324,7 +200,6 @@ defineExpose({
         @focus="handleFocusOrClick"
         @blur="handleBlur"
         @keydown="handleKeydown"
-        @beforeinput="handleBeforeInput"
       >
     </template>
 
