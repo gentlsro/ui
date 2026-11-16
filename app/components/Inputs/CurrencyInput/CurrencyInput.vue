@@ -66,6 +66,8 @@ const {
   inputId,
   model,
   masked,
+  typed,
+  setTypedValue,
   wrapperProps,
   hasNoValue,
   hasClearableBtn,
@@ -89,6 +91,106 @@ const {
 const { path } = useInputValidationUtils(props)
 
 const isEditable = computed(() => !props.readonly && !props.disabled)
+
+// Input handling: typing at the end fills the whole part from the right while the fraction stays fixed
+// (3, 0, 0 gives 300.00); the decimal separator moves into the fraction, filled from the left (3, ., 5 gives 3.50)
+const fraction = ref<{ digits: number } | null>(null)
+
+watch(isBlurred, isBlurred => {
+  if (isBlurred) {
+    fraction.value = null
+  }
+})
+
+function setValue(value: number) {
+  setTypedValue(value)
+  nextTick(() => {
+    const input = el.value as HTMLInputElement | undefined
+
+    input?.setSelectionRange(input.value.length, input.value.length)
+  })
+}
+
+function handleBeforeInput(ev: Event) {
+  const input = el.value as HTMLInputElement
+
+  if (!input || !(ev instanceof InputEvent)) {
+    return
+  }
+
+  const isAllSelected = input.value.length > 0
+    && input.selectionStart === 0
+    && input.selectionEnd === input.value.length
+  const isAtEnd = input.selectionStart === input.value.length && input.selectionEnd === input.value.length
+
+  // Typing in the middle of the value keeps the mask's own editing
+  if (!isAllSelected && !isAtEnd) {
+    return
+  }
+
+  ev.preventDefault()
+
+  const value = isAllSelected || isNil(typed.value) ? 0 : Number(typed.value)
+  const sign = value < 0 || Object.is(value, -0) ? -1 : 1
+  const scale = 10 ** props.fractionDigits
+  const whole = Math.trunc(Math.abs(value))
+  const cents = Math.round((Math.abs(value) - whole) * scale)
+
+  if (isAllSelected) {
+    fraction.value = null
+  }
+
+  // Deleting
+  if (!ev.data) {
+    if (!isAllSelected && ev.inputType !== 'deleteContentBackward') {
+      return
+    }
+
+    if (isAllSelected) {
+      setTypedValue(props.emptyValue)
+    } else if (fraction.value?.digits) {
+      const digits = --fraction.value.digits
+      const kept = Math.trunc(cents / 10 ** (props.fractionDigits - digits)) * 10 ** (props.fractionDigits - digits)
+
+      setValue(sign * (whole + kept / scale))
+    } else if (fraction.value) {
+      fraction.value = null
+    } else {
+      setValue(sign * (Math.trunc(whole / 10) + cents / scale))
+    }
+
+    return
+  }
+
+  for (const char of ev.data) {
+    const current = isNil(typed.value) || isAllSelected ? 0 : Number(typed.value)
+    const absolute = Math.abs(current)
+    const currentWhole = Math.trunc(absolute)
+    const currentCents = Math.round((absolute - currentWhole) * scale)
+    const currentSign = current < 0 ? -1 : sign
+
+    if (char === '-') {
+      setValue(-current)
+    } else if (char === '.' || char === ',') {
+      if (props.fractionDigits > 0) {
+        fraction.value = { digits: 0 }
+      }
+    } else if (isNumeric(char)) {
+      const digit = Number(char)
+
+      if (fraction.value) {
+        if (fraction.value.digits < props.fractionDigits) {
+          const position = props.fractionDigits - ++fraction.value.digits
+          const nextCents = Math.trunc(currentCents / 10 ** (position + 1)) * 10 ** (position + 1) + digit * 10 ** position
+
+          setValue(currentSign * (currentWhole + nextCents / scale))
+        }
+      } else {
+        setValue(currentSign * (currentWhole * 10 + digit + currentCents / scale))
+      }
+    }
+  }
+}
 
 const currency = computed(() => {
   if (props.noCurrency) {
@@ -200,6 +302,7 @@ defineExpose({
         @focus="handleFocusOrClick"
         @blur="handleBlur"
         @keydown="handleKeydown"
+        @beforeinput="handleBeforeInput"
       >
     </template>
 
