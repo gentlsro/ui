@@ -5,6 +5,9 @@ import type { ITableProps } from '../types/table-props.type'
 // Models
 import type { TableColumn } from '../models/table-column.model'
 
+// Constants
+import { TABLE_DEFAULT_PROPS } from '../constants/table-default-props.constant'
+
 // Components
 import Checkbox from '../../Checkbox/Checkbox.vue'
 
@@ -62,8 +65,15 @@ export function useRenderTemporaryTableCell() {
       dataType: col.dataType,
     })
 
-    // @ts-expect-error
-    const { cellInnerClass, cellInnerStyle, cellClass, cellStyle } = ui ?? getComponentProps('table').ui?.() ?? {}
+    // Resolved the way `TableRow` does, so the measured cell has the real cell's padding and font
+    const _ui: ITableProps['ui'] = ui ?? getComponentProps('table').ui?.()
+    const cellClass = [
+      _ui?.cellClass?.({ row, column: col, defaults: TABLE_DEFAULT_PROPS.ui.cellClass() }),
+      typeof col.cellClass === 'function' ? col.cellClass(row) : col.cellClass,
+    ]
+    const cellStyle = { ..._ui?.cellStyle?.({ row, column: col }), width: 'max-content' }
+    const cellInnerClass = _ui?.cellInnerClass?.({ row, column: col, defaults: TABLE_DEFAULT_PROPS.ui.cellInnerClass() })
+    const cellInnerStyle = _ui?.cellInnerStyle?.({ row, column: col })
 
     const _cellClass = [cellClass, 'flex', 'items-center']
 
@@ -129,15 +139,19 @@ export function useRenderTemporaryTableCell() {
       ? splitStringInMiddle(col._label)
       : col._label
 
-    // @ts-expect-error
-    const { headerCellClass, headerCellInnerClass, headerCellStyle, headerCellInnerStyle } = ui ?? getComponentProps('table').ui?.() ?? {}
+    // Resolved the way `TableHeaderCell` does
+    const _ui: ITableProps['ui'] = ui ?? getComponentProps('table').ui?.()
 
     // UI
-    const _headerCellClass = ['flex items-center gap-2', headerCellClass, col.headerClass]
-    const _headerCellStyle = { ...headerCellStyle, ...col.headerStyle }
+    const _headerCellClass = [
+      'flex items-center gap-2',
+      _ui?.headerCellClass?.({ column: col, defaults: TABLE_DEFAULT_PROPS.ui.headerCellClass() }),
+      col.headerClass,
+    ]
+    const _headerCellStyle = { ..._ui?.headerCellStyle?.({ column: col }), ...col.headerStyle, width: 'max-content' }
 
-    const _headerCellInnerClass = [headerCellInnerClass]
-    const _headerCellInnerStyle = headerCellInnerStyle
+    const _headerCellInnerClass = [_ui?.headerCellInnerClass?.({ column: col, defaults: TABLE_DEFAULT_PROPS.ui.headerCellInnerClass() })]
+    const _headerCellInnerStyle = _ui?.headerCellInnerStyle?.({ column: col })
 
     const isHelperCol = col.isHelperCol || col.nonInteractive
     const hasFilterBtn = (col.filterable || col.sortable) && !isHelperCol
