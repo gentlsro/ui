@@ -66,7 +66,7 @@ export function useForm(props: IFormProps) {
     // When `e` is pressed, we want to enter the edit mode
     const isFocusedInInput = uiStore.isActiveElementInput()
 
-    if (isFocusedInInput) {
+    if (isFocusedInInput || props.editDisabled) {
       return
     }
 
