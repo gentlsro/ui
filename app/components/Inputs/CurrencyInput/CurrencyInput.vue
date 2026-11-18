@@ -219,6 +219,10 @@ function handleBeforeInput(ev: Event) {
   }
 
   ev.preventDefault()
+  if (!isAllSelected) {
+    ev.stopPropagation()
+    ev.stopImmediatePropagation()
+  }
   nextTick(() => input.setSelectionRange(input.value.length, input.value.length))
 }
 
