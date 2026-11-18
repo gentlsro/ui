@@ -152,23 +152,28 @@ watch(virtualDimensions, () => {
   positionTask.schedule()
 }, { deep: true })
 
-// We react to page resize/scroll to reposition the floating UI
-// Closed menus have no floating surface to position. In particular, observing
-// an anchor inside an entering Dialog makes WebKit deliver its zero-sized
-// transition frame and then report an undelivered resize notification.
-const activeReference = computed(() => model.value ? referenceEl.value : undefined)
-// @ts-expect-error Bad element type
-const { x: pageX, y: pageY } = useElementBounding(activeReference, { windowResize: true })
+// Only a visible, anchored menu needs scroll/resize tracking. Keep it through the leave transition, then release
+// the observer and window listeners; editors can mount hundreds of closed menus beside their fields.
+const shouldTrackAnchor = computed(() => debouncedModel.value && !props.noMove && !isVirtual.value)
 
-if (!props.noMove && !props.virtualConfig?.enabled) {
-  // The frame task already coalesces movement. A second throttle would leave
-  // a trailing timer that could schedule new work after the menu is disposed.
-  watch([pageX, pageY], () => {
-    if (model.value) {
-      positionTask.schedule()
-    }
+watch(shouldTrackAnchor, (track, _previous, onCleanup) => {
+  if (!track) {
+    return
+  }
+
+  const scope = effectScope()
+  scope.run(() => {
+    // @ts-expect-error Bad element type
+    const { x: pageX, y: pageY } = useElementBounding(referenceEl, { windowResize: true })
+
+    watch([pageX, pageY], () => {
+      if (shouldTrackAnchor.value) {
+        positionTask.schedule()
+      }
+    })
   })
-}
+  onCleanup(() => scope.stop())
+}, { immediate: true })
 
 // Click outside
 onClickOutside(

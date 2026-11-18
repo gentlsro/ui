@@ -255,6 +255,7 @@ export const defaultComponentsConfig = {
   crudBtns: {
     props: {
       actions: undefined,
+      btnProps: undefined,
       labels: undefined,
       loading: undefined,
       btnConfirmationPosition: 'bottom',
@@ -1382,6 +1383,9 @@ export const defaultComponentsConfig = {
     props: {
       bordered: false,
       allowComparatorsOfSameType: false,
+      columnSelectionDialogProps: {
+        position: 'top',
+      },
       minimumColumnWidth: 80,
       breakpoint: 600,
       editable: false,
@@ -1451,6 +1455,7 @@ export const defaultComponentsConfig = {
     },
     merge: [
       'autoFit',
+      'columnSelectionDialogProps',
       'loadMetaData',
       'modifiers',
       'selectionConfig',

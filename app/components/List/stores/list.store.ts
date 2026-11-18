@@ -20,7 +20,6 @@ import { getListDefaultSortBy } from '../functions/helpers/get-list-default-sort
 
 // Components
 import type { Type } from 'arktype'
-import { type } from 'arktype'
 
 export const LIST_ID_KEY = Symbol('__listId')
 
@@ -145,15 +144,21 @@ function createStore(injectionKey?: string) {
       }, {} as Record<string, IListItemToAdd>)
     })
 
-    // Add validation
+    // Add validation: only a list given a schema validates what is added, and only it loads ArkType (whose module is a
+    // long task to evaluate; its caller already loaded it to build the schema)
     const schema = addConfig.value?.validationSchema as NonNullable<IListProps['addConfig']>['validationSchema'] as Type<any>
+    const addSchema = shallowRef<Type<any>>()
+
+    if (schema) {
+      import('arktype').then(({ type }) => {
+        addSchema.value = type({ search: schema })
+      })
+    }
 
     const { validation } = useArk({
       name: 'List',
       state: () => ({ search: search.value }),
-      schema: type({
-        search: schema ?? 'unknown.any',
-      }),
+      schema: addSchema,
       scope: '_listAdd',
     })
 
@@ -392,12 +397,13 @@ function createStore(injectionKey?: string) {
     }) {
       isFetchMore.value = hasMore.value && !!payload?.isFetchMore
       const res = await fetchData(payload)
-      totalRows.value = res?.totalRows ?? 0
 
+      // Nothing was fetched (skipped or superseded request) ~ keep the current data
       if (!res) {
         return
       }
 
+      totalRows.value = res.totalRows ?? 0
       hasMore.value = res?.hasMore
       items.value = res.items ? [...res.items] : []
     }
@@ -557,7 +563,7 @@ function createStore(injectionKey?: string) {
 }
 
 export function useListStore(payload?: IConfig) {
-  let injectionKey = payload?.injectionKey ?? injectLocal(LIST_ID_KEY)
+  let injectionKey = payload?.injectionKey ?? injectLocal(LIST_ID_KEY, undefined)
 
   if (!injectionKey) {
     const uuid = generateUUID()

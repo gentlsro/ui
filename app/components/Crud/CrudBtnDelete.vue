@@ -2,7 +2,7 @@
 import type { CSSProperties } from 'vue'
 
 // Types
-import type { ICrudBtnProps, ICrudBtnsProps } from './types/crud-btn-props.type'
+import type { ICrudBtnProps } from './types/crud-btn-props.type'
 import type { IMenuConfirmationProps } from '../MenuConfirmation/types/menu-confirmation-props.type'
 
 type IProps = ICrudBtnProps & {
@@ -12,7 +12,7 @@ type IProps = ICrudBtnProps & {
 }
 
 const props = withDefaults(defineProps<IProps>(), {
-  loading: (getComponentProps('crudBtns') as ICrudBtnsProps).loading,
+  ...getComponentProps('crudBtns', ['btnProps', 'loading']),
 })
 
 defineEmits<{

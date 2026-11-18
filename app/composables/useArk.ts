@@ -13,7 +13,7 @@ type MaybeRefsOrGetters<T> = {
 
 type IPayload<Validation extends Type> = {
   state?: MaybeRefOrGetter<Validation['infer']> | MaybeRefsOrGetters<Validation['infer']>
-  schema?: MaybeRef<Validation>
+  schema?: MaybeRef<Validation | undefined>
   scope?: string
   /** Optional diagnostic label; registrations always receive a unique suffix. */
   name?: string

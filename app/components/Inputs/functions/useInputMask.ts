@@ -1,6 +1,6 @@
 import type { Ref } from 'vue'
 import IMask, { createMask, Masked } from 'imask'
-import { computed, onScopeDispose, shallowRef, toRaw, watch } from 'vue'
+import { computed, onScopeDispose, shallowReadonly, shallowRef, toRaw, watch } from 'vue'
 import type { FactoryOpts, InputMask } from 'imask'
 
 type InputMaskOptions = {
@@ -11,7 +11,7 @@ type InputMaskOptions = {
   onComplete?: (event?: InputEvent) => void
 }
 
-/** @vapor-ready DOM refs and effect scopes own the mask in either renderer. */
+/** @vapor-ready SSR formatting and programmatic writes share IMask's typed-value semantics. */
 export function useInputMask(maskRef: Ref<FactoryOpts>, options: InputMaskOptions) {
   // createMask(existingInstance) returns that instance. Wrap it in options to
   // create an owned copy, including when a caller shares a mask across inputs.
@@ -21,23 +21,66 @@ export function useInputMask(maskRef: Ref<FactoryOpts>, options: InputMaskOption
     return { mask: createMask(source instanceof Masked ? { mask: source } : source) }
   })
 
-  const binding = {
-    el: shallowRef<HTMLInputElement | HTMLTextAreaElement>(),
-    mask: shallowRef<InputMask<FactoryOpts>>(),
-    masked: shallowRef(''),
-    unmasked: shallowRef(''),
-    typed: shallowRef<any>(),
-  }
+  const el = shallowRef<HTMLInputElement | HTMLTextAreaElement | null>()
+  const mask = shallowRef<InputMask<FactoryOpts>>()
+  const masked = shallowRef('')
+  const unmasked = shallowRef('')
+  const typed = shallowRef<any>()
   let reformatting = false
-
   let headless = createMask({ mask: maskOptions.value.mask })
 
-  function publishHeadless() {
-    binding.masked.value = headless.value
-    binding.unmasked.value = headless.unmaskedValue
-    // A numeric empty mask parses as zero; preserve its empty display.
-    binding.typed.value = headless.unmaskedValue === '' ? undefined : headless.typedValue
+  function publish(source: { value: string, unmaskedValue: string, typedValue: any }) {
+    masked.value = source.value
+    unmasked.value = source.unmaskedValue
+    typed.value = source.typedValue
   }
+
+  function publishHeadless() {
+    publish(headless)
+    // An empty numeric mask parses as zero; the field is empty, not zero
+    if (headless.unmaskedValue === '') {
+      typed.value = undefined
+    }
+  }
+
+  // The only place a live mask is made or destroyed: one per element, created when the element arrives
+  // (synchronously, so the mask exists in mounted hooks) and destroyed when it leaves or the scope ends
+  function bind(next?: HTMLInputElement | HTMLTextAreaElement | null) {
+    if (mask.value) {
+      headless = createMask({ mask: maskOptions.value.mask })
+      headless.value = mask.value.value
+      mask.value.destroy()
+    }
+    mask.value = undefined
+
+    if (!next) {
+      return
+    }
+
+    const live = IMask(next, { mask: maskOptions.value.mask })
+    // The refs hold what was written while no mask was bound
+    live.unmaskedValue = unmasked.value
+    live.on('accept', (event?: InputEvent) => {
+      publish(live)
+      if (!reformatting) {
+        options.onAccept?.(event)
+      }
+    }).on('complete', (event?: InputEvent) => {
+      if (!reformatting) {
+        options.onComplete?.(event)
+      }
+    })
+    mask.value = live
+    publish(live)
+  }
+
+  watch(el, bind, { flush: 'sync' })
+  onScopeDispose(() => bind(null))
+
+  // vue-imask applied the options once more in the flush after it had created the mask, which makes the mask's
+  // model the adapter's own. For a pattern mask that fires `accept` (and `complete`) after the component has mounted,
+  // and consumers follow it: a date field writes its normalized value to the model then. Kept, at the same point
+  watch(mask, live => live?.updateOptions({ mask: maskOptions.value.mask }), { once: true })
 
   function clear() {
     setUnmaskedValue('')
@@ -50,11 +93,10 @@ export function useInputMask(maskRef: Ref<FactoryOpts>, options: InputMaskOption
       return
     }
 
-    const live = binding.mask.value
-    if (live) {
+    if (mask.value) {
       // Bypass ref equality: an empty number mask and a displayed zero both
       // have typedValue 0. IMask's setter understands the distinction.
-      live.typedValue = value
+      mask.value.typedValue = value
     } else {
       headless.typedValue = value
       publishHeadless()
@@ -62,9 +104,8 @@ export function useInputMask(maskRef: Ref<FactoryOpts>, options: InputMaskOption
   }
 
   function setUnmaskedValue(value: string) {
-    const live = binding.mask.value
-    if (live) {
-      live.unmaskedValue = value
+    if (mask.value) {
+      mask.value.unmaskedValue = value
     } else {
       headless.unmaskedValue = value
       publishHeadless()
@@ -72,9 +113,8 @@ export function useInputMask(maskRef: Ref<FactoryOpts>, options: InputMaskOption
   }
 
   function setMaskedValue(value: string) {
-    const live = binding.mask.value
-    if (live) {
-      live.value = value
+    if (mask.value) {
+      mask.value.value = value
     } else {
       headless.value = value
       publishHeadless()
@@ -83,60 +123,11 @@ export function useInputMask(maskRef: Ref<FactoryOpts>, options: InputMaskOption
 
   setTypedValue(options.initialValue)
 
-  function publishLive() {
-    const live = binding.mask.value
-    if (!live) {
-      return
-    }
-
-    binding.masked.value = live.value
-    binding.unmasked.value = live.unmaskedValue
-    binding.typed.value = live.typedValue
-  }
-
-  function destroy() {
-    const live = binding.mask.value
-    if (!live) {
-      return
-    }
-
-    // Keep edits while the DOM ref is absent so the same owner can remount.
-    headless = createMask({ mask: maskOptions.value.mask })
-    headless.value = live.value
-    live.destroy()
-    binding.mask.value = undefined
-    publishHeadless()
-  }
-
-  watch(binding.el, element => {
-    destroy()
-    if (!element) {
-      return
-    }
-
-    const live = IMask(element, maskOptions.value)
-    live.value = binding.masked.value
-    binding.mask.value = live
-    publishLive()
-    live.on('accept', event => {
-      publishLive()
-      if (!reformatting) {
-        options.onAccept?.(event)
-      }
-    })
-    live.on('complete', event => {
-      if (!reformatting) {
-        options.onComplete?.(event)
-      }
-    })
-  }, { flush: 'post' })
-  onScopeDispose(destroy)
-
   watch(maskOptions, nextOptions => {
-    const live = binding.mask.value
+    const live = mask.value
     const preserve = !!options.getReformatValue
-    const value = preserve ? options.getReformatValue!() : binding.typed.value
-    const empty = preserve ? options.isEmptyValue(value) : binding.unmasked.value === ''
+    const value = preserve ? options.getReformatValue!() : typed.value
+    const empty = preserve ? options.isEmptyValue(value) : unmasked.value === ''
 
     reformatting = preserve
     try {
@@ -156,7 +147,7 @@ export function useInputMask(maskRef: Ref<FactoryOpts>, options: InputMaskOption
         return
       }
 
-      headless = createMask({ mask: maskOptions.value.mask })
+      headless = createMask({ mask: nextOptions.mask })
       if (empty) {
         clear()
       } else {
@@ -168,13 +159,13 @@ export function useInputMask(maskRef: Ref<FactoryOpts>, options: InputMaskOption
   })
 
   return {
-    el: binding.el,
-    mask: computed(() => binding.mask.value),
+    el,
+    mask: shallowReadonly(mask),
     // Writable computed refs preserve the callback API without losing writes
     // of equal typed values. All setters go through the same adapter.
-    typed: computed({ get: () => binding.typed.value, set: setTypedValue }),
-    masked: computed({ get: () => binding.masked.value, set: setMaskedValue }),
-    unmasked: computed({ get: () => binding.unmasked.value, set: setUnmaskedValue }),
+    typed: computed({ get: () => typed.value, set: setTypedValue }),
+    masked: computed({ get: () => masked.value, set: setMaskedValue }),
+    unmasked: computed({ get: () => unmasked.value, set: setUnmaskedValue }),
     setTypedValue,
     clear,
   }

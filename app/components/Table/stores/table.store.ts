@@ -14,6 +14,7 @@ import type { TableColumn } from '../models/table-column.model'
 
 // Functions
 import { tableNavigate } from '../functions/table-navigate'
+import { tableTrackNavigation } from '../functions/table-track-navigation'
 import { getListItemKey } from '../../List/functions/helpers'
 import { extendColumns } from '../functions/table-extend-columns'
 import { tableMergeColumns } from '../functions/table-merge-columns'
@@ -80,6 +81,7 @@ const [
       loadMetaData,
       loadData,
       queryBuilderProps,
+      columnSelectionDialogProps,
       autofitConfig,
       features,
       paginationConfig,
@@ -206,12 +208,35 @@ const [
     source: { type: 'store', name: 'table' },
   })
 
+  // The route the table is rendered on (frozen for a page that is being left)
+  const tableRoute = useRoute()
+  const router = useRouter()
+  const navigationTracker = import.meta.client
+    ? tableTrackNavigation(router, useNuxtApp().hooks)
+    : undefined
+
+  function canNavigate() {
+    return !!modifiers.value?.useUrl
+      && !!tableEl.value
+      && tableRoute.path === router.currentRoute.value.path
+  }
+
   /**
    * Navigates to a URL corresponding to the current state of the table
    */
   function navigate() {
     // When using URL, we navigate to the new URL
-    if (modifiers.value?.useUrl && tableEl.value) {
+    if (!navigationTracker || !canNavigate()) {
+      return
+    }
+
+    // Writing the URL while another navigation is in flight would cancel it,
+    // so we wait for it to settle and check we are still on the table's route
+    navigationTracker.waitForIdle().then(() => {
+      if (!canNavigate()) {
+        return
+      }
+
       const { navigate = tableNavigate } = modifiers.value ?? {}
 
       navigate({
@@ -220,7 +245,7 @@ const [
         isInfiniteScroll: !paginationConfig.value?.enabled,
         customData: customData.value,
       })
-    }
+    })
   }
 
   // SECTION State
@@ -301,6 +326,7 @@ const [
   const loadMetaData = ref<ITableProps['loadMetaData']>(tableProps?.loadMetaData)
   const loadData = ref<ITableProps['loadData']>(tableProps?.loadData)
   const queryBuilderProps = ref(tableProps?.queryBuilderProps) as Ref<ITableProps['queryBuilderProps']>
+  const columnSelectionDialogProps = ref(tableProps?.columnSelectionDialogProps) as Ref<ITableProps['columnSelectionDialogProps']>
   const autofitConfig = ref<ITableProps['autoFit']>(tableProps?.autoFit)
   const features = ref<ITableProps['features']>(tableProps?.features ?? [])
   const paginationConfig = ref<NonNullable<ITableProps['paginationConfig']>>(
@@ -344,7 +370,14 @@ const [
   // because of column merging and possibly other things. For that reason,
   // we set the `isInitialLoad` flag to true at the start and trigger the first data fetch
   // manually (from `Table.vue`)
+  // It stays true until that first fetch settles, so the table shows its loading
+  // state instead of "No data" while the first rows are on their way
   const isInitialLoad = ref(true)
+
+  // Unlike `isInitialLoad`, this only holds back the fetches that would run
+  // before the first one ~ once it started, a query change may supersede it
+  let hasFirstFetchStarted = false
+  const isAwaitingFirstFetch = () => isInitialLoad.value && !hasFirstFetchStarted
 
   const rowsColumnCount = computed(() => {
     const _tableWidth = tableWidth.value || Number.MAX_SAFE_INTEGER
@@ -811,7 +844,7 @@ const [
    * When filter or query builder changes, we need to reset the pagination
    */
   watch([filtersSerialized, queryBuilderSerialized], () => {
-    if (currentPage.value > 1) {
+    if (currentPage.value !== 1) {
       currentPage.value = 1
     }
   })
@@ -821,7 +854,7 @@ const [
    * order). A sort restored with the table's saved state keeps the saved page
    */
   watch(sortingSerialized, () => {
-    if (!isInitialLoad.value && currentPage.value > 1) {
+    if (!isAwaitingFirstFetch() && currentPage.value > 1) {
       currentPage.value = 1
     }
   })
@@ -897,7 +930,7 @@ const [
   }) {
     const isInvalidFetchMore = payload?.isFetchMore && !hasMore.value
     const isOverLimit = rows.value.length >= rowsLimit.value
-    const isInitial = isInitialLoad.value && !payload?.force
+    const isInitial = isAwaitingFirstFetch() && !payload?.force
 
     // Fetching more rows waits for the request in flight (~ no double fetch while scrolling),
     // while a query change supersedes it, so the latest query wins
@@ -907,7 +940,7 @@ const [
       return
     }
 
-    isInitialLoad.value = false
+    hasFirstFetchStarted = true
     isFetchMore.value = hasMore.value && !!payload?.isFetchMore
 
     if (isOverLimit && isFetchMore.value) {
@@ -946,6 +979,8 @@ const [
         return
       }
 
+      isInitialLoad.value = false
+
       throw error
     }
 
@@ -953,6 +988,10 @@ const [
     if (!isLatestRequest()) {
       return
     }
+
+    // Only the request whose result is shown ends the initial load ~ a superseded
+    // one would reveal "No data" while the newer request is still running
+    isInitialLoad.value = false
 
     const resModified = loadData.value?.onFetch?.({ res, getStore }) ?? res
     const { payloadKey, countKey = 'count' } = loadData.value ?? {}
@@ -1019,6 +1058,7 @@ const [
     loadMetaData,
     loadData,
     queryBuilderProps,
+    columnSelectionDialogProps,
     autofitConfig,
     features,
     paginationConfig,

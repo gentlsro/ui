@@ -1,4 +1,7 @@
+import type { MaybeRefOrGetter } from 'vue'
 import type { z } from 'zod'
+import { computed, markRaw, onUnmounted } from 'vue'
+import { generateUUID } from '#layers/utilities/shared/utils/generate-uuid'
 
 // Store
 import { useValidationStore } from '../stores/validation.store'
@@ -51,6 +54,8 @@ export function useZod<Validation extends z.ZodType = z.ZodType>(payload?: IPayl
   } = useValidationStore()
 
   // Add validation part
+  // NOTE: The schema must not become reactive ~ zod (>= 4.5) reads its internals
+  // through `this`, and a reactive proxy cannot hand out those read-only properties
   validationParts.value = [
     ...validationParts.value,
     {

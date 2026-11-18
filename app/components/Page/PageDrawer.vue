@@ -19,7 +19,7 @@ const mergedProps = computed(() => {
 })
 
 // Store
-const { drawerWidth, navigationHeight } = storeToRefs(useLayoutStore())
+const { drawerWidth, isDrawerMini, navigationHeight } = storeToRefs(useLayoutStore())
 
 // Layout
 const model = defineModel<boolean>({ default: false })
@@ -38,7 +38,14 @@ const drawerWidthRef = computed({
 
 syncRef(width, drawerWidthRef)
 
-const { handleMouseDown, isResizing } = useDrawerResize({
+// The page wrapper needs the mini width and the mini state as well, otherwise
+// it offsets the page by the configured default, not by this drawer's width
+watchEffect(() => {
+  drawerWidth.value[`${props.side}Mini`] = props.miniWidth
+  isDrawerMini.value[props.side] = isMini.value
+})
+
+const { handlePointerDown, isResizing } = useDrawerResize({
   width,
   side: () => props.side,
 })
@@ -240,7 +247,7 @@ useHead(() => {
       v-if="isResizable && !isMini && model"
       :side="props.side"
       :is-resizing
-      @mousedown="handleMouseDown"
+      @pointerdown="handlePointerDown"
     />
   </aside>
 </template>

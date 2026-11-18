@@ -117,7 +117,7 @@ const innerStyle = computed(() => {
           :option-by-key
           :readonly
           :disabled
-          :navigate-to-options="{ target: '_blank' }"
+          target="_blank"
           :chip-props
           :to="resolveTo(item)"
           @remove="handleRemove(idx)"
@@ -149,7 +149,7 @@ const innerStyle = computed(() => {
           :option-by-key
           :readonly
           :disabled
-          :navigate-to-options="{ target: '_blank' }"
+          target="_blank"
           :chip-props
           :to="resolveTo(item)"
           @remove="handleRemove(idx)"

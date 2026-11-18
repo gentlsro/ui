@@ -34,7 +34,7 @@ export function useUILink(props: IUILinkProps, element: Ref<HTMLElement | null |
 
     return value && !['javascript', 'vbscript', 'data'].includes(scheme ?? '') ? value : undefined
   })
-  const linkTarget = computed(() => props.target ?? props.navigateToOptions?.target ?? props.navigateToOptions?.open?.target)
+  const linkTarget = computed(() => props.target ?? props.navigateToOptions?.open?.target)
   const isExactActive = computed(() => internal.value && routerLink.isExactActive.value)
   const isActive = computed(() => internal.value && routerLink.isActive.value)
   const prefetched = ref(false)
@@ -65,19 +65,17 @@ export function useUILink(props: IUILinkProps, element: Ref<HTMLElement | null |
   function prefetchOn(mode: 'visibility' | 'interaction') {
     const setting = props.prefetchOn
 
-    return typeof setting === 'string' ? setting === mode : setting?.[mode] ?? mode === 'visibility'
+    return typeof setting === 'string' ? setting === mode : setting?.[mode] ?? mode === 'interaction'
   }
+
   const observedElement = computed(() => allowsPrefetch.value ? element.value : null)
-  useIntersectionObserver(observedElement, ([entry]) => {
-    if (entry?.isIntersecting && prefetchOn('visibility')) {
+
+  useIntersectionObserver(computed(() => prefetchOn('visibility') ? observedElement.value : null), ([entry]) => {
+    if (entry?.isIntersecting) {
       void prefetch()
     }
   })
-  useEventListener(observedElement, ['pointerenter', 'focus'], () => {
-    if (prefetchOn('interaction')) {
-      void prefetch()
-    }
-  })
+  useEventListener(computed(() => prefetchOn('interaction') ? observedElement.value : null), ['pointerenter', 'focus'], () => void prefetch())
 
   function navigate(event: MouseEvent) {
     if (props.disabled || !href.value) {
@@ -103,7 +101,7 @@ export function useUILink(props: IUILinkProps, element: Ref<HTMLElement | null |
   const attrs = computed(() => ({
     'href': href.value,
     'target': linkTarget.value,
-    'rel': props.noRel ? undefined : props.rel ?? props.navigateToOptions?.rel ?? ((linkTarget.value && linkTarget.value !== '_self') || external.value ? 'noopener noreferrer' : undefined),
+    'rel': props.noRel ? undefined : props.rel ?? ((linkTarget.value && linkTarget.value !== '_self') || external.value ? 'noopener noreferrer' : undefined),
     'download': isDownload.value ? props.download === true ? '' : props.download : undefined,
     'tabindex': props.disabled || !href.value ? -1 : undefined,
     'aria-disabled': props.disabled ? true : undefined,

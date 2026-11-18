@@ -44,6 +44,19 @@ const props = withDefaults(defineProps<IProps>(), {
     @apply left--6px;
   }
 
+  // A finger needs a wider strip to hit than a mouse
+  @media (pointer: coarse) {
+    @apply w-6;
+
+    &--left {
+      @apply right--12px;
+    }
+
+    &--right {
+      @apply left--12px;
+    }
+  }
+
   &::before,
   &::after {
     @apply content-empty pointer-events-none;

@@ -1,4 +1,5 @@
 import { defu } from 'defu'
+import { klona } from 'klona/full'
 import { skipHydrate } from 'pinia'
 import { uiConfig } from '$uiConfig'
 
@@ -39,11 +40,15 @@ export const useUIStore = defineStore('__ui', () => {
     watch: true,
   })
 
-  // Cookie Store deletion notifications use null even with a default callback.
-  // Restore preferences before consumers react to an absent cookie.
+  // NOTE: `default` only covers the initial read; the cookie ref still becomes
+  // `null`/`undefined` when the cookie is deleted or changed elsewhere (cookieStore
+  // / BroadcastChannel sync, `refreshCookie`), so we restore the default synchronously
+  // to keep `uiState.value` safe to dereference for every reader
   watch(uiState, state => {
     if (isNil(state)) {
-      uiState.value = getDefaultUIState()
+      // Cloned, as `defu` keeps references into `uiConfig` ~ writing a preference
+      // would otherwise change the configured defaults
+      uiState.value = klona(getDefaultUIState())
     }
   }, { flush: 'sync' })
 

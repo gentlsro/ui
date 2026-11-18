@@ -1,9 +1,9 @@
 <script setup lang="ts" vapor>
 // Types
-import type { ICrudBtnProps, ICrudBtnsProps } from './types/crud-btn-props.type'
+import type { ICrudBtnProps } from './types/crud-btn-props.type'
 
 const props = withDefaults(defineProps<ICrudBtnProps>(), {
-  loading: (getComponentProps('crudBtns') as ICrudBtnsProps).loading,
+  ...getComponentProps('crudBtns', ['btnProps', 'loading']),
 })
 
 defineEmits<{

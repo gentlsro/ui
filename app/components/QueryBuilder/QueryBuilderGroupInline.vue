@@ -8,7 +8,7 @@ import type { IQueryBuilderGroup, IQueryBuilderGroupProps } from './types/query-
 import { useColors } from '../../composables/useColors'
 
 // Store
-import { useQueryBuilderStore } from './query-builder.store'
+import { QUERY_BUILDER_HIGHLIGHT_COLOR_KEY, useQueryBuilderStore } from './query-builder.store'
 
 // Constants
 import { QUERY_BUILDER_LEVEL_COLORS } from './constants/query-builder-level-colors.constant'
@@ -36,6 +36,24 @@ const levelColor = computed(() => {
 
   return getColor(color)
 })
+
+// Highlight
+// When the condition is hovered, all rows of the group are highlighted, including
+// the rows of nested groups, so the whole bracketed expression is outlined
+const parentHighlightColor = inject(QUERY_BUILDER_HIGHLIGHT_COLOR_KEY, undefined)
+
+const highlightColor = computed(() => {
+  if (isHovered.value) {
+    const childrenLevel = props.level + 1
+    const color = QUERY_BUILDER_LEVEL_COLORS[childrenLevel % QUERY_BUILDER_LEVEL_COLORS.length] as string
+
+    return getColor(color)
+  }
+
+  return parentHighlightColor?.value
+})
+
+provide(QUERY_BUILDER_HIGHLIGHT_COLOR_KEY, highlightColor)
 
 function handleSetCondition(val: 'AND' | 'OR') {
   const isNegated = item.value.condition === 'NOT_AND' || item.value.condition === 'NOT_OR'
@@ -214,12 +232,6 @@ function handleRemoveGroup() {
     :remove-fnc
     :modify-fnc
     :editable
-    :style="{
-      ...(isHovered && {
-        borderColor: 'var(--bracketColor)',
-        borderStyle: 'solid',
-      }),
-    }"
     @add:row="handleAddCondition()"
   />
 
@@ -275,10 +287,11 @@ function handleRemoveGroup() {
   }
 }
 
+// (`::before`: a Btn's `::after` is its ripple)
 .last-child-bracket {
   @apply relative self-center m-r-2;
 
-  &::after {
+  &::before {
     @apply absolute -right-2 text-6 leading-none font-normal;
 
     content: '\2773';

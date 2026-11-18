@@ -21,9 +21,11 @@ export default defineNitroPlugin(nitroApp => {
               return agg
             }, {})
 
+          // A theme the page sets for itself (the server sets data-page-theme on <html>) wins over every other
+          const pageTheme = document.documentElement.getAttribute('data-page-theme')
           const manualTheme = ${!theme || theme === 'auto'} ? '' : '${theme}'
           const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-          const setting = manualTheme || cookieByName.theme || (prefersDark ? 'dark' : 'light')
+          const setting = pageTheme || manualTheme || cookieByName.theme || (prefersDark ? 'dark' : 'light')
           cookieByName.theme = setting
 
           document.documentElement.setAttribute('class', setting)

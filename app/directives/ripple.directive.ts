@@ -1,94 +1,78 @@
-// @vapor-ready
-import type { ObjectDirective, VaporDirective } from 'vue'
+import { watchEffect } from 'vue'
+import type { Directive, VaporDirective } from 'vue'
 
-function getRippleAttributes(ev: MouseEvent) {
-  const target = ev.currentTarget as HTMLElement
-  const rect = target.getBoundingClientRect()
-  const computedStyle = getComputedStyle(target)
-  const borderWidth = computedStyle.getPropertyValue('border-width')
-  const zoomValue = computedStyle.getPropertyValue('--zoom')
-  const zoom = zoomValue ? Number.parseFloat(zoomValue) : 1
+/**
+ * Plays the ripple as the element's `::after` (`ripple.scss`): no node, attribute, class or inline style of the element
+ * changes, so an element clicked before it hydrates still hydrates against the DOM the server rendered
+ */
+function playRipple(el: HTMLElement, ev: MouseEvent) {
+  const rect = el.getBoundingClientRect()
+  const style = getComputedStyle(el)
+  const zoom = Number.parseFloat(style.getPropertyValue('--zoom')) || 1
 
-  const x = (ev.clientX - rect.left) / zoom
-  const y = (ev.clientY - rect.top) / zoom
-  const width = rect.width / zoom
-  const height = rect.height / zoom
-
-  return {
-    x,
-    y,
-    width: `${width}px`,
-    height: `${height}px`,
-    ...(borderWidth && { top: `-${borderWidth}`, left: `-${borderWidth}` }),
+  // A circle from the click, 0.5px to 150px (a 1px dot scaled 300), over the element's border box, clipped to its outer
+  // radius ~ absolute offsets start inside the border
+  const at = `${(ev.clientX - rect.left) / zoom + 0.5}px ${(ev.clientY - rect.top) / zoom + 0.5}px`
+  const box = {
+    top: `-${style.borderTopWidth}`,
+    left: `-${style.borderLeftWidth}`,
+    width: `${rect.width / zoom}px`,
+    height: `${rect.height / zoom}px`,
+    borderRadius: style.borderRadius,
+    backgroundColor: style.color,
   }
+
+  // A click while a ripple plays starts it again from the new point
+  // (an element's own list leaves out its pseudo-elements: `subtree` has them, and its descendants' too)
+  el.getAnimations({ subtree: true })
+    .find(animation => animation.id === 'ripple' && (animation.effect as KeyframeEffect | null)?.target === el)
+    ?.cancel()
+
+  // (eased per keyframe interval: the opacity over the first 70 %, the circle over the whole run)
+  el.animate([
+    { ...box, opacity: 0.3, clipPath: `circle(0.5px at ${at})`, easing: 'ease-out' },
+    { ...box, opacity: 0, offset: 0.7, easing: 'ease-out' },
+    { ...box, opacity: 0, clipPath: `circle(150px at ${at})` },
+  ], { id: 'ripple', pseudoElement: '::after', duration: 800 })
 }
 
-// Both renderers own the same DOM listener and release unfinished animations.
-function bindRipple(el: HTMLElement, isEnabled: () => boolean) {
-  const ripples = new Set<HTMLElement>()
+/**
+ * One listener plays the ripple of every element marked `data-ripple`, started once by the `ripple` plugin: the
+ * directive marks the elements it is on, the server renders the mark too, so an element that never hydrates (a
+ * published page's static block) ripples as well
+ */
+export function listenToRipples() {
+  document.addEventListener('click', ev => {
+    const target = ev.target as Element | null
+    const el = target?.closest?.('[data-ripple], button, a[href]')
 
-  function onClick(ev: MouseEvent) {
-    if (!isEnabled() || el.matches(':disabled')) {
-      return
+    // Only a visitor's click ripples: a click made by code (DynamicGrid replaying a click made before hydration) would
+    // play a second ripple, from the viewport's corner
+    if (el?.matches('[data-ripple]:not(:disabled)') && ev.isTrusted) {
+      playRipple(el as HTMLElement, ev)
     }
 
-    const rippleContainerEl = el.ownerDocument.createElement('span')
-    const rippleEl = el.ownerDocument.createElement('span')
-    const attributes = getRippleAttributes(ev)
-
-    rippleContainerEl.style.width = attributes.width
-    rippleContainerEl.style.height = attributes.height
-    rippleContainerEl.style.top = attributes.top || '0'
-    rippleContainerEl.style.left = attributes.left || '0'
-    rippleEl.style.top = `${attributes.y}px`
-    rippleEl.style.left = `${attributes.x}px`
-    rippleContainerEl.classList.add('ripple-container')
-    rippleEl.classList.add('ripple')
-    rippleContainerEl.appendChild(rippleEl)
-    ripples.add(rippleContainerEl)
-
-    rippleEl.addEventListener('animationend', () => {
-      rippleContainerEl.remove()
-      ripples.delete(rippleContainerEl)
-    }, { once: true })
-    el.appendChild(rippleContainerEl)
-  }
-
-  el.addEventListener('click', onClick)
-
-  return () => {
-    el.removeEventListener('click', onClick)
-    for (const ripple of ripples) {
-      ripple.remove()
-    }
-    ripples.clear()
-  }
+    // Capture phase ~ a `@click.stop` on the element (or between it and the document)
+    // would otherwise keep the click from ever reaching this listener
+  }, true)
 }
 
-const bindings = new WeakMap<HTMLElement, { enabled: boolean, cleanup: () => void }>()
+function toggleRipple(el: HTMLElement, value: unknown) {
+  el.toggleAttribute('data-ripple', value !== false)
+}
 
-export const vRipple: ObjectDirective<HTMLElement, boolean | undefined> = {
+export const vRipple: Directive = {
+  getSSRProps: ({ value }) => value === false ? {} : { 'data-ripple': '' },
   mounted(el, { value }) {
-    const binding = {
-      enabled: value !== false,
-      cleanup: () => {},
-    }
-    binding.cleanup = bindRipple(el, () => binding.enabled)
-    bindings.set(el, binding)
+    toggleRipple(el, value)
   },
   updated(el, { value }) {
-    const binding = bindings.get(el)
-    if (binding) {
-      binding.enabled = value !== false
-    }
-  },
-  beforeUnmount(el) {
-    bindings.get(el)?.cleanup()
-    bindings.delete(el)
+    toggleRipple(el, value)
   },
 }
 
-// Vapor supplies a live value getter and disposes the returned cleanup with its owner.
-export const vRippleVapor: VaporDirective<HTMLElement, boolean | undefined> = (el, value) => {
-  return bindRipple(el, () => value?.() !== false)
+const bindVaporRipple: VaporDirective<HTMLElement, boolean | undefined> = (el, value) => {
+  return watchEffect(() => toggleRipple(el, value?.()))
 }
+
+export const vRippleVapor = Object.assign(bindVaporRipple, { getSSRProps: vRipple.getSSRProps })

@@ -138,7 +138,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
   })
 
   // Input methods
-  const getInputElement = () => inputElement.value
+  const getInputElement = () => inputElement.value ?? undefined
   const select = () => inputElement.value?.select()
 
   const focus = (alignCursor?: boolean, preventScroll?: boolean) => {

@@ -42,36 +42,51 @@ export function useDrawerResize(options: IUseDrawerResizeOptions) {
     }
   })
 
-  function handleMouseMove(event: MouseEvent) {
+  // The resizer captures the pointer, so a drag that leaves it still reaches it
+  let resizer: HTMLElement | undefined
+  let pointerId = 0
+
+  function handlePointerMove(event: PointerEvent) {
     // Dragging the resizer away from the drawer (towards the page) grows it
     const diffX = (event.clientX - currentX) * (toValue(options.side) === 'left' ? 1 : -1)
 
     widthTask.schedule(Math.min(Math.max(currentWidth + diffX, minWidth), maxWidth))
   }
 
-  function handleMouseUp() {
+  function handlePointerUp() {
     widthTask.flush()
     clearResize()
   }
 
   function clearResize() {
-    if (!import.meta.client) {
+    if (!resizer) {
       return
     }
-    document.removeEventListener('mousemove', handleMouseMove)
-    document.removeEventListener('mouseup', handleMouseUp)
+    resizer?.removeEventListener('pointermove', handlePointerMove)
+    resizer?.removeEventListener('pointerup', handlePointerUp)
+    resizer?.removeEventListener('pointercancel', handlePointerUp)
+
+    if (resizer?.hasPointerCapture(pointerId)) {
+      resizer.releasePointerCapture(pointerId)
+    }
+
+    resizer = undefined
 
     document.documentElement.classList.remove('select-none')
     document.body.classList.remove('cursor-col-resize')
     isResizing.value = false
   }
 
-  function handleMouseDown(event: MouseEvent) {
-    if (event.button !== 0) {
+  function handlePointerDown(event: PointerEvent) {
+    if (!event.isPrimary || event.button !== 0) {
       return
     }
 
     event.preventDefault()
+
+    resizer = event.currentTarget as HTMLElement
+    pointerId = event.pointerId
+    resizer.setPointerCapture(pointerId)
 
     currentX = event.clientX
     currentWidth = options.width.value
@@ -81,8 +96,9 @@ export function useDrawerResize(options: IUseDrawerResizeOptions) {
     document.documentElement.classList.add('select-none')
     document.body.classList.add('cursor-col-resize')
 
-    document.addEventListener('mousemove', handleMouseMove)
-    document.addEventListener('mouseup', handleMouseUp)
+    resizer.addEventListener('pointermove', handlePointerMove)
+    resizer.addEventListener('pointerup', handlePointerUp)
+    resizer.addEventListener('pointercancel', handlePointerUp)
   }
 
   onScopeDispose(() => {
@@ -91,7 +107,7 @@ export function useDrawerResize(options: IUseDrawerResizeOptions) {
   })
 
   return {
-    handleMouseDown,
+    handlePointerDown,
     isResizing,
   }
 }
