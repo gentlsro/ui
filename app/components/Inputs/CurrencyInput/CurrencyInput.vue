@@ -103,8 +103,12 @@ const isEditable = computed(() => !props.readonly && !props.disabled)
 // (3, 0, 0 gives 300.00); the decimal separator moves into the fraction, filled from the left (3, ., 5 gives 3.50)
 const fraction = ref<{ digits: number } | null>(null)
 
+// IMask represents both signs of zero as 0 between keystrokes.
+let negativeZero = false
+
 watch(isBlurred, isBlurred => {
   if (isBlurred) {
+    negativeZero = false
     fraction.value = null
   }
 })
@@ -132,18 +136,21 @@ function handleBeforeInput(ev: Event) {
 
   // Typing in the middle of the value keeps the mask's own editing
   if (!isAllSelected && !isAtEnd) {
+    negativeZero = false
+
     return
   }
 
   ev.preventDefault()
 
   const value = isAllSelected || isNil(typed.value) ? 0 : Number(typed.value)
-  const sign = value < 0 || Object.is(value, -0) ? -1 : 1
+  let sign = value < 0 || (!isAllSelected && value === 0 && negativeZero) ? -1 : 1
   const scale = 10 ** props.fractionDigits
   const whole = Math.trunc(Math.abs(value))
   const cents = Math.round((Math.abs(value) - whole) * scale)
 
   if (isAllSelected) {
+    negativeZero = false
     fraction.value = null
   }
 
@@ -154,6 +161,7 @@ function handleBeforeInput(ev: Event) {
     }
 
     if (isAllSelected) {
+      negativeZero = false
       setTypedValue(props.emptyValue)
     } else if (fraction.value?.digits) {
       const digits = --fraction.value.digits
@@ -174,10 +182,10 @@ function handleBeforeInput(ev: Event) {
     const absolute = Math.abs(current)
     const currentWhole = Math.trunc(absolute)
     const currentCents = Math.round((absolute - currentWhole) * scale)
-    const currentSign = current < 0 ? -1 : sign
 
     if (char === '-') {
-      setValue(-current)
+      sign = -sign
+      current = sign * absolute
     } else if (char === '.' || char === ',') {
       if (props.fractionDigits > 0) {
         fraction.value = { digits: 0 }
@@ -190,14 +198,16 @@ function handleBeforeInput(ev: Event) {
           const position = props.fractionDigits - ++fraction.value.digits
           const nextCents = Math.trunc(currentCents / 10 ** (position + 1)) * 10 ** (position + 1) + digit * 10 ** position
 
-          setValue(currentSign * (currentWhole + nextCents / scale))
+          current = sign * (currentWhole + nextCents / scale)
         }
       } else {
-        setValue(currentSign * (currentWhole * 10 + digit + currentCents / scale))
+        current = sign * (currentWhole * 10 + digit + currentCents / scale)
       }
     }
-    current = Number(typed.value ?? 0)
   }
+
+  negativeZero = current === 0 && sign < 0
+  setValue(current)
 }
 
 const currency = computed(() => {

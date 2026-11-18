@@ -1,3 +1,5 @@
+import type { ComponentInternalInstance } from 'vue'
+
 type FloatingElement = Element & {
   hide?: (force?: boolean) => void
 }
@@ -14,6 +16,9 @@ export function $hide(options?: {
    * An explicitly missing target does nothing instead of closing another overlay.
    */
   target?: Element | null
+
+  /** Legacy VDOM owner. An explicit DOM target takes precedence. */
+  instance?: ComponentInternalInstance | null
 
   /**
    * When true, all the floating UIs will be hidden (with exception of `ignore`d elements)
@@ -44,7 +49,7 @@ export function $hide(options?: {
    */
   force?: boolean
 }) {
-  if (!import.meta.client) {
+  if (typeof document === 'undefined') {
     return
   }
 
@@ -78,8 +83,10 @@ export function $hide(options?: {
     return
   }
 
-  if (options && 'target' in options) {
-    const floatingEl = target?.closest<FloatingElement>(selector)
+  if (options && ('target' in options || 'instance' in options)) {
+    const root = 'target' in options ? target : options.instance?.vnode.el
+    const element = root instanceof Element ? root : root?.parentElement
+    const floatingEl = element?.closest(selector) as FloatingElement | null | undefined
 
     floatingEl?.hide?.(force)
 
