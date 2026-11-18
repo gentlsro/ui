@@ -199,8 +199,10 @@ function handleBeforeInput(ev: Event) {
     }
   }
 
-  negativeZero = current === 0 && sign < 0
-  setValue(current)
+  if (/[0-9-]/.test(ev.data)) {
+    negativeZero = current === 0 && sign < 0
+    setValue(current)
+  }
 }
 
 const currency = computed(() => {
