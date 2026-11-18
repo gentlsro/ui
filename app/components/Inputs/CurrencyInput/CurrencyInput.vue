@@ -68,10 +68,8 @@ const {
   model,
   masked,
   typed,
-  unmasked,
   wrapperProps,
   hasNoValue,
-  lastValidValue,
   hasClearableBtn,
   label,
   isTouched,
@@ -129,7 +127,13 @@ const { path } = useInputValidationUtils(props)
 const isEditable = computed(() => !props.readonly && !props.disabled)
 
 // Input handling
-const ALLOWED_CHARS = /[0-9-]/
+// IMask normalizes negative zero before the next digit arrives.
+let negativeZero = false
+watch(isBlurred, blurred => {
+  if (blurred) {
+    negativeZero = false
+  }
+})
 
 const currency = computed(() => {
   if (props.noCurrency) {
@@ -170,75 +174,52 @@ function handleBeforeInput(ev: Event) {
     && input.selectionEnd === input.value.length
     && input.value.length > 0
 
-  const isAtEnd = input.selectionStart === input.value.length
+  const isAtEnd = input.selectionStart === input.value.length && input.selectionEnd === input.value.length
+  if (!isAllSelected && !isAtEnd) {
+    negativeZero = false
 
-  // When the entire text is selected and we're adding a digit, we need to
-  // initialize the value to `0.0` and add the digit
-  if (isAllSelected && ev.data) {
-    if (ev.data.length === 1 && isNumeric(ev.data)) {
-      typed.value = Number(`0.0${ev.data}`)
-    } else if (ev.data.length === 1 && ev.data === '-') {
-      typed.value = typed.value * -1
-    }
+    return
   }
 
-  // When the entire text is selected and we're not providing any data (for example backspace/delete),
-  // we reset the value to the `emptyValue`
-  else if (isAllSelected) {
-    typed.value = props.emptyValue
+  if (isAllSelected) {
+    negativeZero = false
+  }
+  if (!ev.data) {
+    negativeZero = false
+    if (isAllSelected) {
+      typed.value = props.emptyValue
+    }
+
+    return
   }
 
-  // When providing data (typing or pasting) while we are at the end of the input,
-  // we "shift" the value to the right and add the new digit
-  else if (ev.data && isAtEnd) {
-    if (!ALLOWED_CHARS.test(ev.data)) {
+  const current = isAllSelected ? 0 : Number(typed.value ?? 0)
+  const scale = 10 ** props.fractionDigits
+
+  if (ev.data === '-') {
+    negativeZero = current === 0 && !negativeZero
+    typed.value = -current
+  } else if (ev.data.length > 1 && (isAllSelected || !current || ev.data.startsWith('-'))) {
+    const amount = ev.data.trim().split(separators.value.thousandSeparator).join('')
+      .replace(separators.value.decimalSeparator, '.')
+    if (!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)$/.test(amount)) {
       return
     }
-
-    const isValNumeric = isNumeric(ev.data)
-    const sliceRange = -1 * props.fractionDigits
-    let val = (lastValidValue.value ?? 0).toFixed(props.fractionDigits).replace(/\./g, '')
-
-    if (isValNumeric) {
-      val += ev.data
-    }
-
-    val = Number(`${val.slice(0, sliceRange)}.${val.slice(sliceRange)}`)
-
-    // Handle negative values
-    const isMinus = ev.data === '-'
-
-    // When the `masked` value has been preset to `-0.00` and the input is a numeric value,
-    // we set the value and negate it
-    if (unmasked.value === '-0' && isValNumeric) {
-      val = val * -1
-    }
-
-    // When input is `-` and the value is `0`, we preset the `masked` value to `-0.00`
-    else if (val === 0 && isMinus) {
-      masked.value = '-0.00'
-
-      return
-    }
-
-    // When input is `-` and the value is not `0`, we negate the value
-    else if (val !== 0 && isMinus) {
-      val = val * -1
-    }
-
-    // When inputting an actual 0
-    else if (val === 0) {
-      masked.value = '0.00'
-
-      return
-    }
-
-    typed.value = val
-
-    ev.preventDefault()
-    ev.stopPropagation()
-    ev.stopImmediatePropagation()
+    typed.value = Number(amount)
+    negativeZero = amount.startsWith('-') && typed.value === 0
+  } else if (/^\d+$/.test(ev.data)) {
+    // This branch uses fixed-point entry: append digits to the amount in minor units.
+    const minorUnits = Math.round(Math.abs(current) * scale)
+    const magnitude = Number(`${minorUnits}${ev.data}`) / scale
+    const sign = current < 0 || (current === 0 && negativeZero) ? -1 : 1
+    typed.value = sign * magnitude
+    negativeZero = sign < 0 && magnitude === 0
+  } else {
+    return
   }
+
+  ev.preventDefault()
+  nextTick(() => input.setSelectionRange(input.value.length, input.value.length))
 }
 
 // Wrapper class
