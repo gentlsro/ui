@@ -129,8 +129,10 @@ const isEditable = computed(() => !props.readonly && !props.disabled)
 // Input handling
 // IMask normalizes negative zero before the next digit arrives.
 let negativeZero = false
-watch(isBlurred, blurred => {
-  if (blurred) {
+
+// A blur or an emptied field (Backspace, the clear button) starts the next amount afresh
+watch([isBlurred, hasNoValue], ([blurred, isEmpty]) => {
+  if (blurred || isEmpty) {
     negativeZero = false
   }
 })
@@ -188,6 +190,14 @@ function handleBeforeInput(ev: Event) {
     negativeZero = false
     if (isAllSelected) {
       typed.value = props.emptyValue
+    } else if (
+      ev.inputType === 'deleteContentBackward'
+      && Math.round(Math.abs(Number(typed.value ?? 0)) * 10 ** props.fractionDigits) < 10
+    ) {
+      // Backspace on the last digit empties the field; the mask alone would leave 0.0, then 0.00.
+      // Through the text: vue-imask ignores an undefined typed value
+      ev.preventDefault()
+      masked.value = ''
     }
 
     return
