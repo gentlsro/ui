@@ -618,10 +618,8 @@ export type ITableProps<
   splitRows?: Array<{ breakpoint: number, count: number }>
 
   /**
-   * Stable, explicit localStorage key. Omit or use `null` for local state only.
-   * To retain settings from older versions, pass the former parent component
-   * name unchanged. Tables sharing a key intentionally share saved settings.
-   * Remount the table when enabling or disabling persistence.
+   * Saved settings use the named parent by default, as in 2.3. Set a key
+   * explicitly to share settings, or null to keep this table in memory.
    */
   storageKey?: string | null
 

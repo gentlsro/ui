@@ -1,22 +1,20 @@
 // @unocss-include
 import { existsSync } from 'node:fs'
 import { createResolver } from 'nuxt/kit'
-import { loadEnv } from 'vite'
 import { writeFile } from 'node:fs/promises'
-import { cwd, env as processEnv } from 'node:process'
-import { prepareLocalNuxtLayers } from './prepare-layers.ts'
 
-const env = {
-  ...import.meta.env,
-  ...loadEnv('', processEnv.NUXT_DOTENV_DIR ?? cwd(), ''),
-}
-
-const isMonorepo = env.VITE_MONOREPO === 'true'
 const { resolve } = createResolver(import.meta.url)
-const hasUtilitiesLib = isMonorepo || existsSync(resolve('../Utilities'))
+const utilitiesRevision = '83028177ba3eec7596eae585ae3eb947681253d6'
+const hasUtilitiesLib = existsSync(resolve('../Utilities/nuxt.config.ts'))
 
 export default defineNuxtConfig({
-  extends: hasUtilitiesLib ? ['../Utilities'] : ['github:gentlsro/Utilities#2.3'],
+  extends: hasUtilitiesLib
+    ? ['../Utilities']
+    : [[
+        `github:gentlsro/Utilities#${utilitiesRevision}`,
+        // Resolve the downloaded layer's packages through the same installation as UI.
+        { giget: { dir: resolve(`./node_modules/.gentl/utilities-${utilitiesRevision}`), force: true } },
+      ]],
 
   modules: [
     '@nuxtjs/i18n',
@@ -112,8 +110,6 @@ export default defineNuxtConfig({
   },
 
   hooks: {
-    'ready': prepareLocalNuxtLayers,
-
     'unocss:config': async config => {
       console.log('✔ Creating colors.json file...')
       const colors: Record<string, string> = {}

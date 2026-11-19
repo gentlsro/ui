@@ -24,7 +24,7 @@ const model = defineModel<Datetime>()
 
 const dateObj = computed(() => $date(model.value, { utc: !!props.utc }))
 
-const now = useNow({ interval: $duration(15, 'minute').as('ms') })
+const now = useNow({ scheduler: callback => useIntervalFn(callback, $duration(15, 'minute').as('ms')) })
 const nowValue = computed(() => $date(now.value))
 const nowMonth = computed(() => `${nowValue.value.year()}-${padStart(String(nowValue.value.month()), 2, '0')}`)
 

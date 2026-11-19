@@ -11,6 +11,7 @@ import { tableMeasurementsKey, tableSlotsKey } from './provide/table.provide'
 
 // Functions
 import { tableInitialize } from './functions/table-initialize'
+import { tableGetStorageOwner } from './functions/table-get-storage-owner'
 import { tableGetExposed } from './functions/table-get-exposed'
 
 // Constants
@@ -51,7 +52,8 @@ function hasRowActions() {
 provideLocal(tableSlotsKey, slots)
 
 // Init
-const storageKey = computed(() => props.storageKey ?? null)
+const storageOwner = tableGetStorageOwner()
+const storageKey = computed(() => props.storageKey === undefined ? storageOwner ?? null : props.storageKey)
 
 const mergedProps = computed(() => {
   return getComponentMergedProps('table', props)

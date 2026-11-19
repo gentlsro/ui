@@ -212,8 +212,7 @@ function placeCursorOnTime() {
     focusInputWithoutClosingPicker(input)
   }
 
-  // The mask binding exposes a readonly proxy; update the owned IMask instance.
-  toRaw(mask).updateCursor(getTimeCursorPosition())
+  mask.updateCursor(getTimeCursorPosition())
 }
 
 function handleDateSelect(val?: Datetime) {

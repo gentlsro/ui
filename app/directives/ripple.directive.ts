@@ -5,6 +5,13 @@ import type { Directive, VaporDirective } from 'vue'
  * Plays the ripple as the element's `::after` (`ripple.scss`): no node, attribute, class or inline style of the element
  * changes, so an element clicked before it hydrates still hydrates against the DOM the server rendered
  */
+const animations = new WeakMap<HTMLElement, Animation>()
+
+function stopRipple(el: HTMLElement) {
+  animations.get(el)?.cancel()
+  animations.delete(el)
+}
+
 function playRipple(el: HTMLElement, ev: MouseEvent) {
   const rect = el.getBoundingClientRect()
   const style = getComputedStyle(el)
@@ -22,18 +29,15 @@ function playRipple(el: HTMLElement, ev: MouseEvent) {
     backgroundColor: style.color,
   }
 
-  // A click while a ripple plays starts it again from the new point
-  // (an element's own list leaves out its pseudo-elements: `subtree` has them, and its descendants' too)
-  el.getAnimations({ subtree: true })
-    .find(animation => animation.id === 'ripple' && (animation.effect as KeyframeEffect | null)?.target === el)
-    ?.cancel()
+  stopRipple(el)
 
   // (eased per keyframe interval: the opacity over the first 70 %, the circle over the whole run)
-  el.animate([
+  const animation = el.animate([
     { ...box, opacity: 0.3, clipPath: `circle(0.5px at ${at})`, easing: 'ease-out' },
     { ...box, opacity: 0, offset: 0.7, easing: 'ease-out' },
     { ...box, opacity: 0, clipPath: `circle(150px at ${at})` },
   ], { id: 'ripple', pseudoElement: '::after', duration: 800 })
+  animations.set(el, animation)
 }
 
 /**
@@ -42,6 +46,7 @@ function playRipple(el: HTMLElement, ev: MouseEvent) {
  * published page's static block) ripples as well
  */
 export function listenToRipples() {
+  const controller = new AbortController()
   document.addEventListener('click', ev => {
     const target = ev.target as Element | null
     const el = target?.closest?.('[data-ripple], button, a[href]')
@@ -54,7 +59,9 @@ export function listenToRipples() {
 
     // Capture phase ~ a `@click.stop` on the element (or between it and the document)
     // would otherwise keep the click from ever reaching this listener
-  }, true)
+  }, { capture: true, signal: controller.signal })
+
+  return () => controller.abort()
 }
 
 function toggleRipple(el: HTMLElement, value: unknown) {
@@ -62,6 +69,7 @@ function toggleRipple(el: HTMLElement, value: unknown) {
 }
 
 export const vRipple: Directive = {
+  beforeUnmount: stopRipple,
   getSSRProps: ({ value }) => value === false ? {} : { 'data-ripple': '' },
   mounted(el, { value }) {
     toggleRipple(el, value)
@@ -72,7 +80,12 @@ export const vRipple: Directive = {
 }
 
 const bindVaporRipple: VaporDirective<HTMLElement, boolean | undefined> = (el, value) => {
-  return watchEffect(() => toggleRipple(el, value?.()))
+  const stop = watchEffect(() => toggleRipple(el, value?.()))
+
+  return () => {
+    stop()
+    stopRipple(el)
+  }
 }
 
 export const vRippleVapor = Object.assign(bindVaporRipple, { getSSRProps: vRipple.getSSRProps })

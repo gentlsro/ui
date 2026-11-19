@@ -32,7 +32,6 @@ function publishAsset(path: string, contents: string) {
 export function updateIconManifest(options: {
   directory: string
   update: (manifest: Record<string, IconAsset>) => Record<string, IconAsset>
-  reset?: boolean
 }) {
   mkdirSync(options.directory, { recursive: true })
   const lock = join(options.directory, 'manifest.lock')
@@ -54,7 +53,7 @@ export function updateIconManifest(options: {
   }
   try {
     const path = join(options.directory, 'manifest.json')
-    const manifest: Record<string, IconAsset> = !options.reset && existsSync(path)
+    const manifest: Record<string, IconAsset> = existsSync(path)
       ? JSON.parse(readFileSync(path, 'utf8'))
       : {}
     const updated = options.update(manifest)

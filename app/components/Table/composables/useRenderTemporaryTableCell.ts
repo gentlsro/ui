@@ -1,11 +1,15 @@
 // @vapor-ready
+import type { VNodeChild } from 'vue'
 import type { ITableProps } from '../types/table-props.type'
 import type { TableColumn } from '../models/table-column.model'
+
+export type LegacyTableCellSlot = (props: { row: IItem, index: number, refreshDataFnc: () => void }) => VNodeChild
 
 type CellMeasurement = {
   row: IItem
   col: TableColumn<any>
   index?: number
+  slotRenderFnc?: LegacyTableCellSlot
   ui?: ITableProps['ui']
 }
 

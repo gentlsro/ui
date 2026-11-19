@@ -11,7 +11,7 @@ import type { ITableDistinctData } from '../types/table-distinct-data.type'
 
 // Functions
 import { getDateSimpleValue } from '#layers/utilities/app/composables/useDateUtils'
-import type { TableMeasurements } from '../composables/useRenderTemporaryTableCell'
+import type { LegacyTableCellSlot, TableMeasurements } from '../composables/useRenderTemporaryTableCell'
 
 // Components
 import DynamicInput from '../../Inputs/DynamicInput/DynamicInput.vue'
@@ -487,7 +487,9 @@ export class TableColumn<T = IItem> {
 
   async autoFit(payload: {
     rows: any[]
-    measurements: TableMeasurements
+    measurements?: TableMeasurements
+    /** VDOM slot from the 2.3 API. */
+    slotRenderFnc?: LegacyTableCellSlot
     tableMinColWidth: number
     autofitConfig?: ITableProps['autoFit']
     ui?: ITableProps['ui']
@@ -503,7 +505,11 @@ export class TableColumn<T = IItem> {
       rowsLimit = 80,
       mode = 'fit-with-header',
     } = autofitConfig ?? getComponentProps('table').autoFit()
-    const { getCellWidth, getHeaderWidth } = measurements
+    const host = measurements ?? tryUseNuxtApp()?.$legacyTableMeasurements
+    if (!host) {
+      return
+    }
+    const { getCellWidth, getHeaderWidth } = host
 
     const considerHeader = mode === 'fit-with-header'
     let maxContentWidth = 0
@@ -514,7 +520,7 @@ export class TableColumn<T = IItem> {
       const maxContentRow = (rows || [])
         .slice(0, rowsLimit)
         .reduce(
-          (agg, row) => {
+          (agg, row, index) => {
             const cellValue = this.valueGetter(row)
             const cellFormattedValue = Array.isArray(cellValue)
               ? cellValue.map(val => this.format?.(row, val) || val).join(', ')
@@ -525,17 +531,19 @@ export class TableColumn<T = IItem> {
             if (labelChars > agg.labelChars || !agg.labelChars) {
               agg.labelChars = labelChars
               agg.row = row
+              agg.index = index
             }
 
             return agg
           },
-          { labelChars: 0, row: undefined } as Record<string, any>,
+          { labelChars: 0, row: undefined, index: 0 } as { labelChars: number, row: any, index: number },
         )
 
       const width = await getCellWidth({
         row: maxContentRow.row,
         col: this,
-        index: rows.indexOf(maxContentRow.row),
+        index: maxContentRow.index,
+        slotRenderFnc: payload.slotRenderFnc,
         ui,
       })
 
@@ -552,11 +560,12 @@ export class TableColumn<T = IItem> {
     else {
       const _rows = (rows || []).slice(0, rowsLimit)
 
-      for await (const row of _rows) {
+      for (const [index, row] of _rows.entries()) {
         const width = await getCellWidth({
           row,
           col: this,
-          index: rows.indexOf(row),
+          index,
+          slotRenderFnc: payload.slotRenderFnc,
           ui,
         })
 

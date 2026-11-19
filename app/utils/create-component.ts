@@ -3,28 +3,25 @@ import type { Component, VaporComponent } from 'vue'
 import type { ComponentProps } from '#layers/utilities/app/types/component-map.type'
 import { resolveRegisteredComponent } from './resolve-registered-component'
 
-type ComponentDescriptor<T extends Component | VaporComponent> = {
+type UIComponent = Component | VaporComponent
+
+type ComponentDescriptor<T extends UIComponent> = {
   component: T
   props?: ComponentProps<T>
   icon?: string
 }
 
-export function createComponent<T extends Component | VaporComponent>(payload: ComponentDescriptor<T>): ComponentDescriptor<T>
-export function createComponent<T extends Component | VaporComponent>(payload?: {
+type ComponentSource<T extends UIComponent> = Omit<ComponentDescriptor<T>, 'component'> & {
   component: T | string | (() => T)
-  props?: ComponentProps<T>
-  icon?: string
-}): ComponentDescriptor<T> | undefined
+  /** A callable VDOM component with no arguments is indistinguishable from a legacy resolver. */
+  functional?: boolean
+}
 
-/**
- * Returns an object with raw component and props.
- * It can be used even if nuxt/vue instance is not available
- */
-export function createComponent<T extends Component | VaporComponent>(payload?: {
-  component: T | string | (() => T)
-  props?: ComponentProps<T>
-  icon?: string
-}): ComponentDescriptor<T> | undefined {
+export function createComponent<T extends UIComponent>(payload: ComponentDescriptor<T> & { functional?: boolean }): ComponentDescriptor<T>
+export function createComponent<T extends UIComponent>(payload?: ComponentSource<T>): ComponentDescriptor<T> | undefined
+
+/** Resolve descriptors even outside component setup. */
+export function createComponent<T extends UIComponent>(payload?: ComponentSource<T>): ComponentDescriptor<T> | undefined {
   if (!payload) {
     return undefined
   }
@@ -32,18 +29,11 @@ export function createComponent<T extends Component | VaporComponent>(payload?: 
   const { component: componentSrc, props, icon } = payload
   let component = componentSrc as T
 
-  // Case: component is provided by name and resolved through Vite's glob registry.
   if (typeof componentSrc === 'string') {
     component = resolveRegisteredComponent(componentSrc) as T
-  }
-
-  // Case: we provide an actual component imported via `import` statement
-  else if (typeof componentSrc === 'object') {
-    component = markRaw(componentSrc)
-  }
-
-  // Callable Vapor components are render functions; only legacy resolvers run here.
-  else if (typeof componentSrc === 'function' && !('__vapor' in componentSrc && componentSrc.__vapor === true)) {
+  } else if (typeof componentSrc === 'function' && componentSrc.length === 0 && !payload.functional
+    && !('__vapor' in componentSrc && componentSrc.__vapor === true)) {
+    // Zero-argument factories are the legacy resolver form.
     component = (componentSrc as () => T)()
   }
 

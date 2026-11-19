@@ -7,10 +7,13 @@ import { useDialogUtils } from './useDialogUtils'
 export function useDialogLayout(
   model: Ref<boolean>,
   props: IDialogProps,
-  getHost: () => HTMLElement | null | undefined,
+  getHost?: () => HTMLElement | null | undefined,
 ) {
   // Utils
   const { getElement } = useDialogUtils()
+  // Older VDOM callers derive the trigger from the mounted dialog's parent.
+  const legacyOwner = getHost ? null : getCurrentInstance()
+  const resolveHost = getHost ?? (() => legacyOwner?.proxy?.$el?.parentElement)
 
   // Layout
   const floatingEl = ref<HTMLDivElement>()
@@ -32,7 +35,7 @@ export function useDialogLayout(
       return
     }
 
-    const parentEl = getHost() ?? undefined
+    const parentEl = resolveHost() ?? undefined
     const target = getElement({ elRef: props.target ?? parentEl, parentEl })
     const event = props.trigger ?? 'click'
     triggerEl.value = target

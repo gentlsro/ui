@@ -24,7 +24,7 @@ const mergedProps = computed(() => {
 // Layout
 const model = defineModel<Datetime>()
 
-const now = useNow({ interval: $duration(15, 'minute').as('ms') })
+const now = useNow({ scheduler: callback => useIntervalFn(callback, $duration(15, 'minute').as('ms')) })
 const nowValue = computed(() => $date(now.value))
 const nowMonth = computed(() => `${nowValue.value.year()}-${nowValue.value.month()}`)
 
