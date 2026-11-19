@@ -18,6 +18,9 @@
     "update": "npx npm-check-updates -t latest --interactive",
     "postinstall": "nuxt prepare"
   },
+  "peerDependencies": {
+    "vue": "^3.6.0-rc.15"
+  },
   "dependencies": {
     "@floating-ui/dom": "1.7.6",
     "@floating-ui/vue": "2.0.0",
@@ -80,6 +83,7 @@
     "unocss": "66.7.3",
     "utility-types": "3.11.0",
     "vitest": "4.1.9",
+    "vue": "3.6.0-rc.15",
     "vue-tsc": "3.3.11"
   }
 }

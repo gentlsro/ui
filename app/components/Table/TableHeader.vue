@@ -68,6 +68,11 @@ function getSplitterLeft(splitter: ITableSplitter) {
     :style="headerStyle"
     :ui="{ contentClass: ({ defaults }) => `${defaults.all} ${contentClass}` }"
   >
+    <!-- Vapor needs a nonempty forwarded slot to hydrate the scroller with zero columns. -->
+    <span
+      v-if="!visibleColumns.length"
+      hidden
+    />
     <!-- Column cells -->
     <slot
       v-for="(col, idx) in visibleColumns"
