@@ -99,8 +99,9 @@ const fraction = ref<{ digits: number } | null>(null)
 // IMask represents both signs of zero as 0 between keystrokes.
 let negativeZero = false
 
-watch(isBlurred, isBlurred => {
-  if (isBlurred) {
+// A blur or an emptied field (Backspace, the clear button) starts the next amount afresh
+watch([isBlurred, hasNoValue], ([isBlurred, isEmpty]) => {
+  if (isBlurred || isEmpty) {
     negativeZero = false
     fraction.value = null
   }
@@ -164,7 +165,14 @@ function handleBeforeInput(ev: Event) {
     } else if (fraction.value) {
       fraction.value = null
     } else {
-      setValue(sign * (Math.trunc(whole / 10) + cents / scale))
+      const next = sign * (Math.trunc(whole / 10) + cents / scale)
+
+      // With no whole digit left to delete, or none left after it, Backspace empties the field
+      if (whole === 0 || next === 0) {
+        setTypedValue(props.emptyValue)
+      } else {
+        setValue(next)
+      }
     }
 
     return
