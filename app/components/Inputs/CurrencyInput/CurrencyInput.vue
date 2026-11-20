@@ -99,28 +99,16 @@ const { path } = useInputValidationUtils(props)
 
 const isEditable = computed(() => !props.readonly && !props.disabled)
 
-// Input handling: typing at the end fills the whole part from the right while the fraction stays fixed
-// (3, 0, 0 gives 300.00); the decimal separator moves into the fraction, filled from the left (3, ., 5 gives 3.50)
-const fraction = ref<{ digits: number } | null>(null)
-
+// Input handling: typing at the end fills the amount from the cents (3, 0 gives 0.30), as a till does.
 // IMask represents both signs of zero as 0 between keystrokes.
 let negativeZero = false
 
-watch(isBlurred, isBlurred => {
-  if (isBlurred) {
+// A blur or an emptied field (Backspace, the clear button) starts the next amount afresh
+watch([isBlurred, hasNoValue], ([isBlurred, isEmpty]) => {
+  if (isBlurred || isEmpty) {
     negativeZero = false
-    fraction.value = null
   }
 })
-
-function setValue(value: number) {
-  setTypedValue(value)
-  nextTick(() => {
-    const input = el.value as HTMLInputElement | undefined
-
-    input?.setSelectionRange(input.value.length, input.value.length)
-  })
-}
 
 function handleBeforeInput(ev: Event) {
   const input = el.value as HTMLInputElement
@@ -134,82 +122,67 @@ function handleBeforeInput(ev: Event) {
     && input.selectionEnd === input.value.length
   const isAtEnd = input.selectionStart === input.value.length && input.selectionEnd === input.value.length
 
-  // Typing in the middle of the value keeps the mask's own editing
+  // Editing in the middle of the value keeps the mask's own editing
   if (!isAllSelected && !isAtEnd) {
     negativeZero = false
 
     return
   }
 
-  ev.preventDefault()
-
-  const value = isAllSelected || isNil(typed.value) ? 0 : Number(typed.value)
-  let sign = value < 0 || (!isAllSelected && value === 0 && negativeZero) ? -1 : 1
+  const current = isAllSelected || isNil(typed.value) ? 0 : Number(typed.value)
   const scale = 10 ** props.fractionDigits
-  const whole = Math.trunc(Math.abs(value))
-  const cents = Math.round((Math.abs(value) - whole) * scale)
+  const minorUnits = Math.round(Math.abs(current) * scale)
+  const sign = current < 0 || (current === 0 && negativeZero) ? -1 : 1
 
   if (isAllSelected) {
     negativeZero = false
-    fraction.value = null
   }
 
-  // Deleting
+  // Deleting: everything selected empties the field; Backspace at the end drops the last digit and empties the
+  // field once no digit is left
   if (!ev.data) {
-    if (!isAllSelected && ev.inputType !== 'deleteContentBackward') {
+    if (isAllSelected) {
+      setTypedValue(props.emptyValue)
+    } else if (ev.inputType === 'deleteContentBackward') {
+      const next = Math.trunc(minorUnits / 10)
+
+      setTypedValue(next ? sign * next / scale : props.emptyValue)
+    } else {
+      return
+    }
+  } else if (ev.data === '-') {
+    negativeZero = current === 0 && !negativeZero
+    setTypedValue(-current)
+  } else if (ev.data.length > 1 && (isAllSelected || !current || ev.data.startsWith('-'))) {
+    // Pasting a whole amount (into an empty or selected field) reads it with the locale's separators
+    const amount = ev.data
+      .replace(/\s/g, '')
+      .split(separators.value.thousandSeparator)
+      .join('')
+      .replace(separators.value.decimalSeparator, '.')
+
+    if (!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)$/.test(amount)) {
       return
     }
 
-    if (isAllSelected) {
-      negativeZero = false
-      setTypedValue(props.emptyValue)
-    } else if (fraction.value?.digits) {
-      const digits = --fraction.value.digits
-      const kept = Math.trunc(cents / 10 ** (props.fractionDigits - digits)) * 10 ** (props.fractionDigits - digits)
+    setTypedValue(Number(amount))
+    negativeZero = amount.startsWith('-') && Number(amount) === 0
+  } else if (/^\d+$/.test(ev.data)) {
+    // Digits append to the amount in minor units
+    const magnitude = Number(`${minorUnits}${ev.data}`) / scale
 
-      setValue(sign * (whole + kept / scale))
-    } else if (fraction.value) {
-      fraction.value = null
-    } else {
-      setValue(sign * (Math.trunc(whole / 10) + cents / scale))
-    }
-
+    setTypedValue(sign * magnitude)
+    negativeZero = sign < 0 && magnitude === 0
+  } else {
     return
   }
 
-  let current = value
-  for (const char of ev.data) {
-    const absolute = Math.abs(current)
-    const currentWhole = Math.trunc(absolute)
-    const currentCents = Math.round((absolute - currentWhole) * scale)
-
-    if (char === '-') {
-      sign = -sign
-      current = sign * absolute
-    } else if (char === '.' || char === ',') {
-      if (props.fractionDigits > 0) {
-        fraction.value = { digits: 0 }
-      }
-    } else if (isNumeric(char)) {
-      const digit = Number(char)
-
-      if (fraction.value) {
-        if (fraction.value.digits < props.fractionDigits) {
-          const position = props.fractionDigits - ++fraction.value.digits
-          const nextCents = Math.trunc(currentCents / 10 ** (position + 1)) * 10 ** (position + 1) + digit * 10 ** position
-
-          current = sign * (currentWhole + nextCents / scale)
-        }
-      } else {
-        current = sign * (currentWhole * 10 + digit + currentCents / scale)
-      }
-    }
+  ev.preventDefault()
+  if (!isAllSelected) {
+    ev.stopPropagation()
+    ev.stopImmediatePropagation()
   }
-
-  if (/[0-9-]/.test(ev.data)) {
-    negativeZero = current === 0 && sign < 0
-    setValue(current)
-  }
+  nextTick(() => input.setSelectionRange(input.value.length, input.value.length))
 }
 
 const currency = computed(() => {
@@ -313,7 +286,7 @@ defineExpose({
         ref="el"
         flex="1"
         :value="masked"
-        inputmode="decimal"
+        inputmode="numeric"
         :placeholder
         :readonly
         :disabled
