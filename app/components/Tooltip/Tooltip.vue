@@ -1,170 +1,185 @@
 <script setup lang="ts">
-import { arrow, flip, offset, shift, useFloating } from '@floating-ui/vue'
-
 // Types
 import type { ITooltipProps } from './types/tooltip-props.type'
 
 // Constants
 import { TOOLTIP_DEFAULT_PROPS } from './constants/tooltip-default-props.constant'
 
-defineOptions({
-  inheritAttrs: false,
-})
+// Composables
+import { useTooltipHost } from './composables/useTooltipHost'
+
+defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(defineProps<ITooltipProps>(), {
   ...getComponentProps('tooltip'),
 })
 
-// Utils
-const instance = getCurrentInstance()
-const { getLastFloatingUIZindex, getElement } = useFloatingUIUtils()
-
-const zIndex = computed(() => {
-  return getLastFloatingUIZindex()
-})
+const model = defineModel<boolean>({ default: false })
 
 // Utils
+const shared = useTooltipHost()
+const { getElement } = useFloatingUIUtils()
+
 const mergedProps = computed(() => {
   return getComponentMergedProps('tooltip', props)
 })
 
 // Layout
-const referenceTarget = toRef(props, 'referenceTarget')
-const model = defineModel<boolean>({ default: false })
-const tooltipEl = ref<HTMLElement>()
-const referenceEl = ref<Element>() // Element that tooltip is attached to
-const clickOutsideTarget = computed<HTMLElement | SVGElement | undefined>(() => {
-  return referenceEl.value instanceof HTMLElement
-    || referenceEl.value instanceof SVGElement
-    ? referenceEl.value
-    : undefined
-})
-const arrowEl = ref<HTMLDivElement>()
-const middleware = ref([
-  offset(props.offset),
-  flip(),
-  shift(),
-  ...(props.noArrow ? [] : [arrow({ element: arrowEl, padding: 8 })]),
-])
+const hostAnchor = useTemplateRef<HTMLSpanElement>('hostAnchor')
+const referenceEl = shallowRef<Element>()
+const contentTarget = shared.contentTarget
+const isMounted = ref(false)
 
-const { floatingStyles, placement, middlewareData } = useFloating(
-  referenceEl,
-  tooltipEl,
-  {
-    placement: () => props.placement,
-    middleware,
-    strategy: 'fixed',
+// Forwarded attributes
+const attrs = useAttrs()
+const forwardedAttrs = shallowRef({ ...attrs })
+
+// Shared ownership
+const owner = {
+  target: referenceEl,
+  props: computed(() => props),
+  attrs: forwardedAttrs,
+  appearance: computed(() => ({
+    containerClass: containerClass.value,
+    containerStyle: containerStyle.value,
+    arrowClass: arrowClass.value,
+    arrowStyle: arrowStyle.value,
+  })),
+  setModel: (value: boolean) => {
+    model.value = value
   },
-)
-
-const classes = computed(() => {
-  return {
-    'no-inherit-font-style': props.noInheritFontStyle,
-  }
-})
-
-let hoverTimer: ReturnType<typeof setTimeout> | undefined
-let wasOpenOnPointerDown = false
-
-function setOpen(open: boolean) {
-  clearTimeout(hoverTimer)
-
-  if (!props.manual) {
-    model.value = open
-  }
 }
 
-useEventListener(referenceEl, 'mouseenter', () => {
-  if (props.manual || props.mode !== 'hover') {
+const isActive = computed(() => shared.active.value === owner)
+
+// Target listeners
+watchEffect(onCleanup => {
+  if (!isMounted.value) {
     return
   }
 
-  clearTimeout(hoverTimer)
-  hoverTimer = setTimeout(setOpen, props.delay?.[0] ?? 0, true)
-})
-
-useEventListener(referenceEl, 'mouseleave', () => {
-  if (props.manual || props.mode !== 'hover') {
-    return
-  }
-
-  clearTimeout(hoverTimer)
-  hoverTimer = setTimeout(() => {
-    if (!referenceEl.value?.matches(':focus-visible')) {
-      setOpen(false)
-    }
-  }, props.delay?.[1] ?? 0)
-})
-
-useEventListener(referenceEl, 'pointerdown', () => {
-  wasOpenOnPointerDown = model.value
-})
-useEventListener(referenceEl, 'focus', () => setOpen(true))
-useEventListener(referenceEl, 'click', (event: MouseEvent) => {
-  if (props.manual || props.mode !== 'click' || event.detail === 0) {
-    return
-  }
-
-  setOpen(!wasOpenOnPointerDown)
-})
-useEventListener(referenceEl, 'blur', () => setOpen(false))
-useEventListener(referenceEl, 'keydown', (event: KeyboardEvent) => {
-  if (props.manual) {
-    return
-  }
-
-  if (event.key === 'Escape') {
-    if (model.value) {
-      event.stopPropagation()
-      event.preventDefault()
-    }
-    setOpen(false)
-  } else if (event.key === 'Enter' || event.key === ' ') {
-    setOpen(true)
-  }
-})
-
-onClickOutside(clickOutsideTarget, () => setOpen(false))
-
-function assignReferenceEl() {
-  const parentEl = instance?.vnode?.el?.parentNode
+  const parentEl = hostAnchor.value?.parentElement ?? undefined
   const target = getElement({ elRef: props.referenceTarget ?? parentEl, parentEl })
 
-  if (!target) {
+  referenceEl.value = target instanceof Element ? target : undefined
+
+  if (!(target instanceof Element)) {
     return
   }
 
-  clearTimeout(hoverTimer)
-  referenceEl.value?.classList.remove('has-tooltip')
-  referenceEl.value = target
-  referenceEl.value?.classList.add('has-tooltip')
-}
+  target.classList.add('has-tooltip')
+  const manual = props.manual
+  let wasOpenOnPointerDown = false
 
-watch(middlewareData, middlewareData => {
-  if (middlewareData.arrow && arrowEl.value) {
-    const { x, y } = middlewareData.arrow
+  const enter = () => {
+    if (props.mode !== 'hover') {
+      return
+    }
 
-    Object.assign(arrowEl.value.style, {
-      left: x != null ? `${x}px` : '',
-      top: y != null ? `${y}px` : '',
-    })
+    target.classList.add('tooltip-hovered')
+    shared.enter(owner)
+  }
+
+  const leave = () => {
+    if (props.mode !== 'hover') {
+      return
+    }
+
+    target.classList.remove('tooltip-hovered')
+
+    if (!target.matches(':focus-visible')) {
+      shared.leave(owner)
+    }
+  }
+
+  const pointerDown = () => {
+    wasOpenOnPointerDown = model.value
+  }
+
+  const focus = () => shared.show(owner)
+  const click = (event: Event) => {
+    if (!(event instanceof MouseEvent) || props.mode !== 'click' || event.detail === 0) {
+      return
+    }
+
+    if (wasOpenOnPointerDown) {
+      shared.release(owner)
+    } else {
+      shared.show(owner)
+    }
+  }
+  const blur = () => shared.release(owner)
+  const keydown = (event: Event) => {
+    if (!(event instanceof KeyboardEvent)) {
+      return
+    }
+
+    if (event.key === 'Escape') {
+      if (model.value) {
+        event.stopPropagation()
+        event.preventDefault()
+      }
+      shared.release(owner)
+    } else if (event.key === 'Enter' || event.key === ' ') {
+      shared.show(owner)
+    }
+  }
+  const clickOutside = (event: Event) => {
+    if (event.target instanceof Node && !target.contains(event.target)) {
+      shared.release(owner)
+    }
+  }
+
+  if (!manual) {
+    target.addEventListener('mouseenter', enter)
+    target.addEventListener('mouseleave', leave)
+    target.addEventListener('pointerdown', pointerDown)
+    target.addEventListener('focus', focus)
+    target.addEventListener('click', click)
+    target.addEventListener('blur', blur)
+    target.addEventListener('keydown', keydown)
+    document.addEventListener('pointerdown', clickOutside)
+  }
+
+  onCleanup(() => {
+    target.removeEventListener('mouseenter', enter)
+    target.removeEventListener('mouseleave', leave)
+    target.removeEventListener('pointerdown', pointerDown)
+    target.removeEventListener('focus', focus)
+    target.removeEventListener('click', click)
+    target.removeEventListener('blur', blur)
+    target.removeEventListener('keydown', keydown)
+    document.removeEventListener('pointerdown', clickOutside)
+    target.classList.remove('has-tooltip', 'tooltip-hovered')
+
+    // Retarget an open bubble in place; only cancel work tied to the old target.
+    shared.cancelPending(owner)
+  })
+}, { flush: 'post' })
+
+// Model synchronization
+watch([model, referenceEl], ([open, target]) => {
+  if (open && target) {
+    if (!isActive.value) {
+      shared.show(owner)
+    }
+  } else {
+    shared.release(owner)
+  }
+}, { flush: 'post' })
+
+// Lifecycle
+onMounted(() => {
+  isMounted.value = true
+})
+
+onUpdated(() => {
+  if (!isEqual(forwardedAttrs.value, attrs)) {
+    forwardedAttrs.value = { ...attrs }
   }
 })
 
-watch(referenceTarget, () => {
-  assignReferenceEl()
-})
-
-onMounted(() => {
-  nextTick(() => {
-    assignReferenceEl()
-  })
-})
-
-onBeforeUnmount(() => {
-  clearTimeout(hoverTimer)
-  referenceEl.value?.classList.remove('has-tooltip')
-})
+onBeforeUnmount(() => shared.release(owner))
 
 // Styles - container
 const containerClass = computed(() => {
@@ -223,87 +238,48 @@ const arrowStyle = computed(() => {
 </script>
 
 <template>
-  <Teleport to="body">
-    <div
-      v-if="model"
-      ref="tooltipEl"
-      class="tooltip group/tooltip"
-      role="tooltip"
-      :class="[classes, containerClass]"
-      :style="{ ...floatingStyles, ...containerStyle, '--zIndex': zIndex }"
-      :placement
-      v-bind="$attrs"
+  <!-- The declaration keeps its own target and slot context; only the bubble is shared. -->
+  <span
+    ref="hostAnchor"
+    hidden
+  />
+
+  <Teleport
+    v-if="isActive && contentTarget"
+    :to="contentTarget"
+  >
+    <slot
+      :content-class
+      :content-style
+      :description-class
+      :description-style
+      :title-class
+      :title-style
     >
-      <!-- Arrow -->
       <div
-        v-if="!noArrow"
-        ref="arrowEl"
-        class="arrow"
-        :class="arrowClass"
-        :style="arrowStyle"
-      />
-
-      <slot
-        :content-class
-        :content-style
-        :description-class
-        :description-style
-        :title-class
-        :title-style
+        v-if="content"
+        class="tooltip__content"
+        :class="contentClass"
+        :style="contentStyle"
       >
-        <div
-          v-if="content"
-          class="tooltip__content"
-          :class="contentClass"
-          :style="contentStyle"
+        <span
+          v-if="content.title"
+          class="tooltip__content-title"
+          :class="titleClass"
+          :style="titleStyle"
         >
-          <span
-            v-if="content.title"
-            class="tooltip__content-title"
-            :class="titleClass"
-            :style="titleStyle"
-          >
-            {{ content.title }}
-          </span>
+          {{ content.title }}
+        </span>
 
-          <span
-            v-if="content.description"
-            class="tooltip__content-description"
-            :class="descriptionClass"
-            :style="descriptionStyle"
-          >
-            {{ content.description }}
-          </span>
-        </div>
-      </slot>
-    </div>
+        <span
+          v-if="content.description"
+          class="tooltip__content-description"
+          :class="descriptionClass"
+          :style="descriptionStyle"
+        >
+          {{ content.description }}
+        </span>
+      </div>
+    </slot>
   </Teleport>
 </template>
-
-<style lang="scss" scoped>
-.tooltip {
-  z-index: var(--zIndex);
-}
-
-.arrow {
-  &.has-header {
-    @apply bg-inherit;
-  }
-}
-
-.tooltip[placement^='top'] > .arrow {
-  @apply bottom--4px border-b-custom border-r-custom border-ca;
-}
-
-.tooltip[placement^='bottom'] > .arrow {
-  @apply top--4px border-t-custom border-l-custom border-ca;
-}
-
-.tooltip[placement^='left'] > .arrow {
-  @apply right--4px border-r-custom border-t-custom border-ca;
-}
-
-.tooltip[placement^='right'] > .arrow {
-  @apply left--4px border-l-custom border-b-custom border-ca;
-}
-</style>
