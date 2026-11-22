@@ -175,7 +175,8 @@ function stopStep() {
 <style lang="scss">
 // (on a touch screen the field's end area that holds the step takes the field's height, so − and + do too)
 @media (pointer: coarse) {
-  :where(div:has(> .number-input__step)) {
+  // (a selector, not :where: it outweighs the container's own padding utility)
+  div:has(> .number-input__step) {
     align-self: stretch;
     padding-right: 0;
   }
