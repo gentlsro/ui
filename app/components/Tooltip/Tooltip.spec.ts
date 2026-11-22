@@ -44,6 +44,7 @@ describe('tooltip', () => {
   })
 
   it('keeps a hover tooltip open through a pointer click and closes on pointer leave', async () => {
+    vi.useFakeTimers()
     const wrapper = mount(Fixture, mountOptions)
     const button = wrapper.get('button')
 
@@ -51,7 +52,12 @@ describe('tooltip', () => {
     await nextTick()
 
     await button.trigger('mouseenter')
-    await new Promise(resolve => setTimeout(resolve, 0))
+    // Default open delay is 300ms
+    vi.advanceTimersByTime(299)
+    await nextTick()
+    expect(document.body.querySelector('[role="tooltip"]')).toBeNull()
+    vi.advanceTimersByTime(1)
+    await nextTick()
     expect(document.body.querySelector('[role="tooltip"]')).not.toBeNull()
 
     await button.trigger('pointerdown')
@@ -63,7 +69,8 @@ describe('tooltip', () => {
     expect(document.body.querySelector('[role="tooltip"]')).not.toBeNull()
 
     await button.trigger('mouseleave')
-    await new Promise(resolve => setTimeout(resolve, 0))
+    vi.advanceTimersByTime(0)
+    await nextTick()
 
     expect(document.body.querySelector('[role="tooltip"]')).toBeNull()
     wrapper.unmount()
@@ -116,6 +123,7 @@ describe('tooltip', () => {
 
 describe('tooltip host', () => {
   afterEach(() => {
+    vi.useRealTimers()
     document.body.innerHTML = ''
   })
 
@@ -133,6 +141,7 @@ describe('tooltip host', () => {
       `,
     })
 
+    vi.useFakeTimers()
     const wrapper = mount(Many, mountOptions)
     const buttons = wrapper.findAll('button')
 
@@ -142,7 +151,12 @@ describe('tooltip host', () => {
     expect(document.body.querySelectorAll('[role="tooltip"]')).toHaveLength(0)
 
     await buttons[0]!.trigger('mouseenter')
-    await new Promise(resolve => setTimeout(resolve, 0))
+    // Default open delay is 300ms
+    vi.advanceTimersByTime(299)
+    await nextTick()
+    expect(document.body.querySelector('[role="tooltip"]')).toBeNull()
+    vi.advanceTimersByTime(1)
+    await nextTick()
     await buttons[0]!.trigger('mouseleave')
     await buttons[1]!.trigger('mouseenter')
     await nextTick()
