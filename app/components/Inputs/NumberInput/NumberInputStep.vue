@@ -75,6 +75,7 @@ function stopStep() {
 </script>
 
 <template>
+  <!-- (on a touch screen the step is − and + side by side, each a finger wide: a media query, so the server's HTML matches) -->
   <div
     class="number-input__step"
     :class="`is--${size}`"
@@ -83,32 +84,48 @@ function stopStep() {
       ref="increment"
       tabindex="-1"
       size="auto"
-      icon="step-icon i-bi:caret-up-fill"
       color="ca"
       no-hover-effect
       touch-none
+      class="number-input__step-btn is--increment"
+      data-testid="number-input-increment"
       @pointerdown="startStep($event, true)"
       @mousedown.stop.prevent
       @click.stop.prevent
-    />
+    >
+      <template #icon>
+        <div class="btn-icon step-icon step-icon--caret i-bi:caret-up-fill" />
+        <div class="btn-icon step-icon step-icon--touch i-bi:plus-lg" />
+      </template>
+    </Btn>
     <Btn
       ref="decrement"
       tabindex="-1"
       size="auto"
-      icon="step-icon i-bi:caret-up-fill rotate-180"
       color="ca"
       no-hover-effect
       touch-none
+      class="number-input__step-btn is--decrement"
+      data-testid="number-input-decrement"
       @pointerdown="startStep($event, false)"
       @mousedown.stop.prevent
       @click.stop.prevent
-    />
+    >
+      <template #icon>
+        <div class="btn-icon step-icon step-icon--caret i-bi:caret-up-fill rotate-180" />
+        <div class="btn-icon step-icon step-icon--touch i-bi:dash-lg" />
+      </template>
+    </Btn>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .number-input__step {
   @apply flex flex-col shrink w-4;
+}
+
+.step-icon--touch {
+  display: none;
 }
 
 .is--xs {
@@ -127,6 +144,40 @@ function stopStep() {
 .is--lg {
   :deep(.step-icon) {
     @apply w-4 h-4;
+  }
+}
+
+// A touch screen: − then +, each 44 px wide and the field's height, at the end of the field
+@media (pointer: coarse) {
+  .number-input__step {
+    @apply flex-row-reverse self-stretch w-auto shrink-0;
+  }
+
+  .number-input__step-btn {
+    @apply w-11 h-auto self-stretch rounded-0 border-l-1 border-ca;
+  }
+
+  .step-icon--caret {
+    display: none;
+  }
+
+  .step-icon--touch {
+    display: block;
+  }
+
+  // (the same size on every field: a finger target, not a caret)
+  .number-input__step :deep(.step-icon) {
+    @apply w-4 h-4;
+  }
+}
+</style>
+
+<style lang="scss">
+// (on a touch screen the field's end area that holds the step takes the field's height, so − and + do too)
+@media (pointer: coarse) {
+  :where(div:has(> .number-input__step)) {
+    align-self: stretch;
+    padding-right: 0;
   }
 }
 </style>
