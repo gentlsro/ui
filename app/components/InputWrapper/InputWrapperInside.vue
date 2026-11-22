@@ -19,6 +19,7 @@ const props = defineProps<
 const classes = computed(() => {
   return {
     [`is-${props.size}`]: true,
+    'has-label': props.hasLabel,
     'has-border': !props.noBorder,
     'has-errors': props.hasErrors,
     'is-readonly': props.readonly,
@@ -232,6 +233,22 @@ const inputInnerContainerStyle = computed(() => {
 
   &.is-lg > .input-wrapper__inside-input {
     @apply min-h-48px;
+  }
+}
+
+// With a label above the value, a prepend and the append's text (a unit, a suffix) sit on the value's line, half the
+// label's offset below the middle; icon buttons (clear, step) stay in the middle of the field
+.input-wrapper__inside.has-label {
+  --valueLineOffset: 7px;
+
+  &.is-xs,
+  &.is-sm {
+    --valueLineOffset: 6px;
+  }
+
+  > .input-wrapper__inside-prepend,
+  > .input-wrapper__inside-append :deep(> * > :not(.btn:not(.has-label), .number-input__step)) {
+    transform: translateY(var(--valueLineOffset));
   }
 }
 
