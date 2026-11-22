@@ -1,6 +1,7 @@
 import { addTemplate, createResolver, defineNuxtModule } from 'nuxt/kit'
 import type { Nuxt } from 'nuxt/schema'
-import { existsSync } from 'node:fs'
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
+import { dirname, join } from 'node:path'
 
 const { resolve } = createResolver(import.meta.url)
 const currentDir = resolve('..')
@@ -90,28 +91,26 @@ export default defineNuxtModule({
   setup: async (_, nuxt) => {
     console.log('✔ Process UI...')
 
-    // Mount the shared tooltip bubble once, next to the consumer's App
-    let appComponent: string
-    const hostTemplate = addTemplate({
-      filename: 'ui-app.vue',
-      write: true,
-      getContents: () => `<script setup>
-import App from ${JSON.stringify(appComponent)}
-import TooltipHost from ${JSON.stringify(resolve('../app/components/Tooltip/TooltipHost.vue'))}
+    // Mount the shared tooltip bubble once, next to the consumer's App. A file on disk, not a template: in development
+    // Vue's component tracer adds a relative import to every component, which a virtual template's id cannot resolve
+    const hostPath = join(nuxt.options.buildDir, 'ui-app.vue')
+    const tooltipHostPath = resolve('../app/components/Tooltip/TooltipHost.vue')
+
+    nuxt.hook('app:resolve', app => {
+      // Preserve Nuxt's resolved app, including consumer overrides, across rebuilds.
+      if (app.mainComponent !== hostPath) {
+        mkdirSync(dirname(hostPath), { recursive: true })
+        writeFileSync(hostPath, `<script setup>
+import App from ${JSON.stringify(app.mainComponent)}
+import TooltipHost from ${JSON.stringify(tooltipHostPath)}
 </script>
 
 <template>
   <TooltipHost />
   <App />
 </template>
-`,
-    })
-
-    nuxt.hook('app:resolve', app => {
-      // Preserve Nuxt's resolved app, including consumer overrides, across rebuilds.
-      if (app.mainComponent !== hostTemplate.dst) {
-        appComponent = app.mainComponent!
-        app.mainComponent = hostTemplate.dst
+`)
+        app.mainComponent = hostPath
       }
     })
 
