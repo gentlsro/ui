@@ -90,6 +90,31 @@ export default defineNuxtModule({
   setup: async (_, nuxt) => {
     console.log('✔ Process UI...')
 
+    // Mount the shared tooltip bubble once, next to the consumer's App
+    let appComponent: string
+    const hostTemplate = addTemplate({
+      filename: 'ui-app.vue',
+      write: true,
+      getContents: () => `<script setup>
+import App from ${JSON.stringify(appComponent)}
+import TooltipHost from ${JSON.stringify(resolve('../app/components/Tooltip/TooltipHost.vue'))}
+</script>
+
+<template>
+  <TooltipHost />
+  <App />
+</template>
+`,
+    })
+
+    nuxt.hook('app:resolve', app => {
+      // Preserve Nuxt's resolved app, including consumer overrides, across rebuilds.
+      if (app.mainComponent !== hostTemplate.dst) {
+        appComponent = app.mainComponent!
+        app.mainComponent = hostTemplate.dst
+      }
+    })
+
     const configPaths = nuxt.options._layers
       .map(layer => {
         const isBase = layer.cwd === currentDir
