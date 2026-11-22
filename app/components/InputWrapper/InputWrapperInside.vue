@@ -130,6 +130,8 @@ const inputInnerContainerStyle = computed(() => {
   grid-template-columns: auto 1fr auto auto;
   grid-template-rows: 18px 1fr auto;
 
+  // (an extra small field has no room for a label above its value: it takes the small field's height)
+  &.is-xs,
   &.is-sm {
     @apply min-h-9;
 
@@ -144,8 +146,9 @@ const inputInnerContainerStyle = computed(() => {
     @apply min-h-13;
   }
 
+  // (positioned: the label, absolute, starts where the value does, after a prepend)
   .input-wrapper__inside-label {
-    @apply fit;
+    @apply fit relative;
     grid-column: 2 / 3;
     grid-row: 1 / 3;
   }
@@ -215,6 +218,10 @@ const inputInnerContainerStyle = computed(() => {
 
 // Height of input based on size
 .input-wrapper__inside {
+  &.is-xs > .input-wrapper__inside-input {
+    @apply min-h-36px;
+  }
+
   &.is-sm > .input-wrapper__inside-input {
     @apply min-h-40px;
   }

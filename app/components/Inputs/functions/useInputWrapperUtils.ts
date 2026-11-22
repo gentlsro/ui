@@ -76,6 +76,12 @@ export function useInputWrapperUtils() {
       styleVariables['--lineHeight'] = '20px'
       styleVariables['--padding'] = preferMargin ? '0 8px' : '4px 8px'
       styleVariables['--margin'] = preferMargin ? '4px 0' : '0'
+
+      // (a label inside has no room in 28 px: the field takes the small one's 36 px, the value goes under the label)
+      if (isLabelInside && hasLabel) {
+        styleVariables['--padding'] = preferMargin ? '0 12px' : '14px 12px 2px'
+        styleVariables['--margin'] = preferMargin ? '14px 0 2px' : '0'
+      }
     }
 
     // Size: sm
