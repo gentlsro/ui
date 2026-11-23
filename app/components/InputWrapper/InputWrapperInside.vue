@@ -147,11 +147,16 @@ const inputInnerContainerStyle = computed(() => {
     @apply min-h-13;
   }
 
-  // (positioned: the label, absolute, starts where the value does, after a prepend)
+  // (positioned: the label, absolute, starts where the value does, after a prepend. Over the value's rows, it lets a
+  // tap through to the input; its hint stays interactive)
   .input-wrapper__inside-label {
-    @apply fit relative;
+    @apply fit relative pointer-events-none;
     grid-column: 2 / 3;
     grid-row: 1 / 3;
+
+    :deep(.label__hint) {
+      @apply pointer-events-auto;
+    }
   }
 
   .input-wrapper__inside-input {
@@ -236,8 +241,9 @@ const inputInnerContainerStyle = computed(() => {
   }
 }
 
-// With a label above the value, a prepend and the append's text (a unit, a suffix) sit on the value's line, half the
-// label's offset below the middle; icon buttons (clear, step) stay in the middle of the field
+// With a label above the value, a prepend and the append's text (a unit, a suffix: a span, in the append or its
+// wrapper) sit on the value's line, half the label's offset below the middle; icons (clear, step, a dropdown or
+// picker icon) and buttons stay in the middle of the field
 .input-wrapper__inside.has-label {
   --valueLineOffset: 7px;
 
@@ -247,7 +253,8 @@ const inputInnerContainerStyle = computed(() => {
   }
 
   > .input-wrapper__inside-prepend,
-  > .input-wrapper__inside-append :deep(> * > :not(.btn:not(.has-label), .number-input__step)) {
+  > .input-wrapper__inside-append :deep(> span),
+  > .input-wrapper__inside-append :deep(> div > span) {
     transform: translateY(var(--valueLineOffset));
   }
 }
