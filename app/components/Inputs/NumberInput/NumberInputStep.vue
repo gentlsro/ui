@@ -30,8 +30,11 @@ const stepAdjusted = computed(() => {
 
 // (a press steps once; held past HOLD_DELAY it repeats, so a finger's press is one step)
 const HOLD_DELAY = 400
-const { pause, resume } = useIntervalFn(() => handleStep(), 120, { immediate: false })
+const { pause, resume } = useIntervalFn(() => handleStep(), 120, { immediate: false, immediateCallback: true })
 let holdTimer: ReturnType<typeof setTimeout> | undefined
+
+// (a hold that outlives the field, closed while pressed, stops with it)
+onScopeDispose(stopStep)
 
 function handleStep() {
   let currentValue = model.value
@@ -54,6 +57,8 @@ function handleStep() {
 }
 
 function startStep(_: PointerEvent, increment = true) {
+  // (a second press before the first ends, a second finger, takes over from it)
+  stopStep()
   modifier.value = increment ? 1 : -1
 
   window.addEventListener('pointerup', stopStep)
