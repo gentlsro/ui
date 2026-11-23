@@ -241,8 +241,8 @@ const inputInnerContainerStyle = computed(() => {
   }
 }
 
-// With a label above the value, a prepend and the append's text (a unit, a suffix: a span, in the append or its
-// wrapper) sit on the value's line, half the label's offset below the middle; icons (clear, step, a dropdown or
+// With a label above the value, a prepend and the append's text (a unit, a suffix: a span or a labelled button, in the
+// append or its wrapper) sit on the value's line, half the label's offset below the middle; icons (clear, step, a dropdown or
 // picker icon) and buttons stay in the middle of the field
 .input-wrapper__inside.has-label {
   --valueLineOffset: 7px;
@@ -253,8 +253,8 @@ const inputInnerContainerStyle = computed(() => {
   }
 
   > .input-wrapper__inside-prepend,
-  > .input-wrapper__inside-append :deep(> span),
-  > .input-wrapper__inside-append :deep(> div > span) {
+  > .input-wrapper__inside-append :deep(> :is(span, .btn.has-label)),
+  > .input-wrapper__inside-append :deep(> div > :is(span, .btn.has-label)) {
     transform: translateY(var(--valueLineOffset));
   }
 }
