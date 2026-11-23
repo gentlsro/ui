@@ -93,7 +93,9 @@
     "negation2": "Negace"
   },
   "general": {
-    "moveAndResizeAvailable": "Tento element lze přesouvat a měnit jeho velikost"
+    "moveAndResizeAvailable": "Tento element lze přesouvat a měnit jeho velikost",
+    "increase": "Zvýšit",
+    "decrease": "Snížit"
   },
   "pivot": {
     "rawData": "Zdrojová data",
