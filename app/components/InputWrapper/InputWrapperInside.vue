@@ -148,15 +148,11 @@ const inputInnerContainerStyle = computed(() => {
   }
 
   // (positioned: the label, absolute, starts where the value does, after a prepend. Over the value's rows, it lets a
-  // tap through to the input; its hint stays interactive)
+  // tap through to the input; its hint takes pointer events of its own: InputLabel)
   .input-wrapper__inside-label {
     @apply fit relative pointer-events-none;
     grid-column: 2 / 3;
     grid-row: 1 / 3;
-
-    :deep(.label__hint) {
-      @apply pointer-events-auto;
-    }
   }
 
   .input-wrapper__inside-input {
