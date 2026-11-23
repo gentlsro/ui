@@ -93,7 +93,9 @@
     "negation2": "Negation"
   },
   "general": {
-    "moveAndResizeAvailable": "You can move and resize this element"
+    "moveAndResizeAvailable": "You can move and resize this element",
+    "increase": "Increase",
+    "decrease": "Decrease"
   },
   "pivot": {
     "rawData": "Raw data",

@@ -28,10 +28,10 @@ const stepAdjusted = computed(() => {
   }
 })
 
-const { pause, resume } = useIntervalFn(() => handleStep(), 120, {
-  immediate: false,
-  immediateCallback: true,
-})
+// (a press steps once; held past HOLD_DELAY it repeats, so a finger's press is one step)
+const HOLD_DELAY = 400
+const { pause, resume } = useIntervalFn(() => handleStep(), 120, { immediate: false })
+let holdTimer: ReturnType<typeof setTimeout> | undefined
 
 function handleStep() {
   let currentValue = model.value
@@ -61,10 +61,20 @@ function startStep(_: PointerEvent, increment = true) {
   window.addEventListener('touchend', stopStep)
   window.addEventListener('touchmove', stopStep)
   window.addEventListener('touchcancel', stopStep)
-  resume()
+  handleStep()
+  holdTimer = setTimeout(resume, HOLD_DELAY)
+}
+
+/** A click with no press before it (a screen reader's activation) steps once */
+function handleClick(event: MouseEvent, increment: boolean) {
+  if (event.detail === 0) {
+    modifier.value = increment ? 1 : -1
+    handleStep()
+  }
 }
 
 function stopStep() {
+  clearTimeout(holdTimer)
   pause()
   window.removeEventListener('pointerup', stopStep)
   window.removeEventListener('mouseup', stopStep)
@@ -89,9 +99,10 @@ function stopStep() {
       touch-none
       class="number-input__step-btn is--increment"
       data-testid="number-input-increment"
+      :name="$t('general.increase')"
       @pointerdown="startStep($event, true)"
       @mousedown.stop.prevent
-      @click.stop.prevent
+      @click.stop.prevent="handleClick($event, true)"
     >
       <template #icon>
         <div class="btn-icon step-icon step-icon--caret i-bi:caret-up-fill" />
@@ -107,9 +118,10 @@ function stopStep() {
       touch-none
       class="number-input__step-btn is--decrement"
       data-testid="number-input-decrement"
+      :name="$t('general.decrease')"
       @pointerdown="startStep($event, false)"
       @mousedown.stop.prevent
-      @click.stop.prevent
+      @click.stop.prevent="handleClick($event, false)"
     >
       <template #icon>
         <div class="btn-icon step-icon step-icon--caret i-bi:caret-up-fill rotate-180" />
