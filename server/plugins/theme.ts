@@ -1,3 +1,5 @@
+import { defineNitroPlugin, useRuntimeConfig } from 'nitropack/runtime'
+
 export default defineNitroPlugin(nitroApp => {
   const rC = useRuntimeConfig()
   const theme = rC.public.theme
