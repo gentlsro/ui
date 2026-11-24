@@ -25,7 +25,8 @@ export function useTableAutoFit() {
     options?: { mode?: 'fit' | 'stretch' | 'justify' | 'fit-with-header' | null },
   ) {
     const { mode = uiState.value.table?.fit } = options ?? {}
-    if (!ev && !mode) {
+    // (it measures the rendered table: the server's render has none, the browser's setup fits it after hydration)
+    if (import.meta.server || (!ev && !mode)) {
       return
     }
 
