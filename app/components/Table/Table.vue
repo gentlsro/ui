@@ -255,7 +255,23 @@ onMounted(() => {
         :query-builder-props="mergedProps.queryBuilderProps"
         :features
         :ui="mergedProps.ui"
-      />
+      >
+        <!-- Replaces the export button (e.g. an export of every matching row, not only the loaded ones) -->
+        <template
+          v-if="slots.export"
+          #export
+        >
+          <slot name="export" />
+        </template>
+
+        <!-- After the export, at the end of the top row (e.g. a create button) -->
+        <template
+          v-if="slots['top-append']"
+          #append
+        >
+          <slot name="top-append" />
+        </template>
+      </TableTop>
     </slot>
 
     <!-- Toolbar -->

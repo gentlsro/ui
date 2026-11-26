@@ -94,12 +94,22 @@ const topStyle = computed(() => {
     />
 
     <!-- Export data -->
-    <slot name="export">
-      <TableExportBtn
-        v-if="featuresEnabledByName.export"
-        class="table-top__export"
-      />
-    </slot>
+    <div
+      v-if="$slots.export || featuresEnabledByName.export"
+      class="table-top__export"
+    >
+      <slot name="export">
+        <TableExportBtn />
+      </slot>
+    </div>
+
+    <!-- At the end of the row, after the export (e.g. a create button) -->
+    <div
+      v-if="$slots.append"
+      class="table-top__append"
+    >
+      <slot name="append" />
+    </div>
 
     <slot />
   </div>
@@ -139,6 +149,10 @@ const topStyle = computed(() => {
 
   &__export {
     @apply order-40 m-t-0.5 shrink-0;
+  }
+
+  &__append {
+    @apply order-50 m-t-0.5 shrink-0 flex items-center gap-1;
   }
 
   // The table is the container (`@container`), as for the toolbar's `@…:` classes
