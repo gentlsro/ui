@@ -194,6 +194,12 @@ watch([visibleColumns, () => visibleColumns.value.map(store.getColumnWidth)], ([
   })
 })
 
+// Skeleton rows need the columns (and a header to align with); a card view or columns
+// that come with the metadata fall back to the loading overlay
+const hasSkeleton = computed(() => {
+  return !props.noHeader && !store.isCardView.value && visibleColumns.value.some(col => !col.isHelperCol)
+})
+
 const hasTop = computed(() => {
   const TOP_FEATURES = [
     'queryBuilderDialog',
@@ -249,7 +255,23 @@ onMounted(() => {
         :query-builder-props="mergedProps.queryBuilderProps"
         :features
         :ui="mergedProps.ui"
-      />
+      >
+        <!-- Replaces the export button (e.g. an export of every matching row, not only the loaded ones) -->
+        <template
+          v-if="slots.export"
+          #export
+        >
+          <slot name="export" />
+        </template>
+
+        <!-- After the export, at the end of the top row (e.g. a create button) -->
+        <template
+          v-if="slots['top-append']"
+          #append
+        >
+          <slot name="top-append" />
+        </template>
+      </TableTop>
     </slot>
 
     <!-- Toolbar -->
@@ -311,7 +333,9 @@ onMounted(() => {
       <!-- Cell, `row-actions` and `row-inside` slots are rendered by the rows themselves -->
     </TableContent>
 
-    <!-- Initial load placeholder (the loading overlay is rendered below) -->
+    <!-- Initial load: skeleton rows under the header once the columns are known, else the overlay below -->
+    <TableSkeleton v-else-if="isInitialLoad && hasSkeleton" />
+
     <div
       v-else-if="isInitialLoad"
       class="grow"
@@ -359,7 +383,7 @@ onMounted(() => {
     </slot>
 
     <!-- Loading -->
-    <TableLoading v-if="isInitialLoad" />
+    <TableLoading v-if="isInitialLoad && !hasSkeleton" />
 
     <!-- Default slot to be used for custom content (most likely absolutely positioned) -->
     <slot />

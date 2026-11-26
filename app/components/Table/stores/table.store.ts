@@ -545,7 +545,8 @@ const [
         state.value.queryBuilder = queryBuilder.value
       }
     } else {
-      queryBuilder.value = state.value.queryBuilder ?? queryBuilderInitializeItems()
+      // The state starts with no items, which would leave the query builder without its root group
+      queryBuilder.value = state.value.queryBuilder?.length ? state.value.queryBuilder : queryBuilderInitializeItems()
     }
 
     // Set the pagination
