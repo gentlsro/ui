@@ -15,8 +15,9 @@ const props = computed(() => active.value?.props.value)
 const appearance = computed(() => active.value?.appearance.value)
 const referenceEl = computed(() => active.value?.target.value)
 
+// The host sits early in <body>, so it must outrank the topmost menu or dialog instead of tying with it
 const zIndex = computed(() => {
-  return active.value ? getLastFloatingUIZindex() : 2999
+  return active.value ? getLastFloatingUIZindex() + 1 : 2999
 })
 
 const middleware = computed(() => [
