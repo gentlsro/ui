@@ -13,7 +13,7 @@ export const COLORS_PREDEFINED = [
   'indigo.500',
   'yellow.500',
   'coolGray.500',
-  'brown.500',
+  'stone.500',
   'gray.500',
   'trueGray.500',
 ]
