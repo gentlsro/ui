@@ -27,7 +27,13 @@ export async function listHandleAddSearch(payload: {
     validation.reset()
   }
 
-  if (hasExactMatch || !search) {
+  // A list that validates what is added offers only what would pass (an ArkType type returns its errors, which carry
+  // a `summary`, for a value that does not fit)
+  const schema = addConfig.validationSchema as ((value: unknown) => unknown) | undefined
+  const result = schema && search ? schema(search) : undefined
+  const isInvalid = !!result && typeof result === 'object' && 'summary' in result
+
+  if (hasExactMatch || !search || isInvalid) {
     preAddedItem.value = undefined
 
     return
