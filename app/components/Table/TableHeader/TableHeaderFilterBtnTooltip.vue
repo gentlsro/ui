@@ -62,7 +62,7 @@ const { emptyValue } = useTableStore()
             :value="filter.value"
             :data-type="column.dataType"
             :empty-value
-            :format="column.format"
+            :format="column.filterLabelFormat ?? column.format"
             :comparator="filter.comparator"
             :empty-value-string="$t('general.empty')"
             text="sm"

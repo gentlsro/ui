@@ -24,6 +24,10 @@ These only affect deeper integrations. None of them are used by the apps in this
 
 ### Added
 
+- **`TableColumn.filterLabelFormat`**: formats a filter's value in its labels (the filter chip, the query
+  builder and the header filter tooltip) without changing the cell, for example a date-time filter that shows
+  only the day. Called like `format`, falls back to it. The filter chip no longer calls `filterFormat`, which
+  stays the value client-side filtering compares.
 - **`Stepper` and `Step`**: a step indicator for wizards and multi-step flows, declared like `Tabs`:
   `<Stepper v-model="step"><Step name="account" label="Account">...</Step></Stepper>`. `v-model` holds the
   active step's `name`; each `Step` takes `label`, `description`, `icon`, `disabled` and `error` and renders its
