@@ -288,9 +288,15 @@ export class TableColumn<T = IItem> {
   extraComparators?: ComparatorEnum[]
 
   /**
-   * When filtering in the filter dropdown, we can use different formatting than in the table
+   * The value client-side filtering compares, read from the row (defaults to the field's value, then `format`)
    */
   filterFormat?: (row: T) => any
+
+  /**
+   * Formats a filter's value in its labels (the filter chip, the query builder, the header tooltip),
+   * called like `format`; defaults to `format`
+   */
+  filterLabelFormat?: (row: T, value?: any) => any
 
   /**
    * Clears all the filters
@@ -660,6 +666,7 @@ export class TableColumn<T = IItem> {
     this.extraComparators = col.extraComparators
     this.customDbQueryFnc = col.customDbQueryFnc
     this.filterFormat = col.filterFormat
+    this.filterLabelFormat = col.filterLabelFormat
     this.getDistinctData = col.getDistinctData
     this.valueGetter = col.valueGetter ?? this.valueGetter
     this.filterComponentProps = col.filterComponentProps ?? this.filterComponentProps

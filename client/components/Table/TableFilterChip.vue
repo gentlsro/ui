@@ -29,9 +29,8 @@ const {
 } = useRefReset(() => props.filter, { modifyFnc: val => new FilterItem(val) })
 
 const formattedValue = computed(() => {
-  const format = props.filter.filterFormat
+  const format = column.value?.filterLabelFormat
     ?? props.filter.format
-    ?? column.value?.filterFormat
     ?? column.value?.format
 
   return formatValue(

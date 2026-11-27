@@ -160,7 +160,7 @@ const $z = useZod({ scope: 'qb' })
       v-if="!isNonValueComparator"
       :value="item.value"
       :data-type="colSelected?.dataType"
-      :format="colSelected?.format"
+      :format="colSelected?.filterLabelFormat ?? colSelected?.format"
       :comparator="item.comparator"
       class="qb-item__value"
     />
