@@ -84,11 +84,7 @@ function select(value: unknown) {
       disable-style="flat"
       :role="isSegmented ? 'radio' : undefined"
       :aria-checked="isSegmented ? model === btn.value : undefined"
-      :class="[
-        buttonClass,
-        model === btn.value && activeClass,
-        { 'is-first': idx === 0, 'is-last': idx === buttons.length - 1 },
-      ]"
+      :class="[buttonClass, model === btn.value && activeClass]"
       :style="btn.value === modelValue ? activeStyle : undefined"
       @click="select(btn.value)"
     >
