@@ -1,6 +1,7 @@
 import type { Required } from 'utility-types'
 import type { CSSProperties } from 'vue'
 import type { ExtendedDataType } from '$dataType'
+import type { IFormatValueOptions } from '#layers/utilities/app/types/format-value-options.type'
 import { ComparatorEnum } from '$comparatorEnum'
 
 // Types
@@ -308,7 +309,11 @@ export class TableColumn<T = IItem> {
    * Formats a filter's value in its labels (the filter chip, the query builder, the header tooltip),
    * called like `format`; defaults to `format`
    */
-  filterLabelFormat?: (row: T, value?: any) => any
+  filterLabelFormat?: (
+    row: T,
+    value: any,
+    options?: Pick<IFormatValueOptions, 'dataType' | 'emptyValue' | 'comparator'>,
+  ) => any
 
   /**
    * Clears all the filters
