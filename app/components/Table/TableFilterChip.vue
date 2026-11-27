@@ -32,16 +32,15 @@ const {
 } = useRefReset(() => props.filter, { modifyFnc: val => new FilterItem(val) })
 
 const formattedValue = computed(() => {
-  const format = props.filter.filterFormat
+  const format = column.value?.filterLabelFormat
     ?? props.filter.format
-    ?? column.value?.filterFormat
     ?? column.value?.format
 
   return formatValue(
     props.filter.value,
     undefined,
-	    {
-	      dataType: props.filter.dataType,
+    {
+      dataType: props.filter.dataType,
       format,
       localeIso: currentLocaleCode.value,
       source: { type: 'component', name: 'TableFilterChip' },
