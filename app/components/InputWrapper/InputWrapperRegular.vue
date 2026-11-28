@@ -210,7 +210,7 @@ const inputInnerContainerStyle = computed(() => {
   }
 
   &:not(.is-readonly):not(.is-disabled):focus-within > .input-wrapper__regular-border {
-    @apply bg-white dark:bg-black;
+    @apply bg-surface;
   }
 
   // An error keeps its border on hover and focus

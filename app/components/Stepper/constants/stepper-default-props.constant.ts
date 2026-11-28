@@ -120,8 +120,8 @@ export const STEPPER_DEFAULT_PROPS = {
 
       // State styling via CSS selectors
       const upcoming = '[&.is-upcoming]:(border-true-gray-300 bg-white color-ca dark:(border-true-gray-600 bg-darker))'
-      const active = '[&.is-active]:(border-primary bg-primary color-white ring-4 ring-primary/20)'
-      const completed = '[&.is-completed]:(border-primary bg-primary color-white)'
+      const active = '[&.is-active]:(border-primary bg-primary color-on-primary ring-4 ring-primary/20)'
+      const completed = '[&.is-completed]:(border-primary bg-primary color-on-primary)'
       const error = '[&.is-error]:(border-negative bg-negative color-white)'
 
       // Size variants

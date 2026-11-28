@@ -132,7 +132,7 @@ const pages = computed(() => {
   }
 
   .is-active {
-    @apply bg-primary color-white;
+    @apply bg-primary color-on-primary;
   }
 }
 </style>

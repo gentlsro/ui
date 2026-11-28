@@ -28,7 +28,7 @@ export const DATE_PICKER_DEFAULT_PROPS = {
       const weekend = 'bg-slate-50 dark:bg-true-gray-200/3'
       const outside = 'color-slate-400 dark:color-true-gray-500'
       const selected = 'bg-primary font-semibold'
-      const color = 'color-white dark:color-white'
+      const color = 'color-on-primary'
       const disabled = 'cursor-not-allowed color-true-gray-400 dark:color-true-gray-600'
       const interactive = 'cursor-pointer'
 
@@ -58,7 +58,7 @@ export const DATE_PICKER_DEFAULT_PROPS = {
       const base = 'flex flex-center relative rounded-full font-rem-13 leading-none w-7 h-7'
       const today = 'outline-1 outline-solid font-semibold'
       const outline = 'outline-primary'
-      const selected = 'outline-white'
+      const selected = 'outline-on-primary'
 
       return {
         base,

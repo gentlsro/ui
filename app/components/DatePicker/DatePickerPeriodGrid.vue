@@ -185,7 +185,7 @@ const options = computed(() => {
   }
 
   .is-selected {
-    @apply bg-primary color-white;
+    @apply bg-primary color-on-primary;
   }
 }
 </style>

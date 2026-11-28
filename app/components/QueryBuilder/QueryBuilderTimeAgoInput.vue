@@ -159,7 +159,7 @@ function setUnit(unitShortName: string) {
         <Btn
           size="xs"
           :class="{
-            'color-white !bg-primary': isExact,
+            'color-on-primary !bg-primary': isExact,
             'color-ca': !isExact,
           }"
           no-bold

@@ -226,7 +226,7 @@ export const defaultComponentsConfig = {
       size: 'md',
       noIcon: true,
       ui: {
-        borderRadius: '0.5rem',
+        borderRadius: 'var(--radius-custom,0.5rem)',
         focusInputOnLabelClick: false,
         appendClass: ({ defaults }) => defaults.all,
       },
@@ -292,7 +292,7 @@ export const defaultComponentsConfig = {
       fractionDigits: 2,
       currencyPosition: 'prepend',
       ui: {
-        borderRadius: '0.5rem',
+        borderRadius: 'var(--radius-custom,0.5rem)',
         focusInputOnLabelClick: false,
         appendClass: ({ defaults }) => defaults.all,
       },
@@ -315,7 +315,7 @@ export const defaultComponentsConfig = {
       size: 'md',
       stackLabel: true,
       ui: {
-        borderRadius: '0.5rem',
+        borderRadius: 'var(--radius-custom,0.5rem)',
         focusInputOnLabelClick: false,
         appendClass: ({ defaults }) => defaults.all,
       },
@@ -340,7 +340,7 @@ export const defaultComponentsConfig = {
       size: 'md',
       stackLabel: true,
       ui: {
-        borderRadius: '0.5rem',
+        borderRadius: 'var(--radius-custom,0.5rem)',
         focusInputOnLabelClick: false,
         appendClass: ({ defaults }) => defaults.all,
       },
@@ -430,7 +430,7 @@ export const defaultComponentsConfig = {
       readonly: undefined,
       size: 'md',
       ui: {
-        borderRadius: '0.5rem',
+        borderRadius: 'var(--radius-custom,0.5rem)',
         focusInputOnLabelClick: false,
       },
     },
@@ -454,7 +454,7 @@ export const defaultComponentsConfig = {
       stackLabel: true,
       readonly: undefined,
       ui: {
-        borderRadius: '0.5rem',
+        borderRadius: 'var(--radius-custom,0.5rem)',
         focusInputOnLabelClick: false,
       },
       inputProps: {},
@@ -466,7 +466,7 @@ export const defaultComponentsConfig = {
   fieldWithFormatter: {
     props: {
       ui: {
-        borderRadius: '0.5rem',
+        borderRadius: 'var(--radius-custom,0.5rem)',
         focusInputOnLabelClick: false,
       },
     },
@@ -487,7 +487,7 @@ export const defaultComponentsConfig = {
       noBorder: true,
       ui: {
         focusInputOnLabelClick: false,
-        borderRadius: '0.5rem',
+        borderRadius: 'var(--radius-custom,0.5rem)',
         inputContainerClass: () => '!bg-transparent',
         inputClass: () => '!p-0',
       },
@@ -590,7 +590,7 @@ export const defaultComponentsConfig = {
       stackLabel: true,
       minSearchLength: 1,
       ui: {
-        borderRadius: '0.5rem',
+        borderRadius: 'var(--radius-custom,0.5rem)',
         focusInputOnLabelClick: false,
         appendClass: ({ defaults }) => defaults.all,
       },
@@ -633,9 +633,9 @@ export const defaultComponentsConfig = {
       tooltip: undefined,
       variant: 'regular',
       ui: {
-        borderRadius: '0.5rem',
+        borderRadius: 'var(--radius-custom,0.5rem)',
         borderColor: {
-          base: '#737373',
+          base: 'var(--color-border, #737373)',
           focus: 'var(--color-primary)',
         },
         focusInputOnLabelClick: false,
@@ -986,7 +986,7 @@ export const defaultComponentsConfig = {
       max: Number.POSITIVE_INFINITY,
       step: 'auto',
       ui: {
-        borderRadius: '0.5rem',
+        borderRadius: 'var(--radius-custom,0.5rem)',
         appendClass: ({ defaults }) => defaults.all,
         focusInputOnLabelClick: false,
       },
@@ -1220,7 +1220,7 @@ export const defaultComponentsConfig = {
         },
       },
       ui: {
-        borderRadius: '0.5rem',
+        borderRadius: 'var(--radius-custom,0.5rem)',
         focusInputOnLabelClick: false,
         inputClass: ({ defaults }) => `${defaults.all} flex items-center`,
         appendClass: ({ defaults }) => defaults.all,
@@ -1495,7 +1495,7 @@ export const defaultComponentsConfig = {
       size: 'md',
       stackLabel: true,
       ui: {
-        borderRadius: '0.5rem',
+        borderRadius: 'var(--radius-custom,0.5rem)',
         focusInputOnLabelClick: false,
         appendClass: ({ defaults }) => defaults.all,
       },
@@ -1519,7 +1519,7 @@ export const defaultComponentsConfig = {
       size: 'md',
       stackLabel: true,
       ui: {
-        borderRadius: '0.5rem',
+        borderRadius: 'var(--radius-custom,0.5rem)',
         focusInputOnLabelClick: false,
         appendClass: ({ defaults }) => defaults.all,
       },
@@ -1537,7 +1537,7 @@ export const defaultComponentsConfig = {
       readonly: undefined,
       stackLabel: true,
       ui: {
-        borderRadius: '0.5rem',
+        borderRadius: 'var(--radius-custom,0.5rem)',
         focusInputOnLabelClick: false,
         appendClass: ({ defaults }) => defaults.all,
       },

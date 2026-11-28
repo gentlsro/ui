@@ -34,7 +34,7 @@ export const BUTTON_GROUP_DEFAULT_PROPS = {
     },
 
     activeClass(props: IButtonGroupStyleProps = {}) {
-      const pill = 'bg-primary color-white'
+      const pill = 'bg-primary color-on-primary'
       const segmented = '!color-current bg-white dark:bg-white/12 shadow-sm'
 
       return {

@@ -42,7 +42,7 @@ export const TABS_DEFAULT_PROPS = {
       const base = ''
 
       // State styling via CSS selectors
-      const active = '[&.is-active]:(bg-primary color-white)'
+      const active = '[&.is-active]:(bg-primary color-on-primary)'
       const inactive = '[&:not(.is-active)]:(color-ca)'
 
       return {

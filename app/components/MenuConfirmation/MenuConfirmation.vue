@@ -122,7 +122,7 @@ const confirmationTextStyle = computed(() => {
       ref="confirmBtnEl"
       :label="$t('general.confirm')"
       bg="primary"
-      color="white"
+      color="on-primary"
       data-cy="confirm-delete"
       :class="confirmBtnClass"
       :style="confirmBtnStyle"

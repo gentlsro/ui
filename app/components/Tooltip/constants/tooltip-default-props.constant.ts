@@ -7,7 +7,8 @@ export const TOOLTIP_DEFAULT_PROPS = {
   ui: {
     containerClass() {
       const base = 'p-x-2 p-y-1 rounded-custom border-custom border-ca'
-      const bg = 'dark:bg-dark-950 bg-white'
+      // (a scope's surface, else white / dark-950)
+      const bg = 'bg-[rgb(var(--color-surface-rgb,255_255_255))] dark:bg-[rgb(var(--color-surface-rgb,8_8_8))]'
       const font = 'font-rem-13 color-ca'
       const noInheritFontStyle = '[&.no-inherit-font-style]:(font-normal normal-case leading-normal font-rem-13)'
 
