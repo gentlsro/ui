@@ -128,7 +128,11 @@ const pages = computed(() => {
   }
 
   .pagination-el {
-    @apply rounded-md color-true-gray-600 dark:color-true-gray-300 font-medium;
+    @apply rounded-md font-medium;
+
+    &:not(.is-active) {
+      @apply color-true-gray-600 dark:color-true-gray-300;
+    }
   }
 
   .is-active {
