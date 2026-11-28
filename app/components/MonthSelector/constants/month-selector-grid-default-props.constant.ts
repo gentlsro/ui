@@ -15,7 +15,7 @@ export const MONTH_SELECTOR_GRID_DEFAULT_PROPS = {
       const base = 'capitalize'
 
       // States (via CSS selectors)
-      const selected = '[&.is-selected]:(bg-primary color-white)'
+      const selected = '[&.is-selected]:(bg-primary color-on-primary)'
       const current = '[&.is-current]:(shadow-coolGray shadow-[0px_0px_0px_2px_var(--un-shadow-color)])'
 
       return {

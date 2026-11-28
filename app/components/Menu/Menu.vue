@@ -200,6 +200,9 @@ const menuStyleComputed = computed(() => {
   return mergedProps.value?.ui?.menuStyle?.()
 })
 
+// (teleported to <body>, out of its scope's element: it carries the scope's UI theme itself)
+const uiThemeScope = useUIThemeScope()
+
 // Styles - content
 const contentClass = computed(() => {
   return mergedProps.value?.ui?.contentClass?.({
@@ -240,8 +243,8 @@ const contentStyle = computed(() => {
         ref="floatingEl"
         class="floating-element menu group/menu"
         :data-open="model"
-        :class="[menuClassComputed, menuClass]"
-        :style="{ ...menuStyleComputed, ...menuStyle, ...floatingStyles }"
+        :class="[uiThemeScope?.class, menuClassComputed, menuClass]"
+        :style="{ ...uiThemeScope?.style, ...menuStyleComputed, ...menuStyle, ...floatingStyles }"
         :placement="menuPlacement"
         .hide="hide"
         v-bind="$attrs"

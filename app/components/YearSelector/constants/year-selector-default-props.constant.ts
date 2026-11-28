@@ -40,7 +40,7 @@ export const YEAR_SELECTOR_DEFAULT_PROPS = {
 
     yearBtnClass() {
       // States (via CSS selectors)
-      const selected = '[&.is-selected]:(bg-primary color-white)'
+      const selected = '[&.is-selected]:(bg-primary color-on-primary)'
 
       return {
         selected,

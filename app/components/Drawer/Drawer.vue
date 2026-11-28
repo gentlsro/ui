@@ -88,6 +88,9 @@ const containerStyle = computed(() => {
   return mergedProps.value?.ui?.containerStyle?.()
 })
 
+// (teleported out of its scope's element: it carries the scope's UI theme itself)
+const uiThemeScope = useUIThemeScope()
+
 function handleTransition(
   ev: TransitionEvent,
   state: 'start' | 'end',
@@ -159,8 +162,8 @@ onClickOutside(drawerEl, handleClickOutside, {
     <aside
       ref="drawerEl"
       class="drawer"
-      :class="[classes, containerClass]"
-      :style="[styles, containerStyle]"
+      :class="[uiThemeScope?.class, classes, containerClass]"
+      :style="[uiThemeScope?.style, styles, containerStyle]"
       @transitionstart="handleTransition($event, 'start')"
       @transitionend="handleTransition($event, 'end')"
     >

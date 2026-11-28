@@ -67,7 +67,7 @@ const units = computed(() => {
   return props.allowedUnits.map(unit => ({
     id: unit,
     label: $t(`general.${unit}`, 2),
-    class: durationUnit.value === unit ? 'bg-primary color-white' : '',
+    class: durationUnit.value === unit ? 'bg-primary color-on-primary' : '',
     handler: () => handleDurationUnitChange(unit),
   }))
 })

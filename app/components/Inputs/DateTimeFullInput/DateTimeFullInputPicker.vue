@@ -85,7 +85,7 @@ defineExpose({
   >
     <!-- The dialog is closed explicitly – unlike on a desktop the picking continues in the other pane -->
     <Btn
-      class="datetime-full-picker__apply bg-primary color-white"
+      class="datetime-full-picker__apply bg-primary color-on-primary"
       :label="$t('general.apply')"
       size="sm"
       no-uppercase

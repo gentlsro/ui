@@ -48,7 +48,8 @@ export const DIALOG_DEFAULT_PROPS = {
     }) {
       const { position: positionProp } = payload
 
-      const base = 'max-h-[min(95%,var(--dialogMaxHeight))] max-w-95vw pointer-events-auto flex flex-col dark:bg-black/95 bg-white backdrop-blur-2px rounded-custom overflow-auto'
+      // (a scope's surface, else white / black)
+      const base = 'max-h-[min(95%,var(--dialogMaxHeight))] max-w-95vw pointer-events-auto flex flex-col bg-[rgb(var(--color-surface-rgb,255_255_255))] dark:bg-[rgb(var(--color-surface-rgb,0_0_0)/0.95)] backdrop-blur-2px rounded-custom overflow-auto'
 
       // Position
       let position = ''
@@ -80,7 +81,8 @@ export const DIALOG_DEFAULT_PROPS = {
     },
 
     headerClass() {
-      const base = 'flex items-center gap-2 p-x-4 p-y-3 border-b border-b-truegray-2 dark:border-b-truegray-7 bg-white dark:bg-dark-950'
+      // (a scope's border and surface, else true-gray-200 / 700 and white / dark-950)
+      const base = 'flex items-center gap-2 p-x-4 p-y-3 border-b border-b-[rgb(var(--color-border-rgb,229_229_229))] dark:border-b-[rgb(var(--color-border-rgb,64_64_64))] bg-[rgb(var(--color-surface-rgb,255_255_255))] dark:bg-[rgb(var(--color-surface-rgb,8_8_8))]'
 
       return {
         base,

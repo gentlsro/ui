@@ -7,8 +7,9 @@ export const MENU_DEFAULT_PROPS = {
   ui: {
     menuClass() {
       const base = 'flex flex-col grow rounded-custom'
-      const background = 'dark:bg-dark-950/90 bg-white/90 backdrop-blur-2px'
-      const border = 'rounded-custom border-1 border-slate-300 dark:border-dark-700'
+      // (a scope's surface and border, else white / dark-950 and slate-300 / dark-700)
+      const background = 'bg-[rgb(var(--color-surface-rgb,255_255_255)/0.9)] dark:bg-[rgb(var(--color-surface-rgb,8_8_8)/0.9)] backdrop-blur-2px'
+      const border = 'rounded-custom border-1 border-[rgb(var(--color-border-rgb,203_213_225))] dark:border-[rgb(var(--color-border-rgb,27_27_27))]'
       const limits = 'max-w-95vw max-h-95%'
       const shadow = 'light:(shadow-consistent-xs shadow-darker/12)'
 

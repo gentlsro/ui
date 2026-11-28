@@ -34,14 +34,17 @@ const isMounted = ref(false)
 const attrs = useAttrs()
 const forwardedAttrs = shallowRef({ ...attrs })
 
+// The UI theme where the tooltip is declared: the shared bubble renders in <body>, outside it
+const uiThemeScope = useUIThemeScope()
+
 // Shared ownership
 const owner = {
   target: referenceEl,
   props: computed(() => props),
   attrs: forwardedAttrs,
   appearance: computed(() => ({
-    containerClass: containerClass.value,
-    containerStyle: containerStyle.value,
+    containerClass: [uiThemeScope.value?.class, containerClass.value],
+    containerStyle: uiThemeScope.value ? { ...uiThemeScope.value.style, ...containerStyle.value } : containerStyle.value,
     arrowClass: arrowClass.value,
     arrowStyle: arrowStyle.value,
   })),

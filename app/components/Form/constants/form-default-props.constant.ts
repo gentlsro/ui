@@ -58,7 +58,7 @@ export const FORM_DEFAULT_PROPS = {
     },
 
     submitClass() {
-      const base = 'bg-primary color-white'
+      const base = 'bg-primary color-on-primary'
 
       // Presets
       const fullWidth = `${base} grow`

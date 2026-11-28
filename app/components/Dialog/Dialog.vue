@@ -217,6 +217,9 @@ const wrapperStyle = computed(() => {
   return mergedProps.value?.ui?.wrapperStyle?.()
 })
 
+// (teleported to <body>, out of its scope's element: it carries the scope's UI theme itself)
+const uiThemeScope = useUIThemeScope()
+
 // Styles - dialog
 const dialogClass = computed(() => {
   return mergedProps.value?.ui?.dialogClass?.({
@@ -305,10 +308,11 @@ const contentClasses = computed(() => {
         v-if="model"
         ref="dialogWrapperEl"
         class="dialog__wrapper floating-element group/dialog"
-        :class="wrapperClass"
+        :class="[uiThemeScope?.class, wrapperClass]"
         :data-open="model"
         :position
         :style="{
+          ...uiThemeScope?.style,
           ...wrapperStyle,
           '--dialogMaxHeight': dialogMaxHeight,
           '--zIndex': zIndex,

@@ -18,8 +18,6 @@ import { gentlUIPreset } from './app/constants/unocss-preset'
 import { iconAssetProcessor } from './modules/icon-assets/processor'
 
 const fontSize = 16
-const rounding = 2
-const borderWidth = 1
 
 export default defineConfig({
   rules: [
@@ -78,49 +76,7 @@ export default defineConfig({
     ['flex-center', 'items-center justify-center'],
     ['fit', 'h-full w-full'],
     ['g-section', 'flex flex-col gap-2 bg-white dark:bg-darker border-1 rounded-custom border-ca border-solid hover:border-dashed'],
-    ['disabled', 'dark:bg-dark-800 dark:color-true-gray-600 bg-light-300 color-true-gray-300'],
-    ['shadow-consistent-fill', 'shadow-consistent-md-fill'],
-    ['text-caption', 'color-ca tracking-wide text-sm'],
-    ['text-subtitle', 'font-rem-12 italic color-ca leading-tight'],
-
-    // Color adjusted
-    ['bg-ca', 'dark:bg-true-gray-800 bg-true-gray-100'],
-    ['color-ca', 'dark:color-true-gray-400 color-true-gray-600'],
-    ['outline-ca', 'dark:outline-true-gray-600 outline-true-gray-300'],
-    ['shadow-ca', 'dark:shadow-true-gray-700/30 shadow-true-gray-300/50'],
-
-    // Border color
-    ['border-ca', 'dark:border-true-gray-600 border-true-gray-300'],
-    [
-      /^(?:border|b)-([blrtxy])(?:-ca)?$/,
-      ([_, d]) => {
-        const pre = d ? `-${d}` : ''
-
-        return `dark:border${pre}-true-gray-600 border${pre}-true-gray-300`
-      },
-    ],
-
-    // Border width
-    ['border-custom', `border-${borderWidth}`],
-    [
-      /^(?:border|b)-([blrtxy])(?:-custom)?$/,
-      ([_, d]) => {
-        const pre = d ? `-${d}` : ''
-
-        return `border${pre}-${borderWidth}`
-      },
-    ],
-
-    // Border radius
-    ['rounded-custom', `rounded-${rounding}`],
-    [
-      /^rounded-([blrtxy])(?:-custom)?$/,
-      ([_, d]) => {
-        const pre = d ? `-${d}` : ''
-
-        return `rounded${pre}-${rounding}`
-      },
-    ],
+    // (the other shortcuts, the colour, border and radius tokens among them: `gentlUIPreset`)
   ],
   presets: [
     presetWind3(),

@@ -1,9 +1,44 @@
 import { toEscapedSelector } from 'unocss'
 import type { Preset } from 'unocss'
 
+/**
+ * Brand and status colours backed by CSS variables: `rgb(var(--color-<name>-rgb, <default channels>))`, so a scope
+ * (a DynamicGrid's UI theme) can set `--color-<name>-rgb` and keep opacity modifiers (`bg-primary/10`). The presets
+ * still declare them as hex (the `colors.json` the UI layer writes keeps hex for `useColors().getColor()`); the
+ * resolved theme gets the variable form, its default the last preset's hex
+ */
+export const CSS_VARIABLE_COLORS = ['primary', 'secondary', 'tertiary', 'positive', 'negative', 'warning', 'info'] as const
+
+/**
+ * Tokens a scope may set, unset by default: each usage keeps its own colour as the fallback, so nothing changes where
+ * no scope sets them. `<token>` is the light fallback, `<token>-dark` the dark one (the `bg-ca`, `border-ca`,
+ * `color-ca` and `bg-surface` shortcuts pick them by theme)
+ */
+const UI_TOKEN_COLORS = {
+  'surface': 'rgb(var(--color-surface-rgb, 255 255 255))',
+  'surface-dark': 'rgb(var(--color-surface-rgb, 0 0 0))',
+  'surface-muted': 'rgb(var(--color-surface-muted-rgb, 245 245 245))',
+  'surface-muted-dark': 'rgb(var(--color-surface-muted-rgb, 38 38 38))',
+  'border': 'rgb(var(--color-border-rgb, 212 212 212))',
+  'border-dark': 'rgb(var(--color-border-rgb, 82 82 82))',
+  'text-muted': 'rgb(var(--color-text-muted-rgb, 82 82 82))',
+  'text-muted-dark': 'rgb(var(--color-text-muted-rgb, 163 163 163))',
+}
+
+/** The border radius `rounded-custom` and the inputs take: a scope sets `--radius-custom` */
+export const CUSTOM_RADIUS = 'var(--radius-custom,0.5rem)'
+
+function hexToChannels(hex: string) {
+  const digits = hex.slice(1)
+  const full = digits.length <= 4 ? [...digits].map(digit => digit + digit).join('') : digits
+
+  return [0, 2, 4].map(at => Number.parseInt(full.slice(at, at + 2), 16)).join(' ')
+}
+
+const HEX_COLOR = /^#(?:[\da-f]{3,4}|[\da-f]{6}|[\da-f]{8})$/i
+
 export function gentlUIPreset(): Preset {
   const fontSize = 16
-  const rounding = 2
   const borderWidth = 1
 
   return {
@@ -44,6 +79,32 @@ export function gentlUIPreset(): Preset {
           black: '900',
         },
       },
+    },
+    // (on the theme every preset merged into, so the brand colours' defaults are the last preset's: Platform's)
+    extendTheme: theme => {
+      const colors = ((theme as { colors?: Record<string, unknown> }).colors ??= {})
+
+      for (const name of CSS_VARIABLE_COLORS) {
+        const value = colors[name]
+
+        if (typeof value === 'string' && HEX_COLOR.test(value)) {
+          colors[name] = `rgb(var(--color-${name}-rgb, ${hexToChannels(value)}))`
+        }
+      }
+
+      // (the text on a brand fill: white unless a scope sets it; keep any keys a consumer already defined)
+      const existingOn = typeof colors.on === 'object' && colors.on !== null ? colors.on : undefined
+      const existingUi = typeof colors.ui === 'object' && colors.ui !== null ? colors.ui : undefined
+
+      colors.on = {
+        primary: 'rgb(var(--color-on-primary-rgb, 255 255 255))',
+        secondary: 'rgb(var(--color-on-secondary-rgb, 255 255 255))',
+        ...existingOn,
+      }
+      colors.ui = {
+        ...UI_TOKEN_COLORS,
+        ...existingUi,
+      }
     },
     blocklist: [
       /^ps/, // blocks all ps-* utilities
@@ -152,20 +213,28 @@ export function gentlUIPreset(): Preset {
       ['text-caption', 'color-ca tracking-wide text-sm'],
       ['text-subtitle', 'font-rem-12 italic color-ca leading-tight'],
 
-      // Color adjusted
-      ['bg-ca', 'dark:bg-true-gray-800 bg-true-gray-100'],
-      ['color-ca', 'dark:color-true-gray-400 color-true-gray-600'],
-      ['outline-ca', 'dark:outline-true-gray-600 outline-true-gray-300'],
+      // Color adjusted (UI tokens: a scope's value, else the usage's own colour per theme)
+      ['bg-ca', 'bg-ui-surface-muted dark:bg-ui-surface-muted-dark'],
+      ['color-ca', 'color-ui-text-muted dark:color-ui-text-muted-dark'],
+      ['outline-ca', 'outline-ui-border dark:outline-ui-border-dark'],
       ['shadow-ca', 'dark:shadow-true-gray-700/30 shadow-true-gray-300/50'],
 
+      // Surfaces (cards, inputs, menus): white / black unless a scope sets `--color-surface-rgb`
+      [
+        /^(bg|border|outline|ring|from|via|to)-surface(-muted)?(\/\d+)?$/,
+        ([, utility, muted = '', opacity = '']) => {
+          return `${utility}-ui-surface${muted}${opacity} dark:${utility}-ui-surface${muted}-dark${opacity}`
+        },
+      ],
+
       // Border color
-      ['border-ca', 'dark:border-true-gray-600 border-true-gray-300'],
+      ['border-ca', 'border-ui-border dark:border-ui-border-dark'],
       [
         /^(?:border|b)-([blrtxy])(?:-ca)?$/,
         ([_, d]) => {
           const pre = d ? `-${d}` : ''
 
-          return `dark:border${pre}-true-gray-600 border${pre}-true-gray-300`
+          return `border${pre}-ui-border dark:border${pre}-ui-border-dark`
         },
       ],
 
@@ -180,14 +249,14 @@ export function gentlUIPreset(): Preset {
         },
       ],
 
-      // Border radius
-      ['rounded-custom', `rounded-${rounding}`],
+      // Border radius (a scope sets `--radius-custom`)
+      ['rounded-custom', `rounded-[${CUSTOM_RADIUS}]`],
       [
         /^rounded-([blrtxy])(?:-custom)?$/,
         ([_, d]) => {
           const pre = d ? `-${d}` : ''
 
-          return `rounded${pre}-${rounding}`
+          return `rounded${pre}-[${CUSTOM_RADIUS}]`
         },
       ],
     ],

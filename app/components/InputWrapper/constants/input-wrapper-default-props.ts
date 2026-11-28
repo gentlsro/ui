@@ -50,7 +50,7 @@ export const INPUT_WRAPPER_DEFAULT_PROPS = {
     },
 
     inputContainerClass() {
-      const base = 'bg-white dark:bg-black'
+      const base = 'bg-surface'
 
       return {
         base,

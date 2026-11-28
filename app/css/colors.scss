@@ -1,3 +1,8 @@
+// The brand colours resolve to `rgb(var(--color-<name>-rgb, <default channels>))` (`gentlUIPreset`): their defaults
+// are the theme's hex. A scope that themes a subtree (a DynamicGrid's UI theme) sets both `--color-<name>-rgb` and
+// `--color-<name>` on its element, as a variable declared here is computed on `:root`. The surface, border, muted-text
+// and radius tokens (`--color-surface[-rgb]`, `--color-border[-rgb]`, …, `--radius-custom`) are unset by default: each
+// usage falls back to its own colour
 :root {
   --color-primary: theme('colors.primary');
   --color-secondary: theme('colors.secondary');

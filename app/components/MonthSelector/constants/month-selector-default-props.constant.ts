@@ -51,7 +51,7 @@ export const MONTH_SELECTOR_DEFAULT_PROPS = {
       const base = 'capitalize'
 
       // States (via CSS selectors)
-      const selected = '[&.is-selected]:(bg-primary color-white)'
+      const selected = '[&.is-selected]:(bg-primary color-on-primary)'
       const current = '[&.is-current]:(border-2 border-ca)'
 
       return {

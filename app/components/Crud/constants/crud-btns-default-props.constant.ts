@@ -36,7 +36,7 @@ export const CRUD_EDIT_BTN_DEFAULT_PROPS = {
       const base = 'md:min-w-40 w-full'
 
       // State styling via CSS selectors
-      const activeState = '[&:not(.is-archived):not(.is-disabled)]:(bg-primary color-white)'
+      const activeState = '[&:not(.is-archived):not(.is-disabled)]:(bg-primary color-on-primary)'
 
       return {
         base,

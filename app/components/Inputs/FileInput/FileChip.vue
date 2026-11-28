@@ -32,7 +32,7 @@ defineEmits<{
       w="5"
       h="5"
       bg="primary"
-      color="white"
+      color="on-primary"
       self-center
       icon="i-material-symbols:download"
       @click.stop.prevent="handleDownloadFile(chip, { url: downloadUrl })"
